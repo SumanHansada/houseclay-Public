@@ -7,15 +7,42 @@
   --foreground: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  /* font-family: Arial, Helvetica, sans-serif; */
+  font-family: var(--font-inter), sans-serif;
+}
+
+.no-scroll {
+  overflow: hidden;
+}
+
+.react-international-phone-container {
+  all: unset !important;
+}
+
+/* Fixes input styling */
+.custom-phone-input input {
+  all: unset !important; /* Removes default styles */
+  width: 100% !important;
+  background: transparent !important;
+  outline: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Fixes flag selector */
+.react-international-phone-country-selector-button {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin-right: 8px !important;
 }
