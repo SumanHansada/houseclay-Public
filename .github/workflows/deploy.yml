@@ -20,7 +20,9 @@ jobs:
           java-version: '17'
 
       - name: Build the project using Maven
-        run: mvn clean package -DskipTests
+        run: |
+          cd hc-backend/backend
+          mvn clean package -DskipTests
 
       - name: Transfer JAR file to EC2
         run: |
