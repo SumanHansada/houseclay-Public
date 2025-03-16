@@ -24,6 +24,18 @@ jobs:
           cd hc-backend/backend
           mvn clean package -DskipTests
 
+      - name: Debug SSH Key
+        run: |
+          echo "${{ secrets.EC2_PRIVATE_KEY }}" | base64 --decode > private_key.pem
+          chmod 600 private_key.pem
+          ssh-keygen -y -f private_key.pem
+
+      - name: Test SSH Connection
+        run: |
+          echo "${{ secrets.EC2_PRIVATE_KEY }}" | base64 --decode > private_key.pem
+          chmod 600 private_key.pem
+          ssh -v -o StrictHostKeyChecking=no -i private_key.pem ec2-user@${{ secrets.EC2_HOST }} "echo 'SSH Connection Successful'"
+
 
       - name: Transfer JAR file to EC2
         run: |
