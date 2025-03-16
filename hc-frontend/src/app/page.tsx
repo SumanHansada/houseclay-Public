@@ -1,13 +1,149 @@
 "use client";
-import { Dialog, DialogContent } from "@/components/Dialog";
-import Footer from "@/components/Footer";
-import { Header } from "@/components/Header";
-import Login from "@/components/Login";
-import { useDialog } from "@/providers/DialogContextProvider";
 import Image from "next/image";
+import Carousel2D from "@/components/Carousel2D";
+import Dropdown from "@/components/Dropdown";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import Login from "@/components/Login";
+import Neighborhoods, {
+  Neighborhood,
+} from "@/components/Neighborhoods";
+import Properties, { Property } from "@/components/Properties";
+import PropertyOwners from "@/components/PropertyOwners";
+import Testimonials, { Testimonial } from "@/components/Testimonials";
+import { useState } from "react";
+import { useDialog } from "@/providers/DialogContextProvider";
+import { Dialog, DialogContent } from "@/components/Dialog";
 
 export default function Home() {
   const { openDialog, isOpen } = useDialog();
+  const [activeTab, setActiveTab] = useState("rent");
+
+  const properties: Property[] = [
+    {
+      id: 1,
+      complex: "Sobha Royal Pavilion",
+      beds: 3,
+      baths: 3,
+      price: "2.3",
+      area: "1,790",
+      location: "Nagavarapalya, 15th cross, Landmark - Life in...",
+      images: [
+        "/photos/House1.avif",
+        "/photos/House2.avif",
+        "/photos/House3.avif",
+        "/photos/House4.avif",
+      ],
+      type: "Featured",
+    },
+    {
+      id: 2,
+      complex: "Prestige Lakeside Habitat",
+      beds: 3,
+      baths: 2,
+      price: "1.7",
+      area: "1,360",
+      location: "Varthur, Gunjur, Bangalore",
+      images: [
+        "/photos/House1.avif",
+        "/photos/House3.avif",
+        "/photos/House2.avif",
+        "/photos/House4.avif",
+      ],
+      type: null,
+    },
+    {
+      id: 3,
+      complex: "Sobha Neopolis",
+      beds: 2,
+      baths: 2,
+      price: "1.3",
+      area: "1180",
+      location: "Gunjur Road, Bangalore",
+      images: [
+        "/photos/House4.avif",
+        "/photos/House1.avif",
+        "/photos/House3.avif",
+        "/photos/House2.avif",
+      ],
+      type: "Exclusive",
+    },
+    {
+      id: 4,
+      complex: "Durga Petals",
+      beds: 2,
+      baths: 2,
+      price: "2.2",
+      area: "1240",
+      location: "Doddenakundi, Marathahalli, Bangalore",
+      images: [
+        "/photos/House4.avif",
+        "/photos/House3.avif",
+        "/photos/House2.avif",
+        "/photos/House1.avif",
+      ],
+      type: "Exclusive",
+    },
+  ];
+
+  const sampleNeighborhoods: Neighborhood[] = [
+    { name: "Whitefield", image: "/neighbourhood/Whitefield.jpeg" },
+    { name: "Koramangala", image: "/neighbourhood/Koramangala.jpeg" },
+    { name: "Indiranagar", image: "/neighbourhood/Indiranagar.jpeg" },
+    { name: "HSR Layout", image: "/neighbourhood/HSR.jpeg" },
+    { name: "Jayanagar", image: "/neighbourhood/Jayanagar.jpeg" },
+    { name: "Hebbal", image: "/neighbourhood/Hebbal.jpeg" },
+    { name: "Sarjapur Road", image: "/neighbourhood/Sarjapur Road.jpeg" },
+    { name: "Banashankari", image: "/neighbourhood/Banashankari.jpeg" },
+  ];
+
+  const testimonials: Testimonial[] = [
+    {
+      id: 1,
+      name: "Samir T.",
+      initial: "S",
+      avatar: "/people/daniel.png",
+      rating: 5,
+      content:
+        "Finding the perfect home felt effortless with HouseClay. The team was incredibly supportive, guiding me through every step and providing all the resources I needed.",
+    },
+    {
+      id: 2,
+      name: "Rajesh M.",
+      initial: "R",
+      avatar: "/people/garry.png",
+      rating: 5,
+      content:
+        "The extensive listings, along with accurate property details and legal assistance, made this a smooth, stress-free journey.",
+    },
+    {
+      id: 3,
+      name: "Aditya C.",
+      initial: "A",
+      avatar: "/people/tommy.png",
+      rating: 5,
+      content:
+        "The verified properties and transparent details made all the difference. Their commitment to quality and customer support reassured me, and I'm thrilled with my purchase.",
+    },
+    {
+      id: 4,
+      name: "Priya K.",
+      initial: "P",
+      avatar: "/people/garry.png",
+      rating: 5,
+      content:
+        "As a first-time buyer, I was nervous about the process. The team at HouseClay made everything so simple and straightforward. Couldn't be happier!",
+    },
+    {
+      id: 5,
+      name: "Vikram S.",
+      initial: "V",
+      avatar: "/people/tommy.png",
+      rating: 5,
+      content:
+        "After months of searching elsewhere, I found my dream apartment within two weeks of using this platform. The filters and neighborhood insights were game-changers.",
+    },
+  ];
 
   const onLogin = () => {
     openDialog("login-dialog");
@@ -17,9 +153,105 @@ export default function Home() {
     <>
       <Header onLogin={onLogin} />
       <main className="mx-auto my-0">
-        <section className="bg-[url('/images/banner-background.png')] bg-cover bg-center flex items-center justify-center min-h-[600px]">
-          <div></div>
-          {/* <div className="bg-[url('/images/banner-people.png')] h-screen flex flex-1">Hello</div> */}
+        <section className="relative h-[600px] w-full overflow-hidden">
+          <div className="absolute inset-0 bg-[url('/images/banner-background.png')] bg-center bg-cover"></div>
+          <div className="absolute inset-0 bg-[url('/images/banner-people.png')] bg-right bg-no-repeat right-40"></div>
+          <div className="absolute h-full flex flex-col justify-center pl-40 w-2/3">
+            {/* Headings */}
+            <div className="max-w-md mb-8">
+              <h1 className="text-6xl font-bold text-gray-900 mb-2">
+                No Middlemen
+              </h1>
+              <h2 className="text-5xl text-gray-800">Just Connects</h2>
+            </div>
+
+            {/* Tabs */}
+            <div className="max-w-4xl">
+              <div className="flex ml-8 border-b border-gray-300 mb-4 max-w-xs">
+                <button
+                  className={`px-6 py-2  ${activeTab === "rent" ? "text-red-500 border-b-2 border-red-500" : "text-gray-600"}`}
+                  onClick={() => setActiveTab("rent")}
+                >
+                  Rent
+                </button>
+                <button
+                  className={`px-6 py-2  ${activeTab === "sale" ? "text-red-500 border-b-2 border-red-500" : "text-gray-600"}`}
+                  onClick={() => setActiveTab("sale")}
+                >
+                  Buy
+                </button>
+              </div>
+            </div>
+
+            {/* Search Form */}
+            <div className="flex pl-8 pr-2 rounded-full bg-white shadow-lg overflow-hidden justify-between items-center">
+              {/* City */}
+              <div className="flex-1 p-3 border-r border-gray-200">
+                <div className="text-sm font-medium text-gray-900 mb-1">
+                  City
+                </div>
+                <div className="text-gray-500 text-sm flex items-center">
+                  <Dropdown
+                    options={[
+                      { id: 1, label: "Featured" },
+                      { id: 2, label: "Posted (Latest First)" },
+                      { id: 3, label: "Posted (Older First)" },
+                      { id: 4, label: "Availability (Early First)" },
+                      { id: 5, label: "Availability (Late First)" },
+                      { id: 6, label: "Price (Lower First)" },
+                      { id: 7, label: "Price (Higher First)" },
+                    ]}
+                    defaultSelected={{ id: 1, label: "Featured" }}
+                    onChange={(option) => console.log(option)}
+                  />
+                </div>
+              </div>
+
+              {/* Location */}
+              <div className="flex-1 p-3 border-r border-gray-200">
+                <div className="text-sm font-medium text-gray-900 mb-1">
+                  Location
+                </div>
+                <input
+                  type="text"
+                  placeholder="Type localities..."
+                  className="text-gray-500 text-sm outline-none w-full"
+                />
+              </div>
+
+              {/* Property Type */}
+              <div className="flex-1 p-3 border-r border-gray-200">
+                <div className="text-sm font-medium text-gray-900 mb-1">
+                  Property Type
+                </div>
+                <div className="text-gray-500 text-sm flex items-center">
+                  House
+                </div>
+              </div>
+
+              {/* Beds */}
+              <div className="flex-1 p-3">
+                <div className="text-sm font-medium text-gray-900 mb-1">
+                  Beds
+                </div>
+                <div className="text-gray-500 text-sm flex items-center">
+                  2 BHK
+                </div>
+              </div>
+
+              {/* Search Button */}
+              <div className="">
+                <button className=" text-white flex items-center justify-center">
+                  <Image
+                    src="/icons/search.svg"
+                    alt="Search"
+                    width={60}
+                    height={60}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
         </section>
         <section className="bg-center flex flex-col items-center justify-center min-h-[500px] gap-10">
           <div className="flex flex-col items-center justify-center gap-4">
@@ -70,6 +302,74 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </section>
+
+        <section className="min-h-[500px] w-full overflow-hidden">
+          {/* Header Section */}
+          <div className="bg-[url('/images/banner-background.png')] bg-center bg-cover flex-col items-center mb-8 px-40 py-20">
+            <div className="flex items-center mb-8">
+              <h1 className="text-3xl font-bold text-gray-800">
+                Standouts of the Day
+              </h1>
+            </div>
+
+            {/* Tabs */}
+            <div className="flex w-full justify-between">
+              <div className="max-w-4xl mb-4 border-b border-gray-300">
+                <button
+                  className={`px-6 py-2 font-medium ${
+                    activeTab === "rent"
+                      ? "text-red-500 border-b-2 border-red-500"
+                      : "text-gray-600"
+                  }`}
+                  onClick={() => setActiveTab("rent")}
+                >
+                  For Rent
+                </button>
+                <button
+                  className={`px-6 py-2 font-medium ${
+                    activeTab === "sale"
+                      ? "text-red-500 border-b-2 border-red-500"
+                      : "text-gray-600"
+                  }`}
+                  onClick={() => setActiveTab("sale")}
+                >
+                  For Sale
+                </button>
+              </div>
+              {/* View All Button */}
+              <div className="flex mb-4">
+                <button className="border border-red-500 text-red-500 px-4 py-2 rounded-md">
+                  View All Standouts
+                </button>
+              </div>
+            </div>
+
+            {/* Property Grid */}
+            <Carousel2D slideWidth={370} gap={24}>
+              {properties.map((property) => (
+                <Properties
+                  key={property.id}
+                  property={property}
+                  badgeType={property.type}
+                />
+              ))}
+            </Carousel2D>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+          </div>
+        </section>
+        <section className="min-h-[500px] w-full overflow-hidden">
+          <Neighborhoods
+            listingType={activeTab}
+            neighborhoods={sampleNeighborhoods}
+          />
+          ;
+        </section>
+        <section className="min-h-[500px] w-full overflow-hidden">
+          <Testimonials testimonials={testimonials} />
+        </section>
+        <section className="min-h-[500px] w-full overflow-hidden">
+          <PropertyOwners />
         </section>
 
         {isOpen("login-dialog") && (
