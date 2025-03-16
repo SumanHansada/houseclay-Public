@@ -19,6 +19,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+
       - name: Build the project using Maven
         run: |
           cd hc-backend/backend
