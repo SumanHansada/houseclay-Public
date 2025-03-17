@@ -15,7 +15,7 @@ export interface HeaderProps {
   onLogout?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ user, onLogin }) => (
+const Header: React.FC<HeaderProps> = ({ user, onLogin }) => (
   <header className="flex justify-between w-full items-center px-24 py-2 shadow-sm gap-32">
     {/* Left Section - Logo */}
     <div className="flex items-center">
@@ -92,3 +92,5 @@ export const Header: React.FC<HeaderProps> = ({ user, onLogin }) => (
     </div>
   </header>
 );
+
+export default Header;

@@ -1,62 +1,52 @@
-name: Deploy Spring Boot to EC2
+name: Deploy Spring Boot to AWS EC2
 
 on:
   push:
     branches:
-      - main  # Change this if your default branch is different
+      - main  # Change to your default branch if needed
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout the repository
+        uses: actions/checkout@v3
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: '17'
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
-    - name: Build Spring Boot App
-      run: |
-        mvn clean package -DskipTests
 
-    - name: Deploy to EC2
-      uses: appleboy/ssh-action@v0.1.6
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-        script: |
-          cd /home/deployer
-
-          # Stop existing application if running
-          pkill -f "java -jar" || true
-        
-          # Ensure the repository exists
-          if [ ! -d "app" ]; then
-            git clone https://github.com/yourusername/your-repo.git app
-          else
-            cd app && git pull && cd ..
-          fi
-        
-          # Navigate to the correct directory
-          cd app
-        
-          # Ensure pom.xml exists before building
-          if [ ! -f "pom.xml" ]; then
-            echo "Error: pom.xml not found in $(pwd)"
-            exit 1
-          fi
-        
-          # Build the application
+      - name: Build the project using Maven
+        run: |
+          cd hc-backend/backend
           mvn clean package -DskipTests
-        
-          # Run the application
-          nohup java -jar target/*.jar > output.log 2>&1 &
-        
-          # Confirm process is running
-          sleep 5
-          ps aux | grep java
+
+      - name: Debug SSH Key
+        run: |
+          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
+          ssh-keygen -y -f private_key.pem
+
+      - name: Test SSH Connection
+        run: |
+          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -v -o StrictHostKeyChecking=no -i private_key.pem ec2-user@${{ secrets.EC2_HOST }} "echo 'SSH Connection Successful'"
+
+
+      - name: Transfer JAR file to EC2
+        run: |
+          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
+          scp -o StrictHostKeyChecking=no -i private_key.pem hc-backend/backend/target/*.jar ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/app.jar
+
+      - name: Restart Application on EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
+          sudo kill -9 $(lsof -t -i:8080) || true
+          nohup java -jar /home/ec2-user/app.jar > /home/ec2-user/app.log 2>&1 &
+          EOF
