@@ -58,6 +58,22 @@ public class UserController {
         }
     }
 
+    @GetMapping("/check-user")
+    public ResponseEntity<Map<String, Object>> checkUserExists(@RequestParam String phoneNo) {
+
+        if (userService.doesUserExist(phoneNo)) {
+            return ResponseEntity.ok(Map.of(
+                    "message", "User exists",
+                    "exists", true
+            ));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
+                    "error", "User not found",
+                    "exists", false
+            ));
+        }
+    }
+
     @RequestMapping (method = RequestMethod.POST, value = "/logout",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity logout(@RequestHeader("Authorization") String authToken,
                                  @RequestAttribute("authenticatedUser") User user) {

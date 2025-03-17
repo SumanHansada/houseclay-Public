@@ -62,4 +62,9 @@ public class UserService {
         return true;
 
     }
+
+    public boolean doesUserExist(String phoneNo) {
+        Optional<User> userOpt = userRepository.findById(phoneNo);
+        return userOpt.isPresent();
+    }
 }
