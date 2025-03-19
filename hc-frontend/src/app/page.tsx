@@ -5,9 +5,7 @@ import Dropdown from "@/components/Dropdown";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Login from "@/components/Login";
-import Neighborhoods, {
-  Neighborhood,
-} from "@/components/Neighborhoods";
+import Neighborhoods, { Neighborhood } from "@/components/Neighborhoods";
 import Properties, { Property } from "@/components/Properties";
 import PropertyOwners from "@/components/PropertyOwners";
 import Testimonials, { Testimonial } from "@/components/Testimonials";
@@ -153,10 +151,10 @@ export default function Home() {
     <>
       <Header onLogin={onLogin} />
       <main className="mx-auto my-0">
-        <section className="relative h-[600px] w-full overflow-hidden">
+        <section className="relative xl:h-[600px] lg:h-[500px] h-[500px] w-full overflow-hidden">
           <div className="absolute inset-0 bg-[url('/images/banner-background.png')] bg-center bg-cover"></div>
-          <div className="absolute inset-0 bg-[url('/images/banner-people.png')] bg-right bg-no-repeat right-40"></div>
-          <div className="absolute h-full flex flex-col justify-center pl-40 w-2/3">
+          <div className="absolute inset-0 bg-[url('/images/banner-people.png')] bg-right bg-no-repeat xl:right-40 lg:right-14 right-14"></div>
+          <div className="absolute h-full flex flex-col justify-center xl:pl-40 lg:pl-14 pl-14 xl:w-2/3 lg:w-4/5 w-4/5">
             {/* Headings */}
             <div className="max-w-md mb-8">
               <h1 className="text-6xl font-bold text-gray-900 mb-2">
@@ -253,52 +251,47 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <section className="bg-center flex flex-col items-center justify-center min-h-[500px] gap-10">
-          <div className="flex flex-col items-center justify-center gap-4">
-            <h1 className="text-4xl font-bold text-center">Why Choose Us?</h1>
-            <div className="text-center text-gray-600 font-thin">
-              Discover the advantages of using our platform to find your perfect
-              property.
+        <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
+          <div className="flex flex-col items-center justify-between gap-10 xl:px-40 lg:px-14 px-14 py-20">
+            <div className="flex flex-col items-center justify-center gap-4">
+              <h1 className="text-4xl font-bold text-center">Why Choose Us?</h1>
+              <div className="text-center text-gray-600 font-thin">
+                Discover the advantages of using our platform to find your
+                perfect property.
+              </div>
             </div>
-          </div>
-          <div className="flex flex-row gap-6">
-            <div className="flex flex-col bg-white rounded-3xl shadow-lg p-6 justify-center items-center gap-6 w-72">
-              <div>
+            <div className="flex gap-6 justify-between">
+              <div className="flex flex-1 flex-col bg-white rounded-3xl shadow-lg px-12 py-6 justify-between items-center gap-6">
                 <Image
                   src="/icons/direct-owner-connections.svg"
                   alt="Direct Owner Connections"
                   width={150}
                   height={150}
+                  layout="responsive"
                 />
+                <h1 className="font-bold text-center">
+                  Direct Owner Connections
+                </h1>
               </div>
-              <div>
-                <h1 className="font-bold">Direct Owner Connections</h1>
-              </div>
-            </div>
-            <div className="flex flex-col bg-white rounded-3xl shadow-lg p-6 justify-center items-center gap-6  w-72">
-              <div>
+              <div className="flex flex-1 flex-col bg-white rounded-3xl shadow-lg px-12 py-6  justify-between items-center gap-6">
                 <Image
                   src="/icons/use-connects.svg"
                   alt="Use Connects"
                   width={150}
                   height={150}
+                  layout="responsive"
                 />
+                <h1 className="font-bold text-center">Use Connects</h1>
               </div>
-              <div>
-                <h1 className="font-bold">Use Connects</h1>
-              </div>
-            </div>
-            <div className="flex flex-col bg-white rounded-3xl shadow-lg p-6 justify-center items-center gap-6  w-72">
-              <div>
+              <div className="flex flex-1 flex-col bg-white rounded-3xl shadow-lg px-12 py-6  justify-between items-center gap-6">
                 <Image
                   src="/icons/pay-as-you-go.svg"
                   alt="Pay as you go"
                   width={150}
                   height={150}
+                  layout="responsive"
                 />
-              </div>
-              <div>
-                <h1 className="font-bold">Pay as you go</h1>
+                <h1 className="font-bold text-center">Pay as you go</h1>
               </div>
             </div>
           </div>
@@ -306,7 +299,7 @@ export default function Home() {
 
         <section className="min-h-[500px] w-full overflow-hidden">
           {/* Header Section */}
-          <div className="bg-[url('/images/banner-background.png')] bg-center bg-cover flex-col items-center mb-8 px-40 py-20">
+          <div className="bg-[url('/images/banner-background.png')] bg-center bg-cover flex-col items-center py-20 xl:px-40 lg:px-14 px-14">
             <div className="flex items-center mb-8">
               <h1 className="text-3xl font-bold text-gray-800">
                 Standouts of the Day

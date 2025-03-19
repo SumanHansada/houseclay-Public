@@ -3,7 +3,7 @@ import React from "react";
 
 const PropertyOwners = () => {
   return (
-    <div className="mx-auto px-40 py-20 flex flex-col md:flex-row items-center justify-between bg-white">
+    <div className="mx-auto xl:px-40 lg:px-14 px-14 py-20 flex flex-col md:flex-row items-center justify-between bg-white">
       {/* Left Side - Text Content */}
       <div className="flex-col flex-1 text-left items-center">
         <span className="bg-red-50 text-red-500 px-4 py-2 rounded-full text-sm ">

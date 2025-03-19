@@ -49,7 +49,7 @@ const Neighborhoods: React.FC<NeighborhoodsProps> = ({
   listingType,
 }) => {
   return (
-    <div className="mx-auto px-40 py-20 bg-gray-100">
+    <div className="mx-auto xl:px-40 lg:px-14 px-14 py-20 bg-gray-100">
       <h2 className="mb-6 text-4xl font-bold text-gray-800">
         Popular Neighborhoods
       </h2>
@@ -71,7 +71,7 @@ const Neighborhoods: React.FC<NeighborhoodsProps> = ({
       </div>
 
       {/* Grid layout for larger screens */}
-      <div className="hidden grid-cols-1 gap-6 sm:grid md:grid-cols-2 lg:grid-cols-4">
+      <div className="hidden grid-cols-1 gap-6 sm:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {neighborhoods.map((neighborhood, index) => (
           <NeighborhoodCard
             key={index}

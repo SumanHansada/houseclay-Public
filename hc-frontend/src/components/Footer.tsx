@@ -3,10 +3,10 @@ import Image from "next/image";
 
 const Footer = () => {
   return (
-    <div className="bg-gray-100 w-full px-24">
+    <div className="bg-gray-100 w-full xl:px-24 lg:px-12 px-12">
       {/* Main footer content */}
       <div className="border-b border-gray-300 py-24">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1  xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 gap-8">
           {/* Quick Links */}
           <div>
             <h3 className="text-gray-400 font-medium text-lg mb-5">

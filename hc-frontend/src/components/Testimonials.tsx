@@ -72,7 +72,7 @@ const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
   };
 
   return (
-    <div className="mx-auto px-40 py-20">
+    <div className="mx-auto xl:px-40 lg:px-14 px-14 py-20">
       {/* Top user avatars row */}
       <div className="mb-8 flex justify-center">
         <Image

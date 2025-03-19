@@ -16,7 +16,7 @@ export interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ user, onLogin }) => (
-  <header className="flex justify-between w-full items-center px-24 py-2 shadow-sm gap-32">
+  <header className="flex justify-between w-full items-center py-2 shadow-sm xl:gap-32 lg:gap-16 gap-16 xl:px-24 md:px-12 px-12">
     {/* Left Section - Logo */}
     <div className="flex items-center">
       <Link href="/">
