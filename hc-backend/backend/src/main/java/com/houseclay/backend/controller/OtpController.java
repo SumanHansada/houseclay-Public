@@ -16,8 +16,8 @@ public class OtpController {
     private OtpService otpService;
 
     @PostMapping("/generate-otp")
-    public ResponseEntity<Map<String, Object>> generateOtp(@RequestParam String phoneNo, HttpSession session) {
-        otpService.generateOtp(phoneNo, session);
+    public ResponseEntity<Map<String, Object>> generateOtp(@RequestParam String phoneNo) {
+        otpService.generateOtp(phoneNo);
         return ResponseEntity.ok(Map.of(
                 "message", "OTP generated successfully"
         ));

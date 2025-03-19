@@ -27,16 +27,16 @@ public class UserService {
     @Autowired
     private OtpService otpService;
 
-    public User createUser(UserPayload userPayload, HttpSession session) throws Exception {
-        if(!otpService.validateOtp(userPayload.getPhoneNo(), userPayload.getOtpCode(), session)) {
+    public User createUser(UserPayload userPayload) throws Exception {
+        if(!otpService.validateOtp(userPayload.getPhoneNo(), userPayload.getOtpCode())) {
             throw new APIException("Invalid OTP Code", HttpStatus.BAD_REQUEST);
         }
         User user = new User(userPayload.getPhoneNo(), userPayload.getName(), userPayload.getEmailID());
         return userRepository.save(user);
     }
 
-    public String loginUser(LoginPayload loginPayload, HttpSession session) throws Exception {
-        if(!otpService.validateOtp(loginPayload.getPhoneNo(), loginPayload.getOtpCode(), session)) {
+    public String loginUser(LoginPayload loginPayload) throws Exception {
+        if(!otpService.validateOtp(loginPayload.getPhoneNo(), loginPayload.getOtpCode())) {
             throw new APIException("Invalid OTP Code", HttpStatus.BAD_REQUEST);
         }
         Optional<User> optionalUser = userRepository.findById(loginPayload.getPhoneNo());

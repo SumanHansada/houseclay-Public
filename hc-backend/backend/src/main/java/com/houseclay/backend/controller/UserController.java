@@ -35,9 +35,9 @@ public class UserController {
 
 
     @RequestMapping (method = RequestMethod.POST, value = "/register",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createUser(@RequestBody UserPayload payload, HttpSession session) {
+    public ResponseEntity createUser(@RequestBody UserPayload payload) {
         try {
-            User user = userService.createUser(payload, session);
+            User user = userService.createUser(payload);
             return ResponseEntity.ok().body(user);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
@@ -47,9 +47,9 @@ public class UserController {
     }
 
     @RequestMapping (method = RequestMethod.POST, value = "/login",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity login(@RequestBody LoginPayload payload, HttpSession session) {
+    public ResponseEntity login(@RequestBody LoginPayload payload) {
         try {
-            String token = userService.loginUser(payload, session);
+            String token = userService.loginUser(payload);
             return ResponseEntity.ok().body(token);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());

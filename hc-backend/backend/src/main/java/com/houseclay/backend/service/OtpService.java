@@ -11,30 +11,32 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class OtpService {
 
-    private static final int OTP_EXPIRY_MINUTES = 1;
+    private static final int OTP_EXPIRY_MINUTES = 10;
 
-    public void generateOtp(String phoneNo, HttpSession session) {
+    private static final Map<String, OtpData> otpMap = new HashMap<>();
+
+    public void generateOtp(String phoneNo) {
         String otp = "0000"; // Replace this with MSG91 API call.
         long expiryTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(OTP_EXPIRY_MINUTES);
 
         OtpData otpData = new OtpData(otp, expiryTime);
 
-        session.setAttribute("OTP_" + phoneNo, otpData); // Store OTP in session
+        otpMap.put("OTP_" + phoneNo, otpData); // Store OTP in session
     }
 
-    public boolean validateOtp(String phoneNo, String otp, HttpSession session) {
-        OtpData storedOtpData = (OtpData) session.getAttribute("OTP_" + phoneNo);
+    public boolean validateOtp(String phoneNo, String otp) {
+        OtpData storedOtpData = (OtpData) otpMap.get("OTP_" + phoneNo);
 
         if (storedOtpData == null || !storedOtpData.getOtp().equals(otp)) {
             return false;
         }
 
         if (System.currentTimeMillis() > storedOtpData.getExpiryTime()) {
-            session.removeAttribute("OTP_" + phoneNo); // Expire OTP
+            otpMap.remove("OTP_" + phoneNo); // Expire OTP
             return false;
         }
 
-        session.removeAttribute("OTP_" + phoneNo); // Remove OTP after successful validation
+        otpMap.remove("OTP_" + phoneNo); // Remove OTP after successful validation
         return true;
     }
 
