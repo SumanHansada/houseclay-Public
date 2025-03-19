@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.List;
+
 @Configuration
 public class SecurityConfig {
 
@@ -31,8 +33,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(cors -> cors.disable()) // ✅ Allow CORS
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/generate-otp").permitAll()
                         .requestMatchers("/api/admin/login", "/api/admin/register").permitAll()
                         .requestMatchers("/api/user/login", "/api/user/register",  "/api/user/check-user").permitAll()
                         .requestMatchers("/api/admin/**").authenticated()
@@ -44,4 +48,5 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 }
