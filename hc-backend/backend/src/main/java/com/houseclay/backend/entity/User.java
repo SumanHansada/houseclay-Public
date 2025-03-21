@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -27,6 +28,7 @@ public class User {
         this.name = name;
         this.emailID = emailID;
         this.createdAt = new Timestamp(System.currentTimeMillis());
+        this.userLogins = new LinkedList<>();
     }
 
     @ManyToOne

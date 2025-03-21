@@ -2,6 +2,7 @@ package com.houseclay.backend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.houseclay.backend.security.TokenAuthenticationFilter;
@@ -36,6 +37,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.disable()) // ✅ Allow CORS
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // ✅ Allow all OPTIONS requests
                         .requestMatchers("/api/auth/generate-otp").permitAll()
                         .requestMatchers("/api/admin/login", "/api/admin/register").permitAll()
                         .requestMatchers("/api/user/login", "/api/user/register",  "/api/user/check-user").permitAll()

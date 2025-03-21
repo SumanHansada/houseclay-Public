@@ -9,7 +9,6 @@ import com.houseclay.backend.payload.UserPayload;
 import com.houseclay.backend.service.ShortlistPropertyService;
 import com.houseclay.backend.service.UserService;
 import com.houseclay.backend.service.ViewPropertyService;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,8 +36,8 @@ public class UserController {
     @RequestMapping (method = RequestMethod.POST, value = "/register",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createUser(@RequestBody UserPayload payload) {
         try {
-            User user = userService.createUser(payload);
-            return ResponseEntity.ok().body(user);
+            String token = userService.createUser(payload);
+            return ResponseEntity.ok().body(token);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {

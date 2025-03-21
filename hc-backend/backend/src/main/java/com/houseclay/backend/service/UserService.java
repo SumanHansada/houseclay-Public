@@ -27,12 +27,18 @@ public class UserService {
     @Autowired
     private OtpService otpService;
 
-    public User createUser(UserPayload userPayload) throws Exception {
+    public String createUser(UserPayload userPayload) throws Exception {
         if(!otpService.validateOtp(userPayload.getPhoneNo(), userPayload.getOtpCode())) {
             throw new APIException("Invalid OTP Code", HttpStatus.BAD_REQUEST);
         }
         User user = new User(userPayload.getPhoneNo(), userPayload.getName(), userPayload.getEmailID());
-        return userRepository.save(user);
+        String token = UUID.randomUUID().toString();
+        UserLogin userLogin = new UserLogin(token, user);
+        List<UserLogin> userLogins = user.getUserLogins();
+        userLogins.add(userLogin);
+        user.setUserLogins(userLogins);
+        userRepository.save(user);
+        return token;
     }
 
     public String loginUser(LoginPayload loginPayload) throws Exception {
@@ -42,6 +48,9 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findById(loginPayload.getPhoneNo());
         if(optionalUser.isEmpty()) {
             throw new APIException("Invalid user login", HttpStatus.BAD_REQUEST);
+        }
+        if(optionalUser.get().isBlacklisted()) {
+            throw new APIException("User is blacklisted", HttpStatus.FORBIDDEN);
         }
         String token = UUID.randomUUID().toString();
         User user = optionalUser.get();
