@@ -42,6 +42,7 @@ const eslintConfig = [
       'react/react-in-jsx-scope': 'off', // Disable the error for missing React in scope
       'react/prop-types': 'off' // Disable prop-types rule since TypeScript handles it
     },
+    ignores: ['.next/', './storybook/', 'node_modules/', 'storybook-static/', 'dist/', 'build/', 'out/'],
     settings: {
       react: {
         version: "detect"

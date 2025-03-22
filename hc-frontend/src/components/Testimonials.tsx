@@ -42,11 +42,7 @@ const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({
       <div className="mt-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="h-12 w-12 overflow-hidden rounded-full">
-            <img
-              src={testimonial.avatar}
-              alt={testimonial.name}
-              className="h-full w-full object-cover"
-            />
+            <Image src={testimonial.avatar} alt={testimonial.name} className="h-full w-full object-cover" layout="fill"/>
           </div>
           <span className="font-medium">{testimonial.name}</span>
         </div>
