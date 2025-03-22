@@ -189,7 +189,7 @@ const Login = () => {
     }
   };
 
-  const isVerifyEnabled = otpCode.every((digit) => digit !== "");
+  const isVerifyEnabled = otpCode.every((digit) => digit && digit !== "");
 
   return (
     <div className="flex items-center justify-center h-full bg-white rounded-lg">
@@ -396,11 +396,11 @@ const Login = () => {
               {/* Verify Button */}
               <button
                 type="submit"
-                className={`w-full bg-red-500 hover:bg-red-600 text-white py-3 px-4 rounded-lg ${isVerifyEnabled ? "bg-red-500 hover:bg-red-600" : "bg-red-400"}`}
+                className={`w-full text-white py-3 px-4 rounded-lg ${isVerifyEnabled ? "bg-red-500 hover:bg-red-600" : "bg-red-300"}`}
                 onClick={handleVerifyAndContinue}
                 disabled={!isVerifyEnabled}
               >
-                Verify and Continue
+                {userExists ?  "Verify" : "Verify and Continue"}
               </button>
               {/* Resend option */}
               <div className="text-center">
