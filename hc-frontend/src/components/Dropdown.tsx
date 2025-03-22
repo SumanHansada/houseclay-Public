@@ -47,6 +47,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   );
 
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownListRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const lastItemRef = useRef<HTMLDivElement | null>(null);
   const optionRefs = useRef<React.RefObject<HTMLDivElement>[]>([]);
@@ -71,8 +72,8 @@ const Dropdown: React.FC<DropdownProps> = ({
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
+        dropdownListRef.current &&
+        !dropdownListRef.current.contains(event.target as Node)
       ) {
         setIsOpen(false);
       }
@@ -250,6 +251,13 @@ const Dropdown: React.FC<DropdownProps> = ({
                 top: dropdownPosition.bottom + window.scrollY,
                 left: dropdownPosition.left + window.scrollX,
               }}
+              ref={dropdownListRef}
+              role="listbox"
+              aria-activedescendant={
+                focusedIndex >= 0
+                  ? `option-${filteredOptions[focusedIndex]?.id}`
+                  : undefined
+              }
               onKeyDown={handleKeyDown}
             >
               {/* Search input */}
@@ -315,7 +323,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                               el as HTMLDivElement;
                           }
                         }}
-                        className={`px-4 py-2 text-sm cursor-pointer hover:bg-gray-100 ${
+                        className={`px-4 py-2 border-l-4 text-sm cursor-pointer hover:bg-gray-100 hover:border-red-500 ${
                           selected.id === option.id
                             ? "bg-red-50 border-l-4 border-red-500"
                             : ""
@@ -324,8 +332,8 @@ const Dropdown: React.FC<DropdownProps> = ({
                             ? "bg-blue-100 outline-none"
                             : ""
                         }`}
-                        onClick={(e) => {
-                          e.stopPropagation();
+                        onClick={(event) => {
+                          event.stopPropagation();
                           handleSelect(option);
                         }}
                         role="option"

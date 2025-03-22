@@ -31,16 +31,10 @@ const Login = () => {
   const [phoneNo, setPhoneNo] = useState("");
   const [emailID, setEmailID] = useState("");
   const [name, setName] = useState("");
-  const [login] =
-    useLoginMutation();
-  const [
-    triggerCheckUser,
-  ] = useLazyCheckUserQuery();
-  const [register] =
-    useRegisterMutation();
-  const [
-    generateOtp,
-  ] = useGenerateOtpMutation();
+  const [login] = useLoginMutation();
+  const [triggerCheckUser] = useLazyCheckUserQuery();
+  const [register] = useRegisterMutation();
+  const [generateOtp] = useGenerateOtpMutation();
   const dispatch = useDispatch();
   const [userExists, setUserExists] = useState(false);
 
@@ -400,7 +394,7 @@ const Login = () => {
                 onClick={handleVerifyAndContinue}
                 disabled={!isVerifyEnabled}
               >
-                {userExists ?  "Verify" : "Verify and Continue"}
+                {userExists ? "Verify" : "Verify and Continue"}
               </button>
               {/* Resend option */}
               <div className="text-center">

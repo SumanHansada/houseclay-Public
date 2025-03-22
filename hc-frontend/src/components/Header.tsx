@@ -9,6 +9,7 @@ import { useLogoutMutation } from "@/store/apiSlice";
 import { clearToken } from "@/store/authSlice";
 
 import { RootState } from "../store/store";
+import ActionMenu from "./ActionMenu";
 
 type User = {
   name: string;
@@ -20,7 +21,7 @@ export interface HeaderProps {
   onLogout?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ user, onLogin }) => {
+const Header: React.FC<HeaderProps> = ({ onLogin }) => {
   const token = useSelector((state: RootState) => state.auth.token);
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
@@ -87,25 +88,43 @@ const Header: React.FC<HeaderProps> = ({ user, onLogin }) => {
           </button>
 
           {/* Login Button */}
-          {user ? (
-            <Link
-              href="/profile"
-              className="flex flex-row gap-2 w-24 px-4 py-2 border rounded-xl  border-gray-300 text-gray-800 hover:bg-gray-100 text-center"
-            >
-              <Image src="/icons/user.svg" alt="User" height={25} width={25} />
-              <Image
-                src="/icons/arrow-down.svg"
-                alt="User"
-                height={25}
-                width={25}
-              />
-            </Link>
+          {token ? (
+            <div className="relative">
+              <ActionMenu
+                options={[
+                  { id: 1, label: "Manage Account" },
+                  { id: 2, label: "Logout" },
+                ]}
+                onSelect={(option) => {
+                  if (option.id === 1) {
+                    console.log("Manage Account");
+                  } else {
+                    onLogout();
+                  }
+                }}
+              >
+                <button className="flex flex-row gap-2 w-24 px-4 py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100 text-center">
+                  <Image
+                    src="/icons/user.svg"
+                    alt="User"
+                    height={25}
+                    width={25}
+                  />
+                  <Image
+                    src="/icons/arrow-down.svg"
+                    alt="Arrow Down"
+                    height={25}
+                    width={25}
+                  />
+                </button>
+              </ActionMenu>
+            </div>
           ) : (
             <button
               className="w-24 px-4 py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100 text-center"
-              onClick={token ? onLogout : onLogin}
+              onClick={onLogin}
             >
-              {token ? "Logout" : "Login"}
+              Login
             </button>
           )}
         </div>
