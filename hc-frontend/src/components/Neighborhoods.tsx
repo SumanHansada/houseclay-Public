@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 // Define types for our component props
 export interface Neighborhood {

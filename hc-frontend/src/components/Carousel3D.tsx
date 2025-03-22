@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useRef, ReactNode, FC } from "react";
 import { animate } from "motion";
+import React, { FC,ReactNode, useEffect, useRef, useState } from "react";
 
 // Define props interface with comprehensive type annotations
 interface Carousel3DProps {

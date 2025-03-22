@@ -1,7 +1,7 @@
 // pages/index.js
-import { useState, useEffect } from "react";
-import Image from "next/image";
 import { Crown, Heart, MapPin, Star } from "lucide-react";
+import Image from "next/image";
+import { useEffect,useState } from "react";
 
 type BadgeType = "Featured" | "Exclusive" | null;
 
@@ -38,11 +38,11 @@ const Properties: React.FC<PropertiesProps> = ({
     setCurrentImageIndex((prev) => (prev + 1) % property.images.length);
   };
 
-  const prevImage = () => {
-    setCurrentImageIndex(
-      (prev) => (prev - 1 + property.images.length) % property.images.length,
-    );
-  };
+  // const prevImage = () => {
+  //   setCurrentImageIndex(
+  //     (prev) => (prev - 1 + property.images.length) % property.images.length,
+  //   );
+  // };
 
   useEffect(() => {
     if (autoplay) {
@@ -56,8 +56,8 @@ const Properties: React.FC<PropertiesProps> = ({
       {/* Image Carousel */}
       <div className="relative h-72">
         <Image
-          src={property.images[currentImageIndex]}
-          alt={`Property ${property.id}`}
+          src={property?.images[currentImageIndex]}
+          alt={`Property ${property?.id}`}
           layout="fill"
           objectFit="cover"
           className="rounded-lg"

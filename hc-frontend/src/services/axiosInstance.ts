@@ -1,6 +1,7 @@
 // src/services/axiosInstance.ts
-import { store } from "@/store/store";
 import axios from "axios";
+
+import { store } from "@/store/store";
 
 const baseUrl = process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL;
 

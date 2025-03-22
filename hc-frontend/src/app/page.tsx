@@ -1,6 +1,9 @@
 "use client";
 import Image from "next/image";
+import { useState } from "react";
+
 import Carousel2D from "@/components/Carousel2D";
+import { Dialog, DialogContent } from "@/components/Dialog";
 import Dropdown from "@/components/Dropdown";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
@@ -9,9 +12,7 @@ import Neighborhoods, { Neighborhood } from "@/components/Neighborhoods";
 import Properties, { Property } from "@/components/Properties";
 import PropertyOwners from "@/components/PropertyOwners";
 import Testimonials, { Testimonial } from "@/components/Testimonials";
-import { useState } from "react";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { Dialog, DialogContent } from "@/components/Dialog";
 
 export default function Home() {
   const { openDialog, isOpen } = useDialog();

@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { FocusTrap } from "focus-trap-react";
+import React, { useEffect,useState } from "react";
+
 import {
   DeviceContextProps,
   useDeviceContext,
 } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { FocusTrap } from "focus-trap-react";
 
 interface DialogProps {
   id: string;

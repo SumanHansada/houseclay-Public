@@ -1,43 +1,50 @@
 "use client";
 
-import { PhoneInput } from "react-international-phone";
-import Image from "next/image";
-import { useDialog } from "@/providers/DialogContextProvider";
 import "react-international-phone/style.css";
+
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { PhoneInput } from "react-international-phone";
 import { useDispatch } from "react-redux";
+
+import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useGenerateOtpMutation,
   useLazyCheckUserQuery,
   useLoginMutation,
   useRegisterMutation,
 } from "@/store/apiSlice";
-import { setUser, User } from "@/store/userSlice";
+import { setToken } from "@/store/authSlice";
+
+enum AuthStep {
+  PHONE = "phone",
+  OTP = "otp",
+  CREATE_USER = "createUser",
+  EMPTY = "",
+}
+
+const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const Login = () => {
   const { closeDialog } = useDialog();
-  const [loginStatus, setLoginStatus] = useState({
-    enterPhone: false,
-    enterOtp: false,
-    createAccount: false,
-  });
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
-
+  const [authStep, setAuthStep] = useState<AuthStep>(AuthStep.EMPTY);
   const [phoneNo, setPhoneNo] = useState("");
   const [emailID, setEmailID] = useState("");
   const [name, setName] = useState("");
-  const [otpCode, setOtpCode] = useState("");
-  const [login] = useLoginMutation();
-  const [triggerCheckUser] = useLazyCheckUserQuery();
-  const [register] = useRegisterMutation();
-  const [generateOtp] = useGenerateOtpMutation();
+  const [login] =
+    useLoginMutation();
+  const [
+    triggerCheckUser,
+  ] = useLazyCheckUserQuery();
+  const [register] =
+    useRegisterMutation();
+  const [
+    generateOtp,
+  ] = useGenerateOtpMutation();
   const dispatch = useDispatch();
   const [userExists, setUserExists] = useState(false);
-  const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-  const [otp, setOtp] = useState<string[]>(["", "", "", ""]);
+  const [otpCode, setOtpCode] = useState<string[]>(["", "", "", ""]);
   const inputRefs = [
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
@@ -47,21 +54,17 @@ const Login = () => {
 
   const handleCheckUser = async () => {
     try {
-      const response = await triggerCheckUser({ phoneNo }).unwrap();
-      console.log("User data:", response);
-      setUserExists(true);
-      setLoginStatus({
-        ...loginStatus,
-        enterPhone: false,
-        enterOtp: true,
-      })
+      const checkUserResponse = await triggerCheckUser({ phoneNo }).unwrap();
+      console.log("Check User Response:", checkUserResponse);
+      setUserExists(checkUserResponse.exists);
+      const otpResponse = await generateOtp({ phoneNo });
+      console.log("OTP Response:", otpResponse);
+      if (otpResponse.data) {
+        setAuthStep(AuthStep.OTP);
+      }
     } catch (err) {
-      setLoginStatus({
-        ...loginStatus,
-        enterPhone: false,
-        createAccount: true,
-      });
       console.error("Login Error:", err);
+      setAuthStep(AuthStep.CREATE_USER);
     }
   };
 
@@ -70,76 +73,57 @@ const Login = () => {
       if (!phoneNo) return;
       if (!emailIDRegex.test(emailID)) return;
       if (!name) return;
-
       const otpResponse = await generateOtp({ phoneNo });
-      console.log(otpResponse);
-      if(otpResponse.data) {
-        setLoginStatus({
-          ...loginStatus,
-          createAccount: false,
-          enterOtp: true,
-        });
-      }      
-
+      console.log("OTP Response:", otpResponse);
+      if (otpResponse.data) {
+        setAuthStep(AuthStep.OTP);
+      }
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
   };
 
   const handleVerifyAndContinue = async () => {
     try {
-      
-      if(!userExists) {
+      if (!userExists) {
         if (!phoneNo) return;
         if (!emailIDRegex.test(emailID)) return;
         if (!name) return;
-      }
-      else {
+        const registerResponse = await register({
+          phoneNo,
+          name,
+          emailID,
+          otpCode: otpCode.join(""),
+        });
+        if (registerResponse.data) {
+          dispatch(setToken(registerResponse.data));
+        }
+      } else {
         if (!phoneNo) return;
-        if (!otp.join()) return;
+        if (!otpCode.join()) return;
+        const loginResponse = await login({
+          phoneNo,
+          otpCode: otpCode.join(""),
+        });
+        if (loginResponse.data) {
+          dispatch(setToken(loginResponse.data));
+        }
       }
-
-      const registerResponse = await register({
-        phoneNo,
-        name,
-        emailID,
-        otpCode: otp.join(""),
-      });
-
-      if(registerResponse.data) {
-        dispatch(setUser(registerResponse.data.user))
-      }
-
-      const loginResponse = await login({
-        phoneNo,
-        otpCode: otp.join(""),
-      });
-
-      console.log("loginResponse", loginResponse);
-
-      setLoginStatus({
-        ...loginStatus,
-        createAccount: false,
-        enterOtp: false,
-        enterPhone:false
-      });
-
+      setAuthStep(AuthStep.EMPTY);
       closeDialog("login-dialog");
-
     } catch (err) {
-
+      console.error(err);
     }
-  }
+  };
 
-  const handlePhoneChange = (data: any) => {
+  const handlePhoneChange = (data: string) => {
     // Remove '+' sign and update the phone number
-    const sanitizedPhone = data.replace(/^\+/, '');
+    const sanitizedPhone = data.replace(/^\+/, "");
     setPhoneNo(sanitizedPhone);
-  }; 
-
+  };
 
   useEffect(() => {
-    setLoginStatus({ ...loginStatus, enterPhone: true });
+    setAuthStep(AuthStep.PHONE);
     // Focus the first input when component mounts
     if (inputRefs[0].current) {
       inputRefs[0].current.focus();
@@ -151,9 +135,9 @@ const Login = () => {
     if (value && !/^\d*$/.test(value)) return;
 
     // Update the OTP array
-    const newOtp = [...otp];
+    const newOtp = [...otpCode];
     newOtp[index] = value.slice(0, 1); // Ensure only one character
-    setOtp(newOtp);
+    setOtpCode(newOtp);
 
     // Auto-focus next input if value exists
     if (value && index < 3 && inputRefs[index + 1].current) {
@@ -169,7 +153,7 @@ const Login = () => {
     // Handle backspace - move to previous input
     if (
       e.key === "Backspace" &&
-      !otp[index] &&
+      !otpCode[index] &&
       index > 0 &&
       inputRefs[index - 1].current
     ) {
@@ -187,7 +171,7 @@ const Login = () => {
     // Only proceed if it looks like a 4-digit number
     if (/^\d{4}$/.test(pastedData)) {
       const digits = pastedData.split("");
-      const newOtp = [...otp];
+      const newOtp = [...otpCode];
 
       // Fill the inputs with pasted digits
       digits.forEach((digit, index) => {
@@ -196,7 +180,7 @@ const Login = () => {
         }
       });
 
-      setOtp(newOtp);
+      setOtpCode(newOtp);
 
       // Focus the last input
       if (inputRefs[3].current) {
@@ -205,7 +189,7 @@ const Login = () => {
     }
   };
 
-  const isVerifyEnabled = otp.every((digit) => digit !== "");
+  const isVerifyEnabled = otpCode.every((digit) => digit !== "");
 
   return (
     <div className="flex items-center justify-center h-full bg-white rounded-lg">
@@ -231,7 +215,7 @@ const Login = () => {
           </button>
         </div>
 
-        {loginStatus.enterPhone && (
+        {authStep === AuthStep.PHONE && (
           <div className="w-full flex flex-col align-center justify-center gap-8">
             {/* Form header */}
             <div>
@@ -272,7 +256,7 @@ const Login = () => {
             </div>
           </div>
         )}
-        {loginStatus.createAccount && (
+        {authStep === AuthStep.CREATE_USER && (
           <div className="w-full flex flex-col align-center justify-center gap-2">
             {/* Form header */}
             <div>
@@ -332,7 +316,7 @@ const Login = () => {
             </div>
           </div>
         )}
-        {loginStatus.enterOtp && (
+        {authStep === AuthStep.OTP && (
           <div className="w-full flex flex-col align-center justify-center gap-8">
             {/* Form header */}
             <div>
@@ -352,61 +336,63 @@ const Login = () => {
                   inputMode="numeric"
                   autoComplete="one-time-code"
                   ref={inputRefs[0]}
-                  value={otp[0]}
+                  value={otpCode[0]}
                   onChange={(e) => handleChange(0, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(0, e)}
                   onPaste={handlePaste}
-                  className={`w-14 h-14 text-center text-xl font-medium border-2 ${otp[0] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
+                  className={`w-14 h-14 text-center text-xl font-medium border-2 ${otpCode[0] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
                   maxLength={1}
                 />
                 <input
                   type="text"
                   inputMode="numeric"
                   ref={inputRefs[1]}
-                  value={otp[1]}
+                  value={otpCode[1]}
                   onChange={(e) => handleChange(1, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(1, e)}
-                  className={`w-14 h-14 text-center text-xl font-medium border-2 ${otp[1] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
+                  className={`w-14 h-14 text-center text-xl font-medium border-2 ${otpCode[1] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
                   maxLength={1}
                 />
                 <input
                   type="text"
                   inputMode="numeric"
                   ref={inputRefs[2]}
-                  value={otp[2]}
+                  value={otpCode[2]}
                   onChange={(e) => handleChange(2, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(2, e)}
-                  className={`w-14 h-14 text-center text-xl font-medium border-2 ${otp[2] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
+                  className={`w-14 h-14 text-center text-xl font-medium border-2 ${otpCode[2] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
                   maxLength={1}
                 />
                 <input
                   type="text"
                   inputMode="numeric"
                   ref={inputRefs[3]}
-                  value={otp[3]}
+                  value={otpCode[3]}
                   onChange={(e) => handleChange(3, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(3, e)}
-                  className={`w-14 h-14 text-center text-xl font-medium border-2 ${otp[3] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
+                  className={`w-14 h-14 text-center text-xl font-medium border-2 ${otpCode[3] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
                   maxLength={1}
                 />
               </div>
               {/* Info box */}
-              <div className="bg-red-50 p-4 rounded-lg flex items-center gap-4">
-                <Image
-                  src="/icons/coin-egg.svg"
-                  alt="Info"
-                  width={60}
-                  height={60}
-                />
+              {!userExists && (
+                <div className="bg-red-50 p-4 rounded-lg flex items-center gap-4">
+                  <Image
+                    src="/icons/coin-egg.svg"
+                    alt="Info"
+                    width={60}
+                    height={60}
+                  />
 
-                <div>
-                  <p className="text-gray-800 font-normal">
-                    Verify your Phone Number and earn
-                    <br />
-                    <span className="font-bold">2 Connects</span> instantly!
-                  </p>
+                  <div>
+                    <p className="text-gray-800 font-normal">
+                      Verify your Phone Number and earn
+                      <br />
+                      <span className="font-bold">2 Connects</span> instantly!
+                    </p>
+                  </div>
                 </div>
-              </div>
+              )}
               {/* Verify Button */}
               <button
                 type="submit"

@@ -1,10 +1,12 @@
+import "./globals.css";
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+
 import { DeviceContextProvider } from "@/providers/DeviceContextProvider";
 import { DialogContextProvider } from "@/providers/DialogContextProvider";
-import ReduxProvider from "@/providers/ReduxProvider";
 import QueryProvider from "@/providers/QueryProvider";
+import ReduxProvider from "@/providers/ReduxProvider";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",

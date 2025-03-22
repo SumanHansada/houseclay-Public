@@ -1,15 +1,15 @@
 "use client";
 
+import { FocusTrap } from "focus-trap-react";
+import { ChevronDown, Search, X } from "lucide-react";
 import React, {
-  useState,
-  useRef,
-  useEffect,
-  KeyboardEvent,
   ChangeEvent,
+  KeyboardEvent,
+  useEffect,
+  useRef,
+  useState,
 } from "react";
 import { createPortal } from "react-dom";
-import { ChevronDown, Search, X } from "lucide-react";
-import { FocusTrap } from "focus-trap-react";
 
 interface Option {
   id: number | string;

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { Quote, ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { Quote, Star } from "lucide-react";
 import Image from "next/image";
+import React from "react";
+
 import Carousel2D from "./Carousel2D";
 
 export interface Testimonial {
@@ -56,20 +57,20 @@ const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({
 };
 
 const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
-  const [activeSlide, setActiveSlide] = useState(0);
-  const totalSlides = Math.ceil(testimonials.length / 3);
+  // const [activeSlide, setActiveSlide] = useState(0);
+  // const totalSlides = Math.ceil(testimonials.length / 3);
 
-  const goToSlide = (index: number) => {
-    setActiveSlide(index);
-  };
+  // const goToSlide = (index: number) => {
+  //   setActiveSlide(index);
+  // };
 
-  const nextSlide = () => {
-    setActiveSlide((prev) => (prev + 1) % totalSlides);
-  };
+  // const nextSlide = () => {
+  //   setActiveSlide((prev) => (prev + 1) % totalSlides);
+  // };
 
-  const prevSlide = () => {
-    setActiveSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
-  };
+  // const prevSlide = () => {
+  //   setActiveSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
+  // };
 
   return (
     <div className="mx-auto xl:px-40 lg:px-14 px-14 py-20">
