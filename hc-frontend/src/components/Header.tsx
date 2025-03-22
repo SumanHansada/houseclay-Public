@@ -3,10 +3,11 @@
 // import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useLogoutMutation } from "@/store/apiSlice";
-import { clearToken } from "@/store/authSlice";
+import { clearToken, initializeToken } from "@/store/authSlice";
 
 import { RootState } from "../store/store";
 import ActionMenu from "./ActionMenu";
@@ -25,6 +26,10 @@ const Header: React.FC<HeaderProps> = ({ onLogin }) => {
   const token = useSelector((state: RootState) => state.auth.token);
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
+
+  useEffect(() => {
+    dispatch(initializeToken());
+  }, [dispatch]);
 
   const onLogout = async () => {
     try {
