@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { DeviceContextProvider } from "@/providers/DeviceContextProvider";
 import { DialogContextProvider } from "@/providers/DialogContextProvider";
+import ReduxProvider from "@/providers/ReduxProvider";
+import QueryProvider from "@/providers/QueryProvider";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -36,9 +38,13 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
       <body className={`${inter.variable}`}>
-        <DeviceContextProvider>
-          <DialogContextProvider>{children}</DialogContextProvider>
-        </DeviceContextProvider>
+        <ReduxProvider>
+          <QueryProvider>
+            <DeviceContextProvider>
+              <DialogContextProvider>{children}</DialogContextProvider>
+            </DeviceContextProvider>
+          </QueryProvider>
+        </ReduxProvider>
       </body>
     </html>
   );

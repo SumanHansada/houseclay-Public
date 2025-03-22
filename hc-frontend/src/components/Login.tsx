@@ -5,6 +5,14 @@ import Image from "next/image";
 import { useDialog } from "@/providers/DialogContextProvider";
 import "react-international-phone/style.css";
 import { useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import {
+  useGenerateOtpMutation,
+  useLazyCheckUserQuery,
+  useLoginMutation,
+  useRegisterMutation,
+} from "@/store/apiSlice";
+import { setUser, User } from "@/store/userSlice";
 
 const Login = () => {
   const { closeDialog } = useDialog();
@@ -14,6 +22,21 @@ const Login = () => {
     createAccount: false,
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  const [phoneNo, setPhoneNo] = useState("");
+  const [emailID, setEmailID] = useState("");
+  const [name, setName] = useState("");
+  const [otpCode, setOtpCode] = useState("");
+  const [login] = useLoginMutation();
+  const [triggerCheckUser] = useLazyCheckUserQuery();
+  const [register] = useRegisterMutation();
+  const [generateOtp] = useGenerateOtpMutation();
+  const dispatch = useDispatch();
+  const [userExists, setUserExists] = useState(false);
+  const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
   const [otp, setOtp] = useState<string[]>(["", "", "", ""]);
   const inputRefs = [
     useRef<HTMLInputElement>(null),
@@ -21,6 +44,99 @@ const Login = () => {
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
   ];
+
+  const handleCheckUser = async () => {
+    try {
+      const response = await triggerCheckUser({ phoneNo }).unwrap();
+      console.log("User data:", response);
+      setUserExists(true);
+      setLoginStatus({
+        ...loginStatus,
+        enterPhone: false,
+        enterOtp: true,
+      })
+    } catch (err) {
+      setLoginStatus({
+        ...loginStatus,
+        enterPhone: false,
+        createAccount: true,
+      });
+      console.error("Login Error:", err);
+    }
+  };
+
+  const handleCreateUser = async () => {
+    try {
+      if (!phoneNo) return;
+      if (!emailIDRegex.test(emailID)) return;
+      if (!name) return;
+
+      const otpResponse = await generateOtp({ phoneNo });
+      console.log(otpResponse);
+      if(otpResponse.data) {
+        setLoginStatus({
+          ...loginStatus,
+          createAccount: false,
+          enterOtp: true,
+        });
+      }      
+
+    } catch (err) {
+      console.log(err)
+    }
+  };
+
+  const handleVerifyAndContinue = async () => {
+    try {
+      
+      if(!userExists) {
+        if (!phoneNo) return;
+        if (!emailIDRegex.test(emailID)) return;
+        if (!name) return;
+      }
+      else {
+        if (!phoneNo) return;
+        if (!otp.join()) return;
+      }
+
+      const registerResponse = await register({
+        phoneNo,
+        name,
+        emailID,
+        otpCode: otp.join(""),
+      });
+
+      if(registerResponse.data) {
+        dispatch(setUser(registerResponse.data.user))
+      }
+
+      const loginResponse = await login({
+        phoneNo,
+        otpCode: otp.join(""),
+      });
+
+      console.log("loginResponse", loginResponse);
+
+      setLoginStatus({
+        ...loginStatus,
+        createAccount: false,
+        enterOtp: false,
+        enterPhone:false
+      });
+
+      closeDialog("login-dialog");
+
+    } catch (err) {
+
+    }
+  }
+
+  const handlePhoneChange = (data: any) => {
+    // Remove '+' sign and update the phone number
+    const sanitizedPhone = data.replace(/^\+/, '');
+    setPhoneNo(sanitizedPhone);
+  }; 
+
 
   useEffect(() => {
     setLoginStatus({ ...loginStatus, enterPhone: true });
@@ -138,11 +254,9 @@ const Login = () => {
                 </label>
                 <PhoneInput
                   defaultCountry="in"
-                  value={""}
+                  value={phoneNo}
                   placeholder="Enter phone number"
-                  onChange={(e) => {
-                    console.log(e);
-                  }}
+                  onChange={(value) => handlePhoneChange(value)}
                   className="custom-phone-input w-full border border-gray-300 rounded-lg px-2 py-0.5 focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -151,7 +265,7 @@ const Login = () => {
               <button
                 type="submit"
                 className="w-full bg-red-500 hover:bg-red-600 text-white py-3 px-4 rounded-lg"
-                onClick={() => console.log("Continue clicked")}
+                onClick={handleCheckUser}
               >
                 Continue
               </button>
@@ -174,11 +288,9 @@ const Login = () => {
                 </label>
                 <PhoneInput
                   defaultCountry="in"
-                  value={""}
+                  value={phoneNo}
                   placeholder="Enter phone number"
-                  onChange={(e) => {
-                    console.log(e);
-                  }}
+                  onChange={(value) => handlePhoneChange(value)}
                   className="custom-phone-input w-full border border-gray-300 rounded-lg px-2 py-0.5 focus:ring-2 focus:ring-blue-500"
                 />
                 <label
@@ -190,10 +302,8 @@ const Login = () => {
                 <input
                   type="email"
                   placeholder="Enter email address"
-                  value={""}
-                  onChange={(e) => {
-                    console.log(e);
-                  }}
+                  value={emailID}
+                  onChange={(e) => setEmailID(e.target.value)}
                   className="px-2 py-2 w-full border border-gray-300 rounded-lg"
                 />
                 <label
@@ -206,10 +316,8 @@ const Login = () => {
                   type="text"
                   placeholder="Enter name"
                   required
-                  value={""}
-                  onChange={(e) => {
-                    console.log(e);
-                  }}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="px-2 py-2 w-full border border-gray-300 rounded-lg mb-2"
                 />
               </div>
@@ -217,7 +325,7 @@ const Login = () => {
               <button
                 type="submit"
                 className="w-full bg-red-500 hover:bg-red-600 text-white py-3 px-4 rounded-lg"
-                onClick={() => console.log("Continue clicked")}
+                onClick={handleCreateUser}
               >
                 Continue
               </button>
@@ -303,7 +411,7 @@ const Login = () => {
               <button
                 type="submit"
                 className={`w-full bg-red-500 hover:bg-red-600 text-white py-3 px-4 rounded-lg ${isVerifyEnabled ? "bg-red-500 hover:bg-red-600" : "bg-red-400"}`}
-                onClick={() => console.log("Verify and Continue clicked")}
+                onClick={handleVerifyAndContinue}
                 disabled={!isVerifyEnabled}
               >
                 Verify and Continue

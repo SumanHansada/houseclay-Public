@@ -1,6 +1,10 @@
+import { FlatCompat } from "@eslint/eslintrc";
+import reactPlugin from "eslint-plugin-react";
+import reactHooksPlugin from "eslint-plugin-react-hooks";
+import simpleImportSortPlugin from "eslint-plugin-simple-import-sort";
+import unusedImportsPlugin from "eslint-plugin-unused-imports";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -10,7 +14,40 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript", "prettier"),
+  ...compat.extends(
+    "next/core-web-vitals", 
+    "next/typescript", 
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "prettier"
+  ),
+  {
+    plugins: {
+      react: reactPlugin,
+      "react-hooks": reactHooksPlugin,
+      "simple-import-sort": simpleImportSortPlugin,
+      "unused-imports": unusedImportsPlugin
+    },
+    rules: {
+      // Remove unused variables and imports
+      "unused-imports/no-unused-imports": "error",
+      "unused-imports/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+      
+      // Ensure correct hook usage
+      "react-hooks/exhaustive-deps": "warn",
+
+      // Sort imports and exports
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error",
+      'react/react-in-jsx-scope': 'off', // Disable the error for missing React in scope
+      'react/prop-types': 'off' // Disable prop-types rule since TypeScript handles it
+    },
+    settings: {
+      react: {
+        version: "detect"
+      }
+    }
+  }
 ];
 
 export default eslintConfig;
