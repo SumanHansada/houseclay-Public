@@ -1,4 +1,5 @@
 import { FlatCompat } from "@eslint/eslintrc";
+import prettierPlugin from "eslint-plugin-prettier";
 import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import simpleImportSortPlugin from "eslint-plugin-simple-import-sort";
@@ -15,40 +16,51 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends(
-    "next/core-web-vitals", 
-    "next/typescript", 
+    "next/core-web-vitals",
+    "next/typescript",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
-    "prettier"
+    "prettier",
   ),
   {
     plugins: {
       react: reactPlugin,
       "react-hooks": reactHooksPlugin,
       "simple-import-sort": simpleImportSortPlugin,
-      "unused-imports": unusedImportsPlugin
+      "unused-imports": unusedImportsPlugin,
+      prettier: prettierPlugin,
     },
     rules: {
       // Remove unused variables and imports
       "unused-imports/no-unused-imports": "error",
-      "unused-imports/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
-      
+      "unused-imports/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+
       // Ensure correct hook usage
       "react-hooks/exhaustive-deps": "warn",
 
       // Sort imports and exports
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
-      'react/react-in-jsx-scope': 'off', // Disable the error for missing React in scope
-      'react/prop-types': 'off' // Disable prop-types rule since TypeScript handles it
+
+      "react/react-in-jsx-scope": "off", // Disable the error for missing React in scope
+      "react/prop-types": "off", // Disable prop-types rule since TypeScript handles it
+      "prettier/prettier": "error", // Enable prettier errors
     },
-    ignores: ['.next/', './storybook/', 'node_modules/', 'storybook-static/', 'dist/', 'build/', 'out/'],
+    ignores: [
+      ".next/",
+      "./storybook/",
+      "node_modules/",
+      "storybook-static/",
+      "dist/",
+      "build/",
+      "out/",
+    ],
     settings: {
       react: {
-        version: "detect"
-      }
-    }
-  }
+        version: "detect",
+      },
+    },
+  },
 ];
 
 export default eslintConfig;

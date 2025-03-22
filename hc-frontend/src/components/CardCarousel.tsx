@@ -1,6 +1,6 @@
 "use client";
 
-import React, { JSX,useEffect, useState } from "react";
+import React, { JSX, useEffect, useState } from "react";
 
 interface CardCarouselProps {
   cards: JSX.Element[];

@@ -28,7 +28,12 @@ const NeighborhoodCard: React.FC<NeighborhoodCardProps> = ({
       role="listitem"
       className="relative h-80 min-w-[280px] overflow-hidden rounded-lg shadow-md transition-transform duration-300 hover:scale-105 sm:h-64"
     >
-      <Image src={image} alt={`${name} neighborhood`} className="h-full w-full object-cover" layout="fill"/>
+      <Image
+        src={image}
+        alt={`${name} neighborhood`}
+        className="h-full w-full object-cover"
+        layout="fill"
+      />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
         <div className="absolute bottom-0 left-0 p-6">
           <p className="mb-1 font-light text-gray-50 opacity-90">

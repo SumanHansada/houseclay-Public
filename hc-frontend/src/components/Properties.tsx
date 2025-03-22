@@ -1,7 +1,7 @@
 // pages/index.js
 import { Crown, Heart, MapPin, Star } from "lucide-react";
 import Image from "next/image";
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 
 type BadgeType = "Featured" | "Exclusive" | null;
 

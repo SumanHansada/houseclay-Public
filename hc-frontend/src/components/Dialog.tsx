@@ -1,7 +1,7 @@
 "use client";
 
 import { FocusTrap } from "focus-trap-react";
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   DeviceContextProps,
