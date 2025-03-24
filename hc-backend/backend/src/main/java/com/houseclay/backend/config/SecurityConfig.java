@@ -3,6 +3,7 @@ package com.houseclay.backend.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.houseclay.backend.security.TokenAuthenticationFilter;
@@ -10,8 +11,6 @@ import com.houseclay.backend.security.UserTokenAuthenticationFilter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import java.util.List;
 
 @Configuration
 public class SecurityConfig {
@@ -34,7 +33,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.disable()) // ✅ Allow CORS
+                .cors(Customizer.withDefaults()) // 👈 enable CORS
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // ✅ Allow all OPTIONS requests
