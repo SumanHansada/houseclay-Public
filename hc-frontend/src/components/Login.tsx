@@ -3,10 +3,11 @@
 import "react-international-phone/style.css";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { PhoneInput } from "react-international-phone";
 import { useDispatch } from "react-redux";
 
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useGenerateOtpMutation,
@@ -37,14 +38,16 @@ const Login = () => {
   const [generateOtp] = useGenerateOtpMutation();
   const dispatch = useDispatch();
   const [userExists, setUserExists] = useState(false);
+  const { isMobile } = useDeviceContext();
 
   const [otpCode, setOtpCode] = useState<string[]>(["", "", "", ""]);
-  const inputRefs = [
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-  ];
+
+  const ref1 = useRef<HTMLInputElement>(null);
+  const ref2 = useRef<HTMLInputElement>(null);
+  const ref3 = useRef<HTMLInputElement>(null);
+  const ref4 = useRef<HTMLInputElement>(null);
+
+  const inputRefs = useMemo(() => [ref1, ref2, ref3, ref4], []);
 
   const handleCheckUser = async () => {
     try {
@@ -122,7 +125,7 @@ const Login = () => {
     if (inputRefs[0].current) {
       inputRefs[0].current.focus();
     }
-  }, []);
+  }, [inputRefs]);
 
   const handleChange = (index: number, value: string): void => {
     // Only allow single digit numbers
@@ -188,31 +191,23 @@ const Login = () => {
   return (
     <div className="flex items-center justify-center h-full bg-white rounded-lg">
       {/* Left pane (image) - takes full height */}
-      <div className="h-full w-5/12">
-        <Image
-          src="/icons/login.svg"
-          alt="Login"
-          className="relative rounded-l-lg"
-          width={500}
-          height={400}
-        />
-      </div>
+      {!isMobile && (
+        <div className="h-full w-5/12">
+          <Image
+            src="/icons/login.svg"
+            alt="Login"
+            className="relative rounded-l-lg"
+            width={500}
+            height={400}
+          />
+        </div>
+      )}
       {/* Right pane (form) - takes remaining width */}
       <div className="flex flex-1 h-full px-8">
-        {/* Close button */}
-        <div className="absolute top-4 right-4">
-          <button
-            className="text-gray-400 hover:text-gray-600"
-            onClick={() => closeDialog("login-dialog")}
-          >
-            <Image src="/icons/close.svg" alt="Close" width={30} height={30} />
-          </button>
-        </div>
-
         {authStep === AuthStep.PHONE && (
           <div className="w-full flex flex-col align-center justify-center gap-8">
             {/* Form header */}
-            <div>
+            <div className="max-md:hidden">
               <h1 className="text-2xl mb-3 text-black ">
                 Log In to Your Account
               </h1>
@@ -239,6 +234,11 @@ const Login = () => {
                 />
               </div>
 
+              {/* Info box */}
+              <div className="md:hidden text-gray-400 mb-3">
+                We’ll text you to confirm your number.
+              </div>
+
               {/* Continue button */}
               <button
                 type="submit"
@@ -247,6 +247,18 @@ const Login = () => {
               >
                 Continue
               </button>
+
+              {/* Privacy policy */}
+              <div className="md:hidden text-gray-500 text-sm">
+                By continuing to use this service, you agree to our{" "}
+                <span className="text-gray-700 underline font-bold">
+                  Terms of Service
+                </span>{" "}
+                and{" "}
+                <span className="text-gray-700 underline font-bold">
+                  Privacy Policy
+                </span>
+              </div>
             </div>
           </div>
         )}

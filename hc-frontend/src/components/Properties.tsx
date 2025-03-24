@@ -1,7 +1,7 @@
 // pages/index.js
 import { Crown, Heart, MapPin, Star } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type BadgeType = "Featured" | "Exclusive" | null;
 
@@ -34,9 +34,9 @@ const Properties: React.FC<PropertiesProps> = ({
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
 
-  const nextImage = () => {
+  const nextImage = useCallback(() => {
     setCurrentImageIndex((prev) => (prev + 1) % property.images.length);
-  };
+  }, [property.images.length]);
 
   // const prevImage = () => {
   //   setCurrentImageIndex(
@@ -49,12 +49,12 @@ const Properties: React.FC<PropertiesProps> = ({
       const interval = setInterval(nextImage, autoplayInterval);
       return () => clearInterval(interval);
     }
-  }, [autoplay, autoplayInterval]);
+  }, [autoplay, autoplayInterval, nextImage]);
 
   return (
-    <div className="flex-col gap-8 bg-white rounded-lg shadow-md relative p-3">
+    <div className="flex-col gap-8 bg-white border border-gray-100 rounded-lg shadow-lg relative p-3">
       {/* Image Carousel */}
-      <div className="relative h-72">
+      <div className="relative h-72 max-md:h-60">
         <Image
           src={property?.images[currentImageIndex]}
           alt={`Property ${property?.id}`}
@@ -137,7 +137,7 @@ const Properties: React.FC<PropertiesProps> = ({
           <i className="mr-1">
             <MapPin size={16} />
           </i>
-          <p>{property.location}</p>
+          <p className="truncate">{property.location}</p>
         </div>
       </div>
     </div>

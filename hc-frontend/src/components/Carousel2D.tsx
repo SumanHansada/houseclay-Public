@@ -6,6 +6,7 @@ interface Carousel2DProps {
   slideWidth?: number; // Optional fixed width for each slide
   gap?: number; // Gap between slides
   showArrows?: boolean; // Option to hide arrows
+  showDots?: boolean; // Option to show/hide dots
   autoScroll?: boolean; // Auto scroll feature
   autoScrollInterval?: number; // Interval for auto scroll in ms
 }
@@ -13,15 +14,18 @@ interface Carousel2DProps {
 const Carousel2D: React.FC<Carousel2DProps> = ({
   children,
   className = "",
-  slideWidth,
+  slideWidth = 200,
   gap = 16,
-  showArrows = true,
+  showArrows = false,
+  showDots = false,
   autoScroll = false,
-  autoScrollInterval = 5000,
+  autoScrollInterval = 3000,
 }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const slidesCount = React.Children.count(children);
 
   // Check if scroll buttons should be visible
   const checkScrollButtons = () => {
@@ -54,6 +58,15 @@ const Carousel2D: React.FC<Carousel2DProps> = ({
     });
   };
 
+  // Update current slide index on scroll
+  const handleScrollUpdate = () => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const slideIndex = Math.round(container.scrollLeft / (slideWidth + gap));
+    setCurrentSlideIndex(slideIndex);
+  };
+
   // Set up auto-scroll
   useEffect(() => {
     if (!autoScroll) return;
@@ -81,6 +94,7 @@ const Carousel2D: React.FC<Carousel2DProps> = ({
     if (!container) return;
 
     container.addEventListener("scroll", checkScrollButtons);
+    container.addEventListener("scroll", handleScrollUpdate);
     window.addEventListener("resize", checkScrollButtons);
 
     // Initial check
@@ -88,9 +102,10 @@ const Carousel2D: React.FC<Carousel2DProps> = ({
 
     return () => {
       container.removeEventListener("scroll", checkScrollButtons);
+      container.removeEventListener("scroll", handleScrollUpdate);
       window.addEventListener("resize", checkScrollButtons);
     };
-  }, []);
+  }, [slideWidth, gap]);
 
   return (
     <div className={`relative w-full ${className}`}>
@@ -123,7 +138,7 @@ const Carousel2D: React.FC<Carousel2DProps> = ({
       {/* Carousel container */}
       <div
         ref={scrollContainerRef}
-        className="flex overflow-x-scroll scrollbar-hide scroll-smooth"
+        className="flex overflow-x-scroll scrollbar-hide scroll-smooth py-2"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {/* Apply gap and width to child elements if specified */}
@@ -164,6 +179,30 @@ const Carousel2D: React.FC<Carousel2DProps> = ({
             />
           </svg>
         </button>
+      )}
+
+      {/* Carousel Dots */}
+      {showDots && (
+        <div className="mt-5 bottom-2 left-0 right-0 flex justify-center space-x-1">
+          {Array.from({ length: slidesCount }).map((_, index) => (
+            <button
+              key={index}
+              className={`w-2 h-2 rounded-full ${
+                index === currentSlideIndex ? "bg-black" : "bg-gray-400"
+              }`}
+              onClick={() => {
+                const container = scrollContainerRef.current;
+                if (!container) return;
+
+                const targetScrollLeft = index * (slideWidth + gap);
+                container.scrollTo({
+                  left: targetScrollLeft,
+                  behavior: "smooth",
+                });
+              }}
+            />
+          ))}
+        </div>
       )}
     </div>
   );

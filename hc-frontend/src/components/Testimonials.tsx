@@ -2,6 +2,8 @@ import { Quote, Star } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
+
 import Carousel2D from "./Carousel2D";
 
 export interface Testimonial {
@@ -34,10 +36,12 @@ const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({
   testimonial,
 }) => {
   return (
-    <div className="flex h-full flex-col justify-between rounded-2xl bg-gray-50 p-8 shadow-sm">
+    <div className="flex h-full flex-col justify-between rounded-2xl bg-gray-50 p-8 max-md:p-4 shadow-sm">
       <div>
         <Quote className="mb-4 h-10 w-10 text-red-500 fill-red-500 transform rotate-180" />
-        <p className="text-lg text-gray-800">{testimonial.content}</p>
+        <p className="text-lg max-md:text-sm font-nunito text-gray-800">
+          {testimonial.content}
+        </p>
       </div>
       <div className="mt-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -72,9 +76,9 @@ const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
   // const prevSlide = () => {
   //   setActiveSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
   // };
-
+  const { isMobile } = useDeviceContext();
   return (
-    <div className="mx-auto xl:px-40 lg:px-14 px-14 py-20">
+    <div className="mx-auto xl:px-40 lg:px-14 md:px-14 px-8 py-20">
       {/* Top user avatars row */}
       <div className="mb-8 flex justify-center">
         <Image
@@ -87,23 +91,17 @@ const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
 
       {/* Heading section */}
       <div className="mb-10 text-center">
-        <h2 className="mb-4 text-4xl font-bold text-gray-900">
-          Sign up and become part of a vibrant community of <br />
-          <span className="text-5xl">5,000+ flatwappers.</span>
+        <h2 className="mb-4 text-4xl max-md:text-xl font-bold text-gray-900">
+          Sign up and become part of a vibrant community of 5,000+ flatwappers.
         </h2>
-        <p className="mx-auto max-w-3xl text-lg text-gray-700">
+        <p className="mx-auto max-w-3xl text-lg max-md:text-base font-thin font-nunito text-gray-400">
           Our users success stories reflect our commitment to delivering
           excellent service, transparency, and value.
         </p>
       </div>
 
       {/* Testimonials grid */}
-      <Carousel2D
-        slideWidth={400}
-        gap={24}
-        showArrows={true}
-        autoScroll={false}
-      >
+      <Carousel2D slideWidth={isMobile ? 300 : 400} gap={24} showDots={true}>
         {testimonials.map((testimonial) => (
           <TestimonialCard key={testimonial.id} testimonial={testimonial} />
         ))}

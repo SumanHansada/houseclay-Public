@@ -71,7 +71,7 @@ const Carousel3D: FC<Carousel3DProps> = ({
       const scale =
         relativeIndex === 0
           ? centerZoom
-          : Math.max(0.6, 1 - Math.abs(relativeIndex) * 0.2);
+          : Math.max(0.6, 1 - Math.abs(relativeIndex) * scaleFactor);
       const translateX = relativeIndex * (width / 2 + gap);
 
       // Apply transforms
@@ -96,6 +96,7 @@ const Carousel3D: FC<Carousel3DProps> = ({
     totalItems,
     rotationFactor,
     centerZoom,
+    scaleFactor,
     width,
     gap,
   ]);

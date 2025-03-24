@@ -26,7 +26,7 @@ const NeighborhoodCard: React.FC<NeighborhoodCardProps> = ({
   return (
     <div
       role="listitem"
-      className="relative h-80 min-w-[280px] overflow-hidden rounded-lg shadow-md transition-transform duration-300 hover:scale-105 sm:h-64"
+      className="relative h-80 min-w-[280px] max-md:min-w-[245px] overflow-hidden rounded-lg shadow-md transition-transform duration-300 md:hover:scale-105 max-md:h-96"
     >
       <Image
         src={image}
@@ -34,12 +34,12 @@ const NeighborhoodCard: React.FC<NeighborhoodCardProps> = ({
         className="h-full w-full object-cover"
         layout="fill"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
-        <div className="absolute bottom-0 left-0 p-6">
-          <p className="mb-1 font-light text-gray-50 opacity-90">
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent max-md:from-transparent max-md:to-black/60">
+        <div className="absolute bottom-0 max-md:top-0 left-0 p-6">
+          <p className="mb-1 font-light text-gray-50 opacity-90 font-nunito">
             Flats for {listingType} in
           </p>
-          <h3 className="text-3xl text-white">{name}</h3>
+          <h3 className="text-3xl text-white font-nunito">{name}</h3>
         </div>
       </div>
     </div>
@@ -51,15 +51,15 @@ const Neighborhoods: React.FC<NeighborhoodsProps> = ({
   listingType,
 }) => {
   return (
-    <div className="mx-auto xl:px-40 lg:px-14 px-14 py-20 bg-gray-100">
-      <h2 className="mb-6 text-4xl font-bold text-gray-800">
+    <div className="mx-auto xl:px-40 lg:px-14 md:px-14 px-8 py-20 max-md:py-10 bg-gray-100">
+      <h1 className="mb-6 text-3xl max-md:text-2xl font-bold text-gray-800">
         Popular Neighborhoods
-      </h2>
+      </h1>
 
       {/* Scrollable cards container for mobile */}
       <div
         role="list"
-        className="no-scrollbar -mx-4 flex overflow-x-auto pb-6 pl-4 sm:hidden"
+        className="scrollbar-hide flex overflow-x-auto pb-6 md:hidden"
       >
         {neighborhoods.map((neighborhood, index) => (
           <div key={index} className="mr-4 flex-none">
@@ -73,7 +73,7 @@ const Neighborhoods: React.FC<NeighborhoodsProps> = ({
       </div>
 
       {/* Grid layout for larger screens */}
-      <div className="hidden grid-cols-1 gap-6 sm:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-3 xl:grid-cols-4 xl:gap-4 max-md:hidden">
         {neighborhoods.map((neighborhood, index) => (
           <NeighborhoodCard
             key={index}

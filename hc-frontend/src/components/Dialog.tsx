@@ -25,10 +25,13 @@ interface DialogFooterProps {
   children: React.ReactNode;
 }
 
-const getBorderRadiusClass = (borderRadius: string) => {
+const getBorderRadiusClass = (
+  borderRadius: string,
+  deviceContext?: DeviceContextProps,
+) => {
   switch (borderRadius) {
     case "top":
-      return "rounded-t-lg";
+      return `${deviceContext?.isMobile ? "rounded-t-3xl" : "rounded-t-lg"}`;
     case "bottom":
       return "rounded-b-lg";
     case "left":
@@ -46,7 +49,7 @@ const getDirectionClass = (
   deviceContext?: DeviceContextProps,
 ) => {
   if (deviceContext?.isMobile) {
-    return "bottom-0";
+    return "bottom-16";
   }
   switch (direction) {
     case "top":
@@ -68,7 +71,10 @@ const getAnimationClass = (
   deviceContext?: DeviceContextProps,
   isClosing?: boolean,
 ) => {
-  return isClosing ? "animate-fade-out" : "animate-fade-in";
+  if (deviceContext?.isMobile) {
+    return isClosing ? "animate-slide-out-bottom" : "animate-slide-in-bottom";
+  }
+  return isClosing ? "animate-zoom-out" : "animate-zoom-in";
 };
 
 export const Dialog: React.FC<DialogProps> = ({
@@ -112,7 +118,11 @@ export const Dialog: React.FC<DialogProps> = ({
     }
   };
 
-  const borderRadiusClass = getBorderRadiusClass(borderRadius);
+  const borderRadiusClass = getBorderRadiusClass(borderRadius, {
+    isDesktop,
+    isMobile,
+    isTablet,
+  });
   const directionClass = getDirectionClass(direction, {
     isDesktop,
     isMobile,
@@ -127,15 +137,15 @@ export const Dialog: React.FC<DialogProps> = ({
   return (
     <FocusTrap>
       <div
-        className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center ${animationClass}`}
+        className={`fixed inset-0 bg-black bg-opacity-50 flex items-end justify-center`}
         onClick={handleOverlayClick}
       >
         <div
-          className={`bg-white ${directionClass} ${borderRadiusClass} ${animationClass}`}
+          className={`bg-white border border-gray-200 ${directionClass} ${borderRadiusClass} ${animationClass} flex flex-col`}
           style={{
-            minHeight: `${height ? height : ""}vh`,
-            maxHeight: `${height ? height : 50}vh`,
-            width: `${isMobile ? "100%" : width ? width : ""}`,
+            height: `${height ? `${height}vh` : "auto"}`,
+            maxHeight: `${height ? `${height}vh` : "80vh"}`,
+            width: `${isMobile ? "100%" : width ? `${width}%` : "50%"}`,
             position: stickyPosition ? "sticky" : "relative",
           }}
           onClick={(e) => e.stopPropagation()}
@@ -152,11 +162,10 @@ export const DialogHeader: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const { isMobile } = useDeviceContext();
   return (
-    <div className="border-b border-gray-200">
+    <div className="border-b border-gray-200 flex-shrink-0">
       {isMobile && (
-        <div className="w-8 h-1 bg-gray-300 rounded-full mx-auto mb-2"></div>
+        <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto my-1"></div>
       )}
-
       {children}
     </div>
   );
@@ -164,7 +173,11 @@ export const DialogHeader: React.FC<{ children: React.ReactNode }> = ({
 
 export const DialogContent: React.FC<{ children: React.ReactNode }> = ({
   children,
-}) => <div className="">{children}</div>;
+}) => (
+  <div className="overflow-y-auto overflow-x-hidden flex-grow scroll-smooth max-md:scrollbar-hide">
+    {children}
+  </div>
+);
 
 export const DialogFooter: React.FC<DialogFooterProps> = ({
   children,
@@ -173,7 +186,7 @@ export const DialogFooter: React.FC<DialogFooterProps> = ({
   const { isMobile } = useDeviceContext();
   return (
     <div
-      className={`border-t border-gray-200 flex ${align || (isMobile ? "justify-around" : "justify-end")}`}
+      className={`border-t border-gray-200 flex flex-shrink-0 ${align || (isMobile ? "justify-around" : "justify-end")}`}
     >
       {children}
     </div>
