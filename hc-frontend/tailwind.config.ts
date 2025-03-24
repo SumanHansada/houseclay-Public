@@ -13,6 +13,10 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        nunito: "var(--font-nunito)",
+        inter: "var(--font-inter)",
+      },
       keyframes: {
         // Fade animations
         "fade-in": {
