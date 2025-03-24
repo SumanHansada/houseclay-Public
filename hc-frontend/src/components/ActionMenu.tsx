@@ -28,6 +28,8 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
   const [actionMenuPosition, setActionMenuPosition] = useState<DOMRect | null>(
     null,
   );
+  //   const [actionMenuListPosition, setActionMenuListPosition] =
+  //     useState<DOMRect | null>(null);
 
   const actionMenuRef = useRef<HTMLDivElement>(null);
   const actionMenuListRef = useRef<HTMLDivElement>(null);
@@ -43,6 +45,13 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
   // Close action menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      event.stopPropagation();
+      if (
+        actionMenuRef.current &&
+        actionMenuRef.current.contains(event.target as Node)
+      ) {
+        return;
+      }
       if (
         actionMenuListRef.current &&
         !actionMenuListRef.current.contains(event.target as Node)
@@ -140,6 +149,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
   useEffect(() => {
     if (isOpen && actionMenuRef.current) {
       setActionMenuPosition(actionMenuRef.current.getBoundingClientRect());
+      //   setActionMenuListPosition(actionMenuListRef.current.getBoundingClientRect());
     }
   }, [isOpen]);
 
