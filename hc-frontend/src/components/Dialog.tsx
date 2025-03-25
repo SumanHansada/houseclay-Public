@@ -49,7 +49,7 @@ const getDirectionClass = (
   deviceContext?: DeviceContextProps,
 ) => {
   if (deviceContext?.isMobile) {
-    return "bottom-16";
+    return "bottom-0";
   }
   switch (direction) {
     case "top":
@@ -137,7 +137,7 @@ export const Dialog: React.FC<DialogProps> = ({
   return (
     <FocusTrap>
       <div
-        className={`fixed inset-0 bg-black bg-opacity-50 flex items-end justify-center`}
+        className={`fixed inset-0 bg-black bg-opacity-50 flex items-end justify-center bottom-16`}
         onClick={handleOverlayClick}
       >
         <div
