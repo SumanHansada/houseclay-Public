@@ -46,6 +46,7 @@ export default function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="theme-color" content="#EA3934" />
+        <meta name="apple-mobile-web-app-title" content="Houseclay" />
       </head>
       <body className={`${inter.variable} ${nutino.variable}`}>
         <ReduxProvider>
