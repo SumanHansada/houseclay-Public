@@ -56,8 +56,7 @@ jobs:
           chmod 600 private_key.pem
           scp -o StrictHostKeyChecking=no -i private_key.pem hc-backend/backend/target/*.jar ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/app.jar
           scp -o StrictHostKeyChecking=no -i private_key.pem -r hc-frontend/.next ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/frontend
-          scp -o StrictHostKeyChecking=no -i private_key.pem hc-frontend/package.json ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/frontend/package.json
-          scp -o StrictHostKeyChecking=no -i private_key.pem hc-frontend/package-lock.json ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/frontend/package-lock.json
+          scp -o StrictHostKeyChecking=no -i private_key.pem -r hc-frontend/public ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/frontend
 
       # Restart Applications
       - name: Restart Spring Boot and Next.js on EC2
