@@ -10,7 +10,7 @@ import WeeklyStandoutsSvg from "public/icons/weekly-standouts.svg";
 import ZeroPercentSvg from "public/icons/zero-percent.svg";
 import { useState } from "react";
 
-import { Dialog, DialogContent, DialogFooter, DialogHeader } from "@/components/Dialog";
+import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import Dropdown from "@/components/Dropdown";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
@@ -512,9 +512,8 @@ export default function Home() {
                 listingType={activeTab}
                 properties={properties}
                 setActiveTab={setActiveTab}
-              />              
+              />
             </DialogContent>
-            
           </Dialog>
         )}
       </main>
