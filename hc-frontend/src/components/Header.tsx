@@ -46,7 +46,7 @@ const Header: React.FC<HeaderProps> = ({ onLogin }) => {
 
   return (
     <>
-      <header className="flex justify-between w-full items-center py-2 shadow-sm xl:gap-32 lg:gap-16 gap-16 xl:px-24 md:px-12 px-12 max-md:hidden">
+      <header className="flex sticky top-0 left-0 right-0 bg-white z-50 justify-between w-full items-center py-2 shadow-sm xl:gap-32 lg:gap-16 md:gap-8 gap-8 xl:px-24 md:px-12 px-12 max-md:hidden mx-auto">
         {/* Left Section - Logo */}
         <div className="flex items-center">
           <Link href="/" className="flex items-center gap-1">
@@ -58,8 +58,8 @@ const Header: React.FC<HeaderProps> = ({ onLogin }) => {
         </div>
 
         {/* Center - Navigation */}
-        <div className="flex justify-between items-center w-full">
-          <nav className="hidden md:flex xl:space-x-12 space-x-3 text-gray-800">
+        <div className="flex justify-between items-center w-full text-sm">
+          <nav className="hidden md:flex xl:gap-12 lg:gap-6 md:gap-3 gap-3 text-gray-800">
             <Link href="/rent" className="hover:text-red-500">
               Rent
             </Link>
@@ -76,11 +76,11 @@ const Header: React.FC<HeaderProps> = ({ onLogin }) => {
           </nav>
 
           {/* Right Section - Actions */}
-          <div className="flex items-center xl:space-x-6 space-x-3">
+          <div className="flex items-center xl:gap-6 lg:gap-3 md:gap-2 gap-2">
             {/* List Property Button */}
             <Link
               href="/list-property"
-              className="relative border border-red-500 text-red-500 px-4 py-2 rounded-xl hover:bg-red-50"
+              className="relative border border-red-500 text-red-500 xl:px-6 lg:px-5 md:px-3 px-3 py-2 rounded-xl hover:bg-red-50"
             >
               List Your Property
               <span className="absolute bottom-0 right-0 -mb-2 -mr-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-md">
@@ -89,12 +89,12 @@ const Header: React.FC<HeaderProps> = ({ onLogin }) => {
             </Link>
 
             {/* Coin Counter */}
-            <button className="flex items-center space-x-1 px-4 py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100">
+            <button className="flex items-center xl:px-4 lg:px-3 md:px-2 px-2 py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100">
               <Image
                 src={"/icons/coin.svg"}
                 alt="Coin"
-                height={25}
-                width={25}
+                height={20}
+                width={20}
               />
               <span>0</span>
             </button>
@@ -115,25 +115,25 @@ const Header: React.FC<HeaderProps> = ({ onLogin }) => {
                     }
                   }}
                 >
-                  <button className="flex flex-row gap-2 w-24 px-4 py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100 text-center">
+                  <button className="flex flex-row xl:gap-2 md:gap-1 gap-1 xl:px-6 lg:px-5 md:px-3 px-3 py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100 text-center">
                     <Image
                       src="/icons/user.svg"
                       alt="User"
-                      height={25}
-                      width={25}
+                      height={20}
+                      width={20}
                     />
                     <Image
                       src="/icons/arrow-down.svg"
                       alt="Arrow Down"
-                      height={25}
-                      width={25}
+                      height={20}
+                      width={20}
                     />
                   </button>
                 </ActionMenu>
               </div>
             ) : (
               <button
-                className="w-24 px-4 py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100 text-center"
+                className="xl:px-8 lg:px-6 md:px-4 px-4  py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100 text-center"
                 onClick={onLogin}
               >
                 Login
@@ -143,7 +143,7 @@ const Header: React.FC<HeaderProps> = ({ onLogin }) => {
         </div>
       </header>
       {/* Mobile Header */}
-      <header className="flex justify-between w-full px-4 py-2 shadow-sm md:hidden">
+      <header className="fixed top-0 left-0 right-0 bg-white flex justify-between w-full px-4 py-2 shadow-sm md:hidden">
         {/* Left Section - Logo */}
 
         <div className="flex items-center gap-2">
@@ -159,14 +159,14 @@ const Header: React.FC<HeaderProps> = ({ onLogin }) => {
         </div>
         {token ? (
           <button
-            className="w-24 px-4 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100text-center"
+            className="px-24 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100text-center"
             onClick={onLogout}
           >
             Logout
           </button>
         ) : (
           <button
-            className="w-20 px-2 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100 text-center"
+            className="px-24 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100 text-center"
             onClick={onLogin}
           >
             Log In

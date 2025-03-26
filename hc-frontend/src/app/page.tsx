@@ -11,9 +11,9 @@ import ZeroPercentSvg from "public/icons/zero-percent.svg";
 import { useState } from "react";
 
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
-import Dropdown from "@/components/Dropdown";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import HomeSearchBar from "@/components/HomeSearchBar";
 import Login from "@/components/Login";
 import Neighborhoods, { Neighborhood } from "@/components/Neighborhoods";
 import { Property } from "@/components/Properties";
@@ -175,17 +175,18 @@ export default function Home() {
   return (
     <>
       <Header onLogin={onLogin} />
-      <main className="mx-auto my-0">
+      <main className="mx-auto my-0 flex-1 flex flex-wrap items-center justify-center">
         <section className="relative xl:h-[600px] lg:h-[500px] h-[500px] w-full overflow-hidden max-md:hidden">
-          <div className="absolute inset-0 bg-[url('/images/banner-background.png')] bg-center bg-cover"></div>
-          <div className="absolute inset-0 bg-[url('/images/banner-people.png')] bg-right bg-no-repeat xl:right-40 lg:right-14 right-14"></div>
-          <div className="absolute h-full flex flex-col justify-center xl:pl-40 lg:pl-14 pl-14 xl:w-2/3 lg:w-4/5 w-4/5">
+          <div className="absolute inset-0 bg-[url('/images/banner-background.svg')] bg-right bg-cover"></div>
+          <div className="absolute h-full flex flex-col justify-center xl:pl-40 lg:pl-14 pl-14 xl:w-2/3 lg:w-4/5 md:w-5/6 w-5/6">
             {/* Headings */}
             <div className="max-w-md mb-8">
-              <h1 className="text-6xl font-bold text-gray-900 mb-2">
+              <h1 className="xl:text-6xl lg:text-5xl text-5xl font-bold text-gray-900 mb-2">
                 No Middlemen
               </h1>
-              <h2 className="text-5xl text-gray-800">Just Connects</h2>
+              <h2 className="xl:text-5xl lg:text-4xl text-4xl text-gray-800">
+                Just Connects
+              </h2>
             </div>
 
             {/* Tabs */}
@@ -205,66 +206,7 @@ export default function Home() {
             </div>
 
             {/* Search Form */}
-            <div className="flex pl-8 pr-2 rounded-full bg-white shadow-lg overflow-hidden justify-between items-center">
-              {/* City */}
-              <div className="flex-1 px-3 py-2 border-r border-gray-200">
-                <div className="text-sm font-medium text-gray-900 mb-1">
-                  City
-                </div>
-                <div className="text-gray-500 text-sm flex items-center">
-                  <Dropdown
-                    options={[
-                      { id: 1, label: "Featured" },
-                      { id: 2, label: "Posted (Latest First)" },
-                      { id: 3, label: "Posted (Older First)" },
-                      { id: 4, label: "Availability (Early First)" },
-                      { id: 5, label: "Availability (Late First)" },
-                      { id: 6, label: "Price (Lower First)" },
-                      { id: 7, label: "Price (Higher First)" },
-                    ]}
-                    defaultSelected={{ id: 1, label: "Featured" }}
-                    onChange={(option) => console.log(option)}
-                  />
-                </div>
-              </div>
-
-              {/* Location */}
-              <div className="flex-1 px-3 py-2 border-r border-gray-200">
-                <div className="text-sm font-medium text-gray-900 mb-1">
-                  Location
-                </div>
-                <input
-                  type="text"
-                  placeholder="Type localities..."
-                  className="text-gray-500 text-sm outline-none w-full"
-                />
-              </div>
-
-              {/* Property Type */}
-              <div className="flex-1 px-3 py-2 border-r border-gray-200">
-                <div className="text-sm font-medium text-gray-900 mb-1">
-                  Property Type
-                </div>
-                <div className="text-gray-500 text-sm flex items-center">
-                  House
-                </div>
-              </div>
-
-              {/* Beds */}
-              <div className="flex-1 px-3 py-2">
-                <div className="text-sm font-medium text-gray-900 mb-1">
-                  Beds
-                </div>
-                <div className="text-gray-500 text-sm flex items-center">
-                  2 BHK
-                </div>
-              </div>
-
-              {/* Search Button */}
-              <button className=" text-white flex items-center justify-center">
-                <Search />
-              </button>
-            </div>
+            <HomeSearchBar />
           </div>
         </section>
         <section className={"min-h-[500px] w-full overflow-hidden md:hidden"}>
@@ -397,43 +339,50 @@ export default function Home() {
           <div className="flex flex-col items-center justify-between gap-10 xl:px-40 lg:px-14 md:px-14 px-8 py-20">
             <div className="flex flex-col items-center justify-center gap-4">
               <h1 className="text-4xl font-bold text-center">Why Choose Us?</h1>
-              <div className="text-center text-gray-600 font-thin">
+              <div className="text-center text-gray-600">
                 Discover the advantages of using our platform to find your
                 perfect property.
               </div>
             </div>
-            <div className="flex gap-6 justify-between">
-              <div className="flex flex-1 flex-col bg-white rounded-3xl shadow-lg px-12 py-6 justify-between items-center gap-6">
+            <div className="flex flex-wrap xl:gap-12 lg:gap-6 gap-6 justify-between">
+              <div className="flex flex-1 flex-col bg-white rounded-3xl  border border-gray-200 shadow-lg xl:px-12 lg:px-6 px-3 py-6 justify-between items-center gap-4">
                 <Image
-                  src="/icons/direct-owner-connections.svg"
-                  alt="Direct Owner Connections"
+                  src="/icons/direct-owner-access.svg"
+                  alt="Direct Owner Accesss"
                   width={150}
                   height={150}
-                  layout="responsive"
                 />
-                <h1 className="font-bold text-center">
-                  Direct Owner Connections
-                </h1>
+                <h1 className="font-bold text-center">Direct Owner Access</h1>
+                <p className="text-center">
+                  Skip the brokers — connect straight to property owners with
+                  ease.
+                </p>
               </div>
-              <div className="flex flex-1 flex-col bg-white rounded-3xl shadow-lg px-12 py-6  justify-between items-center gap-6">
-                <Image
-                  src="/icons/use-connects.svg"
-                  alt="Use Connects"
-                  width={150}
-                  height={150}
-                  layout="responsive"
-                />
-                <h1 className="font-bold text-center">Use Connects</h1>
-              </div>
-              <div className="flex flex-1 flex-col bg-white rounded-3xl shadow-lg px-12 py-6  justify-between items-center gap-6">
+              <div className="flex flex-1 flex-col bg-white rounded-3xl border border-gray-200 shadow-lg xl:px-12 lg:px-6 px-3  py-6 justify-between items-center gap-4">
                 <Image
                   src="/icons/pay-as-you-go.svg"
-                  alt="Pay as you go"
+                  alt="Pay-As-You-Go"
                   width={150}
                   height={150}
-                  layout="responsive"
                 />
-                <h1 className="font-bold text-center">Pay as you go</h1>
+                <h1 className="font-bold text-center">Pay-As-You-Go</h1>
+                <p className="text-center">
+                  Buy connects only when you need them. No subscriptions, no
+                  hidden fees.
+                </p>
+              </div>
+              <div className="flex flex-1 flex-col bg-white rounded-3xl border border-gray-200 shadow-lg xl:px-12 lg:px-6 px-3  py-6 justify-between items-center gap-4">
+                <Image
+                  src="/icons/exclusive-listings.svg"
+                  alt="Exclusive Listings"
+                  width={150}
+                  height={150}
+                />
+                <h1 className="font-bold text-center">Exclusive Listings</h1>
+                <p className="text-center">
+                  Access properties you won’t find anywhere else, only on
+                  HouseClay.
+                </p>
               </div>
             </div>
           </div>

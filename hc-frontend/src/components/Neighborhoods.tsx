@@ -26,7 +26,7 @@ const NeighborhoodCard: React.FC<NeighborhoodCardProps> = ({
   return (
     <div
       role="listitem"
-      className="relative h-80 min-w-[280px] max-md:min-w-[245px] overflow-hidden rounded-lg shadow-md transition-transform duration-300 md:hover:scale-105 max-md:h-96"
+      className="relative h-64 max-w-[280px] max-md:min-w-[245px] overflow-hidden rounded-lg shadow-md transition-transform duration-300 md:hover:scale-105 max-md:h-96"
     >
       <Image
         src={image}
@@ -73,7 +73,7 @@ const Neighborhoods: React.FC<NeighborhoodsProps> = ({
       </div>
 
       {/* Grid layout for larger screens */}
-      <div className="grid gap-6 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-3 xl:grid-cols-4 xl:gap-4 max-md:hidden">
+      <div className="grid gap-3 md:gap-3  lg:gap-4  xl:gap-4 2xl:gap-5 grid-cols-[repeat(auto-fit,minmax(280px,1fr))]  max-md:hidden">
         {neighborhoods.map((neighborhood, index) => (
           <NeighborhoodCard
             key={index}
