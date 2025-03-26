@@ -1,9 +1,9 @@
-name: Deploy Spring Boot to AWS EC2
+name: Deploy Spring Boot and Next.js to AWS EC2
 
 on:
   push:
     branches:
-      - main  # Change to your default branch if needed
+      - main
 
 jobs:
   deploy:
@@ -19,11 +19,23 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Set up Node.js (Latest Stable)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
 
-      - name: Build the project using Maven
+      # Build Spring Boot Backend
+      - name: Build the Spring Boot Project using Maven
         run: |
           cd hc-backend/backend
           mvn clean package -DskipTests
+
+      # Build Next.js Frontend
+      - name: Install Dependencies and Build Next.js
+        run: |
+          cd hc-frontend
+          npm install
+          npm run build
 
       - name: Debug SSH Key
         run: |
@@ -37,16 +49,27 @@ jobs:
           chmod 600 private_key.pem
           ssh -v -o StrictHostKeyChecking=no -i private_key.pem ec2-user@${{ secrets.EC2_HOST }} "echo 'SSH Connection Successful'"
 
-
-      - name: Transfer JAR file to EC2
+      # Transfer JAR and Next.js Build to EC2
+      - name: Transfer JAR and Next.js Files to EC2
         run: |
           echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > private_key.pem
           chmod 600 private_key.pem
           scp -o StrictHostKeyChecking=no -i private_key.pem hc-backend/backend/target/*.jar ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/app.jar
+          scp -o StrictHostKeyChecking=no -i private_key.pem -r hc-frontend/.next ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/frontend/.next
+          scp -o StrictHostKeyChecking=no -i private_key.pem hc-frontend/package.json ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/frontend/package.json
+          scp -o StrictHostKeyChecking=no -i private_key.pem hc-frontend/package-lock.json ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/frontend/package-lock.json
 
-      - name: Restart Application on EC2
+      # Restart Applications
+      - name: Restart Spring Boot and Next.js on EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i private_key.pem ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
+          # Restart Spring Boot
           sudo kill -9 $(lsof -t -i:8080) || true
           nohup java -jar /home/ec2-user/app.jar > /home/ec2-user/app.log 2>&1 &
+
+          # Restart Next.js
+          cd /home/ec2-user/frontend
+          npm install --omit=dev
+          pm2 stop all || true
+          pm2 start npm --name "next-app" -- run start
           EOF
