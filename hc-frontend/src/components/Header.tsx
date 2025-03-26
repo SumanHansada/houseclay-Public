@@ -46,7 +46,7 @@ const Header: React.FC<HeaderProps> = ({ onLogin }) => {
 
   return (
     <>
-      <header className="flex sticky top-0 left-0 right-0 bg-white z-50 justify-between w-full items-center py-2 shadow-sm xl:gap-32 lg:gap-16 md:gap-8 gap-8 xl:px-24 md:px-12 px-12 max-md:hidden mx-auto">
+      <header className="flex fixed top-0 left-0 right-0 bg-white z-50 justify-between w-full items-center py-2 shadow-sm xl:gap-32 lg:gap-16 md:gap-8 gap-8 xl:px-24 md:px-12 px-12 max-md:hidden mx-auto">
         {/* Left Section - Logo */}
         <div className="flex items-center">
           <Link href="/" className="flex items-center gap-1">
@@ -143,7 +143,7 @@ const Header: React.FC<HeaderProps> = ({ onLogin }) => {
         </div>
       </header>
       {/* Mobile Header */}
-      <header className="fixed top-0 left-0 right-0 bg-white flex justify-between w-full px-4 py-2 shadow-sm md:hidden">
+      <header className="sticky top-0 left-0 right-0 bg-white z-50 flex justify-between w-full px-4 py-2 shadow-sm md:hidden">
         {/* Left Section - Logo */}
 
         <div className="flex items-center gap-2">
@@ -159,14 +159,14 @@ const Header: React.FC<HeaderProps> = ({ onLogin }) => {
         </div>
         {token ? (
           <button
-            className="px-24 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100text-center"
+            className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100 text-center"
             onClick={onLogout}
           >
             Logout
           </button>
         ) : (
           <button
-            className="px-24 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100 text-center"
+            className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100 text-center"
             onClick={onLogin}
           >
             Log In

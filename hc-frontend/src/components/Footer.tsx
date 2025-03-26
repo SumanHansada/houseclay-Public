@@ -12,7 +12,7 @@ const Footer = () => {
 
   return (
     <>
-      <div className="bg-gray-100 w-full xl:px-24 lg:px-12 px-12 font-nunito max-md:hidden">
+      <footer className="bg-gray-100 w-full xl:px-24 lg:px-12 px-12 font-nunito max-md:hidden">
         {/* Main footer content */}
         <div className="border-b border-gray-300 py-24">
           <div className="grid grid-cols-1  xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 gap-8">
@@ -165,7 +165,7 @@ const Footer = () => {
         </div>
 
         {/* Bottom footer with logo and copyright */}
-        <footer className="py-6 flex flex-row justify-between items-center">
+        <div className="py-6 flex flex-row justify-between items-center">
           <div className="flex items-center">
             <Link href="/" className="flex items-center gap-1">
               <HouseClay />
@@ -197,10 +197,10 @@ const Footer = () => {
               </li>
             </ul>
           </div>
-        </footer>
-      </div>
+        </div>
+      </footer>
       {/* Mobile Footer */}
-      <div className="flex flex-col gap-6 md:hidden bg-gray-100 px-8 pt-8 pb-2">
+      <footer className="flex flex-col gap-6 md:hidden bg-gray-100 px-8 pt-8 pb-2">
         <Link href="/" className="flex items-center gap-1">
           <HouseClay />
           <span className="text-red-600 text-lg font-nunito font-bold">
@@ -347,12 +347,12 @@ const Footer = () => {
           </ul>
         </div>
         {/* Bottom footer with logo and copyright */}
-        <footer className="flex border-t border-t-gray-400 py-4 w-full justify-around items-center">
+        <div className="flex border-t border-t-gray-400 py-4 w-full justify-around items-center">
           <div className="text-gray-400 text-sm">
             © 2025 HouseClay. All right reserved.
           </div>
-        </footer>
-      </div>
+        </div>
+      </footer>
     </>
   );
 };

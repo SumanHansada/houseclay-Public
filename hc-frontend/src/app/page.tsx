@@ -175,7 +175,7 @@ export default function Home() {
   return (
     <>
       <Header onLogin={onLogin} />
-      <main className="mx-auto my-0 flex-1 flex flex-wrap items-center justify-center">
+      <main className="mx-auto my-0  min-h-screen flex-1 flex flex-wrap items-center justify-center">
         <section className="relative xl:h-[600px] lg:h-[500px] h-[500px] w-full overflow-hidden max-md:hidden">
           <div className="absolute inset-0 bg-[url('/images/banner-background.svg')] bg-right bg-cover"></div>
           <div className="absolute h-full flex flex-col justify-center xl:pl-40 lg:pl-14 pl-14 xl:w-2/3 lg:w-4/5 md:w-5/6 w-5/6">
