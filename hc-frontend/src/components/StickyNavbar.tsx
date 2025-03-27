@@ -70,46 +70,42 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-16">
-      {/* Main content area that will be offset by the navbar height */}
-      {/* Semantic Navigation Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-md">
-        <ul className="flex items-center justify-between px-4 py-2">
-          {navItems.map((item) => (
-            <li key={item.id}>
-              <a
-                href={item.href}
-                className="flex flex-col items-center justify-center relative"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavClick(item.id);
-                }}
-                aria-current={activeTab === item.id ? "page" : undefined}
+    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-md z-50 w-full">
+      <ul className="flex items-center justify-between px-4 py-2 max-w-7xl mx-auto">
+        {navItems.map((item) => (
+          <li key={item.id}>
+            <a
+              href={item.href}
+              className="flex flex-col items-center justify-center relative"
+              onClick={(e) => {
+                e.preventDefault();
+                handleNavClick(item.id);
+              }}
+              aria-current={activeTab === item.id ? "page" : undefined}
+            >
+              <div
+                className={`p-1 flex justify-center items-center ${activeTab === item.id && item.id !== "connects" ? "text-red-500 border-red-500 stroke-red-500 fill-red-500" : "text-gray-500"}`}
               >
-                <div
-                  className={`p-1 flex justify-center items-center ${activeTab === item.id && item.id !== "connects" ? "text-red-500 border-red-500 stroke-red-500 fill-red-500" : "text-gray-500"}`}
-                >
-                  {item.icon}
-                  {item.badge && (
-                    <div
-                      className="absolute -top-1 right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
-                      aria-label={`${item.badge} new notifications`}
-                    >
-                      {item.badge}
-                    </div>
-                  )}
-                </div>
-                <span
-                  className={`text-xs ${activeTab === item.id ? "text-red-500" : "text-gray-500"}`}
-                >
-                  {item.label}
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </div>
+                {item.icon}
+                {item.badge && (
+                  <div
+                    className="absolute -top-1 right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
+                    aria-label={`${item.badge} new notifications`}
+                  >
+                    {item.badge}
+                  </div>
+                )}
+              </div>
+              <span
+                className={`text-xs ${activeTab === item.id ? "text-red-500" : "text-gray-500"}`}
+              >
+                {item.label}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 };
 

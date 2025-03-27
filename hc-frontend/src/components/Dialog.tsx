@@ -11,142 +11,104 @@ import { useDialog } from "@/providers/DialogContextProvider";
 
 interface DialogProps {
   id: string;
-  direction?: "top" | "bottom" | "left" | "right" | "center";
+  type: "fullscreen" | "bottom-sheet" | "card";
+  onClose: () => void;
   height?: number;
   width?: number;
-  stickyPosition?: boolean;
-  overlayClose?: boolean;
-  borderRadius?: "top" | "bottom" | "left" | "right" | "all";
   children: React.ReactNode;
 }
 
-interface DialogFooterProps {
-  align?: "left" | "center" | "right";
-  children: React.ReactNode;
-}
-
-const getBorderRadiusClass = (
-  borderRadius: string,
+const getDialogStyles = (
+  type: string,
   deviceContext?: DeviceContextProps,
-) => {
-  switch (borderRadius) {
-    case "top":
-      return `${deviceContext?.isMobile ? "rounded-t-3xl" : "rounded-t-lg"}`;
-    case "bottom":
-      return "rounded-b-lg";
-    case "left":
-      return "rounded-l-lg";
-    case "right":
-      return "rounded-r-lg";
-    case "all":
+): string => {
+  const isMobile = deviceContext?.isMobile;
+  switch (type) {
+    case "fullscreen":
+      return `fixed inset-0 bg-white flex flex-col ${
+        isMobile ? "" : "rounded-lg"
+      }`;
+    case "bottom-sheet":
+      return `fixed bottom-[4rem] bg-white rounded-t-lg ${
+        isMobile ? "w-full h-auto" : "hidden"
+      }`;
+    case "card":
+      return `fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg ${
+        isMobile ? "hidden" : "w-1/2 h-auto"
+      }`;
     default:
-      return "rounded-lg";
+      return "";
   }
 };
 
-const getDirectionClass = (
-  direction?: string,
-  deviceContext?: DeviceContextProps,
-) => {
-  if (deviceContext?.isMobile) {
-    return "bottom-0";
-  }
-  switch (direction) {
-    case "top":
-      return "top-0";
-    case "bottom":
-      return "bottom-0";
-    case "left":
-      return "left-0";
-    case "right":
-      return "right-0";
-    case "center":
+const overlayStyles = (type: string, isMobile?: boolean): string => {
+  switch (type) {
+    case "fullscreen":
+      return `fixed inset-0 bg-black bg-opacity-50`;
+    case "bottom-sheet":
+      return `fixed inset-x-0 top-0 bg-black bg-opacity-50 ${
+        isMobile ? "bottom-[4rem]" : "bottom-0"
+      }`; // Stop overlay at sticky footer for mobile
     default:
-      return "inset-0 m-auto";
+      return `fixed inset-0 bg-black bg-opacity-50`;
   }
-};
-
-const getAnimationClass = (
-  direction?: string,
-  deviceContext?: DeviceContextProps,
-  isClosing?: boolean,
-) => {
-  if (deviceContext?.isMobile) {
-    return isClosing ? "animate-slide-out-bottom" : "animate-slide-in-bottom";
-  }
-  return isClosing ? "animate-zoom-out" : "animate-zoom-in";
 };
 
 export const Dialog: React.FC<DialogProps> = ({
   id,
-  direction,
+  type,
+  onClose,
   height,
   width,
-  stickyPosition = false,
-  overlayClose = true,
-  borderRadius = "all",
   children,
 }) => {
-  const { isDesktop, isMobile, isTablet } = useDeviceContext();
-  const { isOpen, closeDialog } = useDialog();
+  const { isDialogOpen, closeDialog } = useDialog();
+  const isOpen = isDialogOpen(id);
+  const deviceContext = useDeviceContext();
   const [isClosing, setIsClosing] = useState(false);
+  const dialogOverlayStyles = overlayStyles(type, deviceContext?.isMobile);
 
   useEffect(() => {
-    const dialogIsOpen = isOpen(id);
-    if (!dialogIsOpen) {
+    if (!isOpen) {
       setIsClosing(true);
-      setTimeout(() => setIsClosing(false), 300); // Match the animation duration
+      setTimeout(() => setIsClosing(false), 300); // Animation duration
     }
-  }, [id, isOpen]);
+  }, [isOpen]);
 
   useEffect(() => {
-    document.body.classList.add("no-scroll");
+    document.body.classList.toggle("overflow-hidden", isOpen);
     return () => {
-      document.body.classList.remove("no-scroll");
+      document.body.classList.remove("overflow-hidden");
     };
-  }, []);
+  }, [isOpen]);
 
-  if (!isOpen(id) && !isClosing) return null;
+  if (!isOpen && !isClosing) return null;
 
   const handleOverlayClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (overlayClose) {
-      closeDialog(id);
-      setTimeout(() => {
-        document.body.classList.remove("no-scroll");
-      }, 300);
+    if (isOpen) {
+      closeDialog(id); // Close dialog via context
+      onClose();
     }
   };
 
-  const borderRadiusClass = getBorderRadiusClass(borderRadius, {
-    isDesktop,
-    isMobile,
-    isTablet,
-  });
-  const directionClass = getDirectionClass(direction, {
-    isDesktop,
-    isMobile,
-    isTablet,
-  });
-  const animationClass = getAnimationClass(
-    direction,
-    { isDesktop, isMobile, isTablet },
-    isClosing,
-  );
+  const dialogStyles = getDialogStyles(type, deviceContext);
 
   return (
     <FocusTrap>
       <div
-        className={`fixed inset-0 bg-black bg-opacity-50 flex items-end justify-center bottom-16`}
+        id={id}
+        className={`${dialogOverlayStyles} flex justify-center items-center z-50`}
         onClick={handleOverlayClick}
       >
         <div
-          className={`bg-white border border-gray-200 ${directionClass} ${borderRadiusClass} ${animationClass} flex flex-col`}
+          className={`${dialogStyles} flex flex-col transition-transform ${
+            isClosing ? "scale-95 opacity-0" : "scale-100 opacity-100"
+          }`}
           style={{
-            height: `${height ? `${height}vh` : "auto"}`,
-            maxHeight: `${height ? `${height}vh` : "80vh"}`,
-            width: `${isMobile ? "100%" : width ? `${width}%` : "50%"}`,
-            position: stickyPosition ? "sticky" : "relative",
+            height: height ? `${height}%` : "auto",
+            width: width ? `${width}%` : "auto",
+            maxHeight: "calc(100vh - 4rem)", // Prevent dialog from exceeding viewport height
           }}
           onClick={(e) => e.stopPropagation()}
         >
@@ -161,11 +123,11 @@ export const DialogHeader: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const { isMobile } = useDeviceContext();
+
   return (
-    <div className="border-b border-gray-200 flex-shrink-0">
-      {isMobile && (
-        <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto my-1"></div>
-      )}
+    <div
+      className={`${isMobile ? "border-b border-gray-200" : ""} flex items-center justify-between`}
+    >
       {children}
     </div>
   );
@@ -174,21 +136,15 @@ export const DialogHeader: React.FC<{ children: React.ReactNode }> = ({
 export const DialogContent: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <div className="overflow-y-auto overflow-x-hidden flex-grow scroll-smooth max-md:scrollbar-hide">
+  <div className="overflow-y-auto overflow-x-hidden flex-grow max-h-[calc(100vh-4rem)] scroll-smooth">
     {children}
   </div>
 );
 
-export const DialogFooter: React.FC<DialogFooterProps> = ({
+export const DialogFooter: React.FC<{ children: React.ReactNode }> = ({
   children,
-  align,
-}) => {
-  const { isMobile } = useDeviceContext();
-  return (
-    <div
-      className={`border-t border-gray-200 flex flex-shrink-0 ${align || (isMobile ? "justify-around" : "justify-end")}`}
-    >
-      {children}
-    </div>
-  );
-};
+}) => (
+  <div className="border-t border-gray-200 py-2 px-4 flex justify-end">
+    {children}
+  </div>
+);

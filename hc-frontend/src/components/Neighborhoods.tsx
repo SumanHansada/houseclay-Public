@@ -51,7 +51,7 @@ const Neighborhoods: React.FC<NeighborhoodsProps> = ({
   listingType,
 }) => {
   return (
-    <div className="mx-auto xl:px-40 lg:px-14 md:px-14 px-8 py-20 max-md:py-10 bg-gray-100">
+    <div className="mx-auto xl:px-28 lg:px-14 md:px-14 px-8 py-20 max-md:py-10 bg-gray-100">
       <h1 className="mb-6 text-3xl max-md:text-2xl font-bold text-gray-800">
         Popular Neighborhoods
       </h1>

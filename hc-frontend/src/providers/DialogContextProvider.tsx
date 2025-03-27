@@ -4,7 +4,7 @@ import React, { createContext, ReactNode, useContext, useState } from "react";
 
 // Define the shape of the context
 interface DialogContextType {
-  isOpen: (id: string) => boolean;
+  isDialogOpen: (id: string) => boolean;
   openDialog: (id: string) => void;
   closeDialog: (id: string) => void;
   currentOpenDialogId: string;
@@ -26,7 +26,7 @@ export const DialogContextProvider: React.FC<DialogContextProviderProps> = ({
   );
   const [currentOpenDialogId, setCurrentOpenDialogId] = useState<string>("");
 
-  const isOpen = (id: string) => !!openDialogs[id];
+  const isDialogOpen = (id: string) => !!openDialogs[id];
 
   const openDialog = (id: string) => {
     setOpenDialogs((prev) => ({ ...prev, [id]: true }));
@@ -42,7 +42,7 @@ export const DialogContextProvider: React.FC<DialogContextProviderProps> = ({
 
   return (
     <DialogContext.Provider
-      value={{ isOpen, openDialog, closeDialog, currentOpenDialogId }}
+      value={{ isDialogOpen, openDialog, closeDialog, currentOpenDialogId }}
     >
       {children}
     </DialogContext.Provider>

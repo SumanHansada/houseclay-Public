@@ -53,7 +53,7 @@ const HomeSearchBar: React.FC = () => {
 
       {/* Search Button */}
       <button className=" text-white flex items-center justify-center">
-        <Search height={50} width={50}/>
+        <Search height={50} width={50} />
       </button>
     </div>
   );

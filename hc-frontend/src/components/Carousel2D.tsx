@@ -183,7 +183,7 @@ const Carousel2D: React.FC<Carousel2DProps> = ({
 
       {/* Carousel Dots */}
       {showDots && (
-        <div className="mt-5 bottom-2 left-0 right-0 flex justify-center space-x-1">
+        <div className="py-4 bottom-2 left-0 right-0 flex justify-center gap-1">
           {Array.from({ length: slidesCount }).map((_, index) => (
             <button
               key={index}

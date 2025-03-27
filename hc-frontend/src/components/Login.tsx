@@ -203,7 +203,7 @@ const Login = () => {
         </div>
       )}
       {/* Right pane (form) - takes remaining width */}
-      <div className="flex flex-1 h-full px-8">
+      <div className="flex flex-1 h-full px-8 mx-auto">
         {authStep === AuthStep.PHONE && (
           <div className="w-full flex flex-col align-center justify-center gap-8">
             {/* Form header */}

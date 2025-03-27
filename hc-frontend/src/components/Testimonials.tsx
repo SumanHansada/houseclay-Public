@@ -78,7 +78,7 @@ const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
   // };
   const { isMobile } = useDeviceContext();
   return (
-    <div className="mx-auto xl:px-40 lg:px-14 md:px-14 px-8 py-20">
+    <div className="mx-auto xl:px-28 lg:px-14 md:px-14 px-8 py-20">
       {/* Top user avatars row */}
       <div className="mb-8 flex justify-center">
         <Image

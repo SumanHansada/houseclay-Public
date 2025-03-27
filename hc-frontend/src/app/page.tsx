@@ -25,7 +25,7 @@ import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 
 export default function Home() {
-  const { openDialog, isOpen, closeDialog } = useDialog();
+  const { openDialog, isDialogOpen, closeDialog } = useDialog();
   const [activeTab, setActiveTab] = useState("rent");
   const { isMobile } = useDeviceContext();
   const Search = SearchSvg as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -241,7 +241,7 @@ export default function Home() {
                   </div>
                   {/* Search Button */}
                   <button className=" text-white flex items-center justify-center">
-                    <Search />
+                    <Search width={40} height={40} />
                   </button>
                 </div>
               </div>
@@ -336,7 +336,7 @@ export default function Home() {
           </div>
         </section>
         <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
-          <div className="flex flex-col items-center justify-between gap-10 xl:px-40 lg:px-14 md:px-14 px-8 py-20">
+          <div className="flex flex-col items-center justify-between gap-10 xl:px-28 lg:px-14 md:px-14 px-8 py-20">
             <div className="flex flex-col items-center justify-center gap-4">
               <h1 className="text-4xl font-bold text-center">Why Choose Us?</h1>
               <div className="text-center text-gray-600">
@@ -408,26 +408,26 @@ export default function Home() {
           <PropertyOwners />
         </section>
 
-        {isOpen("login-dialog") && (
+        {isDialogOpen("login-dialog") && (
           <Dialog
             id="login-dialog"
-            direction={isMobile ? "bottom" : "center"}
-            overlayClose={true}
-            borderRadius={isMobile ? "top" : "all"}
-            height={isMobile ? 80 : 0}
+            type={isMobile ? "fullscreen" : "card"}
+            onClose={() => closeDialog("login-dialog")}
           >
             {
               <DialogHeader>
-                {isMobile && (
-                  <div className="flex flex-col justify-between items-center w-full">
+                <div
+                  className={`${isMobile ? "py-2 px-8" : ""}  flex flex-col justify-between items-center w-full`}
+                >
+                  {isMobile && (
                     <h1 className="text-xl mt-1 mb-2 text-black">
                       Log In to Your Account
                     </h1>
-                  </div>
-                )}
-                <button className="absolute top-4 right-4 border border-gray-200 rounded-full md:border-none">
-                  <X onClick={() => closeDialog("login-dialog")} size={25} />
-                </button>
+                  )}
+                  <button className="absolute top-4 right-4 border border-gray-200 rounded-full md:border-none">
+                    <X onClick={() => closeDialog("login-dialog")} size={25} />
+                  </button>
+                </div>
               </DialogHeader>
             }
             <DialogContent>
@@ -435,17 +435,16 @@ export default function Home() {
             </DialogContent>
           </Dialog>
         )}
-        {isOpen("standouts-dialog") && (
+        {isDialogOpen("standouts-dialog") && (
           <Dialog
             id="standouts-dialog"
-            direction={isMobile ? "bottom" : "center"}
-            overlayClose={true}
-            borderRadius={isMobile ? "top" : "all"}
-            height={isMobile ? 80 : 0}
+            type="bottom-sheet"
+            onClose={() => closeDialog("standouts-dialog")}
+            height={80}
           >
             {isMobile && (
               <DialogHeader>
-                <div className="flex flex-col justify-between items-center w-full">
+                <div className="py-2 px-8 flex flex-col justify-between items-center w-full">
                   <h1 className="text-xl mt-1 mb-2 text-black">Standouts</h1>
                 </div>
                 <button className="absolute top-4 right-4 border border-gray-200 rounded-full">
