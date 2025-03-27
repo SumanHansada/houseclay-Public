@@ -7,7 +7,10 @@ const baseUrl = process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL;
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: baseUrl || "https://jsonplaceholder.typicode.com",
+    baseUrl:
+      baseUrl ||
+      "http://ec2-3-27-226-168.ap-southeast-2.compute.amazonaws.com:8080/api" ||
+      "https://jsonplaceholder.typicode.com",
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
       if (token) {
