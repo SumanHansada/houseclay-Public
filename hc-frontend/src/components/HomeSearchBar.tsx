@@ -33,7 +33,7 @@ const HomeSearchBar: React.FC = () => {
         <input
           type="text"
           placeholder="Type localities..."
-          className="text-gray-500 text-sm outline-none w-full"
+          className="text-gray-500 text-sm w-full"
         />
       </div>
 
@@ -53,7 +53,7 @@ const HomeSearchBar: React.FC = () => {
 
       {/* Search Button */}
       <button className=" text-white flex items-center justify-center">
-        <Search />
+        <Search height={50} width={50}/>
       </button>
     </div>
   );
