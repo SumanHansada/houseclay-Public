@@ -1,5 +1,6 @@
-import { Heart, Home, Search } from "lucide-react";
+import { Heart, Search } from "lucide-react";
 import CoinSvg from "public/icons/coin.svg";
+import HouseClayHomeSvg from "public/icons/houseclay-home.svg";
 import UserSvg from "public/icons/user.svg";
 import React, { useState } from "react";
 
@@ -23,6 +24,9 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
   const [activeTab, setActiveTab] = useState<string>(defaultActive);
   const Coin = CoinSvg as React.FC<React.SVGProps<SVGSVGElement>>;
   const User = UserSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+  const HouseClayHome = HouseClayHomeSvg as React.FC<
+    React.SVGProps<SVGSVGElement>
+  >;
 
   const navItems: NavItem[] = [
     {
@@ -37,7 +41,12 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
       label: "Shortlists",
       href: "/shortlists",
     },
-    { id: "home", icon: <Home size={25} />, label: "Home", href: "/" },
+    {
+      id: "home",
+      icon: <HouseClayHome width={20} height={20} />,
+      label: "Home",
+      href: "/",
+    },
     {
       id: "connects",
       icon: <Coin width={25} height={25} />,
@@ -78,7 +87,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
                 aria-current={activeTab === item.id ? "page" : undefined}
               >
                 <div
-                  className={`p-1 flex justify-center items-center ${activeTab === item.id && item.id !== "connects" ? "text-red-500 border-red-500 stroke-red-500" : "text-gray-500"}`}
+                  className={`p-1 flex justify-center items-center ${activeTab === item.id && item.id !== "connects" ? "text-red-500 border-red-500 stroke-red-500 fill-red-500" : "text-gray-500"}`}
                 >
                   {item.icon}
                   {item.badge && (
