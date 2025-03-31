@@ -261,50 +261,60 @@ export default function Home() {
             {/* Feature Grid */}
             <div className="grid grid-cols-4 gap-4">
               <div className="flex-1 flex-col items-center">
-                <div className="bg-white p-4 rounded-2xl shadow-lg flex flex-1 justify-center items-center">
+                <button
+                  className="bg-white p-4 rounded-2xl shadow-lg flex flex-1 justify-center items-center"
+                  role="button"
+                >
                   <div className="rounded-full">
                     <FindFlatmates />
                   </div>
-                </div>
+                </button>
                 <div className="text-center mt-2">
                   <div className="text-sm font-nunito">Find Flatmates</div>
                 </div>
               </div>
 
               <div className="flex-1 flex-col items-center">
-                <div className="bg-white p-4 rounded-2xl shadow-lg flex flex-1 justify-center items-center">
+                <button
+                  className="bg-white p-4 rounded-2xl shadow-lg flex flex-1 justify-center items-center"
+                  role="button"
+                >
                   <div className="rounded-full">
                     <FindRooms />
                   </div>
-                </div>
+                </button>
                 <div className="text-center mt-2">
                   <div className="text-sm font-nunito">Find Rooms</div>
                 </div>
               </div>
 
-              <div
-                className="flex-1 flex-col items-center"
-                onClick={() => openDialog("standouts-dialog")}
-              >
-                <div className="bg-white p-4 rounded-2xl shadow-lg flex flex-1 justify-center items-center">
+              <div className="flex-1 flex-col items-center">
+                <button
+                  className="bg-white p-4 rounded-2xl shadow-lg flex flex-1 justify-center items-center"
+                  role="button"
+                  onClick={() => openDialog("standouts-dialog")}
+                >
                   <div className="rounded-full">
                     <WeeklyStandouts />
                   </div>
-                </div>
+                </button>
                 <div className="text-center mt-2">
                   <div className="text-sm font-nunito">Weekly Standouts</div>
                 </div>
               </div>
 
               <div className="flex-1 flex-col items-center">
-                <div className="bg-white p-4 rounded-2xl shadow-lg flex flex-1 justify-center items-center relative">
+                <button
+                  className="bg-white p-4 rounded-2xl shadow-lg flex flex-1 justify-center items-center relative"
+                  role="button"
+                >
                   <div className="absolute -top-2 -right-2 bg-red-500 text-white px-2 py-0.5 text-xs rounded">
                     FREE
                   </div>
                   <div className="rounded-full">
                     <ListProperty />
                   </div>
-                </div>
+                </button>
                 <div className="text-center mt-2 flex-1">
                   <div className="text-sm font-nunito">List Your Property</div>
                 </div>

@@ -95,7 +95,7 @@ export const Dialog: React.FC<DialogProps> = ({
   const dialogStyles = getDialogStyles(type, deviceContext);
 
   return (
-    <FocusTrap>
+    <FocusTrap focusTrapOptions={{ allowOutsideClick: true }}>
       <div
         id={id}
         className={`${dialogOverlayStyles} flex justify-center items-center z-50`}
