@@ -1,7 +1,6 @@
 import Image from "next/image";
-import React from "react";
 
-const PropertyOwners = () => {
+const PropertyOwners: React.FC = () => {
   return (
     <div className="mx-auto xl:px-28 lg:px-14 md:px-14 px-8 py-20 flex flex-col md:flex-row items-center justify-between bg-white">
       {/* Left Side - Text Content */}

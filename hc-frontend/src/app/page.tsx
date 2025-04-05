@@ -1,6 +1,5 @@
 "use client";
 import { X } from "lucide-react";
-import Image from "next/image";
 import DealSvg from "public/icons/deal.svg";
 import FindFlatmatesSvg from "public/icons/find-flatmates.svg";
 import FindRoomsSvg from "public/icons/find-rooms.svg";
@@ -10,6 +9,7 @@ import WeeklyStandoutsSvg from "public/icons/weekly-standouts.svg";
 import ZeroPercentSvg from "public/icons/zero-percent.svg";
 import { useState } from "react";
 
+import Advantages from "@/components/Advantages";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
@@ -259,10 +259,10 @@ export default function Home() {
             </div>
 
             {/* Feature Grid */}
-            <div className="grid grid-cols-4 gap-4">
-              <div className="flex-1 flex-col items-center">
+            <div className="grid grid-cols-4 gap-4 place-items-start">
+              <div className="flex flex-col items-center justify-center self-start justify-self-center">
                 <button
-                  className="bg-white p-4 rounded-2xl shadow-lg flex flex-1 justify-center items-center"
+                  className="bg-white p-4 rounded-2xl shadow-lg justify-center items-center "
                   role="button"
                 >
                   <div className="rounded-full">
@@ -274,9 +274,9 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="flex-1 flex-col items-center">
+              <div className="flex flex-col items-center justify-center self-start justify-self-center">
                 <button
-                  className="bg-white p-4 rounded-2xl shadow-lg flex flex-1 justify-center items-center"
+                  className="bg-white p-4 rounded-2xl shadow-lg justify-center items-center"
                   role="button"
                 >
                   <div className="rounded-full">
@@ -288,9 +288,9 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="flex-1 flex-col items-center">
+              <div className="flex flex-col items-center justify-center self-start justify-self-center">
                 <button
-                  className="bg-white p-4 rounded-2xl shadow-lg flex flex-1 justify-center items-center"
+                  className="bg-white p-4 rounded-2xl shadow-lg justify-center items-center"
                   role="button"
                   onClick={() => openDialog("standouts-dialog")}
                 >
@@ -303,9 +303,9 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="flex-1 flex-col items-center">
+              <div className="flex flex-col items-center justify-center self-start justify-self-center">
                 <button
-                  className="bg-white p-4 rounded-2xl shadow-lg flex flex-1 justify-center items-center relative"
+                  className="bg-white p-4 rounded-2xl shadow-lg justify-center items-center relative"
                   role="button"
                 >
                   <div className="absolute -top-2 -right-2 bg-red-500 text-white px-2 py-0.5 text-xs rounded">
@@ -346,56 +346,7 @@ export default function Home() {
           </div>
         </section>
         <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
-          <div className="flex flex-col items-center justify-between gap-10 xl:px-28 lg:px-14 md:px-14 px-8 py-20">
-            <div className="flex flex-col items-center justify-center gap-4">
-              <h1 className="text-4xl font-bold text-center">Why Choose Us?</h1>
-              <div className="text-center text-gray-600">
-                Discover the advantages of using our platform to find your
-                perfect property.
-              </div>
-            </div>
-            <div className="flex flex-wrap xl:gap-12 lg:gap-6 gap-6 justify-between">
-              <div className="flex flex-1 flex-col bg-white rounded-3xl  border border-gray-200 shadow-lg xl:px-12 lg:px-6 px-3 py-6 justify-between items-center gap-4">
-                <Image
-                  src="/icons/direct-owner-access.svg"
-                  alt="Direct Owner Accesss"
-                  width={150}
-                  height={150}
-                />
-                <h1 className="font-bold text-center">Direct Owner Access</h1>
-                <p className="text-center">
-                  Skip the brokers — connect straight to property owners with
-                  ease.
-                </p>
-              </div>
-              <div className="flex flex-1 flex-col bg-white rounded-3xl border border-gray-200 shadow-lg xl:px-12 lg:px-6 px-3  py-6 justify-between items-center gap-4">
-                <Image
-                  src="/icons/pay-as-you-go.svg"
-                  alt="Pay-As-You-Go"
-                  width={150}
-                  height={150}
-                />
-                <h1 className="font-bold text-center">Pay-As-You-Go</h1>
-                <p className="text-center">
-                  Buy connects only when you need them. No subscriptions, no
-                  hidden fees.
-                </p>
-              </div>
-              <div className="flex flex-1 flex-col bg-white rounded-3xl border border-gray-200 shadow-lg xl:px-12 lg:px-6 px-3  py-6 justify-between items-center gap-4">
-                <Image
-                  src="/icons/exclusive-listings.svg"
-                  alt="Exclusive Listings"
-                  width={150}
-                  height={150}
-                />
-                <h1 className="font-bold text-center">Exclusive Listings</h1>
-                <p className="text-center">
-                  Access properties you won’t find anywhere else, only on
-                  HouseClay.
-                </p>
-              </div>
-            </div>
-          </div>
+          <Advantages />
         </section>
 
         <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
