@@ -1,6 +1,8 @@
 import Image from "next/image";
 import React from "react";
 
+import Carousel2D from "./Carousel2D";
+
 // Define types for our component props
 export interface Neighbourhood {
   name: string;
@@ -59,17 +61,19 @@ const Neighbourhoods: React.FC<NeighbourhoodsProps> = ({
       {/* Scrollable cards container for mobile */}
       <div
         role="list"
-        className="scrollbar-hide flex overflow-x-auto pb-6 md:hidden"
+        className="scrollbar-hide flex overflow-x-auto md:hidden"
       >
-        {neighbourhoods.map((neighbourhood, index) => (
-          <div key={index} className="mr-4 flex-none">
-            <NeighbourhoodCard
-              image={neighbourhood.image}
-              name={neighbourhood.name}
-              listingType={listingType}
-            />
-          </div>
-        ))}
+        <Carousel2D slideWidth={245} gap={24} showDots={true}>
+          {neighbourhoods.map((neighbourhood, index) => (
+            <div key={index} className="mr-4 flex-none">
+              <NeighbourhoodCard
+                image={neighbourhood.image}
+                name={neighbourhood.name}
+                listingType={listingType}
+              />
+            </div>
+          ))}
+        </Carousel2D>
       </div>
 
       {/* Grid layout for larger screens */}
@@ -81,18 +85,6 @@ const Neighbourhoods: React.FC<NeighbourhoodsProps> = ({
             name={neighbourhood.name}
             listingType={listingType}
           />
-        ))}
-      </div>
-
-      {/* Pagination dots for mobile scrolling */}
-      <div className="mt-4 flex justify-center space-x-2 sm:hidden">
-        {[0, 1, 2, 3, 4].map((dot) => (
-          <div
-            key={dot}
-            className={`h-2 w-2 rounded-full ${
-              dot === 0 ? "bg-gray-800" : "bg-gray-300"
-            }`}
-          ></div>
         ))}
       </div>
     </div>

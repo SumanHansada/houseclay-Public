@@ -70,6 +70,7 @@ export default function Home() {
         <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
           <PropertyOwners />
         </section>
+        {/* Login Dialog */}
         {isDialogOpen("login-dialog") && (
           <Dialog
             id="login-dialog"
@@ -97,6 +98,7 @@ export default function Home() {
             </DialogContent>
           </Dialog>
         )}
+        {/* Standouts Dialog */}
         {isDialogOpen("standouts-dialog") && (
           <Dialog
             id="standouts-dialog"
@@ -127,7 +129,9 @@ export default function Home() {
           </Dialog>
         )}
       </main>
+      {/* Footer Section */}
       <Footer />
+      {/* Sticky Navbar for Mobile */}
       {isMobile && <StickyNavbar />}
     </>
   );
