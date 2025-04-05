@@ -22,7 +22,7 @@ export interface Property {
 
 interface PropertiesProps {
   property: Property;
-  badgeType?: BadgeType;
+  badgeType?: string;
   autoplay?: boolean;
   autoplayInterval?: number;
 }
