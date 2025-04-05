@@ -2,23 +2,23 @@ import Image from "next/image";
 import React from "react";
 
 // Define types for our component props
-export interface Neighborhood {
+export interface Neighbourhood {
   name: string;
   image: string;
 }
 
-interface NeighborhoodCardProps {
+interface NeighbourhoodCardProps {
   image: string;
   name: string;
   listingType: string;
 }
 
-interface NeighborhoodsProps {
-  neighborhoods: Neighborhood[];
+interface NeighbourhoodsProps {
+  neighbourhoods: Neighbourhood[];
   listingType: string;
 }
 
-const NeighborhoodCard: React.FC<NeighborhoodCardProps> = ({
+const NeighbourhoodCard: React.FC<NeighbourhoodCardProps> = ({
   image,
   name,
   listingType,
@@ -30,7 +30,7 @@ const NeighborhoodCard: React.FC<NeighborhoodCardProps> = ({
     >
       <Image
         src={image}
-        alt={`${name} neighborhood`}
+        alt={`${name} neighbourhood`}
         className="h-full w-full object-cover"
         layout="fill"
       />
@@ -46,14 +46,14 @@ const NeighborhoodCard: React.FC<NeighborhoodCardProps> = ({
   );
 };
 
-const Neighborhoods: React.FC<NeighborhoodsProps> = ({
-  neighborhoods,
+const Neighbourhoods: React.FC<NeighbourhoodsProps> = ({
+  neighbourhoods,
   listingType,
 }) => {
   return (
     <div className="mx-auto xl:px-28 lg:px-14 md:px-14 px-8 py-20 max-md:py-10 bg-gray-100">
       <h1 className="mb-6 text-3xl max-md:text-2xl font-bold text-gray-800">
-        Popular Neighborhoods
+        Popular Neighbourhoods
       </h1>
 
       {/* Scrollable cards container for mobile */}
@@ -61,11 +61,11 @@ const Neighborhoods: React.FC<NeighborhoodsProps> = ({
         role="list"
         className="scrollbar-hide flex overflow-x-auto pb-6 md:hidden"
       >
-        {neighborhoods.map((neighborhood, index) => (
+        {neighbourhoods.map((neighbourhood, index) => (
           <div key={index} className="mr-4 flex-none">
-            <NeighborhoodCard
-              image={neighborhood.image}
-              name={neighborhood.name}
+            <NeighbourhoodCard
+              image={neighbourhood.image}
+              name={neighbourhood.name}
               listingType={listingType}
             />
           </div>
@@ -74,11 +74,11 @@ const Neighborhoods: React.FC<NeighborhoodsProps> = ({
 
       {/* Grid layout for larger screens */}
       <div className="grid gap-3 md:gap-3  lg:gap-4  xl:gap-4 2xl:gap-5 grid-cols-[repeat(auto-fit,minmax(280px,1fr))]  max-md:hidden">
-        {neighborhoods.map((neighborhood, index) => (
-          <NeighborhoodCard
+        {neighbourhoods.map((neighbourhood, index) => (
+          <NeighbourhoodCard
             key={index}
-            image={neighborhood.image}
-            name={neighborhood.name}
+            image={neighbourhood.image}
+            name={neighbourhood.name}
             listingType={listingType}
           />
         ))}
@@ -99,4 +99,4 @@ const Neighborhoods: React.FC<NeighborhoodsProps> = ({
   );
 };
 
-export default Neighborhoods;
+export default Neighbourhoods;

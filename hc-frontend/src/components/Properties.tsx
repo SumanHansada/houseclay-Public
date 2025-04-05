@@ -3,7 +3,10 @@ import { Crown, Heart, MapPin, Star } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 
-type BadgeType = "Featured" | "Exclusive" | null;
+enum BadgeType {
+  Featured = "Featured",
+  Exclusive = "Exclusive",
+}
 
 export interface Property {
   id: number;
@@ -14,7 +17,7 @@ export interface Property {
   area: string;
   location: string;
   images: string[];
-  type: BadgeType;
+  type: string;
 }
 
 interface PropertiesProps {
@@ -68,7 +71,7 @@ const Properties: React.FC<PropertiesProps> = ({
           <div
             className={`absolute top-3 left-3 px-2 py-2 rounded-lg text-xs text-black bg-white`}
           >
-            {badgeType === "Featured" ? (
+            {badgeType === BadgeType.Featured ? (
               <span className="flex items-center">
                 <i className="mr-1 ">
                   <Star

@@ -1,0 +1,120 @@
+{
+  "properties": [
+    {
+      "id": 1,
+      "complex": "Sobha Royal Pavilion",
+      "beds": 3,
+      "baths": 3,
+      "price": "2.3",
+      "area": "1,790",
+      "location": "Nagavarapalya, 15th cross, Landmark - Life in...",
+      "images": [
+        "/photos/House1.avif",
+        "/photos/House2.avif",
+        "/photos/House3.avif",
+        "/photos/House4.avif"
+      ],
+      "type": "Featured"
+    },
+    {
+      "id": 2,
+      "complex": "Prestige Lakeside Habitat",
+      "beds": 3,
+      "baths": 2,
+      "price": "1.7",
+      "area": "1,360",
+      "location": "Varthur, Gunjur, Bangalore",
+      "images": [
+        "/photos/House1.avif",
+        "/photos/House3.avif",
+        "/photos/House2.avif",
+        "/photos/House4.avif"
+      ],
+      "type": ""
+    },
+    {
+      "id": 3,
+      "complex": "Sobha Neopolis",
+      "beds": 2,
+      "baths": 2,
+      "price": "1.3",
+      "area": "1180",
+      "location": "Gunjur Road, Bangalore",
+      "images": [
+        "/photos/House4.avif",
+        "/photos/House1.avif",
+        "/photos/House3.avif",
+        "/photos/House2.avif"
+      ],
+      "type": "Exclusive"
+    },
+    {
+      "id": 4,
+      "complex": "Durga Petals",
+      "beds": 2,
+      "baths": 2,
+      "price": "2.2",
+      "area": "1240",
+      "location": "Doddenakundi, Marathahalli, Bangalore",
+      "images": [
+        "/photos/House4.avif",
+        "/photos/House3.avif",
+        "/photos/House2.avif",
+        "/photos/House1.avif"
+      ],
+      "type": "Exclusive"
+    }
+  ],
+  "neighbourhoods": [
+    { "name": "Whitefield", "image": "/neighbourhood/Whitefield.jpeg" },
+    { "name": "Koramangala", "image": "/neighbourhood/Koramangala.jpeg" },
+    { "name": "Indiranagar", "image": "/neighbourhood/Indiranagar.jpeg" },
+    { "name": "HSR Layout", "image": "/neighbourhood/HSR.jpeg" },
+    { "name": "Jayanagar", "image": "/neighbourhood/Jayanagar.jpeg" },
+    { "name": "Hebbal", "image": "/neighbourhood/Hebbal.jpeg" },
+    { "name": "Sarjapur Road", "image": "/neighbourhood/Sarjapur Road.jpeg" },
+    { "name": "Banashankari", "image": "/neighbourhood/Banashankari.jpeg" }
+  ],
+  "testimonials": [
+    {
+      "id": 1,
+      "name": "Samir T.",
+      "initial": "S",
+      "avatar": "/people/daniel.png",
+      "rating": 5,
+      "content": "Finding the perfect home felt effortless with HouseClay. The team was incredibly supportive, guiding me through every step and providing all the resources I needed."
+    },
+    {
+      "id": 2,
+      "name": "Rajesh M.",
+      "initial": "R",
+      "avatar": "/people/garry.png",
+      "rating": 5,
+      "content": "The extensive listings, along with accurate property details and legal assistance, made this a smooth, stress-free journey."
+    },
+    {
+      "id": 3,
+      "name": "Aditya C.",
+      "initial": "A",
+      "avatar": "/people/tommy.png",
+      "rating": 5,
+      "content": "The verified properties and transparent details made all the difference. Their commitment to quality and customer support reassured me, and I'm thrilled with my purchase."
+    },
+    {
+      "id": 4,
+      "name": "Priya K.",
+      "initial": "P",
+      "avatar": "/people/garry.png",
+      "rating": 5,
+      "content": "As a first-time buyer, I was nervous about the process. The team at HouseClay made everything so simple and straightforward. Couldn't be happier!"
+    },
+    {
+      "id": 5,
+      "name": "Vikram S.",
+      "initial": "V",
+      "avatar": "/people/tommy.png",
+      "rating": 5,
+      "content": "After months of searching elsewhere, I found my dream apartment within two weeks of using this platform. The filters and neighborhood insights were game-changers."
+    }
+  ]
+}
