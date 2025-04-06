@@ -8,6 +8,7 @@ import HouseclaySvg from "public/icons/houseclay.svg";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { useDialog } from "@/providers/DialogContextProvider";
 import { useLogoutMutation } from "@/store/apiSlice";
 import { clearToken, initializeToken } from "@/store/authSlice";
 
@@ -20,15 +21,17 @@ type User = {
 
 export interface HeaderProps {
   user?: User;
-  onLogin?: () => void;
-  onLogout?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ onLogin }) => {
+const Header: React.FC<HeaderProps> = () => {
   const token = useSelector((state: RootState) => state.auth.token);
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
+  const { openDialog } = useDialog();
   const HouseClay = HouseclaySvg as React.FC<React.SVGProps<SVGSVGElement>>;
+  const onLogin = () => {
+    openDialog("login-dialog");
+  };
 
   useEffect(() => {
     dispatch(initializeToken());

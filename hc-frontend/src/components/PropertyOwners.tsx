@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const PropertyOwners: React.FC = () => {
   return (
@@ -17,9 +18,12 @@ const PropertyOwners: React.FC = () => {
           hassle-free transactions, connecting you with the right buyers or
           tenants in no time.
         </p>
-        <button className="mt-4 px-6 py-2 border-2 border-red-500 text-red-500 rounded-lg font-medium hover:bg-red-500 hover:text-white transition">
+        <Link
+          href="/list-property"
+          className="inline-block mt-4 px-6 py-2 border-2 border-red-500 text-red-500 rounded-lg font-medium hover:bg-red-500 hover:text-white transition"
+        >
           List Your Property
-        </button>
+        </Link>
       </div>
 
       {/* Right Side - Image Content */}

@@ -4,15 +4,12 @@ import { useState } from "react";
 
 import Advantages from "@/components/Advantages";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
 import Login from "@/components/Login";
 import MastHeadDesktop from "@/components/MastheadDesktop";
 import MastHeadMobile from "@/components/MastheadMobile";
 import Neighbourhoods from "@/components/Neighborhoods";
 import PropertyOwners from "@/components/PropertyOwners";
 import Standouts from "@/components/Standouts";
-import StickyNavbar from "@/components/StickyNavbar";
 import Testimonials from "@/components/Testimonials";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -20,119 +17,105 @@ import { useDialog } from "@/providers/DialogContextProvider";
 import dummyData from "../data/dummyData.json";
 
 export default function Home() {
-  const { openDialog, isDialogOpen, closeDialog } = useDialog();
+  const { isDialogOpen, closeDialog } = useDialog();
   const [activeTab, setActiveTab] = useState("rent");
   const { isMobile } = useDeviceContext();
   const properties = dummyData.properties;
   const neighbourhoods = dummyData.neighbourhoods;
   const testimonials = dummyData.testimonials;
 
-  const onLogin = () => {
-    openDialog("login-dialog");
-  };
-
   return (
     <>
-      <Header onLogin={onLogin} />
-      <main className="mx-auto my-0  min-h-screen flex-1 flex flex-wrap items-center justify-center">
-        {/* Masthead Desktop Section */}
-        <section className="relative xl:h-[600px] lg:h-[500px] h-[500px] w-full overflow-hidden max-md:hidden">
-          <MastHeadDesktop activeTab={activeTab} setActiveTab={setActiveTab} />
-        </section>
-        {/* Masthead Mobile Section */}
-        <section className={"min-h-[500px] w-full overflow-hidden md:hidden"}>
-          <MastHeadMobile activeTab={activeTab} setActiveTab={setActiveTab} />
-        </section>
-        {/* Advantages Section */}
-        <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
-          <Advantages />
-        </section>
-        {/* Standouts Section */}
-        <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
-          <Standouts
-            listingType={activeTab}
-            properties={properties}
-            setActiveTab={setActiveTab}
-          />
-        </section>
-        {/* neighbourhoods Section */}
-        <section className="min-h-[500px] w-full overflow-hidden">
-          <Neighbourhoods
-            listingType={activeTab}
-            neighbourhoods={neighbourhoods}
-          />
-        </section>
-        {/* Testimonials Section */}
-        <section className="min-h-[500px] w-full overflow-hidden">
-          <Testimonials testimonials={testimonials} />
-        </section>
-        {/* Property Owners Section */}
-        <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
-          <PropertyOwners />
-        </section>
-        {/* Login Dialog */}
-        {isDialogOpen("login-dialog") && (
-          <Dialog
-            id="login-dialog"
-            type={isMobile ? "fullscreen" : "card"}
-            onClose={() => closeDialog("login-dialog")}
-          >
-            {
-              <DialogHeader>
-                <div
-                  className={`${isMobile ? "py-2 px-8" : ""}  flex flex-col justify-between items-center w-full`}
-                >
-                  {isMobile && (
-                    <h1 className="text-xl mt-1 mb-2 text-black">
-                      Log In to Your Account
-                    </h1>
-                  )}
-                  <button className="absolute top-4 right-4 border border-gray-200 rounded-full md:border-none">
-                    <X onClick={() => closeDialog("login-dialog")} size={25} />
-                  </button>
-                </div>
-              </DialogHeader>
-            }
-            <DialogContent>
-              <Login />
-            </DialogContent>
-          </Dialog>
-        )}
-        {/* Standouts Dialog */}
-        {isDialogOpen("standouts-dialog") && (
-          <Dialog
-            id="standouts-dialog"
-            type="bottom-sheet"
-            onClose={() => closeDialog("standouts-dialog")}
-            height={80}
-          >
-            {isMobile && (
-              <DialogHeader>
-                <div className="py-2 px-8 flex flex-col justify-between items-center w-full">
-                  <h1 className="text-xl mt-1 mb-2 text-black">Standouts</h1>
-                </div>
-                <button className="absolute top-4 right-4 border border-gray-200 rounded-full">
-                  <X
-                    onClick={() => closeDialog("standouts-dialog")}
-                    size={25}
-                  />
+      {/* Masthead Desktop Section */}
+      <section className="relative xl:h-[600px] lg:h-[500px] h-[500px] w-full overflow-hidden max-md:hidden">
+        <MastHeadDesktop activeTab={activeTab} setActiveTab={setActiveTab} />
+      </section>
+      {/* Masthead Mobile Section */}
+      <section className={"min-h-[500px] w-full overflow-hidden md:hidden"}>
+        <MastHeadMobile activeTab={activeTab} setActiveTab={setActiveTab} />
+      </section>
+      {/* Advantages Section */}
+      <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
+        <Advantages />
+      </section>
+      {/* Standouts Section */}
+      <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
+        <Standouts
+          listingType={activeTab}
+          properties={properties}
+          setActiveTab={setActiveTab}
+        />
+      </section>
+      {/* neighbourhoods Section */}
+      <section className="min-h-[500px] w-full overflow-hidden">
+        <Neighbourhoods
+          listingType={activeTab}
+          neighbourhoods={neighbourhoods}
+        />
+      </section>
+      {/* Testimonials Section */}
+      <section className="min-h-[500px] w-full overflow-hidden">
+        <Testimonials testimonials={testimonials} />
+      </section>
+      {/* Property Owners Section */}
+      <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
+        <PropertyOwners />
+      </section>
+      {/* Login Dialog */}
+      {isDialogOpen("login-dialog") && (
+        <Dialog
+          id="login-dialog"
+          type={isMobile ? "fullscreen" : "card"}
+          onClose={() => closeDialog("login-dialog")}
+        >
+          {
+            <DialogHeader>
+              <div
+                className={`${isMobile ? "py-2 px-8" : ""}  flex flex-col justify-between items-center w-full`}
+              >
+                {isMobile && (
+                  <h1 className="text-xl mt-1 mb-2 text-black">
+                    Log In to Your Account
+                  </h1>
+                )}
+                <button className="absolute top-4 right-4 border border-gray-200 rounded-full md:border-none">
+                  <X onClick={() => closeDialog("login-dialog")} size={25} />
                 </button>
-              </DialogHeader>
-            )}
-            <DialogContent>
-              <Standouts
-                listingType={activeTab}
-                properties={properties}
-                setActiveTab={setActiveTab}
-              />
-            </DialogContent>
-          </Dialog>
-        )}
-      </main>
-      {/* Footer Section */}
-      <Footer />
-      {/* Sticky Navbar for Mobile */}
-      {isMobile && <StickyNavbar />}
+              </div>
+            </DialogHeader>
+          }
+          <DialogContent>
+            <Login />
+          </DialogContent>
+        </Dialog>
+      )}
+      {/* Standouts Dialog */}
+      {isDialogOpen("standouts-dialog") && (
+        <Dialog
+          id="standouts-dialog"
+          type="bottom-sheet"
+          onClose={() => closeDialog("standouts-dialog")}
+          height={80}
+        >
+          {isMobile && (
+            <DialogHeader>
+              <div className="py-2 px-8 flex flex-col justify-between items-center w-full">
+                <h1 className="text-xl mt-1 mb-2 text-black">Standouts</h1>
+              </div>
+              <button className="absolute top-4 right-4 border border-gray-200 rounded-full">
+                <X onClick={() => closeDialog("standouts-dialog")} size={25} />
+              </button>
+            </DialogHeader>
+          )}
+          <DialogContent>
+            <Standouts
+              listingType={activeTab}
+              properties={properties}
+              setActiveTab={setActiveTab}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   );
 }

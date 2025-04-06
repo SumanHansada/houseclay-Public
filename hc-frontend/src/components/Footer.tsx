@@ -200,7 +200,7 @@ const Footer = () => {
         </div>
       </footer>
       {/* Mobile Footer */}
-      <footer className="flex flex-col gap-6 md:hidden bg-gray-100 px-8 pt-8 pb-2">
+      <footer className="flex flex-col gap-6 md:hidden bg-gray-100 px-8 pt-8 pb-16">
         <Link href="/" className="flex items-center gap-1">
           <HouseClay />
           <span className="text-red-600 text-lg font-nunito font-bold">
