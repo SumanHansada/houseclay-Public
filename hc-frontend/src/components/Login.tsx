@@ -203,7 +203,7 @@ const Login = () => {
         </div>
       )}
       {/* Right pane (form) - takes remaining width */}
-      <div className="flex flex-1 h-full px-8 mx-auto">
+      <div className="flex flex-1 h-full px-8 mx-auto max-md:bg-[url('/images/login-ellipse.svg')] max-md:bg-no-repeat">
         {authStep === AuthStep.PHONE && (
           <div className="w-full flex flex-col align-center justify-center gap-8">
             {/* Form header */}
@@ -219,6 +219,10 @@ const Login = () => {
             {/* Form fields */}
             <div className="space-y-4">
               <div>
+                <div className="md:hidden mb-8">
+                  <span className="text-2xl font-bold">No spam,  </span>
+                  <span className="text-2xl">just updates.</span>
+                </div>
                 <label
                   htmlFor="phone"
                   className="block text-base font-normal text-gray-700 mb-2"
