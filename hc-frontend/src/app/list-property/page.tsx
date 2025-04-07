@@ -5,26 +5,109 @@ import "react-international-phone/style.css";
 import { ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import BuyersConnectionsSvg from "public/icons/buyers-connections.svg";
+import CallWithCaptainSvg from "public/icons/call-with-captain.svg";
+import CreateNewListingSvg from "public/icons/create-new-listing.svg";
 import CustomerSupportSvg from "public/icons/customer-support.svg";
 import FasterDealClosuresSvg from "public/icons/faster-deal-closures.svg";
 import HassleFreeListingsSvg from "public/icons/hassle-free-listings.svg";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PhoneInput } from "react-international-phone";
+import { useDispatch, useSelector } from "react-redux";
 
+import { AuthStep } from "@/common/utils";
 import Carousel2D from "@/components/Carousel2D";
 import { TestimonialCard } from "@/components/Testimonials";
+import { useDialog } from "@/providers/DialogContextProvider";
+import {
+  useGenerateOtpMutation,
+  useLazyCheckUserQuery,
+} from "@/store/apiSlice";
+import { setAuthStep, setPhoneNo } from "@/store/authSlice";
+import { RootState } from "@/store/store";
 
 import dummyData from "../../data/dummyData.json";
 
+export enum ListPropertyStep {}
+
+interface ListingOptionProps {
+  id: string;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  isSelected: boolean;
+  onChange: () => void;
+}
+
+const ListingOption: React.FC<ListingOptionProps> = ({
+  id,
+  icon,
+  title,
+  description,
+  isSelected,
+  onChange,
+}) => {
+  return (
+    <div className={`mb-4`}>
+      <label
+        htmlFor={id}
+        className={`flex items-center justify-between p-4 rounded-lg border cursor-pointer gap-16 ${
+          isSelected ? "border-red-400 bg-red-50" : "border-gray-200 bg-white"
+        }`}
+      >
+        <div className="flex items-center">
+          <div
+            className={`flex items-center p-1 mr-4 ${
+              isSelected ? "bg-blue-50" : "bg-green-50"
+            } rounded-full`}
+          >
+            <div
+              className={`flex w-12 h-12  items-center justify-center   rounded-full  ${
+                isSelected ? "bg-blue-100" : "bg-green-100"
+              }`}
+            >
+              {icon}
+            </div>
+          </div>
+          <div>
+            <h3 className="font-medium text-xl">{title}</h3>
+            <p className="text-gray-500 text-base">{description}</p>
+          </div>
+        </div>
+        <div
+          className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+            isSelected ? "border-red-500 bg-red-500" : "border-gray-300"
+          }`}
+        >
+          {isSelected && <div className="w-2 h-2 rounded-full bg-white"></div>}
+        </div>
+      </label>
+      <input
+        type="radio"
+        id={id}
+        name="listingOption"
+        checked={isSelected}
+        onChange={onChange}
+        className="sr-only" // Visually hidden but accessible
+      />
+    </div>
+  );
+};
+
 export default function ListProperty() {
-  const [phoneNo, setPhoneNo] = useState("");
-  console.log("Phone Number:", phoneNo);
+  const { openDialog } = useDialog();
+  const [selectedOption, setSelectedOption] = useState("new");
+  const phoneNo = useSelector((state: RootState) => state.auth.phoneNo);
+  const token = useSelector((state: RootState) => state.auth.token);
   const handlePhoneChange = (data: string) => {
     // Remove '+' sign and update the phone number
     const sanitizedPhone = data.replace(/^\+/, "");
-    setPhoneNo(sanitizedPhone);
+    dispatch(setPhoneNo(sanitizedPhone));
   };
+  const dispatch = useDispatch();
   const [acceptTerms, setAcceptTerms] = useState(false);
+  const [triggerCheckUser] = useLazyCheckUserQuery();
+  const [generateOtp] = useGenerateOtpMutation();
+
   const BuyersConnections = BuyersConnectionsSvg as React.FC<
     React.SVGProps<SVGSVGElement>
   >;
@@ -37,13 +120,25 @@ export default function ListProperty() {
   const CustomerSupport = CustomerSupportSvg as React.FC<
     React.SVGProps<SVGSVGElement>
   >;
+
+  const CreateNewListing = CreateNewListingSvg as React.FC<
+    React.SVGProps<SVGSVGElement>
+  >;
+  const CallWithCaptain = CallWithCaptainSvg as React.FC<
+    React.SVGProps<SVGSVGElement>
+  >;
+
   const testimonials = dummyData.testimonials;
+
+  useEffect(() => {
+    dispatch(setAuthStep(AuthStep.PHONE));
+  }, []);
 
   return (
     <>
       <section className="min-h-[500px] w-full overflow-hidden">
         <div className="container px-4 py-12 mx-auto md:px-6 flex justify-between">
-          <div className="flex  flex-1 justify-between items-center">
+          <div className="flex flex-1 justify-between items-center">
             <Image
               src={"/images/list-your-property.svg"}
               alt="List Your Property"
@@ -54,61 +149,121 @@ export default function ListProperty() {
             />
           </div>
           <div className="flex flex-1 justify-between items-center">
-            <div className="w-full max-w-md my-0 mx-auto flex flex-col gap-8">
+            {token ? (
               <div className="flex flex-col">
-                <label className="block mb-2 text-base font-medium text-gray-700">
-                  Phone Number
-                </label>
-                <PhoneInput
-                  defaultCountry="in"
-                  value={phoneNo}
-                  placeholder="Enter phone number"
-                  onChange={(value) => handlePhoneChange(value)}
-                  className="custom-phone-input w-full border border-gray-300 rounded-lg px-2 py-0.5 focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+                <h1 className="text-2xl mb-8">
+                  Select How You Want to List Your Property
+                </h1>
+                <form>
+                  <fieldset>
+                    <legend className="sr-only">Listing Options</legend>
+                    <ListingOption
+                      id="option-new"
+                      icon={<CreateNewListing />}
+                      title="Create a New Listing"
+                      description="Do it yourself in 5 easy steps"
+                      isSelected={selectedOption === "new"}
+                      onChange={() => setSelectedOption("new")}
+                    />
 
-              <div className="flex items-center">
-                <input
-                  id="terms"
-                  type="checkbox"
-                  className="w-4 h-4 text-red-500 border-gray-300 rounded focus:ring-red-500 accent-red-500"
-                  checked={acceptTerms}
-                  onChange={(e) => setAcceptTerms(e.target.checked)}
-                />
-                <label htmlFor="terms" className="ml-2 text-sm text-gray-700">
-                  I accept the{" "}
-                  <a href="#" className="text-gray-700 underline">
-                    Terms & Conditions
-                  </a>{" "}
-                  &{" "}
-                  <a href="#" className="text-gray-700 underline">
-                    Privacy Policy
-                  </a>
-                </label>
-              </div>
+                    <ListingOption
+                      id="option-call"
+                      icon={<CallWithCaptain />}
+                      title="Get on a Call with an Captain"
+                      description="Let us do it for you over a quick phone call"
+                      isSelected={selectedOption === "call"}
+                      onChange={() => setSelectedOption("call")}
+                    />
 
-              <div className="flex flex-col items-center">
-                <button
-                  className={`w-full px-6 py-3 text-base text-white rounded-md  ${!acceptTerms || !phoneNo.substring(2) ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
-                  disabled={!acceptTerms || !phoneNo.substring(2)}
-                >
-                  Post Your Property – It&apos;s free
-                </button>
-
-                <p className="mt-2 text-base text-center text-gray-500">
-                  Don&apos;t worry we won&apos;t spam you.
-                </p>
+                    <button
+                      type="submit"
+                      className="w-full bg-red-500 hover:bg-red-600 text-white py-4 rounded-lg mt-4 font-medium transition duration-200"
+                    >
+                      Get Started
+                    </button>
+                  </fieldset>
+                </form>
               </div>
+            ) : (
+              <div className="w-full max-w-md my-0 mx-auto flex flex-col gap-8">
+                <div className="flex flex-col">
+                  <label className="block mb-2 text-base font-medium text-gray-700">
+                    Phone Number
+                  </label>
+                  <PhoneInput
+                    defaultCountry="in"
+                    value={phoneNo}
+                    placeholder="Enter phone number"
+                    onChange={(value) => handlePhoneChange(value)}
+                    className="custom-phone-input w-full border border-gray-300 rounded-lg px-2 py-0.5 focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
 
-              <div className="flex flex-col items-center">
-                <ShieldCheck className="text-white fill-gray-600" size={32} />
-                <p className="mt-2 text-sm text-center text-gray-400">
-                  More than 800+ owners have listed their properties on
-                  HouseClay and closed their deal.
-                </p>
+                <div className="flex items-center">
+                  <input
+                    id="terms"
+                    type="checkbox"
+                    className="w-4 h-4 text-red-500 border-gray-300 rounded focus:ring-red-500 accent-red-500"
+                    checked={acceptTerms}
+                    onChange={(e) => setAcceptTerms(e.target.checked)}
+                  />
+                  <label htmlFor="terms" className="ml-2 text-sm text-gray-700">
+                    I accept the{" "}
+                    <a href="#" className="text-gray-700 underline">
+                      Terms & Conditions
+                    </a>{" "}
+                    &{" "}
+                    <a href="#" className="text-gray-700 underline">
+                      Privacy Policy
+                    </a>
+                  </label>
+                </div>
+
+                <div className="flex flex-col items-center">
+                  <button
+                    className={`w-full px-6 py-3 text-base text-white rounded-md  ${!acceptTerms || !phoneNo.substring(2) ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
+                    disabled={!acceptTerms || !phoneNo.substring(2)}
+                    onClick={async () => {
+                      if (acceptTerms && phoneNo.substring(2)) {
+                        try {
+                          const checkUserResponse = await triggerCheckUser({
+                            phoneNo,
+                          }).unwrap();
+                          console.log(
+                            "Check User Response:",
+                            checkUserResponse,
+                          );
+                          // setUserExists(checkUserResponse.exists);
+                          const otpResponse = await generateOtp({ phoneNo });
+                          console.log("OTP Response:", otpResponse);
+                          if (otpResponse.data) {
+                            dispatch(setAuthStep(AuthStep.OTP));
+                          }
+                        } catch (err) {
+                          console.error("Login Error:", err);
+                          dispatch(setAuthStep(AuthStep.CREATE_USER));
+                        }
+                        openDialog("login-dialog");
+                      }
+                    }}
+                  >
+                    Post Your Property – It&apos;s free
+                  </button>
+
+                  <p className="mt-2 text-base text-center text-gray-500">
+                    Don&apos;t worry we won&apos;t spam you.
+                  </p>
+                </div>
+
+                <div className="flex flex-col items-center">
+                  <ShieldCheck className="text-white fill-gray-600" size={32} />
+                  <p className="mt-2 text-sm text-center text-gray-400">
+                    More than 800+ owners have listed their properties on
+                    HouseClay and closed their deal.
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </section>
@@ -117,7 +272,7 @@ export default function ListProperty() {
           <div className="flex justify-around items-center">
             <div className="flex items-center gap-4">
               <div className="flex items-center p-1 bg-green-50 rounded-full">
-                <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-full">
+                <div className="flex  w-12 h-12 items-center justify-center bg-green-100 rounded-full">
                   <HassleFreeListings
                     height={32}
                     width={32}
@@ -132,7 +287,7 @@ export default function ListProperty() {
 
             <div className="flex items-center gap-4">
               <div className="flex items-center p-1 bg-blue-50 rounded-full">
-                <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full">
+                <div className="flex  w-12 h-12 items-center justify-center bg-blue-100 rounded-full">
                   <FasterDealClosures
                     height={32}
                     width={32}
@@ -147,7 +302,7 @@ export default function ListProperty() {
 
             <div className="flex items-center gap-4">
               <div className="flex items-center p-1 bg-amber-50 rounded-full">
-                <div className="flex items-center justify-center w-12 h-12 bg-amber-100 rounded-full">
+                <div className="flex w-12 h-12 items-center justify-center  bg-amber-100 rounded-full">
                   <BuyersConnections
                     height={32}
                     width={32}

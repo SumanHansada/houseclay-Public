@@ -5,8 +5,9 @@ import "react-international-phone/style.css";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PhoneInput } from "react-international-phone";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
+import { AuthStep } from "@/common/utils";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -15,23 +16,23 @@ import {
   useLoginMutation,
   useRegisterMutation,
 } from "@/store/apiSlice";
-import { setToken } from "@/store/authSlice";
-
-enum AuthStep {
-  PHONE = "phone",
-  OTP = "otp",
-  CREATE_USER = "createUser",
-  EMPTY = "",
-}
+import {
+  setAuthStep,
+  setEmailID,
+  setName,
+  setPhoneNo,
+  setToken,
+} from "@/store/authSlice";
+import { RootState } from "@/store/store";
 
 const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const Login = () => {
   const { closeDialog } = useDialog();
-  const [authStep, setAuthStep] = useState<AuthStep>(AuthStep.EMPTY);
-  const [phoneNo, setPhoneNo] = useState("");
-  const [emailID, setEmailID] = useState("");
-  const [name, setName] = useState("");
+  const authStep = useSelector((state: RootState) => state.auth.authStep);
+  const phoneNo = useSelector((state: RootState) => state.auth.phoneNo);
+  const emailID = useSelector((state: RootState) => state.auth.emailID);
+  const name = useSelector((state: RootState) => state.auth.name);
   const [login] = useLoginMutation();
   const [triggerCheckUser] = useLazyCheckUserQuery();
   const [register] = useRegisterMutation();
@@ -57,11 +58,11 @@ const Login = () => {
       const otpResponse = await generateOtp({ phoneNo });
       console.log("OTP Response:", otpResponse);
       if (otpResponse.data) {
-        setAuthStep(AuthStep.OTP);
+        dispatch(setAuthStep(AuthStep.OTP));
       }
     } catch (err) {
       console.error("Login Error:", err);
-      setAuthStep(AuthStep.CREATE_USER);
+      dispatch(setAuthStep(AuthStep.CREATE_USER));
     }
   };
 
@@ -73,7 +74,7 @@ const Login = () => {
       const otpResponse = await generateOtp({ phoneNo });
       console.log("OTP Response:", otpResponse);
       if (otpResponse.data) {
-        setAuthStep(AuthStep.OTP);
+        dispatch(setAuthStep(AuthStep.OTP));
       }
     } catch (err) {
       console.log(err);
@@ -106,7 +107,7 @@ const Login = () => {
           dispatch(setToken(loginResponse.data));
         }
       }
-      setAuthStep(AuthStep.EMPTY);
+      dispatch(setAuthStep(AuthStep.EMPTY));
       closeDialog("login-dialog");
     } catch (err) {
       console.error(err);
@@ -116,11 +117,13 @@ const Login = () => {
   const handlePhoneChange = (data: string) => {
     // Remove '+' sign and update the phone number
     const sanitizedPhone = data.replace(/^\+/, "");
-    setPhoneNo(sanitizedPhone);
+    dispatch(setPhoneNo(sanitizedPhone));
   };
 
   useEffect(() => {
-    setAuthStep(AuthStep.PHONE);
+    if (authStep === AuthStep.EMPTY) {
+      dispatch(setAuthStep(AuthStep.PHONE));
+    }
     // Focus the first input when component mounts
     if (inputRefs[0].current) {
       inputRefs[0].current.focus();
@@ -298,7 +301,7 @@ const Login = () => {
                   type="email"
                   placeholder="Enter email address"
                   value={emailID}
-                  onChange={(e) => setEmailID(e.target.value)}
+                  onChange={(e) => dispatch(setEmailID(e.target.value))}
                   className="px-2 py-2 w-full border border-gray-300 rounded-lg"
                 />
                 <label
@@ -312,15 +315,18 @@ const Login = () => {
                   placeholder="Enter name"
                   required
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => dispatch(setName(e.target.value))}
                   className="px-2 py-2 w-full border border-gray-300 rounded-lg mb-2"
                 />
               </div>
               {/* Continue button */}
               <button
                 type="submit"
-                className="w-full bg-red-500 hover:bg-red-600 text-white py-3 px-4 rounded-lg"
+                className={`w-full text-white py-3 px-4 rounded-lg ${!phoneNo.substring(2) || !emailIDRegex.test(emailID) || !name ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
                 onClick={handleCreateUser}
+                disabled={
+                  !phoneNo.substring(2) || !emailIDRegex.test(emailID) || !name
+                }
               >
                 Continue
               </button>
