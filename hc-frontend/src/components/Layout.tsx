@@ -1,6 +1,7 @@
 "use client";
 import { X } from "lucide-react";
 import PropertySvg from "public/icons/property.svg";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import Footer from "@/components/Footer";
@@ -9,11 +10,31 @@ import Login from "@/components/Login";
 import StickyNavbar from "@/components/StickyNavbar";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
+import { useLogoutMutation } from "@/store/apiSlice";
+import { clearToken } from "@/store/authSlice";
+import { RootState } from "@/store/store";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const { isDialogOpen, closeDialog } = useDialog();
+  const token = useSelector((state: RootState) => state.auth.token);
+  const { openDialog, isDialogOpen, closeDialog } = useDialog();
+  const [logout] = useLogoutMutation();
   const { isMobile } = useDeviceContext();
+  const dispatch = useDispatch();
   const Property = PropertySvg as React.FC<React.SVGProps<SVGSVGElement>>;
+  const onLogin = () => {
+    openDialog("login-dialog");
+  };
+
+  const onLogout = async () => {
+    try {
+      const logoutResponse = await logout();
+      console.log(logoutResponse);
+      dispatch(clearToken());
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <>
       <Header />
@@ -71,12 +92,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <button className="border border-gray-200 rounded-full md:border-none items-center justify-center">
                 <X onClick={() => closeDialog("menu-dialog")} size={25} />
               </button>
-              <button
-                className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100 text-center"
-                // onClick={onLogin}
-              >
-                Log In
-              </button>
+              {token ? (
+                <button
+                  className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100 text-center"
+                  onClick={onLogout}
+                >
+                  Logout
+                </button>
+              ) : (
+                <button
+                  className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100 text-center"
+                  onClick={onLogin}
+                >
+                  Log In
+                </button>
+              )}
             </div>
           </DialogHeader>
           <DialogContent>

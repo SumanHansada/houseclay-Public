@@ -246,8 +246,9 @@ const Login = () => {
               {/* Continue button */}
               <button
                 type="submit"
-                className="w-full bg-red-500 hover:bg-red-600 text-white py-3 px-4 rounded-lg"
+                className={`w-full text-white py-3 px-4 rounded-lg ${!phoneNo.substring(2) ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
                 onClick={handleCheckUser}
+                disabled={!phoneNo.substring(2)}
               >
                 Continue
               </button>
