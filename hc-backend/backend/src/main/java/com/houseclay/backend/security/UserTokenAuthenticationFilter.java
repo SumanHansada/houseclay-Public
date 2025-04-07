@@ -30,6 +30,10 @@ public class UserTokenAuthenticationFilter extends OncePerRequestFilter {
             "/api/user/check-user"
     );
 
+    private static final List<String> PRIVATE_URLS = List.of(
+            "/api/property/add"
+    );
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -43,7 +47,7 @@ public class UserTokenAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // ✅ Ensure this filter only applies to `/api/user/**`
-        if (!requestURI.startsWith("/api/user/")) {
+        if (!requestURI.startsWith("/api/user/") && !PRIVATE_URLS.contains(requestURI)) {
             filterChain.doFilter(request, response);
             return;
         }

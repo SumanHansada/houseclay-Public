@@ -1,5 +1,7 @@
 package com.houseclay.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.NotFound;
@@ -8,6 +10,17 @@ import org.hibernate.annotations.NotFoundAction;
 import java.sql.Timestamp;
 import java.util.List;
 
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "propertyCategory", // this field tells Jackson what subclass to use
+        visible = true
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = SaleProperty.class, name = "Sale"),
+        @JsonSubTypes.Type(value = RentProperty.class, name = "Rent"),
+        @JsonSubTypes.Type(value = FlatmateProperty.class, name = "Flatmate")
+})
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE) // All properties in one table
 @DiscriminatorColumn(name = "property_type", discriminatorType = DiscriminatorType.STRING)
@@ -16,13 +29,14 @@ import java.util.List;
 public class Property {
 
     @Id
-    String propertyID;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    long propertyID;
     String title;
     boolean isVerified;
     boolean isReVerified;
     boolean isDeleted;
-    boolean isPremium;
     boolean isManaged;
+    boolean isPremium;
     Timestamp postedOn;
     Timestamp verifiedOn;
     Timestamp reVerifiedOn;
@@ -39,7 +53,7 @@ public class Property {
     private String landmark;
     private Double latitude;
     private Double longitude;
-    private Boolean furnishing;
+    private String furnishing;
     private Boolean waterSupply;
     private Boolean powerBackup;
     private Boolean parking;

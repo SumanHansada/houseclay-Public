@@ -1,5 +1,6 @@
 package com.houseclay.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -29,6 +30,7 @@ public class User {
         this.emailID = emailID;
         this.createdAt = new Timestamp(System.currentTimeMillis());
         this.userLogins = new LinkedList<>();
+        this.ownedProperties = new LinkedList<>();
     }
 
     @ManyToOne
@@ -61,6 +63,14 @@ public class User {
 
     public User() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + phoneNo +
+                ", username='" + name + '\'' +
+                '}';
     }
 }
 

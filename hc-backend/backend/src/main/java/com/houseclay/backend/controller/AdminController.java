@@ -61,7 +61,7 @@ public class AdminController {
     }
 
     @PostMapping("/verify-property")
-    public ResponseEntity verifyProperty(@RequestParam String propertyId, @RequestAttribute("authenticatedAdmin") Admin admin) {
+    public ResponseEntity verifyProperty(@RequestParam Long propertyId, @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
             Property verifiedProperty = propertyService.verifyProperty(propertyId, admin);
 
@@ -79,7 +79,7 @@ public class AdminController {
     }
 
     @PostMapping("/reVerify-property")
-    public ResponseEntity reVerifyProperty(@RequestParam String propertyId, @RequestAttribute("authenticatedAdmin") Admin admin) {
+    public ResponseEntity reVerifyProperty(@RequestParam Long propertyId, @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
             Property verifiedProperty = propertyService.verifyProperty(propertyId, admin);
 
