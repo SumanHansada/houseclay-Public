@@ -220,7 +220,7 @@ const Login = () => {
             <div className="space-y-4">
               <div>
                 <div className="md:hidden mb-8">
-                  <span className="text-2xl font-bold">No spam,  </span>
+                  <span className="text-2xl font-bold">No spam, </span>
                   <span className="text-2xl">just updates.</span>
                 </div>
                 <label

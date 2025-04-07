@@ -16,6 +16,8 @@ interface DialogProps {
   height?: number;
   width?: number;
   children: React.ReactNode;
+  entryAnimation?: string; // New prop for entry animation
+  exitAnimation?: string; // New prop for exit animation
 }
 
 const getDialogStyles = (
@@ -61,6 +63,8 @@ export const Dialog: React.FC<DialogProps> = ({
   height,
   width,
   children,
+  entryAnimation = "animate-fade-in", // Default entry animation
+  exitAnimation = "animate-fade-out", // Default exit animation
 }) => {
   const { isDialogOpen, closeDialog } = useDialog();
   const isOpen = isDialogOpen(id);
@@ -103,7 +107,7 @@ export const Dialog: React.FC<DialogProps> = ({
       >
         <div
           className={`${dialogStyles} flex flex-col transition-transform ${
-            isClosing ? "scale-95 opacity-0" : "scale-100 opacity-100"
+            isClosing ? exitAnimation : entryAnimation
           }`}
           style={{
             height: height ? `${height}%` : "auto",

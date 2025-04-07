@@ -33,6 +33,10 @@ const Header: React.FC<HeaderProps> = () => {
     openDialog("login-dialog");
   };
 
+  const onMenuClick = () => {
+    openDialog("menu-dialog");
+  };
+
   useEffect(() => {
     dispatch(initializeToken());
   }, [dispatch]);
@@ -49,7 +53,7 @@ const Header: React.FC<HeaderProps> = () => {
 
   return (
     <>
-      <header className="flex fixed top-0 left-0 right-0 bg-white z-50 justify-between w-full items-center py-2 shadow-sm xl:gap-32 lg:gap-16 md:gap-8 gap-8 xl:px-24 md:px-12 px-12 max-md:hidden mx-auto">
+      <header className="flex sticky top-0 left-0 right-0 bg-white z-50 justify-between w-full items-center py-2 shadow-sm xl:gap-32 lg:gap-16 md:gap-8 gap-8 xl:px-24 md:px-12 px-12 max-md:hidden mx-auto">
         {/* Left Section - Logo */}
         <div className="flex items-center">
           <Link href="/" className="flex items-center gap-1">
@@ -150,9 +154,7 @@ const Header: React.FC<HeaderProps> = () => {
         {/* Left Section - Logo */}
 
         <div className="flex items-center gap-2">
-          <div>
-            <Menu />
-          </div>
+          <Menu onClick={onMenuClick} />
           <Link href="/" className="flex items-center gap-1">
             <HouseClay />
             <span className="text-red-600 text-lg font-nunito font-bold">

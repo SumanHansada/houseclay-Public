@@ -4,26 +4,24 @@ import { useState } from "react";
 
 import Advantages from "@/components/Advantages";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
-import Login from "@/components/Login";
 import MastHeadDesktop from "@/components/MastheadDesktop";
 import MastHeadMobile from "@/components/MastheadMobile";
 import Neighbourhoods from "@/components/Neighborhoods";
 import PropertyOwners from "@/components/PropertyOwners";
 import Standouts from "@/components/Standouts";
-import Testimonials from "@/components/Testimonials";
+import { Testimonials } from "@/components/Testimonials";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 
 import dummyData from "../data/dummyData.json";
 
 export default function Home() {
-  const { isDialogOpen, closeDialog } = useDialog();
   const [activeTab, setActiveTab] = useState("rent");
-  const { isMobile } = useDeviceContext();
   const properties = dummyData.properties;
   const neighbourhoods = dummyData.neighbourhoods;
   const testimonials = dummyData.testimonials;
-
+  const { isDialogOpen, closeDialog } = useDialog();
+  const { isMobile } = useDeviceContext();
   return (
     <>
       {/* Masthead Desktop Section */}
@@ -61,34 +59,6 @@ export default function Home() {
       <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
         <PropertyOwners />
       </section>
-      {/* Login Dialog */}
-      {isDialogOpen("login-dialog") && (
-        <Dialog
-          id="login-dialog"
-          type={isMobile ? "fullscreen" : "card"}
-          onClose={() => closeDialog("login-dialog")}
-        >
-          {
-            <DialogHeader>
-              <div
-                className={`${isMobile ? "py-2 px-8" : ""}  flex flex-col justify-between items-center w-full`}
-              >
-                {isMobile && (
-                  <h1 className="text-xl mt-1 mb-2 text-black">
-                    Log In to Your Account
-                  </h1>
-                )}
-                <button className="absolute top-4 right-4 border border-gray-200 rounded-full md:border-none">
-                  <X onClick={() => closeDialog("login-dialog")} size={25} />
-                </button>
-              </div>
-            </DialogHeader>
-          }
-          <DialogContent>
-            <Login />
-          </DialogContent>
-        </Dialog>
-      )}
       {/* Standouts Dialog */}
       {isDialogOpen("standouts-dialog") && (
         <Dialog
@@ -96,6 +66,8 @@ export default function Home() {
           type="bottom-sheet"
           onClose={() => closeDialog("standouts-dialog")}
           height={80}
+          entryAnimation="animate-slide-in-bottom"
+          exitAnimation="animate-slide-out-bottom"
         >
           {isMobile && (
             <DialogHeader>

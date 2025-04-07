@@ -32,7 +32,7 @@ const StarRating: React.FC<{ rating: number }> = ({ rating }) => {
   );
 };
 
-const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({
+export const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({
   testimonial,
 }) => {
   return (
@@ -61,7 +61,7 @@ const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({
   );
 };
 
-const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
+export const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
   // const [activeSlide, setActiveSlide] = useState(0);
   // const totalSlides = Math.ceil(testimonials.length / 3);
 
@@ -109,5 +109,3 @@ const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
     </div>
   );
 };
-
-export default Testimonials;
