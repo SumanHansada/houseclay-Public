@@ -10,12 +10,14 @@ import CreateNewListingSvg from "public/icons/create-new-listing.svg";
 import CustomerSupportSvg from "public/icons/customer-support.svg";
 import FasterDealClosuresSvg from "public/icons/faster-deal-closures.svg";
 import HassleFreeListingsSvg from "public/icons/hassle-free-listings.svg";
+import HouseClayCaptainSvg from "public/icons/houseclay-captain.svg";
 import React, { useEffect, useState } from "react";
 import { PhoneInput } from "react-international-phone";
 import { useDispatch, useSelector } from "react-redux";
 
-import { AuthStep } from "@/common/utils";
+import { AuthStep, PropertyListingType } from "@/common/utils";
 import Carousel2D from "@/components/Carousel2D";
+import { Dialog, DialogContent } from "@/components/Dialog";
 import { TestimonialCard } from "@/components/Testimonials";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -23,6 +25,7 @@ import {
   useLazyCheckUserQuery,
 } from "@/store/apiSlice";
 import { setAuthStep, setPhoneNo } from "@/store/authSlice";
+import { setListingType } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
 import dummyData from "../../data/dummyData.json";
@@ -32,6 +35,7 @@ export enum ListPropertyStep {}
 interface ListingOptionProps {
   id: string;
   icon: React.ReactNode;
+  iconColor: string;
   title: string;
   description: string;
   isSelected: boolean;
@@ -41,6 +45,7 @@ interface ListingOptionProps {
 const ListingOption: React.FC<ListingOptionProps> = ({
   id,
   icon,
+  iconColor,
   title,
   description,
   isSelected,
@@ -50,35 +55,33 @@ const ListingOption: React.FC<ListingOptionProps> = ({
     <div className={`mb-4`}>
       <label
         htmlFor={id}
-        className={`flex items-center justify-between p-4 rounded-lg border cursor-pointer gap-16 ${
+        className={`flex items-center justify-between p-4 rounded-lg border cursor-pointer gap-12 ${
           isSelected ? "border-red-400 bg-red-50" : "border-gray-200 bg-white"
         }`}
       >
-        <div className="flex items-center">
+        <div className="flex flex-1 items-center gap-4">
           <div
-            className={`flex items-center p-1 mr-4 ${
-              isSelected ? "bg-blue-50" : "bg-green-50"
-            } rounded-full`}
+            className={`flex items-center p-1 bg-${iconColor}-50 rounded-full`}
           >
             <div
-              className={`flex w-12 h-12  items-center justify-center   rounded-full  ${
-                isSelected ? "bg-blue-100" : "bg-green-100"
-              }`}
+              className={`flex w-12 h-12  items-center justify-center   rounded-full  bg-${iconColor}-100`}
             >
               {icon}
             </div>
           </div>
           <div>
-            <h3 className="font-medium text-xl">{title}</h3>
-            <p className="text-gray-500 text-base">{description}</p>
+            <h2 className="font-medium">{title}</h2>
+            <p className="text-gray-500">{description}</p>
           </div>
         </div>
         <div
           className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-            isSelected ? "border-red-500 bg-red-500" : "border-gray-300"
+            isSelected ? "border-red-500 bg-white" : "border-gray-300"
           }`}
         >
-          {isSelected && <div className="w-2 h-2 rounded-full bg-white"></div>}
+          {isSelected && (
+            <div className="w-3 h-3 rounded-full bg-red-500"></div>
+          )}
         </div>
       </label>
       <input
@@ -94,8 +97,10 @@ const ListingOption: React.FC<ListingOptionProps> = ({
 };
 
 export default function ListProperty() {
-  const { openDialog } = useDialog();
-  const [selectedOption, setSelectedOption] = useState("new");
+  const { isDialogOpen, openDialog, closeDialog } = useDialog();
+  const listingType = useSelector(
+    (state: RootState) => state.listProperty.listingType,
+  );
   const phoneNo = useSelector((state: RootState) => state.auth.phoneNo);
   const token = useSelector((state: RootState) => state.auth.token);
   const handlePhoneChange = (data: string) => {
@@ -127,6 +132,9 @@ export default function ListProperty() {
   const CallWithCaptain = CallWithCaptainSvg as React.FC<
     React.SVGProps<SVGSVGElement>
   >;
+  const HouseClayCaptain = HouseClayCaptainSvg as React.FC<
+    React.SVGProps<SVGSVGElement>
+  >;
 
   const testimonials = dummyData.testimonials;
 
@@ -134,11 +142,18 @@ export default function ListProperty() {
     dispatch(setAuthStep(AuthStep.PHONE));
   }, []);
 
+  const handleListingTypeClick = () => {
+    if (listingType === PropertyListingType.CALL) {
+      openDialog("call-with-captain-dialog");
+      return;
+    }
+  };
+
   return (
     <>
       <section className="min-h-[500px] w-full overflow-hidden">
-        <div className="container px-4 py-12 mx-auto md:px-6 flex justify-between">
-          <div className="flex flex-1 justify-between items-center">
+        <div className="container py-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 flex justify-between gap-16">
+          <div className="flex w-2/5 justify-around items-start">
             <Image
               src={"/images/list-your-property.svg"}
               alt="List Your Property"
@@ -148,41 +163,44 @@ export default function ListProperty() {
               className="my-0"
             />
           </div>
-          <div className="flex flex-1 justify-between items-center">
+          <div className="flex w-3/5 justify-around items-center">
             {token ? (
               <div className="flex flex-col">
                 <h1 className="text-2xl mb-8">
                   Select How You Want to List Your Property
                 </h1>
-                <form>
-                  <fieldset>
-                    <legend className="sr-only">Listing Options</legend>
-                    <ListingOption
-                      id="option-new"
-                      icon={<CreateNewListing />}
-                      title="Create a New Listing"
-                      description="Do it yourself in 5 easy steps"
-                      isSelected={selectedOption === "new"}
-                      onChange={() => setSelectedOption("new")}
-                    />
+                <legend className="sr-only">Listing Options</legend>
+                <ListingOption
+                  id="option-diy"
+                  icon={<CreateNewListing />}
+                  iconColor="blue"
+                  title="Create a New Listing"
+                  description="Do it yourself in 5 easy steps"
+                  isSelected={listingType === PropertyListingType.DIY}
+                  onChange={() =>
+                    dispatch(setListingType(PropertyListingType.DIY))
+                  }
+                />
 
-                    <ListingOption
-                      id="option-call"
-                      icon={<CallWithCaptain />}
-                      title="Get on a Call with an Captain"
-                      description="Let us do it for you over a quick phone call"
-                      isSelected={selectedOption === "call"}
-                      onChange={() => setSelectedOption("call")}
-                    />
+                <ListingOption
+                  id="option-call"
+                  icon={<CallWithCaptain />}
+                  iconColor="green"
+                  title="Get on a Call with an Captain"
+                  description="Let us do it for you over a quick phone call"
+                  isSelected={listingType === PropertyListingType.CALL}
+                  onChange={() =>
+                    dispatch(setListingType(PropertyListingType.CALL))
+                  }
+                />
 
-                    <button
-                      type="submit"
-                      className="w-full bg-red-500 hover:bg-red-600 text-white py-4 rounded-lg mt-4 font-medium transition duration-200"
-                    >
-                      Get Started
-                    </button>
-                  </fieldset>
-                </form>
+                <button
+                  type="button"
+                  className="w-full bg-red-500 hover:bg-red-600 text-white py-4 rounded-lg mt-4 font-medium transition duration-200"
+                  onClick={handleListingTypeClick}
+                >
+                  Get Started
+                </button>
               </div>
             ) : (
               <div className="w-full max-w-md my-0 mx-auto flex flex-col gap-8">
@@ -268,7 +286,7 @@ export default function ListProperty() {
         </div>
       </section>
       <section className="w-full overflow-hidden">
-        <div className="container px-4 py-8 mx-auto md:px-6">
+        <div className="container py-8 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
           <div className="flex justify-around items-center">
             <div className="flex items-center gap-4">
               <div className="flex items-center p-1 bg-green-50 rounded-full">
@@ -318,8 +336,8 @@ export default function ListProperty() {
         </div>
       </section>
       <section className="w-full overflow-hidden">
-        <div className="container px-4 py-12 mx-auto md:px-6">
-          <div className="p-8 bg-gray-50 border border-gray-200 rounded-2xl shadow-sm flex items-center w-full justify-between">
+        <div className="container py-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
+          <div className="p-8 bg-gray-50 border border-gray-200 rounded-2xl shadow-sm flex items-center w-full justify-between gap-16">
             <div className="relative overflow-hidden rounded-lg">
               <div className="absolute inset-0 shadow-[inset_0_0_80px_40px_rgba(255,255,255,0.8)] z-20"></div>
               <CustomerSupport />
@@ -345,7 +363,7 @@ export default function ListProperty() {
       </section>
 
       <section className="w-full overflow-hidden">
-        <div className="container px-4 py-12 mx-auto md:px-6">
+        <div className="container py-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
           <div className="flex justify-around items-center gap-16">
             <div className="flex flex-col w-1/2">
               <h2 className="text-3xl font-bold text-gray-800">
@@ -372,7 +390,7 @@ export default function ListProperty() {
       </section>
 
       <section className="w-full overflow-hidden">
-        <div className="flex flex-col items-center justify-between gap-10 xl:px-28 lg:px-14 md:px-14 px-8 py-12">
+        <div className="container mx-auto flex flex-col items-center justify-between gap-10 xl:px-28 lg:px-14 md:px-8 px-8 py-12">
           <div className="flex flex-col items-center justify-center gap-4">
             <h1 className="text-4xl font-bold text-center">
               Why List Your Property With Us?
@@ -422,6 +440,37 @@ export default function ListProperty() {
           </div>
         </div>
       </section>
+      {isDialogOpen("call-with-captain-dialog") && (
+        <Dialog
+          id="call-with-captain-dialog"
+          type="card"
+          onClose={() => closeDialog("call-with-captain-dialog")}
+          width={40}
+        >
+          <DialogContent>
+            <div className="flex flex-col items-center justify-center text-center p-8">
+              <div className="relative overflow-hidden rounded-lg">
+                <div className="absolute inset-0 shadow-[inset_0_0_25px_25px_rgba(255,255,255,0.8)] z-20"></div>
+                <HouseClayCaptain />
+              </div>
+              <h2 className="text-2xl font-medium">Awesome!</h2>
+              <h2 className="text-2xl font-medium">
+                We&apos;re Getting Started
+              </h2>
+              <p className="text-base text-gray-500 my-4">
+                One of our team members will call you shortly to guide you
+                through the property listing process.
+              </p>
+              <button
+                className="px-24 py-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200"
+                onClick={() => closeDialog("call-with-captain-dialog")}
+              >
+                Great!
+              </button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   );
 }
