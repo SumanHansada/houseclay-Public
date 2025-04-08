@@ -4,3 +4,14 @@ export enum AuthStep {
   CREATE_USER = "createUser",
   EMPTY = "",
 }
+
+export enum PropertyListingType {
+  DIY = "DIY",
+  CALL = "CALL",
+}
+
+export enum PropertyType {
+  RENT = "RENT",
+  RESALE = "RESALE",
+  FLATMATE = "FLATMATE",
+}

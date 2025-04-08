@@ -49,19 +49,19 @@ const authSlice = createSlice({
       state.phoneNo = action.payload;
     },
     clearPhoneNo: (state) => {
-      state.phoneNo = null;
+      state.phoneNo = "";
     },
     setEmailID: (state, action: PayloadAction<string>) => {
       state.emailID = action.payload;
     },
     clearEmailID: (state) => {
-      state.emailID = null;
+      state.emailID = "";
     },
     setName: (state, action: PayloadAction<string>) => {
       state.name = action.payload;
     },
     clearName: (state) => {
-      state.name = null;
+      state.name = "";
     },
   },
 });
