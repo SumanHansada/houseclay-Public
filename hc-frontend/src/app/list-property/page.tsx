@@ -250,7 +250,7 @@ export default function ListProperty() {
           <div className="flex w-3/5 justify-around items-center">
             {token ? (
               showPropertyType ? (
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col">
                   <h1 className="lg:text-2xl text-xl lg:mb-8 mb-4">
                     Tell us about your property
                   </h1>
@@ -258,7 +258,11 @@ export default function ListProperty() {
                     <PropertyTypeOption
                       id="rent"
                       label="Rent"
-                      icon={<Rent />}
+                      icon={
+                        <Rent
+                          opacity={propertyType === PropertyType.RENT ? 1 : 0.5}
+                        />
+                      }
                       isSelected={propertyType === PropertyType.RENT}
                       onChange={() =>
                         dispatch(setPropertyType(PropertyType.RENT))
@@ -267,7 +271,13 @@ export default function ListProperty() {
                     <PropertyTypeOption
                       id="resale"
                       label="Resale"
-                      icon={<Resale />}
+                      icon={
+                        <Resale
+                          opacity={
+                            propertyType === PropertyType.RESALE ? 1 : 0.5
+                          }
+                        />
+                      }
                       isSelected={propertyType === PropertyType.RESALE}
                       onChange={() =>
                         dispatch(setPropertyType(PropertyType.RESALE))
@@ -276,7 +286,13 @@ export default function ListProperty() {
                     <PropertyTypeOption
                       id="flatmates"
                       label="Flatmates"
-                      icon={<Flatmates />}
+                      icon={
+                        <Flatmates
+                          opacity={
+                            propertyType === PropertyType.FLATMATES ? 1 : 0.5
+                          }
+                        />
+                      }
                       isSelected={propertyType === PropertyType.FLATMATES}
                       onChange={() =>
                         dispatch(setPropertyType(PropertyType.FLATMATES))
