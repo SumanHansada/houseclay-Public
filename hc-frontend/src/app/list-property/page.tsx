@@ -4,18 +4,22 @@ import "react-international-phone/style.css";
 
 import { ShieldCheck } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import BuyersConnectionsSvg from "public/icons/buyers-connections.svg";
 import CallWithCaptainSvg from "public/icons/call-with-captain.svg";
 import CreateNewListingSvg from "public/icons/create-new-listing.svg";
 import CustomerSupportSvg from "public/icons/customer-support.svg";
 import FasterDealClosuresSvg from "public/icons/faster-deal-closures.svg";
+import FlatmatesSvg from "public/icons/flatmates.svg";
 import HassleFreeListingsSvg from "public/icons/hassle-free-listings.svg";
 import HouseClayCaptainSvg from "public/icons/houseclay-captain.svg";
+import RentSvg from "public/icons/rent.svg";
+import ResaleSvg from "public/icons/resale.svg";
 import React, { useEffect, useState } from "react";
 import { PhoneInput } from "react-international-phone";
 import { useDispatch, useSelector } from "react-redux";
 
-import { AuthStep, PropertyListingType } from "@/common/utils";
+import { AuthStep, PropertyListingType, PropertyType } from "@/common/utils";
 import Carousel2D from "@/components/Carousel2D";
 import { Dialog, DialogContent } from "@/components/Dialog";
 import { TestimonialCard } from "@/components/Testimonials";
@@ -25,12 +29,14 @@ import {
   useLazyCheckUserQuery,
 } from "@/store/apiSlice";
 import { setAuthStep, setPhoneNo } from "@/store/authSlice";
-import { setListingType } from "@/store/listPropertySlice";
+import {
+  setListingType,
+  setPropertyType,
+  setShowPropertyType,
+} from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
 import dummyData from "../../data/dummyData.json";
-
-export enum ListPropertyStep {}
 
 interface ListingOptionProps {
   id: string;
@@ -52,10 +58,12 @@ const ListingOption: React.FC<ListingOptionProps> = ({
   onChange,
 }) => {
   return (
-    <div className={`mb-4`}>
+    <div
+      className={`lg:mb-4 mb-2 focus-within:ring-1 focus-within:rounded-lg focus-within:ring-red-500`}
+    >
       <label
         htmlFor={id}
-        className={`flex items-center justify-between p-4 rounded-lg border cursor-pointer gap-12 ${
+        className={`flex items-center justify-between lg:p-4 p-2 rounded-lg border cursor-pointer lg:gap-12 gap-6 ${
           isSelected ? "border-red-400 bg-red-50" : "border-gray-200 bg-white"
         }`}
       >
@@ -70,8 +78,8 @@ const ListingOption: React.FC<ListingOptionProps> = ({
             </div>
           </div>
           <div>
-            <h2 className="font-medium">{title}</h2>
-            <p className="text-gray-500">{description}</p>
+            <h2 className="lg:text-xl text-sm font-medium">{title}</h2>
+            <p className="lg:text-base text-xs text-gray-500">{description}</p>
           </div>
         </div>
         <div
@@ -96,10 +104,65 @@ const ListingOption: React.FC<ListingOptionProps> = ({
   );
 };
 
+interface PropertyTypeOptionProps {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+  isSelected: boolean;
+  onChange: () => void;
+}
+
+const PropertyTypeOption: React.FC<PropertyTypeOptionProps> = ({
+  id,
+  label,
+  icon,
+  isSelected,
+  onChange,
+}) => {
+  return (
+    <div className="flex flex-1 focus-within:ring-1 focus-within:rounded-lg focus-within:ring-red-500">
+      <label
+        htmlFor={id}
+        className={`flex items-start lg:gap-8 gap-4 justify-center lg:p-4 p-2 rounded-lg border cursor-pointer text-center ${
+          isSelected ? "border-red-500 bg-red-50" : ""
+        }`}
+      >
+        <div className="flex flex-col items-start justify-center">
+          {icon}
+          <span>{label}</span>
+        </div>
+        <div
+          className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+            isSelected ? "border-red-500 bg-white" : "border-gray-300"
+          }`}
+        >
+          {isSelected && (
+            <div className="w-3 h-3 rounded-full bg-red-500"></div>
+          )}
+        </div>
+      </label>
+      <input
+        type="radio"
+        id={id}
+        name="propertyType"
+        className="sr-only"
+        checked={isSelected}
+        onChange={onChange}
+      />
+    </div>
+  );
+};
+
 export default function ListProperty() {
   const { isDialogOpen, openDialog, closeDialog } = useDialog();
   const listingType = useSelector(
     (state: RootState) => state.listProperty.listingType,
+  );
+  const showPropertyType = useSelector(
+    (state: RootState) => state.listProperty.showPropertyType,
+  );
+  const propertyType = useSelector(
+    (state: RootState) => state.listProperty.propertyType,
   );
   const phoneNo = useSelector((state: RootState) => state.auth.phoneNo);
   const token = useSelector((state: RootState) => state.auth.token);
@@ -136,6 +199,10 @@ export default function ListProperty() {
     React.SVGProps<SVGSVGElement>
   >;
 
+  const Rent = RentSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+  const Resale = ResaleSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+  const Flatmates = FlatmatesSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+
   const testimonials = dummyData.testimonials;
 
   useEffect(() => {
@@ -146,12 +213,29 @@ export default function ListProperty() {
     if (listingType === PropertyListingType.CALL) {
       openDialog("call-with-captain-dialog");
       return;
+    } else if (listingType === PropertyListingType.DIY) {
+      dispatch(setShowPropertyType(true));
+      return;
     }
+  };
+
+  const handlePostListingClick = () => {
+    if (!propertyType) {
+      console.error("Property type is not selected");
+      return;
+    }
+
+    const url = `/list-property/${propertyType.toLowerCase()}`;
+    // Assuming you have a router instance from Next.js
+    // Uncomment the following line if using Next.js router
+    // router.push(url);
+
+    console.log(`Navigating to: ${url}`);
   };
 
   return (
     <>
-      <section className="min-h-[500px] w-full overflow-hidden">
+      <section className="xl:min-h-[500px] min-h-[400px] w-full overflow-hidden">
         <div className="container py-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 flex justify-between gap-16">
           <div className="flex w-2/5 justify-around items-start">
             <Image
@@ -165,43 +249,88 @@ export default function ListProperty() {
           </div>
           <div className="flex w-3/5 justify-around items-center">
             {token ? (
-              <div className="flex flex-col">
-                <h1 className="text-2xl mb-8">
-                  Select How You Want to List Your Property
-                </h1>
-                <legend className="sr-only">Listing Options</legend>
-                <ListingOption
-                  id="option-diy"
-                  icon={<CreateNewListing />}
-                  iconColor="blue"
-                  title="Create a New Listing"
-                  description="Do it yourself in 5 easy steps"
-                  isSelected={listingType === PropertyListingType.DIY}
-                  onChange={() =>
-                    dispatch(setListingType(PropertyListingType.DIY))
-                  }
-                />
+              showPropertyType ? (
+                <div className="flex flex-col items-center">
+                  <h1 className="lg:text-2xl text-xl lg:mb-8 mb-4">
+                    Tell us about your property
+                  </h1>
+                  <div className="flex justify-between lg:gap-8 gap-4 lg:mb-8 mb-4">
+                    <PropertyTypeOption
+                      id="rent"
+                      label="Rent"
+                      icon={<Rent />}
+                      isSelected={propertyType === PropertyType.RENT}
+                      onChange={() =>
+                        dispatch(setPropertyType(PropertyType.RENT))
+                      }
+                    />
+                    <PropertyTypeOption
+                      id="resale"
+                      label="Resale"
+                      icon={<Resale />}
+                      isSelected={propertyType === PropertyType.RESALE}
+                      onChange={() =>
+                        dispatch(setPropertyType(PropertyType.RESALE))
+                      }
+                    />
+                    <PropertyTypeOption
+                      id="flatmates"
+                      label="Flatmates"
+                      icon={<Flatmates />}
+                      isSelected={propertyType === PropertyType.FLATMATES}
+                      onChange={() =>
+                        dispatch(setPropertyType(PropertyType.FLATMATES))
+                      }
+                    />
+                  </div>
+                  <Link
+                    href={`/list-property/${propertyType.toLowerCase()}`}
+                    type="button"
+                    className="text-center w-full bg-red-500 hover:bg-red-600 text-white lg:py-4 py-3 rounded-lg font-medium transition duration-200"
+                    onClick={handlePostListingClick}
+                  >
+                    Start Posting Your Free Listing
+                  </Link>
+                </div>
+              ) : (
+                <div className="flex flex-col">
+                  <h1 className="lg:text-2xl text-xl lg:mb-8 mb-4">
+                    Select How You Want to List Your Property
+                  </h1>
+                  <legend className="sr-only">Listing Options</legend>
+                  <ListingOption
+                    id="option-diy"
+                    icon={<CreateNewListing />}
+                    iconColor="blue"
+                    title="Create a New Listing"
+                    description="Do it yourself in 5 easy steps"
+                    isSelected={listingType === PropertyListingType.DIY}
+                    onChange={() =>
+                      dispatch(setListingType(PropertyListingType.DIY))
+                    }
+                  />
 
-                <ListingOption
-                  id="option-call"
-                  icon={<CallWithCaptain />}
-                  iconColor="green"
-                  title="Get on a Call with an Captain"
-                  description="Let us do it for you over a quick phone call"
-                  isSelected={listingType === PropertyListingType.CALL}
-                  onChange={() =>
-                    dispatch(setListingType(PropertyListingType.CALL))
-                  }
-                />
+                  <ListingOption
+                    id="option-call"
+                    icon={<CallWithCaptain />}
+                    iconColor="green"
+                    title="Get on a Call with an Captain"
+                    description="Let us do it for you over a quick phone call"
+                    isSelected={listingType === PropertyListingType.CALL}
+                    onChange={() =>
+                      dispatch(setListingType(PropertyListingType.CALL))
+                    }
+                  />
 
-                <button
-                  type="button"
-                  className="w-full bg-red-500 hover:bg-red-600 text-white py-4 rounded-lg mt-4 font-medium transition duration-200"
-                  onClick={handleListingTypeClick}
-                >
-                  Get Started
-                </button>
-              </div>
+                  <button
+                    type="button"
+                    className="w-full bg-red-500 hover:bg-red-600 text-white lg:py-4 py-3 rounded-lg lg:mt-4 mt-2 font-medium transition duration-200"
+                    onClick={handleListingTypeClick}
+                  >
+                    Get Started
+                  </button>
+                </div>
+              )
             ) : (
               <div className="w-full max-w-md my-0 mx-auto flex flex-col gap-8">
                 <div className="flex flex-col">

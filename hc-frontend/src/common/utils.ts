@@ -13,5 +13,5 @@ export enum PropertyListingType {
 export enum PropertyType {
   RENT = "RENT",
   RESALE = "RESALE",
-  FLATMATE = "FLATMATE",
+  FLATMATES = "FLATMATES",
 }
