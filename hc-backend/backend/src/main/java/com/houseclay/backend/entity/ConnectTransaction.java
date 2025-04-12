@@ -24,7 +24,7 @@ public class ConnectTransaction {
     @NotFound(action=NotFoundAction.IGNORE)
     Property property;
 
-    @OneToOne(mappedBy="connectTransaction")
+    @OneToOne(mappedBy="connectTransaction", cascade = CascadeType.ALL)
     @NotFound(action=NotFoundAction.IGNORE)
     ExternalPayments externalPayments;
 }

@@ -31,7 +31,9 @@ public class UserTokenAuthenticationFilter extends OncePerRequestFilter {
     );
 
     private static final List<String> PRIVATE_URLS = List.of(
-            "/api/property/add"
+            "/api/property/add",
+            "/api/payment/create-order",
+            "/api/payment/verify"
     );
 
     @Override
