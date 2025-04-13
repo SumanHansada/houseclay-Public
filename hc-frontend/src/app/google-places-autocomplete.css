@@ -1,0 +1,29 @@
+/* Google Places Autocomplete styling with Tailwind-like classes */
+.pac-container {
+  display: none;
+  /* @apply bg-white rounded-md shadow-lg border border-gray-300 mt-1 z-50 max-h-60 overflow-auto; */
+}
+
+/* .pac-item {
+  @apply p-2 cursor-pointer flex items-start hover:bg-gray-100 border-b border-gray-100;
+}
+
+.pac-item:last-child {
+  @apply border-b-0;
+}
+
+.pac-icon {
+  @apply mr-2 text-gray-500;
+}
+
+.pac-item-query {
+  @apply font-medium;
+}
+
+.pac-matched {
+  @apply font-bold;
+}
+
+.pac-item-selected {
+  @apply bg-gray-100;
+} */
