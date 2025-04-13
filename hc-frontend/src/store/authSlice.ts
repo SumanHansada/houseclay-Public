@@ -24,6 +24,8 @@ const authSlice = createSlice({
   reducers: {
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
+      state.name = "Suman";
+      state.phoneNo = "919999988888";
       if (typeof window !== "undefined") {
         window.localStorage.setItem("token", action.payload);
       }
@@ -37,6 +39,8 @@ const authSlice = createSlice({
     initializeToken: (state) => {
       if (typeof window !== "undefined") {
         state.token = window.localStorage.getItem("token");
+        state.name = "Suman";
+        state.phoneNo = "919999988888";
       }
     },
     setAuthStep: (state, action: PayloadAction<AuthStep>) => {

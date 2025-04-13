@@ -7,6 +7,7 @@ interface DialogContextType {
   isDialogOpen: (id: string) => boolean;
   openDialog: (id: string) => void;
   closeDialog: (id: string) => void;
+  closeAllDialogs: () => void;
   currentOpenDialogId: string;
 }
 
@@ -40,9 +41,20 @@ export const DialogContextProvider: React.FC<DialogContextProviderProps> = ({
     }
   };
 
+  const closeAllDialogs = () => {
+    setOpenDialogs({});
+    setCurrentOpenDialogId("");
+  };
+
   return (
     <DialogContext.Provider
-      value={{ isDialogOpen, openDialog, closeDialog, currentOpenDialogId }}
+      value={{
+        isDialogOpen,
+        openDialog,
+        closeDialog,
+        closeAllDialogs,
+        currentOpenDialogId,
+      }}
     >
       {children}
     </DialogContext.Provider>

@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import Advantages from "@/components/Advantages";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
+import Footer from "@/components/Footer";
 import MastHeadDesktop from "@/components/MastheadDesktop";
 import MastHeadMobile from "@/components/MastheadMobile";
 import Neighbourhoods from "@/components/Neighborhoods";
@@ -59,6 +60,7 @@ export default function Home() {
       <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
         <PropertyOwners />
       </section>
+      <Footer />
       {/* Standouts Dialog */}
       {isDialogOpen("standouts-dialog") && (
         <Dialog

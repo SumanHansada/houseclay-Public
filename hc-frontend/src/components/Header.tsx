@@ -27,13 +27,15 @@ const Header: React.FC<HeaderProps> = () => {
   const token = useSelector((state: RootState) => state.auth.token);
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
-  const { openDialog } = useDialog();
+  const { openDialog, closeAllDialogs } = useDialog();
   const HouseClay = HouseclaySvg as React.FC<React.SVGProps<SVGSVGElement>>;
   const onLogin = () => {
+    closeAllDialogs();
     openDialog("login-dialog");
   };
 
   const onMenuClick = () => {
+    closeAllDialogs();
     openDialog("menu-dialog");
   };
 

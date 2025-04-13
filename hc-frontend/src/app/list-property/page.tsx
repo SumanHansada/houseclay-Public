@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AuthStep, PropertyListingType, PropertyType } from "@/common/utils";
 import Carousel2D from "@/components/Carousel2D";
 import { Dialog, DialogContent } from "@/components/Dialog";
+import Footer from "@/components/Footer";
 import { TestimonialCard } from "@/components/Testimonials";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -585,6 +586,7 @@ export default function ListProperty() {
           </div>
         </div>
       </section>
+      <Footer />
       {isDialogOpen("call-with-captain-dialog") && (
         <Dialog
           id="call-with-captain-dialog"

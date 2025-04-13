@@ -1,10 +1,28 @@
 "use client";
-import { X } from "lucide-react";
+import { APIProvider } from "@vis.gl/react-google-maps";
+import {
+  ChevronDown,
+  ChevronRight,
+  ChevronUp,
+  Contact,
+  CreditCard,
+  FileText,
+  Heart,
+  Home,
+  LogOut,
+  MessageSquare,
+  User,
+  UserRound,
+  X,
+} from "lucide-react";
+import CoinSvg from "public/icons/coin.svg";
 import PropertySvg from "public/icons/property.svg";
+import VerifiedTenantsSvg from "public/icons/verified-tenants.svg";
+import ZeroPercentRedSvg from "public/icons/zero-percent-red.svg";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
-import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Login from "@/components/Login";
 import StickyNavbar from "@/components/StickyNavbar";
@@ -15,13 +33,28 @@ import { clearToken } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const token = useSelector((state: RootState) => state.auth.token);
-  const { openDialog, isDialogOpen, closeDialog } = useDialog();
+  const { token, name, phoneNo } = useSelector(
+    (state: RootState) => state.auth,
+  );
+  const { openDialog, isDialogOpen, closeAllDialogs, closeDialog } =
+    useDialog();
   const [logout] = useLogoutMutation();
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
   const Property = PropertySvg as React.FC<React.SVGProps<SVGSVGElement>>;
+  const ZeroPercentRed = ZeroPercentRedSvg as React.FC<
+    React.SVGProps<SVGSVGElement>
+  >;
+  const VerifiedTenants = VerifiedTenantsSvg as React.FC<
+    React.SVGProps<SVGSVGElement>
+  >;
+  const Coin = CoinSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+
+  const [quickLinksExpanded, setQuickLinksExpanded] = useState(true);
+  const toggleQuickLinks = () => setQuickLinksExpanded(!quickLinksExpanded);
+
   const onLogin = () => {
+    closeAllDialogs();
     openDialog("login-dialog");
   };
 
@@ -35,10 +68,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const handlePropertyBannerClick = () => {
+    if (!token) {
+      onLogin();
+    } else {
+      closeAllDialogs();
+      openDialog("list-property-dialog");
+    }
+  };
+
+  const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
+
   return (
-    <>
+    <APIProvider apiKey={API_KEY}>
       <Header />
-      <main className="mx-auto my-0  min-h-screen flex-1 flex flex-wrap items-center justify-center">
+      <main className="mx-auto my-0  min-h-fit flex-1 flex flex-wrap justify-center">
         {children}
       </main>
       {/* Login Dialog */}
@@ -54,22 +98,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             isMobile ? "animate-slide-out-right" : "animate-fade-out"
           }
         >
-          {
-            <DialogHeader>
-              <div
-                className={`${isMobile ? "py-2 px-8" : ""}  flex flex-col justify-between items-center w-full`}
-              >
-                {isMobile && (
-                  <h1 className="text-xl py-2 text-black">
-                    Log In to Your Account
-                  </h1>
-                )}
-                <button className="absolute top-4 right-4 border border-gray-200 rounded-full md:border-none">
-                  <X onClick={() => closeDialog("login-dialog")} size={25} />
-                </button>
-              </div>
-            </DialogHeader>
-          }
+          <DialogHeader>
+            <div
+              className={`${isMobile ? "py-2 px-8" : ""}  flex flex-col justify-between items-center w-full`}
+            >
+              {isMobile && (
+                <h1 className="text-xl py-2 text-black">
+                  Log In to Your Account
+                </h1>
+              )}
+              <button className="absolute top-4 right-4 border border-gray-200 rounded-full md:border-none">
+                <X onClick={() => closeDialog("login-dialog")} size={25} />
+              </button>
+            </div>
+          </DialogHeader>
           <DialogContent>
             <Login />
           </DialogContent>
@@ -110,39 +152,202 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
           </DialogHeader>
           <DialogContent>
-            {/* Property Banner */}
-            <div className="m-4 p-4 bg-white rounded-lg shadow-md inset-shadow-xs flex justify-between items-center">
-              <div className="">
-                <h2 className="text-xl font-bold">
-                  List Your Property For Free
-                </h2>
-                <div className="flex items-center text-gray-700">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 text-red-500 mr-2"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span>Verified Tenants/Buyers.</span>
+            <div className="container px-8 py-4 flex flex-col gap-8">
+              {/* Profile Section */}
+              <div className="flex items-center p-4 gap-4 border border-gray-100 rounded-full shadow-md inset-shadow-xs">
+                <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-white">
+                  <UserRound size={32} />
                 </div>
-                <div className="flex items-center text-gray-700">
-                  <span className="text-red-500 font-bold mr-2">0%</span>
-                  <span>Zero Brokerage.</span>
+                <div className="flex-1">
+                  <p className="font-semibold">{name}</p>
+                  <p className="text-sm text-gray-500">+{phoneNo}</p>
+                </div>
+                <div>
+                  <ChevronRight size={20} />
                 </div>
               </div>
-              <Property />
+              {/* Property Banner */}
+              <div
+                onClick={handlePropertyBannerClick}
+                className="relative px-4 py-6 border border-gray-100 rounded-lg shadow-md inset-shadow-xs flex flex-col justify-between items-start gap-4 overflow-hidden"
+              >
+                <h2 className="relative text-base font-bold z-10">
+                  List Your Property For Free
+                </h2>
+                <div className="relative flex flex-col z-10">
+                  <div className="flex items-center text-gray-700 gap-2">
+                    <VerifiedTenants />
+                    <span>Verified Tenants/Buyers.</span>
+                  </div>
+                  <div className="flex items-center text-gray-700 gap-2">
+                    <ZeroPercentRed fill="text-red-500" />
+                    <span>Zero Brokerage.</span>
+                  </div>
+                </div>
+                <Property className="absolute right-0 bottom-0" />
+              </div>
+              {/* Connects Balance */}
+              <div className="flex justify-between items-center">
+                <span>Connects Balance</span>
+                <span className="flex items-center gap-1 font-semibold">
+                  <Coin width={25} height={25} /> {token ? 34 : 0}
+                </span>
+              </div>
+
+              {/* Profile Section */}
+              {token && (
+                <div>
+                  <ul>
+                    <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
+                      <span className="flex items-center gap-2">
+                        <User size={22} />
+                        My Profile
+                      </span>
+                      <ChevronRight size={20} />
+                    </li>
+                    <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
+                      <span className="flex items-center gap-2">
+                        <FileText size={22} />
+                        My Requirements
+                      </span>
+                      <ChevronRight size={20} />
+                    </li>
+                    <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
+                      <span className="flex items-center gap-2">
+                        <Heart size={22} />
+                        Shortlists
+                      </span>
+                      <ChevronRight size={20} />
+                    </li>
+                    <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
+                      <span className="flex items-center gap-2">
+                        <Coin width={22} />
+                        Connects
+                      </span>
+                      <ChevronRight size={20} />
+                    </li>
+                    <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
+                      <span className="flex items-center gap-2">
+                        <CreditCard size={22} />
+                        My Payments
+                      </span>
+                      <ChevronRight size={20} />
+                    </li>
+                    <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
+                      <span className="flex items-center gap-2">
+                        <Home size={22} />
+                        My Properties
+                      </span>
+                      <ChevronRight size={20} />
+                    </li>
+                    <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
+                      <span className="flex items-center gap-2">
+                        <Contact size={22} />
+                        Owners you Contacted
+                      </span>
+                      <ChevronRight size={20} />
+                    </li>
+                    <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
+                      <span className="flex items-center gap-2">
+                        <MessageSquare size={22} />
+                        Support
+                      </span>
+                      <ChevronRight size={20} />
+                    </li>
+                    <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer">
+                      <span className="flex items-center gap-2">
+                        <LogOut size={22} />
+                        Logout
+                      </span>
+                      <ChevronRight size={20} />
+                    </li>
+                  </ul>
+                </div>
+              )}
+
+              {/* Quick Links Section */}
+              <div>
+                <div
+                  onClick={toggleQuickLinks}
+                  className="flex items-center justify-between cursor-pointer"
+                >
+                  <span>Quick Links</span>
+                  {quickLinksExpanded ? (
+                    <ChevronUp size={20} />
+                  ) : (
+                    <ChevronDown size={20} />
+                  )}
+                </div>
+                <div
+                  className={`mt-2 overflow-hidden transition-all duration-300 ease-in-out ${
+                    quickLinksExpanded ? "max-h-screen" : "max-h-0"
+                  }`}
+                >
+                  {" "}
+                  <ul>
+                    <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
+                      <span className="flex items-center gap-2">For Sale</span>
+                      <ChevronRight size={20} />
+                    </li>
+                    <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
+                      <span className="flex items-center gap-2">For Rent</span>
+                      <ChevronRight size={20} />
+                    </li>
+                    <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
+                      <span className="flex items-center gap-2">
+                        What Are Connects
+                      </span>
+                      <ChevronRight size={20} />
+                    </li>
+                    <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
+                      <span className="flex items-center gap-2">Contacts</span>
+                      <ChevronRight size={20} />
+                    </li>
+                    <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
+                      <span className="flex items-center gap-2">FAQs</span>
+                      <ChevronRight size={20} />
+                    </li>
+                    <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer">
+                      <span className="flex items-center gap-2">
+                        Terms & Conditions
+                      </span>
+                      <ChevronRight size={20} />
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </DialogContent>
         </Dialog>
       )}
-      <Footer />
+
+      {/* List Property Dialog */}
+      {isDialogOpen("list-property-dialog") && (
+        <Dialog
+          id="list-property-dialog"
+          type="fullscreen"
+          onClose={() => closeDialog("list-property-dialog")}
+          entryAnimation="animate-slide-in-left"
+          exitAnimation="animate-slide-out-left"
+        >
+          <DialogHeader>
+            <div
+              className={`${isMobile ? "py-2 px-8" : ""}  flex flex-col justify-between items-center w-full`}
+            >
+              {isMobile && (
+                <h1 className="text-xl py-2 text-black">Get Started</h1>
+              )}
+              <button className="absolute top-4 right-4 border border-gray-200 rounded-full md:border-none">
+                <X
+                  onClick={() => closeDialog("list-property-dialog")}
+                  size={25}
+                />
+              </button>
+            </div>
+          </DialogHeader>
+        </Dialog>
+      )}
       <StickyNavbar />
-    </>
+    </APIProvider>
   );
 }
