@@ -278,7 +278,7 @@ const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
       `,
       tabIndex: isFocused ? 0 : -1,
       "aria-label": format(date, "EEEE, MMMM do, yyyy"),
-      "aria-selected": isSelected ? "true" : "false",
+      "aria-selected": isSelected ? true : false,
       "data-date": dateStr,
       "data-is-today": isToday ? "true" : "false",
       onClick: () => handleDateSelect(date),
