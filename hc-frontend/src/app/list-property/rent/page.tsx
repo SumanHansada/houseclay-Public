@@ -10,18 +10,44 @@ import {
   MapPin,
 } from "lucide-react";
 import Image from "next/image";
+import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
+import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
+import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
+import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
+import FireExtinguisherIconSvg from "public/icons/amenities/fire-extinguisher.svg";
+import FirstAidKitIconSvg from "public/icons/amenities/first-aid-kit.svg";
+import GatedSecurityIconSvg from "public/icons/amenities/gated-security.svg";
+import GymIconSvg from "public/icons/amenities/gym.svg";
+import LiftIconSvg from "public/icons/amenities/lift.svg";
+import OutdoorDiningAreaIconSvg from "public/icons/amenities/outdoor-dining-area.svg";
+import ParkingSpaceIconSvg from "public/icons/amenities/parking-space.svg";
+import PoolIconSvg from "public/icons/amenities/pool.svg";
+import PoolTableIconSvg from "public/icons/amenities/pool-table.svg";
+import SecurityIconSvg from "public/icons/amenities/security.svg";
+import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
+import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
+import WifiIconSvg from "public/icons/amenities/wifi.svg";
+import BachelorIconSvg from "public/icons/preferred-tenants/bachelor.svg";
+import CompanyIconSvg from "public/icons/preferred-tenants/company.svg";
+import CoupleIconSvg from "public/icons/preferred-tenants/company.svg";
+import FamilyIconSvg from "public/icons/preferred-tenants/family.svg";
 import React, { useState } from "react";
 import * as Yup from "yup";
 
-import FormDropdown from "@/components/FormDropdown";
-import FormPlacesAutocomplete from "@/components/FormPlacesAutoCompletes";
-import GoogleMaps from "@/components/GoogleMaps";
+import FormCalendarField from "@/components/common/FormCalendarField";
+import FormCheckbox from "@/components/common/FormCheckbox";
+import FormDropdown from "@/components/common/FormDropdown";
+import FormINRCurrencyField from "@/components/common/FormINRCurrencyField";
+import FormPlacesAutocomplete from "@/components/common/FormPlacesAutoCompletes";
+import FormRadioGroup from "@/components/common/FormRadioGroup";
+import GoogleMaps from "@/components/common/GoogleMaps";
 import useGoogleMapsAPI from "@/hooks/useGoogleMapsAPI";
 
 // Define our step enum
 enum FormStep {
   PROPERTY_DETAILS = "Property Details",
   LOCALITY_DETAILS = "Locality Details",
+  RENTAL_DETAILS = "Rental Details",
   RESALE_DETAILS = "Resale Details",
   GALLERY = "Gallery",
   ADDITIONAL_INFO = "Additional Information",
@@ -76,6 +102,10 @@ const initialValues = {
   landmark: "Rainbow Children's Hospital",
   latitude: 12.9716,
   longitude: 77.5946,
+  price: 0,
+  deposit: 0,
+  maintenanceCharges: 0,
+  rentNegotiable: false,
 };
 
 const StepNavigationButton: React.FC<{
@@ -125,6 +155,56 @@ const StepNavigationButton: React.FC<{
 };
 
 const ListPropertyPage: React.FC = () => {
+  const FamilyIcon = FamilyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+  const CompanyIcon = CompanyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+  const BachelorIcon = BachelorIconSvg as React.FC<
+    React.SVGProps<SVGSVGElement>
+  >;
+  const CoupleIcon = CoupleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+  const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+  const ClubhouseIcon = ClubhouseIconSvg as React.FC<
+    React.SVGProps<SVGSVGElement>
+  >;
+  const GymIcon = GymIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+  const OutdoorDiningAreaIcon = OutdoorDiningAreaIconSvg as React.FC<
+    React.SVGProps<SVGSVGElement>
+  >;
+  const GatedSecurityIcon = GatedSecurityIconSvg as React.FC<
+    React.SVGProps<SVGSVGElement>
+  >;
+  const PoolIcon = PoolIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+  const FireExtinguisherIcon = FireExtinguisherIconSvg as React.FC<
+    React.SVGProps<SVGSVGElement>
+  >;
+  const SmokeAlarmIcon = SmokeAlarmIconSvg as React.FC<
+    React.SVGProps<SVGSVGElement>
+  >;
+  const SwimmingPoolIcon = SwimmingPoolIconSvg as React.FC<
+    React.SVGProps<SVGSVGElement>
+  >;
+  const TwentyFourSevenPowerIcon = TwentyFourSevenPowerIconSvg as React.FC<
+    React.SVGProps<SVGSVGElement>
+  >;
+  const SecurityIcon = SecurityIconSvg as React.FC<
+    React.SVGProps<SVGSVGElement>
+  >;
+  const ParkingSpaceIcon = ParkingSpaceIconSvg as React.FC<
+    React.SVGProps<SVGSVGElement>
+  >;
+  const DedicatedWorkspaceIcon = DedicatedWorkspaceIconSvg as React.FC<
+    React.SVGProps<SVGSVGElement>
+  >;
+  const WifiIcon = WifiIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+  const BBQGrillIcon = BBQGrillIconSvg as React.FC<
+    React.SVGProps<SVGSVGElement>
+  >;
+  const PoolTableIcon = PoolTableIconSvg as React.FC<
+    React.SVGProps<SVGSVGElement>
+  >;
+  const FirstAidKitIcon = FirstAidKitIconSvg as React.FC<
+    React.SVGProps<SVGSVGElement>
+  >;
+
   const [currentStep, setCurrentStep] = useState<FormStep>(
     FormStep.PROPERTY_DETAILS,
   );
@@ -146,12 +226,12 @@ const ListPropertyPage: React.FC = () => {
       if (currentStep === FormStep.LOCALITY_DETAILS) {
         updatedSteps.delete(FormStep.PROPERTY_DETAILS);
         setCurrentStep(FormStep.PROPERTY_DETAILS);
-      } else if (currentStep === FormStep.RESALE_DETAILS) {
+      } else if (currentStep === FormStep.RENTAL_DETAILS) {
         updatedSteps.delete(FormStep.LOCALITY_DETAILS);
         setCurrentStep(FormStep.LOCALITY_DETAILS);
       } else if (currentStep === FormStep.GALLERY) {
-        updatedSteps.delete(FormStep.RESALE_DETAILS);
-        setCurrentStep(FormStep.RESALE_DETAILS);
+        updatedSteps.delete(FormStep.RENTAL_DETAILS);
+        setCurrentStep(FormStep.RENTAL_DETAILS);
       } else if (currentStep === FormStep.ADDITIONAL_INFO) {
         updatedSteps.delete(FormStep.GALLERY);
         setCurrentStep(FormStep.GALLERY);
@@ -165,8 +245,8 @@ const ListPropertyPage: React.FC = () => {
     if (currentStep === FormStep.PROPERTY_DETAILS) {
       setCurrentStep(FormStep.LOCALITY_DETAILS);
     } else if (currentStep === FormStep.LOCALITY_DETAILS) {
-      setCurrentStep(FormStep.RESALE_DETAILS);
-    } else if (currentStep === FormStep.RESALE_DETAILS) {
+      setCurrentStep(FormStep.RENTAL_DETAILS);
+    } else if (currentStep === FormStep.RENTAL_DETAILS) {
       setCurrentStep(FormStep.GALLERY);
     } else if (currentStep === FormStep.GALLERY) {
       setCurrentStep(FormStep.ADDITIONAL_INFO);
@@ -184,7 +264,7 @@ const ListPropertyPage: React.FC = () => {
   return (
     <div className="flex w-full h-full top-14">
       {/* Background SVG behind left section only */}
-      <div className="left-0 z-40 w-[33.33%] fixed ">
+      <div className="left-0 top-14 bottom-0 z-40 w-[33.33%] fixed  bg-gray-50">
         <Image
           src="/images/property-add-graphic.svg"
           alt="Property Graphic"
@@ -197,7 +277,7 @@ const ListPropertyPage: React.FC = () => {
           {[
             { step: FormStep.PROPERTY_DETAILS, Icon: Home },
             { step: FormStep.LOCALITY_DETAILS, Icon: MapPin },
-            { step: FormStep.RESALE_DETAILS, Icon: IndianRupee },
+            { step: FormStep.RENTAL_DETAILS, Icon: IndianRupee },
             { step: FormStep.GALLERY, Icon: FileImage },
             { step: FormStep.ADDITIONAL_INFO, Icon: FileText },
           ].map((item, idx, arr) => (
@@ -554,7 +634,6 @@ const ListPropertyPage: React.FC = () => {
                     <div className="mt-4 h-96">
                       <GoogleMaps
                         mapId="houseclay-googlemaps"
-                        apiKey={API_KEY}
                         center={{ lat: values.latitude, lng: values.longitude }} // Bengaluru
                         zoom={12}
                         className="h-full w-full rounded-lg shadow-lg"
@@ -563,10 +642,293 @@ const ListPropertyPage: React.FC = () => {
                   </>
                 )}
 
-                {currentStep === FormStep.RESALE_DETAILS && (
-                  <div className="py-10 text-center text-gray-500">
-                    <p>Resale Details form will be implemented here</p>
-                  </div>
+                {currentStep === FormStep.RENTAL_DETAILS && (
+                  <>
+                    <div className="mb-8">
+                      <h1 className="text-3xl text-gray-800">
+                        Provide rental details about your property
+                      </h1>
+                    </div>
+                    <div>
+                      <div className="grid grid-cols-2 gap-6 mb-6">
+                        <div className="col-span-1">
+                          <FormINRCurrencyField
+                            name="price"
+                            id="price"
+                            label="Price"
+                            required
+                          />
+                        </div>
+                        <div className="col-span-1">
+                          <FormRadioGroup
+                            name="rentNegotiable"
+                            label="Rent Negotiable"
+                            options={[
+                              { value: "true", label: "Yes" },
+                              { value: "false", label: "No" },
+                            ]}
+                            required
+                            horizontal
+                          />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-6 mb-6">
+                        <div className="col-span-1">
+                          <FormINRCurrencyField
+                            name="maintenanceCharges"
+                            id="maintenanceCharges"
+                            label="Maintenance Charges"
+                            required
+                          />
+                        </div>
+                        <div className="col-span-1">
+                          <FormINRCurrencyField
+                            name="deposit"
+                            id="deposit"
+                            label="Deposit"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-6 mb-6">
+                        <div className="col-span-1">
+                          <FormCalendarField
+                            name="availableFrom"
+                            label="Available From"
+                            dateFormat="MM/dd/yyyy"
+                            className="w-full"
+                            required
+                          />
+                        </div>
+                        <div className="col-span-1">
+                          <FormDropdown
+                            label="Furnishing"
+                            name="furnishing"
+                            id="furnishing"
+                            options={[
+                              {
+                                value: "Fully-furnished",
+                                label: "Fully Furnished",
+                              },
+                              {
+                                value: "Semi-funnished",
+                                label: "Semi Furnished",
+                              },
+                              { value: "Unfurnished", label: "Un Furnished" },
+                            ]}
+                            required={true}
+                            placeholder="Select furnishing"
+                            aria-describedby={
+                              errors.city && touched.city
+                                ? "furnishing-error"
+                                : undefined
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div className="mb-6">
+                        <FormRadioGroup
+                          name="preferredTenant"
+                          label="Preferred Tenant"
+                          options={[
+                            {
+                              value: "Family",
+                              label: "Family",
+                              icon: <FamilyIcon />,
+                            },
+                            {
+                              value: "Company",
+                              label: "Company",
+                              icon: <CompanyIcon />,
+                            },
+                            {
+                              value: "Bachelor",
+                              label: "Bachelor",
+                              icon: <BachelorIcon />,
+                            },
+                            {
+                              value: "Couple",
+                              label: "Couple",
+                              icon: <CoupleIcon />,
+                            },
+                          ]}
+                          withIcons={true}
+                          required
+                          horizontal
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-6 mb-6">
+                        <div className="col-span-1">
+                          <FormDropdown
+                            label="Water Supply"
+                            name="waterSupply"
+                            id="waterSupply"
+                            options={[
+                              { value: "both", label: "Both" },
+                              {
+                                value: "tanker",
+                                label: "Tanker",
+                              },
+                              {
+                                value: "Ground-water",
+                                label: "Ground Water",
+                              },
+                            ]}
+                            required={true}
+                            placeholder="Select Water supply"
+                            aria-describedby={
+                              errors.city && touched.city
+                                ? "waterSupply-error"
+                                : undefined
+                            }
+                          />
+                        </div>
+                        <div className="col-span-1">
+                          <FormDropdown
+                            label="Power Backup"
+                            name="powerBackup"
+                            id="powerBackup"
+                            options={[
+                              { value: "full", label: "Full" },
+                              {
+                                value: "partial",
+                                label: "Partial",
+                              },
+                              {
+                                value: "no",
+                                label: "No",
+                              },
+                            ]}
+                            required={true}
+                            placeholder="Select Power backup"
+                            aria-describedby={
+                              errors.city && touched.city
+                                ? "powerBackup-error"
+                                : undefined
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-6 mb-6">
+                        <div className="col-span-1">
+                          <FormDropdown
+                            label="Parking"
+                            name="parking"
+                            id="parking"
+                            options={[
+                              { value: "yes", label: "Yes" },
+                              {
+                                value: "no",
+                                label: "No",
+                              },
+                            ]}
+                            required={true}
+                            placeholder="Select Parking"
+                            aria-describedby={
+                              errors.city && touched.city
+                                ? "parking-error"
+                                : undefined
+                            }
+                          />
+                        </div>
+                        <div className="col-span-1">
+                          <FormRadioGroup
+                            name="nonVegAllowed"
+                            label="Non Veg Allowed"
+                            options={[
+                              { value: "true", label: "Yes" },
+                              { value: "false", label: "No" },
+                            ]}
+                            required
+                            horizontal
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mb-8">
+                      <h1 className="text-2xl text-gray-800">
+                        Select the available amenities
+                      </h1>
+                      <FormCheckbox
+                        name="amenities"
+                        columns={4}
+                        options={[
+                          { value: "Lift", label: "Lift", icon: <LiftIcon /> },
+                          {
+                            value: "Clubhouse",
+                            label: "Club house",
+                            icon: <ClubhouseIcon />,
+                          },
+                          { value: "Gym", label: "Gym", icon: <GymIcon /> },
+                          {
+                            value: "Outdoor Dining Area",
+                            label: "Outdoor Dining Area",
+                            icon: <OutdoorDiningAreaIcon />,
+                          },
+                          {
+                            value: "Gated Security",
+                            label: "Gated Security",
+                            icon: <GatedSecurityIcon />,
+                          },
+                          { value: "Pool", label: "Pool ", icon: <PoolIcon /> },
+                          {
+                            value: "Fire Extinguisher",
+                            label: "Fire Extinguisher",
+                            icon: <FireExtinguisherIcon />,
+                          },
+                          {
+                            value: "Smoke Alarm",
+                            label: "Smoke Alarm",
+                            icon: <SmokeAlarmIcon />,
+                          },
+                          {
+                            value: "Swimming Pool",
+                            label: "Swimming Pool",
+                            icon: <SwimmingPoolIcon />,
+                          },
+                          {
+                            value: "24/7 Power",
+                            label: "24/7 Power",
+                            icon: <TwentyFourSevenPowerIcon />,
+                          },
+                          {
+                            value: "Security",
+                            label: "Security",
+                            icon: <SecurityIcon />,
+                          },
+                          {
+                            value: "Parking Space",
+                            label: "Parking Space",
+                            icon: <ParkingSpaceIcon />,
+                          },
+                          {
+                            value: "Dedicated Workspace",
+                            label: "Dedicated Workspace",
+                            icon: <DedicatedWorkspaceIcon />,
+                          },
+                          { value: "Wifi", label: "Wifi", icon: <WifiIcon /> },
+                          {
+                            value: "BBQ Grill",
+                            label: "BBQ Grill",
+                            icon: <BBQGrillIcon />,
+                          },
+                          {
+                            value: "Pool Table",
+                            label: "Pool Table",
+                            icon: <PoolTableIcon />,
+                          },
+                          {
+                            value: "First Aid Kit",
+                            label: "First Aid Kit",
+                            icon: <FirstAidKitIcon />,
+                          },
+                        ]}
+                        withIcons={true}
+                        alignment="start"
+                        required
+                      />
+                    </div>
+                  </>
                 )}
 
                 {currentStep === FormStep.GALLERY && (
@@ -581,7 +943,7 @@ const ListPropertyPage: React.FC = () => {
                   </div>
                 )}
 
-                <div className="flex justify-between mt-10 pt-4  border-t border-t-gray-300">
+                <div className="fixed bottom-0 left-0 ml-[33.33%] right-0 flex justify-between py-3 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 border-t border-t-gray-300 bg-white">
                   <button
                     type="button"
                     className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50"
