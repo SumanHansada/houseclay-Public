@@ -22,8 +22,8 @@ import ZeroPercentRedSvg from "public/icons/zero-percent-red.svg";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import Header from "@/components/common/Header";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
-import Header from "@/components/Header";
 import Login from "@/components/Login";
 import StickyNavbar from "@/components/StickyNavbar";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
@@ -82,7 +82,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <APIProvider apiKey={API_KEY}>
       <Header />
-      <main className="mx-auto my-0  min-h-fit flex-1 flex flex-wrap justify-center">
+      <main className="mx-auto my-0 t-[54px] pt-[54px] min-h-fit flex-1 flex flex-wrap justify-center">
         {children}
       </main>
       {/* Login Dialog */}

@@ -1,4 +1,4 @@
-import "../app/google-places-autocomplete.css"; // Import the CSS
+import "../../app/google-places-autocomplete.css"; // Import the CSS
 
 import { useField, useFormikContext } from "formik";
 import { MapPin } from "lucide-react";
