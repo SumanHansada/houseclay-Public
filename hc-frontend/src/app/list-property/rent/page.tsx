@@ -10,6 +10,7 @@ import {
   MapPin,
 } from "lucide-react";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
 import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
 import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
@@ -27,21 +28,28 @@ import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
 import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 import WifiIconSvg from "public/icons/amenities/wifi.svg";
+import ListPropertySuccessSvg from "public/icons/list-property-success.svg";
 import BachelorIconSvg from "public/icons/preferred-tenants/bachelor.svg";
 import CompanyIconSvg from "public/icons/preferred-tenants/company.svg";
-import CoupleIconSvg from "public/icons/preferred-tenants/company.svg";
+import CoupleIconSvg from "public/icons/preferred-tenants/couple.svg";
 import FamilyIconSvg from "public/icons/preferred-tenants/family.svg";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import FormCalendarField from "@/components/common/FormCalendarField";
 import FormCheckbox from "@/components/common/FormCheckbox";
 import FormDropdown from "@/components/common/FormDropdown";
 import FormINRCurrencyField from "@/components/common/FormINRCurrencyField";
+import FormPhoneInput from "@/components/common/FormPhoneInput";
+import FormPhotoUpload from "@/components/common/FormPhotoUpload";
 import FormPlacesAutocomplete from "@/components/common/FormPlacesAutoCompletes";
 import FormRadioGroup from "@/components/common/FormRadioGroup";
 import GoogleMaps from "@/components/common/GoogleMaps";
+import { Dialog, DialogContent } from "@/components/Dialog";
 import useGoogleMapsAPI from "@/hooks/useGoogleMapsAPI";
+import { useDialog } from "@/providers/DialogContextProvider";
+import { RootState } from "@/store/store";
 
 // Define our step enum
 enum FormStep {
@@ -102,10 +110,8 @@ const initialValues = {
   landmark: "Rainbow Children's Hospital",
   latitude: 12.9716,
   longitude: 77.5946,
-  price: 0,
-  deposit: 0,
-  maintenanceCharges: 0,
-  rentNegotiable: false,
+  photos: [],
+  whoWillShowProperty: "",
 };
 
 const StepNavigationButton: React.FC<{
@@ -205,14 +211,18 @@ const ListPropertyPage: React.FC = () => {
     React.SVGProps<SVGSVGElement>
   >;
 
+  const ListPropertySuccess = ListPropertySuccessSvg as React.FC<
+    React.SVGProps<SVGSVGElement>
+  >;
+
   const [currentStep, setCurrentStep] = useState<FormStep>(
     FormStep.PROPERTY_DETAILS,
   );
   const [completedSteps, setCompletedSteps] = useState<Set<FormStep>>(
     new Set(),
   );
-  console.log("currentStep", currentStep);
-  console.log("completedSteps", completedSteps);
+  const token = useSelector((state: RootState) => state.auth.token);
+  const { openDialog, isDialogOpen, closeDialog } = useDialog();
 
   // Update the markStepAsCompleted function to manage step completion state
   const markStepAsCompleted = (step: FormStep) => {
@@ -250,8 +260,9 @@ const ListPropertyPage: React.FC = () => {
       setCurrentStep(FormStep.GALLERY);
     } else if (currentStep === FormStep.GALLERY) {
       setCurrentStep(FormStep.ADDITIONAL_INFO);
-    } else {
-      setCurrentStep(FormStep.NONE);
+    } else if (currentStep === FormStep.ADDITIONAL_INFO) {
+      //   setCurrentStep(FormStep.NONE);
+      openDialog("list-property-success-dialog");
     }
   };
 
@@ -260,6 +271,10 @@ const ListPropertyPage: React.FC = () => {
   const { isLoaded, loadError } = useGoogleMapsAPI(API_KEY);
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading maps...</div>;
+
+  if (!token) {
+    redirect("/");
+  }
 
   return (
     <div className="flex w-full h-full top-14">
@@ -292,7 +307,7 @@ const ListPropertyPage: React.FC = () => {
           ))}
         </div>
       </div>
-      <div className="container right-0 ml-[33.33%] py-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
+      <div className="container right-0 ml-[33.33%] pt-12 pb-20 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
         <div className="flex flex-col">
           {/* Right side - Form */}
           <Formik
@@ -714,7 +729,7 @@ const ListPropertyPage: React.FC = () => {
                                 value: "Semi-funnished",
                                 label: "Semi Furnished",
                               },
-                              { value: "Unfurnished", label: "Un Furnished" },
+                              { value: "Unfurnished", label: "UnFurnished" },
                             ]}
                             required={true}
                             placeholder="Select furnishing"
@@ -764,7 +779,7 @@ const ListPropertyPage: React.FC = () => {
                             name="waterSupply"
                             id="waterSupply"
                             options={[
-                              { value: "both", label: "Both" },
+                              { value: "borewell", label: "Borewell" },
                               {
                                 value: "tanker",
                                 label: "Tanker",
@@ -932,18 +947,78 @@ const ListPropertyPage: React.FC = () => {
                 )}
 
                 {currentStep === FormStep.GALLERY && (
-                  <div className="py-10 text-center text-gray-500">
-                    <p>Gallery upload form will be implemented here</p>
-                  </div>
+                  <>
+                    <div className="mb-8">
+                      <h1 className="text-3xl text-gray-800">
+                        Upload Property Photos
+                      </h1>
+                      <p className="text-gray-500 mt-2">
+                        Properties with pictures have higher visibility.
+                      </p>
+                    </div>
+                    <div className="flex justify-between w-full mb-2 items-center">
+                      <h1 className="text-2xl text-gray-800">Add Photos</h1>
+                      <span className="text-sm bg-red-100 py-1 px-3 rounded-lg">
+                        {values.photos.length}/{10}
+                      </span>
+                    </div>
+                    <FormPhotoUpload
+                      name="photos"
+                      noPhotosName="noPhotos"
+                      maxPhotos={10}
+                      showPhotoCount={false}
+                      showNoPhotosCheckbox={true}
+                      className="mb-6"
+                    />
+                  </>
                 )}
 
                 {currentStep === FormStep.ADDITIONAL_INFO && (
-                  <div className="py-10 text-center text-gray-500">
-                    <p>Additional Information form will be implemented here</p>
-                  </div>
+                  <>
+                    <div className="mb-8">
+                      <h1 className="text-3xl text-gray-800">
+                        Complete Your Listing with Final Details
+                      </h1>
+                    </div>
+                    <div>
+                      <div className="grid grid-cols-2 gap-6 mb-6">
+                        <div className="col-span-1">
+                          <FormDropdown
+                            name="whoWillShowProperty"
+                            id="whoWillShowProperty"
+                            label="Who will show the property?"
+                            options={[
+                              { value: "Owner", label: "I will show" },
+                              {
+                                value: "Friend/Neighbour",
+                                label: "Friend/Neighbour will show",
+                              },
+                            ]}
+                            placeholder="Select"
+                            aria-describedby={
+                              errors.whoWillShowProperty &&
+                              touched.whoWillShowProperty
+                                ? "whoWillShowProperty-error"
+                                : undefined
+                            }
+                          />
+                        </div>
+                        <div className="col-span-1">
+                          <FormPhoneInput
+                            label="Secondary Phone Number"
+                            name="secondaryPhoneNumber"
+                            id="secondaryPhoneNumber"
+                            defaultCountry="in" // Set to India as your default
+                            placeholder="Enter phone number"
+                            className="border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-red-500 focus:border-red-500"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </>
                 )}
 
-                <div className="fixed bottom-0 left-0 ml-[33.33%] right-0 flex justify-between py-3 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 border-t border-t-gray-300 bg-white">
+                <div className="fixed bottom-0 left-0 ml-[33.33%] right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 border-t border-t-gray-300 bg-white">
                   <button
                     type="button"
                     className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50"
@@ -966,6 +1041,48 @@ const ListPropertyPage: React.FC = () => {
           </Formik>
         </div>
       </div>
+      {isDialogOpen("list-property-success-dialog") && (
+        <Dialog
+          id="list-property-success-dialog"
+          type="card"
+          onClose={() => closeDialog("list-property-success-dialog")}
+          entryAnimation="animate-fade-in"
+          exitAnimation="animate-fade-out"
+        >
+          <DialogContent>
+            <div className="flex flex-col items-center justify-center text-center p-8 gap-4">
+              <div className="relative overflow-hidden rounded-lg">
+                <div className="absolute inset-0 shadow-[inset_0_0_25px_25px_rgba(255,255,255,0.8)] z-20"></div>
+                <ListPropertySuccess />
+              </div>
+              <h2 className="text-3xl text-gray-800">Congratulations!</h2>
+              <p className="text-gray-600 text-lg">
+                You have successfully posted your property,
+                <br />
+                it will be live within 2 Hrs.
+              </p>
+
+              {/* Action buttons */}
+              <div className="flex gap-4">
+                <button
+                  onClick={() => {
+                    closeDialog("list-property-success-dialog");
+                  }}
+                  className="px-24 py-3 text-black border font-medium rounded-lg hover:bg-red-600 transition duration-200"
+                >
+                  Edit
+                </button>
+                <button
+                  //   onClick={onPreview}
+                  className="px-24 py-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200"
+                >
+                  Preview Listing
+                </button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 };

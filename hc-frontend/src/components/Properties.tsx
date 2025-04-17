@@ -76,7 +76,7 @@ const Properties: React.FC<PropertiesProps> = ({
                 <i className="mr-1 ">
                   <Star
                     size={16}
-                    className="bg-red-100 text-red-600 rounded-full"
+                    className="bg-red-200 text-red-600 rounded-full"
                   />
                 </i>{" "}
                 Featured
@@ -84,7 +84,10 @@ const Properties: React.FC<PropertiesProps> = ({
             ) : (
               <span className="flex items-center">
                 <i className="mr-1">
-                  <Crown size={16} className="bg-yellow-100 text-yellow-600" />
+                  <Crown
+                    size={16}
+                    className="bg-yellow-200 text-yellow-600 rounded-full"
+                  />
                 </i>{" "}
                 Exclusive
               </span>
