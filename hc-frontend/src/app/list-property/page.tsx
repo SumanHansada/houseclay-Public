@@ -36,6 +36,7 @@ import {
   setShowPropertyType,
 } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
+import { setCheckUser } from "@/store/userSlice";
 
 import dummyData from "../../data/dummyData.json";
 
@@ -357,7 +358,7 @@ export default function ListProperty() {
                   <PhoneInput
                     defaultCountry="in"
                     value={phoneNo}
-                    placeholder="Enter phone number"
+                    placeholder={"Enter phone number"}
                     onChange={(value) => handlePhoneChange(value)}
                     className="custom-phone-input w-full border border-gray-300 rounded-lg px-2 py-0.5 focus:ring-2 focus:ring-blue-500"
                   />
@@ -397,7 +398,7 @@ export default function ListProperty() {
                             "Check User Response:",
                             checkUserResponse,
                           );
-                          // setUserExists(checkUserResponse.exists);
+                          dispatch(setCheckUser(checkUserResponse));
                           const otpResponse = await generateOtp({ phoneNo });
                           console.log("OTP Response:", otpResponse);
                           if (otpResponse.data) {

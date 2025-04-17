@@ -40,7 +40,7 @@ const authSlice = createSlice({
       if (typeof window !== "undefined") {
         state.token = window.localStorage.getItem("token");
         state.name = "Suman";
-        state.phoneNo = "919999988888";
+        // state.phoneNo = "919999988888"; ̰
       }
     },
     setAuthStep: (state, action: PayloadAction<AuthStep>) => {

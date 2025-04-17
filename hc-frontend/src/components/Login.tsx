@@ -24,6 +24,7 @@ import {
   setToken,
 } from "@/store/authSlice";
 import { RootState } from "@/store/store";
+import { setCheckUser } from "@/store/userSlice";
 
 const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -33,12 +34,12 @@ const Login = () => {
   const phoneNo = useSelector((state: RootState) => state.auth.phoneNo);
   const emailID = useSelector((state: RootState) => state.auth.emailID);
   const name = useSelector((state: RootState) => state.auth.name);
+  const checkUser = useSelector((state: RootState) => state.user.checkUser);
   const [login] = useLoginMutation();
   const [triggerCheckUser] = useLazyCheckUserQuery();
   const [register] = useRegisterMutation();
   const [generateOtp] = useGenerateOtpMutation();
   const dispatch = useDispatch();
-  const [userExists, setUserExists] = useState(false);
   const { isMobile } = useDeviceContext();
 
   const [otpCode, setOtpCode] = useState<string[]>(["", "", "", ""]);
@@ -54,7 +55,7 @@ const Login = () => {
     try {
       const checkUserResponse = await triggerCheckUser({ phoneNo }).unwrap();
       console.log("Check User Response:", checkUserResponse);
-      setUserExists(checkUserResponse.exists);
+      dispatch(setCheckUser(checkUserResponse));
       const otpResponse = await generateOtp({ phoneNo });
       console.log("OTP Response:", otpResponse);
       if (otpResponse.data) {
@@ -83,7 +84,7 @@ const Login = () => {
 
   const handleVerifyAndContinue = async () => {
     try {
-      if (!userExists) {
+      if (!checkUser) {
         if (!phoneNo) return;
         if (!emailIDRegex.test(emailID)) return;
         if (!name) return;
@@ -235,7 +236,7 @@ const Login = () => {
                 <PhoneInput
                   defaultCountry="in"
                   value={phoneNo}
-                  placeholder="Enter phone number"
+                  placeholder={"Enter phone number"}
                   onChange={(value) => handlePhoneChange(value)}
                   className="custom-phone-input w-full border border-gray-300 rounded-lg px-2 py-0.5 focus:ring-2 focus:ring-blue-500"
                 />
@@ -287,7 +288,7 @@ const Login = () => {
                 <PhoneInput
                   defaultCountry="in"
                   value={phoneNo}
-                  placeholder="Enter phone number"
+                  placeholder={"Enter phone number"}
                   onChange={(value) => handlePhoneChange(value)}
                   className="custom-phone-input w-full border border-gray-300 rounded-lg px-2 py-0.5 focus:ring-2 focus:ring-blue-500"
                 />
@@ -392,7 +393,7 @@ const Login = () => {
                 />
               </div>
               {/* Info box */}
-              {!userExists && (
+              {!checkUser && (
                 <div className="bg-red-50 p-4 rounded-lg flex items-center gap-4">
                   <Image
                     src="/icons/coin-egg.svg"
@@ -417,7 +418,7 @@ const Login = () => {
                 onClick={handleVerifyAndContinue}
                 disabled={!isVerifyEnabled}
               >
-                {userExists ? "Verify" : "Verify and Continue"}
+                {checkUser ? "Verify" : "Verify and Continue"}
               </button>
               {/* Resend option */}
               <div className="text-center">

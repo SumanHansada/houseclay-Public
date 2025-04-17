@@ -33,4 +33,4 @@ const listPropertySlice = createSlice({
 
 export const { setPropertyType, setListingType, setShowPropertyType } =
   listPropertySlice.actions;
-export const listPropertyReducer = listPropertySlice.reducer;
+export default listPropertySlice.reducer;
