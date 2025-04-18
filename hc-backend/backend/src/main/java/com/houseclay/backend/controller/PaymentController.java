@@ -5,6 +5,7 @@ import com.houseclay.backend.payload.CreateOrderRequest;
 import com.houseclay.backend.payload.VerifyPaymentRequest;
 import com.houseclay.backend.service.PaymentService;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,11 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/payment")
 public class PaymentController {
 
-    private final PaymentService paymentService;
-
-    public PaymentController(PaymentService paymentService) {
-        this.paymentService = paymentService;
-    }
+    @Autowired
+    private PaymentService paymentService;
 
     @PostMapping("/create-order")
     public ResponseEntity<String> createOrder(@RequestBody CreateOrderRequest request, @RequestAttribute("authenticatedUser") User user) throws Exception {

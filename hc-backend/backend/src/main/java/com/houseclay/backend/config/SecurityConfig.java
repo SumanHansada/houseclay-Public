@@ -38,6 +38,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // ✅ Allow all OPTIONS requests
                         .requestMatchers("/api/auth/generate-otp").permitAll()
+                        .requestMatchers("/api/photo/**").permitAll()
                         .requestMatchers("/api/admin/login", "/api/admin/register").permitAll()
                         .requestMatchers("/api/user/login", "/api/user/register",  "/api/user/check-user").permitAll()
                         .requestMatchers("/api/admin/**").authenticated()
