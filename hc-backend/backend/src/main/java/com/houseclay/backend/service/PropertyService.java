@@ -48,11 +48,11 @@ public class PropertyService {
         return propertyRepository.findAll();
     }
 
-    public Optional<Property> getPropertyById(long id) {
+    public Optional<Property> getPropertyById(String id) {
         return propertyRepository.findById(id);
     }
 
-    public Property verifyProperty(Long propertyId, Admin admin) throws APIException {
+    public Property verifyProperty(String propertyId, Admin admin) throws APIException {
         Optional<Property> propertyOpt = propertyRepository.findById(propertyId);
 
         if (propertyOpt.isEmpty()) {
@@ -69,7 +69,7 @@ public class PropertyService {
         return propertyRepository.save(property);
     }
 
-    public Property reVerifyProperty(Long propertyId, Admin admin) throws APIException {
+    public Property reVerifyProperty(String propertyId, Admin admin) throws APIException {
         Optional<Property> propertyOpt = propertyRepository.findById(propertyId);
 
         if (propertyOpt.isEmpty()) {

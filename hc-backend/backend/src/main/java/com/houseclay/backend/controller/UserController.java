@@ -88,7 +88,7 @@ public class UserController {
 
     @PostMapping("/shortlist-property")
     public ResponseEntity shortlistProperty(
-            @RequestParam Long propertyId,
+            @RequestParam String propertyId,
             @RequestAttribute("authenticatedUser") User user) {
         try {
             List<Property> shortlistedProperties = shortlistPropertyService.shortlistProperty(user, propertyId);
@@ -105,7 +105,7 @@ public class UserController {
 
     @DeleteMapping("/remove-shortlisted-property")
     public ResponseEntity removeShortlistedProperty(
-            @RequestParam Long propertyId,
+            @RequestParam String propertyId,
             @RequestAttribute("authenticatedUser") User user) {
         try {
             List<Property> shortlistedProperties = shortlistPropertyService.removeShortlistedProperty(user, propertyId);
@@ -130,7 +130,7 @@ public class UserController {
 
     @PostMapping("/view-property")
     public ResponseEntity viewProperty(
-            @RequestParam Long propertyId,
+            @RequestParam String propertyId,
             @RequestAttribute("authenticatedUser") User user) {
         try {
             List<Property> viewedProperties = viewPropertyService.markPropertyAsViewed(user, propertyId);

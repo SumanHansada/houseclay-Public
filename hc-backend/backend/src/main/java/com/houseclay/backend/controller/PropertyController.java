@@ -47,7 +47,7 @@ public class PropertyController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getPropertyById(@PathVariable Long id) {
+    public ResponseEntity<Object> getPropertyById(@PathVariable String id) {
         Optional<Property> property = propertyService.getPropertyById(id);
         if (property.isPresent()) {
             return ResponseEntity.ok(property.get());

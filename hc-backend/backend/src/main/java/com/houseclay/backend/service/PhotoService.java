@@ -1,5 +1,8 @@
 package com.houseclay.backend.service;
 
+import com.houseclay.backend.entity.User;
+import com.houseclay.backend.payload.PresignedURLRequest;
+import com.houseclay.backend.payload.PresignedURLResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -12,6 +15,9 @@ import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignReques
 
 import java.net.URL;
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class PhotoService {
@@ -28,7 +34,16 @@ public class PhotoService {
     @Value("${aws.secretAccessKey}")
     private String secretAccessKey;
 
-    public String generatePresignedUrl(String filename) {
+    public PresignedURLResponse getURLs(PresignedURLRequest request, User user) {
+        Map<String, String> fileURLs = new HashMap<>();
+        String propertyID = UUID.randomUUID().toString();
+        for (Map.Entry<String, String> entry : request.getFileMap().entrySet()) {
+            fileURLs.put(entry.getKey(), generatePresignedUrl(entry.getKey(), entry.getValue(), propertyID, user.getPhoneNo()));
+        }
+        return new PresignedURLResponse(propertyID, fileURLs);
+    }
+
+    public String generatePresignedUrl(String filename, String contentType, String propertyID, String phoneNo) {
         S3Presigner presigner = S3Presigner.builder()
                 .region(Region.of(region))
                 .credentialsProvider(
@@ -40,8 +55,8 @@ public class PhotoService {
 
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
-                .key(String.format("users/%s/properties/%s/photos/%s", "rohit", "123",filename))
-                .contentType("image/jpeg") // or "image/png" or dynamic
+                .key(String.format("users/%s/properties/%s/photos/%s", phoneNo, propertyID, filename))
+                .contentType(contentType)
                 .build();
 
         PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()

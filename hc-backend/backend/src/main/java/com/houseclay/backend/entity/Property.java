@@ -29,8 +29,7 @@ import java.util.List;
 public class Property {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long propertyID;
+    String propertyID;
     String title;
     boolean isVerified;
     boolean isReVerified;

@@ -10,7 +10,7 @@ import org.springframework.data.elasticsearch.annotations.GeoPointField;
 public class PropertyDocument {
 
     @Id
-    private Long id;
+    private String id;
 
     private String title;
     private String city;

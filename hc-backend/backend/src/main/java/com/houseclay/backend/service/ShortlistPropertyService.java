@@ -21,7 +21,7 @@ public class ShortlistPropertyService {
     @Autowired
     private PropertyRepository propertyRepository;
 
-    public List<Property> shortlistProperty(User user, Long propertyId) throws Exception {
+    public List<Property> shortlistProperty(User user, String propertyId) throws Exception {
         Optional<Property> propertyOpt = propertyRepository.findById(propertyId);
         if (propertyOpt.isEmpty()) {
             throw new APIException("Property not found", HttpStatus.BAD_REQUEST);
@@ -33,7 +33,7 @@ public class ShortlistPropertyService {
         return user.getShortlistedProperties();
     }
 
-    public List<Property> removeShortlistedProperty(User user, Long propertyId) throws Exception {
+    public List<Property> removeShortlistedProperty(User user, String propertyId) throws Exception {
         Optional<Property> propertyOpt = propertyRepository.findById(propertyId);
         if (propertyOpt.isEmpty()) {
             throw new APIException("Property not found", HttpStatus.BAD_REQUEST);
