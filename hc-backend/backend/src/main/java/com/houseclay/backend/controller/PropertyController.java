@@ -71,4 +71,15 @@ public class PropertyController {
 
         return ResponseEntity.ok(results);
     }
+
+    @GetMapping("/contact/{id}")
+    public ResponseEntity ownContact(@PathVariable String id, @RequestAttribute("authenticatedUser") User user) {
+        try {
+            return ResponseEntity.ok(propertyService.getOwnerContact(id, user));
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }
