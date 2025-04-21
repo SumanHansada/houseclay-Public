@@ -33,8 +33,8 @@ const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
   name,
   label,
   required = false,
-  placeholder = "MM/DD/YYYY",
-  dateFormat = "MM/dd/yyyy",
+  placeholder = "2025-01-01",
+  dateFormat = "yyyy-MM-dd",
   className = "",
   disabled = false,
 }) => {
@@ -226,15 +226,18 @@ const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
 
   // Close calendar when clicking outside
   useEffect(() => {
-    // const handleClickOutside = (event: MouseEvent) => {
-    //   if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
-    //     setIsOpen(false);
-    //   }
-    // };
-    // document.addEventListener('mousedown', handleClickOutside);
-    // return () => {
-    //   document.removeEventListener('mousedown', handleClickOutside);
-    // };
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        calendarRef.current &&
+        !calendarRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   // Focus management - focus the selected/focused date when necessary
@@ -261,12 +264,14 @@ const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
       };
     }
 
-    const isToday = new Date().toDateString() === date.toDateString();
+    const today = new Date();
+    const isToday = today.toDateString() === date.toDateString();
     const isSelected =
       field.value &&
       new Date(field.value).toDateString() === date.toDateString();
     const isFocused =
       focusedDate && focusedDate.toDateString() === date.toDateString();
+    const isDisabled = date.getTime() < today.setHours(0, 0, 0, 0); // Disable dates before today
     const dateStr = format(date, "yyyy-MM-dd");
 
     return {
@@ -275,14 +280,18 @@ const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
         ${isToday ? "bg-gray-200" : ""}
         ${isSelected ? "bg-red-500 text-white hover:bg-red-600" : ""}
         ${isFocused && !isSelected ? "ring-2 ring-red-500" : ""}
+        ${isDisabled ? "text-gray-300 cursor-not-allowed" : ""}
       `,
-      tabIndex: isFocused ? 0 : -1,
+      tabIndex: isFocused && !isDisabled ? 0 : -1,
       "aria-label": format(date, "EEEE, MMMM do, yyyy"),
       "aria-selected": isSelected ? true : false,
+      "aria-disabled": isDisabled ? true : undefined,
       "data-date": dateStr,
       "data-is-today": isToday ? "true" : "false",
-      onClick: () => handleDateSelect(date),
-      onKeyDown: (e: KeyboardEvent<HTMLDivElement>) => handleKeyDown(e, date),
+      onClick: isDisabled ? undefined : () => handleDateSelect(date),
+      onKeyDown: isDisabled
+        ? undefined
+        : (e: KeyboardEvent<HTMLDivElement>) => handleKeyDown(e, date),
     };
   };
 
@@ -305,7 +314,6 @@ const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
           {...field}
           value={displayValue}
           onChange={handleInputChange}
-          onFocus={() => !disabled && setIsOpen(!isOpen)}
           placeholder={placeholder}
           disabled={disabled}
           aria-label={label || "Date input"}

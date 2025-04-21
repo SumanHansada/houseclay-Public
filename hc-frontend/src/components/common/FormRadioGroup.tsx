@@ -2,7 +2,7 @@ import { useField } from "formik";
 import React from "react";
 
 interface RadioOption {
-  value: string;
+  value: string | boolean;
   label: string;
   icon?: React.ReactNode;
 }
@@ -30,8 +30,13 @@ const FormRadioGroup: React.FC<FormRadioGroupProps> = ({
 }) => {
   const [field, meta, helpers] = useField(name);
 
-  const handleChange = (value: string) => {
+  const handleChange = (value: string | boolean) => {
     helpers.setValue(value);
+  };
+
+  // Helper function to perform strict comparison for any value type
+  const isSelected = (optionValue: string | boolean) => {
+    return field.value === optionValue;
   };
 
   return (
@@ -44,45 +49,49 @@ const FormRadioGroup: React.FC<FormRadioGroupProps> = ({
       )}
 
       <div
-        className={`${horizontal ? "flex gap-3 xl:gap-6" : "flex flex-col gap-2"}`}
+        className={`${horizontal ? "flex w-full flex-wrap justify-between gap-3 xl:gap-6" : "flex w-full justify-between flex-col gap-2"}`}
       >
         {options.map((option) => (
           <div
-            key={option.value}
-            onClick={() => handleChange(option.value)}
-            className={`
-              cursor-pointer border rounded-xl transition-all w-full
-              ${
-                field.value === option.value
-                  ? `${selectedColor} border ${withIcons ? "text-red-500" : ""}`
-                  : "border-gray-300 hover:border-gray-400"
-              }
-              ${
-                withIcons
-                  ? "p-3 text-center flex flex-col items-center justify-center"
-                  : "p-3 flex items-center justify-center"
-              }
-            `}
+            key={String(option.value)}
+            className={`flex-1 rounded-xl focus-within:ring-2 focus-within:rounded-xl focus-within:ring-red-500`}
           >
-            {withIcons && option.icon && option.icon}
-            <span className={`${withIcons ? "text-sm" : ""}`}>
-              {option.label}
-            </span>
+            <label
+              htmlFor={`${name}-${String(option.value)}`}
+              className={`
+                cursor-pointer border rounded-xl transition-all w-full
+                ${
+                  isSelected(option.value)
+                    ? `${selectedColor} ${withIcons ? "border-2 text-red-500" : "border-2"}`
+                    : "border-gray-300 hover:border-gray-400"
+                }
+                ${
+                  withIcons
+                    ? "p-3 text-center flex flex-col items-center justify-center"
+                    : "p-3 flex items-center justify-center"
+                }
+              `}
+            >
+              {withIcons && option.icon && option.icon}
+              <span className={`${withIcons ? "text-sm" : ""}`}>
+                {option.label}
+              </span>
+            </label>
             <input
               type="radio"
-              id={`${name}-${option.value}`}
-              {...field}
-              value={option.value}
-              checked={field.value === option.value}
-              onChange={() => {}}
-              className="hidden"
+              id={`${name}-${String(option.value)}`}
+              name={name}
+              value={String(option.value)}
+              checked={isSelected(option.value)}
+              onChange={() => handleChange(option.value)}
+              className="sr-only"
             />
           </div>
         ))}
       </div>
 
       {meta.touched && meta.error ? (
-        <div className="text-red-500 text-xs mt-1">{meta.error}</div>
+        <div className="text-red-500 text-sm mt-1">{meta.error}</div>
       ) : null}
     </div>
   );

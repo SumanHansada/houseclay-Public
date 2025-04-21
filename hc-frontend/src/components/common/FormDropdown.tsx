@@ -5,7 +5,7 @@ import { useState } from "react";
 import { FormValues } from "@/app/list-property/[type]/layout";
 
 interface DropdownOption {
-  value: string;
+  value: string | boolean; // Allow boolean values
   label: string;
 }
 
@@ -36,7 +36,7 @@ const FormDropdown = ({
   const displayText = selectedOption ? selectedOption.label : placeholder;
 
   // Function to handle option selection with immediate validation
-  const handleSelect = async (value: string) => {
+  const handleSelect = async (value: string | boolean) => {
     await helpers.setValue(value);
     await helpers.setTouched(true);
     // Run validation immediately
@@ -107,7 +107,9 @@ const FormDropdown = ({
           aria-expanded={isOpen}
           aria-required={required}
           aria-invalid={!!hasError}
-          aria-activedescendant={selectedOption ? `${id || name}-${selectedOption.value}` : undefined}
+          aria-activedescendant={
+            selectedOption ? `${id || name}-${selectedOption.value}` : undefined
+          }
         >
           <span className={!selectedOption ? "text-gray-400" : "text-gray-900"}>
             {displayText}
@@ -122,7 +124,7 @@ const FormDropdown = ({
           <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-auto">
             <ul className="py-1" role="listbox" aria-labelledby={id || name}>
               {/* Add placeholder option if needed */}
-              {(!field.value || field.value === "") && (
+              {!field.value && field.value !== false && (
                 <li
                   className="px-3 py-2 cursor-pointer hover:bg-gray-100 text-gray-400"
                   onClick={() => handleSelect("")}
@@ -134,10 +136,10 @@ const FormDropdown = ({
               )}
 
               {/* Real options */}
-              {options.map((option, index) => (
+              {options.map((option) => (
                 <li
-                  key={option.value}
-                  id={`${id || name}-${option.value}`}
+                  key={String(option.value)} // Ensure unique keys for boolean values
+                  id={`${id || name}-${String(option.value)}`}
                   className={`px-3 py-2 cursor-pointer hover:bg-gray-100 ${
                     field.value === option.value
                       ? "bg-red-50 text-red-700 font-medium"

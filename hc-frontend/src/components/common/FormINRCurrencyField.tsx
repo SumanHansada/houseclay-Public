@@ -21,11 +21,11 @@ const FormINRCurrencyField: React.FC<FormINRCurrencyFieldProps> = ({
   const [field, meta, helpers] = useField(props.name);
 
   // Format for display (add commas according to Indian numbering system)
-  const formatINR = (value: string): string => {
-    if (!value) return "";
+  const formatINR = (value: number | string): string => {
+    if (value === null || value === undefined || value === "") return "";
 
-    // Remove non-numeric characters
-    const numericValue = value.replace(/[^0-9]/g, "");
+    // Convert to string and remove non-numeric characters
+    const numericValue = String(value).replace(/[^0-9]/g, "");
 
     if (!numericValue) return "";
 
@@ -35,8 +35,9 @@ const FormINRCurrencyField: React.FC<FormINRCurrencyFieldProps> = ({
   };
 
   // Convert formatted string back to number for form value
-  const parseINR = (formattedValue: string): string => {
-    return formattedValue.replace(/[^0-9]/g, "");
+  const parseINR = (formattedValue: string): number => {
+    const numericValue = formattedValue.replace(/[^0-9]/g, "");
+    return numericValue ? parseInt(numericValue, 10) : 0;
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,7 +74,7 @@ const FormINRCurrencyField: React.FC<FormINRCurrencyFieldProps> = ({
           type="text"
           id={props.id || props.name}
           placeholder={placeholder}
-          className={`w-full p-3 border border-gray-300 focus:ring-red-500 focus:border-red-500 ${className}`}
+          className={`w-full p-3 border border-gray-300 focus:ring-red-500 focus:border-red-500 rounded-none ${className}`}
           value={formatINR(field.value)}
           onChange={handleChange}
           onBlur={handleBlur}

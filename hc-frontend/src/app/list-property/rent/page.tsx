@@ -703,7 +703,7 @@ const ListPropertyPage: React.FC = () => {
                           <FormCalendarField
                             name="availableFrom"
                             label="Available From"
-                            dateFormat="MM/dd/yyyy"
+                            dateFormat="yyyy-MM-dd"
                             className="w-full"
                             required
                           />

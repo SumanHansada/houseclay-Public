@@ -45,6 +45,20 @@ export interface FormValues {
     latitude: number;
     longitude: number;
   };
+  rentalDetails: {
+    rent: number;
+    rentNegotiable: boolean;
+    maintenanceCharges: number;
+    deposit: number;
+    availableFrom: string;
+    furnishing: string;
+    preferredTenant: string;
+    waterSupply: string;
+    powerBackup: string;
+    parking: string;
+    nonVegAllowed: boolean;
+    amenities: string[];
+  };
 }
 
 export default function ListPropertyTypeLayout({

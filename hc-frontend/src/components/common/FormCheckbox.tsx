@@ -48,9 +48,9 @@ const FormCheckbox: React.FC<FormCheckboxProps> = ({
   // Define grid columns based on the columns prop
   const gridCols = {
     1: "grid-cols-1",
-    2: "grid-cols-1 sm:grid-cols-2",
-    3: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3",
-    4: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
+    2: "grid-cols-2",
+    3: "grid-cols-2 md:grid-cols-2 lg:grid-cols-3",
+    4: "grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
   };
 
   return (
@@ -68,27 +68,34 @@ const FormCheckbox: React.FC<FormCheckboxProps> = ({
         {options.map((option) => (
           <div
             key={option.value}
-            onClick={() => handleToggle(option.value)}
             className={`
               cursor-pointer border rounded-lg transition-all p-4
               flex flex-col items-${alignment} justify-center
+              focus-within:ring-2 focus-within:rounded-xl focus-within:ring-red-500
               ${
                 isChecked(option.value)
-                  ? `${selectedColor} border`
+                  ? `${selectedColor} border-2`
                   : "border-gray-300 hover:border-gray-400"
               }
             `}
           >
-            {withIcons && option.icon && (
-              <div className="mb-2">{option.icon}</div>
-            )}
-            <span className={`text-${alignment}`}>{option.label}</span>
+            <label
+              htmlFor={`${name}-${option.value}`}
+              className={`flex flex-col items-${alignment} justify-center cursor-pointer`}
+            >
+              {withIcons && option.icon && (
+                <div className="mb-2">{option.icon}</div>
+              )}
+              <span className={`text-${alignment}`}>{option.label}</span>
+            </label>
             <input
               type="checkbox"
               id={`${name}-${option.value}`}
+              name={name}
+              value={option.value}
               checked={isChecked(option.value)}
-              onChange={() => {}}
-              className="hidden"
+              onChange={() => handleToggle(option.value)}
+              className="sr-only"
             />
           </div>
         ))}

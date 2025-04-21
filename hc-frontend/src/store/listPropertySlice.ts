@@ -25,6 +25,21 @@ interface LocalityDetails {
   longitude: number;
 }
 
+interface RentalDetails {
+  rent: number;
+  rentNegotiable: boolean;
+  maintenanceCharges: number;
+  deposit: number;
+  availableFrom: string;
+  furnishing: string;
+  preferredTenant: string;
+  waterSupply: string;
+  powerBackup: string;
+  parking: boolean;
+  nonVegAllowed: string;
+  amenities: string[];
+}
+
 interface ListPropertyState {
   propertyType: PropertyType;
   listingType: PropertyListingType;
@@ -34,6 +49,7 @@ interface ListPropertyState {
     data?: {
       propertyDetails: PropertyDetails;
       localityDetails: LocalityDetails;
+      rentalDetails: RentalDetails;
     };
   };
   resaleForm: {
@@ -41,6 +57,7 @@ interface ListPropertyState {
     data?: {
       propertyDetails: PropertyDetails;
       localityDetails: LocalityDetails;
+      rentalDetails: RentalDetails;
     };
   };
   flatmatesForm: {
@@ -48,6 +65,7 @@ interface ListPropertyState {
     data?: {
       propertyDetails: PropertyDetails;
       localityDetails: LocalityDetails;
+      rentalDetails: RentalDetails;
     };
   };
 }
@@ -55,19 +73,21 @@ interface ListPropertyState {
 const initialData: {
   propertyDetails: PropertyDetails;
   localityDetails: LocalityDetails;
+  rentalDetails: RentalDetails;
 } = {
   propertyDetails: {
     propertyCategory: "",
-    propertyType: "",
-    builtUpArea: 0,
-    facing: "",
-    bhkType: "",
-    ownershipType: "",
-    propertyAge: "",
-    floor: "",
-    totalFloor: "",
-    floorType: "",
-    description: "",
+    propertyType: "Apartment",
+    builtUpArea: 2500,
+    facing: "East",
+    bhkType: "3BHK",
+    ownershipType: "Self Owned",
+    propertyAge: "More than 10 year",
+    floor: "Ground",
+    totalFloor: "2",
+    floorType: "Mosaic",
+    description:
+      "Top floor nicely placed. This lovely three bedroom for sale is only 1.95 Crores rupees without any extra brokerage & could be your new home. This West facing home is over 1536 sqft. & is in a convenient location. Situated on the 29th floor this home can comfortably serve your space for car and bike parking needs.",
   },
   localityDetails: {
     city: "",
@@ -75,6 +95,20 @@ const initialData: {
     landmark: "",
     latitude: 0,
     longitude: 0,
+  },
+  rentalDetails: {
+    rent: 0,
+    rentNegotiable: false,
+    maintenanceCharges: 0,
+    deposit: 0,
+    availableFrom: "",
+    furnishing: "",
+    preferredTenant: "",
+    waterSupply: "",
+    powerBackup: "",
+    parking: false,
+    nonVegAllowed: "",
+    amenities: [],
   },
 };
 

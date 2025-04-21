@@ -1,0 +1,445 @@
+"use client";
+
+import { useFormikContext } from "formik";
+import { useParams } from "next/navigation";
+import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
+import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
+import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
+import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
+import FireExtinguisherIconSvg from "public/icons/amenities/fire-extinguisher.svg";
+import FirstAidKitIconSvg from "public/icons/amenities/first-aid-kit.svg";
+import GatedSecurityIconSvg from "public/icons/amenities/gated-security.svg";
+import GymIconSvg from "public/icons/amenities/gym.svg";
+import LiftIconSvg from "public/icons/amenities/lift.svg";
+import OutdoorDiningAreaIconSvg from "public/icons/amenities/outdoor-dining-area.svg";
+import ParkingSpaceIconSvg from "public/icons/amenities/parking-space.svg";
+import PoolIconSvg from "public/icons/amenities/pool.svg";
+import PoolTableIconSvg from "public/icons/amenities/pool-table.svg";
+import SecurityIconSvg from "public/icons/amenities/security.svg";
+import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
+import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
+import WifiIconSvg from "public/icons/amenities/wifi.svg";
+import BachelorIconSvg from "public/icons/preferred-tenants/bachelor.svg";
+import CompanyIconSvg from "public/icons/preferred-tenants/company.svg";
+import CoupleIconSvg from "public/icons/preferred-tenants/couple.svg";
+import FamilyIconSvg from "public/icons/preferred-tenants/family.svg";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import * as Yup from "yup";
+
+import FormCalendarField from "@/components/common/FormCalendarField";
+import FormCheckbox from "@/components/common/FormCheckbox";
+import FormDropdown from "@/components/common/FormDropdown";
+import FormINRCurrencyField from "@/components/common/FormINRCurrencyField";
+import FormRadioGroup from "@/components/common/FormRadioGroup";
+import {
+  FormType,
+  setFormData,
+  setFormValidity,
+} from "@/store/listPropertySlice";
+import { RootState } from "@/store/store";
+
+import { FormValues } from "../layout";
+
+const FamilyIcon = FamilyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const CompanyIcon = CompanyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const BachelorIcon = BachelorIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const CoupleIcon = CoupleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const ClubhouseIcon = ClubhouseIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const GymIcon = GymIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const OutdoorDiningAreaIcon = OutdoorDiningAreaIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const GatedSecurityIcon = GatedSecurityIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const PoolIcon = PoolIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const FireExtinguisherIcon = FireExtinguisherIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const SmokeAlarmIcon = SmokeAlarmIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const SwimmingPoolIcon = SwimmingPoolIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const TwentyFourSevenPowerIcon = TwentyFourSevenPowerIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const SecurityIcon = SecurityIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const ParkingSpaceIcon = ParkingSpaceIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const DedicatedWorkspaceIcon = DedicatedWorkspaceIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const WifiIcon = WifiIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const BBQGrillIcon = BBQGrillIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const PoolTableIcon = PoolTableIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const FirstAidKitIcon = FirstAidKitIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+
+const RentalDetailsPage: React.FC = () => {
+  const { values, errors, touched, setFieldError, setErrors } =
+    useFormikContext<FormValues>();
+  const params = useParams();
+  const formKey = `${params?.type}Form` as FormType; // Optional: add type assertion
+  const formState = useSelector(
+    (state: RootState) => state.listProperty[formKey],
+  );
+  const isFormValid = formState?.isValid;
+  const dispatch = useDispatch();
+
+  const rentalSchema = Yup.object().shape({
+    rentalDetails: Yup.object().shape({
+      rent: Yup.string().required("Price is required"),
+      deposit: Yup.string().required("Deposit is required"),
+      maintenanceCharges: Yup.string().required(
+        "Maintenance charges is required",
+      ),
+      availableFrom: Yup.string().required("Available from is required"),
+      furnishing: Yup.string().required("Furnishing is required"),
+      preferredTenant: Yup.string().required("Preferred tenant is required"),
+      parking: Yup.boolean().required("Parking is required"),
+      nonVegAllowed: Yup.string().required("Non veg allowed is required"),
+    }),
+  });
+
+  useEffect(() => {
+    const validateAndDispatch = async () => {
+      try {
+        await rentalSchema.validate(values, { abortEarly: false });
+        // Clear any previous errors
+        setErrors({});
+        // Set form data in the store
+        dispatch(setFormData({ type: formKey, data: { ...values } }));
+        // Form is valid
+        if (!isFormValid) {
+          dispatch(setFormValidity({ type: formKey, isValid: true }));
+        }
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          // Clear any previous errors
+          setErrors({});
+          // Set individual field errors
+          err.inner.forEach((validationError) => {
+            if (validationError.path && validationError.message) {
+              setFieldError(validationError.path, validationError.message);
+            }
+          });
+          // Form is invalid
+          if (isFormValid) {
+            dispatch(setFormValidity({ type: formKey, isValid: false }));
+          }
+        }
+      }
+    };
+
+    validateAndDispatch();
+  }, [
+    JSON.stringify(values.rentalDetails),
+    dispatch,
+    formKey,
+    setErrors,
+    setFieldError,
+  ]);
+
+  return (
+    <>
+      <div className="mb-8">
+        <h1 className="text-3xl text-gray-800">
+          Provide rental details about your property
+        </h1>
+      </div>
+      <div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormINRCurrencyField
+              name="rentalDetails.rent"
+              id="rentalDetails.rent"
+              label="Rent"
+              required
+            />
+          </div>
+          <div className="col-span-1">
+            <FormRadioGroup
+              name="rentalDetails.rentNegotiable"
+              label="Rent Negotiable"
+              options={[
+                { value: true, label: "Yes" },
+                { value: false, label: "No" },
+              ]}
+              horizontal
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormINRCurrencyField
+              name="rentalDetails.maintenanceCharges"
+              id="rentalDetails.maintenanceCharges"
+              label="Maintenance Charges"
+            />
+          </div>
+          <div className="col-span-1">
+            <FormINRCurrencyField
+              name="rentalDetails.deposit"
+              id="rentalDetails.deposit"
+              label="Deposit"
+              required
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormCalendarField
+              name="rentalDetails.availableFrom"
+              label="Available From"
+              dateFormat="yyyy-MM-dd"
+              className="w-full"
+              required
+            />
+          </div>
+          <div className="col-span-1">
+            <FormDropdown
+              label="Furnishing"
+              name="rentalDetails.furnishing"
+              id="rentalDetails.furnishing"
+              options={[
+                {
+                  value: "Fully-furnished",
+                  label: "Fully Furnished",
+                },
+                {
+                  value: "Semi-funnished",
+                  label: "Semi Furnished",
+                },
+                { value: "Unfurnished", label: "UnFurnished" },
+              ]}
+              required={true}
+              placeholder="Select furnishing"
+              aria-describedby={
+                errors?.rentalDetails?.furnishing &&
+                touched?.rentalDetails?.furnishing
+                  ? "rentalDetails.furnishing-error"
+                  : undefined
+              }
+            />
+          </div>
+        </div>
+        <div className="mb-6">
+          <FormRadioGroup
+            name="rentalDetails.preferredTenant"
+            label="Preferred Tenant"
+            options={[
+              {
+                value: "Family",
+                label: "Family",
+                icon: <FamilyIcon />,
+              },
+              {
+                value: "Company",
+                label: "Company",
+                icon: <CompanyIcon />,
+              },
+              {
+                value: "Bachelor",
+                label: "Bachelor",
+                icon: <BachelorIcon />,
+              },
+              {
+                value: "Couple",
+                label: "Couple",
+                icon: <CoupleIcon />,
+              },
+            ]}
+            withIcons={true}
+            required
+            horizontal
+          />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormDropdown
+              label="Water Supply"
+              name="rentalDetails.waterSupply"
+              id="rentalDetails.waterSupply"
+              options={[
+                { value: "borewell", label: "Borewell" },
+                {
+                  value: "tanker",
+                  label: "Tanker",
+                },
+                {
+                  value: "Ground-water",
+                  label: "Ground Water",
+                },
+              ]}
+              required={true}
+              placeholder="Select Water supply"
+              aria-describedby={
+                errors?.rentalDetails?.waterSupply &&
+                touched.rentalDetails?.waterSupply
+                  ? "rentalDetails.waterSupply-error"
+                  : undefined
+              }
+            />
+          </div>
+          <div className="col-span-1">
+            <FormDropdown
+              label="Power Backup"
+              name="rentalDetails.powerBackup"
+              id="rentalDetails.powerBackup"
+              options={[
+                { value: "full", label: "Full" },
+                {
+                  value: "partial",
+                  label: "Partial",
+                },
+                {
+                  value: "no",
+                  label: "No",
+                },
+              ]}
+              required={true}
+              placeholder="Select Power backup"
+              aria-describedby={
+                errors?.rentalDetails?.powerBackup &&
+                touched?.rentalDetails?.powerBackup
+                  ? "rentalDetails.powerBackup-error"
+                  : undefined
+              }
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormDropdown
+              label="Parking"
+              name="rentalDetails.parking"
+              id="rentalDetails.parking"
+              options={[
+                { value: true, label: "Yes" },
+                {
+                  value: false,
+                  label: "No",
+                },
+              ]}
+              required={true}
+              placeholder="Select Parking"
+              aria-describedby={
+                errors?.rentalDetails?.parking &&
+                touched?.rentalDetails?.parking
+                  ? "rentalDetails.parking-error"
+                  : undefined
+              }
+            />
+          </div>
+          <div className="col-span-1">
+            <FormRadioGroup
+              name="rentalDetails.nonVegAllowed"
+              label="Non Veg Allowed"
+              options={[
+                { value: true, label: "Yes" },
+                { value: false, label: "No" },
+              ]}
+              required
+              horizontal
+            />
+          </div>
+        </div>
+      </div>
+      <div className="mb-8">
+        <h1 className="text-2xl text-gray-800">
+          Select the available amenities
+        </h1>
+        <FormCheckbox
+          name="rentalDetails.amenities"
+          columns={4}
+          options={[
+            { value: "Lift", label: "Lift", icon: <LiftIcon /> },
+            {
+              value: "Clubhouse",
+              label: "Club house",
+              icon: <ClubhouseIcon />,
+            },
+            { value: "Gym", label: "Gym", icon: <GymIcon /> },
+            {
+              value: "Outdoor Dining Area",
+              label: "Outdoor Dining Area",
+              icon: <OutdoorDiningAreaIcon />,
+            },
+            {
+              value: "Gated Security",
+              label: "Gated Security",
+              icon: <GatedSecurityIcon />,
+            },
+            { value: "Pool", label: "Pool ", icon: <PoolIcon /> },
+            {
+              value: "Fire Extinguisher",
+              label: "Fire Extinguisher",
+              icon: <FireExtinguisherIcon />,
+            },
+            {
+              value: "Smoke Alarm",
+              label: "Smoke Alarm",
+              icon: <SmokeAlarmIcon />,
+            },
+            {
+              value: "Swimming Pool",
+              label: "Swimming Pool",
+              icon: <SwimmingPoolIcon />,
+            },
+            {
+              value: "24/7 Power",
+              label: "24/7 Power",
+              icon: <TwentyFourSevenPowerIcon />,
+            },
+            {
+              value: "Security",
+              label: "Security",
+              icon: <SecurityIcon />,
+            },
+            {
+              value: "Parking Space",
+              label: "Parking Space",
+              icon: <ParkingSpaceIcon />,
+            },
+            {
+              value: "Dedicated Workspace",
+              label: "Dedicated Workspace",
+              icon: <DedicatedWorkspaceIcon />,
+            },
+            { value: "Wifi", label: "Wifi", icon: <WifiIcon /> },
+            {
+              value: "BBQ Grill",
+              label: "BBQ Grill",
+              icon: <BBQGrillIcon />,
+            },
+            {
+              value: "Pool Table",
+              label: "Pool Table",
+              icon: <PoolTableIcon />,
+            },
+            {
+              value: "First Aid Kit",
+              label: "First Aid Kit",
+              icon: <FirstAidKitIcon />,
+            },
+          ]}
+          withIcons={true}
+          alignment="start"
+          required
+        />
+      </div>
+    </>
+  );
+};
+
+export default RentalDetailsPage;

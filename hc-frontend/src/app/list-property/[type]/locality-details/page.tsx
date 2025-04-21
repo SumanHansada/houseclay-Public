@@ -33,9 +33,6 @@ const LocalityDetailsPage: React.FC = () => {
   );
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
-  console.log("Locality DetailsPage values", values);
-  console.log("Locality DetailsPage errors", errors);
-  console.log("Locality DetailsPage touched", touched);
 
   useEffect(() => {
     const timer = setTimeout(() => {
