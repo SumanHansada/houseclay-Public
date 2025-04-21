@@ -41,6 +41,11 @@ interface RentalDetails {
   amenities: string[];
 }
 
+interface AdditionalDetails {
+  whoWillShowProperty: string;
+  secondaryPhoneNumber: string;
+}
+
 interface ListPropertyState {
   propertyType: PropertyType;
   listingType: PropertyListingType;
@@ -52,6 +57,7 @@ interface ListPropertyState {
       localityDetails: LocalityDetails;
       rentalDetails: RentalDetails;
       images: PropertyPhoto[];
+      additionalDetails: AdditionalDetails;
     };
   };
   resaleForm: {
@@ -61,6 +67,7 @@ interface ListPropertyState {
       localityDetails: LocalityDetails;
       rentalDetails: RentalDetails;
       images: PropertyPhoto[];
+      additionalDetails: AdditionalDetails;
     };
   };
   flatmatesForm: {
@@ -70,6 +77,7 @@ interface ListPropertyState {
       localityDetails: LocalityDetails;
       rentalDetails: RentalDetails;
       images: PropertyPhoto[];
+      additionalDetails: AdditionalDetails;
     };
   };
 }
@@ -79,6 +87,7 @@ const initialData: {
   localityDetails: LocalityDetails;
   rentalDetails: RentalDetails;
   images: PropertyPhoto[];
+  additionalDetails: AdditionalDetails;
 } = {
   propertyDetails: {
     propertyCategory: "",
@@ -116,6 +125,10 @@ const initialData: {
     amenities: [],
   },
   images: [],
+  additionalDetails: {
+    whoWillShowProperty: "",
+    secondaryPhoneNumber: "",
+  },
 };
 
 const initialState: ListPropertyState = {

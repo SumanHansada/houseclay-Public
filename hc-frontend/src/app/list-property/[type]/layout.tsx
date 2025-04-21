@@ -3,16 +3,23 @@
 import { Form, Formik, FormikProvider } from "formik";
 import Image from "next/image";
 import { redirect, useParams, useRouter } from "next/navigation";
+import ListPropertySuccessSvg from "public/icons/list-property-success.svg";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
 import { PropertyPhoto } from "@/components/common/FormPhotoUpload";
+import { Dialog, DialogContent } from "@/components/Dialog";
+import { useDialog } from "@/providers/DialogContextProvider";
 import { RootState } from "@/store/store";
 
 import FlatmatesStepper from "../components/FlatmatesStepper";
 import RentStepper from "../components/RentStepper";
 import ResaleStepper from "../components/ResaleStepper";
 import { FormStep } from "../components/StepNavigationButton";
+
+const ListPropertySuccess = ListPropertySuccessSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
 
 export enum RouteStep {
   GETTING_STARTED = "getting-started",
@@ -61,6 +68,10 @@ export interface FormValues {
     amenities: string[];
   };
   images: PropertyPhoto[];
+  additionalInfo: {
+    whoWillShowProperty: string;
+    secondaryPhoneNumber: string;
+  };
 }
 
 export default function ListPropertyTypeLayout({
@@ -75,6 +86,8 @@ export default function ListPropertyTypeLayout({
   const params = useParams();
   const type = params?.type as string; // Optional: add type assertion
   const router = useRouter();
+  const { openDialog, isDialogOpen, closeDialog } = useDialog();
+
   const [currentStep, setCurrentStep] = useState<FormStep>(
     FormStep.PROPERTY_DETAILS,
   );
@@ -128,6 +141,9 @@ export default function ListPropertyTypeLayout({
         updatedSteps.delete(FormStep.GALLERY);
         setCurrentStep(FormStep.GALLERY);
         setRoute(RouteStep.GALLERY);
+      } else if (currentStep === FormStep.NONE) {
+        updatedSteps.delete(FormStep.ADDITIONAL_INFO);
+        setCurrentStep(FormStep.ADDITIONAL_INFO);
       }
       return updatedSteps;
     });
@@ -157,8 +173,8 @@ export default function ListPropertyTypeLayout({
       setRoute(RouteStep.ADDITIONAL_INFO);
     } else if (currentStep === FormStep.ADDITIONAL_INFO) {
       setCurrentStep(FormStep.NONE);
-      setRoute(RouteStep.NONE);
-      //   openDialog("list-property-success-dialog");
+      // setRoute(RouteStep.NONE);
+      openDialog("list-property-success-dialog");
     }
   };
 
@@ -243,6 +259,48 @@ export default function ListPropertyTypeLayout({
           </button>
         </div>
       </div>
+      {isDialogOpen("list-property-success-dialog") && (
+        <Dialog
+          id="list-property-success-dialog"
+          type="card"
+          onClose={() => closeDialog("list-property-success-dialog")}
+          entryAnimation="animate-fade-in"
+          exitAnimation="animate-fade-out"
+        >
+          <DialogContent>
+            <div className="flex flex-col items-center justify-center text-center p-8 gap-4">
+              <div className="relative overflow-hidden rounded-lg">
+                <div className="absolute inset-0 shadow-[inset_0_0_25px_25px_rgba(255,255,255,0.8)] z-20"></div>
+                <ListPropertySuccess />
+              </div>
+              <h2 className="text-3xl text-gray-800">Congratulations!</h2>
+              <p className="text-gray-600 text-lg">
+                You have successfully posted your property,
+                <br />
+                it will be live within 2 Hrs.
+              </p>
+
+              {/* Action buttons */}
+              <div className="flex gap-4">
+                <button
+                  onClick={() => {
+                    closeDialog("list-property-success-dialog");
+                  }}
+                  className="px-24 py-3 text-black border font-medium rounded-lg hover:bg-red-600 hover:text-white transition duration-200"
+                >
+                  Edit
+                </button>
+                <button
+                  //   onClick={onPreview}
+                  className="px-24 py-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200"
+                >
+                  Preview Listing
+                </button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
