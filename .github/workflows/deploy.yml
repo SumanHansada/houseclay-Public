@@ -81,6 +81,6 @@ jobs:
           # Restart Next.js
           cd /home/ec2-user/frontend
           npm install --omit=dev
-          pm2 stop all || true
+          pm2 delete all || true
           pm2 start npm --name "next-app" -- run start
           EOF
