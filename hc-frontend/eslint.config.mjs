@@ -33,7 +33,15 @@ const eslintConfig = [
     rules: {
       // Remove unused variables and imports
       "unused-imports/no-unused-imports": "error",
-      "unused-imports/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+      "unused-imports/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+      ],
+
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { varsIgnorePattern: "^_", argsIgnorePattern: "^_" },
+      ],
 
       // Ensure correct hook usage
       "react-hooks/exhaustive-deps": "warn",

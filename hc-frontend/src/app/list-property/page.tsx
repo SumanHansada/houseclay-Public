@@ -209,7 +209,7 @@ export default function ListProperty() {
 
   useEffect(() => {
     dispatch(setAuthStep(AuthStep.PHONE));
-  }, []);
+  }, [dispatch]);
 
   const handleListingTypeClick = () => {
     if (listingType === PropertyListingType.CALL) {

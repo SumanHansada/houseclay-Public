@@ -4,12 +4,16 @@ import { useField, useFormikContext } from "formik";
 import { MapPin } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+import { FormValues } from "@/app/list-property/[type]/layout";
+
 interface FormPlacesAutocompleteProps {
   label: string;
   name: string;
   id: string;
   placeholder?: string;
   required?: boolean;
+  pairWithGoogleMaps?: boolean; // New prop to enable/disable Google Maps pairing
+  googleMapsFieldName?: string; // New prop for Google Maps field name
 }
 
 const FormPlacesAutocomplete = ({
@@ -18,9 +22,11 @@ const FormPlacesAutocomplete = ({
   id,
   placeholder = "Search places",
   required = false,
+  pairWithGoogleMaps = false, // Default to true
+  googleMapsFieldName = "", // Default field name
 }: FormPlacesAutocompleteProps) => {
   const [field, meta, helpers] = useField(name);
-  const { setFieldValue, setTouched } = useFormikContext();
+  const { setFieldValue, validateField } = useFormikContext<FormValues>();
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [predictions, setPredictions] = useState<
@@ -35,7 +41,7 @@ const FormPlacesAutocomplete = ({
         setIsLoaded(true);
       } else {
         // If not loaded yet, check again in a moment
-        setTimeout(checkGoogleMapsLoaded, 100);
+        setTimeout(checkGoogleMapsLoaded, 250);
       }
     };
 
@@ -67,19 +73,31 @@ const FormPlacesAutocomplete = ({
 
           helpers.setValue(place.formatted_address);
           helpers.setTouched(true);
-          setFieldValue("latitude", latitude);
-          setFieldValue("longitude", longitude);
+
+          // Use the googleMapsFieldName prop for field updates
+          if (pairWithGoogleMaps) {
+            setFieldValue(`${googleMapsFieldName}.latitude`, latitude);
+            setFieldValue(`${googleMapsFieldName}.longitude`, longitude);
+          }
           setShowDropdown(false);
         }
       });
     }
-  }, [isLoaded]);
+  }, [
+    isLoaded,
+    pairWithGoogleMaps,
+    googleMapsFieldName,
+    helpers,
+    setFieldValue,
+  ]);
 
   // Handle manual input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    helpers.setValue(value);
-
+    await helpers.setValue(value);
+    await helpers.setTouched(true);
+    // Run validation immediately
+    await validateField(id || name);
     if (value.length > 2 && isLoaded) {
       const service = new window.google.maps.places.AutocompleteService();
       service.getPlacePredictions(
@@ -127,8 +145,18 @@ const FormPlacesAutocomplete = ({
           ) {
             helpers.setValue(place.formatted_address);
             helpers.setTouched(true);
-            setFieldValue("latitude", place.geometry?.location?.lat());
-            setFieldValue("longitude", place.geometry?.location?.lng());
+
+            // Use the googleMapsFieldName prop for field updates
+            if (pairWithGoogleMaps) {
+              setFieldValue(
+                `${googleMapsFieldName}.latitude`,
+                place.geometry?.location?.lat(),
+              );
+              setFieldValue(
+                `${googleMapsFieldName}.longitude`,
+                place.geometry?.location?.lng(),
+              );
+            }
             setShowDropdown(false);
           }
         },
@@ -153,15 +181,15 @@ const FormPlacesAutocomplete = ({
         value={field.value}
         onChange={handleInputChange}
         onBlur={() => {
+          helpers.setTouched(true);
           setTimeout(() => {
             setShowDropdown(false);
-            setTouched({ [name]: true });
           }, 200);
         }}
         placeholder={placeholder}
         className={`w-full p-3 border ${
           hasError ? "border-red-500" : "border-gray-300"
-        } rounded-xl focus:ring-red-500 focus:border-red-500`}
+        } rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500`}
         type="text"
         // These attributes help prevent browser's native autocomplete
         autoComplete="off"
@@ -193,7 +221,9 @@ const FormPlacesAutocomplete = ({
       )}
 
       {hasError && (
-        <div className="mt-1 text-sm text-red-500">{meta.error}</div>
+        <div className="mt-1 text-sm text-red-600" id={`${id || name}-error`}>
+          {meta.error}
+        </div>
       )}
     </div>
   );

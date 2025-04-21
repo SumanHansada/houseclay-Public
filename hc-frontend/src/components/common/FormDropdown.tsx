@@ -2,6 +2,8 @@ import { useField, useFormikContext } from "formik";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
+import { FormValues } from "@/app/list-property/[type]/layout";
+
 interface DropdownOption {
   value: string;
   label: string;
@@ -25,7 +27,7 @@ const FormDropdown = ({
   placeholder = "Select an option",
 }: FormDropdownProps) => {
   const [field, meta, helpers] = useField(name);
-  const { validateForm } = useFormikContext();
+  const { validateField } = useFormikContext<FormValues>();
   const [isOpen, setIsOpen] = useState(false);
   const hasError = meta.touched && meta.error;
 
@@ -38,7 +40,7 @@ const FormDropdown = ({
     await helpers.setValue(value);
     await helpers.setTouched(true);
     // Run validation immediately
-    validateForm();
+    await validateField(id || name);
     setIsOpen(false);
   };
 

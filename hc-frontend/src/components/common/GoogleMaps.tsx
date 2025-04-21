@@ -7,6 +7,8 @@ import {
 import React from "react";
 import { useState } from "react";
 
+import useGoogleMapsAPI from "@/hooks/useGoogleMapsAPI";
+
 interface Location {
   id: string | number;
   position: {
@@ -27,7 +29,7 @@ interface GoogleMapsProps {
 
 const GoogleMaps: React.FC<GoogleMapsProps> = ({
   mapId,
-  center = { lat: -34.397, lng: 150.644 },
+  center = { lat: 20.5937, lng: 78.9629 },
   zoom = 10,
   className = "h-96 w-full",
   mapOptions = {},
@@ -36,27 +38,29 @@ const GoogleMaps: React.FC<GoogleMapsProps> = ({
     null,
   );
 
-  const { renderingType, colorScheme, ...cleanMapOptions } = mapOptions;
-  console.log("Rendering Type", renderingType);
-  console.log("Color Scheme", colorScheme);
+  const {
+    renderingType: _rt,
+    colorScheme: _cs,
+    ...cleanMapOptions
+  } = mapOptions;
+
+  const { isLoaded, loadError } = useGoogleMapsAPI();
+  console.log("Google Maps API Loaded:", isLoaded);
+  console.log("Google Maps API Load Error:", loadError);
+  if (loadError) return <div>Error loading maps</div>;
+  if (!isLoaded) return <div>Loading maps...</div>;
 
   return (
     <Map
       mapId={mapId}
-      defaultCenter={center}
-      defaultZoom={zoom}
+      center={center}
+      zoom={zoom}
       className={className}
       gestureHandling={"greedy"}
       disableDefaultUI={false}
       {...cleanMapOptions}
     >
-      <AdvancedMarker
-        position={{ lat: center.lat, lng: center.lng }}
-        // onClick={() => setSelectedLocation({position: {
-        //     lat: center.lat,
-        //     lng: center.lng
-        // }})}
-      >
+      <AdvancedMarker position={{ lat: center.lat, lng: center.lng }}>
         <Pin
           background={"#FF5252"}
           borderColor={"#B71C1C"}

@@ -47,7 +47,6 @@ import FormPlacesAutocomplete from "@/components/common/FormPlacesAutoCompletes"
 import FormRadioGroup from "@/components/common/FormRadioGroup";
 import GoogleMaps from "@/components/common/GoogleMaps";
 import { Dialog, DialogContent } from "@/components/Dialog";
-import useGoogleMapsAPI from "@/hooks/useGoogleMapsAPI";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { RootState } from "@/store/store";
 
@@ -94,7 +93,7 @@ const PropertyDetailsSchema = Yup.object().shape({
 // Initial form values
 const initialValues = {
   propertyCategory: "Rent",
-  propertyType: "Apartment",
+  propertyType: "",
   builtUpArea: 2500,
   facing: "East",
   bhkType: "3BHK",
@@ -265,12 +264,6 @@ const ListPropertyPage: React.FC = () => {
       openDialog("list-property-success-dialog");
     }
   };
-
-  const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
-
-  const { isLoaded, loadError } = useGoogleMapsAPI(API_KEY);
-  if (loadError) return <div>Error loading maps</div>;
-  if (!isLoaded) return <div>Loading maps...</div>;
 
   if (!token) {
     redirect("/");

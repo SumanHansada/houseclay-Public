@@ -9,6 +9,7 @@ import { DeviceContextProvider } from "@/providers/DeviceContextProvider";
 import { DialogContextProvider } from "@/providers/DialogContextProvider";
 import QueryProvider from "@/providers/QueryProvider";
 import ReduxProvider from "@/providers/ReduxProvider";
+import { SkeletonProvider } from "@/providers/SkeletonProvider";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -54,7 +55,9 @@ export default function RootLayout({
           <QueryProvider>
             <DeviceContextProvider>
               <DialogContextProvider>
-                <Layout>{children}</Layout>
+                <SkeletonProvider>
+                  <Layout>{children}</Layout>
+                </SkeletonProvider>
               </DialogContextProvider>
             </DeviceContextProvider>
           </QueryProvider>
