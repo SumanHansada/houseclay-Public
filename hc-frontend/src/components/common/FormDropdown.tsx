@@ -44,6 +44,40 @@ const FormDropdown = ({
     setIsOpen(false);
   };
 
+  // Add keyboard accessibility to the dropdown
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    const currentIndex = options.findIndex((opt) => opt.value === field.value);
+    let newIndex = currentIndex;
+
+    switch (event.key) {
+      case "ArrowDown":
+        event.preventDefault();
+        newIndex = (currentIndex + 1) % options.length;
+        break;
+      case "ArrowUp":
+        event.preventDefault();
+        newIndex = (currentIndex - 1 + options.length) % options.length;
+        break;
+      case "Enter":
+        event.preventDefault();
+        setIsOpen(!isOpen);
+        if (isOpen && options[newIndex]) {
+          handleSelect(options[newIndex].value);
+        }
+        break;
+      case "Escape":
+        event.preventDefault();
+        setIsOpen(false);
+        break;
+      default:
+        break;
+    }
+
+    if (newIndex !== currentIndex && options[newIndex]) {
+      helpers.setValue(options[newIndex].value);
+    }
+  };
+
   return (
     <div className="relative w-full">
       {label && (
@@ -63,6 +97,7 @@ const FormDropdown = ({
             hasError ? "border-red-500" : "border-gray-300"
           } rounded-xl bg-white text-left focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500`}
           onClick={() => setIsOpen(!isOpen)}
+          onKeyDown={handleKeyDown}
           onBlur={() => {
             helpers.setTouched(true);
             // Don't close immediately to allow for click on option
@@ -72,6 +107,7 @@ const FormDropdown = ({
           aria-expanded={isOpen}
           aria-required={required}
           aria-invalid={!!hasError}
+          aria-activedescendant={selectedOption ? `${id || name}-${selectedOption.value}` : undefined}
         >
           <span className={!selectedOption ? "text-gray-400" : "text-gray-900"}>
             {displayText}
@@ -98,9 +134,10 @@ const FormDropdown = ({
               )}
 
               {/* Real options */}
-              {options.map((option) => (
+              {options.map((option, index) => (
                 <li
                   key={option.value}
+                  id={`${id || name}-${option.value}`}
                   className={`px-3 py-2 cursor-pointer hover:bg-gray-100 ${
                     field.value === option.value
                       ? "bg-red-50 text-red-700 font-medium"
