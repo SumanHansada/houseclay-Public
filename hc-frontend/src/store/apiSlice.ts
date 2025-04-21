@@ -66,6 +66,22 @@ export const apiSlice = createApi({
         method: "POST",
       }),
     }),
+    photo: builder.mutation<
+      {
+        propertyID: string;
+        fileURLMap: Record<string, string>;
+      }, // Response type
+      { fileMap: Record<string, string> } // Request body type
+    >({
+      query: (data) => ({
+        url: "photo/presigned-urls",
+        method: "POST",
+        body: data,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
   }),
 });
 
@@ -76,4 +92,5 @@ export const {
   useCheckUserQuery,
   useLazyCheckUserQuery,
   useLogoutMutation,
+  usePhotoMutation,
 } = apiSlice;

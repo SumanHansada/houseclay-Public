@@ -343,7 +343,7 @@ const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
       {meta.touched && meta.error ? (
         <div
           id={`${name}-error`}
-          className="text-red-500 text-xs mt-1"
+          className="text-red-500 text-sm mt-1"
           aria-live="polite"
         >
           {meta.error}

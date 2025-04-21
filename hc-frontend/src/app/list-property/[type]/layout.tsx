@@ -6,6 +6,7 @@ import { redirect, useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
+import { PropertyPhoto } from "@/components/common/FormPhotoUpload";
 import { RootState } from "@/store/store";
 
 import FlatmatesStepper from "../components/FlatmatesStepper";
@@ -59,6 +60,7 @@ export interface FormValues {
     nonVegAllowed: boolean;
     amenities: string[];
   };
+  images: PropertyPhoto[];
 }
 
 export default function ListPropertyTypeLayout({

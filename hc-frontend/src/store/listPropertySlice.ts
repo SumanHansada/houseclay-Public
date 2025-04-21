@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { PropertyListingType } from "@/common/utils";
 import { PropertyType } from "@/common/utils";
+import { PropertyPhoto } from "@/components/common/FormPhotoUpload";
 
 interface PropertyDetails {
   propertyCategory: string;
@@ -50,6 +51,7 @@ interface ListPropertyState {
       propertyDetails: PropertyDetails;
       localityDetails: LocalityDetails;
       rentalDetails: RentalDetails;
+      images: PropertyPhoto[];
     };
   };
   resaleForm: {
@@ -58,6 +60,7 @@ interface ListPropertyState {
       propertyDetails: PropertyDetails;
       localityDetails: LocalityDetails;
       rentalDetails: RentalDetails;
+      images: PropertyPhoto[];
     };
   };
   flatmatesForm: {
@@ -66,6 +69,7 @@ interface ListPropertyState {
       propertyDetails: PropertyDetails;
       localityDetails: LocalityDetails;
       rentalDetails: RentalDetails;
+      images: PropertyPhoto[];
     };
   };
 }
@@ -74,6 +78,7 @@ const initialData: {
   propertyDetails: PropertyDetails;
   localityDetails: LocalityDetails;
   rentalDetails: RentalDetails;
+  images: PropertyPhoto[];
 } = {
   propertyDetails: {
     propertyCategory: "",
@@ -110,6 +115,7 @@ const initialData: {
     nonVegAllowed: "",
     amenities: [],
   },
+  images: [],
 };
 
 const initialState: ListPropertyState = {
