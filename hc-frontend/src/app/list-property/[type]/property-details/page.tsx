@@ -9,13 +9,15 @@ import * as Yup from "yup";
 import FormDropdown from "@/components/common/FormDropdown";
 import {
   FormType,
-  setFormData,
   setFormValidity,
+  setPropertyDetails,
 } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
 import { FormValues } from "../layout";
 import PropertyFormSkeleton from "./components/PropertyFormSkeleton";
+
+export const dynamicParams = true;
 
 const propertySchema = Yup.object({
   propertyDetails: Yup.object({
@@ -60,7 +62,12 @@ const PropertyDetailsPage: React.FC = () => {
         // Clear any previous errors
         setErrors({});
         // Set form data in the store
-        dispatch(setFormData({ type: formKey, data: { ...values } }));
+        dispatch(
+          setPropertyDetails({
+            type: formKey,
+            propertyDetails: values.propertyDetails,
+          }),
+        );
         // Form is valid
         if (!isFormValid) {
           dispatch(setFormValidity({ type: formKey, isValid: true }));

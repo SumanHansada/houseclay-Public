@@ -5,11 +5,17 @@ import Image from "next/image";
 import { redirect, useParams, useRouter } from "next/navigation";
 import ListPropertySuccessSvg from "public/icons/list-property-success.svg";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { PropertyPhoto } from "@/components/common/FormPhotoUpload";
 import { Dialog, DialogContent } from "@/components/Dialog";
+import { useS3Uploader } from "@/hooks/useS3Uploader";
 import { useDialog } from "@/providers/DialogContextProvider";
+import { usePresignedUrlsMutation } from "@/store/apiSlice";
+import {
+  PropertyPhoto,
+  setFileURLMap,
+  setPropertyID,
+} from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
 import FlatmatesStepper from "../components/FlatmatesStepper";
@@ -63,9 +69,24 @@ export interface FormValues {
     preferredTenant: string;
     waterSupply: string;
     powerBackup: string;
-    parking: string;
+    parking: boolean;
     nonVegAllowed: boolean;
     amenities: string[];
+  };
+  resaleDetails: {
+    price: number;
+    availableFrom: string;
+    bathrooms: number;
+    balcony: number;
+    priceNegotiable: boolean;
+    underLoan: boolean;
+    waterSupply: string;
+    powerBackup: string;
+    furnishing: string;
+    parking: boolean;
+    khataCertificate: boolean;
+    saleDeed: boolean;
+    propertyTax: boolean;
   };
   images: PropertyPhoto[];
   additionalInfo: {
@@ -83,7 +104,10 @@ export default function ListPropertyTypeLayout({
   if (!token) {
     redirect("/");
   }
+  const [getPresignedUrls] = usePresignedUrlsMutation();
   const params = useParams();
+  const dispatch = useDispatch();
+  const uploadFiles = useS3Uploader();
   const type = params?.type as string; // Optional: add type assertion
   const router = useRouter();
   const { openDialog, isDialogOpen, closeDialog } = useDialog();
@@ -109,6 +133,52 @@ export default function ListPropertyTypeLayout({
   const setRoute = (stepSlug: string) => {
     const route = `/list-property/${type}/${stepSlug}`;
     router.push(route);
+  };
+
+  const uploadFilesToS3 = async () => {
+    const photos = formState?.data?.images || [];
+    if (photos.length > 0) {
+      // create a map of file names to their corresponding Blob URLs
+      const photosToUpload = photos.map((photo) => {
+        return {
+          name: photo.file.name,
+          url: photo.url,
+          S3url: photo.S3Url,
+          type: photo.file.type,
+        };
+      });
+      uploadFiles(photosToUpload);
+    }
+  };
+
+  const getPresignedPhotoUrls = async () => {
+    const photos = formState?.data?.images || [];
+    if (photos.length > 0) {
+      // Step 1: Request pre-signed URLs
+      const fileMap: Record<string, string> = {};
+      photos.forEach((f) => {
+        fileMap[encodeURIComponent(f.file.name)] = f.file.type;
+      });
+      console.log(fileMap);
+      const presignedUrlsResponse = await getPresignedUrls({
+        fileMap,
+      })
+        .unwrap()
+        .catch((error) => {
+          console.error("Error fetching presigned URLs:", error);
+        });
+      if (!presignedUrlsResponse) {
+        console.error("No presigned URLs received");
+        return;
+      }
+      dispatch(setPropertyID(presignedUrlsResponse.propertyID));
+      dispatch(
+        setFileURLMap({
+          type: formKey,
+          data: presignedUrlsResponse.fileURLMap,
+        }),
+      );
+    }
   };
 
   // Update the handleBack function to remove the previous step from completedSteps
@@ -141,7 +211,7 @@ export default function ListPropertyTypeLayout({
         updatedSteps.delete(FormStep.GALLERY);
         setCurrentStep(FormStep.GALLERY);
         setRoute(RouteStep.GALLERY);
-      } else if (currentStep === FormStep.NONE) {
+      } else if (currentStep === FormStep.DONE) {
         updatedSteps.delete(FormStep.ADDITIONAL_INFO);
         setCurrentStep(FormStep.ADDITIONAL_INFO);
       }
@@ -149,7 +219,7 @@ export default function ListPropertyTypeLayout({
     });
   };
 
-  const handleSaveAndNext = () => {
+  const handleSaveAndNext = async () => {
     markStepAsCompleted(currentStep);
     if (currentStep === FormStep.PROPERTY_DETAILS) {
       setCurrentStep(FormStep.LOCALITY_DETAILS);
@@ -169,11 +239,13 @@ export default function ListPropertyTypeLayout({
       setCurrentStep(FormStep.GALLERY);
       setRoute(RouteStep.GALLERY);
     } else if (currentStep === FormStep.GALLERY) {
+      // Make API call to get presigned-urls
+      await getPresignedPhotoUrls();
       setCurrentStep(FormStep.ADDITIONAL_INFO);
       setRoute(RouteStep.ADDITIONAL_INFO);
     } else if (currentStep === FormStep.ADDITIONAL_INFO) {
-      setCurrentStep(FormStep.NONE);
-      // setRoute(RouteStep.NONE);
+      uploadFilesToS3();
+      setCurrentStep(FormStep.DONE);
       openDialog("list-property-success-dialog");
     }
   };

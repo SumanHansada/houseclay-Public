@@ -9,12 +9,14 @@ import * as Yup from "yup";
 import FormPhotoUpload from "@/components/common/FormPhotoUpload";
 import {
   FormType,
-  setFormData,
   setFormValidity,
+  setImages,
 } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
 import { FormValues } from "../layout";
+
+export const dynamicParams = true;
 
 const GalleryPage: React.FC = () => {
   const { values, setFieldError, setErrors } = useFormikContext<FormValues>();
@@ -41,7 +43,7 @@ const GalleryPage: React.FC = () => {
         // Clear any previous errors
         setErrors({});
         // Set form data in the store
-        dispatch(setFormData({ type: formKey, data: { ...values } }));
+        dispatch(setImages({ type: formKey, images: values.images }));
         // Form is valid
         if (!isFormValid) {
           dispatch(setFormValidity({ type: formKey, isValid: true }));

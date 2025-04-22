@@ -66,7 +66,7 @@ export const apiSlice = createApi({
         method: "POST",
       }),
     }),
-    photo: builder.mutation<
+    presignedUrls: builder.mutation<
       {
         propertyID: string;
         fileURLMap: Record<string, string>;
@@ -92,5 +92,5 @@ export const {
   useCheckUserQuery,
   useLazyCheckUserQuery,
   useLogoutMutation,
-  usePhotoMutation,
+  usePresignedUrlsMutation,
 } = apiSlice;

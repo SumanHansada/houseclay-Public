@@ -34,8 +34,8 @@ import FormINRCurrencyField from "@/components/common/FormINRCurrencyField";
 import FormRadioGroup from "@/components/common/FormRadioGroup";
 import {
   FormType,
-  setFormData,
   setFormValidity,
+  setRentalDetails,
 } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
@@ -107,7 +107,7 @@ const RentalDetailsPage: React.FC = () => {
       furnishing: Yup.string().required("Furnishing is required"),
       preferredTenant: Yup.string().required("Preferred tenant is required"),
       parking: Yup.boolean().required("Parking is required"),
-      nonVegAllowed: Yup.string().required("Non veg allowed is required"),
+      nonVegAllowed: Yup.boolean().required("Non veg allowed is required"),
     }),
   });
 
@@ -118,7 +118,12 @@ const RentalDetailsPage: React.FC = () => {
         // Clear any previous errors
         setErrors({});
         // Set form data in the store
-        dispatch(setFormData({ type: formKey, data: { ...values } }));
+        dispatch(
+          setRentalDetails({
+            type: formKey,
+            rentalDetails: values.rentalDetails,
+          }),
+        );
         // Form is valid
         if (!isFormValid) {
           dispatch(setFormValidity({ type: formKey, isValid: true }));

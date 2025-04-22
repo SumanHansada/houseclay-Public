@@ -8,7 +8,7 @@ export enum FormStep {
   RESALE_DETAILS = "Resale Details",
   GALLERY = "Gallery",
   ADDITIONAL_INFO = "Additional Information",
-  NONE = "None",
+  DONE = "Done",
 }
 
 const StepNavigationButton: React.FC<{

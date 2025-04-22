@@ -4,6 +4,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "./apiSlice";
 import authReducer from "./authSlice";
 import listPropertyReducer from "./listPropertySlice";
+import uploadToS3SliceReducer from "./uploadToS3Slice";
 import userReducer from "./userSlice";
 
 export const store = configureStore({
@@ -11,6 +12,7 @@ export const store = configureStore({
     auth: authReducer,
     listProperty: listPropertyReducer,
     user: userReducer,
+    uploadToS3: uploadToS3SliceReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

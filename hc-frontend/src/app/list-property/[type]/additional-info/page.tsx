@@ -10,12 +10,14 @@ import FormDropdown from "@/components/common/FormDropdown";
 import FormPhoneInput from "@/components/common/FormPhoneInput";
 import {
   FormType,
-  setFormData,
+  setAdditionalInfo,
   setFormValidity,
 } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
 import { FormValues } from "../layout";
+
+export const dynamicParams = true;
 
 const AdditionalInfoPage = () => {
   const { values, errors, touched, setFieldError, setErrors } =
@@ -40,7 +42,12 @@ const AdditionalInfoPage = () => {
         // Clear any previous errors
         setErrors({});
         // Set form data in the store
-        dispatch(setFormData({ type: formKey, data: { ...values } }));
+        dispatch(
+          setAdditionalInfo({
+            type: formKey,
+            additionalInfo: values.additionalInfo,
+          }),
+        );
         // Form is valid
         if (!isFormValid) {
           dispatch(setFormValidity({ type: formKey, isValid: true }));

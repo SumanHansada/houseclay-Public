@@ -1,5 +1,3 @@
-// app/list-property/[type]/locality-details/page.tsx
-
 "use client";
 
 import { useFormikContext } from "formik";
@@ -14,13 +12,15 @@ import FormPlacesAutocomplete from "@/components/common/FormPlacesAutoCompletes"
 import GoogleMaps from "@/components/common/GoogleMaps";
 import {
   FormType,
-  setFormData,
   setFormValidity,
+  setLocalityDetails,
 } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
 import { FormValues } from "../layout";
 import LocationFormSkeleton from "./LocationFormSkeleton";
+
+export const dynamicParams = true;
 
 const LocalityDetailsPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -81,7 +81,12 @@ const LocalityDetailsPage: React.FC = () => {
         // Clear any previous errors
         setErrors({});
         // Set form data in the store
-        dispatch(setFormData({ type: formKey, data: { ...values } }));
+        dispatch(
+          setLocalityDetails({
+            type: formKey,
+            localityDetails: values.localityDetails,
+          }),
+        );
         // Form is valid
         if (!isFormValid) {
           dispatch(setFormValidity({ type: formKey, isValid: true }));

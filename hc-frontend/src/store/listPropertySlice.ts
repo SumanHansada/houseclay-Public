@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { PropertyListingType } from "@/common/utils";
 import { PropertyType } from "@/common/utils";
-import { PropertyPhoto } from "@/components/common/FormPhotoUpload";
 
 interface PropertyDetails {
   propertyCategory: string;
@@ -37,16 +36,47 @@ interface RentalDetails {
   waterSupply: string;
   powerBackup: string;
   parking: boolean;
-  nonVegAllowed: string;
+  nonVegAllowed: boolean;
   amenities: string[];
 }
 
-interface AdditionalDetails {
+interface ResaleDetails {
+  price: number;
+  availableFrom: string;
+  bathrooms: number;
+  balcony: number;
+  priceNegotiable: boolean;
+  underLoan: boolean;
+  waterSupply: string;
+  powerBackup: string;
+  furnishing: string;
+  parking: boolean;
+  khataCertificate: boolean;
+  saleDeed: boolean;
+  propertyTax: boolean;
+}
+
+interface AdditionalInfo {
   whoWillShowProperty: string;
   secondaryPhoneNumber: string;
 }
 
+interface FileData {
+  name: string;
+  type: string;
+  webkitRelativePath: string;
+}
+
+export interface PropertyPhoto {
+  id: string;
+  file: FileData;
+  url: string;
+  isCover: boolean;
+  S3Url: string;
+}
+
 interface ListPropertyState {
+  propertyID: string;
   propertyType: PropertyType;
   listingType: PropertyListingType;
   showPropertyType: boolean;
@@ -57,7 +87,8 @@ interface ListPropertyState {
       localityDetails: LocalityDetails;
       rentalDetails: RentalDetails;
       images: PropertyPhoto[];
-      additionalDetails: AdditionalDetails;
+      additionalInfo: AdditionalInfo;
+      resaleDetails: ResaleDetails;
     };
   };
   resaleForm: {
@@ -67,7 +98,8 @@ interface ListPropertyState {
       localityDetails: LocalityDetails;
       rentalDetails: RentalDetails;
       images: PropertyPhoto[];
-      additionalDetails: AdditionalDetails;
+      additionalInfo: AdditionalInfo;
+      resaleDetails: ResaleDetails;
     };
   };
   flatmatesForm: {
@@ -77,7 +109,8 @@ interface ListPropertyState {
       localityDetails: LocalityDetails;
       rentalDetails: RentalDetails;
       images: PropertyPhoto[];
-      additionalDetails: AdditionalDetails;
+      additionalInfo: AdditionalInfo;
+      resaleDetails: ResaleDetails;
     };
   };
 }
@@ -87,7 +120,8 @@ const initialData: {
   localityDetails: LocalityDetails;
   rentalDetails: RentalDetails;
   images: PropertyPhoto[];
-  additionalDetails: AdditionalDetails;
+  additionalInfo: AdditionalInfo;
+  resaleDetails: ResaleDetails;
 } = {
   propertyDetails: {
     propertyCategory: "",
@@ -121,17 +155,33 @@ const initialData: {
     waterSupply: "",
     powerBackup: "",
     parking: false,
-    nonVegAllowed: "",
+    nonVegAllowed: false,
     amenities: [],
   },
   images: [],
-  additionalDetails: {
+  additionalInfo: {
     whoWillShowProperty: "",
     secondaryPhoneNumber: "",
+  },
+  resaleDetails: {
+    price: 0,
+    availableFrom: "",
+    bathrooms: 0,
+    balcony: 0,
+    priceNegotiable: false,
+    underLoan: false,
+    waterSupply: "",
+    powerBackup: "",
+    furnishing: "",
+    parking: false,
+    khataCertificate: false,
+    saleDeed: false,
+    propertyTax: false,
   },
 };
 
 const initialState: ListPropertyState = {
+  propertyID: "",
   propertyType: PropertyType.RENT,
   listingType: PropertyListingType.DIY,
   showPropertyType: false,
@@ -196,6 +246,10 @@ const listPropertySlice = createSlice({
         data: Partial<{
           propertyDetails: PropertyDetails;
           localityDetails: LocalityDetails;
+          rentalDetails: RentalDetails;
+          resaleDetails: ResaleDetails;
+          images: PropertyPhoto[];
+          additionalInfo: AdditionalInfo;
         }>;
       }>,
     ) => {
@@ -204,6 +258,81 @@ const listPropertySlice = createSlice({
         ...(state[type].data || initialData),
         ...data,
       };
+    },
+    setFileURLMap: (
+      state,
+      action: PayloadAction<{
+        type: FormType;
+        data: Record<string, string>;
+      }>,
+    ) => {
+      const { type, data } = action.payload;
+      state[type].data?.images?.forEach((image) => {
+        image.S3Url = data[image.file.name];
+      });
+    },
+    setPropertyID: (state, action: PayloadAction<string>) => {
+      state.propertyID = action.payload;
+    },
+    setPropertyDetails: (
+      state,
+      action: PayloadAction<{
+        type: FormType;
+        propertyDetails: PropertyDetails;
+      }>,
+    ) => {
+      const { type, propertyDetails } = action.payload;
+      if (state[type].data) {
+        state[type].data.propertyDetails = propertyDetails;
+      }
+    },
+    setLocalityDetails: (
+      state,
+      action: PayloadAction<{
+        type: FormType;
+        localityDetails: LocalityDetails;
+      }>,
+    ) => {
+      const { type, localityDetails } = action.payload;
+      if (state[type].data) {
+        state[type].data.localityDetails = localityDetails;
+      }
+    },
+    setRentalDetails: (
+      state,
+      action: PayloadAction<{ type: FormType; rentalDetails: RentalDetails }>,
+    ) => {
+      const { type, rentalDetails } = action.payload;
+      if (state[type].data) {
+        state[type].data.rentalDetails = rentalDetails;
+      }
+    },
+    setResaleDetails: (
+      state,
+      action: PayloadAction<{ type: FormType; resaleDetails: ResaleDetails }>,
+    ) => {
+      const { type, resaleDetails } = action.payload;
+      if (state[type].data) {
+        state[type].data.resaleDetails = resaleDetails;
+      }
+    },
+    setImages: (
+      state,
+      action: PayloadAction<{ type: FormType; images: PropertyPhoto[] }>,
+    ) => {
+      const { type, images } = action.payload;
+      if (state[type].data) {
+        state[type].data.images = images;
+      }
+    },
+    setAdditionalInfo: (
+      state,
+      action: PayloadAction<{ type: FormType; additionalInfo: AdditionalInfo }>,
+    ) => {
+      const { type, additionalInfo } = action.payload;
+      if (state[type].data) {
+        state[type].data.additionalInfo = additionalInfo;
+      }
     },
   },
 });
@@ -214,5 +343,13 @@ export const {
   setShowPropertyType,
   setFormValidity,
   setFormData,
+  setFileURLMap,
+  setPropertyID,
+  setPropertyDetails,
+  setLocalityDetails,
+  setRentalDetails,
+  setResaleDetails,
+  setImages,
+  setAdditionalInfo,
 } = listPropertySlice.actions;
 export default listPropertySlice.reducer;

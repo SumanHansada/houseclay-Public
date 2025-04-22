@@ -10,20 +10,9 @@ import {
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 
+import { PropertyPhoto } from "@/store/listPropertySlice";
+
 // Types
-
-interface FileData {
-  name: string;
-  type: string;
-  webkitRelativePath: string;
-}
-
-export interface PropertyPhoto {
-  id: string;
-  file: FileData;
-  url: string;
-  isCover: boolean;
-}
 
 interface FormPhotoUploadProps {
   name: string;
