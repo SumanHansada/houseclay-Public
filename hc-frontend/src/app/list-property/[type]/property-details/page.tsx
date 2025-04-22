@@ -37,25 +37,29 @@ const PropertyDetailsPage: React.FC = () => {
       builtUpArea: Yup.number()
         .required("Built up area is required")
         .positive("Area must be positive"),
-      facing:
-        formKey === "flatmatesForm"
-          ? Yup.string()
-          : Yup.string().required("Facing is required"),
+      facing: Yup.string().when("$formType", {
+        is: "flatmatesForm",
+        then: (schema) => schema.optional(),
+        otherwise: (schema) => schema.required("Facing is required"),
+      }),
       bhkType: Yup.string().required("BHK type is required"),
-      ownershipType:
-        formKey === "flatmatesForm"
-          ? Yup.string()
-          : Yup.string().required("Ownership type is required"),
-      propertyAge:
-        formKey === "flatmatesForm"
-          ? Yup.string()
-          : Yup.string().required("Property age is required"),
+      ownershipType: Yup.string().when("$formType", {
+        is: "flatmatesForm",
+        then: (schema) => schema.optional(),
+        otherwise: (schema) => schema.required("Ownership type is required"),
+      }),
+      propertyAge: Yup.string().when("$formType", {
+        is: "flatmatesForm",
+        then: (schema) => schema.optional(),
+        otherwise: (schema) => schema.required("Property age is required"),
+      }),
       floor: Yup.string().required("Floor is required"),
       totalFloor: Yup.string().required("Total floor is required"),
-      floorType:
-        formKey === "flatmatesForm"
-          ? Yup.string()
-          : Yup.string().required("Floor type is required"),
+      floorType: Yup.string().when("$formType", {
+        is: "flatmatesForm",
+        then: (schema) => schema.optional(),
+        otherwise: (schema) => schema.required("Floor type is required"),
+      }),
     }),
   });
 

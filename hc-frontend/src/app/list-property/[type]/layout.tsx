@@ -72,6 +72,11 @@ export interface FormValues {
     parking: boolean;
     nonVegAllowed: boolean;
     amenities: string[];
+    tenantType: string;
+    attachedBathroom: boolean;
+    bathroomType: string;
+    smokingPreference: boolean;
+    drinkingPreference: boolean;
   };
   resaleDetails: {
     price: number;

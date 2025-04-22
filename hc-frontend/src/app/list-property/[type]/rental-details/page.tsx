@@ -19,10 +19,14 @@ import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
 import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 import WifiIconSvg from "public/icons/amenities/wifi.svg";
+import NonVegIconSvg from "public/icons/food-preferences/non-veg.svg";
+import VegIconSvg from "public/icons/food-preferences/veg.svg";
 import BachelorIconSvg from "public/icons/preferred-tenants/bachelor.svg";
 import CompanyIconSvg from "public/icons/preferred-tenants/company.svg";
 import CoupleIconSvg from "public/icons/preferred-tenants/couple.svg";
 import FamilyIconSvg from "public/icons/preferred-tenants/family.svg";
+import FemaleIconSvg from "public/icons/preferred-tenants/female.svg";
+import MaleIconSvg from "public/icons/preferred-tenants/male.svg";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
@@ -45,6 +49,10 @@ const FamilyIcon = FamilyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const CompanyIcon = CompanyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const BachelorIcon = BachelorIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const CoupleIcon = CoupleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const MaleIcon = MaleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const FemaleIcon = FemaleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const VegIcon = VegIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const NonVegIcon = NonVegIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ClubhouseIcon = ClubhouseIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
@@ -105,9 +113,38 @@ const RentalDetailsPage: React.FC = () => {
       ),
       availableFrom: Yup.string().required("Available from is required"),
       furnishing: Yup.string().required("Furnishing is required"),
-      preferredTenant: Yup.string().required("Preferred tenant is required"),
+      preferredTenant: Yup.string().when("$formType", {
+        is: "rentForm",
+        then: (schema) => schema.required("Preferred tenant is required"),
+        otherwise: (schema) => schema.optional(),
+      }),
       parking: Yup.boolean().required("Parking is required"),
       nonVegAllowed: Yup.boolean().required("Non veg allowed is required"),
+      tenantType: Yup.string().when("$formType", {
+        is: "flatmatesForm",
+        then: (schema) => schema.required("Tenant type is required"),
+        otherwise: (schema) => schema.optional(),
+      }),
+      attachedBathroom: Yup.boolean().when("$formType", {
+        is: "flatmatesForm",
+        then: (schema) => schema.required("Attached bathroom is required"),
+        otherwise: (schema) => schema.optional(),
+      }),
+      bathroomType: Yup.string().when("$formType", {
+        is: "flatmatesForm",
+        then: (schema) => schema.required("Bathroom type is required"),
+        otherwise: (schema) => schema.optional(),
+      }),
+      smokingPreference: Yup.boolean().when("$formType", {
+        is: "flatmatesForm",
+        then: (schema) => schema.required("Smoking preference is required"),
+        otherwise: (schema) => schema.optional(),
+      }),
+      drinkingPreference: Yup.boolean().when("$formType", {
+        is: "flatmatesForm",
+        then: (schema) => schema.required("Drinking preference is required"),
+        otherwise: (schema) => schema.optional(),
+      }),
     }),
   });
 
@@ -169,19 +206,44 @@ const RentalDetailsPage: React.FC = () => {
               name="rentalDetails.rent"
               id="rentalDetails.rent"
               label="Rent"
+              suffix="/month"
               required
             />
           </div>
           <div className="col-span-1">
-            <FormRadioGroup
-              name="rentalDetails.rentNegotiable"
-              label="Rent Negotiable"
-              options={[
-                { value: true, label: "Yes" },
-                { value: false, label: "No" },
-              ]}
-              horizontal
-            />
+            {formKey === "rentForm" && (
+              <FormRadioGroup
+                name="rentalDetails.rentNegotiable"
+                label="Rent Negotiable"
+                options={[
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
+                ]}
+                horizontal
+              />
+            )}
+            {formKey === "flatmatesForm" && (
+              <FormDropdown
+                label="Parking"
+                name="rentalDetails.parking"
+                id="rentalDetails.parking"
+                options={[
+                  { value: true, label: "Yes" },
+                  {
+                    value: false,
+                    label: "No",
+                  },
+                ]}
+                required={true}
+                placeholder="Select Parking"
+                aria-describedby={
+                  errors?.rentalDetails?.parking &&
+                  touched?.rentalDetails?.parking
+                    ? "rentalDetails.parking-error"
+                    : undefined
+                }
+              />
+            )}
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -190,6 +252,7 @@ const RentalDetailsPage: React.FC = () => {
               name="rentalDetails.maintenanceCharges"
               id="rentalDetails.maintenanceCharges"
               label="Maintenance Charges"
+              suffix="/month"
             />
           </div>
           <div className="col-span-1">
@@ -238,37 +301,80 @@ const RentalDetailsPage: React.FC = () => {
             />
           </div>
         </div>
-        <div className="mb-6">
-          <FormRadioGroup
-            name="rentalDetails.preferredTenant"
-            label="Preferred Tenant"
-            options={[
-              {
-                value: "Family",
-                label: "Family",
-                icon: <FamilyIcon />,
-              },
-              {
-                value: "Company",
-                label: "Company",
-                icon: <CompanyIcon />,
-              },
-              {
-                value: "Bachelor",
-                label: "Bachelor",
-                icon: <BachelorIcon />,
-              },
-              {
-                value: "Couple",
-                label: "Couple",
-                icon: <CoupleIcon />,
-              },
-            ]}
-            withIcons={true}
-            required
-            horizontal
-          />
-        </div>
+        {formKey === "rentForm" && (
+          <div className="mb-6">
+            <FormRadioGroup
+              name="rentalDetails.preferredTenant"
+              label="Preferred Tenant"
+              options={[
+                {
+                  value: "Family",
+                  label: "Family",
+                  icon: <FamilyIcon />,
+                },
+                {
+                  value: "Company",
+                  label: "Company",
+                  icon: <CompanyIcon />,
+                },
+                {
+                  value: "Bachelor",
+                  label: "Bachelor",
+                  icon: <BachelorIcon />,
+                },
+                {
+                  value: "Couple",
+                  label: "Couple",
+                  icon: <CoupleIcon />,
+                },
+              ]}
+              withIcons={true}
+              required
+              horizontal
+            />
+          </div>
+        )}
+        {formKey === "flatmatesForm" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <FormRadioGroup
+              name="rentalDetails.tenantType"
+              label="Preferred Tenant"
+              options={[
+                {
+                  value: "Female",
+                  label: "Female",
+                  icon: <FemaleIcon />,
+                },
+                {
+                  value: "Male",
+                  label: "Male",
+                  icon: <MaleIcon />,
+                },
+              ]}
+              withIcons={true}
+              required
+              horizontal
+            />
+            <FormRadioGroup
+              name="rentalDetails.nonVegAllowed"
+              label="Food Preferences"
+              options={[
+                {
+                  value: false,
+                  label: "Veg",
+                  icon: <VegIcon />,
+                },
+                {
+                  value: true,
+                  label: "Non-Veg",
+                  icon: <NonVegIcon />,
+                },
+              ]}
+              withIcons={true}
+              horizontal
+            />
+          </div>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <FormDropdown
@@ -323,42 +429,100 @@ const RentalDetailsPage: React.FC = () => {
             />
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="col-span-1">
-            <FormDropdown
-              label="Parking"
-              name="rentalDetails.parking"
-              id="rentalDetails.parking"
-              options={[
-                { value: true, label: "Yes" },
-                {
-                  value: false,
-                  label: "No",
-                },
-              ]}
-              required={true}
-              placeholder="Select Parking"
-              aria-describedby={
-                errors?.rentalDetails?.parking &&
-                touched?.rentalDetails?.parking
-                  ? "rentalDetails.parking-error"
-                  : undefined
-              }
-            />
+        {formKey === "rentForm" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div className="col-span-1">
+              <FormDropdown
+                label="Parking"
+                name="rentalDetails.parking"
+                id="rentalDetails.parking"
+                options={[
+                  { value: true, label: "Yes" },
+                  {
+                    value: false,
+                    label: "No",
+                  },
+                ]}
+                required={true}
+                placeholder="Select Parking"
+                aria-describedby={
+                  errors?.rentalDetails?.parking &&
+                  touched?.rentalDetails?.parking
+                    ? "rentalDetails.parking-error"
+                    : undefined
+                }
+              />
+            </div>
+            <div className="col-span-1">
+              <FormRadioGroup
+                name="rentalDetails.nonVegAllowed"
+                label="Non Veg Allowed"
+                options={[
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
+                ]}
+                required
+                horizontal
+              />
+            </div>
           </div>
-          <div className="col-span-1">
-            <FormRadioGroup
-              name="rentalDetails.nonVegAllowed"
-              label="Non Veg Allowed"
-              options={[
-                { value: true, label: "Yes" },
-                { value: false, label: "No" },
-              ]}
-              required
-              horizontal
-            />
+        )}
+        {formKey === "flatmatesForm" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div className="col-span-1">
+              <FormRadioGroup
+                name="rentalDetails.attachedBathroom"
+                label="Attached Bathroom"
+                options={[
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
+                ]}
+                required
+                horizontal
+              />
+            </div>
+            <div className="col-span-1">
+              <FormRadioGroup
+                name="rentalDetails.bathroomType"
+                label="Bathroom Type"
+                options={[
+                  { value: "Western", label: "Western" },
+                  { value: "Indian", label: "Indian" },
+                ]}
+                required
+                horizontal
+              />
+            </div>
           </div>
-        </div>
+        )}
+        {formKey === "flatmatesForm" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div className="col-span-1">
+              <FormRadioGroup
+                name="rentalDetails.smokingPreference"
+                label="Smoking Allowed"
+                options={[
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
+                ]}
+                required
+                horizontal
+              />
+            </div>
+            <div className="col-span-1">
+              <FormRadioGroup
+                name="rentalDetails.drinkingPreference"
+                label="Drinking Allowed"
+                options={[
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
+                ]}
+                required
+                horizontal
+              />
+            </div>
+          </div>
+        )}
       </div>
       <div className="mb-8">
         <h1 className="text-2xl text-gray-800">

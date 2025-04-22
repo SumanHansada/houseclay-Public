@@ -38,6 +38,11 @@ interface RentalDetails {
   parking: boolean;
   nonVegAllowed: boolean;
   amenities: string[];
+  tenantType: string;
+  attachedBathroom: boolean;
+  bathroomType: string;
+  smokingPreference: boolean;
+  drinkingPreference: boolean;
 }
 
 interface ResaleDetails {

@@ -9,6 +9,7 @@ interface FormINRCurrencyFieldProps {
   required?: boolean;
   placeholder?: string;
   className?: string;
+  suffix?: string;
 }
 
 const FormINRCurrencyField: React.FC<FormINRCurrencyFieldProps> = ({
@@ -16,6 +17,7 @@ const FormINRCurrencyField: React.FC<FormINRCurrencyFieldProps> = ({
   required = false,
   placeholder = "0",
   className = "",
+  suffix,
   ...props
 }) => {
   const [field, meta, helpers] = useField(props.name);
@@ -74,14 +76,16 @@ const FormINRCurrencyField: React.FC<FormINRCurrencyFieldProps> = ({
           type="text"
           id={props.id || props.name}
           placeholder={placeholder}
-          className={`w-full p-3 border border-gray-300 focus:ring-red-500 focus:border-red-500 rounded-none ${className}`}
+          className={`w-full p-3 border border-gray-300 focus:ring-red-500 focus:border-red-500 ${suffix ? "rounded-none" : "rounded-r-xl"} ${className}`}
           value={formatINR(field.value)}
           onChange={handleChange}
           onBlur={handleBlur}
         />
-        <span className="inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-l-0 border-gray-300 rounded-r-xl">
-          /month
-        </span>
+        {suffix && (
+          <span className="inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-l-0 border-gray-300 rounded-r-xl">
+            {suffix}
+          </span>
+        )}
       </div>
       {meta.touched && meta.error ? (
         <div className="text-red-500 text-sm mt-1">{meta.error}</div>

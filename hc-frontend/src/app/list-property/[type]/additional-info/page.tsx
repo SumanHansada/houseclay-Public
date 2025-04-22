@@ -34,18 +34,21 @@ const AdditionalInfoPage = () => {
     additionalInfo: Yup.object().shape({
       whoWillShowProperty: Yup.string(),
       secondaryPhoneNumber: Yup.string(),
-      khataCertificate:
-        formKey === "resaleForm"
-          ? Yup.string().required("Khata Certificate is required")
-          : Yup.string(),
-      saleDeed:
-        formKey === "resaleForm"
-          ? Yup.boolean().required("Sale Deed is required")
-          : Yup.boolean(),
-      propertyTax:
-        formKey === "resaleForm"
-          ? Yup.boolean().required("Property Tax is required")
-          : Yup.boolean(),
+      khataCertificate: Yup.string().when("$formType", {
+        is: "resaleForm",
+        then: (schema) => schema.required("Khata Certificate is required"),
+        otherwise: (schema) => schema.optional(),
+      }),
+      saleDeed: Yup.boolean().when("$formType", {
+        is: "resaleForm",
+        then: (schema) => schema.required("Sale Deed is required"),
+        otherwise: (schema) => schema.optional(),
+      }),
+      propertyTax: Yup.boolean().when("$formType", {
+        is: "resaleForm",
+        then: (schema) => schema.required("Property Tax is required"),
+        otherwise: (schema) => schema.optional(),
+      }),
     }),
   });
 
