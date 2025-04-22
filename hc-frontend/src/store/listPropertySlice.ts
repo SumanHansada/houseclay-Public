@@ -162,6 +162,11 @@ const initialData: {
     parking: false,
     nonVegAllowed: false,
     amenities: [],
+    tenantType: "",
+    attachedBathroom: false,
+    bathroomType: "",
+    smokingPreference: false,
+    drinkingPreference: false,
   },
   images: [],
   additionalInfo: {

@@ -1,5 +1,4 @@
 import { useField } from "formik";
-import { IndianRupee } from "lucide-react";
 import React from "react";
 
 interface FormINRCurrencyFieldProps {
@@ -9,18 +8,21 @@ interface FormINRCurrencyFieldProps {
   required?: boolean;
   placeholder?: string;
   className?: string;
-  suffix?: string;
+  prefix?: React.ReactNode;
+  suffix?: React.ReactNode;
 }
 
 const FormINRCurrencyField: React.FC<FormINRCurrencyFieldProps> = ({
+  name,
+  id,
   label,
   required = false,
   placeholder = "0",
   className = "",
+  prefix,
   suffix,
-  ...props
 }) => {
-  const [field, meta, helpers] = useField(props.name);
+  const [field, meta, helpers] = useField(name);
 
   // Format for display (add commas according to Indian numbering system)
   const formatINR = (value: number | string): string => {
@@ -61,7 +63,7 @@ const FormINRCurrencyField: React.FC<FormINRCurrencyFieldProps> = ({
     <div className="w-full">
       {label && (
         <label
-          htmlFor={props.id || props.name}
+          htmlFor={id || name}
           className="block text-sm font-medium text-gray-700 mb-1"
         >
           {label}
@@ -69,19 +71,23 @@ const FormINRCurrencyField: React.FC<FormINRCurrencyFieldProps> = ({
         </label>
       )}
       <div className="flex">
-        <span className="inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-r-0 border-gray-300 rounded-l-xl">
-          <IndianRupee size={20} />
-        </span>
+        {prefix && ( // Conditionally render the prefix
+          <span className="inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-r-0 border-gray-300 rounded-l-xl">
+            {prefix}
+          </span>
+        )}
         <input
           type="text"
-          id={props.id || props.name}
+          id={id || name}
           placeholder={placeholder}
-          className={`w-full p-3 border border-gray-300 focus:ring-red-500 focus:border-red-500 ${suffix ? "rounded-none" : "rounded-r-xl"} ${className}`}
+          className={`w-full p-3 border border-gray-300 focus:ring-red-500 focus:border-red-500 ${
+            prefix ? "rounded-none" : "rounded-l-xl"
+          } ${suffix ? "rounded-none" : "rounded-r-xl"} ${className}`}
           value={formatINR(field.value)}
           onChange={handleChange}
           onBlur={handleBlur}
         />
-        {suffix && (
+        {suffix && ( // Conditionally render the suffix
           <span className="inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-l-0 border-gray-300 rounded-r-xl">
             {suffix}
           </span>

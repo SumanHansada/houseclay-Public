@@ -1,6 +1,7 @@
 "use client";
 
 import { useFormikContext } from "formik";
+import { IndianRupee } from "lucide-react";
 import { useParams } from "next/navigation";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
 import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
@@ -93,7 +94,13 @@ const ResaleDetailsPage: React.FC = () => {
 
   const resaleSchema = Yup.object().shape({
     resaleDetails: Yup.object().shape({
-      price: Yup.string().required("Price is required"),
+      price: Yup.string()
+        .required("Price is required")
+        .test(
+          "is-greater-than-zero",
+          "Price must be greater than zero",
+          (value) => parseFloat(value || "0") > 0,
+        ),
       availableFrom: Yup.string().required("Available from is required"),
       bathrooms: Yup.number().required("Bathrooms is required"),
       furnishing: Yup.string().required("Furnishing is required"),
@@ -159,6 +166,7 @@ const ResaleDetailsPage: React.FC = () => {
               name="resaleDetails.price"
               id="resaleDetails.price"
               label="Expected Price"
+              prefix={<IndianRupee size={20} />}
               required
             />
           </div>

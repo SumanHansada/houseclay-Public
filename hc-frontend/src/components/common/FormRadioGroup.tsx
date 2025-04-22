@@ -30,11 +30,15 @@ const FormRadioGroup: React.FC<FormRadioGroupProps> = ({
 }) => {
   const [field, meta, helpers] = useField(name);
 
-  const handleChange = (value: string | boolean) => {
-    helpers.setValue(value);
+  const handleFocus = () => {
+    helpers.setTouched(true);
   };
 
-  // Helper function to perform strict comparison for any value type
+  const handleChange = (value: string | boolean) => {
+    helpers.setValue(value);
+    helpers.setTouched(true);
+  };
+
   const isSelected = (optionValue: string | boolean) => {
     return field.value === optionValue;
   };
@@ -49,7 +53,9 @@ const FormRadioGroup: React.FC<FormRadioGroupProps> = ({
       )}
 
       <div
-        className={`${horizontal ? "flex w-full flex-wrap justify-between gap-3 xl:gap-6" : "flex w-full justify-between flex-col gap-2"}`}
+        className={`flex w-full justify-between ${
+          horizontal ? "flex-wrap  gap-3 xl:gap-6" : "flex-col gap-2"
+        }`}
       >
         {options.map((option) => (
           <div
@@ -62,7 +68,9 @@ const FormRadioGroup: React.FC<FormRadioGroupProps> = ({
                 cursor-pointer border rounded-xl transition-all w-full
                 ${
                   isSelected(option.value)
-                    ? `${selectedColor} ${withIcons ? "border-2 text-red-500" : "border-2"}`
+                    ? `${selectedColor} ${
+                        withIcons ? "border-2 text-red-500" : "border-2"
+                      }`
                     : "border-gray-300 hover:border-gray-400"
                 }
                 ${
@@ -84,6 +92,7 @@ const FormRadioGroup: React.FC<FormRadioGroupProps> = ({
               value={String(option.value)}
               checked={isSelected(option.value)}
               onChange={() => handleChange(option.value)}
+              onFocus={handleFocus}
               className="sr-only"
             />
           </div>
