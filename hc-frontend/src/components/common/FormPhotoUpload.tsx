@@ -10,7 +10,7 @@ import {
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 
-import { PropertyPhoto } from "@/store/listPropertySlice";
+import { FileData, PropertyPhoto } from "@/store/listPropertySlice";
 
 // Types
 
@@ -70,6 +70,7 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
         file: fileData,
         url: URL.createObjectURL(file),
         isCover: photos.length === 0,
+        S3Url: "", // Default value for S3Url
       };
     });
 
