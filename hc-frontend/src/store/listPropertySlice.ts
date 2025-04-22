@@ -61,7 +61,7 @@ interface AdditionalInfo {
   secondaryPhoneNumber: string;
 }
 
-interface FileData {
+export interface FileData {
   name: string;
   type: string;
   webkitRelativePath: string;
