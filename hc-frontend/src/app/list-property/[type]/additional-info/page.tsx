@@ -31,8 +31,22 @@ const AdditionalInfoPage = () => {
   const dispatch = useDispatch();
 
   const additionalInfoSchema = Yup.object().shape({
-    whoWillShowProperty: Yup.string(),
-    secondaryPhoneNumber: Yup.string(),
+    additionalInfo: Yup.object().shape({
+      whoWillShowProperty: Yup.string(),
+      secondaryPhoneNumber: Yup.string(),
+      khataCertificate:
+        formKey === "resaleForm"
+          ? Yup.string().required("Khata Certificate is required")
+          : Yup.string(),
+      saleDeed:
+        formKey === "resaleForm"
+          ? Yup.boolean().required("Sale Deed is required")
+          : Yup.boolean(),
+      propertyTax:
+        formKey === "resaleForm"
+          ? Yup.boolean().required("Property Tax is required")
+          : Yup.boolean(),
+    }),
   });
 
   useEffect(() => {
@@ -87,39 +101,135 @@ const AdditionalInfoPage = () => {
         </h1>
       </div>
       <div>
-        <div className="grid grid-cols-2 gap-6 mb-6">
-          <div className="col-span-1">
-            <FormDropdown
-              name="additionalInfo.whoWillShowProperty"
-              id="additionalInfo.whoWillShowProperty"
-              label="Who will show the property?"
-              options={[
-                { value: "Owner", label: "I will show" },
-                {
-                  value: "Friend/Neighbour",
-                  label: "Friend/Neighbour will show",
-                },
-              ]}
-              placeholder="Select"
-              aria-describedby={
-                errors?.additionalInfo?.whoWillShowProperty &&
-                touched?.additionalInfo?.whoWillShowProperty
-                  ? "whoWillShowProperty-error"
-                  : undefined
-              }
-            />
+        {(formKey === "rentForm" || formKey === "flatmatesForm") && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div className="col-span-1">
+              <FormDropdown
+                name="additionalInfo.whoWillShowProperty"
+                id="additionalInfo.whoWillShowProperty"
+                label="Who will show the property?"
+                options={[
+                  { value: "Owner", label: "I will show" },
+                  {
+                    value: "Friend/Neighbour",
+                    label: "Friend/Neighbour will show",
+                  },
+                ]}
+                placeholder="Select"
+                aria-describedby={
+                  errors?.additionalInfo?.whoWillShowProperty &&
+                  touched?.additionalInfo?.whoWillShowProperty
+                    ? "whoWillShowProperty-error"
+                    : undefined
+                }
+              />
+            </div>
+            <div className="col-span-1">
+              <FormPhoneInput
+                label="Secondary Phone Number"
+                name="additionalInfo.secondaryPhoneNumber"
+                id="additionalInfo.secondaryPhoneNumber"
+                defaultCountry="in" // Set to India as your default
+                placeholder="Enter phone number"
+                className="border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-red-500 focus:border-red-500"
+              />
+            </div>
           </div>
-          <div className="col-span-1">
-            <FormPhoneInput
-              label="Secondary Phone Number"
-              name="additionalInfo.secondaryPhoneNumber"
-              id="additionalInfo.secondaryPhoneNumber"
-              defaultCountry="in" // Set to India as your default
-              placeholder="Enter phone number"
-              className="border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-red-500 focus:border-red-500"
-            />
-          </div>
-        </div>
+        )}
+        {formKey === "resaleForm" && (
+          <>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              <div className="col-span-1">
+                <FormDropdown
+                  label="Do You have Khata Certificate?"
+                  name="additionalInfo.khataCertificate"
+                  id="additionalInfo.khataCertificate"
+                  options={[
+                    { value: "A-Khata", label: "Yes, A-Khata" },
+                    {
+                      value: "B-Khata",
+                      label: "Yes, B-Khata",
+                    },
+                    {
+                      value: "No",
+                      label: "No",
+                    },
+                  ]}
+                  required={true}
+                  placeholder="Select Khata Certificate"
+                  aria-describedby={
+                    errors?.additionalInfo?.khataCertificate &&
+                    touched?.additionalInfo?.khataCertificate
+                      ? "additionalInfo.khataCertificate-error"
+                      : undefined
+                  }
+                />
+              </div>
+              <div className="col-span-1">
+                <FormDropdown
+                  label="Do You have Sale Deed Certificate?"
+                  name="additionalInfo.saleDeed"
+                  id="additionalInfo.saleDeed"
+                  options={[
+                    {
+                      value: true,
+                      label: "Yes",
+                    },
+                    {
+                      value: false,
+                      label: "No",
+                    },
+                  ]}
+                  required={true}
+                  placeholder="Select Sale Deed Certificate"
+                  aria-describedby={
+                    errors?.additionalInfo?.saleDeed &&
+                    touched?.additionalInfo?.saleDeed
+                      ? "additionalInfo.saleDeed-error"
+                      : undefined
+                  }
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              <div className="col-span-1">
+                <FormDropdown
+                  label="Have you paid Property Tax?"
+                  name="additionalInfo.propertyTax"
+                  id="additionalInfo.propertyTax"
+                  options={[
+                    {
+                      value: true,
+                      label: "Yes",
+                    },
+                    {
+                      value: false,
+                      label: "No",
+                    },
+                  ]}
+                  required={true}
+                  placeholder="Select Property Tax Status"
+                  aria-describedby={
+                    errors?.additionalInfo?.propertyTax &&
+                    touched?.additionalInfo?.propertyTax
+                      ? "additionalInfo.propertyTax-error"
+                      : undefined
+                  }
+                />
+              </div>
+              <div className="col-span-1">
+                <FormPhoneInput
+                  label="Secondary Phone Number"
+                  name="additionalInfo.secondaryPhoneNumber"
+                  id="additionalInfo.secondaryPhoneNumber"
+                  defaultCountry="in" // Set to India as your default
+                  placeholder="Enter phone number"
+                  className="border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-red-500 focus:border-red-500"
+                />
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </>
   );

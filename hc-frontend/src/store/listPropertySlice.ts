@@ -51,14 +51,14 @@ interface ResaleDetails {
   powerBackup: string;
   furnishing: string;
   parking: boolean;
-  khataCertificate: boolean;
-  saleDeed: boolean;
-  propertyTax: boolean;
 }
 
 interface AdditionalInfo {
   whoWillShowProperty: string;
   secondaryPhoneNumber: string;
+  khataCertificate: string;
+  saleDeed: boolean;
+  propertyTax: boolean;
 }
 
 export interface FileData {
@@ -162,6 +162,9 @@ const initialData: {
   additionalInfo: {
     whoWillShowProperty: "",
     secondaryPhoneNumber: "",
+    khataCertificate: "",
+    saleDeed: false,
+    propertyTax: false,
   },
   resaleDetails: {
     price: 0,
@@ -174,9 +177,6 @@ const initialData: {
     powerBackup: "",
     furnishing: "",
     parking: false,
-    khataCertificate: false,
-    saleDeed: false,
-    propertyTax: false,
   },
 };
 

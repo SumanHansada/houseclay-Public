@@ -84,14 +84,14 @@ export interface FormValues {
     powerBackup: string;
     furnishing: string;
     parking: boolean;
-    khataCertificate: boolean;
-    saleDeed: boolean;
-    propertyTax: boolean;
   };
   images: PropertyPhoto[];
   additionalInfo: {
     whoWillShowProperty: string;
     secondaryPhoneNumber: string;
+    khataCertificate: string;
+    saleDeed: boolean;
+    propertyTax: boolean;
   };
 }
 
@@ -201,7 +201,7 @@ export default function ListPropertyTypeLayout({
         if (type === "resale") {
           updatedSteps.delete(FormStep.RESALE_DETAILS);
           setCurrentStep(FormStep.RESALE_DETAILS);
-          setRoute(RouteStep.RENTAL_DETAILS);
+          setRoute(RouteStep.RESALE_DETAILS);
         } else {
           updatedSteps.delete(FormStep.RENTAL_DETAILS);
           setCurrentStep(FormStep.RENTAL_DETAILS);
