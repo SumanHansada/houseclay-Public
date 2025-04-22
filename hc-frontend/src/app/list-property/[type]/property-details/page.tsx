@@ -19,22 +19,6 @@ import PropertyFormSkeleton from "./components/PropertyFormSkeleton";
 
 export const dynamicParams = true;
 
-const propertySchema = Yup.object({
-  propertyDetails: Yup.object({
-    propertyType: Yup.string().required("Property type is required"),
-    builtUpArea: Yup.number()
-      .required("Built up area is required")
-      .positive("Area must be positive"),
-    facing: Yup.string().required("Facing is required"),
-    bhkType: Yup.string().required("BHK type is required"),
-    ownershipType: Yup.string().required("Ownership type is required"),
-    propertyAge: Yup.string().required("Property age is required"),
-    floor: Yup.string().required("Floor is required"),
-    totalFloor: Yup.string().required("Total floor is required"),
-    floorType: Yup.string().required("Floor type is required"),
-  }),
-});
-
 const PropertyDetailsPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { values, errors, touched, setFieldError, setErrors } =
@@ -46,6 +30,34 @@ const PropertyDetailsPage: React.FC = () => {
   );
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
+
+  const propertySchema = Yup.object({
+    propertyDetails: Yup.object({
+      propertyType: Yup.string().required("Property type is required"),
+      builtUpArea: Yup.number()
+        .required("Built up area is required")
+        .positive("Area must be positive"),
+      facing:
+        formKey === "flatmatesForm"
+          ? Yup.string()
+          : Yup.string().required("Facing is required"),
+      bhkType: Yup.string().required("BHK type is required"),
+      ownershipType:
+        formKey === "flatmatesForm"
+          ? Yup.string()
+          : Yup.string().required("Ownership type is required"),
+      propertyAge:
+        formKey === "flatmatesForm"
+          ? Yup.string()
+          : Yup.string().required("Property age is required"),
+      floor: Yup.string().required("Floor is required"),
+      totalFloor: Yup.string().required("Total floor is required"),
+      floorType:
+        formKey === "flatmatesForm"
+          ? Yup.string()
+          : Yup.string().required("Floor type is required"),
+    }),
+  });
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -134,139 +146,207 @@ const PropertyDetailsPage: React.FC = () => {
         />
 
         {/* BUILT UP AREA + FACING */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          <div>
-            <label
-              htmlFor="propertyDetails.builtUpArea"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Built Up Area<span className="text-red-500">*</span>
-            </label>
-            <div className="flex">
-              <Field
-                type="number"
-                id="propertyDetails.builtUpArea"
-                name="propertyDetails.builtUpArea"
-                className={`w-full p-3 border rounded-r-none ${
-                  errors?.propertyDetails?.builtUpArea &&
-                  touched?.propertyDetails?.builtUpArea
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-l-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500`}
-              />
-              <span
-                className={`inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-l-0 ${
-                  errors?.propertyDetails?.builtUpArea &&
-                  touched?.propertyDetails?.builtUpArea
-                    ? "ml-0.5"
-                    : ""
-                } border-gray-300 rounded-r-xl`}
+        {(formKey === "rentForm" || formKey === "resaleForm") && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label
+                htmlFor="propertyDetails.builtUpArea"
+                className="block text-sm font-medium text-gray-700 mb-1"
               >
-                Sq.ft
-              </span>
+                Built Up Area<span className="text-red-500">*</span>
+              </label>
+              <div className="flex">
+                <Field
+                  type="number"
+                  id="propertyDetails.builtUpArea"
+                  name="propertyDetails.builtUpArea"
+                  className={`w-full p-3 border rounded-r-none ${
+                    errors?.propertyDetails?.builtUpArea &&
+                    touched?.propertyDetails?.builtUpArea
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  } rounded-l-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500`}
+                />
+                <span
+                  className={`inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-l-0 ${
+                    errors?.propertyDetails?.builtUpArea &&
+                    touched?.propertyDetails?.builtUpArea
+                      ? "ml-0.5"
+                      : ""
+                  } border-gray-300 rounded-r-xl`}
+                >
+                  Sq.ft
+                </span>
+              </div>
+              <ErrorMessage
+                name="propertyDetails.builtUpArea"
+                component="div"
+                className="mt-1 text-sm text-red-500"
+              />
             </div>
-            <ErrorMessage
-              name="propertyDetails.builtUpArea"
-              component="div"
-              className="mt-1 text-sm text-red-500"
+
+            <FormDropdown
+              label="Facing"
+              name="propertyDetails.facing"
+              id="propertyDetails.facing"
+              options={[
+                { value: "East", label: "East" },
+                { value: "West", label: "West" },
+                { value: "North", label: "North" },
+                { value: "South", label: "South" },
+                { value: "North-East", label: "North-East" },
+                { value: "North-West", label: "North-West" },
+                { value: "South-East", label: "South-East" },
+                { value: "South-West", label: "South-West" },
+              ]}
+              required
+              placeholder="Select facing direction"
+              aria-describedby={
+                errors?.propertyDetails?.facing &&
+                touched?.propertyDetails?.facing
+                  ? "propertyDetails.facing-error"
+                  : undefined
+              }
             />
           </div>
-
-          <FormDropdown
-            label="Facing"
-            name="propertyDetails.facing"
-            id="propertyDetails.facing"
-            options={[
-              { value: "East", label: "East" },
-              { value: "West", label: "West" },
-              { value: "North", label: "North" },
-              { value: "South", label: "South" },
-              { value: "North-East", label: "North-East" },
-              { value: "North-West", label: "North-West" },
-              { value: "South-East", label: "South-East" },
-              { value: "South-West", label: "South-West" },
-            ]}
-            required
-            placeholder="Select facing direction"
-            aria-describedby={
-              errors?.propertyDetails?.facing &&
-              touched?.propertyDetails?.facing
-                ? "propertyDetails.facing-error"
-                : undefined
-            }
-          />
-        </div>
+        )}
 
         {/* BHK TYPE, OWNERSHIP, AGE */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          <FormDropdown
-            label="BHK Type"
-            name="propertyDetails.bhkType"
-            id="propertyDetails.bhkType"
-            options={[
-              { value: "1BHK", label: "1 BHK" },
-              { value: "2BHK", label: "2 BHK" },
-              { value: "3BHK", label: "3 BHK" },
-              { value: "4BHK", label: "4 BHK" },
-              { value: "5+BHK", label: "5+ BHK" },
-            ]}
-            required
-            placeholder="Select BHK Type"
-            aria-describedby={
-              errors?.propertyDetails?.bhkType &&
-              touched?.propertyDetails?.bhkType
-                ? "propertyDetails.bhkType-error"
-                : undefined
-            }
-          />
+        {(formKey === "rentForm" || formKey === "resaleForm") && (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <FormDropdown
+              label="BHK Type"
+              name="propertyDetails.bhkType"
+              id="propertyDetails.bhkType"
+              options={[
+                { value: "1BHK", label: "1 BHK" },
+                { value: "2BHK", label: "2 BHK" },
+                { value: "3BHK", label: "3 BHK" },
+                { value: "4BHK", label: "4 BHK" },
+                { value: "5+BHK", label: "5+ BHK" },
+              ]}
+              required
+              placeholder="Select BHK Type"
+              aria-describedby={
+                errors?.propertyDetails?.bhkType &&
+                touched?.propertyDetails?.bhkType
+                  ? "propertyDetails.bhkType-error"
+                  : undefined
+              }
+            />
 
-          <FormDropdown
-            label="Ownership Type"
-            name="propertyDetails.ownershipType"
-            id="propertyDetails.ownershipType"
-            options={[
-              { value: "Self Owned", label: "Self Owned" },
-              { value: "Rented", label: "Rented" },
-              {
-                value: "Co-operative Society",
-                label: "Co-operative Society",
-              },
-              { value: "Power of Attorney", label: "Power of Attorney" },
-            ]}
-            required
-            placeholder="Select ownership type"
-            aria-describedby={
-              errors?.propertyDetails?.ownershipType &&
-              touched?.propertyDetails?.ownershipType
-                ? "propertyDetails.ownershipType-error"
-                : undefined
-            }
-          />
+            <FormDropdown
+              label="Ownership Type"
+              name="propertyDetails.ownershipType"
+              id="propertyDetails.ownershipType"
+              options={[
+                { value: "Self Owned", label: "Self Owned" },
+                { value: "Rented", label: "Rented" },
+                {
+                  value: "Co-operative Society",
+                  label: "Co-operative Society",
+                },
+                { value: "Power of Attorney", label: "Power of Attorney" },
+              ]}
+              required
+              placeholder="Select ownership type"
+              aria-describedby={
+                errors?.propertyDetails?.ownershipType &&
+                touched?.propertyDetails?.ownershipType
+                  ? "propertyDetails.ownershipType-error"
+                  : undefined
+              }
+            />
 
-          <FormDropdown
-            label="Property Age"
-            name="propertyDetails.propertyAge"
-            id="propertyDetails.propertyAge"
-            options={[
-              { value: "Under Construction", label: "Under Construction" },
-              { value: "Less than 1 year", label: "Less than 1 year" },
-              { value: "1-5 years", label: "1-5 years" },
-              { value: "5-10 years", label: "5-10 years" },
-              { value: "More than 10 year", label: "More than 10 year" },
-            ]}
-            required
-            placeholder="Select property age"
-            aria-describedby={
-              errors?.propertyDetails?.propertyAge &&
-              touched?.propertyDetails?.propertyAge
-                ? "propertyDetails.propertyAge-error"
-                : undefined
-            }
-          />
-        </div>
+            <FormDropdown
+              label="Property Age"
+              name="propertyDetails.propertyAge"
+              id="propertyDetails.propertyAge"
+              options={[
+                { value: "Under Construction", label: "Under Construction" },
+                { value: "Less than 1 year", label: "Less than 1 year" },
+                { value: "1-5 years", label: "1-5 years" },
+                { value: "5-10 years", label: "5-10 years" },
+                { value: "More than 10 year", label: "More than 10 year" },
+              ]}
+              required
+              placeholder="Select property age"
+              aria-describedby={
+                errors?.propertyDetails?.propertyAge &&
+                touched?.propertyDetails?.propertyAge
+                  ? "propertyDetails.propertyAge-error"
+                  : undefined
+              }
+            />
+          </div>
+        )}
+
+        {formKey === "flatmatesForm" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label
+                htmlFor="propertyDetails.builtUpArea"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Built Up Area<span className="text-red-500">*</span>
+              </label>
+              <div className="flex">
+                <Field
+                  type="number"
+                  id="propertyDetails.builtUpArea"
+                  name="propertyDetails.builtUpArea"
+                  className={`w-full p-3 border rounded-r-none ${
+                    errors?.propertyDetails?.builtUpArea &&
+                    touched?.propertyDetails?.builtUpArea
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  } rounded-l-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500`}
+                />
+                <span
+                  className={`inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-l-0 ${
+                    errors?.propertyDetails?.builtUpArea &&
+                    touched?.propertyDetails?.builtUpArea
+                      ? "ml-0.5"
+                      : ""
+                  } border-gray-300 rounded-r-xl`}
+                >
+                  Sq.ft
+                </span>
+              </div>
+              <ErrorMessage
+                name="propertyDetails.builtUpArea"
+                component="div"
+                className="mt-1 text-sm text-red-500"
+              />
+            </div>
+
+            <FormDropdown
+              label="BHK Type"
+              name="propertyDetails.bhkType"
+              id="propertyDetails.bhkType"
+              options={[
+                { value: "1BHK", label: "1 BHK" },
+                { value: "2BHK", label: "2 BHK" },
+                { value: "3BHK", label: "3 BHK" },
+                { value: "4BHK", label: "4 BHK" },
+                { value: "5+BHK", label: "5+ BHK" },
+              ]}
+              required
+              placeholder="Select BHK Type"
+              aria-describedby={
+                errors?.propertyDetails?.bhkType &&
+                touched?.propertyDetails?.bhkType
+                  ? "propertyDetails.bhkType-error"
+                  : undefined
+              }
+            />
+          </div>
+        )}
 
         {/* FLOOR, TOTAL FLOOR, FLOOR TYPE */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div
+          className={`grid grid-cols-1 md:grid-cols-2 ${formKey === "rentForm" || formKey === "resaleForm" ? "xl:grid-cols-3" : ""} gap-6`}
+        >
           <FormDropdown
             label="Floor"
             name="propertyDetails.floor"
@@ -308,26 +388,28 @@ const PropertyDetailsPage: React.FC = () => {
             }
           />
 
-          <FormDropdown
-            label="Floor Type"
-            name="propertyDetails.floorType"
-            id="floorType"
-            options={[
-              { value: "Mosaic", label: "Mosaic" },
-              { value: "Marble", label: "Marble" },
-              { value: "Granite", label: "Granite" },
-              { value: "Vitrified", label: "Vitrified" },
-              { value: "Wooden", label: "Wooden" },
-            ]}
-            required
-            placeholder="Select floor type"
-            aria-describedby={
-              errors?.propertyDetails?.floorType &&
-              touched?.propertyDetails?.floorType
-                ? "floorType-error"
-                : undefined
-            }
-          />
+          {(formKey === "rentForm" || formKey === "resaleForm") && (
+            <FormDropdown
+              label="Floor Type"
+              name="propertyDetails.floorType"
+              id="floorType"
+              options={[
+                { value: "Mosaic", label: "Mosaic" },
+                { value: "Marble", label: "Marble" },
+                { value: "Granite", label: "Granite" },
+                { value: "Vitrified", label: "Vitrified" },
+                { value: "Wooden", label: "Wooden" },
+              ]}
+              required
+              placeholder="Select floor type"
+              aria-describedby={
+                errors?.propertyDetails?.floorType &&
+                touched?.propertyDetails?.floorType
+                  ? "floorType-error"
+                  : undefined
+              }
+            />
+          )}
         </div>
         <div className="mb-6">
           <label
