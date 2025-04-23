@@ -1,5 +1,6 @@
 import "./globals.css";
 
+import { AnimatePresence } from "framer-motion";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Nunito } from "next/font/google";
@@ -56,7 +57,9 @@ export default function RootLayout({
             <DeviceContextProvider>
               <DialogContextProvider>
                 <SkeletonProvider>
-                  <Layout>{children}</Layout>
+                  <AnimatePresence mode="wait">
+                    <Layout>{children}</Layout>
+                  </AnimatePresence>
                 </SkeletonProvider>
               </DialogContextProvider>
             </DeviceContextProvider>

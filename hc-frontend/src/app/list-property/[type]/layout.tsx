@@ -1,6 +1,7 @@
 "use client";
 
 import { Form, Formik, FormikProvider } from "formik";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { redirect, useParams, useRouter } from "next/navigation";
 import ListPropertySuccessSvg from "public/icons/list-property-success.svg";
@@ -285,6 +286,12 @@ export default function ListPropertyTypeLayout({
     }
   };
 
+  const slideVariants = {
+    initial: { x: 300, opacity: 0 }, // Slide in from the right
+    animate: { x: 0, opacity: 1 }, // Centered and visible
+    exit: { x: -300, opacity: 0 }, // Slide out to the left
+  };
+
   return (
     <div className="flex w-full h-full top-14">
       {/* Background SVG behind left section only */}
@@ -302,23 +309,32 @@ export default function ListPropertyTypeLayout({
         </div>
       </div>
       <div className="container right-0 ml-[33.33%] pt-12 pb-20 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
-        <div className="flex flex-col">
-          <Formik
-            initialValues={initialValues}
-            onSubmit={(values) => {
-              console.log("Submit all data:", values);
-              // send to backend
-            }}
-            validateOnChange={false}
-            validateOnBlur={false}
-          >
-            {(formik) => (
-              <Form>
-                <FormikProvider value={formik}>{children}</FormikProvider>
-              </Form>
-            )}
-          </Formik>
-        </div>
+        <motion.div
+          key={`${type}-${currentStep}`} // Key the animation to the route
+          variants={slideVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+        >
+          <div className="flex flex-col">
+            <Formik
+              initialValues={initialValues}
+              onSubmit={(values) => {
+                console.log("Submit all data:", values);
+                // send to backend
+              }}
+              validateOnChange={false}
+              validateOnBlur={false}
+            >
+              {(formik) => (
+                <Form>
+                  <FormikProvider value={formik}>{children}</FormikProvider>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </motion.div>
         <div className="fixed bottom-0 left-0 ml-[33.33%] right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 border-t border-t-gray-300 bg-white">
           <button
             type="button"

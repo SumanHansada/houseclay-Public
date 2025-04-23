@@ -1,6 +1,6 @@
 import "react-international-phone/style.css";
 
-import { useField, useFormikContext } from "formik";
+import { useField } from "formik";
 import { PhoneInput } from "react-international-phone";
 
 interface FormPhoneInputProps {
@@ -23,15 +23,13 @@ const FormPhoneInput = ({
   className = "",
 }: FormPhoneInputProps) => {
   const [field, meta, helpers] = useField(name);
-  const { validateForm } = useFormikContext();
   const hasError = meta.touched && meta.error;
 
   // Function to handle phone number change with immediate validation
   const handlePhoneChange = async (value: string) => {
-    await helpers.setValue(value);
+    const sanitizedPhone = value.replace(/^\+/, "");
+    await helpers.setValue(sanitizedPhone);
     await helpers.setTouched(true);
-    // Run validation immediately
-    validateForm();
   };
 
   return (
