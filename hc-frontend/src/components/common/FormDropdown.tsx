@@ -1,11 +1,9 @@
-import { useField, useFormikContext } from "formik";
+import { useField } from "formik";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
-import { FormValues } from "@/app/list-property/[type]/layout";
-
 interface DropdownOption {
-  value: string | boolean; // Allow boolean values
+  value: string | boolean;
   label: string;
 }
 
@@ -18,7 +16,7 @@ interface FormDropdownProps {
   placeholder?: string;
 }
 
-const FormDropdown = ({
+const FormDropdown: React.FC<FormDropdownProps> = ({
   label,
   name,
   id,
@@ -27,7 +25,6 @@ const FormDropdown = ({
   placeholder = "Select an option",
 }: FormDropdownProps) => {
   const [field, meta, helpers] = useField(name);
-  const { validateField } = useFormikContext<FormValues>();
   const [isOpen, setIsOpen] = useState(false);
   const hasError = meta.touched && meta.error;
 
@@ -39,8 +36,6 @@ const FormDropdown = ({
   const handleSelect = async (value: string | boolean) => {
     await helpers.setValue(value);
     await helpers.setTouched(true);
-    // Run validation immediately
-    await validateField(id || name);
     setIsOpen(false);
   };
 

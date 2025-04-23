@@ -29,6 +29,7 @@ const FormRadioGroup: React.FC<FormRadioGroupProps> = ({
   className = "",
 }) => {
   const [field, meta, helpers] = useField(name);
+  const hasError = meta.touched && meta.error;
 
   const handleFocus = () => {
     helpers.setTouched(true);
@@ -99,7 +100,7 @@ const FormRadioGroup: React.FC<FormRadioGroupProps> = ({
         ))}
       </div>
 
-      {meta.touched && meta.error ? (
+      {hasError ? (
         <div className="text-red-500 text-sm mt-1">{meta.error}</div>
       ) : null}
     </div>
