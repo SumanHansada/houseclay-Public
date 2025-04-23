@@ -34,17 +34,17 @@ const AdditionalInfoPage = () => {
     additionalInfo: Yup.object().shape({
       whoWillShowProperty: Yup.string(),
       secondaryPhoneNumber: Yup.string(),
-      khataCertificate: Yup.string().when("$formType", {
+      khataCertificate: Yup.string().when("$formKey", {
         is: "resaleForm",
         then: (schema) => schema.required("Khata Certificate is required"),
         otherwise: (schema) => schema.optional(),
       }),
-      saleDeed: Yup.boolean().when("$formType", {
+      saleDeed: Yup.boolean().when("$formKey", {
         is: "resaleForm",
         then: (schema) => schema.required("Sale Deed is required"),
         otherwise: (schema) => schema.optional(),
       }),
-      propertyTax: Yup.boolean().when("$formType", {
+      propertyTax: Yup.boolean().when("$formKey", {
         is: "resaleForm",
         then: (schema) => schema.required("Property Tax is required"),
         otherwise: (schema) => schema.optional(),
@@ -55,7 +55,7 @@ const AdditionalInfoPage = () => {
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {
-        await additionalInfoSchema.validate(values, { abortEarly: false });
+        await additionalInfoSchema.validate(values, { abortEarly: false, context: { formKey } });
         // Clear any previous errors
         setErrors({});
         // Set form data in the store

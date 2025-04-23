@@ -122,9 +122,6 @@ const RentalDetailsPage: React.FC = () => {
           "Deposit must be greater than zero",
           (value) => parseFloat(value || "0") > 0,
         ),
-      maintenanceCharges: Yup.string().required(
-        "Maintenance charges is required",
-      ),
       availableFrom: Yup.string().required("Available from is required"),
       furnishing: Yup.string().required("Furnishing is required"),
       preferredTenant: Yup.string().when("$formKey", {
@@ -167,7 +164,7 @@ const RentalDetailsPage: React.FC = () => {
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {
-        await rentalSchema.validate(values, { abortEarly: false });
+        await rentalSchema.validate(values, { abortEarly: false, context: { formKey } });
         // Clear any previous errors
         setErrors({});
         // Set form data in the store

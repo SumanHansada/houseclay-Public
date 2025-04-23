@@ -37,25 +37,25 @@ const PropertyDetailsPage: React.FC = () => {
       builtUpArea: Yup.number()
         .required("Built up area is required")
         .positive("Area must be positive"),
-      facing: Yup.string().when("$formType", {
+      facing: Yup.string().when("$formKey", {
         is: "flatmatesForm",
         then: (schema) => schema.optional(),
         otherwise: (schema) => schema.required("Facing is required"),
       }),
       bhkType: Yup.string().required("BHK type is required"),
-      ownershipType: Yup.string().when("$formType", {
+      ownershipType: Yup.string().when("$formKey", {
         is: "flatmatesForm",
         then: (schema) => schema.optional(),
         otherwise: (schema) => schema.required("Ownership type is required"),
       }),
-      propertyAge: Yup.string().when("$formType", {
+      propertyAge: Yup.string().when("$formKey", {
         is: "flatmatesForm",
         then: (schema) => schema.optional(),
         otherwise: (schema) => schema.required("Property age is required"),
       }),
       floor: Yup.string().required("Floor is required"),
       totalFloor: Yup.string().required("Total floor is required"),
-      floorType: Yup.string().when("$formType", {
+      floorType: Yup.string().when("$formKey", {
         is: "flatmatesForm",
         then: (schema) => schema.optional(),
         otherwise: (schema) => schema.required("Floor type is required"),
@@ -74,7 +74,7 @@ const PropertyDetailsPage: React.FC = () => {
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {
-        await propertySchema.validate(values, { abortEarly: false });
+        await propertySchema.validate(values, { abortEarly: false, context: { formKey } });
         // Clear any previous errors
         setErrors({});
         // Set form data in the store
