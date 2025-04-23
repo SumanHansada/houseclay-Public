@@ -3,7 +3,7 @@
 import { useFormikContext } from "formik";
 import { MapPin } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
@@ -18,7 +18,6 @@ import {
 import { RootState } from "@/store/store";
 
 import { FormValues } from "../layout";
-import LocationFormSkeleton from "./LocationFormSkeleton";
 
 export const dynamicParams = true;
 
@@ -38,7 +37,6 @@ const localitySchema = Yup.object().shape({
 });
 
 const LocalityDetailsPage: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(true);
   const { values, errors, touched, setFieldError, setErrors, setFieldValue } =
     useFormikContext<FormValues>();
   const params = useParams();
@@ -48,13 +46,6 @@ const LocalityDetailsPage: React.FC = () => {
   );
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
 
   const cityLatLngMapping: Record<string, { lat: number; lng: number }> = {
     Bengaluru: { lat: 12.9716, lng: 77.5946 },
@@ -117,10 +108,6 @@ const LocalityDetailsPage: React.FC = () => {
     setErrors,
     setFieldError,
   ]);
-
-  if (isLoading) {
-    return <LocationFormSkeleton />;
-  }
 
   return (
     <>

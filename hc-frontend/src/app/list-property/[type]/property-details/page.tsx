@@ -2,7 +2,7 @@
 
 import { ErrorMessage, Field, useFormikContext } from "formik";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
@@ -15,7 +15,6 @@ import {
 import { RootState } from "@/store/store";
 
 import { FormValues } from "../layout";
-import PropertyFormSkeleton from "./components/PropertyFormSkeleton";
 
 export const dynamicParams = true;
 
@@ -52,7 +51,6 @@ const propertySchema = Yup.object({
 });
 
 const PropertyDetailsPage: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(true);
   const { values, errors, touched, setFieldError, setErrors } =
     useFormikContext<FormValues>();
   const params = useParams();
@@ -62,14 +60,6 @@ const PropertyDetailsPage: React.FC = () => {
   );
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     const validateAndDispatch = async () => {
@@ -117,8 +107,6 @@ const PropertyDetailsPage: React.FC = () => {
     setErrors,
     setFieldError,
   ]);
-
-  if (isLoading) return <PropertyFormSkeleton />;
 
   return (
     <>
