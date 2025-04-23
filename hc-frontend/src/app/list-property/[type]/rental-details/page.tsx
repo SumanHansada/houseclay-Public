@@ -46,6 +46,8 @@ import { RootState } from "@/store/store";
 
 import { FormValues } from "../layout";
 
+export const dynamicParams = true;
+
 const FamilyIcon = FamilyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const CompanyIcon = CompanyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const BachelorIcon = BachelorIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -94,77 +96,79 @@ const FirstAidKitIcon = FirstAidKitIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
 
+const rentalSchema = Yup.object().shape({
+  rentalDetails: Yup.object().shape({
+    rent: Yup.string()
+      .required("Rent is required")
+      .test(
+        "is-greater-than-zero",
+        "Rent must be greater than zero",
+        (value) => parseFloat(value || "0") > 0,
+      ),
+    deposit: Yup.string()
+      .required("Deposit is required")
+      .test(
+        "is-greater-than-zero",
+        "Deposit must be greater than zero",
+        (value) => parseFloat(value || "0") > 0,
+      ),
+    availableFrom: Yup.string().required("Available from is required"),
+    furnishing: Yup.string().required("Furnishing is required"),
+    preferredTenant: Yup.string().when("$formKey", {
+      is: "rentForm",
+      then: (schema) => schema.required("Preferred tenant is required"),
+      otherwise: (schema) => schema.optional(),
+    }),
+    waterSupply: Yup.string().required("Water supply is required"),
+    powerBackup: Yup.string().required("Power backup is required"),
+    parking: Yup.boolean().required("Parking is required"),
+    nonVegAllowed: Yup.boolean().required("Non veg allowed is required"),
+    tenantType: Yup.string().when("$formKey", {
+      is: "flatmatesForm",
+      then: (schema) => schema.required("Preferred tenant is required"),
+      otherwise: (schema) => schema.optional(),
+    }),
+    attachedBathroom: Yup.boolean().when("$formKey", {
+      is: "flatmatesForm",
+      then: (schema) => schema.required("Attached bathroom is required"),
+      otherwise: (schema) => schema.optional(),
+    }),
+    bathroomType: Yup.string().when("$formKey", {
+      is: "flatmatesForm",
+      then: (schema) => schema.required("Bathroom type is required"),
+      otherwise: (schema) => schema.optional(),
+    }),
+    smokingPreference: Yup.boolean().when("$formKey", {
+      is: "flatmatesForm",
+      then: (schema) => schema.required("Smoking preference is required"),
+      otherwise: (schema) => schema.optional(),
+    }),
+    drinkingPreference: Yup.boolean().when("$formKey", {
+      is: "flatmatesForm",
+      then: (schema) => schema.required("Drinking preference is required"),
+      otherwise: (schema) => schema.optional(),
+    }),
+  }),
+});
+
 const RentalDetailsPage: React.FC = () => {
   const { values, errors, touched, setFieldError, setErrors } =
     useFormikContext<FormValues>();
   const params = useParams();
-  const formKey = `${params?.type}Form` as FormType; // Optional: add type assertion
-  console.log("formKey", formKey);
+  const formKey = `${params?.type}Form` as FormType;
   const formState = useSelector(
     (state: RootState) => state.listProperty[formKey],
   );
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
 
-  const rentalSchema = Yup.object().shape({
-    rentalDetails: Yup.object().shape({
-      rent: Yup.string()
-        .required("Rent is required")
-        .test(
-          "is-greater-than-zero",
-          "Rent must be greater than zero",
-          (value) => parseFloat(value || "0") > 0,
-        ),
-      deposit: Yup.string()
-        .required("Deposit is required")
-        .test(
-          "is-greater-than-zero",
-          "Deposit must be greater than zero",
-          (value) => parseFloat(value || "0") > 0,
-        ),
-      availableFrom: Yup.string().required("Available from is required"),
-      furnishing: Yup.string().required("Furnishing is required"),
-      preferredTenant: Yup.string().when("$formKey", {
-        is: "rentForm",
-        then: (schema) => schema.required("Preferred tenant is required"),
-        otherwise: (schema) => schema.optional(),
-      }),
-      waterSupply: Yup.string().required("Water supply is required"),
-      powerBackup: Yup.string().required("Power backup is required"),
-      parking: Yup.boolean().required("Parking is required"),
-      nonVegAllowed: Yup.boolean().required("Non veg allowed is required"),
-      tenantType: Yup.string().when("$formKey", {
-        is: "flatmatesForm",
-        then: (schema) => schema.required("Tenant type is required"),
-        otherwise: (schema) => schema.optional(),
-      }),
-      attachedBathroom: Yup.boolean().when("$formKey", {
-        is: "flatmatesForm",
-        then: (schema) => schema.required("Attached bathroom is required"),
-        otherwise: (schema) => schema.optional(),
-      }),
-      bathroomType: Yup.string().when("$formKey", {
-        is: "flatmatesForm",
-        then: (schema) => schema.required("Bathroom type is required"),
-        otherwise: (schema) => schema.optional(),
-      }),
-      smokingPreference: Yup.boolean().when("$formKey", {
-        is: "flatmatesForm",
-        then: (schema) => schema.required("Smoking preference is required"),
-        otherwise: (schema) => schema.optional(),
-      }),
-      drinkingPreference: Yup.boolean().when("$formKey", {
-        is: "flatmatesForm",
-        then: (schema) => schema.required("Drinking preference is required"),
-        otherwise: (schema) => schema.optional(),
-      }),
-    }),
-  });
-
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {
-        await rentalSchema.validate(values, { abortEarly: false, context: { formKey } });
+        await rentalSchema.validate(values, {
+          abortEarly: false,
+          context: { formKey },
+        });
         // Clear any previous errors
         setErrors({});
         // Set form data in the store

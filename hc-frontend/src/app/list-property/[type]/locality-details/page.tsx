@@ -22,6 +22,21 @@ import LocationFormSkeleton from "./LocationFormSkeleton";
 
 export const dynamicParams = true;
 
+const localitySchema = Yup.object().shape({
+  localityDetails: Yup.object().shape({
+    city: Yup.string().required("City is required"),
+    location: Yup.string().required("Location is required"),
+    latitude: Yup.number()
+      .required("Latitude is required")
+      .min(-90, "Latitude must be greater than or equal to -90")
+      .max(90, "Latitude must be less than or equal to 90"),
+    longitude: Yup.number()
+      .required("Longitude is required")
+      .min(-180, "Longitude must be greater than or equal to -180")
+      .max(180, "Longitude must be less than or equal to 180"),
+  }),
+});
+
 const LocalityDetailsPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { values, errors, touched, setFieldError, setErrors, setFieldValue } =
@@ -40,21 +55,6 @@ const LocalityDetailsPage: React.FC = () => {
     }, 100);
     return () => clearTimeout(timer);
   }, []);
-
-  const localitySchema = Yup.object().shape({
-    localityDetails: Yup.object().shape({
-      city: Yup.string().required("City is required"),
-      location: Yup.string().required("Location is required"),
-      latitude: Yup.number()
-        .required("Latitude is required")
-        .min(-90, "Latitude must be greater than or equal to -90")
-        .max(90, "Latitude must be less than or equal to 90"),
-      longitude: Yup.number()
-        .required("Longitude is required")
-        .min(-180, "Longitude must be greater than or equal to -180")
-        .max(180, "Longitude must be less than or equal to 180"),
-    }),
-  });
 
   const cityLatLngMapping: Record<string, { lat: number; lng: number }> = {
     Bengaluru: { lat: 12.9716, lng: 77.5946 },

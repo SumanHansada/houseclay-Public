@@ -19,6 +19,38 @@ import PropertyFormSkeleton from "./components/PropertyFormSkeleton";
 
 export const dynamicParams = true;
 
+const propertySchema = Yup.object({
+  propertyDetails: Yup.object({
+    propertyType: Yup.string().required("Property type is required"),
+    builtUpArea: Yup.number()
+      .required("Built up area is required")
+      .positive("Area must be positive"),
+    facing: Yup.string().when("$formKey", {
+      is: "flatmatesForm",
+      then: (schema) => schema.optional(),
+      otherwise: (schema) => schema.required("Facing is required"),
+    }),
+    bhkType: Yup.string().required("BHK type is required"),
+    ownershipType: Yup.string().when("$formKey", {
+      is: "flatmatesForm",
+      then: (schema) => schema.optional(),
+      otherwise: (schema) => schema.required("Ownership type is required"),
+    }),
+    propertyAge: Yup.string().when("$formKey", {
+      is: "flatmatesForm",
+      then: (schema) => schema.optional(),
+      otherwise: (schema) => schema.required("Property age is required"),
+    }),
+    floor: Yup.string().required("Floor is required"),
+    totalFloor: Yup.string().required("Total floor is required"),
+    floorType: Yup.string().when("$formKey", {
+      is: "flatmatesForm",
+      then: (schema) => schema.optional(),
+      otherwise: (schema) => schema.required("Floor type is required"),
+    }),
+  }),
+});
+
 const PropertyDetailsPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { values, errors, touched, setFieldError, setErrors } =
@@ -31,38 +63,6 @@ const PropertyDetailsPage: React.FC = () => {
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
 
-  const propertySchema = Yup.object({
-    propertyDetails: Yup.object({
-      propertyType: Yup.string().required("Property type is required"),
-      builtUpArea: Yup.number()
-        .required("Built up area is required")
-        .positive("Area must be positive"),
-      facing: Yup.string().when("$formKey", {
-        is: "flatmatesForm",
-        then: (schema) => schema.optional(),
-        otherwise: (schema) => schema.required("Facing is required"),
-      }),
-      bhkType: Yup.string().required("BHK type is required"),
-      ownershipType: Yup.string().when("$formKey", {
-        is: "flatmatesForm",
-        then: (schema) => schema.optional(),
-        otherwise: (schema) => schema.required("Ownership type is required"),
-      }),
-      propertyAge: Yup.string().when("$formKey", {
-        is: "flatmatesForm",
-        then: (schema) => schema.optional(),
-        otherwise: (schema) => schema.required("Property age is required"),
-      }),
-      floor: Yup.string().required("Floor is required"),
-      totalFloor: Yup.string().required("Total floor is required"),
-      floorType: Yup.string().when("$formKey", {
-        is: "flatmatesForm",
-        then: (schema) => schema.optional(),
-        otherwise: (schema) => schema.required("Floor type is required"),
-      }),
-    }),
-  });
-
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -74,7 +74,10 @@ const PropertyDetailsPage: React.FC = () => {
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {
-        await propertySchema.validate(values, { abortEarly: false, context: { formKey } });
+        await propertySchema.validate(values, {
+          abortEarly: false,
+          context: { formKey },
+        });
         // Clear any previous errors
         setErrors({});
         // Set form data in the store

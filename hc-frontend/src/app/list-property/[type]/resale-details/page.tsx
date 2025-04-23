@@ -81,6 +81,22 @@ const FirstAidKitIcon = FirstAidKitIconSvg as React.FC<
 
 export const dynamicParams = true;
 
+const resaleSchema = Yup.object().shape({
+  resaleDetails: Yup.object().shape({
+    price: Yup.string()
+      .required("Price is required")
+      .test(
+        "is-greater-than-zero",
+        "Price must be greater than zero",
+        (value) => parseFloat(value || "0") > 0,
+      ),
+    availableFrom: Yup.string().required("Available from is required"),
+    bathrooms: Yup.number().required("Bathrooms is required"),
+    furnishing: Yup.string().required("Furnishing is required"),
+    parking: Yup.boolean().required("Parking is required"),
+  }),
+});
+
 const ResaleDetailsPage: React.FC = () => {
   const { values, errors, touched, setFieldError, setErrors } =
     useFormikContext<FormValues>();
@@ -91,22 +107,6 @@ const ResaleDetailsPage: React.FC = () => {
   );
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
-
-  const resaleSchema = Yup.object().shape({
-    resaleDetails: Yup.object().shape({
-      price: Yup.string()
-        .required("Price is required")
-        .test(
-          "is-greater-than-zero",
-          "Price must be greater than zero",
-          (value) => parseFloat(value || "0") > 0,
-        ),
-      availableFrom: Yup.string().required("Available from is required"),
-      bathrooms: Yup.number().required("Bathrooms is required"),
-      furnishing: Yup.string().required("Furnishing is required"),
-      parking: Yup.boolean().required("Parking is required"),
-    }),
-  });
 
   useEffect(() => {
     const validateAndDispatch = async () => {

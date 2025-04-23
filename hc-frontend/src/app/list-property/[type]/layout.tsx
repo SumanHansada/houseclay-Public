@@ -100,6 +100,8 @@ export interface FormValues {
   };
 }
 
+export const dynamicParams = true;
+
 export default function ListPropertyTypeLayout({
   children,
 }: {

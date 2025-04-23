@@ -19,6 +19,28 @@ import { FormValues } from "../layout";
 
 export const dynamicParams = true;
 
+const additionalInfoSchema = Yup.object().shape({
+  additionalInfo: Yup.object().shape({
+    whoWillShowProperty: Yup.string(),
+    secondaryPhoneNumber: Yup.string(),
+    khataCertificate: Yup.string().when("$formKey", {
+      is: "resaleForm",
+      then: (schema) => schema.required("Khata Certificate is required"),
+      otherwise: (schema) => schema.optional(),
+    }),
+    saleDeed: Yup.boolean().when("$formKey", {
+      is: "resaleForm",
+      then: (schema) => schema.required("Sale Deed is required"),
+      otherwise: (schema) => schema.optional(),
+    }),
+    propertyTax: Yup.boolean().when("$formKey", {
+      is: "resaleForm",
+      then: (schema) => schema.required("Property Tax is required"),
+      otherwise: (schema) => schema.optional(),
+    }),
+  }),
+});
+
 const AdditionalInfoPage = () => {
   const { values, errors, touched, setFieldError, setErrors } =
     useFormikContext<FormValues>();
@@ -30,32 +52,13 @@ const AdditionalInfoPage = () => {
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
 
-  const additionalInfoSchema = Yup.object().shape({
-    additionalInfo: Yup.object().shape({
-      whoWillShowProperty: Yup.string(),
-      secondaryPhoneNumber: Yup.string(),
-      khataCertificate: Yup.string().when("$formKey", {
-        is: "resaleForm",
-        then: (schema) => schema.required("Khata Certificate is required"),
-        otherwise: (schema) => schema.optional(),
-      }),
-      saleDeed: Yup.boolean().when("$formKey", {
-        is: "resaleForm",
-        then: (schema) => schema.required("Sale Deed is required"),
-        otherwise: (schema) => schema.optional(),
-      }),
-      propertyTax: Yup.boolean().when("$formKey", {
-        is: "resaleForm",
-        then: (schema) => schema.required("Property Tax is required"),
-        otherwise: (schema) => schema.optional(),
-      }),
-    }),
-  });
-
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {
-        await additionalInfoSchema.validate(values, { abortEarly: false, context: { formKey } });
+        await additionalInfoSchema.validate(values, {
+          abortEarly: false,
+          context: { formKey },
+        });
         // Clear any previous errors
         setErrors({});
         // Set form data in the store
