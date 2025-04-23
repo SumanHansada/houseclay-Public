@@ -19,7 +19,7 @@ const PropertyTypeOption: React.FC<PropertyTypeOptionProps> = ({
     <div className="flex flex-1 focus-within:ring-1 focus-within:rounded-lg focus-within:ring-red-500">
       <label
         htmlFor={id}
-        className={`flex items-start lg:gap-8 gap-4 justify-center lg:p-4 p-2 rounded-lg border cursor-pointer text-center ${
+        className={`flex flex-1 items-start justify-between lg:p-4 p-2 rounded-lg border border-gray-300 cursor-pointer text-center ${
           isSelected ? "border-red-500 bg-red-50" : ""
         }`}
       >

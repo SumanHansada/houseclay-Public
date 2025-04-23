@@ -166,7 +166,7 @@ const ListPropertyPage = dynamic(
                 />
               </div>
               <div className="flex w-3/5 justify-around items-center">
-                <div className="max-w-lg my-0 mx-auto flex flex-col gap-8">
+                <div className="max-w-lg lg:w-full my-0 mx-auto flex flex-col gap-8">
                   {!token && (
                     <>
                       <div className="flex flex-col">
@@ -275,7 +275,7 @@ const ListPropertyPage = dynamic(
                       <h1 className="lg:text-2xl text-xl lg:mb-8 mb-4">
                         Tell us about your property
                       </h1>
-                      <div className="flex justify-between lg:gap-8 gap-4 lg:mb-8 mb-4">
+                      <div className="grid grid-cols-3 lg:gap-4 gap-2 lg:mb-8 mb-4">
                         {propertyTypes.map((option) => (
                           <PropertyTypeOption
                             key={option.id}
