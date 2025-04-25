@@ -90,7 +90,7 @@ const FormDropdown: React.FC<FormDropdownProps> = ({
           id={id || name}
           className={`flex justify-between items-center w-full p-3 border ${
             hasError ? "border-red-500" : "border-gray-300"
-          } rounded-xl bg-white text-left focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500`}
+          } rounded-xl bg-white text-left`}
           onClick={() => setIsOpen(!isOpen)}
           onKeyDown={handleKeyDown}
           onBlur={() => {

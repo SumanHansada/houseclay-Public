@@ -361,7 +361,6 @@ const PropertyDetailsPage: React.FC = () => {
             label="Description"
             placeholder="Enter property description"
             rows={5}
-            required
           />
         </div>
       </div>

@@ -85,7 +85,7 @@ const FormInputField: React.FC<FormInputFieldProps> = ({
           type="text"
           id={id || name}
           placeholder={placeholder}
-          className={`w-full p-3 border focus:outline-none focus:ring-2 focus:mx-0.5 focus:ring-red-500 focus:border-red-500  ${
+          className={`w-full p-3 border ${
             prefix ? "rounded-none" : "rounded-l-xl"
           } ${suffix ? "rounded-none" : "rounded-r-xl"} ${className} ${
             meta.touched && meta.error ? "border-red-500" : "border-gray-300"

@@ -37,7 +37,7 @@ const FormTextArea: React.FC<FormTextAreaProps> = ({
         id={id || name}
         placeholder={placeholder}
         rows={rows}
-        className={`w-full p-3 border focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 rounded-xl ${
+        className={`w-full p-3 border rounded-xl ${
           meta.touched && meta.error ? "border-red-500" : "border-gray-300"
         } ${className}`}
         {...field}

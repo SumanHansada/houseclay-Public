@@ -189,7 +189,7 @@ const FormPlacesAutocomplete = ({
         placeholder={placeholder}
         className={`w-full p-3 border ${
           hasError ? "border-red-500" : "border-gray-300"
-        } rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500`}
+        } rounded-xl`}
         type="text"
         // These attributes help prevent browser's native autocomplete
         autoComplete="off"

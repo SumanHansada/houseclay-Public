@@ -177,7 +177,7 @@ const LocalityDetailsPage: React.FC = () => {
             lng: values.localityDetails.longitude,
           }}
           zoom={12}
-          className="h-full w-full rounded-lg shadow-lg"
+          className="h-full w-full border rounded-xl shadow-lg"
         />
       </div>
     </>
