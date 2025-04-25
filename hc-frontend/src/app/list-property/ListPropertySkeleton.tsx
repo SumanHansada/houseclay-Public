@@ -11,10 +11,12 @@ const ListPropertySkeleton: React.FC = () => {
           <div className="flex w-2/5 justify-around items-start">
             <Skeleton height={475} width={550} />
           </div>
-          <div className="flex w-3/5 flex-col gap-6">
-            <Skeleton height={40} width="70%" />
-            <Skeleton height={30} width="90%" />
-            <Skeleton height={50} width="100%" />
+          <div className="flex w-3/5 justify-around items-center">
+            <div className="max-w-lg lg:w-full my-0 mx-auto flex flex-col gap-8">
+              <Skeleton height={60} width="100%" />
+              <Skeleton height={60} width="100%" />
+              <Skeleton height={40} width="100%" />
+            </div>
           </div>
         </div>
       </section>
