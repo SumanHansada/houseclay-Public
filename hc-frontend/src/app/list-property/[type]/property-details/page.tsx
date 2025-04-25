@@ -1,12 +1,14 @@
 "use client";
 
-import { ErrorMessage, Field, useFormikContext } from "formik";
+import { useFormikContext } from "formik";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import FormDropdown from "@/components/common/FormDropdown";
+import FormInputField from "@/components/common/FormInputField";
+import FormTextArea from "@/components/common/FormTextArea";
 import {
   FormType,
   setFormValidity,
@@ -143,42 +145,15 @@ const PropertyDetailsPage: React.FC = () => {
         {/* BUILT UP AREA + FACING */}
         {(formKey === "rentForm" || formKey === "resaleForm") && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label
-                htmlFor="propertyDetails.builtUpArea"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Built Up Area<span className="text-red-500">*</span>
-              </label>
-              <div className="flex">
-                <Field
-                  type="number"
-                  id="propertyDetails.builtUpArea"
-                  name="propertyDetails.builtUpArea"
-                  className={`w-full p-3 border rounded-r-none ${
-                    errors?.propertyDetails?.builtUpArea &&
-                    touched?.propertyDetails?.builtUpArea
-                      ? "border-red-500"
-                      : "border-gray-300"
-                  } rounded-l-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500`}
-                />
-                <span
-                  className={`inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-l-0 ${
-                    errors?.propertyDetails?.builtUpArea &&
-                    touched?.propertyDetails?.builtUpArea
-                      ? "ml-0.5"
-                      : ""
-                  } border-gray-300 rounded-r-xl`}
-                >
-                  Sq.ft
-                </span>
-              </div>
-              <ErrorMessage
-                name="propertyDetails.builtUpArea"
-                component="div"
-                className="mt-1 text-sm text-red-500"
-              />
-            </div>
+            <FormInputField
+              name="propertyDetails.builtUpArea"
+              id="propertyDetails.builtUpArea"
+              label="Built Up Area"
+              dataType="number"
+              placeholder="Enter built up area"
+              suffix="Sq.ft"
+              required
+            />
 
             <FormDropdown
               label="Facing"
@@ -278,42 +253,15 @@ const PropertyDetailsPage: React.FC = () => {
 
         {formKey === "flatmatesForm" && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label
-                htmlFor="propertyDetails.builtUpArea"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Built Up Area<span className="text-red-500">*</span>
-              </label>
-              <div className="flex">
-                <Field
-                  type="number"
-                  id="propertyDetails.builtUpArea"
-                  name="propertyDetails.builtUpArea"
-                  className={`w-full p-3 border rounded-r-none ${
-                    errors?.propertyDetails?.builtUpArea &&
-                    touched?.propertyDetails?.builtUpArea
-                      ? "border-red-500"
-                      : "border-gray-300"
-                  } rounded-l-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500`}
-                />
-                <span
-                  className={`inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-l-0 ${
-                    errors?.propertyDetails?.builtUpArea &&
-                    touched?.propertyDetails?.builtUpArea
-                      ? "ml-0.5"
-                      : ""
-                  } border-gray-300 rounded-r-xl`}
-                >
-                  Sq.ft
-                </span>
-              </div>
-              <ErrorMessage
-                name="propertyDetails.builtUpArea"
-                component="div"
-                className="mt-1 text-sm text-red-500"
-              />
-            </div>
+            <FormInputField
+              name="propertyDetails.builtUpArea"
+              id="propertyDetails.builtUpArea"
+              label="Built Up Area"
+              dataType="number"
+              placeholder="Enter built up area"
+              suffix="Sq.ft"
+              required
+            />
 
             <FormDropdown
               label="BHK Type"
@@ -407,23 +355,13 @@ const PropertyDetailsPage: React.FC = () => {
           )}
         </div>
         <div className="mb-6">
-          <label
-            htmlFor="description"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Description
-          </label>
-          <Field
-            as="textarea"
-            id="description"
+          <FormTextArea
             name="propertyDetails.description"
+            id="propertyDetails.description"
+            label="Description"
+            placeholder="Enter property description"
             rows={5}
-            className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
-          />
-          <ErrorMessage
-            name="propertyDetails.description"
-            component="div"
-            className="mt-1 text-sm text-red-500"
+            required
           />
         </div>
       </div>

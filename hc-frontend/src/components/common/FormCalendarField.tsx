@@ -320,7 +320,7 @@ const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
           aria-invalid={meta.touched && meta.error ? "true" : "false"}
           aria-describedby={meta.error ? `${name}-error` : undefined}
           className={`
-            w-full p-3 border border-r-0 rounded-l-xl
+            w-full p-3 border rounded-l-xl focus:outline-none focus:ring-2 focus:mr-0.5 focus:ring-red-500 focus:border-red-500
             ${meta.touched && meta.error ? "border-red-500" : "border-gray-300"}
             ${disabled ? "bg-gray-100 cursor-not-allowed" : ""}
           `}
@@ -334,7 +334,7 @@ const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
           aria-label="Toggle calendar"
           aria-expanded={isOpen ? "true" : "false"}
           aria-controls={isOpen ? `${name}-calendar` : undefined}
-          className={`inline-flex items-center px-3 ${isOpen ? "bg-gray-200" : "bg-gray-100"} text-gray-500 border border-l-0 border-gray-300 rounded-r-xl`}
+          className={`inline-flex items-center px-3 focus:outline-none focus:ring-2 focus:ml-0.5 focus:border-l focus:ring-red-500 focus:border-red-500 ${isOpen ? "bg-gray-200" : "bg-gray-100"} text-gray-500 border border-l-0 border-gray-300 rounded-r-xl`}
         >
           <CalendarDays size={25} />
         </button>
@@ -365,7 +365,7 @@ const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
           <div
             id={`${name}-calendar`}
             ref={calendarRef}
-            className="absolute z-10 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-full md:w-80"
+            className="absolute right-0 z-10 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-full md:w-80"
             role="dialog"
             aria-modal="true"
             aria-label="Calendar"

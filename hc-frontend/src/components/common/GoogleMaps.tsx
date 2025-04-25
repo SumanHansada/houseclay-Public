@@ -45,46 +45,46 @@ const GoogleMaps: React.FC<GoogleMapsProps> = ({
   } = mapOptions;
 
   const { isLoaded, loadError } = useGoogleMapsAPI();
-  console.log("Google Maps API Loaded:", isLoaded);
-  console.log("Google Maps API Load Error:", loadError);
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading maps...</div>;
 
   return (
-    <Map
-      mapId={mapId}
-      center={center}
-      zoom={zoom}
-      className={className}
-      gestureHandling={"greedy"}
-      disableDefaultUI={false}
-      {...cleanMapOptions}
-    >
-      <AdvancedMarker position={{ lat: center.lat, lng: center.lng }}>
-        <Pin
-          background={"#FF5252"}
-          borderColor={"#B71C1C"}
-          glyphColor={"#FFFFFF"}
-        />
-      </AdvancedMarker>
-      {selectedLocation && (
-        <InfoWindow
-          position={selectedLocation.position}
-          onCloseClick={() => setSelectedLocation(null)}
-        >
-          <div className="p-2 max-w-xs">
-            <h3 className="font-semibold text-gray-800">
-              {selectedLocation.title}
-            </h3>
-            {selectedLocation.description && (
-              <p className="text-gray-600 text-sm mt-1">
-                {selectedLocation.description}
-              </p>
-            )}
-          </div>
-        </InfoWindow>
-      )}
-    </Map>
+    isLoaded && (
+      <Map
+        mapId={mapId}
+        center={center}
+        zoom={zoom}
+        className={className}
+        gestureHandling={"greedy"}
+        disableDefaultUI={false}
+        {...cleanMapOptions}
+      >
+        <AdvancedMarker position={{ lat: center.lat, lng: center.lng }}>
+          <Pin
+            background={"#FF5252"}
+            borderColor={"#B71C1C"}
+            glyphColor={"#FFFFFF"}
+          />
+        </AdvancedMarker>
+        {selectedLocation && (
+          <InfoWindow
+            position={selectedLocation.position}
+            onCloseClick={() => setSelectedLocation(null)}
+          >
+            <div className="p-2 max-w-xs">
+              <h3 className="font-semibold text-gray-800">
+                {selectedLocation.title}
+              </h3>
+              {selectedLocation.description && (
+                <p className="text-gray-600 text-sm mt-1">
+                  {selectedLocation.description}
+                </p>
+              )}
+            </div>
+          </InfoWindow>
+        )}
+      </Map>
+    )
   );
 };
 
