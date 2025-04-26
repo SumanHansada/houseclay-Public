@@ -26,7 +26,7 @@ const FormCheckbox: React.FC<FormCheckboxProps> = ({
   required = false,
   columns = 3,
   withIcons = false,
-  selectedColor = "border-red-500",
+  selectedColor = "border-red-500 bg-red-50",
   className = "",
   alignment = "center",
 }) => {
@@ -64,28 +64,46 @@ const FormCheckbox: React.FC<FormCheckboxProps> = ({
         </div>
       )}
 
-      <div className={`grid ${gridCols[columns]} gap-3 xl:gap-6`}>
+      <div className={`grid ${gridCols[columns]} gap-3 xl:gap-6`} role="group">
         {options.map((option) => (
           <div
             key={option.value}
             className={`
-              cursor-pointer border rounded-lg transition-all p-4
-              flex flex-col items-${alignment} justify-center
-              focus-within:ring-2 focus-within:rounded-xl focus-within:ring-red-500
+              border rounded-xl transition-all 
+              flex flex-col items-${alignment} justify-center 
               ${
                 isChecked(option.value)
-                  ? `${selectedColor} border-2`
+                  ? `${selectedColor} border`
                   : "border-gray-300 hover:border-gray-400"
+              }`}
+            tabIndex={0}
+            onClick={(e) => {
+              e.preventDefault();
+              handleToggle(option.value);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleToggle(option.value);
               }
-            `}
+            }}
+            aria-checked={isChecked(option.value)}
+            aria-labelledby={`${name}-label-${option.value}`}
+            role="checkbox"
           >
             <label
               htmlFor={`${name}-${option.value}`}
-              className={`flex flex-col w-full items-${alignment} justify-center cursor-pointer`}
+              id={`${name}-label-${option.value}`}
+              className={`block  cursor-pointer p-4 w-full h-full 
+                ${
+                  withIcons 
+                  ? "flex flex-col gap-2" 
+                  : "flex"
+                } 
+                  items-${alignment} justify-center`
+                }
             >
-              {withIcons && option.icon && (
-                <div className="mb-2">{option.icon}</div>
-              )}
+              {withIcons && option.icon}
               <span className={`text-${alignment}`}>{option.label}</span>
             </label>
             <input
@@ -96,6 +114,9 @@ const FormCheckbox: React.FC<FormCheckboxProps> = ({
               checked={isChecked(option.value)}
               onChange={() => handleToggle(option.value)}
               className="sr-only"
+              tabIndex={-1}
+              aria-label={option.label}
+              aria-hidden="true"
             />
           </div>
         ))}

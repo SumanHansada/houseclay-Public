@@ -25,7 +25,7 @@ const FormRadioGroup: React.FC<FormRadioGroupProps> = ({
   required = false,
   horizontal = true,
   withIcons = false,
-  selectedColor = "border-red-500",
+  selectedColor = "border-red-500 bg-red-50",
   className = "",
 }) => {
   const [field, meta, helpers] = useField(name);
@@ -47,7 +47,10 @@ const FormRadioGroup: React.FC<FormRadioGroupProps> = ({
   return (
     <div className={`mb-4 ${className}`}>
       {label && (
-        <label className="block text-gray-700 text-sm font-medium mb-1">
+        <label
+          id={`${name}-group-label`}
+          className="block text-gray-700 text-sm font-medium mb-1"
+        >
           {label}
           {required && <span className="text-red-500">*</span>}
         </label>
@@ -55,47 +58,48 @@ const FormRadioGroup: React.FC<FormRadioGroupProps> = ({
 
       <div
         className={`flex w-full justify-between ${
-          horizontal ? "flex-wrap  gap-3 xl:gap-6" : "flex-col gap-2"
+          horizontal ? "flex-wrap gap-3 xl:gap-6" : "flex-col gap-2"
         }`}
+        role="radiogroup"
+        aria-labelledby={`${name}-group-label`}
       >
         {options.map((option) => (
           <div
             key={String(option.value)}
-            className={`flex-1 rounded-xl focus-within:ring-2 focus-within:rounded-xl focus-within:ring-red-500`}
+            className={`
+              flex-1 rounded-xl w-full relative
+              ${
+                isSelected(option.value)
+                  ? `${selectedColor} border`
+                  : "border border-gray-300 hover:border-gray-400"
+              }
+               focus-within:shadow-[inset_0_0_0_2px_royalBlue] focus-within:border-transparent
+            `}
           >
             <label
               htmlFor={`${name}-${String(option.value)}`}
               className={`
-                cursor-pointer border rounded-xl transition-all w-full
-                ${
-                  isSelected(option.value)
-                    ? `${selectedColor} ${
-                        withIcons ? "border-2 text-red-500" : "border-2"
-                      }`
-                    : "border-gray-300 hover:border-gray-400"
-                }
-                ${
-                  withIcons
-                    ? "p-3 text-center flex flex-col items-center justify-center"
-                    : "p-3 flex items-center justify-center"
-                }
-              `}
+                block cursor-pointer p-3 w-full h-full
+                ${withIcons ? "text-center flex flex-col " : "flex "}
+              items-center justify-center`}
             >
-              {withIcons && option.icon && option.icon}
+              <input
+                type="radio"
+                id={`${name}-${String(option.value)}`}
+                name={name}
+                value={String(option.value)}
+                checked={isSelected(option.value)}
+                onChange={() => handleChange(option.value)}
+                onFocus={handleFocus}
+                className="sr-only"
+                aria-label={option.label}
+                aria-hidden="true"
+              />
+              {withIcons && option.icon}
               <span className={`${withIcons ? "text-sm" : ""}`}>
                 {option.label}
               </span>
             </label>
-            <input
-              type="radio"
-              id={`${name}-${String(option.value)}`}
-              name={name}
-              value={String(option.value)}
-              checked={isSelected(option.value)}
-              onChange={() => handleChange(option.value)}
-              onFocus={handleFocus}
-              className="sr-only"
-            />
           </div>
         ))}
       </div>
