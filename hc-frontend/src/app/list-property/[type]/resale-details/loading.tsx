@@ -1,15 +1,7 @@
 import React from "react";
 import Skeleton from "react-loading-skeleton";
 
-interface RentalDetailsLoadingProps {
-  formType?: "rentForm" | "flatmatesForm";
-  className?: string;
-}
-
-export default function RentalDetailsLoading({
-  formType = "rentForm",
-  className = "",
-}: RentalDetailsLoadingProps) {
+export default function ResaleDetailsLoading() {
   // Skeleton for currency input field with label and icon
   const CurrencyFieldSkeleton = () => (
     <div className="flex flex-col gap-2 mb-2">
@@ -42,23 +34,6 @@ export default function RentalDetailsLoading({
     </div>
   );
 
-  // Skeleton for a radio group with icons
-  const IconRadioGroupSkeleton = ({ options = 4 }) => (
-    <div className="flex flex-col gap-3 mb-2">
-      <Skeleton width={170} height={20} />
-      <div className="flex gap-4">
-        {Array(options)
-          .fill(0)
-          .map((_, i) => (
-            <div key={i} className="flex flex-col items-center gap-2">
-              <Skeleton circle width={40} height={40} />
-              <Skeleton width={70} height={16} />
-            </div>
-          ))}
-      </div>
-    </div>
-  );
-
   // Skeleton for amenities section
   const AmenitiesSkeletonGrid = () => (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -77,7 +52,7 @@ export default function RentalDetailsLoading({
   );
 
   return (
-    <div className={className}>
+    <div>
       {/* Page header */}
       <div className="mb-8">
         <Skeleton width={450} height={36} />
@@ -85,31 +60,17 @@ export default function RentalDetailsLoading({
 
       {/* Form content */}
       <div>
-        {/* Rent and negotiable section */}
+        {/* Price and Available From */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <CurrencyFieldSkeleton />
           </div>
           <div className="col-span-1">
-            {formType === "rentForm" ? (
-              <RadioGroupSkeleton />
-            ) : (
-              <FormFieldSkeleton />
-            )}
+            <FormFieldSkeleton />
           </div>
         </div>
 
-        {/* Maintenance and deposit section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="col-span-1">
-            <CurrencyFieldSkeleton />
-          </div>
-          <div className="col-span-1">
-            <CurrencyFieldSkeleton />
-          </div>
-        </div>
-
-        {/* Available from and furnishing section */}
+        {/* Bathrooms and Balcony */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <FormFieldSkeleton />
@@ -119,22 +80,17 @@ export default function RentalDetailsLoading({
           </div>
         </div>
 
-        {/* Preferred tenant section - Rent Form */}
-        {formType === "rentForm" && (
-          <div className="mb-6">
-            <IconRadioGroupSkeleton options={4} />
+        {/* Price Negotiable and Under Loan */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <RadioGroupSkeleton />
           </div>
-        )}
-
-        {/* Tenant type and food preferences - Flatmates Form */}
-        {formType === "flatmatesForm" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <IconRadioGroupSkeleton options={2} />
-            <IconRadioGroupSkeleton options={2} />
+          <div className="col-span-1">
+            <RadioGroupSkeleton />
           </div>
-        )}
+        </div>
 
-        {/* Water and power backup section */}
+        {/* Water Supply and Power Backup */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <FormFieldSkeleton />
@@ -144,39 +100,15 @@ export default function RentalDetailsLoading({
           </div>
         </div>
 
-        {/* Parking and Non-veg section - Rent Form */}
-        {formType === "rentForm" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div className="col-span-1">
-              <FormFieldSkeleton />
-            </div>
-            <div className="col-span-1">
-              <RadioGroupSkeleton />
-            </div>
+        {/* Furnishing and Parking */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormFieldSkeleton />
           </div>
-        )}
-
-        {/* Bathroom and preferences section - Flatmates Form */}
-        {formType === "flatmatesForm" && (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div className="col-span-1">
-                <RadioGroupSkeleton />
-              </div>
-              <div className="col-span-1">
-                <RadioGroupSkeleton />
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div className="col-span-1">
-                <RadioGroupSkeleton />
-              </div>
-              <div className="col-span-1">
-                <RadioGroupSkeleton />
-              </div>
-            </div>
-          </>
-        )}
+          <div className="col-span-1">
+            <FormFieldSkeleton />
+          </div>
+        </div>
       </div>
 
       {/* Amenities section */}
