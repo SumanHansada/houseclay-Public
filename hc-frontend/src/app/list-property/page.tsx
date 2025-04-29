@@ -41,7 +41,7 @@ import { RootState } from "@/store/store";
 import { setCheckUser } from "@/store/userSlice";
 
 import dummyData from "../../data/dummyData.json";
-import ListPropertySkeleton from "./ListPropertySkeleton";
+import ListPropertyLoading from "./loading";
 
 const CreateNewListing = CreateNewListingSvg as React.FC<
   React.SVGProps<SVGSVGElement>
@@ -383,7 +383,7 @@ const ListPropertyPage = dynamic(
         </>
       );
     }),
-  { ssr: false, loading: () => <ListPropertySkeleton /> },
+  { ssr: false, loading: () => <ListPropertyLoading /> },
 );
 
 export default ListPropertyPage;

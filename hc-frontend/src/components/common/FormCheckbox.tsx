@@ -95,13 +95,8 @@ const FormCheckbox: React.FC<FormCheckboxProps> = ({
               htmlFor={`${name}-${option.value}`}
               id={`${name}-label-${option.value}`}
               className={`block  cursor-pointer p-4 w-full h-full 
-                ${
-                  withIcons 
-                  ? "flex flex-col gap-2" 
-                  : "flex"
-                } 
-                  items-${alignment} justify-center`
-                }
+                ${withIcons ? "flex flex-col gap-2" : "flex"} 
+                  items-${alignment} justify-center`}
             >
               {withIcons && option.icon}
               <span className={`text-${alignment}`}>{option.label}</span>
