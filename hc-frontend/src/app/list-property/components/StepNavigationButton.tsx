@@ -19,7 +19,7 @@ const StepNavigationButton: React.FC<{
   isLast?: boolean;
 }> = ({ step, currentStep, completedSteps, Icon, isLast }) => {
   const isActive = currentStep === step;
-  const isCompleted = completedSteps.has(step);
+  const isCompleted = completedSteps.size > 0 && completedSteps.has(step);
 
   return (
     <div className="relative flex flex-col items-start">
