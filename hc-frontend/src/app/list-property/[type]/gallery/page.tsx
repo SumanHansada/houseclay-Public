@@ -7,14 +7,13 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import FormPhotoUpload from "@/components/common/FormPhotoUpload";
+import { FormValues } from "@/interfaces/FormValues";
 import {
   FormType,
   setFormValidity,
   setImages,
 } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
-
-import { FormValues } from "../layout";
 
 export const dynamicParams = true;
 

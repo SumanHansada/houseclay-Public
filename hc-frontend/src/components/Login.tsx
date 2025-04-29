@@ -7,7 +7,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { PhoneInput } from "react-international-phone";
 import { useDispatch, useSelector } from "react-redux";
 
-import { AuthStep } from "@/common/utils";
+import { AuthStep } from "@/common/enums";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {

@@ -1,5 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+import { PropertyListingType, PropertyType } from "@/common/enums";
+import { LocalityDetails } from "@/interfaces/LocalityDetails";
+import { PropertyDetails } from "@/interfaces/PropertyDetails";
+import { RentalDetails } from "@/interfaces/RentalDetails";
+
 import { RootState } from "./store";
 
 const baseUrl = process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL;
@@ -82,6 +87,28 @@ export const apiSlice = createApi({
         },
       }),
     }),
+    propertyAdd: builder.mutation<
+      {
+        message: string;
+        propertyId: number;
+      },
+      {
+        propertyType: PropertyType;
+        listingType: PropertyListingType;
+        propertyDetails: PropertyDetails;
+        localityDetails: LocalityDetails;
+        rentalDetails: RentalDetails;
+      }
+    >({
+      query: (data) => ({
+        url: "property/add",
+        method: "POST",
+        body: data,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
   }),
 });
 
@@ -93,4 +120,5 @@ export const {
   useLazyCheckUserQuery,
   useLogoutMutation,
   usePresignedUrlsMutation,
+  usePropertyAddMutation,
 } = apiSlice;

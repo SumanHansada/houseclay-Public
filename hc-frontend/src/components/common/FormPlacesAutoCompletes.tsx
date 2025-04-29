@@ -4,7 +4,7 @@ import { useField, useFormikContext } from "formik";
 import { MapPin } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-import { FormValues } from "@/app/list-property/[type]/layout";
+import { FormValues } from "@/interfaces/FormValues";
 
 interface FormPlacesAutocompleteProps {
   label: string;

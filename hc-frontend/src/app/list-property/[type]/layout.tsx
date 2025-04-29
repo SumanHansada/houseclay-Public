@@ -10,13 +10,10 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Dialog, DialogContent } from "@/components/Dialog";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
+import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { usePresignedUrlsMutation } from "@/store/apiSlice";
-import {
-  PropertyPhoto,
-  setFileURLMap,
-  setPropertyID,
-} from "@/store/listPropertySlice";
+import { setFileURLMap, setPropertyID } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
 import FlatmatesStepper from "../components/FlatmatesStepper";
@@ -37,68 +34,6 @@ export enum RouteStep {
   GALLERY = "gallery",
   ADDITIONAL_INFO = "additional-info",
   NONE = "none",
-}
-
-export interface FormValues {
-  propertyDetails: {
-    propertyCategory: string;
-    propertyType: string;
-    builtUpArea: number;
-    facing: string;
-    bhkType: string;
-    ownershipType: string;
-    propertyAge: string;
-    floor: string;
-    totalFloor: string;
-    floorType: string;
-    description: string;
-  };
-  localityDetails: {
-    city: string;
-    location: string;
-    landmark: string;
-    latitude: number;
-    longitude: number;
-  };
-  rentalDetails: {
-    rent: number;
-    rentNegotiable: boolean;
-    maintenanceCharges: number;
-    deposit: number;
-    availableFrom: string;
-    furnishing: string;
-    preferredTenant: string;
-    waterSupply: string;
-    powerBackup: string;
-    parking: boolean;
-    nonVegAllowed: boolean;
-    amenities: string[];
-    tenantType: string;
-    attachedBathroom: boolean;
-    bathroomType: string;
-    smokingPreference: boolean;
-    drinkingPreference: boolean;
-  };
-  resaleDetails: {
-    price: number;
-    availableFrom: string;
-    bathrooms: number;
-    balcony: number;
-    priceNegotiable: boolean;
-    underLoan: boolean;
-    waterSupply: string;
-    powerBackup: string;
-    furnishing: string;
-    parking: boolean;
-  };
-  images: PropertyPhoto[];
-  additionalInfo: {
-    whoWillShowProperty: string;
-    secondaryPhoneNumber: string;
-    khataCertificate: string;
-    saleDeed: boolean;
-    propertyTax: boolean;
-  };
 }
 
 export const dynamicParams = true;
@@ -147,7 +82,7 @@ export default function ListPropertyTypeLayout({
     const photos = formState?.data?.images || [];
     if (photos.length > 0) {
       // create a map of file names to their corresponding Blob URLs
-      const photosToUpload = photos.map((photo) => {
+      const photosToUpload = photos.map((photo: PropertyPhoto) => {
         return {
           name: photo.file.name,
           url: photo.url,
@@ -164,7 +99,7 @@ export default function ListPropertyTypeLayout({
     if (photos.length > 0) {
       // Step 1: Request pre-signed URLs
       const fileMap: Record<string, string> = {};
-      photos.forEach((f) => {
+      photos.forEach((f: PropertyPhoto) => {
         fileMap[encodeURIComponent(f.file.name)] = f.file.type;
       });
       console.log(fileMap);
@@ -172,7 +107,7 @@ export default function ListPropertyTypeLayout({
         fileMap,
       })
         .unwrap()
-        .catch((error) => {
+        .catch((error: Error) => {
           console.error("Error fetching presigned URLs:", error);
         });
       if (!presignedUrlsResponse) {
@@ -386,7 +321,9 @@ export default function ListPropertyTypeLayout({
                   Edit
                 </button>
                 <button
-                  //   onClick={onPreview}
+                  onClick={() => {
+                    console.log("Preview Listing");
+                  }}
                   className="px-24 py-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200"
                 >
                   Preview Listing

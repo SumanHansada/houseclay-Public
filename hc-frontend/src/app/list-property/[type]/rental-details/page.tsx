@@ -37,14 +37,13 @@ import FormCheckbox from "@/components/common/FormCheckbox";
 import FormDropdown from "@/components/common/FormDropdown";
 import FormINRCurrencyField from "@/components/common/FormINRCurrencyField";
 import FormRadioGroup from "@/components/common/FormRadioGroup";
+import { FormValues } from "@/interfaces/FormValues";
 import {
   FormType,
   setFormValidity,
   setRentalDetails,
 } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
-
-import { FormValues } from "../layout";
 
 export const dynamicParams = true;
 

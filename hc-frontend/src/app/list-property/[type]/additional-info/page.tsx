@@ -8,14 +8,13 @@ import * as Yup from "yup";
 
 import FormDropdown from "@/components/common/FormDropdown";
 import FormPhoneInput from "@/components/common/FormPhoneInput";
+import { FormValues } from "@/interfaces/FormValues";
 import {
   FormType,
   setAdditionalInfo,
   setFormValidity,
 } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
-
-import { FormValues } from "../layout";
 
 export const dynamicParams = true;
 

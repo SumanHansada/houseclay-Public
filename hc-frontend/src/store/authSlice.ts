@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { AuthStep } from "@/common/utils";
+import { AuthStep } from "@/common/enums";
 
 interface AuthState {
   token: string | null;

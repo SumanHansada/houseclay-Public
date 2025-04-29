@@ -16,7 +16,7 @@ import React, { useEffect, useState } from "react";
 import { PhoneInput } from "react-international-phone";
 import { useDispatch, useSelector } from "react-redux";
 
-import { AuthStep, PropertyListingType, PropertyType } from "@/common/utils";
+import { AuthStep, PropertyListingType, PropertyType } from "@/common/enums";
 import Carousel2D from "@/components/Carousel2D";
 import CustomerSupportBanner from "@/components/CustomerSupportBanner";
 import { Dialog, DialogContent } from "@/components/Dialog";

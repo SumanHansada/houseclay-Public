@@ -30,14 +30,13 @@ import FormDropdown from "@/components/common/FormDropdown";
 import FormINRCurrencyField from "@/components/common/FormINRCurrencyField";
 import FormFormNumberField from "@/components/common/FormNumberField";
 import FormRadioGroup from "@/components/common/FormRadioGroup";
+import { FormValues } from "@/interfaces/FormValues";
 import {
   FormType,
   setFormValidity,
   setResaleDetails,
 } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
-
-import { FormValues } from "../layout";
 
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ClubhouseIcon = ClubhouseIconSvg as React.FC<

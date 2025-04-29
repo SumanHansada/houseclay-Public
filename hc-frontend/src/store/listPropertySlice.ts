@@ -1,124 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { PropertyListingType } from "@/common/utils";
-import { PropertyType } from "@/common/utils";
-
-interface PropertyDetails {
-  propertyCategory: string;
-  propertyType: string;
-  builtUpArea: number;
-  facing: string;
-  bhkType: string;
-  ownershipType: string;
-  propertyAge: string;
-  floor: string;
-  totalFloor: string;
-  floorType: string;
-  description: string;
-}
-
-interface LocalityDetails {
-  city: string;
-  location: string;
-  landmark: string;
-  latitude: number;
-  longitude: number;
-}
-
-interface RentalDetails {
-  rent: number;
-  rentNegotiable: boolean;
-  maintenanceCharges: number;
-  deposit: number;
-  availableFrom: string;
-  furnishing: string;
-  preferredTenant: string;
-  waterSupply: string;
-  powerBackup: string;
-  parking: boolean;
-  nonVegAllowed: boolean;
-  amenities: string[];
-  tenantType: string;
-  attachedBathroom: boolean;
-  bathroomType: string;
-  smokingPreference: boolean;
-  drinkingPreference: boolean;
-}
-
-interface ResaleDetails {
-  price: number;
-  availableFrom: string;
-  bathrooms: number;
-  balcony: number;
-  priceNegotiable: boolean;
-  underLoan: boolean;
-  waterSupply: string;
-  powerBackup: string;
-  furnishing: string;
-  parking: boolean;
-}
-
-interface AdditionalInfo {
-  whoWillShowProperty: string;
-  secondaryPhoneNumber: string;
-  khataCertificate: string;
-  saleDeed: boolean;
-  propertyTax: boolean;
-}
-
-export interface FileData {
-  name: string;
-  type: string;
-  webkitRelativePath: string;
-}
-
-export interface PropertyPhoto {
-  id: string;
-  file: FileData;
-  url: string;
-  isCover: boolean;
-  S3Url: string;
-}
-
-interface ListPropertyState {
-  propertyID: string;
-  propertyType: PropertyType;
-  listingType: PropertyListingType;
-  showPropertyType: boolean;
-  rentForm: {
-    isValid: boolean;
-    data?: {
-      propertyDetails: PropertyDetails;
-      localityDetails: LocalityDetails;
-      rentalDetails: RentalDetails;
-      images: PropertyPhoto[];
-      additionalInfo: AdditionalInfo;
-      resaleDetails: ResaleDetails;
-    };
-  };
-  resaleForm: {
-    isValid: boolean;
-    data?: {
-      propertyDetails: PropertyDetails;
-      localityDetails: LocalityDetails;
-      rentalDetails: RentalDetails;
-      images: PropertyPhoto[];
-      additionalInfo: AdditionalInfo;
-      resaleDetails: ResaleDetails;
-    };
-  };
-  flatmatesForm: {
-    isValid: boolean;
-    data?: {
-      propertyDetails: PropertyDetails;
-      localityDetails: LocalityDetails;
-      rentalDetails: RentalDetails;
-      images: PropertyPhoto[];
-      additionalInfo: AdditionalInfo;
-      resaleDetails: ResaleDetails;
-    };
-  };
-}
+import { PropertyListingType } from "@/common/enums";
+import { PropertyType } from "@/common/enums";
+import { AdditionalInfo } from "@/interfaces/AdditionalInfo";
+import { LocalityDetails } from "@/interfaces/LocalityDetails";
+import { PropertyDetails } from "@/interfaces/PropertyDetails";
+import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
+import { RentalDetails } from "@/interfaces/RentalDetails";
+import { ResaleDetails } from "@/interfaces/ResaleDetails";
 
 const initialData: {
   propertyDetails: PropertyDetails;

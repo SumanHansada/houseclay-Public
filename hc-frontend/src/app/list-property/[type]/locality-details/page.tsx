@@ -10,14 +10,13 @@ import * as Yup from "yup";
 import FormDropdown from "@/components/common/FormDropdown";
 import FormPlacesAutocomplete from "@/components/common/FormPlacesAutoCompletes";
 import GoogleMaps from "@/components/common/GoogleMaps";
+import { FormValues } from "@/interfaces/FormValues";
 import {
   FormType,
   setFormValidity,
   setLocalityDetails,
 } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
-
-import { FormValues } from "../layout";
 
 export const dynamicParams = true;
 
