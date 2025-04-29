@@ -15,3 +15,14 @@ export enum PropertyType {
   RESALE = "RESALE",
   FLATMATES = "FLATMATES",
 }
+
+export enum RouteStep {
+  GETTING_STARTED = "getting-started",
+  PROPERTY_DETAILS = "property-details",
+  LOCALITY_DETAILS = "locality-details",
+  RENTAL_DETAILS = "rental-details",
+  RESALE_DETAILS = "resale-details",
+  GALLERY = "gallery",
+  ADDITIONAL_INFO = "additional-info",
+  NONE = "none",
+}

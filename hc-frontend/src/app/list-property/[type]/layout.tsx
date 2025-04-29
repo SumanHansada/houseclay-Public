@@ -8,6 +8,7 @@ import ListPropertySuccessSvg from "public/icons/list-property-success.svg";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { RouteStep } from "@/common/enums";
 import { Dialog, DialogContent } from "@/components/Dialog";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
 import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
@@ -24,17 +25,6 @@ import { FormStep } from "../components/StepNavigationButton";
 const ListPropertySuccess = ListPropertySuccessSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
-
-export enum RouteStep {
-  GETTING_STARTED = "getting-started",
-  PROPERTY_DETAILS = "property-details",
-  LOCALITY_DETAILS = "locality-details",
-  RENTAL_DETAILS = "rental-details",
-  RESALE_DETAILS = "resale-details",
-  GALLERY = "gallery",
-  ADDITIONAL_INFO = "additional-info",
-  NONE = "none",
-}
 
 export const dynamicParams = true;
 
@@ -250,7 +240,7 @@ export default function ListPropertyTypeLayout({
           initial="initial"
           animate="animate"
           exit="exit"
-          transition={{ duration: 0.5, ease: "easeInOut" }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
         >
           <div className="flex flex-col">
             <Formik

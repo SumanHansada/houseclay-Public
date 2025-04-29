@@ -166,7 +166,7 @@ const listPropertySlice = createSlice({
       }>,
     ) => {
       const { type, data } = action.payload;
-      state[type].data?.images?.forEach((image) => {
+      state[type].data?.images?.forEach((image: PropertyPhoto) => {
         image.S3Url = data[image.file.name];
       });
     },
