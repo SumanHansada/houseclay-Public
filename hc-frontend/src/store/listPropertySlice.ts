@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { PropertyListingType } from "@/common/enums";
 import { PropertyType } from "@/common/enums";
 import { AdditionalInfo } from "@/interfaces/AdditionalInfo";
+import { ListPropertyState } from "@/interfaces/ListPropertyState";
 import { LocalityDetails } from "@/interfaces/LocalityDetails";
 import { PropertyDetails } from "@/interfaces/PropertyDetails";
 import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
