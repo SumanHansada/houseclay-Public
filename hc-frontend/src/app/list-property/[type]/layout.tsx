@@ -13,7 +13,10 @@ import { Dialog, DialogContent } from "@/components/Dialog";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
 import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { usePresignedUrlsMutation } from "@/store/apiSlice";
+import {
+  usePresignedUrlsMutation,
+  usePropertyAddMutation,
+} from "@/store/apiSlice";
 import { setFileURLMap, setPropertyID } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
@@ -38,6 +41,7 @@ export default function ListPropertyTypeLayout({
     redirect("/");
   }
   const [getPresignedUrls] = usePresignedUrlsMutation();
+  const [postProperty] = usePropertyAddMutation();
   const params = useParams();
   const dispatch = useDispatch();
   const uploadFiles = useS3Uploader();
@@ -183,6 +187,36 @@ export default function ListPropertyTypeLayout({
     }
   };
 
+  const handlePreviewListing = async () => {
+    console.log("Preview Listing");
+    const propertyDetails = formState.data!.propertyDetails;
+    const localityDetails = formState.data!.localityDetails;
+    const rentalOrResaleDetails =
+      formKey === "resaleForm"
+        ? formState.data!.resaleDetails
+        : formState.data!.rentalDetails;
+    const images = formState.data!.images.map(
+      (image: PropertyPhoto) => image.url,
+    );
+    const additionalInfo = formState.data!.additionalInfo;
+
+    const postPropertyResponse = await postProperty({
+      propertyID: "1",
+      ...propertyDetails,
+      ...localityDetails,
+      ...rentalOrResaleDetails,
+      images,
+      ...additionalInfo,
+    })
+      .unwrap()
+      .catch((error: Error) => {
+        console.error("Error posting property:", error);
+      });
+    if (postPropertyResponse) {
+      console.log("Property posted successfully");
+    }
+  };
+
   const renderStepper = () => {
     switch (type) {
       case "rent":
@@ -311,9 +345,7 @@ export default function ListPropertyTypeLayout({
                   Edit
                 </button>
                 <button
-                  onClick={() => {
-                    console.log("Preview Listing");
-                  }}
+                  onClick={handlePreviewListing}
                   className="px-24 py-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200"
                 >
                   Preview Listing

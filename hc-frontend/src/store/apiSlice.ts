@@ -1,10 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-import { PropertyListingType, PropertyType } from "@/common/enums";
-import { LocalityDetails } from "@/interfaces/LocalityDetails";
-import { PropertyDetails } from "@/interfaces/PropertyDetails";
-import { RentalDetails } from "@/interfaces/RentalDetails";
-
 import { RootState } from "./store";
 
 const baseUrl = process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL;
@@ -90,14 +85,32 @@ export const apiSlice = createApi({
     propertyAdd: builder.mutation<
       {
         message: string;
-        propertyId: number;
+        propertyID: number;
       },
       {
-        propertyType: PropertyType;
-        listingType: PropertyListingType;
-        propertyDetails: PropertyDetails;
-        localityDetails: LocalityDetails;
-        rentalDetails: RentalDetails;
+        propertyID: string;
+        propertyCategory: string;
+        builtUpArea: number;
+        facing: string;
+        bhkType: string;
+        ownershipType: string;
+        propertyAge: string;
+        floor: string;
+        totalFloor: string;
+        floorType: string;
+        description: string;
+        city: string;
+        location: string;
+        landmark: string;
+        latitude: number;
+        longitude: number;
+        images: string[];
+        whoWillShowProperty?: string;
+        secondaryPhoneNumber?: string;
+        khataCertificate?: string;
+        saleDeed?: boolean;
+        propertyTax?: boolean;
+        [key: string]: string | number | boolean | string[] | undefined;
       }
     >({
       query: (data) => ({
