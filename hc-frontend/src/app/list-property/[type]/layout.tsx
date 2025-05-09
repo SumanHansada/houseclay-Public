@@ -1,7 +1,6 @@
 "use client";
 
 import { Form, Formik, FormikProvider } from "formik";
-import { motion } from "framer-motion";
 import Image from "next/image";
 import { redirect, useParams, useRouter } from "next/navigation";
 import ListPropertySuccessSvg from "public/icons/list-property-success.svg";
@@ -245,16 +244,10 @@ export default function ListPropertyTypeLayout({
     }
   };
 
-  const slideVariants = {
-    initial: { x: 300, opacity: 0 }, // Slide in from the right
-    animate: { x: 0, opacity: 1 }, // Centered and visible
-    exit: { x: -300, opacity: 0 }, // Slide out to the left
-  };
-
   return (
     <div className="flex w-full h-full top-14">
       {/* Background SVG behind left section only */}
-      <div className="left-0 top-14 bottom-0 z-40 w-[33.33%] fixed  bg-gray-50">
+      <div className="left-0 top-14 bottom-0 z-40 w-[33.33%] fixed  bg-gray-50 max-md:hidden">
         <Image
           src="/images/property-add-graphic.svg"
           alt="Property Graphic"
@@ -267,34 +260,25 @@ export default function ListPropertyTypeLayout({
           {renderStepper()}
         </div>
       </div>
-      <div className="container right-0 ml-[33.33%] pt-12 pb-20 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
-        <motion.div
-          key={`${type}-${currentStep}`} // Key the animation to the route
-          variants={slideVariants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          transition={{ duration: 0.3, ease: "easeInOut" }}
-        >
-          <div className="flex flex-col">
-            <Formik
-              initialValues={initialValues}
-              onSubmit={(values) => {
-                console.log("Submit all data:", values);
-                // send to backend
-              }}
-              validateOnChange={false}
-              validateOnBlur={false}
-            >
-              {(formik) => (
-                <Form>
-                  <FormikProvider value={formik}>{children}</FormikProvider>
-                </Form>
-              )}
-            </Formik>
-          </div>
-        </motion.div>
-        <div className="fixed bottom-0 left-0 ml-[33.33%] right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 border-t border-t-gray-300 bg-white">
+      <div className="container right-0 ml-[33.33%] max-md:ml-auto pt-12 pb-20 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
+        <div className="flex flex-col">
+          <Formik
+            initialValues={initialValues}
+            onSubmit={(values) => {
+              console.log("Submit all data:", values);
+              // send to backend
+            }}
+            validateOnChange={false}
+            validateOnBlur={false}
+          >
+            {(formik) => (
+              <Form>
+                <FormikProvider value={formik}>{children}</FormikProvider>
+              </Form>
+            )}
+          </Formik>
+        </div>
+        <div className="fixed bottom-0 left-0 ml-[33.33%] max-md:ml-auto right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 border-t border-t-gray-300 bg-white">
           <button
             type="button"
             className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 disabled:bg-gray-300 disabled:cursor-not-allowed"
