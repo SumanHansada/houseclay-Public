@@ -10,9 +10,8 @@ import {
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 
-import { FileData, PropertyPhoto } from "@/store/listPropertySlice";
-
-// Types
+import { FileData } from "@/interfaces/FileData";
+import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
 
 interface FormPhotoUploadProps {
   name: string;
