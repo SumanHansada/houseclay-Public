@@ -1,6 +1,7 @@
 "use client";
 
 import { Form, Formik, FormikProvider } from "formik";
+import { X } from "lucide-react";
 import Image from "next/image";
 import { redirect, useParams, useRouter } from "next/navigation";
 import ListPropertySuccessSvg from "public/icons/list-property-success.svg";
@@ -244,101 +245,163 @@ export default function ListPropertyTypeLayout({
     }
   };
 
+  const goToHomePage = () => {
+    router.push("/");
+  };
+
+  const renderStepperMobile = () => {
+    // Define steps based on type
+    let steps: string[] = [];
+    if (type === "rent" || type === "flatmates") {
+      steps = [
+        "Property Details",
+        "Locality Details",
+        "Rental Details",
+        "Gallery",
+        "Additional Information",
+      ];
+    } else if (type === "resale") {
+      steps = [
+        "Property Details",
+        "Locality Details",
+        "Resale Details",
+        "Gallery",
+        "Additional Information",
+      ];
+    }
+
+    // Find current step index
+    const currentIndex = steps.findIndex((step) => step === currentStep);
+
+    // Fallback for enum value vs string
+    const displayStep =
+      typeof currentStep === "string"
+        ? currentStep
+        : steps[currentIndex] || steps[0];
+
+    // Progress calculation
+    const progressPercent = ((currentIndex + 1) / steps.length) * 100;
+
+    return (
+      <>
+        <div className="flex justify-center items-center align-middle w-full md:hidden">
+          <h1 className="text-lg my-auto text-black ml-auto">{displayStep}</h1>
+          <button className="border border-gray-200 rounded-full md:border-none ml-auto">
+            <X onClick={goToHomePage} size={25} />
+          </button>
+        </div>
+        <div className="w-full h-1 rounded-full bg-gray-200 relative mt-auto">
+          <div
+            className="h-1 rounded-full bg-red-500 absolute top-0 left-0 transition-all duration-300"
+            style={{ width: `${progressPercent}%` }}
+          />
+        </div>
+      </>
+    );
+  };
+
   return (
-    <div className="flex w-full h-full top-14">
-      {/* Background SVG behind left section only */}
-      <div className="left-0 top-14 bottom-0 z-40 w-[33.33%] fixed  bg-gray-50 max-md:hidden">
-        <Image
-          src="/images/property-add-graphic.svg"
-          alt="Property Graphic"
-          width={500}
-          height={500}
-          className="w-full h-full object-cover max-xl:hidden"
-        />
-        {/* Left side - Steps navigation */}
-        <div className="absolute right-8 top-12 flex flex-col z-50">
-          {renderStepper()}
+    <>
+      <section
+        className={`py-2 px-4 fixed top-0 left-0 right-0 z-50 border-b h-[55px] border-gray-200 bg-white flex flex-col justify-center items-center w-full md:hidden`}
+      >
+        {renderStepperMobile()}
+      </section>
+      <div className="flex w-full h-full top-14">
+        {/* Background SVG behind left section only */}
+        <div className="left-0 top-14 bottom-0 z-40 w-[33.33%] fixed  bg-gray-50 max-md:hidden">
+          <Image
+            src="/images/property-add-graphic.svg"
+            alt="Property Graphic"
+            width={500}
+            height={500}
+            className="w-full h-full object-cover max-xl:hidden"
+          />
+          {/* Left side - Steps navigation */}
+          <div className="absolute right-8 top-12 flex flex-col z-50">
+            {renderStepper()}
+          </div>
         </div>
-      </div>
-      <div className="container right-0 ml-[33.33%] max-md:ml-auto pt-12 pb-20 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
-        <div className="flex flex-col">
-          <Formik
-            initialValues={initialValues}
-            onSubmit={(values) => {
-              console.log("Submit all data:", values);
-              // send to backend
-            }}
-            validateOnChange={false}
-            validateOnBlur={false}
-          >
-            {(formik) => (
-              <Form>
-                <FormikProvider value={formik}>{children}</FormikProvider>
-              </Form>
-            )}
-          </Formik>
-        </div>
-        <div className="fixed bottom-0 left-0 ml-[33.33%] max-md:ml-auto right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 border-t border-t-gray-300 bg-white">
-          <button
-            type="button"
-            className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 disabled:bg-gray-300 disabled:cursor-not-allowed"
-            onClick={handleBack}
-          >
-            Back
-          </button>
+        <div className="container right-0 ml-[33.33%] max-md:ml-auto pt-8 md:pt-12 pb-20 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
+          <div className="flex flex-col">
+            <Formik
+              initialValues={initialValues}
+              onSubmit={(values) => {
+                console.log("Submit all data:", values);
+                // send to backend
+              }}
+              validateOnChange={false}
+              validateOnBlur={false}
+            >
+              {(formik) => (
+                <Form>
+                  <FormikProvider value={formik}>{children}</FormikProvider>
+                </Form>
+              )}
+            </Formik>
+          </div>
+          <div className="fixed bottom-0 left-0 ml-[33.33%] max-md:ml-auto right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 border-t border-t-gray-300 bg-white">
+            <button
+              type="button"
+              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 disabled:bg-gray-300 disabled:cursor-not-allowed"
+              onClick={handleBack}
+            >
+              Back
+            </button>
 
-          <button
-            type="submit"
-            className="px-6 py-3 border border-red-500 bg-red-500 text-white rounded-xl hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300"
-            disabled={!isFormValid}
-            onClick={handleSaveAndNext}
-          >
-            Save & Continue
-          </button>
+            <button
+              type="submit"
+              className="px-6 py-3 border border-red-500 bg-red-500 text-white rounded-xl hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300"
+              disabled={!isFormValid}
+              onClick={handleSaveAndNext}
+            >
+              Save & Continue
+            </button>
+          </div>
         </div>
-      </div>
-      {isDialogOpen("list-property-success-dialog") && (
-        <Dialog
-          id="list-property-success-dialog"
-          type="card"
-          onClose={() => closeDialog("list-property-success-dialog")}
-          entryAnimation="animate-fade-in"
-          exitAnimation="animate-fade-out"
-        >
-          <DialogContent>
-            <div className="flex flex-col items-center justify-center text-center p-8 gap-4">
-              <div className="relative overflow-hidden rounded-lg">
-                <div className="absolute inset-0 shadow-[inset_0_0_25px_25px_rgba(255,255,255,0.8)] z-20"></div>
-                <ListPropertySuccess />
-              </div>
-              <h2 className="text-3xl text-gray-800">Congratulations!</h2>
-              <p className="text-gray-600 text-lg">
-                You have successfully posted your property,
-                <br />
-                it will be live within 2 Hrs.
-              </p>
+        {isDialogOpen("list-property-success-dialog") && (
+          <Dialog
+            id="list-property-success-dialog"
+            type="card"
+            onClose={() => closeDialog("list-property-success-dialog")}
+            entryAnimation="animate-fade-in"
+            exitAnimation="animate-fade-out"
+          >
+            <DialogContent>
+              <div className="flex flex-col items-center justify-center text-center p-8 gap-4">
+                <div className="relative overflow-hidden rounded-lg">
+                  <div className="absolute inset-0 shadow-[inset_0_0_25px_25px_rgba(255,255,255,0.8)] z-20"></div>
+                  <ListPropertySuccess />
+                </div>
+                <h2 className="text-3xl text-gray-800">Congratulations!</h2>
+                <p className="text-gray-600 text-lg">
+                  You have successfully posted your property,
+                  <br />
+                  it will be live within 2 Hrs.
+                </p>
 
-              {/* Action buttons */}
-              <div className="flex gap-4">
-                <button
-                  onClick={() => {
-                    closeDialog("list-property-success-dialog");
-                  }}
-                  className="px-24 py-3 text-black border font-medium rounded-lg hover:bg-red-600 hover:text-white transition duration-200"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={handlePreviewListing}
-                  className="px-24 py-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200"
-                >
-                  Preview Listing
-                </button>
+                {/* Action buttons */}
+                <div className="flex gap-4">
+                  <button
+                    onClick={() => {
+                      closeDialog("list-property-success-dialog");
+                    }}
+                    className="px-24 py-3 text-black border font-medium rounded-lg hover:bg-red-600 hover:text-white transition duration-200"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={handlePreviewListing}
+                    className="px-24 py-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200"
+                  >
+                    Preview Listing
+                  </button>
+                </div>
               </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
-    </div>
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
+    </>
   );
 }

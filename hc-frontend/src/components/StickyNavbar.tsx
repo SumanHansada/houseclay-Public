@@ -5,6 +5,8 @@ import CoinSvg from "public/icons/coin.svg";
 import HouseClayHomeSvg from "public/icons/houseclay-home.svg";
 import UserSvg from "public/icons/user.svg";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 type NavItem = {
   id: string;
@@ -23,6 +25,9 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
   defaultActive = "home",
   onNavChange,
 }) => {
+  const hideStickyNavbar = useSelector(
+    (state: RootState) => state.app.hideStickyNavBar,
+  );
   const [activeTab, setActiveTab] = useState<string>(defaultActive);
   const Coin = CoinSvg as React.FC<React.SVGProps<SVGSVGElement>>;
   const User = UserSvg as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -70,6 +75,10 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
       onNavChange(id);
     }
   };
+
+  if (hideStickyNavbar) {
+    return null;
+  }
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-md z-50 w-full md:hidden">

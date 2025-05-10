@@ -4,6 +4,7 @@ interface PropertyTypeOptionProps {
   icon: React.ReactNode;
   isSelected: boolean;
   iconClassName?: string;
+  className?: string;
   onChange: () => void;
 }
 
@@ -13,6 +14,7 @@ const PropertyTypeOption: React.FC<PropertyTypeOptionProps> = ({
   icon,
   isSelected,
   iconClassName,
+  className,
   onChange,
 }) => {
   return (
@@ -21,7 +23,7 @@ const PropertyTypeOption: React.FC<PropertyTypeOptionProps> = ({
         htmlFor={id}
         className={`flex flex-1 items-start justify-between lg:p-4 p-2 rounded-lg border border-gray-300 cursor-pointer text-center ${
           isSelected ? "border-red-500 bg-red-50" : ""
-        }`}
+        } ${className}`}
       >
         <div className={`flex flex-col items-start justify-center`}>
           <span className={`${iconClassName}`}>{icon}</span>

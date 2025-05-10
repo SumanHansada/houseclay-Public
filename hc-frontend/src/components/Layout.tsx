@@ -1,4 +1,5 @@
 "use client";
+
 import { APIProvider } from "@vis.gl/react-google-maps";
 import {
   ChevronDown,
@@ -15,6 +16,7 @@ import {
   UserRound,
   X,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import CoinSvg from "public/icons/coin.svg";
 import PropertySvg from "public/icons/property.svg";
 import VerifiedTenantsSvg from "public/icons/verified-tenants.svg";
@@ -36,6 +38,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const { token, name, phoneNo } = useSelector(
     (state: RootState) => state.auth,
   );
+  const router = useRouter();
   const { openDialog, isDialogOpen, closeAllDialogs, closeDialog } =
     useDialog();
   const [logout] = useLogoutMutation();
@@ -54,7 +57,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const toggleQuickLinks = () => setQuickLinksExpanded(!quickLinksExpanded);
 
   const onLogin = () => {
-    closeAllDialogs();
     openDialog("login-dialog");
   };
 
@@ -69,11 +71,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   };
 
   const handlePropertyBannerClick = () => {
+    closeAllDialogs();
     if (!token) {
       onLogin();
     } else {
-      closeAllDialogs();
-      openDialog("list-property-dialog");
+      router.push("/list-property");
     }
   };
 
@@ -82,7 +84,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <APIProvider apiKey={API_KEY}>
       <Header />
-      <main className="mx-auto my-0 t-[54px] pt-[54px] min-h-fit flex-1 flex flex-wrap justify-center">
+      <main className="mx-auto my-0 t-[55px] pt-[55px] min-h-fit flex-1 flex flex-wrap justify-center">
         {children}
       </main>
       {/* Login Dialog */}
@@ -134,21 +136,23 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <button className="border border-gray-200 rounded-full md:border-none items-center justify-center">
                 <X onClick={() => closeDialog("menu-dialog")} size={25} />
               </button>
-              {token ? (
-                <button
-                  className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100 text-center"
-                  onClick={onLogout}
-                >
-                  Logout
-                </button>
-              ) : (
-                <button
-                  className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100 text-center"
-                  onClick={onLogin}
-                >
-                  Log In
-                </button>
-              )}
+              <div className="text-sm">
+                {token ? (
+                  <button
+                    className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100 text-center"
+                    onClick={onLogout}
+                  >
+                    Logout
+                  </button>
+                ) : (
+                  <button
+                    className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100 text-center"
+                    onClick={onLogin}
+                  >
+                    Log In
+                  </button>
+                )}
+              </div>
             </div>
           </DialogHeader>
           <DialogContent>
@@ -318,33 +322,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </div>
             </div>
           </DialogContent>
-        </Dialog>
-      )}
-
-      {/* List Property Dialog */}
-      {isDialogOpen("list-property-dialog") && (
-        <Dialog
-          id="list-property-dialog"
-          type="fullscreen"
-          onClose={() => closeDialog("list-property-dialog")}
-          entryAnimation="animate-slide-in-left"
-          exitAnimation="animate-slide-out-left"
-        >
-          <DialogHeader>
-            <div
-              className={`${isMobile ? "py-2 px-8" : ""}  flex flex-col justify-between items-center w-full`}
-            >
-              {isMobile && (
-                <h1 className="text-xl py-2 text-black">Get Started</h1>
-              )}
-              <button className="absolute top-4 right-4 border border-gray-200 rounded-full md:border-none">
-                <X
-                  onClick={() => closeDialog("list-property-dialog")}
-                  size={25}
-                />
-              </button>
-            </div>
-          </DialogHeader>
         </Dialog>
       )}
       <StickyNavbar />

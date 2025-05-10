@@ -17,7 +17,6 @@ export enum PropertyType {
 }
 
 export enum RouteStep {
-  GETTING_STARTED = "getting-started",
   PROPERTY_DETAILS = "property-details",
   LOCALITY_DETAILS = "locality-details",
   RENTAL_DETAILS = "rental-details",

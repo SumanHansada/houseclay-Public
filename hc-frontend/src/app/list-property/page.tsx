@@ -2,13 +2,16 @@
 
 import "react-international-phone/style.css";
 
-import { ShieldCheck } from "lucide-react";
+import { Lightbulb, ShieldCheck, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import CallWithCaptainSvg from "public/icons/call-with-captain.svg";
 import CreateNewListingSvg from "public/icons/create-new-listing.svg";
 import FlatmatesSvg from "public/icons/flatmates.svg";
+import GoLiveSvg from "public/icons/get-started/go-live.svg";
+import PropertyBasicsSvg from "public/icons/get-started/property-basics.svg";
+import ShowcaseYourSpaceSvg from "public/icons/get-started/showcase-your-space.svg";
 import HouseClayCaptainSvg from "public/icons/houseclay-captain.svg";
 import RentSvg from "public/icons/rent.svg";
 import ResaleSvg from "public/icons/resale.svg";
@@ -26,11 +29,17 @@ import ListPropertyAdvantages from "@/components/ListPropertyAdvantages";
 import ListWithUs from "@/components/ListWithUs";
 import PropertyTypeOption from "@/components/PropertyTypeOption";
 import { TestimonialCard } from "@/components/Testimonials";
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useGenerateOtpMutation,
   useLazyCheckUserQuery,
 } from "@/store/apiSlice";
+import {
+  setHideFooter,
+  setHideHeader,
+  setHideStickyNavBar,
+} from "@/store/appSlice";
 import { setAuthStep, setPhoneNo } from "@/store/authSlice";
 import {
   setListingType,
@@ -56,6 +65,13 @@ const HouseClayCaptain = HouseClayCaptainSvg as React.FC<
 const Rent = RentSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const Resale = ResaleSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const Flatmates = FlatmatesSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const GoLive = GoLiveSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const ShowcaseYourSpace = ShowcaseYourSpaceSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const PropertyBasics = PropertyBasicsSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
 
 const propertyTypes = [
   {
@@ -82,6 +98,8 @@ const ListPropertyPage = dynamic(
   () =>
     Promise.resolve(() => {
       const { isDialogOpen, openDialog, closeDialog } = useDialog();
+      const { isMobile } = useDeviceContext();
+      const router = useRouter();
       const token = useSelector((state: RootState) => state.auth.token);
       const phoneNo = useSelector((state: RootState) => state.auth.phoneNo);
       const listingType = useSelector(
@@ -100,6 +118,9 @@ const ListPropertyPage = dynamic(
       };
       const dispatch = useDispatch();
       const [acceptTerms, setAcceptTerms] = useState(false);
+      const [showGetStarted, setShowGetStarted] = useState(
+        isMobile ? true : false,
+      );
       const [triggerCheckUser] = useLazyCheckUserQuery();
       const [generateOtp] = useGenerateOtpMutation();
 
@@ -109,7 +130,17 @@ const ListPropertyPage = dynamic(
 
       useEffect(() => {
         dispatch(setAuthStep(AuthStep.PHONE));
-      }, [dispatch]);
+        if (isMobile) {
+          dispatch(setHideHeader(true));
+          dispatch(setHideFooter(true));
+          dispatch(setHideStickyNavBar(true));
+          setShowGetStarted(true);
+        } else {
+          dispatch(setHideHeader(false));
+          dispatch(setHideFooter(false));
+          dispatch(setHideStickyNavBar(false));
+        }
+      }, [dispatch, isMobile]);
 
       const handleListingTypeClick = () => {
         if (listingType === PropertyListingType.CALL) {
@@ -127,7 +158,8 @@ const ListPropertyPage = dynamic(
           return;
         }
         const url = `/list-property/${propertyType.toLowerCase()}`;
-        console.log(`Navigating to: ${url}`);
+        console.log("Navigating to URL:", url);
+        router.push(url);
       };
 
       const handlePostYourPropertyClick = async () => {
@@ -151,9 +183,177 @@ const ListPropertyPage = dynamic(
         }
       };
 
+      const goToHomePage = () => {
+        router.push("/");
+      };
+
       return (
         <>
-          <section className="xl:min-h-[500px] min-h-[400px] w-full overflow-hidden">
+          {/* Mobile Section */}
+          <section
+            className={`py-2 px-4 fixed top-0 left-0 right-0 z-50 border-b h-[55px] border-gray-200 bg-white flex flex-col justify-center items-center w-full md:hidden`}
+          >
+            <div className="flex justify-center items-center align-middle w-full md:hidden">
+              <h1 className="text-lg my-auto text-black ml-auto">
+                {showGetStarted ? "Get Started" : "List Your Property"}
+              </h1>
+
+              <button className="border border-gray-200 rounded-full md:border-none ml-auto">
+                <X onClick={goToHomePage} size={25} />
+              </button>
+            </div>
+          </section>
+          {showGetStarted && (
+            <section className="flex flex-col items-start justify-around min-h-[calc(100vh-55px)] bg-white px-6 py-4 md:hidden gap-8 w-full mx-auto">
+              <h1 className="text-2xl">
+                It&apos;s easy to list property on Houseclay
+              </h1>
+              <div className="flex flex-col gap-6 w-full mx-auto">
+                <div className="flex items-start gap-4">
+                  <PropertyBasics />
+                  <div className="flex flex-1 flex-col gap-2">
+                    <div className="font-normal text-lg">
+                      1. Property Basics
+                    </div>
+                    <div className="text-gray-500 text-sm">
+                      Choose property type & enter location.
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <ShowcaseYourSpace />
+                  <div className="flex flex-1 flex-col gap-2">
+                    <div className="font-normal text-lg">
+                      2. Showcase Your Space
+                    </div>
+                    <div className="text-gray-500 text-sm">
+                      Upload photos, add key details & set price.
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <GoLive />
+                  <div className="flex flex-1 flex-col gap-2">
+                    <div className="font-normal text-lg">
+                      3. Go Live & Get Leads!
+                    </div>
+                    <div className="text-gray-500 text-sm">
+                      Post instantly & connect with buyers/tenants.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="w-full mx-auto mt-auto">
+                <div className="flex items-center bg-green-100 rounded-lg p-4 gap-4 mb-8">
+                  <span className="bg-teal-500 text-white rounded-md py-2 px-3 text-xs font-medium flex gap-1 items-center">
+                    <Lightbulb size={15} /> Tip
+                  </span>
+                  <span className="text-gray-700 text-sm">
+                    On an average it takes less than 2 minutes to list the
+                    property
+                  </span>
+                </div>
+                <button
+                  className="text-center w-full bg-red-500 hover:bg-red-600 text-white lg:py-4 py-3 rounded-lg font-medium transition duration-200"
+                  onClick={() => setShowGetStarted(false)}
+                >
+                  Get Started
+                </button>
+              </div>
+            </section>
+          )}
+
+          {!showGetStarted && (
+            <section className="w-full my-0 min-h-[calc(100vh-55px)] flex-col container py-4 px-6 mx-auto flex justify-between gap-16 md:hidden">
+              {showListingOptions && (
+                <div className="flex flex-col gap-8 h-full">
+                  <h1 className="text-2xl">
+                    Select How You Want to List Your Property
+                  </h1>
+                  <legend className="sr-only">Listing Options</legend>
+                  <div className="flex flex-col gap-2">
+                    <ListingOption
+                      id="option-diy"
+                      icon={<CreateNewListing />}
+                      iconColor="blue"
+                      title="Create a New Listing"
+                      description="Do it yourself in 5 easy steps"
+                      className="py-4"
+                      isSelected={listingType === PropertyListingType.DIY}
+                      onChange={() =>
+                        dispatch(setListingType(PropertyListingType.DIY))
+                      }
+                    />
+
+                    <ListingOption
+                      id="option-call"
+                      icon={<CallWithCaptain />}
+                      iconColor="green"
+                      title="Get on a Call with an Captain"
+                      description="Let us do it for you over a quick phone call"
+                      className="py-4"
+                      isSelected={listingType === PropertyListingType.CALL}
+                      onChange={() =>
+                        dispatch(setListingType(PropertyListingType.CALL))
+                      }
+                    />
+                  </div>
+
+                  <button
+                    type="button"
+                    className="w-full bg-red-500 hover:bg-red-600 text-white lg:py-4 py-3 rounded-lg lg:mt-4 font-medium transition duration-200 mt-auto"
+                    onClick={handleListingTypeClick}
+                  >
+                    {listingType === PropertyListingType.CALL
+                      ? "Get a call back!"
+                      : "Start Posting Your Free Listing"}
+                  </button>
+                </div>
+              )}
+              {showPropertyTypeOptions && (
+                <div className="flex flex-col gap-8 h-full">
+                  <h1 className="text-2xl">Tell us about your property</h1>
+                  <div className="grid grid-cols-3 max-md:grid-cols-1 lg:gap-4 gap-4 lg:mb-8 mb-4">
+                    {propertyTypes.map((option) => (
+                      <PropertyTypeOption
+                        key={option.id}
+                        id={option.id}
+                        label={option.label}
+                        icon={option.icon}
+                        className="px-4 items-center"
+                        isSelected={propertyType === option.type}
+                        iconClassName={`${
+                          propertyType === option.type
+                            ? "opacity-100"
+                            : "opacity-50"
+                        } transition-opacity duration-200`}
+                        onChange={() => dispatch(setPropertyType(option.type))}
+                      />
+                    ))}
+                  </div>
+                  <div className="flex gap-2 mt-auto">
+                    <button
+                      type="button"
+                      className="text-center w-full border border-gray-300 text-gray-700 hover:bg-gray-50 lg:py-4 py-3 rounded-lg font-medium transition duration-200"
+                      onClick={() => dispatch(setShowPropertyType(false))}
+                    >
+                      Back
+                    </button>
+                    <button
+                      type="button"
+                      className="text-center w-full bg-red-500 hover:bg-red-600 text-white lg:py-4 py-3 rounded-lg font-medium transition duration-200"
+                      onClick={handlePostListingClick}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              )}
+            </section>
+          )}
+
+          {/* Desktop Section */}
+          <section className="xl:min-h-[500px] min-h-[400px] max-md:min-h-[fit-content] w-full overflow-hidden max-md:hidden">
             <div className="container py-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 flex justify-between gap-16">
               <div className="flex w-2/5 justify-around items-start">
                 <Image
@@ -275,7 +475,7 @@ const ListPropertyPage = dynamic(
                       <h1 className="lg:text-2xl text-xl lg:mb-8 mb-4">
                         Tell us about your property
                       </h1>
-                      <div className="grid grid-cols-3 lg:gap-4 gap-2 lg:mb-8 mb-4">
+                      <div className="grid grid-cols-3 max-md:grid-cols-1 lg:gap-4 gap-2 lg:mb-8 mb-4">
                         {propertyTypes.map((option) => (
                           <PropertyTypeOption
                             key={option.id}
@@ -294,14 +494,13 @@ const ListPropertyPage = dynamic(
                           />
                         ))}
                       </div>
-                      <Link
-                        href={`/list-property/${propertyType.toLowerCase()}`}
+                      <button
                         type="button"
                         className="text-center w-full bg-red-500 hover:bg-red-600 text-white lg:py-4 py-3 rounded-lg font-medium transition duration-200"
                         onClick={handlePostListingClick}
                       >
                         Start Posting Your Free Listing
-                      </Link>
+                      </button>
                     </div>
                   )}
                 </div>
@@ -309,15 +508,15 @@ const ListPropertyPage = dynamic(
             </div>
           </section>
 
-          <section className="w-full overflow-hidden">
+          <section className="w-full overflow-hidden max-md:hidden">
             <ListWithUs />
           </section>
 
-          <section className="w-full overflow-hidden">
+          <section className="w-full overflow-hidden max-md:hidden">
             <CustomerSupportBanner />
           </section>
 
-          <section className="w-full overflow-hidden">
+          <section className="w-full overflow-hidden max-md:hidden">
             <div className="container py-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
               <div className="flex justify-around items-center gap-16">
                 <div className="flex flex-col w-1/2">
@@ -344,7 +543,7 @@ const ListPropertyPage = dynamic(
             </div>
           </section>
 
-          <section className="w-full overflow-hidden">
+          <section className="w-full overflow-hidden max-md:hidden">
             <ListPropertyAdvantages />
           </section>
 

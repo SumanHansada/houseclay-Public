@@ -3,7 +3,30 @@ import Skeleton from "react-loading-skeleton";
 export default function ListPropertyLoading() {
   return (
     <>
-      <section className="xl:min-h-[500px] min-h-[400px] w-full overflow-hidden">
+      <section className="md:hidden">
+        <div className="flex flex-col items-start justify-around min-h-[calc(100vh-55px)] bg-white px-6 py-4 gap-8 w-full mx-auto">
+          <Skeleton height={32} width={220} className="mb-4 mt-2" />
+          <div className="flex flex-col gap-6 w-full mx-auto">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex items-start gap-4">
+                <Skeleton circle height={48} width={48} />
+                <div className="flex flex-1 flex-col gap-2">
+                  <Skeleton height={20} width={120} />
+                  <Skeleton height={14} width={180} />
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="w-full mx-auto mt-auto">
+            <div className="flex items-center bg-green-100 rounded-lg p-4 gap-4 mb-8">
+              <Skeleton height={24} width={60} />
+              <Skeleton height={14} width={180} />
+            </div>
+            <Skeleton height={48} width={340} className="rounded-lg" />
+          </div>
+        </div>
+      </section>
+      <section className="xl:min-h-[500px] min-h-[400px] w-full overflow-hidden max-md:hidden">
         <div className="container py-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 flex justify-between gap-16">
           <div className="hidden max-lg:flex w-2/5 justify-around items-start ">
             <Skeleton height={250} width={275} />

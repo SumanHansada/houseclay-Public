@@ -1,6 +1,7 @@
 "use client";
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 import Advantages from "@/components/Advantages";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
@@ -13,6 +14,11 @@ import Standouts from "@/components/Standouts";
 import { Testimonials } from "@/components/Testimonials";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
+import {
+  setHideFooter,
+  setHideHeader,
+  setHideStickyNavBar,
+} from "@/store/appSlice";
 
 import dummyData from "../data/dummyData.json";
 
@@ -23,6 +29,14 @@ export default function Home() {
   const testimonials = dummyData.testimonials;
   const { isDialogOpen, closeDialog } = useDialog();
   const { isMobile } = useDeviceContext();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setHideHeader(false));
+    dispatch(setHideFooter(false));
+    dispatch(setHideStickyNavBar(false));
+  }, [dispatch]);
+
   return (
     <>
       {/* Masthead Desktop Section */}

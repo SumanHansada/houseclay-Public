@@ -24,6 +24,7 @@ export interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = () => {
+  const hideHeader = useSelector((state: RootState) => state.app.hideHeader);
   const token = useSelector((state: RootState) => state.auth.token);
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
@@ -52,6 +53,10 @@ const Header: React.FC<HeaderProps> = () => {
       console.error(err);
     }
   };
+
+  if (hideHeader) {
+    return null;
+  }
 
   return (
     <>
@@ -152,7 +157,7 @@ const Header: React.FC<HeaderProps> = () => {
         </div>
       </header>
       {/* Mobile Header */}
-      <header className="fixed top-0 left-0 right-0 bg-white z-50 flex justify-between w-full px-4 py-2 shadow-sm md:hidden">
+      <header className="fixed top-0 left-0 right-0 bg-white z-50 border-b border-gray-200 flex justify-between w-full px-4 py-2 shadow-sm md:hidden">
         {/* Left Section - Logo */}
 
         <div className="flex items-center gap-2">

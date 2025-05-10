@@ -2,6 +2,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import { apiSlice } from "./apiSlice";
+import appReducer from "./appSlice";
 import authReducer from "./authSlice";
 import listPropertyReducer from "./listPropertySlice";
 import uploadToS3SliceReducer from "./uploadToS3Slice";
@@ -9,6 +10,7 @@ import userReducer from "./userSlice";
 
 export const store = configureStore({
   reducer: {
+    app: appReducer,
     auth: authReducer,
     listProperty: listPropertyReducer,
     user: userReducer,

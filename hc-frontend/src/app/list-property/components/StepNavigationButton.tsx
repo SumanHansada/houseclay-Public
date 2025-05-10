@@ -1,7 +1,6 @@
 import { Check } from "lucide-react";
 
 export enum FormStep {
-  GETTING_STARTED = "Getting Started",
   PROPERTY_DETAILS = "Property Details",
   LOCALITY_DETAILS = "Locality Details",
   RENTAL_DETAILS = "Rental Details",

@@ -5,6 +5,7 @@ interface ListingOptionProps {
   title: string;
   description: string;
   isSelected: boolean;
+  className?: string;
   onChange: () => void;
 }
 
@@ -15,6 +16,7 @@ const ListingOption: React.FC<ListingOptionProps> = ({
   title,
   description,
   isSelected,
+  className,
   onChange,
 }) => {
   return (
@@ -25,7 +27,7 @@ const ListingOption: React.FC<ListingOptionProps> = ({
         htmlFor={id}
         className={`flex items-center justify-between lg:p-4 p-2 rounded-lg border cursor-pointer lg:gap-12 gap-6 ${
           isSelected ? "border-red-400 bg-red-50" : "border-gray-200 bg-white"
-        }`}
+        } ${className}`}
       >
         <div className="flex flex-1 items-center gap-4">
           <div

@@ -3,12 +3,19 @@ import FacebookSvg from "public/icons/facebook.svg";
 import HouseclaySvg from "public/icons/houseclay.svg";
 import InstagramSvg from "public/icons/instagram.svg";
 import LinkedInSvg from "public/icons/linkedin.svg";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
-const Footer = () => {
+const Footer: React.FC = () => {
   const HouseClay = HouseclaySvg as React.FC<React.SVGProps<SVGSVGElement>>;
   const LinkedIn = LinkedInSvg as React.FC<React.SVGProps<SVGSVGElement>>;
   const Facebook = FacebookSvg as React.FC<React.SVGProps<SVGSVGElement>>;
   const Instagram = InstagramSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+  const hideFooter = useSelector((state: RootState) => state.app.hideFooter);
+
+  if (hideFooter) {
+    return null;
+  }
 
   return (
     <>
@@ -200,7 +207,9 @@ const Footer = () => {
         </div>
       </footer>
       {/* Mobile Footer */}
-      <footer className="flex flex-col gap-6 md:hidden bg-gray-100 px-8 pt-8 pb-16">
+      <footer
+        className={`${hideFooter ? "hidden" : "flex"} flex-col gap-6 md:hidden bg-gray-100 px-8 pt-8 pb-16`}
+      >
         <Link href="/" className="flex items-center gap-1">
           <HouseClay />
           <span className="text-red-600 text-lg font-nunito font-bold">
