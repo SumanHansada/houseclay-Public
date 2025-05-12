@@ -8,7 +8,8 @@ import ListPropertySuccessSvg from "public/icons/list-property-success.svg";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { RouteStep } from "@/common/enums";
+import { ListPropertyRouteStep } from "@/common/enums";
+import { ListPropertyFormStep } from "@/common/enums";
 import { Dialog, DialogContent } from "@/components/Dialog";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
 import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
@@ -23,7 +24,6 @@ import { RootState } from "@/store/store";
 import FlatmatesStepper from "../components/FlatmatesStepper";
 import RentStepper from "../components/RentStepper";
 import ResaleStepper from "../components/ResaleStepper";
-import { FormStep } from "../components/StepNavigationButton";
 
 const ListPropertySuccess = ListPropertySuccessSvg as React.FC<
   React.SVGProps<SVGSVGElement>
@@ -49,12 +49,12 @@ export default function ListPropertyTypeLayout({
   const router = useRouter();
   const { openDialog, isDialogOpen, closeDialog } = useDialog();
 
-  const [currentStep, setCurrentStep] = useState<FormStep>(
-    FormStep.PROPERTY_DETAILS,
+  const [currentStep, setCurrentStep] = useState<ListPropertyFormStep>(
+    ListPropertyFormStep.PROPERTY_DETAILS,
   );
-  const [completedSteps, setCompletedSteps] = useState<Set<FormStep>>(
-    new Set(),
-  );
+  const [completedSteps, setCompletedSteps] = useState<
+    Set<ListPropertyFormStep>
+  >(new Set());
   const formKey = `${type}Form` as "rentForm" | "resaleForm" | "flatmatesForm";
   const formState = useSelector(
     (state: RootState) => state.listProperty[formKey],
@@ -63,7 +63,7 @@ export default function ListPropertyTypeLayout({
   const initialValues = formState?.data || {};
 
   // Update the markStepAsCompleted function to manage step completion state
-  const markStepAsCompleted = (step: FormStep) => {
+  const markStepAsCompleted = (step: ListPropertyFormStep) => {
     setCompletedSteps((prev) => new Set(prev).add(step));
   };
 
@@ -122,35 +122,37 @@ export default function ListPropertyTypeLayout({
   const handleBack = () => {
     setCompletedSteps((prev) => {
       const updatedSteps = new Set(prev);
-      if (currentStep === FormStep.LOCALITY_DETAILS) {
-        updatedSteps.delete(FormStep.PROPERTY_DETAILS);
-        setCurrentStep(FormStep.PROPERTY_DETAILS);
-        setRoute(RouteStep.PROPERTY_DETAILS);
-      } else if (currentStep === FormStep.RENTAL_DETAILS) {
-        updatedSteps.delete(FormStep.LOCALITY_DETAILS);
-        setCurrentStep(FormStep.LOCALITY_DETAILS);
-        setRoute(RouteStep.LOCALITY_DETAILS);
-      } else if (currentStep === FormStep.RESALE_DETAILS) {
-        updatedSteps.delete(FormStep.LOCALITY_DETAILS);
-        setCurrentStep(FormStep.LOCALITY_DETAILS);
-        setRoute(RouteStep.LOCALITY_DETAILS);
-      } else if (currentStep === FormStep.GALLERY) {
+      if (currentStep === ListPropertyFormStep.PROPERTY_DETAILS) {
+        router.back();
+      } else if (currentStep === ListPropertyFormStep.LOCALITY_DETAILS) {
+        updatedSteps.delete(ListPropertyFormStep.PROPERTY_DETAILS);
+        setCurrentStep(ListPropertyFormStep.PROPERTY_DETAILS);
+        setRoute(ListPropertyRouteStep.PROPERTY_DETAILS);
+      } else if (currentStep === ListPropertyFormStep.RENTAL_DETAILS) {
+        updatedSteps.delete(ListPropertyFormStep.LOCALITY_DETAILS);
+        setCurrentStep(ListPropertyFormStep.LOCALITY_DETAILS);
+        setRoute(ListPropertyRouteStep.LOCALITY_DETAILS);
+      } else if (currentStep === ListPropertyFormStep.RESALE_DETAILS) {
+        updatedSteps.delete(ListPropertyFormStep.LOCALITY_DETAILS);
+        setCurrentStep(ListPropertyFormStep.LOCALITY_DETAILS);
+        setRoute(ListPropertyRouteStep.LOCALITY_DETAILS);
+      } else if (currentStep === ListPropertyFormStep.GALLERY) {
         if (type === "resale") {
-          updatedSteps.delete(FormStep.RESALE_DETAILS);
-          setCurrentStep(FormStep.RESALE_DETAILS);
-          setRoute(RouteStep.RESALE_DETAILS);
+          updatedSteps.delete(ListPropertyFormStep.RESALE_DETAILS);
+          setCurrentStep(ListPropertyFormStep.RESALE_DETAILS);
+          setRoute(ListPropertyRouteStep.RESALE_DETAILS);
         } else {
-          updatedSteps.delete(FormStep.RENTAL_DETAILS);
-          setCurrentStep(FormStep.RENTAL_DETAILS);
-          setRoute(RouteStep.RENTAL_DETAILS);
+          updatedSteps.delete(ListPropertyFormStep.RENTAL_DETAILS);
+          setCurrentStep(ListPropertyFormStep.RENTAL_DETAILS);
+          setRoute(ListPropertyRouteStep.RENTAL_DETAILS);
         }
-      } else if (currentStep === FormStep.ADDITIONAL_INFO) {
-        updatedSteps.delete(FormStep.GALLERY);
-        setCurrentStep(FormStep.GALLERY);
-        setRoute(RouteStep.GALLERY);
-      } else if (currentStep === FormStep.DONE) {
-        updatedSteps.delete(FormStep.ADDITIONAL_INFO);
-        setCurrentStep(FormStep.ADDITIONAL_INFO);
+      } else if (currentStep === ListPropertyFormStep.ADDITIONAL_INFO) {
+        updatedSteps.delete(ListPropertyFormStep.GALLERY);
+        setCurrentStep(ListPropertyFormStep.GALLERY);
+        setRoute(ListPropertyRouteStep.GALLERY);
+      } else if (currentStep === ListPropertyFormStep.DONE) {
+        updatedSteps.delete(ListPropertyFormStep.ADDITIONAL_INFO);
+        setCurrentStep(ListPropertyFormStep.ADDITIONAL_INFO);
       }
       return updatedSteps;
     });
@@ -158,31 +160,31 @@ export default function ListPropertyTypeLayout({
 
   const handleSaveAndNext = async () => {
     markStepAsCompleted(currentStep);
-    if (currentStep === FormStep.PROPERTY_DETAILS) {
-      setCurrentStep(FormStep.LOCALITY_DETAILS);
-      setRoute(RouteStep.LOCALITY_DETAILS);
-    } else if (currentStep === FormStep.LOCALITY_DETAILS) {
+    if (currentStep === ListPropertyFormStep.PROPERTY_DETAILS) {
+      setCurrentStep(ListPropertyFormStep.LOCALITY_DETAILS);
+      setRoute(ListPropertyRouteStep.LOCALITY_DETAILS);
+    } else if (currentStep === ListPropertyFormStep.LOCALITY_DETAILS) {
       if (type === "resale") {
-        setCurrentStep(FormStep.RESALE_DETAILS);
-        setRoute(RouteStep.RESALE_DETAILS);
+        setCurrentStep(ListPropertyFormStep.RESALE_DETAILS);
+        setRoute(ListPropertyRouteStep.RESALE_DETAILS);
       } else {
-        setCurrentStep(FormStep.RENTAL_DETAILS);
-        setRoute(RouteStep.RENTAL_DETAILS);
+        setCurrentStep(ListPropertyFormStep.RENTAL_DETAILS);
+        setRoute(ListPropertyRouteStep.RENTAL_DETAILS);
       }
     } else if (
-      currentStep === FormStep.RENTAL_DETAILS ||
-      currentStep === FormStep.RESALE_DETAILS
+      currentStep === ListPropertyFormStep.RENTAL_DETAILS ||
+      currentStep === ListPropertyFormStep.RESALE_DETAILS
     ) {
-      setCurrentStep(FormStep.GALLERY);
-      setRoute(RouteStep.GALLERY);
-    } else if (currentStep === FormStep.GALLERY) {
+      setCurrentStep(ListPropertyFormStep.GALLERY);
+      setRoute(ListPropertyRouteStep.GALLERY);
+    } else if (currentStep === ListPropertyFormStep.GALLERY) {
       // Make API call to get presigned-urls
       await getPresignedPhotoUrls();
-      setCurrentStep(FormStep.ADDITIONAL_INFO);
-      setRoute(RouteStep.ADDITIONAL_INFO);
-    } else if (currentStep === FormStep.ADDITIONAL_INFO) {
+      setCurrentStep(ListPropertyFormStep.ADDITIONAL_INFO);
+      setRoute(ListPropertyRouteStep.ADDITIONAL_INFO);
+    } else if (currentStep === ListPropertyFormStep.ADDITIONAL_INFO) {
       uploadFilesToS3();
-      setCurrentStep(FormStep.DONE);
+      setCurrentStep(ListPropertyFormStep.DONE);
       openDialog("list-property-success-dialog");
     }
   };

@@ -84,7 +84,6 @@ const initialState: ListPropertyState = {
   propertyID: "",
   propertyType: PropertyType.RENT,
   listingType: PropertyListingType.DIY,
-  showPropertyType: false,
   rentForm: {
     isValid: false,
     data: {
@@ -128,9 +127,6 @@ const listPropertySlice = createSlice({
     },
     setListingType: (state, action: PayloadAction<PropertyListingType>) => {
       state.listingType = action.payload;
-    },
-    setShowPropertyType: (state, action: PayloadAction<boolean>) => {
-      state.showPropertyType = action.payload;
     },
     setFormValidity: (
       state,
@@ -240,7 +236,6 @@ const listPropertySlice = createSlice({
 export const {
   setPropertyType,
   setListingType,
-  setShowPropertyType,
   setFormValidity,
   setFormData,
   setFileURLMap,

@@ -3,10 +3,7 @@ import { Crown, Heart, MapPin, Star } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 
-enum BadgeType {
-  Featured = "Featured",
-  Exclusive = "Exclusive",
-}
+import { BadgeType } from "@/common/enums";
 
 export interface Property {
   id: number;

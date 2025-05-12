@@ -11,7 +11,6 @@ export interface ListPropertyState {
   propertyID: string;
   propertyType: PropertyType;
   listingType: PropertyListingType;
-  showPropertyType: boolean;
   rentForm: {
     isValid: boolean;
     data?: {

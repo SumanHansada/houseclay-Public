@@ -2,32 +2,30 @@
 
 import "react-international-phone/style.css";
 
-import { Lightbulb, ShieldCheck, X } from "lucide-react";
+import { ShieldCheck, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import CallWithCaptainSvg from "public/icons/call-with-captain.svg";
-import CreateNewListingSvg from "public/icons/create-new-listing.svg";
-import FlatmatesSvg from "public/icons/flatmates.svg";
-import GoLiveSvg from "public/icons/get-started/go-live.svg";
-import PropertyBasicsSvg from "public/icons/get-started/property-basics.svg";
-import ShowcaseYourSpaceSvg from "public/icons/get-started/showcase-your-space.svg";
 import HouseClayCaptainSvg from "public/icons/houseclay-captain.svg";
-import RentSvg from "public/icons/rent.svg";
-import ResaleSvg from "public/icons/resale.svg";
 import React, { useEffect, useState } from "react";
 import { PhoneInput } from "react-international-phone";
 import { useDispatch, useSelector } from "react-redux";
 
-import { AuthStep, PropertyListingType, PropertyType } from "@/common/enums";
+import {
+  AuthStep,
+  ListPropertyDesktopStep,
+  ListPropertyMobileStep,
+  PropertyListingType,
+} from "@/common/enums";
 import Carousel2D from "@/components/Carousel2D";
 import CustomerSupportBanner from "@/components/CustomerSupportBanner";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import Footer from "@/components/Footer";
-import ListingOption from "@/components/ListingOption";
+import GetStarted from "@/components/GetStarted";
+import ListingOptions from "@/components/ListingOptions";
 import ListPropertyAdvantages from "@/components/ListPropertyAdvantages";
 import ListWithUs from "@/components/ListWithUs";
-import PropertyTypeOption from "@/components/PropertyTypeOption";
+import PropertyTypeOptions from "@/components/PropertyTypeOptions";
 import { TestimonialCard } from "@/components/Testimonials";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -41,58 +39,15 @@ import {
   setHideStickyNavBar,
 } from "@/store/appSlice";
 import { setAuthStep, setPhoneNo } from "@/store/authSlice";
-import {
-  setListingType,
-  setPropertyType,
-  setShowPropertyType,
-} from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 import { setCheckUser } from "@/store/userSlice";
 
 import dummyData from "../../data/dummyData.json";
 import ListPropertyLoading from "./loading";
 
-const CreateNewListing = CreateNewListingSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const CallWithCaptain = CallWithCaptainSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
 const HouseClayCaptain = HouseClayCaptainSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
-
-const Rent = RentSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const Resale = ResaleSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const Flatmates = FlatmatesSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const GoLive = GoLiveSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const ShowcaseYourSpace = ShowcaseYourSpaceSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const PropertyBasics = PropertyBasicsSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-
-const propertyTypes = [
-  {
-    id: "rent",
-    label: "Rent",
-    icon: <Rent />,
-    type: PropertyType.RENT,
-  },
-  {
-    id: "resale",
-    label: "Resale",
-    icon: <Resale />,
-    type: PropertyType.RESALE,
-  },
-  {
-    id: "flatmates",
-    label: "Flatmates",
-    icon: <Flatmates />,
-    type: PropertyType.FLATMATES,
-  },
-];
 
 const ListPropertyPage = dynamic(
   () =>
@@ -105,9 +60,6 @@ const ListPropertyPage = dynamic(
       const listingType = useSelector(
         (state: RootState) => state.listProperty.listingType,
       );
-      const showPropertyType = useSelector(
-        (state: RootState) => state.listProperty.showPropertyType,
-      );
       const propertyType = useSelector(
         (state: RootState) => state.listProperty.propertyType,
       );
@@ -118,15 +70,16 @@ const ListPropertyPage = dynamic(
       };
       const dispatch = useDispatch();
       const [acceptTerms, setAcceptTerms] = useState(false);
-      const [showGetStarted, setShowGetStarted] = useState(
-        isMobile ? true : false,
+      const [mobileStep, setMobileStep] = useState<ListPropertyMobileStep>(
+        ListPropertyMobileStep.GET_STARTED,
+      );
+      const [desktopStep, setDesktopStep] = useState<ListPropertyDesktopStep>(
+        ListPropertyDesktopStep.LISTING_OPTIONS,
       );
       const [triggerCheckUser] = useLazyCheckUserQuery();
       const [generateOtp] = useGenerateOtpMutation();
 
       const testimonials = dummyData.testimonials;
-      const showListingOptions = token && !showPropertyType;
-      const showPropertyTypeOptions = token && showPropertyType;
 
       useEffect(() => {
         dispatch(setAuthStep(AuthStep.PHONE));
@@ -134,7 +87,6 @@ const ListPropertyPage = dynamic(
           dispatch(setHideHeader(true));
           dispatch(setHideFooter(true));
           dispatch(setHideStickyNavBar(true));
-          setShowGetStarted(true);
         } else {
           dispatch(setHideHeader(false));
           dispatch(setHideFooter(false));
@@ -142,12 +94,30 @@ const ListPropertyPage = dynamic(
         }
       }, [dispatch, isMobile]);
 
+      const goToHomePage = () => {
+        router.push("/");
+      };
+
+      const GetMobileHeader = () => {
+        if (mobileStep === ListPropertyMobileStep.GET_STARTED) {
+          return "Get Started";
+        } else if (mobileStep === ListPropertyMobileStep.LISTING_OPTIONS) {
+          return "List Your Property";
+        } else if (mobileStep === ListPropertyMobileStep.PROPERTY_TYPE) {
+          return "Type of Listing";
+        }
+      };
+
       const handleListingTypeClick = () => {
         if (listingType === PropertyListingType.CALL) {
           openDialog("call-with-captain-dialog");
           return;
         } else if (listingType === PropertyListingType.DIY) {
-          dispatch(setShowPropertyType(true));
+          if (isMobile) {
+            setMobileStep(ListPropertyMobileStep.PROPERTY_TYPE);
+          } else {
+            setDesktopStep(ListPropertyDesktopStep.PROPERTY_TYPE);
+          }
           return;
         }
       };
@@ -160,6 +130,18 @@ const ListPropertyPage = dynamic(
         const url = `/list-property/${propertyType.toLowerCase()}`;
         console.log("Navigating to URL:", url);
         router.push(url);
+      };
+
+      const handleGetStarted = () => {
+        setMobileStep(ListPropertyMobileStep.LISTING_OPTIONS);
+      };
+
+      const handleBack = () => {
+        if (isMobile) {
+          setMobileStep(ListPropertyMobileStep.LISTING_OPTIONS);
+        } else {
+          setDesktopStep(ListPropertyDesktopStep.LISTING_OPTIONS);
+        }
       };
 
       const handlePostYourPropertyClick = async () => {
@@ -183,10 +165,6 @@ const ListPropertyPage = dynamic(
         }
       };
 
-      const goToHomePage = () => {
-        router.push("/");
-      };
-
       return (
         <>
           {/* Mobile Section */}
@@ -195,7 +173,7 @@ const ListPropertyPage = dynamic(
           >
             <div className="flex justify-center items-center align-middle w-full md:hidden">
               <h1 className="text-lg my-auto text-black ml-auto">
-                {showGetStarted ? "Get Started" : "List Your Property"}
+                {GetMobileHeader()}
               </h1>
 
               <button className="border border-gray-200 rounded-full md:border-none ml-auto">
@@ -203,154 +181,22 @@ const ListPropertyPage = dynamic(
               </button>
             </div>
           </section>
-          {showGetStarted && (
-            <section className="flex flex-col items-start justify-around min-h-[calc(100vh-55px)] bg-white px-6 py-4 md:hidden gap-8 w-full mx-auto">
-              <h1 className="text-2xl">
-                It&apos;s easy to list property on Houseclay
-              </h1>
-              <div className="flex flex-col gap-6 w-full mx-auto">
-                <div className="flex items-start gap-4">
-                  <PropertyBasics />
-                  <div className="flex flex-1 flex-col gap-2">
-                    <div className="font-normal text-lg">
-                      1. Property Basics
-                    </div>
-                    <div className="text-gray-500 text-sm">
-                      Choose property type & enter location.
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <ShowcaseYourSpace />
-                  <div className="flex flex-1 flex-col gap-2">
-                    <div className="font-normal text-lg">
-                      2. Showcase Your Space
-                    </div>
-                    <div className="text-gray-500 text-sm">
-                      Upload photos, add key details & set price.
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <GoLive />
-                  <div className="flex flex-1 flex-col gap-2">
-                    <div className="font-normal text-lg">
-                      3. Go Live & Get Leads!
-                    </div>
-                    <div className="text-gray-500 text-sm">
-                      Post instantly & connect with buyers/tenants.
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="w-full mx-auto mt-auto">
-                <div className="flex items-center bg-green-100 rounded-lg p-4 gap-4 mb-8">
-                  <span className="bg-teal-500 text-white rounded-md py-2 px-3 text-xs font-medium flex gap-1 items-center">
-                    <Lightbulb size={15} /> Tip
-                  </span>
-                  <span className="text-gray-700 text-sm">
-                    On an average it takes less than 2 minutes to list the
-                    property
-                  </span>
-                </div>
-                <button
-                  className="text-center w-full bg-red-500 hover:bg-red-600 text-white lg:py-4 py-3 rounded-lg font-medium transition duration-200"
-                  onClick={() => setShowGetStarted(false)}
-                >
-                  Get Started
-                </button>
-              </div>
-            </section>
-          )}
-
-          {!showGetStarted && (
-            <section className="w-full my-0 min-h-[calc(100vh-55px)] flex-col container py-4 px-6 mx-auto flex justify-between gap-16 md:hidden">
-              {showListingOptions && (
-                <div className="flex flex-col gap-8 h-full">
-                  <h1 className="text-2xl">
-                    Select How You Want to List Your Property
-                  </h1>
-                  <legend className="sr-only">Listing Options</legend>
-                  <div className="flex flex-col gap-2">
-                    <ListingOption
-                      id="option-diy"
-                      icon={<CreateNewListing />}
-                      iconColor="blue"
-                      title="Create a New Listing"
-                      description="Do it yourself in 5 easy steps"
-                      className="py-4"
-                      isSelected={listingType === PropertyListingType.DIY}
-                      onChange={() =>
-                        dispatch(setListingType(PropertyListingType.DIY))
-                      }
-                    />
-
-                    <ListingOption
-                      id="option-call"
-                      icon={<CallWithCaptain />}
-                      iconColor="green"
-                      title="Get on a Call with an Captain"
-                      description="Let us do it for you over a quick phone call"
-                      className="py-4"
-                      isSelected={listingType === PropertyListingType.CALL}
-                      onChange={() =>
-                        dispatch(setListingType(PropertyListingType.CALL))
-                      }
-                    />
-                  </div>
-
-                  <button
-                    type="button"
-                    className="w-full bg-red-500 hover:bg-red-600 text-white lg:py-4 py-3 rounded-lg lg:mt-4 font-medium transition duration-200 mt-auto"
-                    onClick={handleListingTypeClick}
-                  >
-                    {listingType === PropertyListingType.CALL
-                      ? "Get a call back!"
-                      : "Start Posting Your Free Listing"}
-                  </button>
-                </div>
-              )}
-              {showPropertyTypeOptions && (
-                <div className="flex flex-col gap-8 h-full">
-                  <h1 className="text-2xl">Tell us about your property</h1>
-                  <div className="grid grid-cols-3 max-md:grid-cols-1 lg:gap-4 gap-4 lg:mb-8 mb-4">
-                    {propertyTypes.map((option) => (
-                      <PropertyTypeOption
-                        key={option.id}
-                        id={option.id}
-                        label={option.label}
-                        icon={option.icon}
-                        className="px-4 items-center"
-                        isSelected={propertyType === option.type}
-                        iconClassName={`${
-                          propertyType === option.type
-                            ? "opacity-100"
-                            : "opacity-50"
-                        } transition-opacity duration-200`}
-                        onChange={() => dispatch(setPropertyType(option.type))}
-                      />
-                    ))}
-                  </div>
-                  <div className="flex gap-2 mt-auto">
-                    <button
-                      type="button"
-                      className="text-center w-full border border-gray-300 text-gray-700 hover:bg-gray-50 lg:py-4 py-3 rounded-lg font-medium transition duration-200"
-                      onClick={() => dispatch(setShowPropertyType(false))}
-                    >
-                      Back
-                    </button>
-                    <button
-                      type="button"
-                      className="text-center w-full bg-red-500 hover:bg-red-600 text-white lg:py-4 py-3 rounded-lg font-medium transition duration-200"
-                      onClick={handlePostListingClick}
-                    >
-                      Next
-                    </button>
-                  </div>
-                </div>
-              )}
-            </section>
-          )}
+          {/* Mobile Content */}
+          <section className="w-full my-0 min-h-[calc(100vh-55px)] flex-col container py-4 px-6 mx-auto flex justify-between gap-16 md:hidden">
+            {mobileStep === ListPropertyMobileStep.GET_STARTED && (
+              <GetStarted onGetStarted={handleGetStarted} />
+            )}
+            {mobileStep === ListPropertyMobileStep.LISTING_OPTIONS && (
+              <ListingOptions isMobile={true} onNext={handleListingTypeClick} />
+            )}
+            {mobileStep === ListPropertyMobileStep.PROPERTY_TYPE && (
+              <PropertyTypeOptions
+                isMobile={true}
+                onNext={handlePostListingClick}
+                onBack={handleBack}
+              />
+            )}
+          </section>
 
           {/* Desktop Section */}
           <section className="xl:min-h-[500px] min-h-[400px] max-md:min-h-[fit-content] w-full overflow-hidden max-md:hidden">
@@ -367,7 +213,7 @@ const ListPropertyPage = dynamic(
               </div>
               <div className="flex w-3/5 justify-around items-center">
                 <div className="max-w-lg lg:w-full my-0 mx-auto flex flex-col gap-8">
-                  {!token && (
+                  {!token ? (
                     <>
                       <div className="flex flex-col">
                         <label className="block mb-2 text-base font-medium text-gray-700">
@@ -430,84 +276,32 @@ const ListPropertyPage = dynamic(
                         </p>
                       </div>
                     </>
-                  )}
-                  {showListingOptions && (
-                    <div className="flex flex-col">
-                      <h1 className="lg:text-2xl text-xl lg:mb-8 mb-4">
-                        Select How You Want to List Your Property
-                      </h1>
-                      <legend className="sr-only">Listing Options</legend>
-                      <ListingOption
-                        id="option-diy"
-                        icon={<CreateNewListing />}
-                        iconColor="blue"
-                        title="Create a New Listing"
-                        description="Do it yourself in 5 easy steps"
-                        isSelected={listingType === PropertyListingType.DIY}
-                        onChange={() =>
-                          dispatch(setListingType(PropertyListingType.DIY))
-                        }
-                      />
+                  ) : (
+                    <>
+                      {desktopStep ===
+                        ListPropertyDesktopStep.LISTING_OPTIONS && (
+                        <ListingOptions
+                          isMobile={false}
+                          onNext={handleListingTypeClick}
+                        />
+                      )}
 
-                      <ListingOption
-                        id="option-call"
-                        icon={<CallWithCaptain />}
-                        iconColor="green"
-                        title="Get on a Call with an Captain"
-                        description="Let us do it for you over a quick phone call"
-                        isSelected={listingType === PropertyListingType.CALL}
-                        onChange={() =>
-                          dispatch(setListingType(PropertyListingType.CALL))
-                        }
-                      />
-
-                      <button
-                        type="button"
-                        className="w-full bg-red-500 hover:bg-red-600 text-white lg:py-4 py-3 rounded-lg lg:mt-4 mt-2 font-medium transition duration-200"
-                        onClick={handleListingTypeClick}
-                      >
-                        Get Started
-                      </button>
-                    </div>
-                  )}
-                  {showPropertyTypeOptions && (
-                    <div className="flex flex-col">
-                      <h1 className="lg:text-2xl text-xl lg:mb-8 mb-4">
-                        Tell us about your property
-                      </h1>
-                      <div className="grid grid-cols-3 max-md:grid-cols-1 lg:gap-4 gap-2 lg:mb-8 mb-4">
-                        {propertyTypes.map((option) => (
-                          <PropertyTypeOption
-                            key={option.id}
-                            id={option.id}
-                            label={option.label}
-                            icon={option.icon}
-                            isSelected={propertyType === option.type}
-                            iconClassName={`${
-                              propertyType === option.type
-                                ? "opacity-100"
-                                : "opacity-50"
-                            } transition-opacity duration-200`}
-                            onChange={() =>
-                              dispatch(setPropertyType(option.type))
-                            }
-                          />
-                        ))}
-                      </div>
-                      <button
-                        type="button"
-                        className="text-center w-full bg-red-500 hover:bg-red-600 text-white lg:py-4 py-3 rounded-lg font-medium transition duration-200"
-                        onClick={handlePostListingClick}
-                      >
-                        Start Posting Your Free Listing
-                      </button>
-                    </div>
+                      {desktopStep ===
+                        ListPropertyDesktopStep.PROPERTY_TYPE && (
+                        <PropertyTypeOptions
+                          isMobile={false}
+                          onNext={handlePostListingClick}
+                          onBack={handleBack}
+                        />
+                      )}
+                    </>
                   )}
                 </div>
               </div>
             </div>
           </section>
 
+          {/* Rest of the sections */}
           <section className="w-full overflow-hidden max-md:hidden">
             <ListWithUs />
           </section>
@@ -583,7 +377,9 @@ const ListPropertyPage = dynamic(
                 </div>
               </DialogHeader>
               <DialogContent>
-                <div className="flex flex-col items-center justify-center text-center p-8">
+                <div
+                  className={`flex flex-col items-center justify-center text-center ${isMobile ? "p-6" : "p-8"}`}
+                >
                   <div className="relative overflow-hidden rounded-lg">
                     <div className="absolute inset-0 shadow-[inset_0_0_25px_25px_rgba(255,255,255,0.8)] z-20"></div>
                     <HouseClayCaptain />
