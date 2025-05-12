@@ -105,7 +105,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               className={`${isMobile ? "py-2 px-8" : ""}  flex flex-col justify-between items-center w-full`}
             >
               {isMobile && (
-                <h1 className="text-xl py-2 text-black">
+                <h1 className="text-xl py-1.5 text-black">
                   Log In to Your Account
                 </h1>
               )}

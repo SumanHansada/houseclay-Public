@@ -4,6 +4,7 @@ import HouseclaySvg from "public/icons/houseclay.svg";
 import InstagramSvg from "public/icons/instagram.svg";
 import LinkedInSvg from "public/icons/linkedin.svg";
 import { useSelector } from "react-redux";
+
 import { RootState } from "@/store/store";
 
 const Footer: React.FC = () => {

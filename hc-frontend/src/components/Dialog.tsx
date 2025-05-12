@@ -2,12 +2,14 @@
 
 import { FocusTrap } from "focus-trap-react";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 import {
   DeviceContextProps,
   useDeviceContext,
 } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
+import { RootState } from "@/store/store";
 
 interface DialogProps {
   id: string;
@@ -23,6 +25,7 @@ interface DialogProps {
 const getDialogStyles = (
   type: string,
   deviceContext?: DeviceContextProps,
+  hideStickyFooter?: boolean,
 ): string => {
   const isMobile = deviceContext?.isMobile;
   switch (type) {
@@ -31,7 +34,7 @@ const getDialogStyles = (
         isMobile ? "" : "rounded-lg"
       }`;
     case "bottom-sheet":
-      return `fixed bottom-[4rem] bg-white rounded-t-lg ${
+      return `fixed ${hideStickyFooter ? "bottom-0" : "bottom-[4rem]"} bg-white rounded-t-xl ${
         isMobile ? "w-full h-auto" : "hidden"
       }`;
     case "card":
@@ -43,13 +46,13 @@ const getDialogStyles = (
   }
 };
 
-const overlayStyles = (type: string, isMobile?: boolean): string => {
+const overlayStyles = (type: string, hideStickyFooter?: boolean): string => {
   switch (type) {
     case "fullscreen":
       return `fixed inset-0 bg-black bg-opacity-25`;
     case "bottom-sheet":
       return `fixed inset-x-0 top-0 bg-black bg-opacity-25 ${
-        isMobile ? "bottom-[4rem]" : "bottom-0"
+        hideStickyFooter ? "bottom-0" : "bottom-[4rem]"
       }`; // Stop overlay at sticky footer for mobile
     default:
       return `fixed inset-0 bg-black bg-opacity-25`;
@@ -69,8 +72,11 @@ export const Dialog: React.FC<DialogProps> = ({
   const { isDialogOpen, closeDialog } = useDialog();
   const isOpen = isDialogOpen(id);
   const deviceContext = useDeviceContext();
+  const hideStickyFooter = useSelector(
+    (state: RootState) => state.app.hideStickyNavBar,
+  );
   const [isClosing, setIsClosing] = useState(false);
-  const dialogOverlayStyles = overlayStyles(type, deviceContext?.isMobile);
+  const dialogOverlayStyles = overlayStyles(type, hideStickyFooter);
 
   useEffect(() => {
     if (!isOpen) {
@@ -96,7 +102,7 @@ export const Dialog: React.FC<DialogProps> = ({
     }
   };
 
-  const dialogStyles = getDialogStyles(type, deviceContext);
+  const dialogStyles = getDialogStyles(type, deviceContext, hideStickyFooter);
 
   return (
     <FocusTrap focusTrapOptions={{ allowOutsideClick: true }}>
