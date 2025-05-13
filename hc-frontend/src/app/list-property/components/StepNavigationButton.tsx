@@ -1,19 +1,11 @@
 import { Check } from "lucide-react";
 
-export enum FormStep {
-  PROPERTY_DETAILS = "Property Details",
-  LOCALITY_DETAILS = "Locality Details",
-  RENTAL_DETAILS = "Rental Details",
-  RESALE_DETAILS = "Resale Details",
-  GALLERY = "Gallery",
-  ADDITIONAL_INFO = "Additional Information",
-  DONE = "Done",
-}
+import { ListPropertyFormStep } from "@/common/enums";
 
 const StepNavigationButton: React.FC<{
-  step: FormStep;
-  currentStep: FormStep;
-  completedSteps: Set<FormStep>;
+  step: ListPropertyFormStep;
+  currentStep: ListPropertyFormStep;
+  completedSteps: Set<ListPropertyFormStep>;
   Icon: React.FC<React.SVGProps<SVGSVGElement>>;
   isLast?: boolean;
 }> = ({ step, currentStep, completedSteps, Icon, isLast }) => {
