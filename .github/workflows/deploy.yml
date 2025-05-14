@@ -54,7 +54,7 @@ jobs:
         run: |
           echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > private_key.pem
           chmod 600 private_key.pem
-          scp -o StrictHostKeyChecking=no -i private_key.pem hc-backend/backend/target/*.jar ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/app.jar
+          scp -o StrictHostKeyChecking=no -i private_key.pem hc-backend/backend/target/*.jar ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/backend/app.jar
           scp -o StrictHostKeyChecking=no -i private_key.pem hc-frontend/package.json ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/frontend/package.json
           scp -o StrictHostKeyChecking=no -i private_key.pem hc-frontend/package-lock.json ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/frontend/package-lock.json
           scp -o StrictHostKeyChecking=no -i private_key.pem -r hc-frontend/.next ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/frontend
@@ -66,7 +66,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i private_key.pem ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
           # Restart Spring Boot
           sudo kill -9 $(lsof -t -i:8080) || true
-          nohup java -jar /home/ec2-user/app.jar > /home/ec2-user/app.log 2>&1 &
+          nohup java -jar /home/ec2-user/backend/app.jar > /home/ec2-user/app.log 2>&1 &
 
           # Install Node.js and PM2 if not installed
           if ! command -v node &> /dev/null; then
