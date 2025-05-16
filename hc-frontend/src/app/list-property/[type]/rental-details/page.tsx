@@ -161,6 +161,8 @@ const RentalDetailsPage: React.FC = () => {
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
 
+  const rentalDetailsString = JSON.stringify(values.rentalDetails);
+
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {
@@ -201,11 +203,13 @@ const RentalDetailsPage: React.FC = () => {
 
     validateAndDispatch();
   }, [
-    JSON.stringify(values.rentalDetails),
+    rentalDetailsString,
     dispatch,
     formKey,
     setErrors,
     setFieldError,
+    isFormValid,
+    values,
   ]);
 
   return (
@@ -232,6 +236,7 @@ const RentalDetailsPage: React.FC = () => {
               <FormRadioGroup
                 name="rentalDetails.rentNegotiable"
                 label="Rent Negotiable"
+                columns={2}
                 options={[
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
@@ -322,9 +327,10 @@ const RentalDetailsPage: React.FC = () => {
         </div>
         {formKey === "rentForm" && (
           <div className="mb-6">
-            <FormRadioGroup
+            <FormCheckbox
               name="rentalDetails.preferredTenant"
               label="Preferred Tenant"
+              columns={4}
               options={[
                 {
                   value: "Family",
@@ -349,7 +355,6 @@ const RentalDetailsPage: React.FC = () => {
               ]}
               withIcons={true}
               required
-              horizontal
             />
           </div>
         )}
@@ -358,6 +363,7 @@ const RentalDetailsPage: React.FC = () => {
             <FormRadioGroup
               name="rentalDetails.tenantType"
               label="Preferred Tenant"
+              columns={2}
               options={[
                 {
                   value: "Female",
@@ -377,6 +383,7 @@ const RentalDetailsPage: React.FC = () => {
             <FormRadioGroup
               name="rentalDetails.nonVegAllowed"
               label="Food Preferences"
+              columns={2}
               options={[
                 {
                   value: false,
@@ -476,6 +483,7 @@ const RentalDetailsPage: React.FC = () => {
               <FormRadioGroup
                 name="rentalDetails.nonVegAllowed"
                 label="Non Veg Allowed"
+                columns={2}
                 options={[
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
@@ -492,6 +500,7 @@ const RentalDetailsPage: React.FC = () => {
               <FormRadioGroup
                 name="rentalDetails.attachedBathroom"
                 label="Attached Bathroom"
+                columns={2}
                 options={[
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
@@ -504,6 +513,7 @@ const RentalDetailsPage: React.FC = () => {
               <FormRadioGroup
                 name="rentalDetails.bathroomType"
                 label="Bathroom Type"
+                columns={2}
                 options={[
                   { value: "Western", label: "Western" },
                   { value: "Indian", label: "Indian" },
@@ -520,6 +530,7 @@ const RentalDetailsPage: React.FC = () => {
               <FormRadioGroup
                 name="rentalDetails.smokingPreference"
                 label="Smoking Allowed"
+                columns={2}
                 options={[
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },
@@ -532,6 +543,7 @@ const RentalDetailsPage: React.FC = () => {
               <FormRadioGroup
                 name="rentalDetails.drinkingPreference"
                 label="Drinking Allowed"
+                columns={2}
                 options={[
                   { value: true, label: "Yes" },
                   { value: false, label: "No" },

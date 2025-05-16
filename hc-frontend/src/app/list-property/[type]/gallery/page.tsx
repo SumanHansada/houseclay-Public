@@ -35,6 +35,8 @@ const GalleryPage: React.FC = () => {
     ),
   });
 
+  const imagesString = JSON.stringify(values.images);
+
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {
@@ -67,11 +69,14 @@ const GalleryPage: React.FC = () => {
 
     validateAndDispatch();
   }, [
-    JSON.stringify(values.images),
+    imagesString,
     dispatch,
     formKey,
     setErrors,
     setFieldError,
+    isFormValid,
+    gallerySchema,
+    values,
   ]);
 
   return (

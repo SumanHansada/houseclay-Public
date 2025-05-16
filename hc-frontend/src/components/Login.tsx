@@ -129,7 +129,7 @@ const Login = () => {
     if (inputRefs[0].current) {
       inputRefs[0].current.focus();
     }
-  }, [inputRefs]);
+  }, [inputRefs, authStep, dispatch]);
 
   const handleChange = (index: number, value: string): void => {
     // Only allow single digit numbers

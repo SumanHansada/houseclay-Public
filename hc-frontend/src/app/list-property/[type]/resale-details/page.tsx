@@ -107,6 +107,8 @@ const ResaleDetailsPage: React.FC = () => {
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
 
+  const resaleDetailsString = JSON.stringify(values.resaleDetails);
+
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {
@@ -144,11 +146,13 @@ const ResaleDetailsPage: React.FC = () => {
 
     validateAndDispatch();
   }, [
-    JSON.stringify(values.resaleDetails),
+    resaleDetailsString,
     dispatch,
     formKey,
     setErrors,
     setFieldError,
+    isFormValid,
+    values,
   ]);
 
   return (
@@ -201,6 +205,7 @@ const ResaleDetailsPage: React.FC = () => {
             <FormRadioGroup
               name="resaleDetails.priceNegotiable"
               label="Price Negotiable"
+              columns={2}
               options={[
                 { value: true, label: "Yes" },
                 { value: false, label: "No" },
@@ -212,6 +217,7 @@ const ResaleDetailsPage: React.FC = () => {
             <FormRadioGroup
               name="resaleDetails.underLoan"
               label="Currently Under Loan"
+              columns={2}
               options={[
                 { value: true, label: "Yes" },
                 { value: false, label: "No" },

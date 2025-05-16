@@ -62,6 +62,8 @@ const PropertyDetailsPage: React.FC = () => {
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
 
+  const propertyDetailsString = JSON.stringify(values.propertyDetails);
+
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {
@@ -102,11 +104,13 @@ const PropertyDetailsPage: React.FC = () => {
 
     validateAndDispatch();
   }, [
-    JSON.stringify(values.propertyDetails),
+    propertyDetailsString,
     dispatch,
     formKey,
     setErrors,
     setFieldError,
+    isFormValid,
+    values,
   ]);
 
   return (

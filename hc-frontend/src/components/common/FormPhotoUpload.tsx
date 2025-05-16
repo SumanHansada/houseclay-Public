@@ -1,12 +1,13 @@
 import { useField } from "formik";
 import {
-  Image,
+  Image as ImageIcon,
   Lightbulb,
   MoreHorizontal,
   Plus,
   Star,
   Trash2,
 } from "lucide-react";
+import Image from "next/image";
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 
@@ -194,7 +195,7 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
                 }`}
               >
                 <input {...getInputProps()} />
-                <Image size={40} className="text-gray-400" />
+                <ImageIcon size={40} className="text-gray-400" />
               </div>
               <div
                 {...getRootProps()}
@@ -203,7 +204,7 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
                 }`}
               >
                 <input {...getInputProps()} />
-                <Image size={40} className="text-gray-400" />
+                <ImageIcon size={40} className="text-gray-400" />
               </div>
               <div
                 {...getRootProps()}
@@ -212,7 +213,7 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
                 }`}
               >
                 <input {...getInputProps()} />
-                <Image size={40} className="text-gray-400" />
+                <ImageIcon size={40} className="text-gray-400" />
               </div>
               <div
                 {...getRootProps()}
@@ -245,7 +246,7 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
                   setActiveMenuId(null);
                 }}
               >
-                <img
+                <Image
                   src={photo.url}
                   alt={photo.file.name || "Property"}
                   className={`aspect-square w-full object-cover ${hoveredPhotoId === photo.id ? "blur-sm" : ""}`}

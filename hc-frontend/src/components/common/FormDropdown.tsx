@@ -100,11 +100,6 @@ const FormDropdown: React.FC<FormDropdownProps> = ({
           }}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
-          aria-required={required}
-          aria-invalid={!!hasError}
-          aria-activedescendant={
-            selectedOption ? `${id || name}-${selectedOption.value}` : undefined
-          }
         >
           <span className={!selectedOption ? "text-gray-400" : "text-gray-900"}>
             {displayText}

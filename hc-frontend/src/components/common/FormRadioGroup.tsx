@@ -12,6 +12,7 @@ interface FormRadioGroupProps {
   label?: string;
   options: RadioOption[];
   required?: boolean;
+  columns?: 1 | 2 | 3 | 4;
   horizontal?: boolean;
   withIcons?: boolean;
   selectedColor?: string;
@@ -23,6 +24,7 @@ const FormRadioGroup: React.FC<FormRadioGroupProps> = ({
   label,
   options,
   required = false,
+  columns = 3,
   horizontal = true,
   withIcons = false,
   selectedColor = "border-red-500 bg-red-50",
@@ -44,6 +46,14 @@ const FormRadioGroup: React.FC<FormRadioGroupProps> = ({
     return field.value === optionValue;
   };
 
+  // Define grid columns based on the columns prop
+  const gridCols = {
+    1: "grid-cols-1",
+    2: "grid-cols-2",
+    3: "grid-cols-2 md:grid-cols-2 lg:grid-cols-3",
+    4: "grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
+  };
+
   return (
     <div className={`mb-4 ${className}`}>
       {label && (
@@ -58,7 +68,9 @@ const FormRadioGroup: React.FC<FormRadioGroupProps> = ({
 
       <div
         className={`flex w-full justify-between ${
-          horizontal ? "flex-wrap gap-3 xl:gap-6" : "flex-col gap-2"
+          horizontal
+            ? `grid ${gridCols[columns]} gap-3 xl:gap-6`
+            : "grid grid-cols-1 gap-2"
         }`}
         role="radiogroup"
         aria-labelledby={`${name}-group-label`}

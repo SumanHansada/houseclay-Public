@@ -51,6 +51,8 @@ const AdditionalInfoPage = () => {
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
 
+  const additionalInfoString = JSON.stringify(values.additionalInfo);
+
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {
@@ -91,11 +93,13 @@ const AdditionalInfoPage = () => {
 
     validateAndDispatch();
   }, [
-    JSON.stringify(values.additionalInfo),
+    additionalInfoString,
     dispatch,
     formKey,
     setErrors,
     setFieldError,
+    isFormValid,
+    values,
   ]);
 
   return (
