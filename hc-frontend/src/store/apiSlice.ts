@@ -9,7 +9,7 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl:
       baseUrl ||
-      "http://ec2-3-27-226-168.ap-southeast-2.compute.amazonaws.com:8080/api" ||
+      "http://ec2-3-107-183-183.ap-southeast-2.compute.amazonaws.com:8080/api" ||
       "https://jsonplaceholder.typicode.com",
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;

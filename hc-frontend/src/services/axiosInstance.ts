@@ -8,7 +8,7 @@ const baseUrl = process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL;
 const axiosInstance = axios.create({
   baseURL:
     baseUrl ||
-    "http://ec2-3-27-226-168.ap-southeast-2.compute.amazonaws.com:8080/api" ||
+    "http://ec2-3-107-183-183.ap-southeast-2.compute.amazonaws.com:8080/api" ||
     "https://jsonplaceholder.typicode.com",
   headers: {
     "Content-Type": "application/json",

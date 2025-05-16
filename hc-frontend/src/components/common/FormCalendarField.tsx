@@ -320,7 +320,7 @@ const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
           aria-invalid={meta.touched && meta.error ? "true" : "false"}
           aria-describedby={meta.error ? `${name}-error` : undefined}
           className={`
-            w-full p-3 border rounded-l-xl
+            w-full p-3 border rounded-l-xl rounded-none
             ${meta.touched && meta.error ? "border-red-500" : "border-gray-300"}
             ${disabled ? "bg-gray-100 cursor-not-allowed" : ""}
           `}

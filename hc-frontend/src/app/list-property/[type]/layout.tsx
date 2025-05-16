@@ -5,19 +5,28 @@ import { X } from "lucide-react";
 import Image from "next/image";
 import { redirect, useParams, useRouter } from "next/navigation";
 import ListPropertySuccessSvg from "public/icons/list-property-success.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { ListPropertyRouteStep } from "@/common/enums";
-import { ListPropertyFormStep } from "@/common/enums";
+import {
+  ListPropertyFormStep,
+  ListPropertyRouteStep,
+  PropertyType,
+} from "@/common/enums";
 import { Dialog, DialogContent } from "@/components/Dialog";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
 import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   usePresignedUrlsMutation,
   usePropertyAddMutation,
 } from "@/store/apiSlice";
+import {
+  setHideFooter,
+  setHideHeader,
+  setHideStickyNavBar,
+} from "@/store/appSlice";
 import { setFileURLMap, setPropertyID } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
@@ -48,6 +57,7 @@ export default function ListPropertyTypeLayout({
   const type = params?.type as string; // Optional: add type assertion
   const router = useRouter();
   const { openDialog, isDialogOpen, closeDialog } = useDialog();
+  const { isMobile } = useDeviceContext();
 
   const [currentStep, setCurrentStep] = useState<ListPropertyFormStep>(
     ListPropertyFormStep.PROPERTY_DETAILS,
@@ -61,6 +71,18 @@ export default function ListPropertyTypeLayout({
   );
   const isFormValid = formState?.isValid;
   const initialValues = formState?.data || {};
+
+  useEffect(() => {
+    if (isMobile) {
+      dispatch(setHideHeader(true));
+      dispatch(setHideFooter(true));
+      dispatch(setHideStickyNavBar(true));
+    } else {
+      dispatch(setHideHeader(false));
+      dispatch(setHideFooter(false));
+      dispatch(setHideStickyNavBar(false));
+    }
+  }, [dispatch, isMobile]);
 
   // Update the markStepAsCompleted function to manage step completion state
   const markStepAsCompleted = (step: ListPropertyFormStep) => {
@@ -251,28 +273,41 @@ export default function ListPropertyTypeLayout({
     router.push("/");
   };
 
-  const renderStepperMobile = () => {
-    // Define steps based on type
-    let steps: string[] = [];
-    if (type === "rent" || type === "flatmates") {
-      steps = [
-        "Property Details",
-        "Locality Details",
-        "Rental Details",
-        "Gallery",
-        "Additional Information",
+  const getStepsForPropertyType = (type: string): string[] => {
+    const baseSteps = [
+      ListPropertyFormStep.PROPERTY_DETAILS,
+      ListPropertyFormStep.LOCALITY_DETAILS,
+      ListPropertyFormStep.GALLERY,
+      ListPropertyFormStep.ADDITIONAL_INFO,
+    ];
+
+    if (
+      type.toUpperCase() === PropertyType.RENT ||
+      type.toUpperCase() === PropertyType.FLATMATES
+    ) {
+      return [
+        ...baseSteps.slice(0, 2),
+        ListPropertyFormStep.RENTAL_DETAILS,
+        ...baseSteps.slice(2),
       ];
-    } else if (type === "resale") {
-      steps = [
-        "Property Details",
-        "Locality Details",
-        "Resale Details",
-        "Gallery",
-        "Additional Information",
+    } else if (type.toUpperCase() === PropertyType.RESALE) {
+      return [
+        ...baseSteps.slice(0, 2),
+        ListPropertyFormStep.RESALE_DETAILS,
+        ...baseSteps.slice(2),
       ];
     }
+    return baseSteps;
+  };
 
-    // Find current step index
+  const calculateProgressPercent = (type: string, currentStep: string) => {
+    const steps = getStepsForPropertyType(type);
+    const currentIndex = steps.findIndex((step) => step === currentStep);
+    return ((currentIndex + 1) / steps.length) * 100;
+  };
+
+  const renderStepperMobile = () => {
+    const steps = getStepsForPropertyType(type);
     const currentIndex = steps.findIndex((step) => step === currentStep);
 
     // Fallback for enum value vs string
@@ -280,9 +315,6 @@ export default function ListPropertyTypeLayout({
       typeof currentStep === "string"
         ? currentStep
         : steps[currentIndex] || steps[0];
-
-    // Progress calculation
-    const progressPercent = ((currentIndex + 1) / steps.length) * 100;
 
     return (
       <>
@@ -292,12 +324,6 @@ export default function ListPropertyTypeLayout({
             <X onClick={goToHomePage} size={25} />
           </button>
         </div>
-        <div className="w-full h-1 rounded-full bg-gray-200 relative mt-auto">
-          <div
-            className="h-1 rounded-full bg-red-500 absolute top-0 left-0 transition-all duration-300"
-            style={{ width: `${progressPercent}%` }}
-          />
-        </div>
       </>
     );
   };
@@ -305,10 +331,16 @@ export default function ListPropertyTypeLayout({
   return (
     <>
       <section
-        className={`py-2 px-4 fixed top-0 left-0 right-0 z-50 border-b h-[55px] border-gray-200 bg-white flex flex-col justify-center items-center w-full md:hidden`}
+        className={`py-2 px-4 fixed top-0 left-0 right-0 z-50 h-[55px] border-gray-200 bg-white flex flex-col justify-center items-center w-full md:hidden`}
       >
         {renderStepperMobile()}
       </section>
+      <div className="h-[2px] fixed w-full bg-gray-200 mt-auto z-50">
+        <div
+          className="h-[2px] bg-red-500 absolute top-0 left-0 transition-all duration-300"
+          style={{ width: `${calculateProgressPercent(type, currentStep)}%` }}
+        />
+      </div>
       <div className="flex w-full h-full top-14">
         {/* Background SVG behind left section only */}
         <div className="left-0 top-14 bottom-0 z-40 w-[33.33%] fixed  bg-gray-50 max-md:hidden">

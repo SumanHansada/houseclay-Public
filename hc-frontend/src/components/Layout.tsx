@@ -57,6 +57,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const toggleQuickLinks = () => setQuickLinksExpanded(!quickLinksExpanded);
 
   const onLogin = () => {
+    closeAllDialogs();
     openDialog("login-dialog");
   };
 

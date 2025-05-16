@@ -118,7 +118,7 @@ export const Dialog: React.FC<DialogProps> = ({
           style={{
             height: height ? `${height}%` : "auto",
             width: width ? `${width}%` : undefined,
-            maxHeight: "calc(100vh - 4rem)", // Prevent dialog from exceeding viewport height
+            maxHeight: "calc(100svh - 4rem)", // Prevent dialog from exceeding viewport height
           }}
           onClick={(e) => e.stopPropagation()}
         >
