@@ -2,8 +2,6 @@ package com.houseclay.backend.service;
 
 import org.springframework.stereotype.Service;
 
-import jakarta.servlet.http.HttpSession;
-import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -20,7 +18,6 @@ public class OtpService {
         long expiryTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(OTP_EXPIRY_MINUTES);
 
         OtpData otpData = new OtpData(otp, expiryTime);
-
         otpMap.put("OTP_" + phoneNo, otpData); // Store OTP in session
     }
 
