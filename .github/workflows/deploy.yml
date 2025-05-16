@@ -35,7 +35,7 @@ jobs:
         run: |
           cd hc-frontend
           npm install
-          npm run build
+          npm run build:prod
 
       - name: Debug SSH Key
         run: |
