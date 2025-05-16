@@ -12,6 +12,7 @@ import com.houseclay.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -100,6 +101,7 @@ public class PropertyService {
         propertySearchRepository.save(doc);
     }
 
+    @Transactional
     public Map<String, String> getOwnerContact(String propertyId, User user) throws Exception {
         Optional<Property> propertyOpt = propertyRepository.findById(propertyId);
         if (propertyOpt.isEmpty()) {
