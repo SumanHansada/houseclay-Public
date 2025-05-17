@@ -9,10 +9,10 @@
       "area": "1,790",
       "location": "Nagavarapalya, 15th cross, Landmark - Life in...",
       "images": [
-        "/photos/House1.avif",
-        "/photos/House2.avif",
-        "/photos/House3.avif",
-        "/photos/House4.avif"
+        "/photos/House1.webp",
+        "/photos/House2.webp",
+        "/photos/House3.webp",
+        "/photos/House4.webp"
       ],
       "type": "Featured"
     },
@@ -25,10 +25,10 @@
       "area": "1,360",
       "location": "Varthur, Gunjur, Bangalore",
       "images": [
-        "/photos/House1.avif",
-        "/photos/House3.avif",
-        "/photos/House2.avif",
-        "/photos/House4.avif"
+        "/photos/House1.webp",
+        "/photos/House3.webp",
+        "/photos/House2.webp",
+        "/photos/House4.webp"
       ],
       "type": ""
     },
@@ -41,10 +41,10 @@
       "area": "1180",
       "location": "Gunjur Road, Bangalore",
       "images": [
-        "/photos/House4.avif",
-        "/photos/House1.avif",
-        "/photos/House3.avif",
-        "/photos/House2.avif"
+        "/photos/House4.webp",
+        "/photos/House1.webp",
+        "/photos/House3.webp",
+        "/photos/House2.webp"
       ],
       "type": "Exclusive"
     },
@@ -57,23 +57,23 @@
       "area": "1240",
       "location": "Doddenakundi, Marathahalli, Bangalore",
       "images": [
-        "/photos/House4.avif",
-        "/photos/House3.avif",
-        "/photos/House2.avif",
-        "/photos/House1.avif"
+        "/photos/House4.webp",
+        "/photos/House3.webp",
+        "/photos/House2.webp",
+        "/photos/House1.webp"
       ],
       "type": "Exclusive"
     }
   ],
   "neighbourhoods": [
-    { "name": "Whitefield", "image": "/neighbourhood/Whitefield.jpeg" },
-    { "name": "Koramangala", "image": "/neighbourhood/Koramangala.jpeg" },
-    { "name": "Indiranagar", "image": "/neighbourhood/Indiranagar.jpeg" },
-    { "name": "HSR Layout", "image": "/neighbourhood/HSR.jpeg" },
-    { "name": "Jayanagar", "image": "/neighbourhood/Jayanagar.jpeg" },
-    { "name": "Hebbal", "image": "/neighbourhood/Hebbal.jpeg" },
-    { "name": "Sarjapur Road", "image": "/neighbourhood/Sarjapur Road.jpeg" },
-    { "name": "Banashankari", "image": "/neighbourhood/Banashankari.jpeg" }
+    { "name": "Whitefield", "image": "/neighbourhood/Whitefield.webp" },
+    { "name": "Koramangala", "image": "/neighbourhood/Koramangala.webp" },
+    { "name": "Indiranagar", "image": "/neighbourhood/Indiranagar.webp" },
+    { "name": "HSR Layout", "image": "/neighbourhood/HSR.webp" },
+    { "name": "Jayanagar", "image": "/neighbourhood/Jayanagar.webp" },
+    { "name": "Hebbal", "image": "/neighbourhood/Hebbal.webp" },
+    { "name": "Sarjapur Road", "image": "/neighbourhood/Sarjapur Road.webp" },
+    { "name": "Banashankari", "image": "/neighbourhood/Banashankari.webp" }
   ],
   "testimonials": [
     {
