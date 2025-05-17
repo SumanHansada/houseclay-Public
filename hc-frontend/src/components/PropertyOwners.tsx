@@ -29,7 +29,7 @@ const PropertyOwners: React.FC = () => {
       {/* Right Side - Image Content */}
       <div className="flex flex-1 justify-between items-center">
         <Image
-          src={"/images/owners.png"}
+          src={"/images/owners.webp"}
           alt="Property Owners"
           height={500}
           width={500}

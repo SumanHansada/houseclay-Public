@@ -82,7 +82,7 @@ export const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
       {/* Top user avatars row */}
       <div className="mb-8 flex justify-center">
         <Image
-          src="/images/testimonial.png"
+          src="/images/testimonial.webp"
           alt="Testimonial"
           height={75}
           width={400}

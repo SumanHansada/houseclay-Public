@@ -33,7 +33,7 @@ const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
   const ZeroPercent = ZeroPercentSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
   return (
-    <div className="bg-[url('/images/banner-background-mobile.png')] flex flex-col bg-top bg-cover px-8 pt-8 pb-14 gap-6">
+    <div className="bg-[url('/images/banner-background-mobile.webp')] flex flex-col bg-top bg-cover px-8 pt-8 pb-14 gap-6">
       {/* Tabs and Search */}
       <div>
         {/* Tabs */}
