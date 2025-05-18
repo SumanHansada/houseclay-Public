@@ -46,7 +46,7 @@ const initialData: {
     deposit: 0,
     availableFrom: "",
     furnishing: "",
-    preferredTenant: "",
+    preferredTenant: [],
     waterSupply: "",
     powerBackup: "",
     parking: false,
