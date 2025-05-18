@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import Cookies from "js-cookie";
 
 import { RootState } from "./store";
 
@@ -12,7 +13,8 @@ export const apiSlice = createApi({
       "http://ec2-3-107-183-183.ap-southeast-2.compute.amazonaws.com:8080/api" ||
       "https://jsonplaceholder.typicode.com",
     prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).auth.token;
+      const token =
+        Cookies.get("token") || (getState() as RootState).auth.token;
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }

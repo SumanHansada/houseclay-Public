@@ -249,6 +249,8 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
                 <Image
                   src={photo.url}
                   alt={photo.file.name || "Property"}
+                  width={100}
+                  height={100}
                   className={`aspect-square w-full object-cover ${hoveredPhotoId === photo.id ? "blur-sm" : ""}`}
                 />
 

@@ -113,11 +113,16 @@ const rentalSchema = Yup.object().shape({
       ),
     availableFrom: Yup.string().required("Available from is required"),
     furnishing: Yup.string().required("Furnishing is required"),
-    preferredTenant: Yup.string().when("$formKey", {
-      is: "rentForm",
-      then: (schema) => schema.required("Preferred tenant is required"),
-      otherwise: (schema) => schema.optional(),
-    }),
+    preferredTenant: Yup.array()
+      .of(Yup.string())
+      .when("$formKey", {
+        is: "rentForm",
+        then: (schema) =>
+          schema
+            .required("Preferred tenant is required")
+            .min(1, "Select at least one preferred tenant"),
+        otherwise: (schema) => schema.optional(),
+      }),
     waterSupply: Yup.string().required("Water supply is required"),
     powerBackup: Yup.string().required("Power backup is required"),
     parking: Yup.boolean().required("Parking is required"),
