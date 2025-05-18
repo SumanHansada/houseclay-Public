@@ -23,13 +23,14 @@ export interface HeaderProps {
   user?: User;
 }
 
+const HouseClay = HouseClaySvg as React.FC<React.SVGProps<SVGSVGElement>>;
+
 const Header: React.FC<HeaderProps> = () => {
   const hideHeader = useSelector((state: RootState) => state.app.hideHeader);
   const token = useSelector((state: RootState) => state.auth.token);
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
   const { openDialog, closeAllDialogs } = useDialog();
-  const HouseClay = HouseClaySvg as React.FC<React.SVGProps<SVGSVGElement>>;
   const onLogin = () => {
     closeAllDialogs();
     openDialog("login-dialog");
