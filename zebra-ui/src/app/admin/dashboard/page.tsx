@@ -1,30 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import HouseClaySvg from "public/icons/houseclay.svg";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-
-import { logout } from "@/store/adminSlice";
-import { RootState } from "@/store/store";
-
 export default function AdminDashboard() {
-  const router = useRouter();
-  const dispatch = useDispatch();
-  const { token } = useSelector((state: RootState) => state.admin);
-  const HouseClay = HouseClaySvg as React.FC<React.SVGProps<SVGSVGElement>>;
-
-  useEffect(() => {
-    if (!token) {
-      router.push("/admin/login");
-    }
-  }, [token, router]);
-
-  const handleLogout = () => {
-    dispatch(logout());
-    router.push("/admin/login");
-  };
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Main Content */}

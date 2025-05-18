@@ -9,10 +9,12 @@ const Header = () => {
     <header className="flex fixed top-0 left-0 right-0 bg-white dark:bg-gray-800 z-50 justify-between w-full items-center py-2 shadow-sm px-8 h-16">
       {/* Logo and App Name */}
       <div className="flex items-center gap-2">
-      <Link href="/" className="flex items-center gap-1">
-        <HouseClay />
-        <span className="text-red-600 text-lg font-nunito font-bold">ZEBRA | HouseClay</span>
-      </Link>
+        <Link href="/" className="flex items-center gap-1">
+          <HouseClay />
+          <span className="text-red-600 text-lg font-nunito font-bold">
+            ZEBRA | HouseClay
+          </span>
+        </Link>
       </div>
       {/* User Avatar and Dropdown */}
       <div className="flex items-center gap-4">

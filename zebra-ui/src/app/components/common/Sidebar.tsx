@@ -1,30 +1,29 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
 import {
-  Home,
-  LayoutGrid,
-  Users,
-  CreditCard,
-  Settings,
+  BookCopy,
   ChevronDown,
   ChevronUp,
-  UserCheck,
-  BookCopy,
+  CreditCard,
+  Home,
   IndianRupee,
+  Settings,
+  UserCheck,
+  Users,
 } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 
 const sidebarItems = [
   {
     label: "Properties",
-    icon: <Home size={20} />, 
+    icon: <Home size={20} />,
     children: ["ABC"],
     href: "/admin/dashboard/properties",
   },
   {
     label: "ClayManage",
-    icon: <BookCopy size={20} />, 
+    icon: <BookCopy size={20} />,
     children: ["Subitem 1", "Subitem 2"],
     href: "#",
   },
@@ -61,7 +60,9 @@ const sidebarItems = [
 ];
 
 const Sidebar = () => {
-  const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({});
+  const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>(
+    {},
+  );
 
   const toggleSection = (label: string) => {
     setOpenSections((prev) => ({ ...prev, [label]: !prev[label] }));
@@ -78,18 +79,28 @@ const Sidebar = () => {
             >
               <div className="flex items-center gap-3">
                 {item.icon}
-                <Link href={item.href} className="font-medium text-base font-nunito">
+                <Link
+                  href={item.href}
+                  className="font-medium text-base font-nunito"
+                >
                   {item.label}
                 </Link>
               </div>
               {item.children.length ? (
-                openSections[item.label] ? <ChevronUp size={18} /> : <ChevronDown size={18} />
+                openSections[item.label] ? (
+                  <ChevronUp size={18} />
+                ) : (
+                  <ChevronDown size={18} />
+                )
               ) : null}
             </div>
             {item.children.length && openSections[item.label] && (
               <div className="ml-10 flex flex-col gap-1">
                 {item.children.map((child) => (
-                  <div key={child} className="py-1 text-sm text-gray-300 hover:text-white cursor-pointer">
+                  <div
+                    key={child}
+                    className="py-1 text-sm text-gray-300 hover:text-white cursor-pointer"
+                  >
                     {child}
                   </div>
                 ))}
@@ -102,4 +113,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar; 
+export default Sidebar;
