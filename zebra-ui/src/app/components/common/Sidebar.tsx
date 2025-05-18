@@ -18,8 +18,18 @@ const sidebarItems = [
   {
     label: "Properties",
     icon: <Home size={20} />,
-    children: ["ABC"],
-    href: "/admin/dashboard/properties",
+    children: [
+      {
+        label: "Add Rental Property",
+        href: "/admin/add-property/rent/rental-details",
+      },
+      {
+        label: "Add Sale Property",
+        href: "/admin/add-property/sale/sale-details",
+      },
+      { label: "View All Properties", href: "/admin/view-all-properties" },
+    ],
+    href: "#",
   },
   {
     label: "ClayManage",
@@ -95,15 +105,25 @@ const Sidebar = () => {
               ) : null}
             </div>
             {item.children.length && openSections[item.label] && (
-              <div className="ml-10 flex flex-col gap-1">
-                {item.children.map((child) => (
-                  <div
-                    key={child}
-                    className="py-1 text-sm text-gray-300 hover:text-white cursor-pointer"
-                  >
-                    {child}
-                  </div>
-                ))}
+              <div className="ml-16 flex flex-col gap-1 font-nunito">
+                {item.children.map((child) =>
+                  typeof child === "string" ? (
+                    <div
+                      key={child}
+                      className="py-1 text-base text-gray-300 hover:text-white cursor-pointer"
+                    >
+                      {child}
+                    </div>
+                  ) : (
+                    <Link
+                      key={child.label}
+                      href={child.href}
+                      className="py-1 text-base text-gray-300 hover:text-white cursor-pointer block"
+                    >
+                      {child.label}
+                    </Link>
+                  ),
+                )}
               </div>
             )}
           </div>

@@ -1,16 +1,7 @@
-import Header from "@/app/components/common/Header";
-import Sidebar from "@/app/components/common/Sidebar";
-
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <Sidebar />
-      <Header />
-      <main className="pl-72 lg:pl-80 pt-16">{children}</main>
-    </div>
-  );
+  return <>{children}</>;
 }
