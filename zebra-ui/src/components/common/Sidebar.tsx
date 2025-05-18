@@ -21,11 +21,11 @@ const sidebarItems = [
     children: [
       {
         label: "Add Rental Property",
-        href: "/admin/add-property/rent/rental-details",
+        href: "/admin/add-property/rent/property-details",
       },
       {
         label: "Add Sale Property",
-        href: "/admin/add-property/sale/sale-details",
+        href: "/admin/add-property/resale/property-details",
       },
       { label: "View All Properties", href: "/admin/view-all-properties" },
     ],
