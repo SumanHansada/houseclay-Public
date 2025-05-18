@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import Cookies from "js-cookie";
 
 import { AuthStep } from "@/common/enums";
 
@@ -26,21 +27,19 @@ const authSlice = createSlice({
       state.token = action.payload;
       state.name = "Suman";
       state.phoneNo = "919999988888";
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem("token", action.payload);
-      }
+      // Set cookie with 7 days expiry
+      Cookies.set("token", action.payload, { expires: 7 });
     },
     clearToken: (state) => {
       state.token = null;
-      if (typeof window !== "undefined") {
-        window.localStorage.removeItem("token");
-      }
+      Cookies.remove("token");
     },
     initializeToken: (state) => {
-      if (typeof window !== "undefined") {
-        state.token = window.localStorage.getItem("token");
+      const token = Cookies.get("token");
+      if (token) {
+        state.token = token;
         state.name = "Suman";
-        // state.phoneNo = "919999988888"; ̰
+        state.phoneNo = "919999988888";
       }
     },
     setAuthStep: (state, action: PayloadAction<AuthStep>) => {

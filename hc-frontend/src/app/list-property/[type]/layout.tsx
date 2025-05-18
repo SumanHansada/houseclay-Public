@@ -3,7 +3,7 @@
 import { Form, Formik, FormikProvider } from "formik";
 import { X } from "lucide-react";
 import Image from "next/image";
-import { redirect, useParams, useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import ListPropertySuccessSvg from "public/icons/list-property-success.svg";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -45,10 +45,6 @@ export default function ListPropertyTypeLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const token = useSelector((state: RootState) => state.auth.token);
-  if (!token) {
-    redirect("/");
-  }
   const [getPresignedUrls] = usePresignedUrlsMutation();
   const [postProperty] = usePropertyAddMutation();
   const params = useParams();
