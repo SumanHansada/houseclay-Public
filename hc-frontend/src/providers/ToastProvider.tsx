@@ -1,6 +1,5 @@
 "use client";
 
-import { AnimatePresence } from "framer-motion";
 import React, { createContext, useCallback, useContext, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -9,6 +8,10 @@ import Toast, { ToastProps } from "../components/common/Toast";
 interface ToastContextType {
   showToast: (props: Omit<ToastProps, "id">) => string;
   removeToast: (id: string) => void;
+}
+
+interface ToastWithId extends ToastProps {
+  id: string;
 }
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
@@ -24,21 +27,14 @@ export const useToast = () => {
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [toasts, setToasts] = useState<ToastProps[]>([]);
+  const [toasts, setToasts] = useState<ToastWithId[]>([]);
 
   const showToast = useCallback(
-    ({
-      type,
-      message,
-      duration,
-      onClose,
-      onOpen,
-      props,
-    }: Omit<ToastProps, "id">) => {
+    ({ type, message, duration, onClose, onOpen }: Omit<ToastProps, "id">) => {
       const id = uuidv4();
       setToasts((prev) => [
         ...prev,
-        { id, type, message, duration, onClose, onOpen, props },
+        { id, type, message, duration, onClose, onOpen },
       ]);
       return id;
     },
@@ -53,18 +49,19 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
     <ToastContext.Provider value={{ showToast, removeToast }}>
       {children}
       <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
-        <AnimatePresence>
-          {toasts.map((toast) => (
-            <Toast
-              key={toast.id}
-              {...toast}
-              onClose={(props) => {
-                toast.onClose?.(props);
-                removeToast(toast.id);
-              }}
-            />
-          ))}
-        </AnimatePresence>
+        {toasts.map((toast) => (
+          <Toast
+            key={toast.id}
+            type={toast.type}
+            message={toast.message}
+            duration={toast.duration}
+            onClose={() => {
+              toast.onClose?.();
+              removeToast(toast.id);
+            }}
+            onOpen={toast.onOpen}
+          />
+        ))}
       </div>
     </ToastContext.Provider>
   );
