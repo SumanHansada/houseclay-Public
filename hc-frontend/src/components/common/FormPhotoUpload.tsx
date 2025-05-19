@@ -57,7 +57,7 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
       return;
     }
 
-    const newPhotos = acceptedFiles.map((file: File) => {
+    const newPhotos = acceptedFiles.map((file: File, index: number) => {
       // Extract only the properties we need from the File object
       const fileData: FileData = {
         name: file.name,
@@ -69,7 +69,7 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
         id: `photo-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         file: fileData,
         url: URL.createObjectURL(file),
-        isCover: photos.length === 0,
+        isCover: photos.length === 0 && index === 0, // Only set first photo as cover if there were no photos before
         S3Url: "", // Default value for S3Url
       };
     });
