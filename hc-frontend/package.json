@@ -25,6 +25,7 @@
     "date-fns": "^4.1.0",
     "focus-trap-react": "^11.0.3",
     "formik": "^2.4.6",
+    "framer-motion": "^12.12.1",
     "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
     "lucide-react": "^0.479.0",
@@ -36,6 +37,7 @@
     "react-international-phone": "^4.5.0",
     "react-loading-skeleton": "^3.5.0",
     "react-redux": "^9.2.0",
+    "uuid": "^11.1.0",
     "yup": "^1.6.1"
   },
   "devDependencies": {
