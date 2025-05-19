@@ -4,6 +4,7 @@
 import { Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import CoinSvg from "public/icons/coin.svg";
 import HouseClaySvg from "public/icons/houseclay.svg";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,6 +25,7 @@ export interface HeaderProps {
 }
 
 const HouseClay = HouseClaySvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const Coin = CoinSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 const Header: React.FC<HeaderProps> = () => {
   const hideHeader = useSelector((state: RootState) => state.app.hideHeader);
@@ -105,12 +107,7 @@ const Header: React.FC<HeaderProps> = () => {
 
             {/* Coin Counter */}
             <button className="flex items-center xl:px-4 lg:px-3 md:px-2 px-2 py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100">
-              <Image
-                src={"/icons/coin.svg"}
-                alt="Coin"
-                height={20}
-                width={20}
-              />
+              <Coin height={20} width={20} />
               <span>0</span>
             </button>
 

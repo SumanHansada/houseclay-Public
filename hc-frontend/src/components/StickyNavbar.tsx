@@ -22,6 +22,9 @@ interface StickyNavbarProps {
   onNavChange?: (id: string) => void;
 }
 
+const Coin = CoinSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const User = UserSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+
 const StickyNavbar: React.FC<StickyNavbarProps> = ({
   defaultActive = "home",
   onNavChange,
@@ -30,8 +33,6 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
     (state: RootState) => state.app.hideStickyNavBar,
   );
   const [activeTab, setActiveTab] = useState<string>(defaultActive);
-  const Coin = CoinSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-  const User = UserSvg as React.FC<React.SVGProps<SVGSVGElement>>;
   const HouseClayHome = HouseClayHomeSvg as React.FC<
     React.SVGProps<SVGSVGElement>
   >;

@@ -39,7 +39,7 @@ const LocalityDetailsPage: React.FC = () => {
   const { values, errors, touched, setFieldError, setErrors, setFieldValue } =
     useFormikContext<FormValues>();
   const params = useParams();
-  const formKey = `${params?.type}Form` as FormType; // Optional: add type assertion
+  const formKey = `${params?.type}Form` as FormType;
   const formState = useSelector(
     (state: RootState) => state.listProperty[formKey],
   );
@@ -47,6 +47,13 @@ const LocalityDetailsPage: React.FC = () => {
   const dispatch = useDispatch();
 
   const localityDetailsString = JSON.stringify(values.localityDetails);
+
+  // Set default city to Bengaluru when component mounts
+  useEffect(() => {
+    if (!values.localityDetails.city) {
+      setFieldValue("localityDetails.city", "Bengaluru");
+    }
+  }, [setFieldValue, values.localityDetails.city]);
 
   useEffect(() => {
     const validateAndDispatch = async () => {
@@ -98,7 +105,7 @@ const LocalityDetailsPage: React.FC = () => {
     const cityLatLngMapping: Record<string, { lat: number; lng: number }> = {
       Mumbai: { lat: 19.076, lng: 72.8777 },
       Delhi: { lat: 28.6139, lng: 77.209 },
-      Bangalore: { lat: 12.9716, lng: 77.5946 },
+      Bengaluru: { lat: 12.9716, lng: 77.5946 },
       Hyderabad: { lat: 17.385, lng: 78.4867 },
       Chennai: { lat: 13.0827, lng: 80.2707 },
       Kolkata: { lat: 22.5726, lng: 88.3639 },
@@ -137,6 +144,7 @@ const LocalityDetailsPage: React.FC = () => {
                 { value: "Pune", label: "Pune" },
               ]}
               required={true}
+              disabled={true}
               placeholder="Select city"
               aria-describedby={
                 errors?.localityDetails?.city && touched?.localityDetails?.city
@@ -179,11 +187,12 @@ const LocalityDetailsPage: React.FC = () => {
         <GoogleMaps
           mapId="houseclay-googlemaps"
           center={{
-            lat: values.localityDetails.latitude,
-            lng: values.localityDetails.longitude,
+            lat: values.localityDetails.latitude || 12.9716,
+            lng: values.localityDetails.longitude || 77.5946,
           }}
           zoom={12}
           className="h-full w-full border rounded-xl shadow-lg"
+          key={`${values.localityDetails.latitude}-${values.localityDetails.longitude}`}
         />
       </div>
     </>

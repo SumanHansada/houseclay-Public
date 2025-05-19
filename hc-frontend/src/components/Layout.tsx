@@ -1,6 +1,5 @@
 "use client";
 
-import { APIProvider } from "@vis.gl/react-google-maps";
 import {
   ChevronDown,
   ChevronRight,
@@ -34,6 +33,15 @@ import { useLogoutMutation } from "@/store/apiSlice";
 import { clearToken } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 
+const Property = PropertySvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const ZeroPercentRed = ZeroPercentRedSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const VerifiedTenants = VerifiedTenantsSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const Coin = CoinSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { token, name, phoneNo } = useSelector(
     (state: RootState) => state.auth,
@@ -44,14 +52,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [logout] = useLogoutMutation();
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
-  const Property = PropertySvg as React.FC<React.SVGProps<SVGSVGElement>>;
-  const ZeroPercentRed = ZeroPercentRedSvg as React.FC<
-    React.SVGProps<SVGSVGElement>
-  >;
-  const VerifiedTenants = VerifiedTenantsSvg as React.FC<
-    React.SVGProps<SVGSVGElement>
-  >;
-  const Coin = CoinSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
   const [quickLinksExpanded, setQuickLinksExpanded] = useState(true);
   const toggleQuickLinks = () => setQuickLinksExpanded(!quickLinksExpanded);
@@ -80,10 +80,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
-
   return (
-    <APIProvider apiKey={API_KEY}>
+    <>
       <Header />
       <main className="mx-auto my-0 t-[55px] pt-[55px] min-h-fit flex-1 flex flex-wrap justify-center">
         {children}
@@ -326,6 +324,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </Dialog>
       )}
       <StickyNavbar />
-    </APIProvider>
+    </>
   );
 }
