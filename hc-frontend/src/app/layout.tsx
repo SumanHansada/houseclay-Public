@@ -1,16 +1,11 @@
 import "./globals.css";
 
-import { AnimatePresence } from "framer-motion";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Nunito } from "next/font/google";
 
 import Layout from "@/components/Layout";
-import { DeviceContextProvider } from "@/providers/DeviceContextProvider";
-import { DialogContextProvider } from "@/providers/DialogContextProvider";
-import QueryProvider from "@/providers/QueryProvider";
-import ReduxProvider from "@/providers/ReduxProvider";
-import { SkeletonProvider } from "@/providers/SkeletonProvider";
+import Providers from "@/providers/Providers";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -55,19 +50,9 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Houseclay" />
       </head>
       <body className={`${inter.variable} ${nutino.variable}`}>
-        <ReduxProvider>
-          <QueryProvider>
-            <DeviceContextProvider>
-              <DialogContextProvider>
-                <SkeletonProvider>
-                  <AnimatePresence mode="wait">
-                    <Layout>{children}</Layout>
-                  </AnimatePresence>
-                </SkeletonProvider>
-              </DialogContextProvider>
-            </DeviceContextProvider>
-          </QueryProvider>
-        </ReduxProvider>
+        <Providers>
+          <Layout>{children}</Layout>
+        </Providers>
       </body>
     </html>
   );
