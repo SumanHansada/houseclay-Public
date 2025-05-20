@@ -82,7 +82,9 @@ const GalleryPage: React.FC = () => {
   return (
     <>
       <div className="mb-8">
-        <h1 className="text-3xl text-gray-800">Upload Property Photos</h1>
+        <h1 className="text-2xl md:text-3xl text-gray-800">
+          Upload Property Photos
+        </h1>
         <p className="text-gray-500 mt-2">
           Properties with pictures have higher visibility.
         </p>

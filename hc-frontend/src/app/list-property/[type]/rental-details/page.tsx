@@ -280,7 +280,7 @@ const RentalDetailsPage: React.FC = () => {
   return (
     <>
       <div className="mb-8">
-        <h1 className="text-3xl text-gray-800">
+        <h1 className="text-2xl md:text-3xl text-gray-800">
           Provide rental details about your property
         </h1>
       </div>

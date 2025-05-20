@@ -1,9 +1,8 @@
 "use client";
 
-import { Heart, Search } from "lucide-react";
+import { Heart, Search, UserRound } from "lucide-react";
 import CoinSvg from "public/icons/coin.svg";
 import HouseClayHomeSvg from "public/icons/houseclay-home.svg";
-import UserSvg from "public/icons/user.svg";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -23,7 +22,6 @@ interface StickyNavbarProps {
 }
 
 const Coin = CoinSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const User = UserSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 const StickyNavbar: React.FC<StickyNavbarProps> = ({
   defaultActive = "home",
@@ -65,7 +63,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
     },
     {
       id: "account",
-      icon: <User width={25} height={25} />,
+      icon: <UserRound width={25} height={25} />,
       label: "Account",
       href: "/account",
     },

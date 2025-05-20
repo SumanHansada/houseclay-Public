@@ -125,7 +125,9 @@ const LocalityDetailsPage: React.FC = () => {
   return (
     <>
       <div className="mb-8">
-        <h1 className="text-3xl text-gray-800">Provide location details</h1>
+        <h1 className="text-2xl md:text-3xl text-gray-800">
+          Provide location details
+        </h1>
       </div>
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">

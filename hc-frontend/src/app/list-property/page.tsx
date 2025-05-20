@@ -182,7 +182,7 @@ const ListPropertyPage = dynamic(
             </div>
           </section>
           {/* Mobile Content */}
-          <section className="w-full my-0 min-h-[calc(100svh-55px)] flex-col container py-4 px-6 mx-auto flex justify-between gap-16 md:hidden">
+          <section className="w-full my-0 min-h-[calc(100svh-55px)] flex-col container pt-4 pb-2 px-8 mx-auto flex justify-between gap-16 md:hidden">
             {mobileStep === ListPropertyMobileStep.GET_STARTED && (
               <GetStarted onGetStarted={handleGetStarted} />
             )}

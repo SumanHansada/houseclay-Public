@@ -1,8 +1,7 @@
 "use client";
 
 // import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { Menu } from "lucide-react";
-import Image from "next/image";
+import { ChevronDown, Menu, User, UserRound } from "lucide-react";
 import Link from "next/link";
 import CoinSvg from "public/icons/coin.svg";
 import HouseClaySvg from "public/icons/houseclay.svg";
@@ -128,18 +127,8 @@ const Header: React.FC<HeaderProps> = () => {
                   }}
                 >
                   <button className="flex flex-row xl:gap-2 md:gap-1 gap-1 xl:px-6 lg:px-5 md:px-3 px-3 py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100 text-center">
-                    <Image
-                      src="/icons/user.svg"
-                      alt="User"
-                      height={20}
-                      width={20}
-                    />
-                    <Image
-                      src="/icons/arrow-down.svg"
-                      alt="Arrow Down"
-                      height={20}
-                      width={20}
-                    />
+                    <UserRound width={20} height={20} />
+                    <ChevronDown width={20} height={20} />
                   </button>
                 </ActionMenu>
               </div>

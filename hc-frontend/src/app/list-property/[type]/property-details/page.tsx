@@ -116,7 +116,9 @@ const PropertyDetailsPage: React.FC = () => {
   return (
     <>
       <div className="mb-8">
-        <h1 className="text-3xl text-gray-800">Tell Us About Your Property</h1>
+        <h1 className="text-2xl md:text-3xl text-gray-800">
+          Tell Us About Your Property
+        </h1>
         <p className="text-gray-500 mt-2">
           Share key property details to create an accurate, appealing listing.
         </p>

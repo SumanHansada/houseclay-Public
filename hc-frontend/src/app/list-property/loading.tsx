@@ -4,7 +4,7 @@ export default function ListPropertyLoading() {
   return (
     <>
       <section className="md:hidden">
-        <div className="flex flex-col items-start justify-around min-h-[calc(100svh-55px)] bg-white px-6 py-4 gap-8 w-full mx-auto">
+        <div className="flex flex-col items-start justify-around min-h-[calc(100svh-55px)] bg-white px-8 pt-4 pb-2 gap-8 w-full mx-auto">
           <Skeleton height={32} width={220} className="mb-4 mt-2" />
           <div className="flex flex-col gap-6 w-full mx-auto">
             {[1, 2, 3].map((i) => (
