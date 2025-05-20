@@ -28,14 +28,14 @@ export default function ListPropertyLoading() {
       </section>
       <section className="xl:min-h-[500px] min-h-[400px] w-full overflow-hidden max-md:hidden">
         <div className="container py-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 flex justify-between gap-16">
-          <div className="hidden max-lg:flex w-2/5 justify-around items-start ">
+          <div className="flex xl:hidden w-2/5 justify-around items-start ">
             <Skeleton height={250} width={275} />
           </div>
-          <div className="hidden lg:flex w-2/5 justify-around items-start">
+          <div className="hidden xl:flex w-2/5 justify-around items-start">
             <Skeleton height={475} width={550} />
           </div>
-          <div className="flex w-3/5 justify-around items-center">
-            <div className="max-w-lg lg:w-full my-0 mx-auto flex flex-col gap-8">
+          <div className="flex w-3/5 justify-end items-center">
+            <div className="max-w-lg xl:max-w-xl lg:w-full my-0 flex flex-col gap-8">
               <Skeleton height={60} width="100%" />
               <Skeleton height={60} width="100%" />
               <Skeleton height={40} width="100%" />
