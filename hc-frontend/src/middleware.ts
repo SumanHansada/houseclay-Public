@@ -25,7 +25,9 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // Protected routes that require authentication
-    "/list-property/:path*",
+    "/list-property/rent/:path*",
+    "/list-property/resale/:path*",
+    "/list-property/flatmates/new/:path*",
     "/profile/:path*",
     // Add other protected routes here
   ],

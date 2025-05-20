@@ -28,7 +28,7 @@ const NeighbourhoodCard: React.FC<NeighbourhoodCardProps> = ({
   return (
     <div
       role="listitem"
-      className="relative h-64 max-w-[280px] max-md:min-w-[245px] overflow-hidden rounded-lg shadow-md transition-transform duration-300 md:hover:scale-105 max-md:h-96"
+      className="relative max-md:h-96 md:aspect-square max-w-[280px] max-md:min-w-[245px] overflow-hidden rounded-lg shadow-md transition-transform duration-300 md:hover:scale-105"
     >
       <Image
         src={image}
@@ -53,8 +53,8 @@ const Neighbourhoods: React.FC<NeighbourhoodsProps> = ({
   listingType,
 }) => {
   return (
-    <div className="mx-auto xl:px-28 lg:px-14 md:px-14 px-8 py-20 max-md:py-10 bg-gray-100">
-      <h1 className="mb-6 text-3xl max-md:text-2xl font-bold text-gray-800">
+    <div className="mx-auto xl:px-28 lg:px-14 md:px-14 py-20 max-md:py-10 bg-gray-100">
+      <h1 className="mb-6 max-md:px-8 text-3xl max-md:text-2xl font-bold text-gray-800">
         Popular Neighbourhoods
       </h1>
 
@@ -63,9 +63,9 @@ const Neighbourhoods: React.FC<NeighbourhoodsProps> = ({
         role="list"
         className="scrollbar-hide flex overflow-x-auto md:hidden"
       >
-        <Carousel2D slideWidth={245} gap={24} showDots={true}>
+        <Carousel2D slideWidth={245} gap={4} showDots={true}>
           {neighbourhoods.map((neighbourhood, index) => (
-            <div key={index} className="mr-4 flex-none">
+            <div key={index}>
               <NeighbourhoodCard
                 image={neighbourhood.image}
                 name={neighbourhood.name}
@@ -77,7 +77,7 @@ const Neighbourhoods: React.FC<NeighbourhoodsProps> = ({
       </div>
 
       {/* Grid layout for larger screens */}
-      <div className="grid gap-3 md:gap-3  lg:gap-4  xl:gap-4 2xl:gap-5 grid-cols-[repeat(auto-fit,minmax(280px,1fr))]  max-md:hidden">
+      <div className="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-4 max-md:hidden">
         {neighbourhoods.map((neighbourhood, index) => (
           <NeighbourhoodCard
             key={index}

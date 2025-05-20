@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import HomeSearchBar from "@/components/HomeSearchBar";
 
 interface MastHeadDesktopProps {
@@ -11,7 +13,16 @@ const MastHeadDesktop: React.FC<MastHeadDesktopProps> = ({
 }) => {
   return (
     <>
-      <div className="absolute inset-0 bg-[url('/images/banner-background.svg')] bg-right bg-cover"></div>
+      <div className="absolute inset-0">
+        <Image
+          src="/images/banner-background.svg"
+          alt="Banner Background"
+          fill
+          priority
+          className="object-cover object-right"
+          sizes="100vw"
+        />
+      </div>
       <div className="absolute h-full flex flex-col justify-center xl:pl-40 lg:pl-14 pl-14 xl:w-2/3 lg:w-4/5 md:w-5/6 w-5/6">
         {/* Headings */}
         <div className="max-w-md mb-8">

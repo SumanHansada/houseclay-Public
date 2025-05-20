@@ -138,15 +138,13 @@ const Carousel2D: React.FC<Carousel2DProps> = ({
       {/* Carousel container */}
       <div
         ref={scrollContainerRef}
-        className="flex overflow-x-scroll scrollbar-hide scroll-smooth py-2"
+        className={`grid grid-flow-col auto-cols-max ${gap ? `gap-${gap}` : ""} px-8 py-2 overflow-x-scroll scrollbar-hide scroll-smooth`}
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
-        {/* Apply gap and width to child elements if specified */}
+        {/* Apply width to child elements if specified */}
         {React.Children.map(children, (child) => (
           <div
-            className="flex-shrink-0"
             style={{
-              marginRight: `${gap}px`,
               width: slideWidth ? `${slideWidth}px` : "auto",
             }}
           >

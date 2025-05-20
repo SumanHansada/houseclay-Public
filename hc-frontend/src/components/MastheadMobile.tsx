@@ -1,3 +1,4 @@
+import Image from "next/image";
 import DealSvg from "public/icons/deal.svg";
 import FindFlatmatesSvg from "public/icons/find-flatmates.svg";
 import FindRoomsSvg from "public/icons/find-rooms.svg";
@@ -33,7 +34,17 @@ const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
   const ZeroPercent = ZeroPercentSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
   return (
-    <div className="bg-[url('/images/banner-background-mobile.webp')] flex flex-col bg-top bg-cover px-8 pt-8 pb-14 gap-6">
+    <div className="relative flex flex-col px-8 pt-8 pb-14 gap-6">
+      <div className="absolute inset-0 -z-10">
+        <Image
+          src="/images/banner-background-mobile.webp"
+          alt="Banner Background"
+          fill
+          priority
+          className="object-cover object-top"
+          sizes="100vw"
+        />
+      </div>
       {/* Tabs and Search */}
       <div>
         {/* Tabs */}

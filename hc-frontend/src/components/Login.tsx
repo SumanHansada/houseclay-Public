@@ -207,12 +207,22 @@ const Login = () => {
         </div>
       )}
       {/* Right pane (form) - takes remaining width */}
-      <div className="flex flex-1 h-full px-8 mx-auto max-md:bg-[url('/images/login-ellipse.svg')] max-md:bg-no-repeat">
+      <div className="flex flex-1 h-full px-8 mx-auto relative">
+        <div className="absolute inset-0 md:hidden">
+          <Image
+            src="/images/login-ellipse.svg"
+            alt="Login Background"
+            fill
+            priority
+            className="object-contain object-center"
+            sizes="100vw"
+          />
+        </div>
         {authStep === AuthStep.PHONE && (
           <div className="w-full flex flex-col align-center justify-center gap-8">
             {/* Form header */}
             <div className="max-md:hidden">
-              <h1 className="text-2xl mb-3 text-black ">
+              <h1 className="text-lg lg:text-xl xl:text-2xl 2xl:text-3xl mb-3 text-black ">
                 Log In to Your Account
               </h1>
               <p className="text-gray-600 text-sm">
@@ -221,7 +231,7 @@ const Login = () => {
             </div>
 
             {/* Form fields */}
-            <div className="space-y-4">
+            <div className="space-y-1 lg:space-y-2 xl:space-y-3 2xl:space-y-4">
               <div>
                 <div className="md:hidden mb-8">
                   <span className="text-2xl font-bold">No spam, </span>
@@ -244,7 +254,7 @@ const Login = () => {
 
               {/* Info box */}
               <div className="md:hidden text-gray-400 mb-3">
-                We’ll text you to confirm your number.
+                We&apos;ll text you to confirm your number.
               </div>
 
               {/* Continue button */}
@@ -342,7 +352,7 @@ const Login = () => {
                 Verify Your Phone Number
               </h1>
               <p className="text-gray-600 text-sm">
-                We’ve sent a 4-digit OTP to your phone number.
+                We&apos;ve sent a 4-digit OTP to your phone number.
               </p>
             </div>
 
@@ -393,24 +403,22 @@ const Login = () => {
                 />
               </div>
               {/* Info box */}
-              {!checkUser && (
-                <div className="bg-red-50 p-4 rounded-lg flex items-center gap-4">
-                  <Image
-                    src="/icons/coin-egg.svg"
-                    alt="Info"
-                    width={60}
-                    height={60}
-                  />
+              <div className="bg-red-50 p-4 rounded-lg flex items-center gap-4">
+                <Image
+                  src="/icons/coin-egg.svg"
+                  alt="Info"
+                  width={60}
+                  height={60}
+                />
 
-                  <div>
-                    <p className="text-gray-800 font-normal">
-                      Verify your Phone Number and earn
-                      <br />
-                      <span className="font-bold">2 Connects</span> instantly!
-                    </p>
-                  </div>
+                <div>
+                  <p className="text-gray-800 font-normal">
+                    Verify your Phone Number and earn
+                    <br />
+                    <span className="font-bold">2 Connects</span> instantly!
+                  </p>
                 </div>
-              )}
+              </div>
               {/* Verify Button */}
               <button
                 type="submit"
