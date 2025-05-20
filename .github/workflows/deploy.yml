@@ -29,6 +29,12 @@ jobs:
         run: |
           cd hc-backend/backend
           mvn clean package -DskipTests
+      
+      # Set Environment Variables for Next.js
+      - name: Set Environment Variables
+        run: |
+          echo "NEXT_PUBLIC_HOUSECLAY_API_BASE_URL=${{ secrets.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL }}" >> .env.local
+          echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}" >> .env.local
 
       # Build Next.js Frontend
       - name: Install Dependencies and Build Next.js
