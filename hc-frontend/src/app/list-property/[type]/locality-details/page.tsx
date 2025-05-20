@@ -23,7 +23,7 @@ export const dynamicParams = true;
 const localitySchema = Yup.object().shape({
   localityDetails: Yup.object().shape({
     city: Yup.string().required("City is required"),
-    location: Yup.string().required("Location is required"),
+    locationOrSocietyName: Yup.string().required("Location is required"),
     latitude: Yup.number()
       .required("Latitude is required")
       .min(-90, "Latitude must be greater than or equal to -90")
@@ -156,8 +156,8 @@ const LocalityDetailsPage: React.FC = () => {
           <div className="col-span-1 xl:col-span-2">
             <FormPlacesAutocomplete
               label="Location / Society Name"
-              name="localityDetails.location"
-              id="localityDetails.location"
+              name="localityDetails.locationOrSocietyName"
+              id="localityDetails.locationOrSocietyName"
               placeholder="Location / Society Name"
               required
               pairWithGoogleMaps

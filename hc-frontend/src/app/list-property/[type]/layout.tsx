@@ -20,7 +20,9 @@ import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   usePresignedUrlsMutation,
-  usePropertyAddMutation,
+  usePropertyAddFlatmatesMutation,
+  usePropertyAddRentMutation,
+  usePropertyAddResaleMutation,
 } from "@/store/apiSlice";
 import {
   setHideFooter,
@@ -46,7 +48,6 @@ export default function ListPropertyTypeLayout({
   children: React.ReactNode;
 }) {
   const [getPresignedUrls] = usePresignedUrlsMutation();
-  const [postProperty] = usePropertyAddMutation();
   const params = useParams();
   const dispatch = useDispatch();
   const uploadFiles = useS3Uploader();
@@ -62,9 +63,17 @@ export default function ListPropertyTypeLayout({
     Set<ListPropertyFormStep>
   >(new Set());
   const formKey = `${type}Form` as "rentForm" | "resaleForm" | "flatmatesForm";
+  const [addRentProperty] = usePropertyAddRentMutation();
+  const [addResaleProperty] = usePropertyAddResaleMutation();
+  const [addFlatmatesProperty] = usePropertyAddFlatmatesMutation();
+
+  const propertyId = useSelector(
+    (state: RootState) => state.listProperty.propertyID,
+  );
   const formState = useSelector(
     (state: RootState) => state.listProperty[formKey],
   );
+
   const isFormValid = formState?.isValid;
   const initialValues = formState?.data || {};
 
@@ -203,37 +212,85 @@ export default function ListPropertyTypeLayout({
     } else if (currentStep === ListPropertyFormStep.ADDITIONAL_INFO) {
       uploadFilesToS3();
       setCurrentStep(ListPropertyFormStep.DONE);
+      // Make API call to post property
+      await handlePostProperty();
       openDialog("list-property-success-dialog");
     }
   };
 
   const handlePreviewListing = async () => {
+    // Make API call to get presigned-urls
     console.log("Preview Listing");
-    const propertyDetails = formState.data!.propertyDetails;
-    const localityDetails = formState.data!.localityDetails;
-    const rentalOrResaleDetails =
-      formKey === "resaleForm"
-        ? formState.data!.resaleDetails
-        : formState.data!.rentalDetails;
-    const images = formState.data!.images.map(
-      (image: PropertyPhoto) => image.url,
-    );
-    const additionalInfo = formState.data!.additionalInfo;
+  };
 
-    const postPropertyResponse = await postProperty({
-      propertyID: "1",
-      ...propertyDetails,
-      ...localityDetails,
-      ...rentalOrResaleDetails,
-      images,
-      ...additionalInfo,
-    })
-      .unwrap()
-      .catch((error: Error) => {
-        console.error("Error posting property:", error);
-      });
-    if (postPropertyResponse) {
-      console.log("Property posted successfully");
+  const handlePostProperty = async () => {
+    try {
+      const propertyDetails = formState.data!.propertyDetails;
+      const localityDetails = formState.data!.localityDetails;
+      const images = formState.data!.images.map(
+        (image: PropertyPhoto) => image.url,
+      );
+      const additionalInfo = formState.data!.additionalInfo;
+
+      const basePropertyData = {
+        propertyID: propertyId,
+        ...localityDetails,
+        images,
+      };
+
+      if (type === "rent") {
+        const rentalDetails = formState.data!.rentalDetails!;
+
+        const {
+          khataCertificate: _khataCertificate,
+          saleDeed: _saleDeed,
+          propertyTax: _propertyTax,
+          ...rentalAdditionalInfo
+        } = additionalInfo || {};
+        await addRentProperty({
+          ...basePropertyData,
+          ...propertyDetails,
+          ...rentalDetails,
+          ...rentalAdditionalInfo,
+        }).unwrap();
+      } else if (type === "resale") {
+        const resaleDetails = formState.data!.resaleDetails!;
+        const {
+          whoWillShowProperty: _whoWillShowProperty,
+          ...resaleAdditionalInfo
+        } = additionalInfo || {};
+        await addResaleProperty({
+          ...basePropertyData,
+          ...propertyDetails,
+          ...resaleDetails,
+          ...resaleAdditionalInfo,
+        }).unwrap();
+      } else if (type === "flatmates") {
+        const flatmatesDetails = formState.data!.flatmatesDetails!;
+
+        const {
+          ownershipType: _ownershipType,
+          propertyAge: _propertyAge,
+          floorType: _floorType,
+          facing: _facing,
+          ...flatmatesPropertyDetails
+        } = propertyDetails || {};
+
+        const {
+          khataCertificate: _khataCertificate,
+          saleDeed: _saleDeed,
+          propertyTax: _propertyTax,
+          ...flatmatesAdditionalInfo
+        } = additionalInfo || {};
+        await addFlatmatesProperty({
+          ...basePropertyData,
+          ...flatmatesPropertyDetails,
+          ...flatmatesDetails,
+          ...flatmatesAdditionalInfo,
+        }).unwrap();
+      }
+    } catch (error) {
+      console.error("Error posting property:", error);
     }
   };
 
@@ -385,7 +442,9 @@ export default function ListPropertyTypeLayout({
               disabled={!isFormValid}
               onClick={handleSaveAndNext}
             >
-              Save & Continue
+              {currentStep === ListPropertyFormStep.ADDITIONAL_INFO
+                ? "List Property"
+                : "Save & Continue"}
             </button>
           </div>
         </div>

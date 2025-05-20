@@ -9,4 +9,5 @@ export interface ResaleDetails {
   powerBackup: string;
   furnishing: string;
   parking: boolean;
+  amenities: string[];
 }

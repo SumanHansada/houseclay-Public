@@ -1,6 +1,6 @@
 export interface LocalityDetails {
   city: string;
-  location: string;
+  locationOrSocietyName: string;
   landmark: string;
   latitude: number;
   longitude: number;

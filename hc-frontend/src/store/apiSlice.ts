@@ -84,7 +84,56 @@ export const apiSlice = createApi({
         },
       }),
     }),
-    propertyAdd: builder.mutation<
+    propertyAddRent: builder.mutation<
+      {
+        message: string;
+        propertyID: number;
+      },
+      {
+        propertyID: string;
+        propertyCategory: string;
+        propertyType: string;
+        builtUpArea: number;
+        facing: string;
+        bhkType: string;
+        propertyAge: string;
+        ownershipType: string;
+        floor: string;
+        totalFloor: string;
+        floorType: string;
+        description: string;
+        city: string;
+        locationOrSocietyName: string;
+        landmark: string;
+        latitude: number;
+        longitude: number;
+        rent: number;
+        deposit: number;
+        maintenanceCharges: number;
+        rentNegotiable: boolean;
+        availableFrom: string;
+        preferredTenant: string[];
+        waterSupply: string;
+        powerBackup: string;
+        furnishing: string;
+        parking: boolean;
+        nonVegAllowed: boolean;
+        amenities: string[];
+        images: string[];
+        whoWillShowProperty?: string;
+        secondaryPhoneNumber?: string;
+      }
+    >({
+      query: (data) => ({
+        url: "property/add",
+        method: "POST",
+        body: data,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+    propertyAddResale: builder.mutation<
       {
         message: string;
         propertyID: number;
@@ -102,17 +151,73 @@ export const apiSlice = createApi({
         floorType: string;
         description: string;
         city: string;
-        location: string;
+        locationOrSocietyName: string;
         landmark: string;
         latitude: number;
         longitude: number;
+        price: number;
+        availableFrom: string;
+        bathrooms: number;
+        balcony: number;
+        priceNegotiable: boolean;
+        underLoan: boolean;
+        waterSupply: string;
+        powerBackup: string;
+        furnishing: string;
+        parking: boolean;
+        amenities: string[];
         images: string[];
-        whoWillShowProperty?: string;
-        secondaryPhoneNumber?: string;
         khataCertificate?: string;
         saleDeed?: boolean;
         propertyTax?: boolean;
-        [key: string]: string | number | boolean | string[] | undefined;
+        secondaryPhoneNumber?: string;
+      }
+    >({
+      query: (data) => ({
+        url: "property/add",
+        method: "POST",
+        body: data,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+    propertyAddFlatmates: builder.mutation<
+      {
+        message: string;
+        propertyID: number;
+      },
+      {
+        propertyID: string;
+        propertyCategory: string;
+        builtUpArea: number;
+        bhkType: string;
+        floor: string;
+        totalFloor: string;
+        description: string;
+        city: string;
+        locationOrSocietyName: string;
+        landmark: string;
+        latitude: number;
+        longitude: number;
+        rent: number;
+        maintenanceCharges: number;
+        deposit: number;
+        availableFrom: string;
+        furnishing: string;
+        waterSupply: string;
+        powerBackup: string;
+        parking: boolean;
+        nonVegAllowed: boolean;
+        amenities: string[];
+        tenantType: string;
+        attachedBathroom: boolean;
+        bathroomType: string;
+        smokingPreference: string;
+        drinkingPreference: string;
+        images: string[];
+        whoWillShowProperty?: string;
+        secondaryPhoneNumber?: string;
       }
     >({
       query: (data) => ({
@@ -135,5 +240,7 @@ export const {
   useLazyCheckUserQuery,
   useLogoutMutation,
   usePresignedUrlsMutation,
-  usePropertyAddMutation,
+  usePropertyAddRentMutation,
+  usePropertyAddResaleMutation,
+  usePropertyAddFlatmatesMutation,
 } = apiSlice;

@@ -1,6 +1,7 @@
 import { PropertyListingType, PropertyType } from "@/common/enums";
 
 import { AdditionalInfo } from "./AdditionalInfo";
+import { FlatmatesDetails } from "./FlatmatesDetails";
 import { LocalityDetails } from "./LocalityDetails";
 import { PropertyDetails } from "./PropertyDetails";
 import { PropertyPhoto } from "./PropertyPhoto";
@@ -19,7 +20,8 @@ export interface ListPropertyState {
       rentalDetails: RentalDetails;
       images: PropertyPhoto[];
       additionalInfo: AdditionalInfo;
-      resaleDetails: ResaleDetails;
+      resaleDetails?: ResaleDetails;
+      flatmatesDetails?: FlatmatesDetails;
     };
   };
   resaleForm: {
@@ -27,10 +29,11 @@ export interface ListPropertyState {
     data?: {
       propertyDetails: PropertyDetails;
       localityDetails: LocalityDetails;
-      rentalDetails: RentalDetails;
+      resaleDetails: ResaleDetails;
       images: PropertyPhoto[];
       additionalInfo: AdditionalInfo;
-      resaleDetails: ResaleDetails;
+      rentalDetails?: RentalDetails;
+      flatmatesDetails?: FlatmatesDetails;
     };
   };
   flatmatesForm: {
@@ -38,10 +41,11 @@ export interface ListPropertyState {
     data?: {
       propertyDetails: PropertyDetails;
       localityDetails: LocalityDetails;
-      rentalDetails: RentalDetails;
+      flatmatesDetails: FlatmatesDetails;
       images: PropertyPhoto[];
       additionalInfo: AdditionalInfo;
-      resaleDetails: ResaleDetails;
+      rentalDetails?: RentalDetails;
+      resaleDetails?: ResaleDetails;
     };
   };
 }
