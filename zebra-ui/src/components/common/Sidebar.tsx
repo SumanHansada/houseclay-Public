@@ -27,6 +27,10 @@ const sidebarItems = [
         label: "Add Sale Property",
         href: "/admin/add-property/resale/property-details",
       },
+      {
+        label: "Add Flatmates",
+        href: "/admin/add-property/flatmates/property-details",
+      },
       { label: "View All Properties", href: "/admin/view-all-properties" },
     ],
     href: "#",

@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { PropertyListingType } from "@/common/enums";
 import { PropertyType } from "@/common/enums";
 import { AdditionalInfo } from "@/interfaces/AdditionalInfo";
-import { AddPropertyState } from "@/interfaces/AddPropertyState";
+import { ListPropertyState } from "@/interfaces/ListPropertyState";
 import { LocalityDetails } from "@/interfaces/LocalityDetails";
 import { PropertyDetails } from "@/interfaces/PropertyDetails";
 import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
@@ -46,7 +46,7 @@ const initialData: {
     deposit: 0,
     availableFrom: "",
     furnishing: "",
-    preferredTenant: "",
+    preferredTenant: [],
     waterSupply: "",
     powerBackup: "",
     parking: false,
@@ -80,7 +80,7 @@ const initialData: {
   },
 };
 
-const initialState: AddPropertyState = {
+const initialState: ListPropertyState = {
   propertyID: "",
   propertyType: PropertyType.RENT,
   listingType: PropertyListingType.DIY,
@@ -118,7 +118,7 @@ const initialState: AddPropertyState = {
 
 export type FormType = "rentForm" | "resaleForm" | "flatmatesForm";
 
-const addPropertySlice = createSlice({
+const listPropertySlice = createSlice({
   name: "listProperty",
   initialState,
   reducers: {
@@ -246,5 +246,5 @@ export const {
   setResaleDetails,
   setImages,
   setAdditionalInfo,
-} = addPropertySlice.actions;
-export default addPropertySlice.reducer;
+} = listPropertySlice.actions;
+export default listPropertySlice.reducer;

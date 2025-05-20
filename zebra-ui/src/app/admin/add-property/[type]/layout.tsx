@@ -1,29 +1,30 @@
 "use client";
 
+import { APIProvider } from "@vis.gl/react-google-maps";
+import { Form, Formik, FormikProvider } from "formik";
+import { useParams, useRouter } from "next/navigation";
+import ListPropertySuccessSvg from "public/icons/list-property-success.svg";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
-  AddPropertyFormStep,
-  AddPropertyRouteStep,
+  ListPropertyFormStep as AddPropertyFormStep,
+  ListPropertyRouteStep as AddPropertyRouteStep,
   PropertyType,
 } from "@/common/enums";
-import { useDispatch, useSelector } from "react-redux";
-import { redirect, useParams, useRouter } from "next/navigation";
-import { useDialog } from "@/providers/DialogContextProvider";
-import { RootState } from "@/store/store";
-import Image from "next/image";
-import { Form, Formik, FormikProvider } from "formik";
-import RentStepper from "./components/RentStepper";
-import ResaleStepper from "./components/ResaleStepper";
-import FlatmatesStepper from "./components/FlatmatesStepper";
+import { Dialog, DialogContent } from "@/components/Dialog";
 import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
+import { useDialog } from "@/providers/DialogContextProvider";
 import {
   usePresignedUrlsMutation,
   usePropertyAddMutation,
 } from "@/store/apiSlice";
-import { setFileURLMap, setPropertyID } from "@/store/addPropertySlice";
+import { setFileURLMap, setPropertyID } from "@/store/listPropertySlice";
+import { RootState } from "@/store/store";
 
-import ListPropertySuccessSvg from "public/icons/list-property-success.svg";
+import FlatmatesStepper from "../components/FlatmatesStepper";
+import RentStepper from "../components/RentStepper";
+import ResaleStepper from "../components/ResaleStepper";
 
 const ListPropertySuccess = ListPropertySuccessSvg as React.FC<
   React.SVGProps<SVGSVGElement>
@@ -59,7 +60,7 @@ export default function AddPropertyTypeLayout({
   >(new Set());
   const formKey = `${type}Form` as "rentForm" | "resaleForm" | "flatmatesForm";
   const formState = useSelector(
-    (state: RootState) => state.addProperty[formKey],
+    (state: RootState) => state.listProperty[formKey],
   );
   const isFormValid = formState?.isValid;
   const initialValues = formState?.data || {};
@@ -124,8 +125,7 @@ export default function AddPropertyTypeLayout({
     setCompletedSteps((prev) => {
       const updatedSteps = new Set(prev);
       if (currentStep === AddPropertyFormStep.PROPERTY_DETAILS) {
-        // router.back();
-        redirect("/admin/dashboard");
+        router.back();
       } else if (currentStep === AddPropertyFormStep.LOCALITY_DETAILS) {
         updatedSteps.delete(AddPropertyFormStep.PROPERTY_DETAILS);
         setCurrentStep(AddPropertyFormStep.PROPERTY_DETAILS);
@@ -295,23 +295,25 @@ export default function AddPropertyTypeLayout({
           style={{ width: `${calculateProgressPercent(type, currentStep)}%` }}
         />
       </div>
-      <div className="flex w-full h-full top-14">
+      <div className="flex flex-col w-full h-full top-14">
         {/* Background SVG behind left section only */}
-        <div className="left-0 top-14 bottom-0 z-40 w-[33.33%] fixed  bg-gray-50 max-md:hidden">
-          {/* <Image
+        {/* <div className="left-0 top-14 bottom-0 z-40 w-[33.33%] fixed  bg-gray-50 max-md:hidden"> */}
+        {/* <Image
             src="/images/property-add-graphic.svg"
             alt="Property Graphic"
             width={500}
             height={500}
             className="w-full h-full object-cover max-xl:hidden"
           /> */}
-          {/* Left side - Steps navigation */}
+        {/* Left side - Steps navigation */}
+        {/* <div className="absolute right-8 top-12 flex z-50"> */}
+        <div className="flex p-3 justify-between sticky top-16 z-40 bg-white border-b border-b-gray-100 shadow-md xl:px-28 dark:bg-gray-900">
           {/* <div className="absolute right-8 top-12 flex z-50"> */}
-          <div className="absolute right-8 top-12 flex flex-col z-50">
-            {renderStepper()}
-          </div>
+          {renderStepper()}
         </div>
-        <div className="container right-0 ml-[33.33%] max-md:ml-auto pt-8 md:pt-12 pb-20 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
+        {/* </div> */}
+        <div className="container right-0 max-md:ml-auto pt-8 md:pt-12 pb-20 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
+          {/* <div className="container right-0 ml-[33.33%] max-md:ml-auto pt-8 md:pt-12 pb-20 mx-auto xl:px-28 lg:px-14 md:px-8 px-8"> */}
           <div className="flex flex-col">
             <Formik
               initialValues={initialValues}
@@ -324,15 +326,21 @@ export default function AddPropertyTypeLayout({
             >
               {(formik) => (
                 <Form>
-                  <FormikProvider value={formik}>{children}</FormikProvider>
+                  <APIProvider
+                    apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
+                    libraries={["places"]}
+                  >
+                    <FormikProvider value={formik}>{children}</FormikProvider>
+                  </APIProvider>
                 </Form>
               )}
             </Formik>
           </div>
-          <div className="fixed bottom-0 left-0 ml-[33.33%] max-md:ml-auto right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 border-t border-t-gray-300 bg-white">
+          <div className="fixed bottom-0 left-80 right-0 flex justify-between py-2 px-4 border-t border-t-gray-300 bg-white dark:bg-gray-900">
+            {/* <div className="fixed bottom-0 left-0 ml-[33.33%] max-md:ml-auto right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 border-t border-t-gray-300 bg-white"> */}
             <button
               type="button"
-              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="px-6 py-3 border border-gray-300 hover:border-gray-500 text-gray-900 rounded-xl hover:bg-gray-50 disabled:bg-gray-300 disabled:cursor-not-allowed dark:text-gray-300 hover:dark:bg-gray-800"
               onClick={handleBack}
             >
               Back
@@ -340,7 +348,7 @@ export default function AddPropertyTypeLayout({
 
             <button
               type="submit"
-              className="px-6 py-3 border border-red-500 bg-red-500 text-white rounded-xl hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300"
+              className="px-6 py-3 border border-red-500 bg-red-500 text-white rounded-xl hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:text-gray-500 disabled:border-gray-300"
               disabled={!isFormValid}
               onClick={handleSaveAndNext}
             >
@@ -348,7 +356,7 @@ export default function AddPropertyTypeLayout({
             </button>
           </div>
         </div>
-        {/* {isDialogOpen("list-property-success-dialog") && (
+        {isDialogOpen("list-property-success-dialog") && (
           <Dialog
             id="list-property-success-dialog"
             type="card"
@@ -367,10 +375,10 @@ export default function AddPropertyTypeLayout({
                   You have successfully posted your property,
                   <br />
                   it will be live within 2 Hrs.
-                </p> */}
+                </p>
 
-        {/* Action buttons */}
-        {/* <div className="flex gap-4">
+                {/* Action buttons */}
+                <div className="flex gap-4">
                   <button
                     onClick={() => {
                       closeDialog("list-property-success-dialog");
@@ -389,7 +397,7 @@ export default function AddPropertyTypeLayout({
               </div>
             </DialogContent>
           </Dialog>
-        )}*/}
+        )}
       </div>
     </>
   );

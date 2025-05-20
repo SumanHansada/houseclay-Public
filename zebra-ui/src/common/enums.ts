@@ -4,7 +4,7 @@ export enum PropertyType {
   FLATMATES = "FLATMATES",
 }
 
-export enum AddPropertyRouteStep {
+export enum ListPropertyRouteStep {
   PROPERTY_DETAILS = "property-details",
   LOCALITY_DETAILS = "locality-details",
   RENTAL_DETAILS = "rental-details",
@@ -14,7 +14,7 @@ export enum AddPropertyRouteStep {
   NONE = "none",
 }
 
-export enum AddPropertyFormStep {
+export enum ListPropertyFormStep {
   PROPERTY_DETAILS = "Property Details",
   LOCALITY_DETAILS = "Locality Details",
   RENTAL_DETAILS = "Rental Details",

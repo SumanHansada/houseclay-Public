@@ -7,7 +7,7 @@ import { PropertyPhoto } from "./PropertyPhoto";
 import { RentalDetails } from "./RentalDetails";
 import { ResaleDetails } from "./ResaleDetails";
 
-export interface AddPropertyState {
+export interface ListPropertyState {
   propertyID: string;
   propertyType: PropertyType;
   listingType: PropertyListingType;

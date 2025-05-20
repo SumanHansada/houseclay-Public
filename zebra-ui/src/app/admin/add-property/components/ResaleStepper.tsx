@@ -1,6 +1,6 @@
 import { FileImage, FileText, Home, IndianRupee, MapPin } from "lucide-react";
 
-import { AddPropertyFormStep } from "@/common/enums";
+import { ListPropertyFormStep as AddPropertyFormStep } from "@/common/enums";
 
 import StepNavigationButton from "./StepNavigationButton";
 

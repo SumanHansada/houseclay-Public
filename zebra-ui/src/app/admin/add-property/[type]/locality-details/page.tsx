@@ -7,7 +7,8 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
-import FormDropdown from "@/components/common/FormDropdown";
+// import FormDropdown from "@/components/common/FormDropdown";
+import FormInputField from "@/components/common/FormInputField";
 import FormPlacesAutocomplete from "@/components/common/FormPlacesAutoCompletes";
 import GoogleMaps from "@/components/common/GoogleMaps";
 import { FormValues } from "@/interfaces/FormValues";
@@ -15,7 +16,7 @@ import {
   FormType,
   setFormValidity,
   setLocalityDetails,
-} from "@/store/addPropertySlice";
+} from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
 export const dynamicParams = true;
@@ -36,17 +37,23 @@ const localitySchema = Yup.object().shape({
 });
 
 const LocalityDetailsPage: React.FC = () => {
-  const { values, errors, touched, setFieldError, setErrors, setFieldValue } =
+  const { values, setFieldError, setErrors, setFieldValue } =
     useFormikContext<FormValues>();
+  // const { values, errors, touched, setFieldError, setErrors, setFieldValue } =
+  //   useFormikContext<FormValues>();
   const params = useParams();
   const formKey = `${params?.type}Form` as FormType; // Optional: add type assertion
   const formState = useSelector(
-    (state: RootState) => state.addProperty[formKey],
+    (state: RootState) => state.listProperty[formKey],
   );
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
 
   const localityDetailsString = JSON.stringify(values.localityDetails);
+
+  useEffect(() => {
+    setFieldValue("localityDetails.city", "Bengaluru");
+  }, [setFieldValue]);
 
   useEffect(() => {
     const validateAndDispatch = async () => {
@@ -123,7 +130,30 @@ const LocalityDetailsPage: React.FC = () => {
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
           <div className="col-span-1">
-            <FormDropdown
+            <FormInputField
+              label="City"
+              name="localityDetails.city"
+              id="localityDetails.city"
+              readOnly
+              required
+            />
+            {/* <div className="w-full">
+              <label
+                htmlFor="localityDetails.city"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                City
+              </label>
+              <input
+                id="localityDetails.city"
+                name="localityDetails.city"
+                type="text"
+                value="Bangalore"
+                readOnly
+                className="w-full p-3 border border-gray-300 bg-gray-100 text-gray-600 rounded-xl cursor-not-allowed"
+              />
+            </div> */}
+            {/* <FormDropdown
               label="City"
               name="localityDetails.city"
               id="localityDetails.city"
@@ -143,7 +173,7 @@ const LocalityDetailsPage: React.FC = () => {
                   ? "localityDetails.city-error"
                   : undefined
               }
-            />
+            /> */}
           </div>
           <div className="col-span-1 xl:col-span-2">
             <FormPlacesAutocomplete
@@ -176,7 +206,7 @@ const LocalityDetailsPage: React.FC = () => {
         </p>
       </div>
       <div className="mt-4 h-96">
-        {/* <GoogleMaps
+        <GoogleMaps
           mapId="houseclay-googlemaps"
           center={{
             lat: values.localityDetails.latitude,
@@ -184,7 +214,7 @@ const LocalityDetailsPage: React.FC = () => {
           }}
           zoom={12}
           className="h-full w-full border rounded-xl shadow-lg"
-        /> */}
+        />
       </div>
     </>
   );

@@ -18,7 +18,9 @@ const Header = () => {
       </div>
       {/* User Avatar and Dropdown */}
       <div className="flex items-center gap-4">
-        <span className="font-medium text-gray-700">Esther Howard</span>
+        <span className="font-medium text-gray-700 dark:text-gray-300">
+          Esther Howard
+        </span>
         <Image
           src="https://randomuser.me/api/portraits/lego/5.jpg"
           alt="User Avatar"

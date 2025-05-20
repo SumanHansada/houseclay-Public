@@ -14,7 +14,7 @@ import {
   FormType,
   setFormValidity,
   setPropertyDetails,
-} from "@/store/addPropertySlice";
+} from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
 export const dynamicParams = true;
@@ -57,7 +57,7 @@ const PropertyDetailsPage: React.FC = () => {
   const params = useParams();
   const formKey = `${params?.type}Form` as FormType; // Optional: add type assertion
   const formState = useSelector(
-    (state: RootState) => state.addProperty[formKey],
+    (state: RootState) => state.listProperty[formKey],
   );
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
