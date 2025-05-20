@@ -33,13 +33,13 @@ jobs:
       # Set Environment Variables for Next.js
       - name: Set Environment Variables
         run: |
+          cd hc-frontend
           echo "NEXT_PUBLIC_HOUSECLAY_API_BASE_URL=${{ secrets.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL }}" >> .env.local
           echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}" >> .env.local
 
       # Build Next.js Frontend
       - name: Install Dependencies and Build Next.js
         run: |
-          cd hc-frontend
           npm install
           npm run build:prod
 
