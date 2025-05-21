@@ -34,7 +34,6 @@ const PropertyOwners: React.FC = () => {
           height={500}
           width={500}
           className="my-0 mx-auto"
-          placeholder="blur"
         />
       </div>
     </div>

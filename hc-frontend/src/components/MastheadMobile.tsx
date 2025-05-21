@@ -6,6 +6,8 @@ import ListPropertySvg from "public/icons/list-property.svg";
 import SearchSvg from "public/icons/search.svg";
 import WeeklyStandoutsSvg from "public/icons/weekly-standouts.svg";
 import ZeroPercentSvg from "public/icons/zero-percent.svg";
+import bannerBackgroundMobile from "public/images/banner-background-mobile.webp";
+import bannerPeopleMobile from "public/images/banner-people-mobile.webp";
 
 import { useDialog } from "@/providers/DialogContextProvider";
 
@@ -37,12 +39,12 @@ const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
     <div className="relative flex flex-col px-8 pt-8 pb-14 gap-6">
       <div className="absolute inset-0 -z-10">
         <Image
-          src="/images/banner-background-mobile.webp"
+          src={bannerBackgroundMobile}
           alt="Banner Background"
           fill
           className="object-cover object-top"
           sizes="100vw"
-          placeholder="blur"
+          priority
         />
       </div>
       {/* Tabs and Search */}
@@ -158,12 +160,12 @@ const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
         <div className="rounded-2xl p-5 relative overflow-hidden w-full">
           <div className="absolute inset-0 pointer-events-none">
             <Image
-              src="/images/banner-people-mobile.svg"
-              alt="Banner Background"
+              src={bannerPeopleMobile}
+              alt="Banner People"
               fill
               className="object-cover object-right"
               sizes="100vw"
-              placeholder="blur"
+              priority
             />
           </div>
           <div className="w-full relative">

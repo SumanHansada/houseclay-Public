@@ -203,7 +203,6 @@ const Login = () => {
             className="relative rounded-l-lg"
             width={500}
             height={400}
-            placeholder="blur"
           />
         </div>
       )}
@@ -216,7 +215,6 @@ const Login = () => {
             fill
             className="object-contain object-center"
             sizes="100vw"
-            placeholder="blur"
           />
         </div>
         {authStep === AuthStep.PHONE && (
@@ -410,7 +408,6 @@ const Login = () => {
                   alt="Info"
                   width={60}
                   height={60}
-                  placeholder="blur"
                 />
 
                 <div>

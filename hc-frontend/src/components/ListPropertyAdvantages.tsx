@@ -19,7 +19,6 @@ const ListPropertyAdvantages: React.FC = () => {
             alt="Fast Results"
             width={150}
             height={150}
-            placeholder="blur"
           />
           <h1 className="font-bold text-center">Fast Results</h1>
           <p className="text-center">Find tenants or buyers in under 3 days.</p>
@@ -30,7 +29,6 @@ const ListPropertyAdvantages: React.FC = () => {
             alt="Affordable Upgrades"
             width={150}
             height={150}
-            placeholder="blur"
           />
           <h1 className="font-bold text-center">Affordable Upgrades</h1>
           <p className="text-center">
@@ -43,7 +41,6 @@ const ListPropertyAdvantages: React.FC = () => {
             alt="Wide Reach"
             width={150}
             height={150}
-            placeholder="blur"
           />
           <h1 className="font-bold text-center">Wide Reach</h1>
           <p className="text-center">
