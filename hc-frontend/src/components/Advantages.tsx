@@ -17,6 +17,7 @@ const Advantages: React.FC = () => {
             alt="Direct Owner Accesss"
             width={150}
             height={150}
+            placeholder="blur"
           />
           <h1 className="font-bold text-center">Direct Owner Access</h1>
           <p className="text-center">
@@ -29,6 +30,7 @@ const Advantages: React.FC = () => {
             alt="Pay-As-You-Go"
             width={150}
             height={150}
+            placeholder="blur"
           />
           <h1 className="font-bold text-center">Pay-As-You-Go</h1>
           <p className="text-center">
@@ -42,6 +44,7 @@ const Advantages: React.FC = () => {
             alt="Exclusive Listings"
             width={150}
             height={150}
+            placeholder="blur"
           />
           <h1 className="font-bold text-center">Exclusive Listings</h1>
           <p className="text-center">

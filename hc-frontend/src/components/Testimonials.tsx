@@ -51,6 +51,7 @@ export const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({
               alt={testimonial.name}
               className="h-full w-full object-cover"
               fill
+              placeholder="blur"
             />
           </div>
           <span className="font-medium">{testimonial.name}</span>
@@ -86,6 +87,7 @@ export const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
           alt="Testimonial"
           height={75}
           width={400}
+          placeholder="blur"
         />
       </div>
 

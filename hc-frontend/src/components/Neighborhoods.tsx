@@ -35,6 +35,7 @@ const NeighbourhoodCard: React.FC<NeighbourhoodCardProps> = ({
         alt={`${name} neighbourhood`}
         className="h-full w-full object-cover"
         layout="fill"
+        placeholder="blur"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent max-md:from-transparent max-md:to-black/60">
         <div className="absolute bottom-0 max-md:top-0 left-0 p-6">

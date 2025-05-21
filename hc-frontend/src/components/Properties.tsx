@@ -61,6 +61,7 @@ const Properties: React.FC<PropertiesProps> = ({
           layout="fill"
           objectFit="cover"
           className="rounded-lg"
+          placeholder="blur"
         />
 
         {/* Badge: Featured or Exclusive */}

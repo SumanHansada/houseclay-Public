@@ -18,9 +18,9 @@ const MastHeadDesktop: React.FC<MastHeadDesktopProps> = ({
           src="/images/banner-background.svg"
           alt="Banner Background"
           fill
-          priority
           className="object-cover object-right"
           sizes="100vw"
+          placeholder="blur"
         />
       </div>
       <div className="absolute h-full flex flex-col justify-center xl:pl-40 lg:pl-14 pl-14 xl:w-2/3 lg:w-4/5 md:w-5/6 w-5/6">

@@ -40,9 +40,9 @@ const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
           src="/images/banner-background-mobile.webp"
           alt="Banner Background"
           fill
-          priority
           className="object-cover object-top"
           sizes="100vw"
+          placeholder="blur"
         />
       </div>
       {/* Tabs and Search */}
@@ -161,9 +161,9 @@ const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
               src="/images/banner-people-mobile.svg"
               alt="Banner Background"
               fill
-              priority
               className="object-cover object-right"
               sizes="100vw"
+              placeholder="blur"
             />
           </div>
           <div className="w-full relative">
