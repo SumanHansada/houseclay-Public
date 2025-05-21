@@ -10,6 +10,7 @@ import lombok.Data;
 public class FlatmateProperty extends Property {
     private Double rent;
     private Double maintenanceCharges;
+    private Double depositCharges;
     private String tenantType;
     private Boolean attachedBathroom;
     private Boolean attachedBalcony;

@@ -33,6 +33,7 @@ public class UserTokenAuthenticationFilter extends OncePerRequestFilter {
     private static final List<String> PRIVATE_URLS = List.of(
             "/api/property/add",
             "/api/property/contact",
+            "/api/property/user",
             "/api/payment/create-order",
             "/api/payment/verify",
             "/api/photo/presigned-urls"

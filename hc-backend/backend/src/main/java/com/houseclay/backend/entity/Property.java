@@ -37,6 +37,7 @@ public class Property {
     boolean isManaged;
     boolean isPremium;
     Timestamp postedOn;
+    Timestamp updatedOn;
     Timestamp verifiedOn;
     Timestamp reVerifiedOn;
 
@@ -53,16 +54,21 @@ public class Property {
     private Double latitude;
     private Double longitude;
     private String furnishing;
-    private Boolean waterSupply;
-    private Boolean powerBackup;
+    private String propertyAge;
+    private String waterSupply;
+    private String powerBackup;
     private Boolean parking;
     private Timestamp availableFrom;
+    private PropertyState propertyState;
 
     @ElementCollection
     private List<String> images;
 
     @ElementCollection
     private List<String> amenities;
+
+    @ElementCollection
+    private List<String> preferredTenants;
 
     @ManyToOne
     @JoinColumn(name = "username")

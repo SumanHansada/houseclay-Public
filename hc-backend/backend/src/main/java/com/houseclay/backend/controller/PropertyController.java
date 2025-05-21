@@ -1,5 +1,6 @@
 package com.houseclay.backend.controller;
 
+import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.entity.Property;
 import com.houseclay.backend.entity.PropertyDocument;
 import com.houseclay.backend.entity.User;
@@ -41,20 +42,34 @@ public class PropertyController {
         }
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<List<Property>> getAllProperties() {
-        return ResponseEntity.ok(propertyService.getAllProperties());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Object> getPropertyById(@PathVariable String id) {
-        Optional<Property> property = propertyService.getPropertyById(id);
-        if (property.isPresent()) {
-            return ResponseEntity.ok(property.get());
-        } else {
-            return ResponseEntity.status(404).body(Map.of("error", "Property not found"));
+    @GetMapping("/user/{id}")
+    public ResponseEntity<Object> getPropertyByIdForUser(@PathVariable String id, @RequestAttribute("authenticatedUser") User user) {
+        try {
+            Property property = propertyService.getPropertyForUser(id, user);
+            return ResponseEntity.ok(property);
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+    @GetMapping("/admin/{id}")
+    public ResponseEntity<Object> getPropertyByIdForAdmin(@PathVariable String id, @RequestAttribute("authenticatedAdmin") Admin admin) {
+        try {
+            Property property = propertyService.getProperty(id);
+            return ResponseEntity.ok(property);
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+//    @GetMapping("/list")
+//    public ResponseEntity<List<Property>> getAllProperties() {
+//        return ResponseEntity.ok(propertyService.getAllProperties());
+//    }
 
     @GetMapping("/search")
     public ResponseEntity<?> searchProperty(

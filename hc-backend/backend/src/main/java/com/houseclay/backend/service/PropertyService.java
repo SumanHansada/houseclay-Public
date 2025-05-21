@@ -1,9 +1,6 @@
 package com.houseclay.backend.service;
 
-import com.houseclay.backend.entity.Admin;
-import com.houseclay.backend.entity.Property;
-import com.houseclay.backend.entity.PropertyDocument;
-import com.houseclay.backend.entity.User;
+import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.repository.AdminRepository;
 import com.houseclay.backend.repository.PropertyRepository;
@@ -39,6 +36,7 @@ public class PropertyService {
         Optional<User> userOpt = userRepository.findById(user.getPhoneNo());
         if (userOpt.isPresent()) {
             user = userOpt.get();
+            property.setPropertyState(PropertyState.PENDING_VERIFICATION);
             property.setOwner(user);
             user.getOwnedProperties().add(property);
             indexPropertyInElastic(property);
@@ -51,8 +49,20 @@ public class PropertyService {
         return propertyRepository.findAll();
     }
 
-    public Optional<Property> getPropertyById(String id) {
-        return propertyRepository.findById(id);
+    public Property getPropertyForUser(String id, User user) throws APIException {
+        Property property = getProperty(id);
+        if (user.getPhoneNo().equals(property.getOwner().getPhoneNo())) {
+            return property;
+        }
+        throw new APIException("Access denied", HttpStatus.FORBIDDEN);
+    }
+
+    public Property getProperty(String id) throws APIException {
+        Optional<Property> propertyOpt = propertyRepository.findById(id);
+        if (propertyOpt.isPresent()) {
+            return propertyOpt.get();
+        }
+        throw new APIException("Invalid property ID", HttpStatus.BAD_REQUEST);
     }
 
     public Property verifyProperty(String propertyId, Admin admin) throws APIException {

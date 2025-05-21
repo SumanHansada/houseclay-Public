@@ -28,6 +28,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             "/api/admin/login"
     );
 
+    private static final List<String> PRIVATE_URLS = List.of(
+            "/api/property/admin"
+    );
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -41,7 +45,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // ✅ Ensure this filter only applies to `/api/admin/**`
-        if (!requestURI.startsWith("/api/admin/")) {
+        if (!requestURI.startsWith("/api/admin/") && !PRIVATE_URLS.contains(requestURI)) {
             filterChain.doFilter(request, response);
             return;
         }
