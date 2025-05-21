@@ -208,7 +208,7 @@ const Login = () => {
       )}
       {/* Right pane (form) - takes remaining width */}
       <div className="flex flex-1 h-full px-8 mx-auto relative">
-        <div className="absolute inset-0 md:hidden">
+        <div className="absolute inset-0 md:hidden pointer-events-none">
           <Image
             src="/images/login-ellipse.svg"
             alt="Login Background"

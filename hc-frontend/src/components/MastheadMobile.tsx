@@ -154,24 +154,36 @@ const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
       </div>
 
       {/* Banner */}
-      <div className="bg-[url('/images/banner-people-mobile.svg')] bg-cover bg-right bg-no-repeat rounded-2xl p-5 relative">
-        <div className="w-full">
-          <h3 className="font-bold">Introducing connects</h3>
-          <p className="text-xs text-gray-600 mt-2">
-            The new way to find your house
-          </p>
-
-          <div className="flex items-center mt-2 gap-2">
-            <ZeroPercent />
-            <span className="text-sm">ZERO brokerage</span>
+      <div className="relative w-full flex justify-center">
+        <div className="rounded-2xl p-5 relative overflow-hidden w-full">
+          <div className="absolute inset-0 pointer-events-none">
+            <Image
+              src="/images/banner-people-mobile.svg"
+              alt="Banner Background"
+              fill
+              priority
+              className="object-cover object-right"
+              sizes="100vw"
+            />
           </div>
+          <div className="w-full relative">
+            <h3 className="font-bold">Introducing connects</h3>
+            <p className="text-xs text-gray-600 mt-2">
+              The new way to find your house
+            </p>
 
-          <div className="flex items-center mt-2 gap-3">
-            <Deal />
-            <span className="text-sm">Direct Deals</span>
+            <div className="flex items-center mt-2 gap-2">
+              <ZeroPercent />
+              <span className="text-sm">ZERO brokerage</span>
+            </div>
+
+            <div className="flex items-center mt-2 gap-3">
+              <Deal />
+              <span className="text-sm">Direct Deals</span>
+            </div>
           </div>
         </div>
-        <button className="absolute bg-red-500 right-6 -bottom-6 text-white font-nunito px-4 py-2 rounded-2xl border-4 border-red-100 font-bold">
+        <button className="absolute right-6 -bottom-6 bg-red-500 text-white font-nunito px-4 py-2 rounded-2xl border-4 border-red-100 font-bold">
           Know More
         </button>
       </div>
