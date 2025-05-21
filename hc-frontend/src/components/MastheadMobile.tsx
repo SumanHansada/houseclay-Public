@@ -165,7 +165,6 @@ const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
               fill
               className="object-cover object-right"
               sizes="100vw"
-              priority
             />
           </div>
           <div className="w-full relative">
