@@ -1,11 +1,14 @@
 package com.houseclay.backend.controller;
 
+import com.houseclay.backend.entity.Lead;
+import com.houseclay.backend.entity.LeadCategory;
 import com.houseclay.backend.entity.Property;
 import com.houseclay.backend.entity.User;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.payload.LoginPayload;
 import com.houseclay.backend.payload.UserPayload;
 
+import com.houseclay.backend.service.LeadService;
 import com.houseclay.backend.service.ShortlistPropertyService;
 import com.houseclay.backend.service.UserService;
 import com.houseclay.backend.service.ViewPropertyService;
@@ -31,6 +34,9 @@ public class UserController {
 
     @Autowired
     private ViewPropertyService viewPropertyService;
+
+    @Autowired
+    private LeadService leadService;
 
 
     @RequestMapping (method = RequestMethod.POST, value = "/register",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -151,5 +157,21 @@ public class UserController {
         Map<String, Object> response = new HashMap<>();
         response.put("viewedProperties", viewPropertyService.getViewedProperties(user));
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/generate-lead")
+    public ResponseEntity generateLead(
+            @RequestParam LeadCategory leadCategory,
+            @RequestAttribute("authenticatedUser") User user) {
+        try {
+            leadService.createLead(leadCategory, user);
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Lead generated successfully");
+            return ResponseEntity.ok(response);
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 }

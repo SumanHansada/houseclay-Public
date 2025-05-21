@@ -8,6 +8,8 @@ import com.houseclay.backend.repository.AdminLoginRepository;
 import com.houseclay.backend.repository.AdminRepository;
 import com.houseclay.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -71,18 +73,30 @@ public class AdminService {
         return true;
     }
 
-    public User blacklistUser(String userId, Admin admin) throws Exception {
-        Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isEmpty()) {
-            throw new APIException("User not found", HttpStatus.NOT_FOUND);
-        }
-        User user = userOpt.get();
+    public User blacklistUser(String phoneNo, Admin admin) throws Exception {
+        User user = searchUser(phoneNo);
         user.setBlacklisted(true);
         user.setBlacklistedAt(new Timestamp(System.currentTimeMillis()));
         admin.getBlacklistedUsers().add(user);
         adminRepository.save(admin);
         userRepository.save(user);
         return user;
+    }
+
+    public User searchUser(String phoneNo) throws Exception {
+        Optional<User> userOpt = userRepository.findById(phoneNo);
+        if (userOpt.isEmpty()) {
+            throw new APIException("User not found", HttpStatus.NOT_FOUND);
+        }
+        return userOpt.get();
+    }
+
+    public Page<User> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
+
+    public User updateUser(User user) {
+        return userRepository.save(user);
     }
 
 }
