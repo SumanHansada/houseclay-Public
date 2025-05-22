@@ -30,17 +30,31 @@ jobs:
           cd hc-backend/backend
           mvn clean package -DskipTests
       
-      # Set Environment Variables for Next.js
-      - name: Set Environment Variables
+      # Set Environment Variables for Houseclay UI
+      - name: Set Environment Variables for Houseclay UI
         run: |
           cd hc-frontend
           echo "NEXT_PUBLIC_HOUSECLAY_API_BASE_URL=${{ secrets.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL }}" >> .env.local
           echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}" >> .env.local
 
-      # Build Next.js Frontend
-      - name: Install Dependencies and Build Next.js
+      # Build Houseclay UI Next.js Frontend
+      - name: Install Dependencies and Build Houseclay UI
         run: |
           cd hc-frontend
+          npm install
+          npm run build:prod
+
+      # Set Environment Variables for Zebra UI
+      - name: Set Environment Variables for Zebra UI
+        run: |
+          cd zebra-ui
+          echo "NEXT_PUBLIC_HOUSECLAY_API_BASE_URL=${{ secrets.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL }}" >> .env.local
+          echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}" >> .env.local
+
+      # Build Zebra UI Next.js Frontend
+      - name: Install Dependencies and Build Zebra UI
+        run: |
+          cd zebra-ui
           npm install
           npm run build:prod
 
@@ -66,12 +80,16 @@ jobs:
           scp -o StrictHostKeyChecking=no -i private_key.pem hc-frontend/package-lock.json ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/frontend/package-lock.json
           scp -o StrictHostKeyChecking=no -i private_key.pem -r hc-frontend/.next ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/frontend
           scp -o StrictHostKeyChecking=no -i private_key.pem -r hc-frontend/public ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/frontend
-
-      # Restart Applications
-      - name: Restart Spring Boot and Next.js on EC2
+          scp -o StrictHostKeyChecking=no -i private_key.pem zebra-ui/package.json ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/zebra/package.json
+          scp -o StrictHostKeyChecking=no -i private_key.pem zebra-ui/package-lock.json ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/zebra/package-lock.json
+          scp -o StrictHostKeyChecking=no -i private_key.pem -r zebra-ui/.next ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/zebra
+          scp -o StrictHostKeyChecking=no -i private_key.pem -r zebra-ui/public ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/zebra
+      
+      # Start Applications
+      - name: Start Spring Boot and Next.js on EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i private_key.pem ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
-          # Restart Spring Boot
+          # Start Spring Boot
           sudo kill -9 $(lsof -t -i:8080) || true
           nohup java -jar /home/ec2-user/backend/app.jar > /home/ec2-user/backend/app.txt 2>&1 &
 
@@ -85,9 +103,15 @@ jobs:
             sudo npm install -g pm2
           fi
 
-          # Restart Next.js
+          # Start Houseclay UI
           cd /home/ec2-user/frontend
           npm install --omit=dev
           pm2 delete all || true
-          pm2 start npm --name "next-app" -- run start:prod
+          pm2 start npm --name "houseclay-ui-app" -- run start:prod
+
+          # Start Zebra UI
+          cd /home/ec2-user/zebra
+          npm install --omit=dev
+          pm2 delete all || true
+          pm2 start npm --name "zebra-ui-app" -- run start:prod -- -p 3001
           EOF
