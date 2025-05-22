@@ -11,9 +11,6 @@ interface FormInputFieldProps {
   className?: string;
   prefix?: React.ReactNode;
   suffix?: React.ReactNode;
-  // For Now: City will always be Bengaluru
-  readOnly?: boolean;
-  disabled?: boolean;
 }
 
 const FormInputField: React.FC<FormInputFieldProps> = ({
@@ -26,8 +23,6 @@ const FormInputField: React.FC<FormInputFieldProps> = ({
   className = "",
   prefix,
   suffix,
-  readOnly = false,
-  disabled = false,
 }) => {
   const [field, meta, helpers] = useField(name);
 
@@ -49,7 +44,7 @@ const FormInputField: React.FC<FormInputFieldProps> = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
 
-    if (!readOnly && !disabled && dataType === "number") {
+    if (dataType === "number") {
       value = formatNumber(value);
       helpers.setValue(parseNumber(value));
     } else {
@@ -62,7 +57,7 @@ const FormInputField: React.FC<FormInputFieldProps> = ({
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     field.onBlur(e);
 
-    if (!readOnly && !disabled && dataType === "number") {
+    if (dataType === "number") {
       const formattedValue = formatNumber(e.target.value);
       e.target.value = formattedValue;
       helpers.setValue(parseNumber(formattedValue));
@@ -93,11 +88,7 @@ const FormInputField: React.FC<FormInputFieldProps> = ({
           className={`w-full p-3 border ${
             prefix ? "rounded-none" : "rounded-l-xl"
           } ${suffix ? "rounded-none" : "rounded-r-xl"} ${className} ${
-            meta.touched && meta.error
-              ? "border-red-500"
-              : disabled || readOnly
-                ? "border-gray-200 bg-gray-100 cursor-not-allowed text-gray-700"
-                : "border-gray-300 bg-white"
+            meta.touched && meta.error ? "border-red-500" : "border-gray-300"
           }`}
           value={
             dataType === "number" ? formatNumber(field.value) : field.value

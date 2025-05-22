@@ -113,11 +113,6 @@ const rentalSchema = Yup.object().shape({
       ),
     availableFrom: Yup.string().required("Available from is required"),
     furnishing: Yup.string().required("Furnishing is required"),
-    // preferredTenant: Yup.string().when("$formKey", {
-    //   is: "rentForm",
-    //   then: (schema) => schema.required("Preferred tenant is required"),
-    //   otherwise: (schema) => schema.optional(),
-    // }),
     preferredTenant: Yup.array()
       .of(Yup.string())
       .when("$formKey", {
@@ -174,7 +169,6 @@ const RentalDetailsPage: React.FC = () => {
   const rentalDetailsString = JSON.stringify(values.rentalDetails);
 
   useEffect(() => {
-    // console.log(formKey, "rentalDetailsString", rentalDetailsString);
     const validateAndDispatch = async () => {
       try {
         await rentalSchema.validate(values, {

@@ -14,6 +14,7 @@ interface FormDropdownProps {
   options: DropdownOption[];
   required?: boolean;
   placeholder?: string;
+  disabled?: boolean;
 }
 
 const FormDropdown: React.FC<FormDropdownProps> = ({
@@ -23,6 +24,7 @@ const FormDropdown: React.FC<FormDropdownProps> = ({
   options,
   required = false,
   placeholder = "Select an option",
+  disabled = false,
 }: FormDropdownProps) => {
   const [field, meta, helpers] = useField(name);
   const [isOpen, setIsOpen] = useState(false);
@@ -90,8 +92,8 @@ const FormDropdown: React.FC<FormDropdownProps> = ({
           id={id || name}
           className={`flex justify-between items-center w-full p-3 border ${
             hasError ? "border-red-500" : "border-gray-300"
-          } rounded-xl bg-white text-left`}
-          onClick={() => setIsOpen(!isOpen)}
+          } rounded-xl  text-left ${disabled ? "cursor-not-allowed disabled:bg-gray-300" : "bg-white"}`}
+          onClick={() => !disabled && setIsOpen(!isOpen)}
           onKeyDown={handleKeyDown}
           onBlur={() => {
             helpers.setTouched(true);
@@ -100,6 +102,7 @@ const FormDropdown: React.FC<FormDropdownProps> = ({
           }}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
+          disabled={disabled}
         >
           <span className={!selectedOption ? "text-gray-400" : "text-gray-900"}>
             {displayText}

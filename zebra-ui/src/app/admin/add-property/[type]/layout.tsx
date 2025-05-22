@@ -1,6 +1,5 @@
 "use client";
 
-import { APIProvider } from "@vis.gl/react-google-maps";
 import { Form, Formik, FormikProvider } from "formik";
 import { useParams, useRouter } from "next/navigation";
 import ListPropertySuccessSvg from "public/icons/list-property-success.svg";
@@ -17,7 +16,9 @@ import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   usePresignedUrlsMutation,
-  usePropertyAddMutation,
+  usePropertyAddFlatmatesMutation,
+  usePropertyAddRentMutation,
+  usePropertyAddResaleMutation,
 } from "@/store/apiSlice";
 import { setFileURLMap, setPropertyID } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
@@ -37,20 +38,14 @@ export default function AddPropertyTypeLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // const { token } = useSelector((state: RootState) => state.admin);
-  // if (!token) {
-  //   redirect("/admin/login");
-  // }
-
   const [getPresignedUrls] = usePresignedUrlsMutation();
-  const [postProperty] = usePropertyAddMutation();
   const params = useParams();
   const dispatch = useDispatch();
-  // const uploadFiles = useS3Uploader();
   const type = params?.type as string; // Optional: add type assertion
   const router = useRouter();
   const { openDialog, isDialogOpen, closeDialog } = useDialog();
-  //   const { isMobile } = useDeviceContext();
+  // const uploadFiles = useS3Uploader();
+  // const { isMobile } = useDeviceContext();
 
   const [currentStep, setCurrentStep] = useState<AddPropertyFormStep>(
     AddPropertyFormStep.PROPERTY_DETAILS,
@@ -59,9 +54,19 @@ export default function AddPropertyTypeLayout({
     Set<AddPropertyFormStep>
   >(new Set());
   const formKey = `${type}Form` as "rentForm" | "resaleForm" | "flatmatesForm";
+
+  const [addRentProperty] = usePropertyAddRentMutation();
+  const [addResaleProperty] = usePropertyAddResaleMutation();
+  const [addFlatmatesProperty] = usePropertyAddFlatmatesMutation();
+
+  const propertyId = useSelector(
+    (state: RootState) => state.listProperty.propertyID,
+  );
+
   const formState = useSelector(
     (state: RootState) => state.listProperty[formKey],
   );
+
   const isFormValid = formState?.isValid;
   const initialValues = formState?.data || {};
 
@@ -187,37 +192,85 @@ export default function AddPropertyTypeLayout({
     } else if (currentStep === AddPropertyFormStep.ADDITIONAL_INFO) {
       uploadFilesToS3();
       setCurrentStep(AddPropertyFormStep.DONE);
+      // Make API call to post property
+      await handlePostProperty();
       openDialog("list-property-success-dialog");
     }
   };
 
   const handlePreviewListing = async () => {
+    // Make API call to get presigned-urls
     console.log("Preview Listing");
-    const propertyDetails = formState.data!.propertyDetails;
-    const localityDetails = formState.data!.localityDetails;
-    const rentalOrResaleDetails =
-      formKey === "resaleForm"
-        ? formState.data!.resaleDetails
-        : formState.data!.rentalDetails;
-    const images = formState.data!.images.map(
-      (image: PropertyPhoto) => image.url,
-    );
-    const additionalInfo = formState.data!.additionalInfo;
+  };
 
-    const postPropertyResponse = await postProperty({
-      propertyID: "1",
-      ...propertyDetails,
-      ...localityDetails,
-      ...rentalOrResaleDetails,
-      images,
-      ...additionalInfo,
-    })
-      .unwrap()
-      .catch((error: Error) => {
-        console.error("Error posting property:", error);
-      });
-    if (postPropertyResponse) {
-      console.log("Property posted successfully");
+  const handlePostProperty = async () => {
+    try {
+      const propertyDetails = formState.data!.propertyDetails;
+      const localityDetails = formState.data!.localityDetails;
+      const images = formState.data!.images.map(
+        (image: PropertyPhoto) => image.url,
+      );
+      const additionalInfo = formState.data!.additionalInfo;
+
+      const basePropertyData = {
+        propertyID: propertyId,
+        ...localityDetails,
+        images,
+      };
+
+      if (type === "rent") {
+        const rentalDetails = formState.data!.rentalDetails!;
+
+        const {
+          khataCertificate: _khataCertificate,
+          saleDeed: _saleDeed,
+          propertyTax: _propertyTax,
+          ...rentalAdditionalInfo
+        } = additionalInfo || {};
+        await addRentProperty({
+          ...basePropertyData,
+          ...propertyDetails,
+          ...rentalDetails,
+          ...rentalAdditionalInfo,
+        }).unwrap();
+      } else if (type === "resale") {
+        const resaleDetails = formState.data!.resaleDetails!;
+        const {
+          whoWillShowProperty: _whoWillShowProperty,
+          ...resaleAdditionalInfo
+        } = additionalInfo || {};
+        await addResaleProperty({
+          ...basePropertyData,
+          ...propertyDetails,
+          ...resaleDetails,
+          ...resaleAdditionalInfo,
+        }).unwrap();
+      } else if (type === "flatmates") {
+        const flatmatesDetails = formState.data!.flatmatesDetails!;
+
+        const {
+          ownershipType: _ownershipType,
+          propertyAge: _propertyAge,
+          floorType: _floorType,
+          facing: _facing,
+          ...flatmatesPropertyDetails
+        } = propertyDetails || {};
+
+        const {
+          khataCertificate: _khataCertificate,
+          saleDeed: _saleDeed,
+          propertyTax: _propertyTax,
+          ...flatmatesAdditionalInfo
+        } = additionalInfo || {};
+        await addFlatmatesProperty({
+          ...basePropertyData,
+          ...flatmatesPropertyDetails,
+          ...flatmatesDetails,
+          ...flatmatesAdditionalInfo,
+        }).unwrap();
+      }
+    } catch (error) {
+      console.error("Error posting property:", error);
     }
   };
 
@@ -284,11 +337,6 @@ export default function AddPropertyTypeLayout({
 
   return (
     <>
-      {/* <section
-        className={`py-2 px-4 fixed top-0 left-0 right-0 z-50 h-[55px] border-gray-200 bg-white flex flex-col justify-center items-center w-full md:hidden`}
-      >
-        {renderStepperMobile()}
-      </section> */}
       <div className="h-[2px] fixed w-full bg-gray-200 mt-auto z-50">
         <div
           className="h-[2px] bg-red-500 absolute top-0 left-0 transition-all duration-300"
@@ -296,24 +344,11 @@ export default function AddPropertyTypeLayout({
         />
       </div>
       <div className="flex flex-col w-full h-full top-14">
-        {/* Background SVG behind left section only */}
-        {/* <div className="left-0 top-14 bottom-0 z-40 w-[33.33%] fixed  bg-gray-50 max-md:hidden"> */}
-        {/* <Image
-            src="/images/property-add-graphic.svg"
-            alt="Property Graphic"
-            width={500}
-            height={500}
-            className="w-full h-full object-cover max-xl:hidden"
-          /> */}
-        {/* Left side - Steps navigation */}
-        {/* <div className="absolute right-8 top-12 flex z-50"> */}
-        <div className="flex p-3 justify-between sticky top-16 z-40 bg-white border-b border-b-gray-100 shadow-md xl:px-28 dark:bg-gray-900">
-          {/* <div className="absolute right-8 top-12 flex z-50"> */}
+        {/* Horizontal - Steps navigation */}
+        <div className="flex p-3 justify-between sticky top-16 z-40 bg-white border-b border-b-gray-100 shadow-md dark:bg-gray-900 xl:px-28 lg:px-14 md:px-8 px-8">
           {renderStepper()}
         </div>
-        {/* </div> */}
         <div className="container right-0 max-md:ml-auto pt-8 md:pt-12 pb-20 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
-          {/* <div className="container right-0 ml-[33.33%] max-md:ml-auto pt-8 md:pt-12 pb-20 mx-auto xl:px-28 lg:px-14 md:px-8 px-8"> */}
           <div className="flex flex-col">
             <Formik
               initialValues={initialValues}
@@ -326,18 +361,12 @@ export default function AddPropertyTypeLayout({
             >
               {(formik) => (
                 <Form>
-                  <APIProvider
-                    apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
-                    libraries={["places"]}
-                  >
-                    <FormikProvider value={formik}>{children}</FormikProvider>
-                  </APIProvider>
+                  <FormikProvider value={formik}>{children}</FormikProvider>
                 </Form>
               )}
             </Formik>
           </div>
-          <div className="fixed bottom-0 left-80 right-0 flex justify-between py-2 px-4 border-t border-t-gray-300 bg-white dark:bg-gray-900">
-            {/* <div className="fixed bottom-0 left-0 ml-[33.33%] max-md:ml-auto right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 border-t border-t-gray-300 bg-white"> */}
+          <div className="fixed bottom-0 left-80 right-0 flex justify-between py-2 xl:px-28 lg:px-14 md:px-8 px-8 border-t border-t-gray-300 bg-white dark:bg-gray-900">
             <button
               type="button"
               className="px-6 py-3 border border-gray-300 hover:border-gray-500 text-gray-900 rounded-xl hover:bg-gray-50 disabled:bg-gray-300 disabled:cursor-not-allowed dark:text-gray-300 hover:dark:bg-gray-800"
@@ -352,7 +381,9 @@ export default function AddPropertyTypeLayout({
               disabled={!isFormValid}
               onClick={handleSaveAndNext}
             >
-              Save & Continue
+              {currentStep === AddPropertyFormStep.ADDITIONAL_INFO
+                ? "Add Property"
+                : "Save & Next"}
             </button>
           </div>
         </div>

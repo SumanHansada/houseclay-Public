@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { PropertyListingType } from "@/common/enums";
 import { PropertyType } from "@/common/enums";
 import { AdditionalInfo } from "@/interfaces/AdditionalInfo";
+import { FlatmatesDetails } from "@/interfaces/FlatmatesDetails";
 import { ListPropertyState } from "@/interfaces/ListPropertyState";
 import { LocalityDetails } from "@/interfaces/LocalityDetails";
 import { PropertyDetails } from "@/interfaces/PropertyDetails";
@@ -17,6 +18,7 @@ const initialData: {
   images: PropertyPhoto[];
   additionalInfo: AdditionalInfo;
   resaleDetails: ResaleDetails;
+  flatmatesDetails: FlatmatesDetails;
 } = {
   propertyDetails: {
     propertyCategory: "",
@@ -34,7 +36,7 @@ const initialData: {
   },
   localityDetails: {
     city: "",
-    location: "",
+    locationOrSocietyName: "",
     landmark: "",
     latitude: 0,
     longitude: 0,
@@ -52,11 +54,6 @@ const initialData: {
     parking: false,
     nonVegAllowed: false,
     amenities: [],
-    tenantType: "",
-    attachedBathroom: false,
-    bathroomType: "",
-    smokingPreference: false,
-    drinkingPreference: false,
   },
   images: [],
   additionalInfo: {
@@ -77,6 +74,24 @@ const initialData: {
     powerBackup: "",
     furnishing: "",
     parking: false,
+    amenities: [],
+  },
+  flatmatesDetails: {
+    rent: 0,
+    maintenanceCharges: 0,
+    deposit: 0,
+    availableFrom: "",
+    furnishing: "",
+    waterSupply: "",
+    powerBackup: "",
+    parking: false,
+    nonVegAllowed: false,
+    amenities: [],
+    tenantType: "",
+    attachedBathroom: false,
+    bathroomType: "",
+    smokingPreference: "",
+    drinkingPreference: "",
   },
 };
 
@@ -212,6 +227,18 @@ const listPropertySlice = createSlice({
         state[type].data.resaleDetails = resaleDetails;
       }
     },
+    setFlatmatesDetails: (
+      state,
+      action: PayloadAction<{
+        type: FormType;
+        flatmatesDetails: FlatmatesDetails;
+      }>,
+    ) => {
+      const { type, flatmatesDetails } = action.payload;
+      if (state[type].data) {
+        state[type].data.flatmatesDetails = flatmatesDetails;
+      }
+    },
     setImages: (
       state,
       action: PayloadAction<{ type: FormType; images: PropertyPhoto[] }>,
@@ -244,6 +271,7 @@ export const {
   setLocalityDetails,
   setRentalDetails,
   setResaleDetails,
+  setFlatmatesDetails,
   setImages,
   setAdditionalInfo,
 } = listPropertySlice.actions;

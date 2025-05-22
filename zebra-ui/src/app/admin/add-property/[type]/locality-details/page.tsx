@@ -7,8 +7,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
-// import FormDropdown from "@/components/common/FormDropdown";
-import FormInputField from "@/components/common/FormInputField";
+import FormDropdown from "@/components/common/FormDropdown";
 import FormPlacesAutocomplete from "@/components/common/FormPlacesAutoCompletes";
 import GoogleMaps from "@/components/common/GoogleMaps";
 import { FormValues } from "@/interfaces/FormValues";
@@ -24,7 +23,7 @@ export const dynamicParams = true;
 const localitySchema = Yup.object().shape({
   localityDetails: Yup.object().shape({
     city: Yup.string().required("City is required"),
-    location: Yup.string().required("Location is required"),
+    locationOrSocietyName: Yup.string().required("Location is required"),
     latitude: Yup.number()
       .required("Latitude is required")
       .min(-90, "Latitude must be greater than or equal to -90")
@@ -37,12 +36,10 @@ const localitySchema = Yup.object().shape({
 });
 
 const LocalityDetailsPage: React.FC = () => {
-  const { values, setFieldError, setErrors, setFieldValue } =
+  const { values, errors, touched, setFieldError, setErrors, setFieldValue } =
     useFormikContext<FormValues>();
-  // const { values, errors, touched, setFieldError, setErrors, setFieldValue } =
-  //   useFormikContext<FormValues>();
   const params = useParams();
-  const formKey = `${params?.type}Form` as FormType; // Optional: add type assertion
+  const formKey = `${params?.type}Form` as FormType;
   const formState = useSelector(
     (state: RootState) => state.listProperty[formKey],
   );
@@ -51,9 +48,12 @@ const LocalityDetailsPage: React.FC = () => {
 
   const localityDetailsString = JSON.stringify(values.localityDetails);
 
+  // Set default city to Bengaluru when component mounts
   useEffect(() => {
-    setFieldValue("localityDetails.city", "Bengaluru");
-  }, [setFieldValue]);
+    if (!values.localityDetails.city) {
+      setFieldValue("localityDetails.city", "Bengaluru");
+    }
+  }, [setFieldValue, values.localityDetails.city]);
 
   useEffect(() => {
     const validateAndDispatch = async () => {
@@ -105,7 +105,7 @@ const LocalityDetailsPage: React.FC = () => {
     const cityLatLngMapping: Record<string, { lat: number; lng: number }> = {
       Mumbai: { lat: 19.076, lng: 72.8777 },
       Delhi: { lat: 28.6139, lng: 77.209 },
-      Bangalore: { lat: 12.9716, lng: 77.5946 },
+      Bengaluru: { lat: 12.9716, lng: 77.5946 },
       Hyderabad: { lat: 17.385, lng: 78.4867 },
       Chennai: { lat: 13.0827, lng: 80.2707 },
       Kolkata: { lat: 22.5726, lng: 88.3639 },
@@ -125,35 +125,14 @@ const LocalityDetailsPage: React.FC = () => {
   return (
     <>
       <div className="mb-8">
-        <h1 className="text-3xl text-gray-800">Provide location details</h1>
+        <h1 className="text-2xl md:text-3xl text-gray-800">
+          Provide location details
+        </h1>
       </div>
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
           <div className="col-span-1">
-            <FormInputField
-              label="City"
-              name="localityDetails.city"
-              id="localityDetails.city"
-              readOnly
-              required
-            />
-            {/* <div className="w-full">
-              <label
-                htmlFor="localityDetails.city"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                City
-              </label>
-              <input
-                id="localityDetails.city"
-                name="localityDetails.city"
-                type="text"
-                value="Bangalore"
-                readOnly
-                className="w-full p-3 border border-gray-300 bg-gray-100 text-gray-600 rounded-xl cursor-not-allowed"
-              />
-            </div> */}
-            {/* <FormDropdown
+            <FormDropdown
               label="City"
               name="localityDetails.city"
               id="localityDetails.city"
@@ -167,19 +146,20 @@ const LocalityDetailsPage: React.FC = () => {
                 { value: "Pune", label: "Pune" },
               ]}
               required={true}
+              disabled={true}
               placeholder="Select city"
               aria-describedby={
                 errors?.localityDetails?.city && touched?.localityDetails?.city
                   ? "localityDetails.city-error"
                   : undefined
               }
-            /> */}
+            />
           </div>
           <div className="col-span-1 xl:col-span-2">
             <FormPlacesAutocomplete
               label="Location / Society Name"
-              name="localityDetails.location"
-              id="localityDetails.location"
+              name="localityDetails.locationOrSocietyName"
+              id="localityDetails.locationOrSocietyName"
               placeholder="Location / Society Name"
               required
               pairWithGoogleMaps
@@ -209,11 +189,12 @@ const LocalityDetailsPage: React.FC = () => {
         <GoogleMaps
           mapId="houseclay-googlemaps"
           center={{
-            lat: values.localityDetails.latitude,
-            lng: values.localityDetails.longitude,
+            lat: values.localityDetails.latitude || 12.9716,
+            lng: values.localityDetails.longitude || 77.5946,
           }}
           zoom={12}
           className="h-full w-full border rounded-xl shadow-lg"
+          key={`${values.localityDetails.latitude}-${values.localityDetails.longitude}`}
         />
       </div>
     </>
