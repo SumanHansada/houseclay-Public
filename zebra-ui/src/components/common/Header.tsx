@@ -1,10 +1,12 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import HouseClaySvg from "public/icons/houseclay.svg";
 
 const HouseClay = HouseClaySvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
-const Header = () => {
+const Header: React.FC = () => {
   return (
     <header className="flex fixed top-0 left-0 right-0 bg-white dark:bg-gray-800 z-50 justify-between w-full items-center py-2 shadow-sm px-8 h-16">
       {/* Logo and App Name */}

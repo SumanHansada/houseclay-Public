@@ -1,4 +1,5 @@
 import { Check } from "lucide-react";
+
 import { ListPropertyFormStep as AddPropertyFormStep } from "@/common/enums";
 
 interface StepNavProps {
