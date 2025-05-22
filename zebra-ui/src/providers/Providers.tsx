@@ -1,9 +1,25 @@
-"use client";
+import { DeviceContextProvider } from "./DeviceContextProvider";
+import { DialogContextProvider } from "./DialogContextProvider";
+import QueryProvider from "./QueryProvider";
+import ReduxProvider from "./ReduxProvider";
+import { SkeletonProvider } from "./SkeletonProvider";
 
-import { Provider } from "react-redux";
-
-import { store } from "@/store/store";
-
-export function Providers({ children }: { children: React.ReactNode }) {
-  return <Provider store={store}>{children}</Provider>;
+interface ProvidersProps {
+  children: React.ReactNode;
 }
+
+const Providers: React.FC<ProvidersProps> = ({ children }) => {
+  return (
+    <ReduxProvider>
+      <QueryProvider>
+        <DeviceContextProvider>
+          <DialogContextProvider>
+            <SkeletonProvider>{children}</SkeletonProvider>
+          </DialogContextProvider>
+        </DeviceContextProvider>
+      </QueryProvider>
+    </ReduxProvider>
+  );
+};
+
+export default Providers;

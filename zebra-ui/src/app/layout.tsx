@@ -4,9 +4,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Nunito } from "next/font/google";
 
-import Header from "@/app/components/common/Header";
-import Sidebar from "@/app/components/common/Sidebar";
-import { Providers } from "@/providers/Providers";
+import Header from "@/components/common/Header";
+import Sidebar from "@/components/common/Sidebar";
+import Providers from "@/providers/Providers";
 
 const inter = Inter({
   variable: "--font-inter",

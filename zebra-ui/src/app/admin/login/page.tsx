@@ -8,7 +8,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
-import FormInputField from "@/app/components/common/FormInputField";
+import FormInputField from "@/components/common/FormInputField";
 import { loginFailure, loginStart, loginSuccess } from "@/store/adminSlice";
 import { RootState } from "@/store/store";
 
