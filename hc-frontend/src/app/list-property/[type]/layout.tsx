@@ -114,33 +114,32 @@ export default function ListPropertyTypeLayout({
   };
 
   const getPresignedPhotoUrls = async () => {
+    // photos not required for presigned urls
     const photos = formState?.data?.images || [];
-    if (photos.length > 0) {
-      // Step 1: Request pre-signed URLs
-      const fileMap: Record<string, string> = {};
-      photos.forEach((f: PropertyPhoto) => {
-        fileMap[encodeURIComponent(f.file.name)] = f.file.type;
+    // Step 1: Request pre-signed URLs
+    const fileMap: Record<string, string> = {};
+    photos.forEach((f: PropertyPhoto) => {
+      fileMap[encodeURIComponent(f.file.name)] = f.file.type;
+    });
+    console.log(fileMap);
+    const presignedUrlsResponse = await getPresignedUrls({
+      fileMap,
+    })
+      .unwrap()
+      .catch((error: Error) => {
+        console.error("Error fetching presigned URLs:", error);
       });
-      console.log(fileMap);
-      const presignedUrlsResponse = await getPresignedUrls({
-        fileMap,
-      })
-        .unwrap()
-        .catch((error: Error) => {
-          console.error("Error fetching presigned URLs:", error);
-        });
-      if (!presignedUrlsResponse) {
-        console.error("No presigned URLs received");
-        return;
-      }
-      dispatch(setPropertyID(presignedUrlsResponse.propertyID));
-      dispatch(
-        setFileURLMap({
-          type: formKey,
-          data: presignedUrlsResponse.fileURLMap,
-        }),
-      );
+    if (!presignedUrlsResponse) {
+      console.error("No presigned URLs received");
+      return;
     }
+    dispatch(setPropertyID(presignedUrlsResponse.propertyID));
+    dispatch(
+      setFileURLMap({
+        type: formKey,
+        data: presignedUrlsResponse.fileURLMap,
+      }),
+    );
   };
 
   // Update the handleBack function to remove the previous step from completedSteps

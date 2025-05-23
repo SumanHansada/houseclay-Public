@@ -98,8 +98,8 @@ export const apiSlice = createApi({
         bhkType: string;
         propertyAge: string;
         ownershipType: string;
-        floor: string;
-        totalFloor: string;
+        floor: number;
+        totalFloor: number;
         floorType: string;
         description: string;
         city: string;
@@ -146,8 +146,8 @@ export const apiSlice = createApi({
         bhkType: string;
         ownershipType: string;
         propertyAge: string;
-        floor: string;
-        totalFloor: string;
+        floor: number;
+        totalFloor: number;
         floorType: string;
         description: string;
         city: string;
@@ -192,8 +192,8 @@ export const apiSlice = createApi({
         propertyCategory: string;
         builtUpArea: number;
         bhkType: string;
-        floor: string;
-        totalFloor: string;
+        floor: number;
+        totalFloor: number;
         description: string;
         city: string;
         locationOrSocietyName: string;

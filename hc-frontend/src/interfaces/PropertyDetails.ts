@@ -6,8 +6,8 @@ export interface PropertyDetails {
   bhkType: string;
   ownershipType: string;
   propertyAge: string;
-  floor: string;
-  totalFloor: string;
+  floor: number;
+  totalFloor: number;
   floorType: string;
   description: string;
 }

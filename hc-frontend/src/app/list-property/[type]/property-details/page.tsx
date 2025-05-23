@@ -41,8 +41,8 @@ const propertySchema = Yup.object({
       then: (schema) => schema.optional(),
       otherwise: (schema) => schema.required("Property age is required"),
     }),
-    floor: Yup.string().required("Floor is required"),
-    totalFloor: Yup.string().required("Total floor is required"),
+    floor: Yup.number().required("Floor is required"),
+    totalFloor: Yup.number().required("Total floor is required"),
     floorType: Yup.string().when("$formKey", {
       is: "flatmatesForm",
       then: (schema) => schema.optional(),
@@ -296,42 +296,41 @@ const PropertyDetailsPage: React.FC = () => {
           className={`grid grid-cols-1 md:grid-cols-2 ${formKey === "rentForm" || formKey === "resaleForm" ? "xl:grid-cols-3" : ""} gap-6`}
         >
           <FormDropdown
-            label="Floor"
-            name="propertyDetails.floor"
-            id="propertyDetails.floor"
-            options={[
-              { value: "Ground", label: "Ground" },
-              { value: "1", label: "1" },
-              { value: "2", label: "2" },
-              { value: "3", label: "3" },
-              { value: "4+", label: "4+" },
-            ]}
-            required
-            placeholder="Select floor"
-            aria-describedby={
-              errors?.propertyDetails?.floor && touched?.propertyDetails?.floor
-                ? "propertyDetails.floor-error"
-                : undefined
-            }
-          />
-
-          <FormDropdown
             label="Total Floor"
             name="propertyDetails.totalFloor"
             id="totalFloor"
-            options={[
-              { value: "1", label: "1" },
-              { value: "2", label: "2" },
-              { value: "3", label: "3" },
-              { value: "4", label: "4" },
-              { value: "5+", label: "5+" },
-            ]}
+            options={Array.from({ length: 50 }, (_, i) => i + 1).map(
+              (value) => ({
+                value: value,
+                label: value.toString(),
+              }),
+            )}
             required
             placeholder="Select total floors"
             aria-describedby={
               errors?.propertyDetails?.totalFloor &&
               touched?.propertyDetails?.totalFloor
                 ? "totalFloor-error"
+                : undefined
+            }
+          />
+
+          <FormDropdown
+            label="Floor"
+            name="propertyDetails.floor"
+            id="propertyDetails.floor"
+            options={[
+              { value: 0, label: "Ground" },
+              ...Array.from({ length: 50 }, (_, i) => i + 1).map((value) => ({
+                value: value,
+                label: value.toString(),
+              })),
+            ]}
+            required
+            placeholder="Select floor"
+            aria-describedby={
+              errors?.propertyDetails?.floor && touched?.propertyDetails?.floor
+                ? "propertyDetails.floor-error"
                 : undefined
             }
           />

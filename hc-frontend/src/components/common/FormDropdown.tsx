@@ -3,7 +3,7 @@ import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
 interface DropdownOption {
-  value: string | boolean;
+  value: string | number | boolean;
   label: string;
 }
 
