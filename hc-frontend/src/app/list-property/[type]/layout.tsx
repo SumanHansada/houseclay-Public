@@ -32,9 +32,7 @@ import {
 import { setFileURLMap, setPropertyID } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
-import FlatmatesStepper from "../components/FlatmatesStepper";
-import RentStepper from "../components/RentStepper";
-import ResaleStepper from "../components/ResaleStepper";
+import DesktopStepper from "../components/DesktopStepper";
 
 const ListPropertySuccess = ListPropertySuccessSvg as React.FC<
   React.SVGProps<SVGSVGElement>
@@ -147,42 +145,54 @@ export default function ListPropertyTypeLayout({
 
   // Update the handleBack function to remove the previous step from completedSteps
   const handleBack = () => {
-    setCompletedSteps((prev) => {
-      const updatedSteps = new Set(prev);
-      if (currentStep === ListPropertyFormStep.PROPERTY_DETAILS) {
-        router.back();
-      } else if (currentStep === ListPropertyFormStep.LOCALITY_DETAILS) {
-        updatedSteps.delete(ListPropertyFormStep.PROPERTY_DETAILS);
-        setCurrentStep(ListPropertyFormStep.PROPERTY_DETAILS);
-        setRoute(ListPropertyRouteStep.PROPERTY_DETAILS);
-      } else if (currentStep === ListPropertyFormStep.RENTAL_DETAILS) {
-        updatedSteps.delete(ListPropertyFormStep.LOCALITY_DETAILS);
-        setCurrentStep(ListPropertyFormStep.LOCALITY_DETAILS);
-        setRoute(ListPropertyRouteStep.LOCALITY_DETAILS);
-      } else if (currentStep === ListPropertyFormStep.RESALE_DETAILS) {
-        updatedSteps.delete(ListPropertyFormStep.LOCALITY_DETAILS);
-        setCurrentStep(ListPropertyFormStep.LOCALITY_DETAILS);
-        setRoute(ListPropertyRouteStep.LOCALITY_DETAILS);
-      } else if (currentStep === ListPropertyFormStep.GALLERY) {
-        if (type === "resale") {
-          updatedSteps.delete(ListPropertyFormStep.RESALE_DETAILS);
-          setCurrentStep(ListPropertyFormStep.RESALE_DETAILS);
-          setRoute(ListPropertyRouteStep.RESALE_DETAILS);
-        } else {
-          updatedSteps.delete(ListPropertyFormStep.RENTAL_DETAILS);
-          setCurrentStep(ListPropertyFormStep.RENTAL_DETAILS);
-          setRoute(ListPropertyRouteStep.RENTAL_DETAILS);
-        }
-      } else if (currentStep === ListPropertyFormStep.ADDITIONAL_INFO) {
-        updatedSteps.delete(ListPropertyFormStep.GALLERY);
-        setCurrentStep(ListPropertyFormStep.GALLERY);
-        setRoute(ListPropertyRouteStep.GALLERY);
-      } else if (currentStep === ListPropertyFormStep.DONE) {
-        updatedSteps.delete(ListPropertyFormStep.ADDITIONAL_INFO);
-        setCurrentStep(ListPropertyFormStep.ADDITIONAL_INFO);
-      }
-      return updatedSteps;
-    });
+    if (currentStep === ListPropertyFormStep.PROPERTY_DETAILS) {
+      router.back();
+      return;
+    }
+
+    const stepMap = {
+      [ListPropertyFormStep.LOCALITY_DETAILS]: {
+        prevStep: ListPropertyFormStep.PROPERTY_DETAILS,
+        route: ListPropertyRouteStep.PROPERTY_DETAILS,
+      },
+      [ListPropertyFormStep.RENTAL_DETAILS]: {
+        prevStep: ListPropertyFormStep.LOCALITY_DETAILS,
+        route: ListPropertyRouteStep.LOCALITY_DETAILS,
+      },
+      [ListPropertyFormStep.RESALE_DETAILS]: {
+        prevStep: ListPropertyFormStep.LOCALITY_DETAILS,
+        route: ListPropertyRouteStep.LOCALITY_DETAILS,
+      },
+      [ListPropertyFormStep.GALLERY]: {
+        prevStep:
+          type === "resale"
+            ? ListPropertyFormStep.RESALE_DETAILS
+            : ListPropertyFormStep.RENTAL_DETAILS,
+        route:
+          type === "resale"
+            ? ListPropertyRouteStep.RESALE_DETAILS
+            : ListPropertyRouteStep.RENTAL_DETAILS,
+      },
+      [ListPropertyFormStep.ADDITIONAL_INFO]: {
+        prevStep: ListPropertyFormStep.GALLERY,
+        route: ListPropertyRouteStep.GALLERY,
+      },
+      [ListPropertyFormStep.DONE]: {
+        prevStep: ListPropertyFormStep.ADDITIONAL_INFO,
+        route: ListPropertyRouteStep.ADDITIONAL_INFO,
+      },
+    };
+
+    const currentStepConfig = stepMap[currentStep];
+    if (currentStepConfig) {
+      setCompletedSteps((prev) => {
+        const updatedSteps = new Set(prev);
+        updatedSteps.delete(currentStepConfig.prevStep);
+        return updatedSteps;
+      });
+      setCurrentStep(currentStepConfig.prevStep);
+      setRoute(currentStepConfig.route);
+    }
   };
 
   const handleSaveAndNext = async () => {
@@ -295,31 +305,13 @@ export default function ListPropertyTypeLayout({
   };
 
   const renderStepper = () => {
-    switch (type) {
-      case "rent":
-        return (
-          <RentStepper
-            currentStep={currentStep}
-            completedSteps={completedSteps}
-          />
-        );
-      case "resale":
-        return (
-          <ResaleStepper
-            currentStep={currentStep}
-            completedSteps={completedSteps}
-          />
-        );
-      case "flatmates":
-        return (
-          <FlatmatesStepper
-            currentStep={currentStep}
-            completedSteps={completedSteps}
-          />
-        );
-      default:
-        return null;
-    }
+    return (
+      <DesktopStepper
+        currentStep={currentStep}
+        completedSteps={completedSteps}
+        type={type as PropertyType}
+      />
+    );
   };
 
   const goToHomePage = () => {
@@ -466,7 +458,7 @@ export default function ListPropertyTypeLayout({
                 {isMobile && (
                   <>
                     <h1 className="text-xl py-1.5 text-black">
-                      Woohoo! It’s all done.
+                      Woohoo! It&apos;s all done.
                     </h1>
                     <button className="absolute top-4 right-4 border border-gray-200 rounded-full md:border-none">
                       <X

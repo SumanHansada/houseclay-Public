@@ -1,21 +1,41 @@
 import { motion } from "framer-motion";
 import { FileImage, FileText, Home, IndianRupee, MapPin } from "lucide-react";
 
-import { ListPropertyFormStep } from "@/common/enums";
+import { ListPropertyFormStep, PropertyType } from "@/common/enums";
 
 import StepNavigationButton from "./StepNavigationButton";
 
-const RentStepper: React.FC<{
+interface DesktopStepperProps {
   currentStep: ListPropertyFormStep;
   completedSteps: Set<ListPropertyFormStep>;
-}> = ({ currentStep, completedSteps }) => {
-  const steps = [
-    { step: ListPropertyFormStep.PROPERTY_DETAILS, Icon: Home },
-    { step: ListPropertyFormStep.LOCALITY_DETAILS, Icon: MapPin },
-    { step: ListPropertyFormStep.RENTAL_DETAILS, Icon: IndianRupee },
-    { step: ListPropertyFormStep.GALLERY, Icon: FileImage },
-    { step: ListPropertyFormStep.ADDITIONAL_INFO, Icon: FileText },
-  ];
+  type: PropertyType;
+}
+
+const DesktopStepper: React.FC<DesktopStepperProps> = ({
+  currentStep,
+  completedSteps,
+  type,
+}) => {
+  const getSteps = () => {
+    const baseSteps = [
+      { step: ListPropertyFormStep.PROPERTY_DETAILS, Icon: Home },
+      { step: ListPropertyFormStep.LOCALITY_DETAILS, Icon: MapPin },
+      { step: ListPropertyFormStep.GALLERY, Icon: FileImage },
+      { step: ListPropertyFormStep.ADDITIONAL_INFO, Icon: FileText },
+    ];
+
+    const middleStep = {
+      step:
+        type === PropertyType.RESALE
+          ? ListPropertyFormStep.RESALE_DETAILS
+          : ListPropertyFormStep.RENTAL_DETAILS,
+      Icon: IndianRupee,
+    };
+
+    return [...baseSteps.slice(0, 2), middleStep, ...baseSteps.slice(2)];
+  };
+
+  const steps = getSteps();
 
   return (
     <motion.div
@@ -57,4 +77,4 @@ const RentStepper: React.FC<{
   );
 };
 
-export default RentStepper;
+export default DesktopStepper;
