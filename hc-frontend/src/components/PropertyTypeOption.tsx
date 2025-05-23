@@ -22,7 +22,7 @@ const PropertyTypeOption: React.FC<PropertyTypeOptionProps> = ({
       <label
         htmlFor={id}
         className={`flex flex-1 items-start justify-between lg:p-4 p-2 rounded-lg border border-gray-300 cursor-pointer text-center ${
-          isSelected ? "border-red-500 bg-red-50" : ""
+          isSelected ? "border-red-500" : ""
         } ${className}`}
       >
         <div className={`flex flex-col items-start justify-center`}>

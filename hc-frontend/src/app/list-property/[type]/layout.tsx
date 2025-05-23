@@ -308,7 +308,7 @@ export default function ListPropertyTypeLayout({
       <DesktopStepper
         currentStep={currentStep}
         completedSteps={completedSteps}
-        type={type as PropertyType}
+        type={type.toUpperCase() as PropertyType}
       />
     );
   };

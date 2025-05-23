@@ -26,7 +26,7 @@ const ListingOption: React.FC<ListingOptionProps> = ({
       <label
         htmlFor={id}
         className={`flex items-center justify-between lg:p-4 p-2 rounded-lg border cursor-pointer lg:gap-12 gap-6 ${
-          isSelected ? "border-red-400 bg-red-50" : "border-gray-200 bg-white"
+          isSelected ? "border-red-400" : "border-gray-200 bg-white"
         } ${className}`}
       >
         <div className="flex flex-1 items-center gap-4">
