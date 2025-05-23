@@ -10,7 +10,6 @@ import lombok.Data;
 public class SaleProperty extends Property {
 
     private String ownershipType;
-    private Integer propertyAge;
     private Boolean priceNegotiable;
     private Boolean underLoan;
     private Double price;
