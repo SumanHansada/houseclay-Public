@@ -103,15 +103,18 @@ jobs:
             sudo npm install -g pm2
           fi
 
+          # Delete all pm2 apps
+          pm2 delete all || true
+
           # Start Houseclay UI
           cd /home/ec2-user/frontend
-          npm install --omit=dev
-          pm2 delete all || true
+          npm install
+          pm2 delete houseclay-ui-app || true
           pm2 start npm --name "houseclay-ui-app" -- run start:prod
 
           # Start Zebra UI
           cd /home/ec2-user/zebra
-          npm install --omit=dev
-          pm2 delete all || true
+          npm install
+          pm2 delete zebra-ui-app || true
           pm2 start npm --name "zebra-ui-app" -- run start:prod -- -p 3001
           EOF
