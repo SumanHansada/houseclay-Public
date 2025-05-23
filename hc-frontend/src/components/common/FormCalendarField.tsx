@@ -27,6 +27,7 @@ interface FormCalendarFieldProps {
   dateFormat?: string;
   className?: string;
   disabled?: boolean;
+  showPrevNextYear?: boolean;
 }
 
 const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
@@ -37,6 +38,7 @@ const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
   dateFormat = "yyyy-MM-dd",
   className = "",
   disabled = false,
+  showPrevNextYear = false,
 }) => {
   const [field, meta, helpers] = useField(name);
   const [isOpen, setIsOpen] = useState(false);
@@ -372,14 +374,16 @@ const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
           >
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center">
-                <button
-                  type="button"
-                  onClick={prevYear}
-                  aria-label="Previous year"
-                  className="p-1 hover:bg-gray-100 rounded-full"
-                >
-                  <ChevronsLeft size={20} />
-                </button>
+                {showPrevNextYear && (
+                  <button
+                    type="button"
+                    onClick={prevYear}
+                    aria-label="Previous year"
+                    className="p-1 hover:bg-gray-100 rounded-full"
+                  >
+                    <ChevronsLeft size={20} />
+                  </button>
+                )}
 
                 <button
                   type="button"
@@ -409,14 +413,16 @@ const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
                   <ChevronRight size={20} />
                 </button>
 
-                <button
-                  type="button"
-                  onClick={nextYear}
-                  aria-label="Next year"
-                  className="p-1 hover:bg-gray-100 rounded-full"
-                >
-                  <ChevronsRight size={20} />
-                </button>
+                {showPrevNextYear && (
+                  <button
+                    type="button"
+                    onClick={nextYear}
+                    aria-label="Next year"
+                    className="p-1 hover:bg-gray-100 rounded-full"
+                  >
+                    <ChevronsRight size={20} />
+                  </button>
+                )}
               </div>
             </div>
             <div className="flex gap-1">
