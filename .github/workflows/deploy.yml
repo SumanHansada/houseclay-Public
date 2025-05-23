@@ -116,5 +116,5 @@ jobs:
           cd /home/ec2-user/zebra
           npm install
           pm2 delete zebra-ui-app || true
-          pm2 start npm --name "zebra-ui-app" -- run start:prod -- -p 3001
+          pm2 start npm --name "zebra-ui-app" -- run start:prod
           EOF
