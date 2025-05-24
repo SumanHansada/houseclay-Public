@@ -113,10 +113,12 @@ jobs:
           # Start Houseclay UI
           cd /home/ec2-user/frontend
           pm2 delete houseclay-ui-app || true
+          npm install
           pm2 start npm --name "houseclay-ui-app" -- run start:prod
 
-          # # Start Zebra UI
+          # Start Zebra UI
           cd /home/ec2-user/zebra
           pm2 delete zebra-ui-app || true
-          pm2 start npm --name "zebra-ui-app" -- run start:prod
+          npm install
+          pm2 start npm --name "zebra-ui-app" -- run start:prod -- --port=3001
           EOF
