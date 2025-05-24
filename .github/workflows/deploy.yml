@@ -58,20 +58,8 @@ jobs:
           npm install
           npm run build:prod
 
-      - name: Debug SSH Key
-        run: |
-          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > private_key.pem
-          chmod 600 private_key.pem
-          ssh-keygen -y -f private_key.pem
-
-      - name: Test SSH Connection
-        run: |
-          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > private_key.pem
-          chmod 600 private_key.pem
-          ssh -v -o StrictHostKeyChecking=no -i private_key.pem ec2-user@${{ secrets.EC2_HOST }} "echo 'SSH Connection Successful'"
-
-      # Transfer JAR and Next.js Build to EC2
-      - name: Transfer JAR and Next.js Build Files to EC2
+      # Transfer Backend and Houseclay Frontend Build to EC2
+      - name: Transfer Backend and Houseclay Frontend Build to EC2
         run: |
           echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > private_key.pem
           chmod 600 private_key.pem
@@ -80,13 +68,16 @@ jobs:
           scp -o StrictHostKeyChecking=no -i private_key.pem hc-frontend/package-lock.json ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/frontend/package-lock.json
           scp -o StrictHostKeyChecking=no -i private_key.pem -r hc-frontend/.next ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/frontend
           scp -o StrictHostKeyChecking=no -i private_key.pem -r hc-frontend/public ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/frontend
-          scp -o StrictHostKeyChecking=no -i private_key.pem zebra-ui/package.json ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/zebra/package.json
-          scp -o StrictHostKeyChecking=no -i private_key.pem zebra-ui/package-lock.json ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/zebra/package-lock.json
-          scp -o StrictHostKeyChecking=no -i private_key.pem -r zebra-ui/.next ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/zebra
-          scp -o StrictHostKeyChecking=no -i private_key.pem -r zebra-ui/public ec2-user@${{ secrets.EC2_HOST }}:/home/ec2-user/zebra
-      
-      # Start Applications
-      - name: Start Spring Boot and Next.js on EC2
+
+      # Start Houseclay Instance
+      - name: Start Backend Server on EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
+          # Start Spring Boot
+          sudo kill -9 $(lsof -t -i:8080) || true
+          nohup java -jar /home/ec2-user/backend/app.jar > /home/ec2-user/backend/app.txt 2>&1 &
+          
+      - name: Start Frontend on EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i private_key.pem ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
           # Install Node.js and PM2 if not installed
@@ -99,25 +90,42 @@ jobs:
             sudo npm install -g pm2
           fi
 
-          # Npm install in frontend and zebra
+          # Npm install in frontend
           cd /home/ec2-user/frontend
-          rm -rf node_modules
           npm install
-          cd /home/ec2-user/zebra
-          rm -rf node_modules
-          npm install
-
-          # Start Spring Boot
-          sudo kill -9 $(lsof -t -i:8080) || true
-          nohup java -jar /home/ec2-user/backend/app.jar > /home/ec2-user/backend/app.txt 2>&1 &          
-
-          # Delete all pm2 apps
-          pm2 delete all || true
 
           # Start Houseclay UI
           cd /home/ec2-user/frontend
           pm2 delete houseclay-ui-app || true
           pm2 start npm --name "houseclay-ui-app" -- run start:prod
+
+      # Start Zebra Instance
+      - name: Transfer Zebra UI to Zebra Instance EC2
+        run: |
+          echo "${{ secrets.ZEBRA_SECURITY_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
+          scp -o StrictHostKeyChecking=no -i private_key.pem zebra-ui/package.json ec2-user@${{ secrets.ZEBRA_HOST }}:/home/ec2-user/zebra/package.json
+          scp -o StrictHostKeyChecking=no -i private_key.pem zebra-ui/package-lock.json ec2-user@${{ secrets.ZEBRA_HOST }}:/home/ec2-user/zebra/package-lock.json
+          scp -o StrictHostKeyChecking=no -i private_key.pem -r zebra-ui/.next ec2-user@${{ secrets.ZEBRA_HOST }}:/home/ec2-user/zebra
+          scp -o StrictHostKeyChecking=no -i private_key.pem -r zebra-ui/public ec2-user@${{ secrets.ZEBRA_HOST }}:/home/ec2-user/zebra
+
+      # Start Zebra Instance
+      - name: Start Zebra UI on Zebra Instance EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ec2-user@${{ secrets.ZEBRA_HOST }} << 'EOF'
+          # Install Node.js and PM2 if not installed
+          if ! command -v node &> /dev/null; then
+            curl -fsSL https://rpm.nodesource.com/setup_lts.x | sudo bash -
+            sudo yum install -y nodejs
+          fi
+          
+          if ! command -v pm2 &> /dev/null; then
+            sudo npm install -g pm2
+          fi
+
+          # Npm install in frontend and zebra
+          cd /home/ec2-user/zebra
+          npm install
 
           # Start Zebra UI
           cd /home/ec2-user/zebra
