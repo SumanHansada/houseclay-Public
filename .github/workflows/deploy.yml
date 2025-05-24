@@ -112,9 +112,9 @@ jobs:
           pm2 delete houseclay-ui-app || true
           pm2 start npm --name "houseclay-ui-app" -- run start:prod
 
-          # Start Zebra UI
-          cd /home/ec2-user/zebra
-          npm install
-          pm2 delete zebra-ui-app || true
-          pm2 start npm --name "zebra-ui-app" -- run start:prod
+          # # Start Zebra UI
+          # cd /home/ec2-user/zebra
+          # npm install
+          # pm2 delete zebra-ui-app || true
+          # pm2 start npm --name "zebra-ui-app" -- run start:prod
           EOF
