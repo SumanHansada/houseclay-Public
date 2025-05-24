@@ -103,8 +103,8 @@ jobs:
             sudo npm install -g pm2
           fi
 
-          if ! command -v next &> /dev/null; then
-            sudo npm install -g next
+          if ! command -v yarn &> /dev/null; then
+            sudo npm install -g yarn
           fi
 
           # Delete all pm2 apps
@@ -112,9 +112,9 @@ jobs:
 
           # Npm install in frontend and zebra
           cd /home/ec2-user/frontend
-          npm install
+          yarn install
           cd /home/ec2-user/zebra
-          npm install
+          yarn install
 
           # Start Houseclay UI
           cd /home/ec2-user/frontend
