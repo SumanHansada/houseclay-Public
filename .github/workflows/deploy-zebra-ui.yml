@@ -1,0 +1,32 @@
+name: Deploy zebra-ui
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'zebra-ui/**'
+      - '.github/workflows/deploy.yml'
+
+jobs:
+  deploy-zebra-ui:
+    name: Deploy zebra-ui to Zebra Host
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Transfer zebra-ui source code to Zebra Host
+        run: |
+          echo "${{ secrets.ZEBRA_SECURITY_KEY }}" > zebra_key.pem
+          chmod 600 zebra_key.pem
+          rsync -az -e "ssh -o StrictHostKeyChecking=no -i zebra_key.pem" zebra-ui ec2-user@${{ secrets.ZEBRA_HOST }}:/home/ec2-user/
+
+      - name: Build zebra-ui on Zebra Host
+        run: |
+          ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.ZEBRA_HOST }} << 'EOF'
+          cd /home/ec2-user/zebra-ui
+          npm install
+          npm run build
+          EOF
