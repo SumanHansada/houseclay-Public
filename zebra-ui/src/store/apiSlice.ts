@@ -111,7 +111,7 @@ export const apiSlice = createApi({
         maintenanceCharges: number;
         rentNegotiable: boolean;
         availableFrom: string;
-        preferredTenant: string[];
+        preferredTenants: string[];
         waterSupply: string;
         powerBackup: string;
         furnishing: string;

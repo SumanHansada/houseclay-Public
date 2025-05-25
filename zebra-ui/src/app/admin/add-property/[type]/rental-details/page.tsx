@@ -113,7 +113,7 @@ const rentalSchema = Yup.object().shape({
       ),
     availableFrom: Yup.string().required("Available from is required"),
     furnishing: Yup.string().required("Furnishing is required"),
-    preferredTenant: Yup.array()
+    preferredTenants: Yup.array()
       .of(Yup.string())
       .when("$formKey", {
         is: "rentForm",
@@ -333,7 +333,7 @@ const RentalDetailsPage: React.FC = () => {
         {formKey === "rentForm" && (
           <div className="mb-6">
             <FormCheckbox
-              name="rentalDetails.preferredTenant"
+              name="rentalDetails.preferredTenants"
               label="Preferred Tenant"
               columns={4}
               options={[

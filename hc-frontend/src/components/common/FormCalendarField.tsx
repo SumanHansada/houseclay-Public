@@ -79,7 +79,7 @@ const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
 
   // Handle date selection
   const handleDateSelect = (date: Date) => {
-    helpers.setValue(format(date, dateFormat));
+    helpers.setValue(new Date(date).toISOString());
     helpers.setTouched(true);
     setIsOpen(false);
 

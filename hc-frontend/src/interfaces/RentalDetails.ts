@@ -5,7 +5,7 @@ export interface RentalDetails {
   deposit: number;
   availableFrom: string;
   furnishing: string;
-  preferredTenant: string[];
+  preferredTenants: string[];
   waterSupply: string;
   powerBackup: string;
   parking: boolean;
