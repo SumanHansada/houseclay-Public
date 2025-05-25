@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'hc-frontend/**'
-      - '.github/workflows/deploy.yml'
+      - '.github/workflows/deploy-hc-frontend.yml'
 
 jobs:
   deploy-hc-frontend:
