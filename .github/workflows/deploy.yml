@@ -50,7 +50,7 @@ jobs:
           echo "${{ secrets.ZEBRA_SECURITY_KEY }}" > zebra_key.pem
           chmod 600 zebra_key.pem
 
-          # Copy hc-frontend and zebra-ui source
+          # Copy hc-frontend and zebra-ui source code
           rsync -az -e "ssh -o StrictHostKeyChecking=no -i zebra_key.pem" hc-frontend ec2-user@${{ secrets.ZEBRA_HOST }}:/home/ec2-user/
           rsync -az -e "ssh -o StrictHostKeyChecking=no -i zebra_key.pem" zebra-ui ec2-user@${{ secrets.ZEBRA_HOST }}:/home/ec2-user/
 
