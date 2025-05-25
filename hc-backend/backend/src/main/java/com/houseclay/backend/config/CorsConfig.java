@@ -14,7 +14,7 @@ public class CorsConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:3000", "http://ec2-3-107-183-183.ap-southeast-2.compute.amazonaws.com:3000")); // ✅ Allow frontend domains
+        config.setAllowedOrigins(List.of("http://localhost:3000", "http://ec2-54-79-199-42.ap-southeast-2.compute.amazonaws.com:3000", "http://ec2-54-79-199-42.ap-southeast-2.compute.amazonaws.com:3001")); // ✅ Allow frontend domains
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // ✅ Allowed HTTP methods
         config.setAllowedHeaders(List.of("*")); // ✅ Allow all headers
         config.setAllowCredentials(true); // ✅ Allow cookies (if needed)
