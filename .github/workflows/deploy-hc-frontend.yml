@@ -1,0 +1,37 @@
+name: Deploy hc-frontend
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'hc-frontend/**'
+      - '.github/workflows/deploy.yml'
+
+jobs:
+  deploy-hc-frontend:
+    name: Deploy hc-frontend to Zebra Host
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Transfer hc-frontend source code to Zebra Host
+        run: |
+          echo "${{ secrets.ZEBRA_SECURITY_KEY }}" > zebra_key.pem
+          chmod 600 zebra_key.pem
+          rsync -az -e "ssh -o StrictHostKeyChecking=no -i zebra_key.pem" hc-frontend ec2-user@${{ secrets.ZEBRA_HOST }}:/home/ec2-user/
+
+      - name: Build hc-frontend on Zebra Host
+        env:
+          NEXT_PUBLIC_HOUSECLAY_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL }}
+          NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
+        run: |
+          ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.ZEBRA_HOST }} << 'EOF'
+          cd /home/ec2-user/hc-frontend
+          echo "NEXT_PUBLIC_HOUSECLAY_API_BASE_URL=$NEXT_PUBLIC_HOUSECLAY_API_BASE_URL" >> .env.local
+          echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY" >> .env.local
+          npm install
+          npm run build:prod
+          EOF
