@@ -23,15 +23,29 @@ jobs:
           chmod 600 zebra_key.pem
           rsync -az -e "ssh -o StrictHostKeyChecking=no -i zebra_key.pem" hc-frontend ec2-user@${{ secrets.ZEBRA_HOST }}:/home/ec2-user/
 
+      - name: Install pm2 on Zebra Host
+        run: |
+          ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.ZEBRA_HOST }} << EOF
+          npm install -g pm2
+          EOF
+
       - name: Build hc-frontend on Zebra Host
         env:
           NEXT_PUBLIC_HOUSECLAY_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL }}
           NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
         run: |
-          ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.ZEBRA_HOST }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.ZEBRA_HOST }} << EOF
           cd /home/ec2-user/hc-frontend
           echo "NEXT_PUBLIC_HOUSECLAY_API_BASE_URL=$NEXT_PUBLIC_HOUSECLAY_API_BASE_URL" >> .env.local
           echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY" >> .env.local
           npm install
           npm run build:prod
+          EOF
+      
+      - name: Start hc-frontend on Zebra Host
+        run: |
+          ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.ZEBRA_HOST }} << EOF
+          cd /home/ec2-user/hc-frontend
+          pm2 delete houseclay-ui-app || true
+          pm2 start npm --name "hc-frontend" -- start
           EOF

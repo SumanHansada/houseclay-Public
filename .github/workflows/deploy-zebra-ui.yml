@@ -23,10 +23,29 @@ jobs:
           chmod 600 zebra_key.pem
           rsync -az -e "ssh -o StrictHostKeyChecking=no -i zebra_key.pem" zebra-ui ec2-user@${{ secrets.ZEBRA_HOST }}:/home/ec2-user/
 
-      - name: Build zebra-ui on Zebra Host
+      - name: Install pm2 on Zebra Host
         run: |
-          ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.ZEBRA_HOST }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.ZEBRA_HOST }} << EOF
+          npm install -g pm2
+          EOF
+
+      - name: Build zebra-ui on Zebra Host
+        env:
+          NEXT_PUBLIC_HOUSECLAY_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL }}
+          NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
+        run: |
+          ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.ZEBRA_HOST }} << EOF
           cd /home/ec2-user/zebra-ui
+          echo "NEXT_PUBLIC_HOUSECLAY_API_BASE_URL=$NEXT_PUBLIC_HOUSECLAY_API_BASE_URL" >> .env.local
+          echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY" >> .env.local
           npm install
-          npm run build
+          npm run build:prod
+          EOF
+      
+      - name: Start zebra-ui on Zebra Host
+        run: |
+          ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.ZEBRA_HOST }} << EOF
+          cd /home/ec2-user/zebra-ui
+          pm2 delete zebra-ui-app || true
+          pm2 start npm --name "zebra-ui-app" -- run start:prod -- --port=3001
           EOF
