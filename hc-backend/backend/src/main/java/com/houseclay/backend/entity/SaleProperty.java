@@ -15,7 +15,7 @@ public class SaleProperty extends Property {
     private Double price;
     private Integer bathrooms;
     private Integer balcony;
-    private Boolean khataCertificate;
+    private String khataCertificate;
     private Boolean saleDeed;
     private Boolean propertyTax;
 
