@@ -21,13 +21,13 @@ const StepNavigationButton: React.FC<StepNavProps> = ({
   const isCompleted = completedSteps.has(step);
 
   return (
-    <div className="relative flex flex-col items-center flex-1">
+    <div className="relative flex-col items-center text-center">
       {/* Icon */}
       <div
         className={`
-          w-10 h-10 rounded-full border-2 flex items-center justify-center
+          w-10 h-10 rounded-full border-2 flex items-center justify-center mx-auto
           ${isCompleted ? "border-green-500" : isActive ? "border-red-500" : "border-gray-300"}
-          bg-white dark:bg-gray-900 z-10
+          bg-white dark:bg-gray-900 z-20
         `}
       >
         {isCompleted ? (
@@ -40,14 +40,13 @@ const StepNavigationButton: React.FC<StepNavProps> = ({
           />
         )}
       </div>
-
       {/* Connector line */}
       {!isLast && (
         <div
           className={`
             absolute xl:top-1/3 lg:top-[28%] top-1/4 left-1/2
-            w-full h-[3px] -translate-y-1/2
-            ${isCompleted ? "bg-green-500" : "bg-gray-300"}
+            w-full h-[2px] -translate-y-1/2 z-[-1]
+            ${isCompleted ? "bg-green-500" : "bg-gray-300"} 
           `}
         />
       )}

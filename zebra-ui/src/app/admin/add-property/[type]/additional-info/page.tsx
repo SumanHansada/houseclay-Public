@@ -105,7 +105,7 @@ const AdditionalInfoPage = () => {
   return (
     <>
       <div className="mb-8">
-        <h1 className="text-3xl text-gray-800">
+        <h1 className="text-2xl md:text-3xl text-gray-800">
           Complete Your Listing with Final Details
         </h1>
       </div>

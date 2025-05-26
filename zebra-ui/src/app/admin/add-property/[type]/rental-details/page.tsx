@@ -40,6 +40,7 @@ import FormRadioGroup from "@/components/common/FormRadioGroup";
 import { FormValues } from "@/interfaces/FormValues";
 import {
   FormType,
+  setFlatmatesDetails,
   setFormValidity,
   setRentalDetails,
 } from "@/store/listPropertySlice";
@@ -142,16 +143,56 @@ const rentalSchema = Yup.object().shape({
       then: (schema) => schema.required("Bathroom type is required"),
       otherwise: (schema) => schema.optional(),
     }),
-    smokingPreference: Yup.boolean().when("$formKey", {
+    smokingPreference: Yup.string().when("$formKey", {
       is: "flatmatesForm",
       then: (schema) => schema.required("Smoking preference is required"),
       otherwise: (schema) => schema.optional(),
     }),
-    drinkingPreference: Yup.boolean().when("$formKey", {
+    drinkingPreference: Yup.string().when("$formKey", {
       is: "flatmatesForm",
       then: (schema) => schema.required("Drinking preference is required"),
       otherwise: (schema) => schema.optional(),
     }),
+  }),
+});
+
+const flatmatesSchema = Yup.object().shape({
+  flatmatesDetails: Yup.object().shape({
+    rent: Yup.string()
+      .required("Rent is required")
+      .test(
+        "is-greater-than-zero",
+        "Rent must be greater than zero",
+        (value) => parseFloat(value || "0") > 0,
+      ),
+    maintenanceCharges: Yup.string()
+      .required("Maintenance charges is required")
+      .test(
+        "is-greater-than-zero",
+        "Maintenance charges must be greater than zero",
+        (value) => parseFloat(value || "0") > 0,
+      ),
+    deposit: Yup.string()
+      .required("Deposit is required")
+      .test(
+        "is-greater-than-zero",
+        "Deposit must be greater than zero",
+        (value) => parseFloat(value || "0") > 0,
+      ),
+    availableFrom: Yup.string().required("Available from is required"),
+    furnishing: Yup.string().required("Furnishing is required"),
+    waterSupply: Yup.string().required("Water supply is required"),
+    powerBackup: Yup.string().required("Power backup is required"),
+    parking: Yup.boolean().required("Parking is required"),
+    nonVegAllowed: Yup.boolean().required("Non veg allowed is required"),
+    tenantType: Yup.string().required("Preferred tenant is required"),
+    attachedBathroom: Yup.boolean().required("Attached bathroom is required"),
+    bathroomType: Yup.string().required("Bathroom type is required"),
+    smokingPreference: Yup.string().required("Smoking preference is required"),
+    drinkingPreference: Yup.string().required(
+      "Drinking preference is required",
+    ),
+    amenities: Yup.array().of(Yup.string()).required("Amenities are required"),
   }),
 });
 
@@ -167,23 +208,41 @@ const RentalDetailsPage: React.FC = () => {
   const dispatch = useDispatch();
 
   const rentalDetailsString = JSON.stringify(values.rentalDetails);
+  const flatmatesDetailsString = JSON.stringify(values.flatmatesDetails);
 
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {
-        await rentalSchema.validate(values, {
-          abortEarly: false,
-          context: { formKey },
-        });
+        if (formKey === "rentForm") {
+          await rentalSchema.validate(values, {
+            abortEarly: false,
+            context: { formKey },
+          });
+        } else if (formKey === "flatmatesForm") {
+          await flatmatesSchema.validate(values, {
+            abortEarly: false,
+            context: { formKey },
+          });
+        }
         // Clear any previous errors
         setErrors({});
         // Set form data in the store
-        dispatch(
-          setRentalDetails({
-            type: formKey,
-            rentalDetails: values.rentalDetails,
-          }),
-        );
+        if (formKey === "rentForm") {
+          dispatch(
+            setRentalDetails({
+              type: formKey,
+              rentalDetails: values.rentalDetails,
+            }),
+          );
+        }
+        if (formKey === "flatmatesForm") {
+          dispatch(
+            setFlatmatesDetails({
+              type: formKey,
+              flatmatesDetails: values.flatmatesDetails,
+            }),
+          );
+        }
         // Form is valid
         if (!isFormValid) {
           dispatch(setFormValidity({ type: formKey, isValid: true }));
@@ -209,6 +268,7 @@ const RentalDetailsPage: React.FC = () => {
     validateAndDispatch();
   }, [
     rentalDetailsString,
+    flatmatesDetailsString,
     dispatch,
     formKey,
     setErrors,
@@ -220,7 +280,7 @@ const RentalDetailsPage: React.FC = () => {
   return (
     <>
       <div className="mb-8">
-        <h1 className="text-3xl text-gray-800">
+        <h1 className="text-2xl md:text-3xl text-gray-800">
           Provide rental details about your property
         </h1>
       </div>
@@ -228,8 +288,16 @@ const RentalDetailsPage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <FormINRCurrencyField
-              name="rentalDetails.rent"
-              id="rentalDetails.rent"
+              name={
+                formKey === "rentForm"
+                  ? "rentalDetails.rent"
+                  : "flatmatesDetails.rent"
+              }
+              id={
+                formKey === "rentForm"
+                  ? "rentalDetails.rent"
+                  : "flatmatesDetails.rent"
+              }
               label="Rent"
               prefix={<IndianRupee size={20} />}
               suffix="/month"
@@ -252,8 +320,8 @@ const RentalDetailsPage: React.FC = () => {
             {formKey === "flatmatesForm" && (
               <FormDropdown
                 label="Parking"
-                name="rentalDetails.parking"
-                id="rentalDetails.parking"
+                name="flatmatesForm.parking"
+                id="flatmatesForm.parking"
                 options={[
                   { value: true, label: "Yes" },
                   {
@@ -264,9 +332,9 @@ const RentalDetailsPage: React.FC = () => {
                 required={true}
                 placeholder="Select Parking"
                 aria-describedby={
-                  errors?.rentalDetails?.parking &&
-                  touched?.rentalDetails?.parking
-                    ? "rentalDetails.parking-error"
+                  errors?.flatmatesDetails?.parking &&
+                  touched?.flatmatesDetails?.parking
+                    ? "flatmatesDetails.parking-error"
                     : undefined
                 }
               />
@@ -276,8 +344,16 @@ const RentalDetailsPage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <FormINRCurrencyField
-              name="rentalDetails.maintenanceCharges"
-              id="rentalDetails.maintenanceCharges"
+              name={
+                formKey === "rentForm"
+                  ? "rentalDetails.maintenanceCharges"
+                  : "flatmatesDetails.maintenanceCharges"
+              }
+              id={
+                formKey === "rentForm"
+                  ? "rentalDetails.maintenanceCharges"
+                  : "flatmatesDetails.maintenanceCharges"
+              }
               label="Maintenance Charges"
               prefix={<IndianRupee size={20} />}
               suffix="/month"
@@ -285,8 +361,16 @@ const RentalDetailsPage: React.FC = () => {
           </div>
           <div className="col-span-1">
             <FormINRCurrencyField
-              name="rentalDetails.deposit"
-              id="rentalDetails.deposit"
+              name={
+                formKey === "rentForm"
+                  ? "rentalDetails.deposit"
+                  : "flatmatesDetails.deposit"
+              }
+              id={
+                formKey === "rentForm"
+                  ? "rentalDetails.deposit"
+                  : "flatmatesDetails.deposit"
+              }
               label="Deposit"
               prefix={<IndianRupee size={20} />}
               required
@@ -296,7 +380,11 @@ const RentalDetailsPage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <FormCalendarField
-              name="rentalDetails.availableFrom"
+              name={
+                formKey === "rentForm"
+                  ? "rentalDetails.availableFrom"
+                  : "flatmatesDetails.availableFrom"
+              }
               label="Available From"
               dateFormat="yyyy-MM-dd"
               className="w-full"
@@ -306,8 +394,16 @@ const RentalDetailsPage: React.FC = () => {
           <div className="col-span-1">
             <FormDropdown
               label="Furnishing"
-              name="rentalDetails.furnishing"
-              id="rentalDetails.furnishing"
+              name={
+                formKey === "rentForm"
+                  ? "rentalDetails.furnishing"
+                  : "flatmatesDetails.furnishing"
+              }
+              id={
+                formKey === "rentForm"
+                  ? "rentalDetails.furnishing"
+                  : "flatmatesDetails.furnishing"
+              }
               options={[
                 {
                   value: "Fully-furnished",
@@ -322,10 +418,15 @@ const RentalDetailsPage: React.FC = () => {
               required={true}
               placeholder="Select furnishing"
               aria-describedby={
-                errors?.rentalDetails?.furnishing &&
-                touched?.rentalDetails?.furnishing
-                  ? "rentalDetails.furnishing-error"
-                  : undefined
+                formKey === "rentForm"
+                  ? errors?.rentalDetails?.furnishing &&
+                    touched?.rentalDetails?.furnishing
+                    ? "rentalDetails.furnishing-error"
+                    : undefined
+                  : errors?.flatmatesDetails?.furnishing &&
+                      touched?.flatmatesDetails?.furnishing
+                    ? "flatmatesDetails.furnishing-error"
+                    : undefined
               }
             />
           </div>
@@ -366,7 +467,7 @@ const RentalDetailsPage: React.FC = () => {
         {formKey === "flatmatesForm" && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <FormRadioGroup
-              name="rentalDetails.tenantType"
+              name="flatmatesDetails.tenantType"
               label="Preferred Tenant"
               columns={2}
               options={[
@@ -386,7 +487,7 @@ const RentalDetailsPage: React.FC = () => {
               horizontal
             />
             <FormRadioGroup
-              name="rentalDetails.nonVegAllowed"
+              name="flatmatesDetails.nonVegAllowed"
               label="Food Preferences"
               columns={2}
               options={[
@@ -410,8 +511,16 @@ const RentalDetailsPage: React.FC = () => {
           <div className="col-span-1">
             <FormDropdown
               label="Water Supply"
-              name="rentalDetails.waterSupply"
-              id="rentalDetails.waterSupply"
+              name={
+                formKey === "rentForm"
+                  ? "rentalDetails.waterSupply"
+                  : "flatmatesDetails.waterSupply"
+              }
+              id={
+                formKey === "rentForm"
+                  ? "rentalDetails.waterSupply"
+                  : "flatmatesDetails.waterSupply"
+              }
               options={[
                 { value: "borewell", label: "Borewell" },
                 {
@@ -426,18 +535,31 @@ const RentalDetailsPage: React.FC = () => {
               required={true}
               placeholder="Select Water supply"
               aria-describedby={
-                errors?.rentalDetails?.waterSupply &&
-                touched.rentalDetails?.waterSupply
-                  ? "rentalDetails.waterSupply-error"
-                  : undefined
+                formKey === "rentForm"
+                  ? errors?.rentalDetails?.waterSupply &&
+                    touched?.rentalDetails?.waterSupply
+                    ? "rentalDetails.waterSupply-error"
+                    : undefined
+                  : errors?.flatmatesDetails?.waterSupply &&
+                      touched?.flatmatesDetails?.waterSupply
+                    ? "flatmatesDetails.waterSupply-error"
+                    : undefined
               }
             />
           </div>
           <div className="col-span-1">
             <FormDropdown
               label="Power Backup"
-              name="rentalDetails.powerBackup"
-              id="rentalDetails.powerBackup"
+              name={
+                formKey === "rentForm"
+                  ? "rentalDetails.powerBackup"
+                  : "flatmatesDetails.powerBackup"
+              }
+              id={
+                formKey === "rentForm"
+                  ? "rentalDetails.powerBackup"
+                  : "flatmatesDetails.powerBackup"
+              }
               options={[
                 { value: "full", label: "Full" },
                 {
@@ -452,10 +574,15 @@ const RentalDetailsPage: React.FC = () => {
               required={true}
               placeholder="Select Power backup"
               aria-describedby={
-                errors?.rentalDetails?.powerBackup &&
-                touched?.rentalDetails?.powerBackup
-                  ? "rentalDetails.powerBackup-error"
-                  : undefined
+                formKey === "rentForm"
+                  ? errors?.rentalDetails?.powerBackup &&
+                    touched?.rentalDetails?.powerBackup
+                    ? "rentalDetails.powerBackup-error"
+                    : undefined
+                  : errors?.flatmatesDetails?.powerBackup &&
+                      touched?.flatmatesDetails?.powerBackup
+                    ? "flatmatesDetails.powerBackup-error"
+                    : undefined
               }
             />
           </div>
@@ -503,7 +630,7 @@ const RentalDetailsPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="col-span-1">
               <FormRadioGroup
-                name="rentalDetails.attachedBathroom"
+                name="flatmatesDetails.attachedBathroom"
                 label="Attached Bathroom"
                 columns={2}
                 options={[
@@ -516,7 +643,7 @@ const RentalDetailsPage: React.FC = () => {
             </div>
             <div className="col-span-1">
               <FormRadioGroup
-                name="rentalDetails.bathroomType"
+                name="flatmatesDetails.bathroomType"
                 label="Bathroom Type"
                 columns={2}
                 options={[
@@ -533,12 +660,12 @@ const RentalDetailsPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="col-span-1">
               <FormRadioGroup
-                name="rentalDetails.smokingPreference"
+                name="flatmatesDetails.smokingPreference"
                 label="Smoking Allowed"
                 columns={2}
                 options={[
-                  { value: true, label: "Yes" },
-                  { value: false, label: "No" },
+                  { value: "Not Allowed", label: "Not Allowed" },
+                  { value: "Allowed", label: "Allowed" },
                 ]}
                 required
                 horizontal
@@ -546,12 +673,12 @@ const RentalDetailsPage: React.FC = () => {
             </div>
             <div className="col-span-1">
               <FormRadioGroup
-                name="rentalDetails.drinkingPreference"
+                name="flatmatesDetails.drinkingPreference"
                 label="Drinking Allowed"
                 columns={2}
                 options={[
-                  { value: true, label: "Yes" },
-                  { value: false, label: "No" },
+                  { value: "No", label: "No" },
+                  { value: "Occasionally", label: "Occasionally" },
                 ]}
                 required
                 horizontal
@@ -565,7 +692,11 @@ const RentalDetailsPage: React.FC = () => {
           Select the available amenities
         </h1>
         <FormCheckbox
-          name="rentalDetails.amenities"
+          name={
+            formKey === "rentForm"
+              ? "rentalDetails.amenities"
+              : "flatmatesDetails.amenities"
+          }
           columns={4}
           options={[
             { value: "Lift", label: "Lift", icon: <LiftIcon /> },

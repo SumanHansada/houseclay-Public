@@ -3,7 +3,7 @@ import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
 interface DropdownOption {
-  value: string | boolean;
+  value: string | number | boolean;
   label: string;
 }
 
@@ -35,7 +35,7 @@ const FormDropdown: React.FC<FormDropdownProps> = ({
   const displayText = selectedOption ? selectedOption.label : placeholder;
 
   // Function to handle option selection with immediate validation
-  const handleSelect = async (value: string | boolean) => {
+  const handleSelect = async (value: string | number | boolean) => {
     await helpers.setValue(value);
     await helpers.setTouched(true);
     setIsOpen(false);

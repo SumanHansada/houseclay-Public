@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import FormDropdown from "@/components/common/FormDropdown";
+import FormInputField from "@/components/common/FormInputField";
 import FormPlacesAutocomplete from "@/components/common/FormPlacesAutoCompletes";
 import GoogleMaps from "@/components/common/GoogleMaps";
 import { FormValues } from "@/interfaces/FormValues";
@@ -168,7 +169,7 @@ const LocalityDetailsPage: React.FC = () => {
           </div>
         </div>
         <div className="mb-6">
-          <FormPlacesAutocomplete
+          <FormInputField
             label="Landmark / Street"
             name="localityDetails.landmark"
             id="localityDetails.landmark"

@@ -1,9 +1,10 @@
 "use client";
 
 import { Form, Formik, FormikProvider } from "formik";
+import { X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import ListPropertySuccessSvg from "public/icons/list-property-success.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -11,8 +12,9 @@ import {
   ListPropertyRouteStep as AddPropertyRouteStep,
   PropertyType,
 } from "@/common/enums";
-import { Dialog, DialogContent } from "@/components/Dialog";
+import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   usePresignedUrlsMutation,
@@ -20,12 +22,15 @@ import {
   usePropertyAddRentMutation,
   usePropertyAddResaleMutation,
 } from "@/store/apiSlice";
+import {
+  setHideFooter,
+  setHideHeader,
+  setHideStickyNavBar,
+} from "@/store/appSlice";
 import { setFileURLMap, setPropertyID } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
-import FlatmatesStepper from "../components/FlatmatesStepper";
-import RentStepper from "../components/RentStepper";
-import ResaleStepper from "../components/ResaleStepper";
+import DesktopStepper from "../components/DesktopStepper";
 
 const ListPropertySuccess = ListPropertySuccessSvg as React.FC<
   React.SVGProps<SVGSVGElement>
@@ -45,7 +50,7 @@ export default function AddPropertyTypeLayout({
   const router = useRouter();
   const { openDialog, isDialogOpen, closeDialog } = useDialog();
   // const uploadFiles = useS3Uploader();
-  // const { isMobile } = useDeviceContext();
+  const { isMobile } = useDeviceContext();
 
   const [currentStep, setCurrentStep] = useState<AddPropertyFormStep>(
     AddPropertyFormStep.PROPERTY_DETAILS,
@@ -69,6 +74,18 @@ export default function AddPropertyTypeLayout({
 
   const isFormValid = formState?.isValid;
   const initialValues = formState?.data || {};
+
+  useEffect(() => {
+    if (isMobile) {
+      dispatch(setHideHeader(true));
+      dispatch(setHideFooter(true));
+      dispatch(setHideStickyNavBar(true));
+    } else {
+      dispatch(setHideHeader(false));
+      dispatch(setHideFooter(false));
+      dispatch(setHideStickyNavBar(false));
+    }
+  }, [dispatch, isMobile]);
 
   const markStepAsCompleted = (step: AddPropertyFormStep) => {
     setCompletedSteps((prev) => new Set(prev).add(step));
@@ -97,72 +114,83 @@ export default function AddPropertyTypeLayout({
   };
 
   const getPresignedPhotoUrls = async () => {
+    // photos not required for presigned urls
     const photos = formState?.data?.images || [];
-    if (photos.length > 0) {
-      // Step 1: Request pre-signed URLs
-      const fileMap: Record<string, string> = {};
-      photos.forEach((f: PropertyPhoto) => {
-        fileMap[encodeURIComponent(f.file.name)] = f.file.type;
+    // Step 1: Request pre-signed URLs
+    const fileMap: Record<string, string> = {};
+    photos.forEach((f: PropertyPhoto) => {
+      fileMap[encodeURIComponent(f.file.name)] = f.file.type;
+    });
+    console.log(fileMap);
+    const presignedUrlsResponse = await getPresignedUrls({
+      fileMap,
+    })
+      .unwrap()
+      .catch((error: Error) => {
+        console.error("Error fetching presigned URLs:", error);
       });
-      console.log(fileMap);
-      const presignedUrlsResponse = await getPresignedUrls({
-        fileMap,
-      })
-        .unwrap()
-        .catch((error: Error) => {
-          console.error("Error fetching presigned URLs:", error);
-        });
-      if (!presignedUrlsResponse) {
-        console.error("No presigned URLs received");
-        return;
-      }
-      dispatch(setPropertyID(presignedUrlsResponse.propertyID));
-      dispatch(
-        setFileURLMap({
-          type: formKey,
-          data: presignedUrlsResponse.fileURLMap,
-        }),
-      );
+    if (!presignedUrlsResponse) {
+      console.error("No presigned URLs received");
+      return;
     }
+    dispatch(setPropertyID(presignedUrlsResponse.propertyID));
+    dispatch(
+      setFileURLMap({
+        type: formKey,
+        data: presignedUrlsResponse.fileURLMap,
+      }),
+    );
   };
 
   const handleBack = () => {
-    setCompletedSteps((prev) => {
-      const updatedSteps = new Set(prev);
-      if (currentStep === AddPropertyFormStep.PROPERTY_DETAILS) {
-        router.back();
-      } else if (currentStep === AddPropertyFormStep.LOCALITY_DETAILS) {
-        updatedSteps.delete(AddPropertyFormStep.PROPERTY_DETAILS);
-        setCurrentStep(AddPropertyFormStep.PROPERTY_DETAILS);
-        setRoute(AddPropertyRouteStep.PROPERTY_DETAILS);
-      } else if (currentStep === AddPropertyFormStep.RENTAL_DETAILS) {
-        updatedSteps.delete(AddPropertyFormStep.LOCALITY_DETAILS);
-        setCurrentStep(AddPropertyFormStep.LOCALITY_DETAILS);
-        setRoute(AddPropertyRouteStep.LOCALITY_DETAILS);
-      } else if (currentStep === AddPropertyFormStep.RESALE_DETAILS) {
-        updatedSteps.delete(AddPropertyFormStep.LOCALITY_DETAILS);
-        setCurrentStep(AddPropertyFormStep.LOCALITY_DETAILS);
-        setRoute(AddPropertyRouteStep.LOCALITY_DETAILS);
-      } else if (currentStep === AddPropertyFormStep.GALLERY) {
-        if (type === "resale") {
-          updatedSteps.delete(AddPropertyFormStep.RESALE_DETAILS);
-          setCurrentStep(AddPropertyFormStep.RESALE_DETAILS);
-          setRoute(AddPropertyRouteStep.RESALE_DETAILS);
-        } else {
-          updatedSteps.delete(AddPropertyFormStep.RENTAL_DETAILS);
-          setCurrentStep(AddPropertyFormStep.RENTAL_DETAILS);
-          setRoute(AddPropertyRouteStep.RENTAL_DETAILS);
-        }
-      } else if (currentStep === AddPropertyFormStep.ADDITIONAL_INFO) {
-        updatedSteps.delete(AddPropertyFormStep.GALLERY);
-        setCurrentStep(AddPropertyFormStep.GALLERY);
-        setRoute(AddPropertyRouteStep.GALLERY);
-      } else if (currentStep === AddPropertyFormStep.DONE) {
-        updatedSteps.delete(AddPropertyFormStep.ADDITIONAL_INFO);
-        setCurrentStep(AddPropertyFormStep.ADDITIONAL_INFO);
-      }
-      return updatedSteps;
-    });
+    if (currentStep === AddPropertyFormStep.PROPERTY_DETAILS) {
+      router.back();
+      return;
+    }
+
+    const stepMap = {
+      [AddPropertyFormStep.LOCALITY_DETAILS]: {
+        prevStep: AddPropertyFormStep.PROPERTY_DETAILS,
+        route: AddPropertyFormStep.PROPERTY_DETAILS,
+      },
+      [AddPropertyFormStep.RENTAL_DETAILS]: {
+        prevStep: AddPropertyFormStep.LOCALITY_DETAILS,
+        route: AddPropertyFormStep.LOCALITY_DETAILS,
+      },
+      [AddPropertyFormStep.RESALE_DETAILS]: {
+        prevStep: AddPropertyFormStep.LOCALITY_DETAILS,
+        route: AddPropertyFormStep.LOCALITY_DETAILS,
+      },
+      [AddPropertyFormStep.GALLERY]: {
+        prevStep:
+          type === "resale"
+            ? AddPropertyFormStep.RESALE_DETAILS
+            : AddPropertyFormStep.RENTAL_DETAILS,
+        route:
+          type === "resale"
+            ? AddPropertyRouteStep.RESALE_DETAILS
+            : AddPropertyRouteStep.RENTAL_DETAILS,
+      },
+      [AddPropertyFormStep.ADDITIONAL_INFO]: {
+        prevStep: AddPropertyFormStep.GALLERY,
+        route: AddPropertyRouteStep.GALLERY,
+      },
+      [AddPropertyFormStep.DONE]: {
+        prevStep: AddPropertyFormStep.ADDITIONAL_INFO,
+        route: AddPropertyRouteStep.ADDITIONAL_INFO,
+      },
+    };
+
+    const currentStepConfig = stepMap[currentStep];
+    if (currentStepConfig) {
+      setCompletedSteps((prev) => {
+        const updatedSteps = new Set(prev);
+        updatedSteps.delete(currentStepConfig.prevStep);
+        return updatedSteps;
+      });
+      setCurrentStep(currentStepConfig.prevStep);
+      setRoute(currentStepConfig.route);
+    }
   };
 
   const handleSaveAndNext = async () => {
@@ -275,31 +303,17 @@ export default function AddPropertyTypeLayout({
   };
 
   const renderStepper = () => {
-    switch (type) {
-      case "rent":
-        return (
-          <RentStepper
-            currentStep={currentStep}
-            completedSteps={completedSteps}
-          />
-        );
-      case "resale":
-        return (
-          <ResaleStepper
-            currentStep={currentStep}
-            completedSteps={completedSteps}
-          />
-        );
-      case "flatmates":
-        return (
-          <FlatmatesStepper
-            currentStep={currentStep}
-            completedSteps={completedSteps}
-          />
-        );
-      default:
-        return null;
-    }
+    return (
+      <DesktopStepper
+        currentStep={currentStep}
+        completedSteps={completedSteps}
+        type={type.toUpperCase() as PropertyType}
+      />
+    );
+  };
+
+  const goToHomePage = () => {
+    router.push("/");
   };
 
   const getStepsForPropertyType = (type: string): string[] => {
@@ -308,6 +322,7 @@ export default function AddPropertyTypeLayout({
       AddPropertyFormStep.LOCALITY_DETAILS,
       AddPropertyFormStep.GALLERY,
       AddPropertyFormStep.ADDITIONAL_INFO,
+      AddPropertyFormStep.DONE,
     ];
 
     if (
@@ -335,8 +350,37 @@ export default function AddPropertyTypeLayout({
     return ((currentIndex + 1) / steps.length) * 100;
   };
 
+  const renderStepperMobile = () => {
+    const steps = getStepsForPropertyType(type);
+    const currentIndex = steps.findIndex((step) => step === currentStep);
+
+    // Fallback for enum value vs string
+    const displayStep =
+      typeof currentStep === "string"
+        ? currentStep
+        : currentStep === AddPropertyFormStep.DONE
+          ? steps[steps.length - 1]
+          : steps[currentIndex] || steps[0];
+
+    return (
+      <>
+        <div className="flex justify-center items-center align-middle w-full md:hidden">
+          <h1 className="text-lg my-auto text-black ml-auto">{displayStep}</h1>
+          <button className="border border-gray-200 rounded-full md:border-none ml-auto">
+            <X onClick={goToHomePage} size={25} />
+          </button>
+        </div>
+      </>
+    );
+  };
+
   return (
     <>
+      <section
+        className={`py-2 px-4 fixed top-0 left-0 right-0 z-50 h-[55px] border-gray-200 bg-white flex flex-col justify-center items-center w-full md:hidden`}
+      >
+        {renderStepperMobile()}
+      </section>
       <div className="h-[2px] fixed w-full bg-gray-200 mt-auto z-50">
         <div
           className="h-[2px] bg-red-500 absolute top-0 left-0 transition-all duration-300"
@@ -345,10 +389,10 @@ export default function AddPropertyTypeLayout({
       </div>
       <div className="flex flex-col w-full h-full top-14">
         {/* Horizontal - Steps navigation */}
-        <div className="flex p-3 justify-between sticky top-16 z-40 bg-white border-b border-b-gray-100 shadow-md dark:bg-gray-900 xl:px-28 lg:px-14 md:px-8 px-8">
+        <div className="p-3 sticky top-16 z-40 bg-white border-b border-b-gray-100 shadow-md dark:bg-gray-900 xl:px-28 lg:px-14 md:px-8 px-8">
           {renderStepper()}
         </div>
-        <div className="container right-0 max-md:ml-auto pt-8 md:pt-12 pb-20 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
+        <div className="container right-0 max-md:ml-auto pt-4 md:pt-12 pb-20 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
           <div className="flex flex-col">
             <Formik
               initialValues={initialValues}
@@ -390,39 +434,63 @@ export default function AddPropertyTypeLayout({
         {isDialogOpen("list-property-success-dialog") && (
           <Dialog
             id="list-property-success-dialog"
-            type="card"
+            type={isMobile ? "bottom-sheet" : "card"}
             onClose={() => closeDialog("list-property-success-dialog")}
             entryAnimation="animate-fade-in"
             exitAnimation="animate-fade-out"
           >
+            {" "}
+            <DialogHeader>
+              <div
+                className={`${isMobile ? "py-2 px-8" : ""}  flex flex-col justify-between items-center w-full`}
+              >
+                {isMobile && (
+                  <>
+                    <h1 className="text-xl py-1.5 text-black">
+                      Woohoo! It’s all done.
+                    </h1>
+                    <button className="absolute top-4 right-4 border border-gray-200 rounded-full md:border-none">
+                      <X
+                        onClick={() =>
+                          closeDialog("list-property-success-dialog")
+                        }
+                        size={25}
+                      />
+                    </button>
+                  </>
+                )}
+              </div>
+            </DialogHeader>
             <DialogContent>
               <div className="flex flex-col items-center justify-center text-center p-8 gap-4">
                 <div className="relative overflow-hidden rounded-lg">
                   <div className="absolute inset-0 shadow-[inset_0_0_25px_25px_rgba(255,255,255,0.8)] z-20"></div>
                   <ListPropertySuccess />
                 </div>
+                {!isMobile && (
+                  <h2 className="text-3xl text-gray-800">Congratulations!</h2>
+                )}
                 <h2 className="text-3xl text-gray-800">Congratulations!</h2>
                 <p className="text-gray-600 text-lg">
                   You have successfully posted your property,
                   <br />
                   it will be live within 2 Hrs.
                 </p>
-
                 {/* Action buttons */}
-                <div className="flex gap-4">
+                <div className="flex gap-4 w-full">
                   <button
                     onClick={() => {
                       closeDialog("list-property-success-dialog");
                     }}
-                    className="px-24 py-3 text-black border font-medium rounded-lg hover:bg-red-600 hover:text-white transition duration-200"
+                    className="w-full py-3 text-black border font-medium rounded-lg hover:bg-red-600 hover:text-white transition duration-200"
                   >
                     Edit
                   </button>
                   <button
                     onClick={handlePreviewListing}
-                    className="px-24 py-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200"
+                    className="w-full py-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200"
                   >
-                    Preview Listing
+                    {isMobile ? "View Listing" : "Preview Listing"}
                   </button>
                 </div>
               </div>
