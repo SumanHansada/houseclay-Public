@@ -40,7 +40,8 @@ public class PropertyService {
             property.setOwner(user);
             user.getOwnedProperties().add(property);
             indexPropertyInElastic(property);
-            return propertyRepository.save(property);
+            userRepository.save(user);
+            return property;
         }
         throw new APIException("Invalid token", HttpStatus.BAD_REQUEST);
     }

@@ -47,7 +47,10 @@ public class Property {
     private Integer floor;
     private Integer totalFloors;
     private String floorType;
+
+    @Column(length = 1000)
     private String description;
+
     private String city;
     private String locationOrSocietyName;
     private String landmark;
