@@ -115,7 +115,7 @@ const initialState: ListPropertyState = {
       ...initialData,
       propertyDetails: {
         ...initialData.propertyDetails,
-        propertyCategory: "Resale",
+        propertyCategory: "Sale",
       },
     },
   },
@@ -125,7 +125,7 @@ const initialState: ListPropertyState = {
       ...initialData,
       propertyDetails: {
         ...initialData.propertyDetails,
-        propertyCategory: "Flatmates",
+        propertyCategory: "Flatmate",
       },
     },
   },
