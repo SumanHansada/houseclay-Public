@@ -158,7 +158,7 @@ const ResaleDetailsPage: React.FC = () => {
   return (
     <>
       <div className="mb-8">
-        <h1 className="text-3xl text-gray-800">
+        <h1 className="text-2xl md:text-3xl text-gray-800">
           Set the Right Price for Your Property
         </h1>
       </div>

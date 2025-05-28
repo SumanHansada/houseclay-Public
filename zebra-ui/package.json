@@ -34,6 +34,7 @@
     "react-international-phone": "^4.5.0",
     "react-loading-skeleton": "^3.5.0",
     "react-redux": "^9.2.0",
+    "uuid": "^11.1.0",
     "yup": "^1.6.1"
   },
   "devDependencies": {

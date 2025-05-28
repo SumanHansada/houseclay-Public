@@ -146,9 +146,7 @@ const FormPlacesAutocomplete = ({
             longitude: placeData.location.lng(),
           };
           console.log("formattedPlaceData", formattedPlaceData);
-          helpers.setValue(
-            `${placeData.displayName}, ${placeData.formattedAddress}` || "",
-          );
+          helpers.setValue(`${placeData.displayName}` || "");
           helpers.setTouched(true);
 
           if (pairWithGoogleMaps && placeData.location) {
@@ -158,6 +156,12 @@ const FormPlacesAutocomplete = ({
             if (!isNaN(lat) && !isNaN(lng)) {
               setFieldValue(`${googleMapsFieldName}.latitude`, lat);
               setFieldValue(`${googleMapsFieldName}.longitude`, lng);
+            }
+            if (placeData.formattedAddress) {
+              setFieldValue(
+                `${googleMapsFieldName}.landmark`,
+                placeData.formattedAddress,
+              );
             }
           }
           setShowDropdown(false);

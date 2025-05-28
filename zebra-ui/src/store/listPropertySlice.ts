@@ -28,8 +28,8 @@ const initialData: {
     bhkType: "3BHK",
     ownershipType: "Self Owned",
     propertyAge: "More than 10 year",
-    floor: "Ground",
-    totalFloor: "2",
+    floor: 0,
+    totalFloor: 2,
     floorType: "Mosaic",
     description:
       "Top floor nicely placed. This lovely three bedroom for sale is only 1.95 Crores rupees without any extra brokerage & could be your new home. This West facing home is over 1536 sqft. & is in a convenient location. Situated on the 29th floor this home can comfortably serve your space for car and bike parking needs.",
