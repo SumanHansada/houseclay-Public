@@ -50,7 +50,10 @@ const sidebarItems = [
   {
     label: "User Management",
     icon: <Users size={20} />,
-    children: ["Subitem 1", "Subitem 2"],
+    children: [
+      { label: "HouseClay Users", href: "/admin/user-management" },
+      { label: "Zebra Admins", href: "#" },
+    ],
     href: "#",
   },
   {
