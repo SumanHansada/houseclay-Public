@@ -48,6 +48,16 @@ async function getUsers(): Promise<TUser[]> {
       connectBalance: 54,
       id: "62",
     },
+    {
+      name: "Trent Klein",
+      phoneNo: "1-336-718-7669",
+      email: "Stewart.kow@ail.com",
+      admin: false,
+      avatar: "",
+      blacklisted: true,
+      connectBalance: 29,
+      id: "63",
+    },
   ];
   return editedData;
 }

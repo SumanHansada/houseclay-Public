@@ -1,19 +1,20 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { SearchFilterBar, TBlockFilter } from "./SearchFilterBar";
-// import { SearchFilterBar } from "./SearchFilterBar";
+import { SearchFilterBar } from "./SearchFilterBar";
 import { Pagination } from "./Pagination";
 import UserTable from "./UserTable";
 import { getKeyValue } from "@heroui/table";
 import { UserCard } from "./UserCard";
 import { ActionMenu } from "./ActionMenu";
+import { UserStatus } from "./UserStatus";
+import { useRouter } from "next/navigation";
 
 interface UsersManagementProps {
   users: TUser[];
 }
 
-export type TUser = {
+export interface TUser {
   id: string;
   name: string;
   email: string;
@@ -21,45 +22,33 @@ export type TUser = {
   avatar: string;
   blacklisted: boolean;
   connectBalance: number;
-};
+}
 
-const rawColumns = [
+const columns = [
   { key: "name", label: "Name" },
   { key: "phoneNo", label: "Phone No." },
-  { key: "connectBalance", label: "Connect Balance" },
+  { key: "blacklisted", label: "Status" },
+  { key: "action", label: "Action" },
 ];
 
 export const UsersManagement = ({ users }: UsersManagementProps) => {
   const [searchValue, setSearchValue] = useState("");
-  const [blockFilter, setBlockFilter] = useState<TBlockFilter>("all");
   const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
-
-  const columns = useMemo(
-    () => [
-      // ...rawColumns.filter((c) => c.key !== "email"),
-      ...rawColumns,
-      { key: "actions", label: "Actions" },
-    ],
-    [],
-  );
+  const rowsPerPage = 12;
+  const router = useRouter();
 
   const filtered = useMemo(
     () =>
       users.filter((user) => {
         const matchesSearch = user.phoneNo.includes(searchValue);
-        const matchesBlock =
-          blockFilter === "all"
-            ? true
-            : blockFilter === "blocked"
-              ? user.blacklisted
-              : !user.blacklisted;
-        return matchesSearch && matchesBlock;
-        // return matchesSearch;
+        return matchesSearch;
       }),
-    [users, searchValue, blockFilter],
-    // [users, searchValue],
+    [users, searchValue],
   );
+
+  const viewProfile = (id: string) => {
+    router.push(`/admin/user-details/${id}`);
+  };
 
   const renderCell = (user: TUser, columnKey: string) => {
     switch (columnKey) {
@@ -69,10 +58,10 @@ export const UsersManagement = ({ users }: UsersManagementProps) => {
         );
       case "phoneNo":
         return <div className="px-1">{user.phoneNo}</div>;
-      case "connectBalance":
-        return <div className="px-2">{user.connectBalance}</div>;
-      case "actions":
-        return <ActionMenu offsetX={14} offsetY={-7} />;
+      case "action":
+        return <ActionMenu viewProfile={() => viewProfile(user.id)} />;
+      case "blacklisted":
+        return <UserStatus isBlacklisted={user.blacklisted} />;
       default:
         return (
           <div className="flex justify-start">
@@ -92,31 +81,21 @@ export const UsersManagement = ({ users }: UsersManagementProps) => {
 
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">
-      <div className="flex flex-col flex-1 h-full bg-gray-100">
+      <div className="flex flex-col flex-1 h-full">
         {/* Sticky top filter bar */}
-        <div className="sticky top-0 z-10 bg-white shadow-sm">
+        <div className="sticky top-0 z-10 border border-b-gray-200 shadow-sm">
           <SearchFilterBar
             searchValue={searchValue}
             onSearchChange={(v) => {
               setSearchValue(v);
               setPage(1);
             }}
-            blockFilter={blockFilter}
-            onBlockFilterChange={(v) => {
-              setBlockFilter(v);
-              setPage(1);
-            }}
           />
         </div>
 
         {/* Table area */}
-        <div className="flex items-center flex-1 overflow-auto px-28">
-          <UserTable
-            columns={columns}
-            paged={paged}
-            renderCell={renderCell}
-            blockFilter={blockFilter}
-          />
+        <div className="flex items-center flex-1 overflow-auto">
+          <UserTable columns={columns} paged={paged} renderCell={renderCell} />
         </div>
 
         {/* Sticky bottom pagination */}

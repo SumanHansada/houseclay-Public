@@ -7,46 +7,42 @@ import {
   TableRow,
   TableCell,
 } from "@heroui/table";
-import { TBlockFilter } from "./SearchFilterBar";
 import { TUser } from "./UserManagement";
 
 interface UserTableProps {
   columns: { key: string; label: string }[];
   paged: TUser[];
   renderCell: (user: TUser, columnKey: string) => React.ReactNode;
-  blockFilter: TBlockFilter;
 }
 
 export default function UserTable({
   columns,
   paged,
   renderCell,
-  blockFilter,
 }: UserTableProps) {
   return (
     <Table
       aria-label="User table"
-      className="w-full bg-white rounded-md shadow-xl min-h-[350px]"
+      className="w-full bg-white h-full"
+      removeWrapper
     >
       <TableHeader columns={columns} className="">
         {(col) => (
-          <TableColumn key={col.key} className="py-2 text-left">
+          <TableColumn key={col.key} className="text-left text-lg font-bold">
             {col.label}
           </TableColumn>
         )}
       </TableHeader>
 
-      <TableBody>
+      <TableBody className="flex flex-col items-center justify-center h-full">
         {paged.length > 0 ? (
-          paged.map((user) => (
+          paged.map((user, rowIndex) => (
             <TableRow
               key={user.id}
-              className={
-                user.blacklisted && blockFilter === "all" ? "opacity-60" : ""
-              }
+              className={`${rowIndex % 2 === 1 ? "bg-gray-200" : "bg-gray-50 border border-gray-300"}`}
             >
               {(columnKey) => (
-                <TableCell className="px-2 py-px border-b border-b-red-500">
+                <TableCell className="px-2 py-px">
                   {renderCell(user, columnKey as string)}
                 </TableCell>
               )}

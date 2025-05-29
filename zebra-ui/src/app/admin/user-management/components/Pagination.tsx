@@ -16,25 +16,25 @@ export const Pagination = ({
   nextPage,
 }: PaginationProps) => {
   return (
-    <div className="flex justify-end gap-2 py-4">
+    <div className="flex justify-end gap-2 py-2">
       <button
-        className={`px-3 py-1 border bg-red-500 text-white rounded ${
+        className={`px-4 py-3 border rounded-xl font-medium transition duration-200 ${
           isFirst
-            ? "opacity-50 cursor-not-allowed"
-            : "hover:bg-red-600 cursor-pointer"
+            ? "bg-gray-300 text-gray-400 cursor-not-allowed"
+            : "bg-red-500 text-white hover:bg-red-600 cursor-pointer"
         }`}
         onClick={prevPage}
       >
         &lt; Prev
       </button>
-      <span className="px-2 py-1 font-bold text-red-500 border rounded">
+      <span className="px-4 py-3 text-lg font-bold text-red-500 border border-red-500 rounded-xl">
         {currentPage}
       </span>
       <button
-        className={`px-3 py-1 border bg-red-500 text-white rounded ${
+        className={`px-4 py-3 border rounded-xl ${
           isLast
-            ? "opacity-50 cursor-not-allowed"
-            : "hover:bg-red-600 cursor-pointer"
+            ? "bg-gray-300 text-gray-400 cursor-not-allowed"
+            : "bg-red-500 text-white hover:bg-red-600 cursor-pointer"
         }`}
         disabled={isLast}
         onClick={nextPage}
