@@ -1,8 +1,6 @@
 package com.houseclay.backend.service;
 
-import com.houseclay.backend.entity.Lead;
-import com.houseclay.backend.entity.LeadCategory;
-import com.houseclay.backend.entity.User;
+import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.repository.LeadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +22,7 @@ public class LeadService {
         leadRepository.save(lead);
     }
 
-    public void addComment(Long leadId, String comment) throws Exception {
+    public void addComment(Long leadId, String comment, Admin admin) throws Exception {
         if (comment.length() > 1000) {
             throw new APIException("Comment exceeds max length of 1000 characters", HttpStatus.BAD_REQUEST);
         }
@@ -35,8 +33,11 @@ public class LeadService {
         if (lead.getComments() == null) {
             lead.setComments(new ArrayList<>());
         }
-
-        lead.getComments().add(comment);
+        LeadComment leadComment = new LeadComment();
+        leadComment.setLead(lead);
+        leadComment.setComment(comment);
+        leadComment.setAdmin(admin);
+        lead.getComments().add(leadComment);
         leadRepository.save(lead);
     }
 }

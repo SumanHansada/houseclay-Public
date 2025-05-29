@@ -3,6 +3,7 @@ package com.houseclay.backend.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,9 +24,7 @@ public class Lead {
     @JoinColumn(name = "phoneNo")
     User user;
 
-    @ElementCollection
-    @CollectionTable(name = "lead_comments", joinColumns = @JoinColumn(name = "lead_id"))
-    @Column(name = "comment", length = 1000)
-    private List<String> comments;
+    @OneToMany(mappedBy = "lead", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LeadComment> comments = new ArrayList<>();
 
 }

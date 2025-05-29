@@ -32,7 +32,8 @@ public class AdminTokenAuthenticationFilter extends OncePerRequestFilter {
 
     private static final List<String> PRIVATE_URL_PREFIXES = List.of(
             "/api/admin",
-            "/api/property/admin"
+            "/api/property/admin",
+            "/api/leads"
     );
 
     @Override

@@ -148,7 +148,7 @@ public class AdminController {
     }
 
     @PutMapping("/update-user")
-    public ResponseEntity<User> getUsers(
+    public ResponseEntity<User> updateUser(
             @RequestBody User user,
             @RequestAttribute("authenticatedAdmin") Admin admin) {
         return ResponseEntity.ok(adminService.updateUser(user));

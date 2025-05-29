@@ -1,5 +1,6 @@
 package com.houseclay.backend.controller;
 
+import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.service.LeadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,9 @@ public class LeadController {
     private LeadService leadService;
 
     @PostMapping("/{id}/comments")
-    public ResponseEntity<?> addComment(@PathVariable Long id, @RequestBody String comment) {
+    public ResponseEntity<?> addComment(@PathVariable Long id, @RequestBody String comment, @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
-            leadService.addComment(id, comment);
+            leadService.addComment(id, comment, admin);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
