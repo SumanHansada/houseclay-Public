@@ -39,14 +39,8 @@ public class User {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Property> ownedProperties;
 
-    @ManyToMany
-    List<Property> shortlistedProperties;
-
-    @ManyToMany
-    List<Property> contactedProperties;
-
-    @ManyToMany
-    List<Property> viewedProperties;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<PropertyAction> propertyActions;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ReportProperty> reportedProperties;

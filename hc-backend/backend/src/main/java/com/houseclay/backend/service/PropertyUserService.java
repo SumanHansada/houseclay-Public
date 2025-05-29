@@ -1,8 +1,6 @@
 package com.houseclay.backend.service;
 
-import com.houseclay.backend.entity.Property;
-import com.houseclay.backend.entity.PropertyState;
-import com.houseclay.backend.entity.User;
+import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.repository.PropertyRepository;
 import com.houseclay.backend.repository.UserRepository;
@@ -11,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -66,8 +65,12 @@ public class PropertyUserService {
             throw new APIException("User doesn't have enough connect", HttpStatus.BAD_REQUEST);
         }
         user.setConnectBal(user.getConnectBal() - cost);
-        user.getContactedProperties().add(property);
-        property.getContactedUsers().add(user);
+        PropertyAction propertyAction = new PropertyAction();
+        propertyAction.setProperty(property);
+        propertyAction.setUser(user);
+        propertyAction.setCreatedAt(LocalDateTime.now());
+        propertyAction.setActionType(ActionType.CONTACT);
+        user.getPropertyActions().add(propertyAction);
         userRepository.save(user);
         User owner = property.getOwner();
         Map<String, String> contact = new HashMap<>();

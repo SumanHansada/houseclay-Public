@@ -72,10 +72,10 @@ public class PropertyUserController {
             @RequestParam String propertyId,
             @RequestAttribute("authenticatedUser") User user) {
         try {
-            List<Property> shortlistedProperties = shortlistPropertyService.shortlistProperty(user, propertyId);
+            Property shortlistedProperty = shortlistPropertyService.shortlistProperty(user, propertyId);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Property shortlisted successfully");
-            response.put("shortlistedProperties", shortlistedProperties);
+            response.put("shortlistedProperty", PropertyMapper.toDTO(shortlistedProperty));
             return ResponseEntity.ok(response);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
@@ -89,13 +89,10 @@ public class PropertyUserController {
             @RequestParam String propertyId,
             @RequestAttribute("authenticatedUser") User user) {
         try {
-            List<Property> shortlistedProperties = shortlistPropertyService.removeShortlistedProperty(user, propertyId);
+            shortlistPropertyService.removeShortlistedProperty(user, propertyId);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Property removed from shortlist");
-            response.put("shortlistedProperties", shortlistedProperties);
             return ResponseEntity.ok(response);
-        } catch (APIException e) {
-            return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

@@ -85,14 +85,8 @@ public class Property {
     @JoinColumn(name = "phoneNo")
     User owner;
 
-    @ManyToMany(mappedBy = "shortlistedProperties")
-    List<User> shortlistedUsers;
-
-    @ManyToMany(mappedBy = "contactedProperties")
-    List<User> contactedUsers;
-
-    @ManyToMany(mappedBy = "viewedProperties")
-    List<User> viewedUsers;
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<PropertyAction> propertyActions;
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ReportProperty> reportedProperties;
