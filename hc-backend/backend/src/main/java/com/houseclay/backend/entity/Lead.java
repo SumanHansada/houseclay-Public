@@ -3,6 +3,8 @@ package com.houseclay.backend.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 
 @Entity
 @Data
@@ -20,4 +22,10 @@ public class Lead {
     @ManyToOne
     @JoinColumn(name = "phoneNo")
     User user;
+
+    @ElementCollection
+    @CollectionTable(name = "lead_comments", joinColumns = @JoinColumn(name = "lead_id"))
+    @Column(name = "comment", length = 1000)
+    private List<String> comments;
+
 }
