@@ -28,6 +28,7 @@ public class AdminLogin {
     public AdminLogin(Admin admin, String authToken) {
         this.admin = admin;
         this.authToken = authToken;
+        this.createdAt = LocalDateTime.now();
     }
 }
 

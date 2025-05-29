@@ -1,5 +1,6 @@
 package com.houseclay.backend.controller;
 
+import com.houseclay.backend.dto.AdminRegisterDTO;
 import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.entity.Property;
 import com.houseclay.backend.entity.User;
@@ -30,9 +31,10 @@ public class AdminController {
     private PropertyService propertyService;
 
     @PostMapping("/register")
-    public ResponseEntity createAdmin(@RequestBody Admin admin) {
+    public ResponseEntity createAdmin(@RequestBody AdminRegisterDTO adminRegisterDTO) {
         try {
-            return ResponseEntity.ok().body(adminService.registerAdmin(admin));
+            adminService.registerAdmin(adminRegisterDTO);
+            return ResponseEntity.ok().body("Admin registered successfully");
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {
@@ -53,9 +55,10 @@ public class AdminController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity logoutAdmin(@RequestParam AdminLogoutPayload adminLogoutPayload) {
+    public ResponseEntity logoutAdmin(@RequestHeader("Authorization") String authToken, @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
-            return ResponseEntity.ok().body(adminService.logoutAdmin(adminLogoutPayload.getToken()));
+            adminService.logoutAdmin(authToken.replace("Bearer ", ""));
+            return ResponseEntity.ok(Map.of("message", "Logout successful"));
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {

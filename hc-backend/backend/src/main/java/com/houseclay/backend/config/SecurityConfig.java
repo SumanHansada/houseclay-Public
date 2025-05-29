@@ -6,7 +6,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import com.houseclay.backend.security.TokenAuthenticationFilter;
+import com.houseclay.backend.security.AdminTokenAuthenticationFilter;
 import com.houseclay.backend.security.UserTokenAuthenticationFilter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,8 +21,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public TokenAuthenticationFilter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter();
+    public AdminTokenAuthenticationFilter adminTokenAuthenticationFilter() {
+        return new AdminTokenAuthenticationFilter();
     }
 
     @Bean
@@ -45,7 +45,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/user/**").authenticated()
                         .anyRequest().permitAll()
                 )
-                .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(adminTokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(userTokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

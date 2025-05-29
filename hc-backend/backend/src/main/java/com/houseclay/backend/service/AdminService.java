@@ -1,5 +1,6 @@
 package com.houseclay.backend.service;
 
+import com.houseclay.backend.dto.AdminRegisterDTO;
 import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.entity.AdminLogin;
 import com.houseclay.backend.entity.User;
@@ -34,18 +35,24 @@ public class AdminService {
     @Autowired
     private UserRepository userRepository;
 
-    public Admin registerAdmin(Admin admin) throws Exception {
-        if (adminRepository.findByUsername(admin.getUsername()).isPresent()) {
+    public Admin registerAdmin(AdminRegisterDTO adminRegisterDTO) throws Exception {
+        if (adminRepository.findByUsername(adminRegisterDTO.getUsername()).isPresent()) {
             throw new APIException("Username already exists", HttpStatus.BAD_REQUEST);
         }
-        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+        Admin admin = new Admin();
+        admin.setUsername(adminRegisterDTO.getUsername());
+        admin.setPassword(passwordEncoder.encode(adminRegisterDTO.getPassword()));
+        admin.setName(adminRegisterDTO.getName());
         adminRepository.save(admin);
         return admin;
     }
 
     public String loginAdmin(String username, String password) throws Exception {
         Optional<Admin> adminOptional = adminRepository.findByUsername(username);
-        if (adminOptional.isEmpty() || !passwordEncoder.matches(password, adminOptional.get().getPassword())) {
+        if (adminOptional.isEmpty()) {
+            throw new APIException("Invalid username", HttpStatus.BAD_REQUEST);
+        }
+        if (!passwordEncoder.matches(password, adminOptional.get().getPassword())) {
             throw new APIException("Invalid username or password", HttpStatus.BAD_REQUEST);
         }
 
@@ -64,12 +71,11 @@ public class AdminService {
     }
 
     public boolean logoutAdmin(String authToken) throws Exception {
-        Optional<AdminLogin> adminLogin = adminLoginRepository.findByAuthToken(authToken);
-        if (adminLogin.isPresent()) {
-            adminLoginRepository.deleteByAuthToken(authToken);
-        } else {
+        Optional<AdminLogin> adminLoginOpt = adminLoginRepository.findByAuthToken(authToken);
+        if (adminLoginOpt.isEmpty()) {
             throw new APIException("Invalid or expired auth token", HttpStatus.BAD_REQUEST);
         }
+        adminLoginRepository.delete(adminLoginOpt.get());
         return true;
     }
 

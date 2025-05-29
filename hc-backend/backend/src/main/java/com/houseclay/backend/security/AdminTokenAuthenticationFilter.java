@@ -4,6 +4,8 @@ import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.entity.AdminLogin;
 import com.houseclay.backend.repository.AdminLoginRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -16,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class TokenAuthenticationFilter extends OncePerRequestFilter {
+public class AdminTokenAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private AdminLoginRepository adminLoginRepository;
@@ -70,6 +72,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         // Store the admin in request attribute to access in controllers
         Admin admin = adminLoginOpt.get().getAdmin();
         request.setAttribute("authenticatedAdmin", admin);
+
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(admin, null, List.of());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
     }

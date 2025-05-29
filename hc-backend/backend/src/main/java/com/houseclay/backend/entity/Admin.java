@@ -21,6 +21,7 @@ public class Admin {
         ADMIN
     }
 
+
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
     List<User> blacklistedUsers;
 
