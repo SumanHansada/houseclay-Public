@@ -30,7 +30,8 @@ public class AdminTokenAuthenticationFilter extends OncePerRequestFilter {
             "/api/admin/login"
     );
 
-    private static final List<String> PRIVATE_URLS = List.of(
+    private static final List<String> PRIVATE_URL_PREFIXES = List.of(
+            "/api/admin",
             "/api/property/admin"
     );
 
@@ -47,7 +48,7 @@ public class AdminTokenAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // ✅ Ensure this filter only applies to `/api/admin/**`
-        if (!requestURI.startsWith("/api/admin/") && !PRIVATE_URLS.contains(requestURI)) {
+        if (PRIVATE_URL_PREFIXES.stream().noneMatch(requestURI::startsWith)) {
             filterChain.doFilter(request, response);
             return;
         }
