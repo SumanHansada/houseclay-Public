@@ -21,7 +21,7 @@ public class ViewPropertyService {
     @Autowired
     private PropertyRepository propertyRepository;
 
-    public List<Property> markPropertyAsViewed(User user, String propertyId) throws Exception {
+    public Property getProperty(User user, String propertyId) throws Exception {
         Optional<Property> propertyOpt = propertyRepository.findById(propertyId);
         if (propertyOpt.isEmpty()) {
             throw new APIException("Property not found", HttpStatus.BAD_REQUEST);
@@ -31,7 +31,7 @@ public class ViewPropertyService {
         user.getViewedProperties().add(property);
         userRepository.save(user); // Save the updated viewed list
 
-        return user.getViewedProperties();
+        return property;
     }
 
     public List<Property> getViewedProperties(User user) {

@@ -4,14 +4,16 @@ import com.houseclay.backend.entity.Property;
 import com.houseclay.backend.entity.User;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.mapper.PropertyMapper;
-import com.houseclay.backend.service.PropertyService;
 import com.houseclay.backend.service.PropertyUserService;
+import com.houseclay.backend.service.ShortlistPropertyService;
+import com.houseclay.backend.service.ViewPropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -20,6 +22,12 @@ public class PropertyUserController {
 
     @Autowired
     private PropertyUserService propertyUserService;
+
+    @Autowired
+    private ShortlistPropertyService shortlistPropertyService;
+
+    @Autowired
+    private ViewPropertyService viewPropertyService;
 
     @PostMapping("/add")
     public ResponseEntity addProperty(@RequestBody Property property, @RequestAttribute("authenticatedUser") User user) {
@@ -57,5 +65,69 @@ public class PropertyUserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
+
+    @PostMapping("/shortlist-property")
+    public ResponseEntity shortlistProperty(
+            @RequestParam String propertyId,
+            @RequestAttribute("authenticatedUser") User user) {
+        try {
+            List<Property> shortlistedProperties = shortlistPropertyService.shortlistProperty(user, propertyId);
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Property shortlisted successfully");
+            response.put("shortlistedProperties", shortlistedProperties);
+            return ResponseEntity.ok(response);
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/remove-shortlisted-property")
+    public ResponseEntity removeShortlistedProperty(
+            @RequestParam String propertyId,
+            @RequestAttribute("authenticatedUser") User user) {
+        try {
+            List<Property> shortlistedProperties = shortlistPropertyService.removeShortlistedProperty(user, propertyId);
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Property removed from shortlist");
+            response.put("shortlistedProperties", shortlistedProperties);
+            return ResponseEntity.ok(response);
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/shortlisted-properties")
+    public ResponseEntity<Map<String, Object>> getShortlistedProperties(
+            @RequestAttribute("authenticatedUser") User user) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("shortlistedProperties", shortlistPropertyService.getShortlistedProperties(user));
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/get-property")
+    public ResponseEntity viewProperty(
+            @RequestParam String propertyId,
+            @RequestAttribute("authenticatedUser") User user) {
+        try {
+            Property property = viewPropertyService.getProperty(user, propertyId);
+            return ResponseEntity.ok(PropertyMapper.toDTO(property));
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/viewed-properties")
+    public ResponseEntity<Map<String, Object>> getViewedProperties(
+            @RequestAttribute("authenticatedUser") User user) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("viewedProperties", viewPropertyService.getViewedProperties(user));
+        return ResponseEntity.ok(response);
     }
 }
