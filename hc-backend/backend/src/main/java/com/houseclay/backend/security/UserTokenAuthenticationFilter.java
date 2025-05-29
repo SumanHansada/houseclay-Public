@@ -33,10 +33,14 @@ public class UserTokenAuthenticationFilter extends OncePerRequestFilter {
     private static final List<String> PRIVATE_URLS = List.of(
             "/api/property/add",
             "/api/property/contact",
-            "/api/property/user",
             "/api/payment/create-order",
             "/api/payment/verify",
             "/api/photo/presigned-urls"
+    );
+
+    private static final List<String> PRIVATE_URL_PREFIXES = List.of(
+            "/api/user/",
+            "/api/property/user"
     );
 
     @Override
@@ -52,7 +56,7 @@ public class UserTokenAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // ✅ Ensure this filter only applies to `/api/user/**`
-        if (!requestURI.startsWith("/api/user/") && !PRIVATE_URLS.contains(requestURI)) {
+        if (PRIVATE_URL_PREFIXES.stream().noneMatch(requestURI::startsWith) && !PRIVATE_URLS.contains(requestURI)) {
             filterChain.doFilter(request, response);
             return;
         }

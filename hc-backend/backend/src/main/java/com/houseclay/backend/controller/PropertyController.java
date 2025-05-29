@@ -5,6 +5,7 @@ import com.houseclay.backend.entity.Property;
 import com.houseclay.backend.entity.PropertyDocument;
 import com.houseclay.backend.entity.User;
 import com.houseclay.backend.exception.APIException;
+import com.houseclay.backend.mapper.PropertyMapper;
 import com.houseclay.backend.service.PropertyService;
 import com.houseclay.backend.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class PropertyController {
     public ResponseEntity<Object> getPropertyByIdForUser(@PathVariable String id, @RequestAttribute("authenticatedUser") User user) {
         try {
             Property property = propertyService.getPropertyForUser(id, user);
-            return ResponseEntity.ok(property);
+            return ResponseEntity.ok(PropertyMapper.toDTO(property));
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {
@@ -58,18 +59,13 @@ public class PropertyController {
     public ResponseEntity<Object> getPropertyByIdForAdmin(@PathVariable String id, @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
             Property property = propertyService.getProperty(id);
-            return ResponseEntity.ok(property);
+            return ResponseEntity.ok(PropertyMapper.toDTO(property));
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
-
-//    @GetMapping("/list")
-//    public ResponseEntity<List<Property>> getAllProperties() {
-//        return ResponseEntity.ok(propertyService.getAllProperties());
-//    }
 
     @GetMapping("/search")
     public ResponseEntity<?> searchProperty(

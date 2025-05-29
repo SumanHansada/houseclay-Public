@@ -1,14 +1,9 @@
-package com.houseclay.backend.entity;
+package com.houseclay.backend.dto;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
 import lombok.Data;
 
-@Entity
-@DiscriminatorValue("Rent")
 @Data
-public class RentProperty extends Property {
-
+public class RentPropertyDTO extends PropertyDTO {
     private Double rent;
     private Double deposit;
     private Double maintenanceCharges;
@@ -16,5 +11,4 @@ public class RentProperty extends Property {
     private String preferredTenant;
     private Boolean petsAllowed;
     private Boolean nonVegAllowed;
-
 }
