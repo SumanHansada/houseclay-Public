@@ -1,9 +1,12 @@
 package com.houseclay.backend.service;
 
+import com.houseclay.backend.dto.LeadDTO;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.repository.LeadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -39,5 +42,10 @@ public class LeadService {
         leadComment.setAdmin(admin);
         lead.getComments().add(leadComment);
         leadRepository.save(lead);
+    }
+
+    public Page<LeadDTO> getLeads(LeadCategory leadCategory, Pageable pageable) {
+        Page<Lead> leads = leadRepository.findByLeadCategory(leadCategory, pageable);
+        return leads.map(LeadDTO::new);
     }
 }
