@@ -43,4 +43,19 @@ public class LeadController {
         return ResponseEntity.ok(leadService.getLeads(leadCategory, pageable));
     }
 
+    @PutMapping("/{id}/category")
+    public ResponseEntity<String> updateLeadCategory(
+            @PathVariable Long id,
+            @RequestBody LeadCategory leadCategory) {
+        try {
+            leadService.updateLeadCategory(id, leadCategory);
+            return ResponseEntity.ok("Lead category updated.");
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+
 }

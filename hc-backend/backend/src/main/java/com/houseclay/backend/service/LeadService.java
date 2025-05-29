@@ -48,4 +48,12 @@ public class LeadService {
         Page<Lead> leads = leadRepository.findByLeadCategory(leadCategory, pageable);
         return leads.map(LeadDTO::new);
     }
+
+    public void updateLeadCategory(Long id, LeadCategory category)  throws APIException {
+        Lead lead = leadRepository.findById(id)
+                .orElseThrow(() -> new APIException("Lead not found", HttpStatus.NOT_FOUND));
+
+        lead.setLeadCategory(category);
+        leadRepository.save(lead);
+    }
 }
