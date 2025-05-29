@@ -1,6 +1,5 @@
 package com.houseclay.backend.controller;
 
-import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.entity.Property;
 import com.houseclay.backend.entity.PropertyDocument;
 import com.houseclay.backend.entity.User;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/property")
@@ -28,44 +26,6 @@ public class PropertyController {
     @Autowired
     private SearchService searchService;
 
-    @PostMapping("/add")
-    public ResponseEntity addProperty(@RequestBody Property property, @RequestAttribute("authenticatedUser") User user) {
-        try {
-            Property savedProperty = propertyService.addProperty(user, property);
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Property added successfully");
-            response.put("propertyId", savedProperty.getPropertyID());
-            return ResponseEntity.ok(response);
-        } catch (APIException e) {
-            return ResponseEntity.status(e.getCode()).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
-
-    @GetMapping("/user/{id}")
-    public ResponseEntity<Object> getPropertyByIdForUser(@PathVariable String id, @RequestAttribute("authenticatedUser") User user) {
-        try {
-            Property property = propertyService.getPropertyForUser(id, user);
-            return ResponseEntity.ok(PropertyMapper.toDTO(property));
-        } catch (APIException e) {
-            return ResponseEntity.status(e.getCode()).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
-
-    @GetMapping("/admin/{id}")
-    public ResponseEntity<Object> getPropertyByIdForAdmin(@PathVariable String id, @RequestAttribute("authenticatedAdmin") Admin admin) {
-        try {
-            Property property = propertyService.getProperty(id);
-            return ResponseEntity.ok(PropertyMapper.toDTO(property));
-        } catch (APIException e) {
-            return ResponseEntity.status(e.getCode()).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
 
     @GetMapping("/search")
     public ResponseEntity<?> searchProperty(
@@ -81,16 +41,5 @@ public class PropertyController {
         );
 
         return ResponseEntity.ok(results);
-    }
-
-    @GetMapping("/contact/{id}")
-    public ResponseEntity ownContact(@PathVariable String id, @RequestAttribute("authenticatedUser") User user) {
-        try {
-            return ResponseEntity.ok(propertyService.getOwnerContact(id, user));
-        } catch (APIException e) {
-            return ResponseEntity.status(e.getCode()).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
     }
 }
