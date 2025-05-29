@@ -10,5 +10,4 @@ import java.util.List;
 @Repository
 public interface UserLoginRepository extends JpaRepository<UserLogin,String> {
     List<UserLogin> findByToken(String token);
-    UserLogin user(User user);
 }

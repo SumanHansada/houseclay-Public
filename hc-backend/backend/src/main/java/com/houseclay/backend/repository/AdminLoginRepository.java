@@ -10,5 +10,4 @@ import java.util.Optional;
 @Repository
 public interface AdminLoginRepository extends JpaRepository<AdminLogin, Long> {
     Optional<AdminLogin> findByAuthToken(String authToken);
-    void deleteByAuthToken(String authToken);
 }

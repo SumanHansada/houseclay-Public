@@ -14,10 +14,8 @@ public class ReportProperty {
 
     @Id
     String reportId;
-    enum ReportType {
-        FAKE,
-        BROKER
-    }
+
+    ReportType reportType;
 
     Timestamp reportTime;
 

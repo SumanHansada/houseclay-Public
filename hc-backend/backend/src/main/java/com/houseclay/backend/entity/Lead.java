@@ -11,10 +11,13 @@ public class Lead {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    LeadStatus status;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private LeadCategory leadCategory;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "phoneNo")
     User user;
 }
