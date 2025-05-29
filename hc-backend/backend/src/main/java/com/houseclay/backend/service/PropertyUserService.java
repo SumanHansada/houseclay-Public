@@ -30,14 +30,41 @@ public class PropertyUserService {
         Optional<User> userOpt = userRepository.findById(user.getPhoneNo());
         if (userOpt.isPresent()) {
             user = userOpt.get();
-            property.setPropertyState(PropertyState.PENDING_VERIFICATION);
             property.setOwner(user);
+            property.setPropertyState(PropertyState.PENDING_VERIFICATION);
+            property.getPropertUpdateLogs().add(new PropertyUpdateLog(property, user, PropertyUpdateType.CREATE));
             user.getOwnedProperties().add(property);
             propertyService.indexPropertyInElastic(property);
             userRepository.save(user);
             return property;
         }
         throw new APIException("Invalid token", HttpStatus.BAD_REQUEST);
+    }
+
+    public Property updateProperty(User user, Property property) throws APIException {
+        Optional<Property> propertyOpt = propertyRepository.findById(property.getPropertyID());
+        if (propertyOpt.isEmpty()) {
+            throw new APIException("Invalid property", HttpStatus.BAD_REQUEST);
+        }
+        if (!propertyOpt.get().getOwner().getPhoneNo().equals(user.getPhoneNo())) {
+            throw new APIException("user not allowed", HttpStatus.FORBIDDEN);
+        }
+        property.getPropertUpdateLogs().add(new PropertyUpdateLog(property, user, PropertyUpdateType.UPDATE));
+        return propertyRepository.save(property);
+    }
+
+    public void deactivateProperty(User user, String propertyID) throws APIException {
+        Optional<Property> propertyOpt = propertyRepository.findById(propertyID);
+        if (propertyOpt.isEmpty()) {
+            throw new APIException("Invalid property", HttpStatus.BAD_REQUEST);
+        }
+        if (!propertyOpt.get().getOwner().getPhoneNo().equals(user.getPhoneNo())) {
+            throw new APIException("user not allowed", HttpStatus.FORBIDDEN);
+        }
+        Property property = propertyOpt.get();
+        property.setPropertyState(PropertyState.INACTIVE);
+        property.getPropertUpdateLogs().add(new PropertyUpdateLog(property, user, PropertyUpdateType.DEACTIVATE));
+        propertyRepository.save(property);
     }
 
     public Property getPropertyForUser(String id, User user) throws APIException {
@@ -69,7 +96,7 @@ public class PropertyUserService {
         propertyAction.setProperty(property);
         propertyAction.setUser(user);
         propertyAction.setCreatedAt(LocalDateTime.now());
-        propertyAction.setActionType(ActionType.CONTACT);
+        propertyAction.setUserActionType(UserActionType.CONTACT);
         user.getPropertyActions().add(propertyAction);
         userRepository.save(user);
         User owner = property.getOwner();

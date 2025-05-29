@@ -1,7 +1,7 @@
 package com.houseclay.backend.service;
 
 import com.houseclay.backend.dto.PropertyDTO;
-import com.houseclay.backend.entity.ActionType;
+import com.houseclay.backend.entity.UserActionType;
 import com.houseclay.backend.entity.Property;
 import com.houseclay.backend.entity.PropertyAction;
 import com.houseclay.backend.entity.User;
@@ -40,7 +40,7 @@ public class ShortlistPropertyService {
         propertyAction.setProperty(property);
         propertyAction.setUser(user);
         propertyAction.setCreatedAt(LocalDateTime.now());
-        propertyAction.setActionType(ActionType.SHORTLIST);
+        propertyAction.setUserActionType(UserActionType.SHORTLIST);
         user.getPropertyActions().add(propertyAction);
         userRepository.save(user);
         return property;
@@ -51,11 +51,11 @@ public class ShortlistPropertyService {
         if (propertyOpt.isEmpty()) {
             throw new APIException("Property not found", HttpStatus.BAD_REQUEST);
         }
-        propertyActionRepository.deleteByUserAndPropertyAndActionType(user, propertyOpt.get(), ActionType.SHORTLIST);
+        propertyActionRepository.deleteByUserAndPropertyAndUserActionType(user, propertyOpt.get(), UserActionType.SHORTLIST);
     }
 
     public List<PropertyDTO> getShortlistedProperties(User user) {
-        List<PropertyAction> actions = propertyActionRepository.findByUserAndActionType(user, ActionType.SHORTLIST);
+        List<PropertyAction> actions = propertyActionRepository.findByUserAndUserActionType(user, UserActionType.SHORTLIST);
 
         return actions.stream()
                 .map(PropertyAction::getProperty)

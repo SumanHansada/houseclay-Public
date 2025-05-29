@@ -21,15 +21,8 @@ public class Admin {
         ADMIN
     }
 
-
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
     List<User> blacklistedUsers;
-
-    @OneToMany(mappedBy = "verifiedBy", cascade = CascadeType.ALL)
-    List<Property> verifiedProperties;
-
-    @OneToMany(mappedBy = "reverifiedBy", cascade = CascadeType.ALL)
-    List<Property> reverifiedProperties;
 
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
     List<AdminLogin> adminLogins;

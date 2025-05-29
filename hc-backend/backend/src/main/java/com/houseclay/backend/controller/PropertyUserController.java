@@ -44,6 +44,35 @@ public class PropertyUserController {
         }
     }
 
+    @PutMapping("/update")
+    public ResponseEntity updateProperty(@RequestBody Property property, @RequestAttribute("authenticatedUser") User user) {
+        try {
+            Property savedProperty = propertyUserService.updateProperty(user, property);
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Property updated successfully");
+            response.put("propertyId", savedProperty.getPropertyID());
+            return ResponseEntity.ok(response);
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/deactivate")
+    public ResponseEntity deactivateProperty(@RequestBody String propertyID, @RequestAttribute("authenticatedUser") User user) {
+        try {
+            propertyUserService.deactivateProperty(user, propertyID);
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Property deactivated successfully");
+            return ResponseEntity.ok(response);
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Object> getPropertyById(@PathVariable String id, @RequestAttribute("authenticatedUser") User user) {
         try {

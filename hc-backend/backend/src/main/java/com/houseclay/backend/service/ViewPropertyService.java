@@ -1,7 +1,7 @@
 package com.houseclay.backend.service;
 
 import com.houseclay.backend.dto.PropertyDTO;
-import com.houseclay.backend.entity.ActionType;
+import com.houseclay.backend.entity.UserActionType;
 import com.houseclay.backend.entity.Property;
 import com.houseclay.backend.entity.PropertyAction;
 import com.houseclay.backend.entity.User;
@@ -41,7 +41,7 @@ public class ViewPropertyService {
         propertyAction.setProperty(property);
         propertyAction.setUser(user);
         propertyAction.setCreatedAt(LocalDateTime.now());
-        propertyAction.setActionType(ActionType.VIEW);
+        propertyAction.setUserActionType(UserActionType.VIEW);
         user.getPropertyActions().add(propertyAction);
         userRepository.save(user);
 
@@ -49,7 +49,7 @@ public class ViewPropertyService {
     }
 
     public List<PropertyDTO> getViewedProperties(User user) {
-        List<PropertyAction> actions = propertyActionRepository.findByUserAndActionType(user, ActionType.VIEW);
+        List<PropertyAction> actions = propertyActionRepository.findByUserAndUserActionType(user, UserActionType.VIEW);
 
         return actions.stream()
                 .map(PropertyAction::getProperty)

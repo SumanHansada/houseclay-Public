@@ -3,7 +3,6 @@ package com.houseclay.backend.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Data
@@ -14,7 +13,7 @@ public class PropertyAction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    ActionType actionType;
+    UserActionType userActionType;
 
     private LocalDateTime createdAt;
 

@@ -1,6 +1,6 @@
 package com.houseclay.backend.entity;
 
-public enum ActionType {
+public enum UserActionType {
     CONTACT,
     SHORTLIST,
     VIEW

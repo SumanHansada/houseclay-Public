@@ -10,10 +10,8 @@ import java.util.List;
 public class PropertyDTO {
     private String propertyID;
     private String title;
-    private boolean isVerified;
     private boolean isManaged;
     private boolean isPremium;
-    private Timestamp postedOn;
     private Double builtUpArea;
     private String facing;
     private String bhkType;

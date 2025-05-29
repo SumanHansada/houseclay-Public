@@ -3,6 +3,7 @@ package com.houseclay.backend.controller;
 import com.houseclay.backend.dto.LeadDTO;
 import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.entity.LeadCategory;
+import com.houseclay.backend.entity.LeadStatus;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.service.LeadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,12 +44,12 @@ public class LeadController {
         return ResponseEntity.ok(leadService.getLeads(leadCategory, pageable));
     }
 
-    @PutMapping("/{id}/category")
-    public ResponseEntity<String> updateLeadCategory(
+    @PutMapping("/{id}/status")
+    public ResponseEntity<String> updateLeadStatus(
             @PathVariable Long id,
-            @RequestBody LeadCategory leadCategory) {
+            @RequestBody LeadStatus leadStatus) {
         try {
-            leadService.updateLeadCategory(id, leadCategory);
+            leadService.updateLeadStatus(id, leadStatus);
             return ResponseEntity.ok("Lead category updated.");
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());

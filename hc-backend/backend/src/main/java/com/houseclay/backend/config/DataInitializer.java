@@ -190,8 +190,6 @@ public class DataInitializer {
         property.setTitle(title);
         property.setCity("Bangalore");
         property.setLocationOrSocietyName("Test Layout");
-        property.setPostedOn(new Timestamp(System.currentTimeMillis()));
-        property.setUpdatedOn(new Timestamp(System.currentTimeMillis()));
         property.setBuiltUpArea(1100.0);
         property.setBhkType("2 BHK");
         property.setFloor(2);
@@ -211,7 +209,5 @@ public class DataInitializer {
         property.setAmenities(List.of("Lift", "Power Backup"));
         property.setPreferredTenants(List.of("Family", "Bachelors"));
         property.setOwner(user);
-        property.setVerifiedOn(new Timestamp(System.currentTimeMillis()));
-        property.setVerifiedBy(admin);
     }
 }

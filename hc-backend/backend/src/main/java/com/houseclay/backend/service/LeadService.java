@@ -21,6 +21,7 @@ public class LeadService {
     public void createLead(LeadCategory leadCategory, User user) throws Exception {
         Lead lead = new Lead();
         lead.setLeadCategory(leadCategory);
+        lead.setStatus(LeadStatus.NEW);
         lead.setUser(user);
         leadRepository.save(lead);
     }
@@ -49,11 +50,11 @@ public class LeadService {
         return leads.map(LeadDTO::new);
     }
 
-    public void updateLeadCategory(Long id, LeadCategory category)  throws APIException {
+    public void updateLeadStatus(Long id, LeadStatus status)  throws APIException {
         Lead lead = leadRepository.findById(id)
                 .orElseThrow(() -> new APIException("Lead not found", HttpStatus.NOT_FOUND));
 
-        lead.setLeadCategory(category);
+        lead.setStatus(status);
         leadRepository.save(lead);
     }
 }

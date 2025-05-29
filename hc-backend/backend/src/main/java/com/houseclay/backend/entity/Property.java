@@ -31,15 +31,8 @@ public class Property {
     @Id
     String propertyID;
     String title;
-    boolean isVerified;
-    boolean isReVerified;
-    boolean isDeleted;
     boolean isManaged;
     boolean isPremium;
-    Timestamp postedOn;
-    Timestamp updatedOn;
-    Timestamp verifiedOn;
-    Timestamp reVerifiedOn;
 
     private Double builtUpArea;
     private String facing;
@@ -74,14 +67,6 @@ public class Property {
     private List<String> preferredTenants;
 
     @ManyToOne
-    @JoinColumn(name = "username")
-    Admin verifiedBy;
-
-    @ManyToOne
-    @JoinColumn(name = "admin_id")
-    Admin reverifiedBy;
-
-    @ManyToOne
     @JoinColumn(name = "phoneNo")
     User owner;
 
@@ -90,6 +75,9 @@ public class Property {
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ReportProperty> reportedProperties;
+
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<PropertyUpdateLog> propertUpdateLogs;
 
     @OneToOne
     @NotFound(action= NotFoundAction.IGNORE)

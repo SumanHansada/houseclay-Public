@@ -67,11 +67,5 @@ public class AdminUserController {
         Pageable pageable = PageRequest.of(page, size);
         return adminService.getAllUsers(pageable);
     }
-
-    @PutMapping("/update-user")
-    public ResponseEntity<User> updateUser(
-            @RequestBody User user,
-            @RequestAttribute("authenticatedAdmin") Admin admin) {
-        return ResponseEntity.ok(adminService.updateUser(user));
-    }
+    
 }
