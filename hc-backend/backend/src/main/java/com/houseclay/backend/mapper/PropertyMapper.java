@@ -3,6 +3,8 @@ package com.houseclay.backend.mapper;
 import com.houseclay.backend.dto.*;
 import com.houseclay.backend.entity.*;
 
+import java.util.List;
+
 public class PropertyMapper {
 
     public static PropertyDTO toDTO(Property property) {
@@ -77,5 +79,28 @@ public class PropertyMapper {
         target.setAmenities(source.getAmenities());
         target.setPreferredTenants(source.getPreferredTenants());
         target.setPropertyCategory(source.getClass().getSimpleName().replace("Property", ""));
+
+        if (source.getPropertUpdateLogs() != null) {
+            List<PropertyUpdateDTO> updates = source.getPropertUpdateLogs().stream().map(updateLog -> {
+                PropertyUpdateDTO dto = new PropertyUpdateDTO();
+                dto.setUpdateType(updateLog.getUpdateType());
+                dto.setUpdateTime(updateLog.getUpdatedAt());
+
+                if (updateLog.getUpdatedByAdmin() != null) {
+                    dto.setUpdateBy(updateLog.getUpdatedByAdmin().getUsername());
+                    dto.setUserType("ADMIN");
+                } else if (updateLog.getUpdatedByUser() != null) {
+                    dto.setUpdateBy(updateLog.getUpdatedByUser().getPhoneNo());
+                    dto.setUserType("USER");
+                } else {
+                    dto.setUpdateBy("UNKNOWN");
+                    dto.setUserType("UNKNOWN");
+                }
+
+                return dto;
+            }).toList();
+
+            target.setPropertyUpdates(updates);
+        }
     }
 }

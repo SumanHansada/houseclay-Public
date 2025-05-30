@@ -35,4 +35,7 @@ public class PropertyDTO {
     private List<String> amenities;
     private List<String> preferredTenants;
     private String propertyCategory; // to identify subtype like "Sale", "Rent", "Flatmate"
+    List<PropertyUpdateDTO> propertyUpdates;
 }
+
+
