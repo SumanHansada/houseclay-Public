@@ -8,6 +8,7 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonTypeInfo(
@@ -77,7 +78,7 @@ public class Property {
     List<ReportProperty> reportedProperties;
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<PropertyUpdateLog> propertUpdateLogs;
+    List<PropertyUpdateLog> propertUpdateLogs = new ArrayList<>();
 
     @OneToOne
     @NotFound(action= NotFoundAction.IGNORE)
