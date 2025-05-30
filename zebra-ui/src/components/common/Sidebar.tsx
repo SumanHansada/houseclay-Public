@@ -48,8 +48,8 @@ const sidebarItems = [
     label: "Lead Management",
     icon: <UserCheck size={20} />,
     children: [
-      { label: "Property Lead", href: "/admin/lead-management" },
-      { label: "Support Lead", href: "/admin/lead-management" },
+      { label: "Property Lead", href: "/admin/lead-management/property" },
+      { label: "Support Lead", href: "/admin/lead-management/support" },
     ],
     href: "#",
   },
