@@ -1,7 +1,5 @@
 import React from "react";
 
-export type TBlockFilter = "all" | "active" | "blocked";
-
 interface SearchFilterBarProps {
   searchValue: string;
   onSearchChange: (v: string) => void;

@@ -7,7 +7,7 @@ import {
   TableRow,
   TableCell,
 } from "@heroui/table";
-import { TUser } from "./UserManagement";
+import { TUser } from "./Types";
 
 interface UserTableProps {
   columns: { key: string; label: string }[];
