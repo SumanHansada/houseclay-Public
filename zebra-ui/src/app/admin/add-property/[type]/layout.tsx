@@ -151,15 +151,15 @@ export default function AddPropertyTypeLayout({
     const stepMap = {
       [AddPropertyFormStep.LOCALITY_DETAILS]: {
         prevStep: AddPropertyFormStep.PROPERTY_DETAILS,
-        route: AddPropertyFormStep.PROPERTY_DETAILS,
+        route: AddPropertyRouteStep.PROPERTY_DETAILS,
       },
       [AddPropertyFormStep.RENTAL_DETAILS]: {
         prevStep: AddPropertyFormStep.LOCALITY_DETAILS,
-        route: AddPropertyFormStep.LOCALITY_DETAILS,
+        route: AddPropertyRouteStep.LOCALITY_DETAILS,
       },
       [AddPropertyFormStep.RESALE_DETAILS]: {
         prevStep: AddPropertyFormStep.LOCALITY_DETAILS,
-        route: AddPropertyFormStep.LOCALITY_DETAILS,
+        route: AddPropertyRouteStep.LOCALITY_DETAILS,
       },
       [AddPropertyFormStep.GALLERY]: {
         prevStep:
@@ -439,7 +439,6 @@ export default function AddPropertyTypeLayout({
             entryAnimation="animate-fade-in"
             exitAnimation="animate-fade-out"
           >
-            {" "}
             <DialogHeader>
               <div
                 className={`${isMobile ? "py-2 px-8" : ""}  flex flex-col justify-between items-center w-full`}
