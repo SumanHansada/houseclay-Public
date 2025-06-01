@@ -70,6 +70,7 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
         file: fileData,
         url: URL.createObjectURL(file),
         isCover: photos.length === 0 && index === 0, // Only set first photo as cover if there were no photos before
+        S3Url: "", // Default value for S3Url
       };
     });
 
