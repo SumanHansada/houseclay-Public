@@ -13,6 +13,7 @@ import {
   ListPropertyRouteStep,
   PropertyType,
 } from "@/common/enums";
+import { extractS3KeyFromUrl } from "@/common/utils";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
 import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
@@ -68,6 +69,9 @@ export default function ListPropertyTypeLayout({
   const propertyId = useSelector(
     (state: RootState) => state.listProperty.propertyID,
   );
+  const imagesS3Url = useSelector(
+    (state: RootState) => state.listProperty.imagesS3Url,
+  );
   const formState = useSelector(
     (state: RootState) => state.listProperty[formKey],
   );
@@ -105,8 +109,8 @@ export default function ListPropertyTypeLayout({
         return {
           name: photo.file.name,
           url: photo.url,
-          S3url: photo.S3Url,
           type: photo.file.type,
+          S3Url: imagesS3Url[photo.file.name],
         };
       });
       uploadFiles(photosToUpload);
@@ -223,82 +227,92 @@ export default function ListPropertyTypeLayout({
       setCurrentStep(ListPropertyFormStep.DONE);
       // Make API call to post property
       await handlePostProperty();
-      openDialog("list-property-success-dialog");
     }
   };
 
   const handlePreviewListing = async () => {
-    // Make API call to get presigned-urls
-    console.log("Preview Listing");
+    closeDialog("list-property-success-dialog");
+    router.push(`/property-details/${type}/${propertyId}`);
   };
 
   const handlePostProperty = async () => {
     try {
       const propertyDetails = formState.data!.propertyDetails;
       const localityDetails = formState.data!.localityDetails;
-      const images = formState.data!.images.map(
-        (image: PropertyPhoto) => image.url,
-      );
       const additionalInfo = formState.data!.additionalInfo;
+      const imagesS3Keys =
+        Object.values(imagesS3Url).length > 0
+          ? Object.values(imagesS3Url).map(
+              (url) => extractS3KeyFromUrl(url) || "",
+            )
+          : [];
 
       const basePropertyData = {
         propertyID: propertyId,
         ...localityDetails,
-        images,
+        images: imagesS3Keys,
       };
 
-      if (type === "rent") {
-        const rentalDetails = formState.data!.rentalDetails!;
-
-        const {
-          khataCertificate: _khataCertificate,
-          saleDeed: _saleDeed,
-          propertyTax: _propertyTax,
-          ...rentalAdditionalInfo
-        } = additionalInfo || {};
-        await addRentProperty({
-          ...basePropertyData,
-          ...propertyDetails,
-          ...rentalDetails,
-          ...rentalAdditionalInfo,
-        }).unwrap();
-      } else if (type === "resale") {
-        const resaleDetails = formState.data!.resaleDetails!;
-        const {
-          whoWillShowProperty: _whoWillShowProperty,
-          ...resaleAdditionalInfo
-        } = additionalInfo || {};
-        await addResaleProperty({
-          ...basePropertyData,
-          ...propertyDetails,
-          ...resaleDetails,
-          ...resaleAdditionalInfo,
-        }).unwrap();
-      } else if (type === "flatmates") {
-        const flatmatesDetails = formState.data!.flatmatesDetails!;
-
-        const {
-          ownershipType: _ownershipType,
-          propertyAge: _propertyAge,
-          floorType: _floorType,
-          facing: _facing,
-          ...flatmatesPropertyDetails
-        } = propertyDetails || {};
-
-        const {
-          khataCertificate: _khataCertificate,
-          saleDeed: _saleDeed,
-          propertyTax: _propertyTax,
-          ...flatmatesAdditionalInfo
-        } = additionalInfo || {};
-        await addFlatmatesProperty({
-          ...basePropertyData,
-          ...flatmatesPropertyDetails,
-          ...flatmatesDetails,
-          ...flatmatesAdditionalInfo,
-        }).unwrap();
+      switch (type) {
+        case "rent": {
+          const rentalDetails = formState.data!.rentalDetails!;
+          const {
+            khataCertificate: _khataCertificate,
+            saleDeed: _saleDeed,
+            propertyTax: _propertyTax,
+            ...rentalAdditionalInfo
+          } = additionalInfo || {};
+          await addRentProperty({
+            ...basePropertyData,
+            ...propertyDetails,
+            ...rentalDetails,
+            ...rentalAdditionalInfo,
+          }).unwrap();
+          break;
+        }
+        case "resale": {
+          const resaleDetails = formState.data!.resaleDetails!;
+          const {
+            whoWillShowProperty: _whoWillShowProperty,
+            ...resaleAdditionalInfo
+          } = additionalInfo || {};
+          await addResaleProperty({
+            ...basePropertyData,
+            ...propertyDetails,
+            ...resaleDetails,
+            ...resaleAdditionalInfo,
+          }).unwrap();
+          break;
+        }
+        case "flatmates": {
+          const flatmatesDetails = formState.data!.flatmatesDetails!;
+          const {
+            ownershipType: _ownershipType,
+            propertyAge: _propertyAge,
+            floorType: _floorType,
+            facing: _facing,
+            ...flatmatesPropertyDetails
+          } = propertyDetails || {};
+          const {
+            khataCertificate: _khataCertificate,
+            saleDeed: _saleDeed,
+            propertyTax: _propertyTax,
+            ...flatmatesAdditionalInfo
+          } = additionalInfo || {};
+          await addFlatmatesProperty({
+            ...basePropertyData,
+            ...flatmatesPropertyDetails,
+            ...flatmatesDetails,
+            ...flatmatesAdditionalInfo,
+          }).unwrap();
+          break;
+        }
       }
+      openDialog("list-property-success-dialog");
     } catch (error) {
+      // openDialog("list-property-success-dialog");
+      setCurrentStep(ListPropertyFormStep.ADDITIONAL_INFO);
+      setRoute(ListPropertyRouteStep.ADDITIONAL_INFO);
       console.error("Error posting property:", error);
     }
   };

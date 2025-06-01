@@ -5,5 +5,4 @@ export interface PropertyPhoto {
   file: FileData;
   url: string;
   isCover: boolean;
-  S3Url: string;
 }

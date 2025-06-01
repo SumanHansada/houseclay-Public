@@ -42,7 +42,7 @@ const propertySchema = Yup.object({
       otherwise: (schema) => schema.required("Property age is required"),
     }),
     floor: Yup.number().required("Floor is required"),
-    totalFloor: Yup.number().required("Total floor is required"),
+    totalFloors: Yup.number().required("Total floors is required"),
     floorType: Yup.string().when("$formKey", {
       is: "flatmatesForm",
       then: (schema) => schema.optional(),
@@ -297,8 +297,8 @@ const PropertyDetailsPage: React.FC = () => {
         >
           <FormDropdown
             label="Total Floor"
-            name="propertyDetails.totalFloor"
-            id="totalFloor"
+            name="propertyDetails.totalFloors"
+            id="totalFloors"
             options={Array.from({ length: 50 }, (_, i) => i + 1).map(
               (value) => ({
                 value: value,
@@ -308,9 +308,9 @@ const PropertyDetailsPage: React.FC = () => {
             required
             placeholder="Select total floors"
             aria-describedby={
-              errors?.propertyDetails?.totalFloor &&
-              touched?.propertyDetails?.totalFloor
-                ? "totalFloor-error"
+              errors?.propertyDetails?.totalFloors &&
+              touched?.propertyDetails?.totalFloors
+                ? "totalFloors-error"
                 : undefined
             }
           />

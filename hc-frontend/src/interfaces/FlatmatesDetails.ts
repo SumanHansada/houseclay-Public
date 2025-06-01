@@ -1,7 +1,7 @@
 export interface FlatmatesDetails {
   rent: number;
   maintenanceCharges: number;
-  deposit: number;
+  depositCharges: number;
   availableFrom: string;
   furnishing: string;
   waterSupply: string;
@@ -11,7 +11,7 @@ export interface FlatmatesDetails {
   amenities: string[];
   tenantType: string;
   attachedBathroom: boolean;
-  bathroomType: string;
+  attachedBalcony: boolean;
   smokingPreference: string;
   drinkingPreference: string;
 }

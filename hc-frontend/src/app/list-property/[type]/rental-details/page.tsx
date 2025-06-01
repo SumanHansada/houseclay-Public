@@ -128,31 +128,6 @@ const rentalSchema = Yup.object().shape({
     powerBackup: Yup.string().required("Power backup is required"),
     parking: Yup.boolean().required("Parking is required"),
     nonVegAllowed: Yup.boolean().required("Non veg allowed is required"),
-    tenantType: Yup.string().when("$formKey", {
-      is: "flatmatesForm",
-      then: (schema) => schema.required("Preferred tenant is required"),
-      otherwise: (schema) => schema.optional(),
-    }),
-    attachedBathroom: Yup.boolean().when("$formKey", {
-      is: "flatmatesForm",
-      then: (schema) => schema.required("Attached bathroom is required"),
-      otherwise: (schema) => schema.optional(),
-    }),
-    bathroomType: Yup.string().when("$formKey", {
-      is: "flatmatesForm",
-      then: (schema) => schema.required("Bathroom type is required"),
-      otherwise: (schema) => schema.optional(),
-    }),
-    smokingPreference: Yup.string().when("$formKey", {
-      is: "flatmatesForm",
-      then: (schema) => schema.required("Smoking preference is required"),
-      otherwise: (schema) => schema.optional(),
-    }),
-    drinkingPreference: Yup.string().when("$formKey", {
-      is: "flatmatesForm",
-      then: (schema) => schema.required("Drinking preference is required"),
-      otherwise: (schema) => schema.optional(),
-    }),
   }),
 });
 
@@ -172,7 +147,7 @@ const flatmatesSchema = Yup.object().shape({
         "Maintenance charges must be greater than zero",
         (value) => parseFloat(value || "0") > 0,
       ),
-    deposit: Yup.string()
+    depositCharges: Yup.string()
       .required("Deposit is required")
       .test(
         "is-greater-than-zero",
@@ -187,7 +162,7 @@ const flatmatesSchema = Yup.object().shape({
     nonVegAllowed: Yup.boolean().required("Non veg allowed is required"),
     tenantType: Yup.string().required("Preferred tenant is required"),
     attachedBathroom: Yup.boolean().required("Attached bathroom is required"),
-    bathroomType: Yup.string().required("Bathroom type is required"),
+    attachedBalcony: Yup.boolean().required("Attached balcony is required"),
     smokingPreference: Yup.string().required("Smoking preference is required"),
     drinkingPreference: Yup.string().required(
       "Drinking preference is required",
@@ -364,12 +339,12 @@ const RentalDetailsPage: React.FC = () => {
               name={
                 formKey === "rentForm"
                   ? "rentalDetails.deposit"
-                  : "flatmatesDetails.deposit"
+                  : "flatmatesDetails.depositCharges"
               }
               id={
                 formKey === "rentForm"
                   ? "rentalDetails.deposit"
-                  : "flatmatesDetails.deposit"
+                  : "flatmatesDetails.depositCharges"
               }
               label="Deposit"
               prefix={<IndianRupee size={20} />}
@@ -643,12 +618,12 @@ const RentalDetailsPage: React.FC = () => {
             </div>
             <div className="col-span-1">
               <FormRadioGroup
-                name="flatmatesDetails.bathroomType"
-                label="Bathroom Type"
+                name="flatmatesDetails.attachedBalcony"
+                label="Attached Balcony"
                 columns={2}
                 options={[
-                  { value: "Western", label: "Western" },
-                  { value: "Indian", label: "Indian" },
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
                 ]}
                 required
                 horizontal

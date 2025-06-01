@@ -14,8 +14,8 @@ export const useS3Uploader = () => {
     images: {
       name: string;
       url: string;
-      S3url: string;
       type: string;
+      S3Url: string;
     }[],
   ) => {
     if (!images || images.length === 0) {
@@ -30,7 +30,7 @@ export const useS3Uploader = () => {
         const blob = await fetch(image.url).then((r) => r.blob());
         const file = new File([blob], image.name, { type: image.type });
 
-        const uploadResp = await fetch(image.S3url, {
+        const uploadResp = await fetch(image.S3Url, {
           method: "PUT",
           headers: {
             "Content-Type": file.type,

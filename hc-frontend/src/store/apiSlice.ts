@@ -99,7 +99,7 @@ export const apiSlice = createApi({
         propertyAge: string;
         ownershipType: string;
         floor: number;
-        totalFloor: number;
+        totalFloors: number;
         floorType: string;
         description: string;
         city: string;
@@ -125,7 +125,7 @@ export const apiSlice = createApi({
       }
     >({
       query: (data) => ({
-        url: "property/add",
+        url: "property/user/add",
         method: "POST",
         body: data,
         headers: {
@@ -147,7 +147,7 @@ export const apiSlice = createApi({
         ownershipType: string;
         propertyAge: string;
         floor: number;
-        totalFloor: number;
+        totalFloors: number;
         floorType: string;
         description: string;
         city: string;
@@ -174,7 +174,7 @@ export const apiSlice = createApi({
       }
     >({
       query: (data) => ({
-        url: "property/add",
+        url: "property/user/add",
         method: "POST",
         body: data,
         headers: {
@@ -193,7 +193,7 @@ export const apiSlice = createApi({
         builtUpArea: number;
         bhkType: string;
         floor: number;
-        totalFloor: number;
+        totalFloors: number;
         description: string;
         city: string;
         locationOrSocietyName: string;
@@ -202,7 +202,7 @@ export const apiSlice = createApi({
         longitude: number;
         rent: number;
         maintenanceCharges: number;
-        deposit: number;
+        depositCharges: number;
         availableFrom: string;
         furnishing: string;
         waterSupply: string;
@@ -212,7 +212,7 @@ export const apiSlice = createApi({
         amenities: string[];
         tenantType: string;
         attachedBathroom: boolean;
-        bathroomType: string;
+        attachedBalcony: boolean;
         smokingPreference: string;
         drinkingPreference: string;
         images: string[];
@@ -221,13 +221,17 @@ export const apiSlice = createApi({
       }
     >({
       query: (data) => ({
-        url: "property/add",
+        url: "property/user/add",
         method: "POST",
         body: data,
         headers: {
           "Content-Type": "application/json",
         },
       }),
+    }),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    getPropertyById: builder.query<any, string>({
+      query: (id) => `/property/user/${id}`,
     }),
   }),
 });
@@ -243,4 +247,6 @@ export const {
   usePropertyAddRentMutation,
   usePropertyAddResaleMutation,
   usePropertyAddFlatmatesMutation,
+  useGetPropertyByIdQuery,
+  useLazyGetPropertyByIdQuery,
 } = apiSlice;
