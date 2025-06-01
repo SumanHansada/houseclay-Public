@@ -44,6 +44,7 @@ const FormRangeSlider: React.FC<FormRangeSliderProps> = ({
   required = false,
   className = "",
 }) => {
+  console.log("name", name);
   const minInputRef = useRef<HTMLInputElement>(null);
   const maxInputRef = useRef<HTMLInputElement>(null);
 
