@@ -1,7 +1,6 @@
 package com.houseclay.backend.controller;
 
 import com.houseclay.backend.dto.LeadDTO;
-import com.houseclay.backend.dto.LeadDetailDTO;
 import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.entity.LeadCategory;
 import com.houseclay.backend.entity.LeadStatus;

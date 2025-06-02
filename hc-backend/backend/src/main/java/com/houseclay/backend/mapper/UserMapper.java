@@ -10,6 +10,7 @@ public class UserMapper {
         userDTO.setEmail(user.getEmailID());
         userDTO.setPhoneNo(user.getPhoneNo());
         userDTO.setName(user.getName());
+        userDTO.setBlacklisted(user.isBlacklisted());
         return userDTO;
     }
 }

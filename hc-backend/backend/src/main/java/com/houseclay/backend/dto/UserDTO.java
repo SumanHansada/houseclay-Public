@@ -8,4 +8,5 @@ public class UserDTO {
     String phoneNo;
     String email;
     String name;
+    boolean isBlacklisted;
 }
