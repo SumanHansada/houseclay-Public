@@ -26,4 +26,12 @@ public class Admin {
 
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
     List<AdminLogin> adminLogins;
+
+    @Override
+    public String toString() {
+        return "Admin{" +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
 }
