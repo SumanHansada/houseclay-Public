@@ -1,8 +1,10 @@
 package com.houseclay.backend.service;
 
 import com.houseclay.backend.dto.LeadDTO;
+import com.houseclay.backend.dto.LeadDetailDTO;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
+import com.houseclay.backend.mapper.LeadMapper;
 import com.houseclay.backend.repository.LeadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,6 +26,12 @@ public class LeadService {
         lead.setStatus(LeadStatus.NEW);
         lead.setUser(user);
         leadRepository.save(lead);
+    }
+
+    public LeadDetailDTO getLead(Long leadId) throws Exception {
+        Lead lead = leadRepository.findById(leadId)
+                .orElseThrow(() -> new APIException("Lead not found",HttpStatus.NOT_FOUND));
+        return LeadMapper.toLead(lead);
     }
 
     public void addComment(Long leadId, String comment, Admin admin) throws Exception {

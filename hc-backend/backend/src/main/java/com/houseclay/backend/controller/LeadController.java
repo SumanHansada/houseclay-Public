@@ -1,6 +1,7 @@
 package com.houseclay.backend.controller;
 
 import com.houseclay.backend.dto.LeadDTO;
+import com.houseclay.backend.dto.LeadDetailDTO;
 import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.entity.LeadCategory;
 import com.houseclay.backend.entity.LeadStatus;
@@ -25,7 +26,18 @@ public class LeadController {
     public ResponseEntity<?> addComment(@PathVariable Long id, @RequestBody String comment, @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
             leadService.addComment(id, comment, admin);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseEntity.ok("Comment added successfully");
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getLeadDetail(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(leadService.getLead(id));
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {
