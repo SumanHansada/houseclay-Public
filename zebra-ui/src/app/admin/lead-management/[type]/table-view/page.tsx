@@ -1,7 +1,7 @@
 import { LeadTableView } from "../../components/LeadTableView";
 import { LeadType, TLead } from "@/common/Types";
 
-import { default as LeadData } from "@/data/dummyData.json";
+import { default as LeadData } from "@/mock/dummyData.json";
 
 export default async function TableViewPage({
   params,

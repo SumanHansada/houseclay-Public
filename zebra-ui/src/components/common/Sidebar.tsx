@@ -58,7 +58,7 @@ const sidebarItems = [
     icon: <Users size={20} />,
     children: [
       { label: "HouseClay Users", href: "/admin/user-management" },
-      { label: "Zebra Admins", href: "#" },
+      // { label: "Zebra Admins", href: "#" },
     ],
     href: "#",
   },

@@ -1,10 +1,24 @@
 "use client";
-import { useParams } from "next/navigation";
+
+import { LeadType, TLead } from "@/common/Types";
+import { LeadDetails } from "../../../components/LeadDetails";
+import { default as LeadData } from "@/mock/dummyData.json";
+import { notFound } from "next/navigation";
+import { use } from "react";
+
+interface TParams {
+  params: Promise<{ type: LeadType; id: string }>;
+}
 
 export const dynamicParams = true;
 
-export default function LeadManagementIdRootPage() {
-  const params = useParams();
-  const id = params?.id as string;
-  return <div>Lead Management Page: Lead ID - {id}</div>;
+export default function LeadManagementIdRootPage({ params }: TParams) {
+  const { type, id } = use(params);
+  const leads: TLead[] = LeadData;
+  const currentLead = leads.find((lead) => lead?.id === id);
+
+  if (!currentLead || currentLead.type !== type) {
+    return notFound();
+  }
+  return <LeadDetails lead={currentLead} />;
 }

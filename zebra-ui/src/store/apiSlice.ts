@@ -1,6 +1,22 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { RootState } from "./store";
+import { TUser } from "@/interfaces/User";
+
+export interface UsersResponse {
+  content: TUser[];
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
+  };
+  totalPages: number;
+  totalElements: number;
+  last: boolean;
+  first: boolean;
+  numberOfElements: number;
+  size: number;
+  number: number;
+}
 
 const baseUrl = process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL;
 
@@ -21,35 +37,35 @@ export const apiSlice = createApi({
     },
   }),
   endpoints: (builder) => ({
-    login: builder.mutation<
-      string, // Response type
-      { phoneNo: string; otpCode: string } // Request body type
-    >({
+    login: builder.mutation<string, { username: string; password: string }>({
       query: (data) => ({
-        url: "/user/login",
-        method: "POST",
-        body: data,
-        responseHandler: (response) => response.text(), // Convert response to text
-      }),
-    }),
-    register: builder.mutation<
-      string, // Response type
-      { phoneNo: string; name: string; emailID: string; otpCode: string } // Request body type
-    >({
-      query: (data) => ({
-        url: "/user/register",
+        url: "/admin/login",
         method: "POST",
         body: data,
         responseHandler: (response) => response.text(),
       }),
     }),
-    generateOtp: builder.mutation<
-      { otpSent: boolean }, // Response type
-      { phoneNo: string } // Request body type
+    register: builder.mutation<
+      string,
+      { username: string; password: string; name: string }
     >({
-      query: ({ phoneNo }) => ({
-        url: `/auth/generate-otp?phoneNo=${phoneNo}`,
+      query: (data) => ({
+        url: "/admin/register",
         method: "POST",
+        body: data,
+        responseHandler: (response) => response.text(),
+      }),
+    }),
+    logout: builder.mutation<{ message: string }, void>({
+      query: () => ({
+        url: "/admin/logout",
+        method: "POST",
+      }),
+    }),
+    getUsers: builder.query<UsersResponse, { page: number; size: number }>({
+      query: ({ page, size }) => ({
+        url: `/admin/users?page=${page}&size=${size}`,
+        method: "GET",
       }),
     }),
     checkUser: builder.query<
@@ -57,15 +73,6 @@ export const apiSlice = createApi({
       { phoneNo: string } // Query parameter type
     >({
       query: ({ phoneNo }) => `/user/check-user?phoneNo=${phoneNo}`,
-    }),
-    logout: builder.mutation<
-      { message: string }, // Response type
-      void // No request body
-    >({
-      query: () => ({
-        url: "/user/logout",
-        method: "POST",
-      }),
     }),
     presignedUrls: builder.mutation<
       {
@@ -234,7 +241,8 @@ export const apiSlice = createApi({
 export const {
   useLoginMutation,
   useRegisterMutation,
-  useGenerateOtpMutation,
+  useGetUsersQuery,
+  // useGenerateOtpMutation,
   useCheckUserQuery,
   useLazyCheckUserQuery,
   useLogoutMutation,

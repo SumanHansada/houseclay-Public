@@ -60,8 +60,8 @@ export function DataTable<T extends object>({
                 key={rowId}
                 className={
                   rowIndex % 2 === 1
-                    ? "bg-gray-200"
-                    : "bg-gray-50 border border-gray-300"
+                    ? "bg-gray-100"
+                    : "bg-gray-50 border border-gray-200"
                 }
               >
                 {columns.map((col) => (

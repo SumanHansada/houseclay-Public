@@ -16,7 +16,7 @@ export const UserCard = ({
 }: UserCardProps) => {
   return (
     <div
-      className="group flex items-center justify-start pt-1 w-3/5 gap-2 rounded-xl hover:cursor-pointer hover:bg-white transition-colors"
+      className="group flex items-center justify-start pt-1 w-3/5 gap-2 rounded-xl hover:cursor-pointer hover:shadow-md transition-colors"
       onClick={viewProfile}
     >
       <div className="w-10 h-10 overflow-hidden bg-gray-200 rounded-lg">
@@ -36,7 +36,7 @@ export const UserCard = ({
         </span>
         <span className="text-sm/5 text-gray-600">{email}</span>
       </div>
-      <Eye className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity mr-2" />
+      {/* <Eye className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity mr-2" /> */}
     </div>
   );
 };

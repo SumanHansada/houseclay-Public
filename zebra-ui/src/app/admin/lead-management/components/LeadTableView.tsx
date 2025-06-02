@@ -118,7 +118,7 @@ export const LeadTableView = ({ leads, leadType }: LeadTableViewProps) => {
         </div>
 
         {/* Table area */}
-        <div className="flex items-center flex-1 overflow-auto px-4">
+        <div className="flex items-center flex-1 overflow-y-auto px-8">
           <DataTable
             columns={columns}
             data={paged}
@@ -127,7 +127,7 @@ export const LeadTableView = ({ leads, leadType }: LeadTableViewProps) => {
         </div>
 
         {/* Sticky bottom pagination */}
-        <div className="sticky bottom-0 z-10 bg-white shadow px-28">
+        <div className="sticky bottom-0 z-10 border border-b-gray-200 shadow-sm">
           <Pagination
             currentPage={page}
             isFirst={isFirst}

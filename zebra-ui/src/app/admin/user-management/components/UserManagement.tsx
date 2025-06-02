@@ -7,39 +7,67 @@ import { UserCard } from "./UserCard";
 import { ActionMenu } from "./ActionMenu";
 import { UserStatus } from "./UserStatus";
 import { useRouter } from "next/navigation";
-import { TUser } from "@/common/Types";
+import { TUser } from "@/interfaces/User";
 import { Column, DataTable } from "@/components/DataTable";
+import { useGetUsersQuery } from "@/store/apiSlice";
 
-interface UsersManagementProps {
-  users: TUser[];
-}
-
-export const UsersManagement = ({ users }: UsersManagementProps) => {
-  const [searchValue, setSearchValue] = useState("");
-  const [page, setPage] = useState(1);
-  const rowsPerPage = 12;
+export const UsersManagement = () => {
   const router = useRouter();
+  const [searchValue, setSearchValue] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 12;
+
+  const { data, isLoading, isError, error } = useGetUsersQuery({
+    page: currentPage - 1,
+    size: rowsPerPage,
+  });
+
+  const allUsers: TUser[] = data?.content ?? [];
+  console.log(allUsers);
+  const totalPages = data?.totalPages ?? 0;
+  const isFirst = data?.first ?? true;
+  const isLast = data?.last ?? true;
 
   const filtered = useMemo(
     () =>
-      users.filter((user) => {
-        const matchesSearch = user.phoneNo.includes(searchValue);
-        return matchesSearch;
-      }),
-    [users, searchValue],
+      allUsers.filter((user) =>
+        user.phoneNo.includes(searchValue.toLowerCase()),
+      ),
+    [allUsers, searchValue],
   );
 
-  const viewProfile = (id: string) => {
-    router.push(`/admin/user-details/${id}`);
+  const viewProfile = (phoneNo: string) => {
+    router.push(`/admin/user-details/${phoneNo}`);
   };
 
-  const totalPages = Math.ceil(filtered.length / rowsPerPage);
-  const paged = filtered.slice((page - 1) * rowsPerPage, page * rowsPerPage);
-  const isFirst = page === 1;
-  const isLast = page === totalPages;
+  // const totalPages = Math.ceil(filtered.length / rowsPerPage);
+  // const paged = filtered.slice((page - 1) * rowsPerPage, page * rowsPerPage);
+  // const isFirst = page === 1;
+  // const isLast = page === totalPages;
+  // 6) Handle loading / error states
 
-  const nextPage = () => !isLast && setPage((p) => p + 1);
-  const prevPage = () => !isFirst && setPage((p) => p - 1);
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <span>Loading users…</span>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex justify-center items-center h-64 text-red-500">
+        <span>Error loading users.</span>
+      </div>
+    );
+  }
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+  const nextPage = () => !isLast && setCurrentPage((p) => p + 1);
+  const prevPage = () => !isFirst && setCurrentPage((p) => p - 1);
 
   const columns: Column<TUser>[] = [
     {
@@ -62,7 +90,9 @@ export const UsersManagement = ({ users }: UsersManagementProps) => {
     {
       key: "action",
       label: "Action",
-      render: (user) => <ActionMenu viewProfile={() => viewProfile(user.id)} />,
+      render: (user) => (
+        <ActionMenu viewProfile={() => viewProfile(user.phoneNo)} />
+      ),
     },
   ];
 
@@ -75,26 +105,27 @@ export const UsersManagement = ({ users }: UsersManagementProps) => {
             searchValue={searchValue}
             onSearchChange={(v) => {
               setSearchValue(v);
-              setPage(1);
             }}
           />
         </div>
 
         {/* Table area */}
-        <div className="flex items-center flex-1 overflow-auto px-4">
+        <div className="flex items-center flex-1 overflow-auto px-8">
           <DataTable
             columns={columns}
-            data={paged}
-            getRowId={(user) => user.id}
+            data={filtered}
+            getRowId={(user) => user.phoneNo}
           />
         </div>
 
         {/* Sticky bottom pagination */}
-        <div className="sticky bottom-0 z-10 bg-white shadow px-28">
+        <div className="sticky bottom-0 z-10 border border-b-gray-200 shadow-sm">
           <Pagination
-            currentPage={page}
+            currentPage={currentPage}
+            totalPages={totalPages}
             isFirst={isFirst}
             isLast={isLast}
+            goToPage={goToPage}
             nextPage={nextPage}
             prevPage={prevPage}
           />

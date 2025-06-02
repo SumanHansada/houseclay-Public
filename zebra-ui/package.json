@@ -25,6 +25,7 @@
     "date-fns": "^4.1.0",
     "focus-trap-react": "^11.0.3",
     "formik": "^2.4.6",
+    "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
     "lucide-react": "^0.479.0",
     "motion": "^12.4.10",
@@ -39,6 +40,7 @@
     "yup": "^1.6.1"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

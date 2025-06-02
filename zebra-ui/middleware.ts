@@ -3,10 +3,10 @@ import { NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
   // Only protect /admin/dashboard and its subroutes
-  if (request.nextUrl.pathname.startsWith("/admin/dashboard")) {
+  if (request.nextUrl.pathname.startsWith("/admin/")) {
     const token = request.cookies.get("adminToken");
     if (!token) {
-      const loginUrl = new URL("/admin/login", request.url);
+      const loginUrl = new URL("/login", request.url);
       return NextResponse.redirect(loginUrl);
     }
   }
@@ -14,5 +14,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/dashboard/:path*"],
+  matcher: ["/admin/:path*"],
 };
