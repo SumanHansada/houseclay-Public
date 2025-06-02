@@ -1,10 +1,12 @@
 package com.houseclay.backend.service;
 
 import com.houseclay.backend.dto.AdminRegisterDTO;
+import com.houseclay.backend.dto.UserDTO;
 import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.entity.AdminLogin;
 import com.houseclay.backend.entity.User;
 import com.houseclay.backend.exception.APIException;
+import com.houseclay.backend.mapper.UserMapper;
 import com.houseclay.backend.repository.AdminLoginRepository;
 import com.houseclay.backend.repository.AdminRepository;
 import com.houseclay.backend.repository.UserRepository;
@@ -97,8 +99,8 @@ public class AdminService {
         return userOpt.get();
     }
 
-    public Page<User> getAllUsers(Pageable pageable) {
-        return userRepository.findAll(pageable);
+    public Page<UserDTO> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable).map(UserMapper::toDTO);
     }
 
     public User updateUser(User user) {

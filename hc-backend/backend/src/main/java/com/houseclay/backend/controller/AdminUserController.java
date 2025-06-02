@@ -1,5 +1,6 @@
 package com.houseclay.backend.controller;
 
+import com.houseclay.backend.dto.UserDTO;
 import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.entity.User;
 import com.houseclay.backend.exception.APIException;
@@ -60,7 +61,7 @@ public class AdminUserController {
     }
 
     @GetMapping("/users")
-    public Page<User> getUsers(
+    public Page<UserDTO> getUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestAttribute("authenticatedAdmin") Admin admin) {
