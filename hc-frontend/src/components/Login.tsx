@@ -3,6 +3,7 @@
 import "react-international-phone/style.css";
 
 import Image from "next/image";
+import loginImage from "public/images/login.webp";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PhoneInput } from "react-international-phone";
 import { useDispatch, useSelector } from "react-redux";
@@ -198,11 +199,13 @@ const Login = () => {
       {!isMobile && (
         <div className="h-full w-5/12">
           <Image
-            src="/icons/login.svg"
+            src={loginImage}
             alt="Login"
             className="relative rounded-l-lg"
             width={500}
             height={400}
+            placeholder="blur"
+            priority
           />
         </div>
       )}
