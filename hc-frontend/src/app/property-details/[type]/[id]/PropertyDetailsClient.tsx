@@ -742,34 +742,36 @@ export function PropertyDetailsClient({
                     </div>
                   </section>
                   {/* Images Section */}
-                  <section className="py-6 my-6 max-md:py-3 max-md:my-3">
-                    <h2 className="text-lg mb-4">Images</h2>
-                    <div className="flex">
-                      <Carousel2D
-                        slideWidth={300}
-                        gap={4}
-                        showArrows={true}
-                        showDots={true}
-                        autoScroll={false}
-                      >
-                        {property?.images?.map(
-                          (imgUrl: string, idx: number) => (
-                            <div
-                              key={idx}
-                              className="relative w-full aspect-[4/3] rounded-lg overflow-hidden border"
-                            >
-                              {/* <Image 
+                  {property?.images?.length > 0 && (
+                    <section className="py-6 my-6 max-md:py-3 max-md:my-3">
+                      <h2 className="text-lg mb-4">Images</h2>
+                      <div className="flex">
+                        <Carousel2D
+                          slideWidth={300}
+                          gap={4}
+                          showArrows={true}
+                          showDots={true}
+                          autoScroll={false}
+                        >
+                          {property?.images?.map(
+                            (imgUrl: string, idx: number) => (
+                              <div
+                                key={idx}
+                                className="relative w-full aspect-[4/3] rounded-lg overflow-hidden border"
+                              >
+                                {/* <Image 
                             src={imgUrl} 
                             alt={`Property image ${idx + 1}`} 
                             fill
                             className="object-cover"
                           /> */}
-                            </div>
-                          ),
-                        )}
-                      </Carousel2D>
-                    </div>
-                  </section>
+                              </div>
+                            ),
+                          )}
+                        </Carousel2D>
+                      </div>
+                    </section>
+                  )}
                 </TabContent>
                 <TabContent value="upgrades">
                   <section className="py-6 w-full">
@@ -834,7 +836,7 @@ export function PropertyDetailsClient({
 
             <button
               type="submit"
-              className="flex gap-2 items-center px-6 py-3 border border-green-500 text-green-500 rounded-xl hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300"
+              className="flex gap-2 items-center px-6 py-3 border border-green-500 text-green-500 rounded-xl hover:bg-green-600 hover:text-white disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300"
             >
               <Stamp size={20} />{" "}
               {property?.propertyCategory === "Sale"
