@@ -25,7 +25,6 @@ export default function PropertyDetailsLoading() {
                   </div>
                   <div className="flex gap-2">
                     <Skeleton width={120} height={40} />
-                    <Skeleton width={120} height={40} />
                   </div>
                 </div>
 

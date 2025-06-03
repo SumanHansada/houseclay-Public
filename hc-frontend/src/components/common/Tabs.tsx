@@ -43,13 +43,14 @@ interface NonTabProps {
 const Tab: React.FC<TabProps> = ({ label, value }) => {
   const context = useContext(TabContext);
   if (!context) throw new Error("Tab must be used within Tabs");
+  const isActive = context.active === value;
 
   return (
     <button
-      className={`px-4 py-2 text-base font-medium focus:outline-none transition-colors relative
+      className={`px-4 py-2 max-md:py-1.5 text-base font-medium max-md:font-normal focus:outline-none transition-colors relative
         ${
-          context.active === value
-            ? "text-red-600 border-b-2 border-red-500"
+          isActive
+            ? "text-red-600 md:border-b-2 border-red-500 max-md:border max-md:rounded-lg"
             : "text-gray-700 hover:text-red-500"
         }
       `}
@@ -80,8 +81,8 @@ const TabHeader: React.FC<TabHeaderProps> = ({ children }) => {
   });
 
   return (
-    <div className="flex w-full items-center justify-between gap-8">
-      <div className="inline-flex gap-8 border-b border-gray-200">
+    <div className="flex w-full items-center justify-between">
+      <div className="inline-flex gap-2 border-b border-gray-200 max-md:w-full max-md:justify-between max-md:border max-md:rounded-lg max-md:p-2">
         {tabChildren}
       </div>
       <div className="flex gap-2 ml-auto">{nonTabChildren}</div>
@@ -93,7 +94,7 @@ const TabContent: React.FC<TabContentProps> = ({ children, value }) => {
   const context = useContext(TabContext);
   if (!context) throw new Error("TabContent must be used within Tabs");
   if (context.active !== value) return null;
-  return <div className="py-4">{children}</div>;
+  return <div className="py-4 max-md:py-2">{children}</div>;
 };
 
 const Tabs: React.FC<TabsProps> = ({

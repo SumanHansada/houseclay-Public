@@ -8,18 +8,24 @@ import listPropertyReducer from "./listPropertySlice";
 import uploadToS3SliceReducer from "./uploadToS3Slice";
 import userReducer from "./userSlice";
 
-export const store = configureStore({
-  reducer: {
-    app: appReducer,
-    auth: authReducer,
-    listProperty: listPropertyReducer,
-    user: userReducer,
-    uploadToS3: uploadToS3SliceReducer,
-    [apiSlice.reducerPath]: apiSlice.reducer,
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware),
-});
+export function makeStore() {
+  return configureStore({
+    reducer: {
+      app: appReducer,
+      auth: authReducer,
+      listProperty: listPropertyReducer,
+      user: userReducer,
+      uploadToS3: uploadToS3SliceReducer,
+      [apiSlice.reducerPath]: apiSlice.reducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(apiSlice.middleware),
+  });
+}
 
+// Create a store instance
+export const store = makeStore();
+
+// Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
