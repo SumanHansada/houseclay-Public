@@ -110,12 +110,14 @@ public class DataInitializer {
             lead1.setLeadCategory(LeadCategory.PROPERTY_LISTING);
             lead1.setUser(user);
             lead1.setStatus(LeadStatus.NEW);
+            lead1.setCreatedAt(new Timestamp(System.currentTimeMillis()));
             leadRepo.save(lead1);
 
             Lead lead2 = new Lead();
             lead2.setLeadCategory(LeadCategory.SEARCH_SUPPORT);
             lead2.setUser(user);
             lead2.setStatus(LeadStatus.FOLLOW_UP);
+            lead2.setCreatedAt(new Timestamp(System.currentTimeMillis()));
             leadRepo.save(lead2);
 
             // ✅ External Payments
