@@ -16,8 +16,13 @@ public class PhotoController {
     private PhotoService photoService;
 
 
-    @PostMapping("/presigned-urls")
+    @PostMapping("/user/presigned-urls")
     public ResponseEntity<PresignedURLResponse> getPresignedUrl(@RequestBody PresignedURLRequest request, @RequestAttribute("authenticatedUser") User user) {
-        return ResponseEntity.ok(photoService.getURLs(request, user));
+        return ResponseEntity.ok(photoService.getURLs(request, user.getPhoneNo()));
+    }
+
+    @PostMapping("/admin/presigned-urls/{phoneNo}")
+    public ResponseEntity<PresignedURLResponse> getPresignedUrl(@RequestBody PresignedURLRequest request, @PathVariable String phoneNo) {
+        return ResponseEntity.ok(photoService.getURLs(request, phoneNo));
     }
 }

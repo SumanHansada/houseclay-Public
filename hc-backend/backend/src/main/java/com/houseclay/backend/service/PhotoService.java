@@ -34,11 +34,11 @@ public class PhotoService {
     @Value("${aws.secretAccessKey}")
     private String secretAccessKey;
 
-    public PresignedURLResponse getURLs(PresignedURLRequest request, User user) {
+    public PresignedURLResponse getURLs(PresignedURLRequest request, String phoneNo) {
         Map<String, String> fileURLs = new HashMap<>();
         String propertyID = UUID.randomUUID().toString();
         for (Map.Entry<String, String> entry : request.getFileMap().entrySet()) {
-            fileURLs.put(entry.getKey(), generatePresignedUrl(entry.getKey(), entry.getValue(), propertyID, user.getPhoneNo()));
+            fileURLs.put(entry.getKey(), generatePresignedUrl(entry.getKey(), entry.getValue(), propertyID, phoneNo));
         }
         return new PresignedURLResponse(propertyID, fileURLs);
     }
