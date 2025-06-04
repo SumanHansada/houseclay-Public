@@ -34,16 +34,16 @@ public class PhotoService {
     @Value("${aws.secretAccessKey}")
     private String secretAccessKey;
 
-    public PresignedURLResponse getURLs(PresignedURLRequest request, String phoneNo) {
+    public PresignedURLResponse getURLs(PresignedURLRequest request) {
         Map<String, String> fileURLs = new HashMap<>();
         String propertyID = UUID.randomUUID().toString();
         for (Map.Entry<String, String> entry : request.getFileMap().entrySet()) {
-            fileURLs.put(entry.getKey(), generatePresignedUrl(entry.getKey(), entry.getValue(), propertyID, phoneNo));
+            fileURLs.put(entry.getKey(), generatePresignedUrl(entry.getKey(), entry.getValue(), propertyID));
         }
         return new PresignedURLResponse(propertyID, fileURLs);
     }
 
-    public String generatePresignedUrl(String filename, String contentType, String propertyID, String phoneNo) {
+    public String generatePresignedUrl(String filename, String contentType, String propertyID) {
         S3Presigner presigner = S3Presigner.builder()
                 .region(Region.of(region))
                 .credentialsProvider(
@@ -55,7 +55,7 @@ public class PhotoService {
 
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
-                .key(String.format("users/%s/properties/%s/photos/%s", phoneNo, propertyID, filename))
+                .key(String.format("properties/%s/photos/%s", propertyID, filename))
                 .contentType(contentType)
                 .build();
 
