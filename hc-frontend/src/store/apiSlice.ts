@@ -76,7 +76,7 @@ export const apiSlice = createApi({
       { fileMap: Record<string, string> } // Request body type
     >({
       query: (data) => ({
-        url: "photo/presigned-urls",
+        url: "photo/user/presigned-urls",
         method: "POST",
         body: data,
         headers: {
