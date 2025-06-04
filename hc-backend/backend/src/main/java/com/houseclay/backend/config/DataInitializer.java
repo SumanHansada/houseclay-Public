@@ -97,7 +97,6 @@ public class DataInitializer {
 
             // ✅ ReportProperty
             ReportProperty report = new ReportProperty();
-            report.setReportId("R001");
             report.setProperty(sale);
             report.setUser(user);
             report.setReportType(ReportType.BROKER);
@@ -204,8 +203,6 @@ public class DataInitializer {
             propertyAction3.setUser(user);
             propertyAction3.setUserActionType(UserActionType.CONTACT);
             propertyActionRepo.save(propertyAction3);
-
-
 
             System.out.println("✅ All test data inserted successfully.");
         };

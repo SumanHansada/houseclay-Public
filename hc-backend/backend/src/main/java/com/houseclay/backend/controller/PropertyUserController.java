@@ -1,6 +1,7 @@
 package com.houseclay.backend.controller;
 
 import com.houseclay.backend.entity.Property;
+import com.houseclay.backend.entity.ReportType;
 import com.houseclay.backend.entity.User;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.mapper.PropertyMapper;
@@ -13,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -30,7 +30,7 @@ public class PropertyUserController {
     private ViewPropertyService viewPropertyService;
 
     @PostMapping("/add")
-    public ResponseEntity addProperty(@RequestBody Property property, @RequestAttribute("authenticatedUser") User user) {
+    public ResponseEntity<?> addProperty(@RequestBody Property property, @RequestAttribute("authenticatedUser") User user) {
         try {
             Property savedProperty = propertyUserService.addProperty(user, property);
             Map<String, Object> response = new HashMap<>();
@@ -45,7 +45,7 @@ public class PropertyUserController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity updateProperty(@RequestBody Property property, @RequestAttribute("authenticatedUser") User user) {
+    public ResponseEntity<?> updateProperty(@RequestBody Property property, @RequestAttribute("authenticatedUser") User user) {
         try {
             Property savedProperty = propertyUserService.updateProperty(user, property);
             Map<String, Object> response = new HashMap<>();
@@ -60,7 +60,7 @@ public class PropertyUserController {
     }
 
     @PutMapping("/deactivate")
-    public ResponseEntity deactivateProperty(@RequestBody String propertyID, @RequestAttribute("authenticatedUser") User user) {
+    public ResponseEntity<?> deactivateProperty(@RequestBody String propertyID, @RequestAttribute("authenticatedUser") User user) {
         try {
             propertyUserService.deactivateProperty(user, propertyID);
             Map<String, Object> response = new HashMap<>();
@@ -86,7 +86,7 @@ public class PropertyUserController {
     }
 
     @GetMapping("/contact/{id}")
-    public ResponseEntity getPropertyOwnerContact(@PathVariable String id, @RequestAttribute("authenticatedUser") User user) {
+    public ResponseEntity<?> getPropertyOwnerContact(@PathVariable String id, @RequestAttribute("authenticatedUser") User user) {
         try {
             return ResponseEntity.ok(propertyUserService.getOwnerContact(id, user));
         } catch (APIException e) {
@@ -96,9 +96,9 @@ public class PropertyUserController {
         }
     }
 
-    @PostMapping("/shortlist-property")
-    public ResponseEntity shortlistProperty(
-            @RequestParam String propertyId,
+    @PostMapping("/shortlist-property/{propertyId}")
+    public ResponseEntity<?> shortlistProperty(
+            @PathVariable String propertyId,
             @RequestAttribute("authenticatedUser") User user) {
         try {
             Property shortlistedProperty = shortlistPropertyService.shortlistProperty(user, propertyId);
@@ -113,8 +113,8 @@ public class PropertyUserController {
         }
     }
 
-    @DeleteMapping("/remove-shortlisted-property")
-    public ResponseEntity removeShortlistedProperty(
+    @DeleteMapping("/remove-shortlisted-property/{propertyId}")
+    public ResponseEntity<?> removeShortlistedProperty(
             @RequestParam String propertyId,
             @RequestAttribute("authenticatedUser") User user) {
         try {
@@ -135,9 +135,9 @@ public class PropertyUserController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/get-property")
-    public ResponseEntity viewProperty(
-            @RequestParam String propertyId,
+    @PostMapping("/get-property/{propertyId}")
+    public ResponseEntity<?> viewProperty(
+            @PathVariable String propertyId,
             @RequestAttribute("authenticatedUser") User user) {
         try {
             Property property = viewPropertyService.getProperty(user, propertyId);
@@ -156,4 +156,23 @@ public class PropertyUserController {
         response.put("viewedProperties", viewPropertyService.getViewedProperties(user));
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/report-property/{propertyId}")
+    public ResponseEntity<?> reportProperty(
+            @PathVariable String propertyId,
+            @RequestBody ReportType reportType,
+            @RequestAttribute("authenticatedUser") User user) {
+        try {
+            propertyUserService.reportProperty(user, propertyId, reportType);
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Reported property successfully");
+            return ResponseEntity.ok(response);
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+
 }

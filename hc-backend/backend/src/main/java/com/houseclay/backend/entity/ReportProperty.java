@@ -1,9 +1,6 @@
 package com.houseclay.backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -13,6 +10,7 @@ import java.sql.Timestamp;
 public class ReportProperty {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String reportId;
 
     private ReportType reportType;
