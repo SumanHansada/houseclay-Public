@@ -12,8 +12,13 @@ import {
   ListPropertyRouteStep as AddPropertyRouteStep,
   PropertyType,
 } from "@/common/enums";
+import { extractS3KeyFromUrl } from "@/common/utils";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
+import { useS3Uploader } from "@/hooks/useS3Uploader";
+import { TAddFlatmatesProperty } from "@/interfaces/FlatmatesDetails";
 import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
+import { TAddRentPropertyResponse } from "@/interfaces/RentalDetails";
+import { TAddResalePropertyResponse } from "@/interfaces/ResaleDetails";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -49,7 +54,7 @@ export default function AddPropertyTypeLayout({
   const type = params?.type as string; // Optional: add type assertion
   const router = useRouter();
   const { openDialog, isDialogOpen, closeDialog } = useDialog();
-  // const uploadFiles = useS3Uploader();
+  const uploadFiles = useS3Uploader();
   const { isMobile } = useDeviceContext();
 
   const [currentStep, setCurrentStep] = useState<AddPropertyFormStep>(
@@ -66,6 +71,10 @@ export default function AddPropertyTypeLayout({
 
   const propertyId = useSelector(
     (state: RootState) => state.listProperty.propertyID,
+  );
+
+  const imagesS3Url = useSelector(
+    (state: RootState) => state.listProperty.imagesS3Url,
   );
 
   const formState = useSelector(
@@ -104,12 +113,11 @@ export default function AddPropertyTypeLayout({
         return {
           name: photo.file.name,
           url: photo.url,
-          S3url: photo.S3Url,
           type: photo.file.type,
+          S3Url: imagesS3Url[photo.file.name],
         };
       });
-      console.log("photosToUpload", photosToUpload);
-      // uploadFiles(photosToUpload);
+      uploadFiles(photosToUpload);
     }
   };
 
@@ -228,6 +236,8 @@ export default function AddPropertyTypeLayout({
 
   const handlePreviewListing = async () => {
     // Make API call to get presigned-urls
+    closeDialog("list-property-success-dialog");
+    // router.push(`/property-details/${type}/${propertyId}`);
     console.log("Preview Listing");
   };
 
@@ -235,69 +245,103 @@ export default function AddPropertyTypeLayout({
     try {
       const propertyDetails = formState.data!.propertyDetails;
       const localityDetails = formState.data!.localityDetails;
-      const images = formState.data!.images.map(
-        (image: PropertyPhoto) => image.url,
-      );
       const additionalInfo = formState.data!.additionalInfo;
+      const imagesS3Keys =
+        Object.values(imagesS3Url).length > 0
+          ? Object.values(imagesS3Url).map(
+              (url) => extractS3KeyFromUrl(url) || "",
+            )
+          : [];
 
       const basePropertyData = {
         propertyID: propertyId,
         ...localityDetails,
-        images,
+        images: imagesS3Keys,
       };
 
-      if (type === "rent") {
-        const rentalDetails = formState.data!.rentalDetails!;
-
-        const {
-          khataCertificate: _khataCertificate,
-          saleDeed: _saleDeed,
-          propertyTax: _propertyTax,
-          ...rentalAdditionalInfo
-        } = additionalInfo || {};
-        await addRentProperty({
-          ...basePropertyData,
-          ...propertyDetails,
-          ...rentalDetails,
-          ...rentalAdditionalInfo,
-        }).unwrap();
-      } else if (type === "resale") {
-        const resaleDetails = formState.data!.resaleDetails!;
-        const {
-          whoWillShowProperty: _whoWillShowProperty,
-          ...resaleAdditionalInfo
-        } = additionalInfo || {};
-        await addResaleProperty({
-          ...basePropertyData,
-          ...propertyDetails,
-          ...resaleDetails,
-          ...resaleAdditionalInfo,
-        }).unwrap();
-      } else if (type === "flatmates") {
-        const flatmatesDetails = formState.data!.flatmatesDetails!;
-
-        const {
-          ownershipType: _ownershipType,
-          propertyAge: _propertyAge,
-          floorType: _floorType,
-          facing: _facing,
-          ...flatmatesPropertyDetails
-        } = propertyDetails || {};
-
-        const {
-          khataCertificate: _khataCertificate,
-          saleDeed: _saleDeed,
-          propertyTax: _propertyTax,
-          ...flatmatesAdditionalInfo
-        } = additionalInfo || {};
-        await addFlatmatesProperty({
-          ...basePropertyData,
-          ...flatmatesPropertyDetails,
-          ...flatmatesDetails,
-          ...flatmatesAdditionalInfo,
-        }).unwrap();
+      // We need owner phone no as param to add property using an admin account
+      // Currently, I added a dummy users number but will add a form to ask for owner details in the add-property flow
+      const userPhoneNo = "9999999999" as string;
+      switch (type) {
+        case "rent": {
+          const rentalDetails = formState.data!.rentalDetails!;
+          const {
+            khataCertificate: _khataCertificate,
+            saleDeed: _saleDeed,
+            propertyTax: _propertyTax,
+            ...rentalAdditionalInfo
+          } = additionalInfo || {};
+          const data: TAddRentPropertyResponse = {
+            ...basePropertyData,
+            ...propertyDetails,
+            ...rentalDetails,
+            ...rentalAdditionalInfo,
+          };
+          if (data.propertyID === "") {
+            const random = Math.floor(Math.random() * 10000);
+            data.propertyID = `hard-coded-id-${random}` as string;
+          }
+          await addRentProperty({ data: data, phoneNo: userPhoneNo }).unwrap();
+          break;
+        }
+        case "resale": {
+          const resaleDetails = formState.data!.resaleDetails!;
+          const {
+            whoWillShowProperty: _whoWillShowProperty,
+            ...resaleAdditionalInfo
+          } = additionalInfo || {};
+          const data: TAddResalePropertyResponse = {
+            ...basePropertyData,
+            ...propertyDetails,
+            ...resaleDetails,
+            ...resaleAdditionalInfo,
+          };
+          if (data.propertyID === "") {
+            const random = Math.floor(Math.random() * 10000);
+            data.propertyID = `hard-coded-id-${random}` as string;
+          }
+          await addResaleProperty({
+            data: data,
+            phoneNo: userPhoneNo,
+          }).unwrap();
+          break;
+        }
+        case "flatmates": {
+          const flatmatesDetails = formState.data!.flatmatesDetails!;
+          const {
+            ownershipType: _ownershipType,
+            propertyAge: _propertyAge,
+            floorType: _floorType,
+            facing: _facing,
+            ...flatmatesPropertyDetails
+          } = propertyDetails || {};
+          const {
+            khataCertificate: _khataCertificate,
+            saleDeed: _saleDeed,
+            propertyTax: _propertyTax,
+            ...flatmatesAdditionalInfo
+          } = additionalInfo || {};
+          const data: TAddFlatmatesProperty = {
+            ...basePropertyData,
+            ...flatmatesPropertyDetails,
+            ...flatmatesDetails,
+            ...flatmatesAdditionalInfo,
+          };
+          if (data.propertyID === "") {
+            const random = Math.floor(Math.random() * 10000);
+            data.propertyID = `hard-coded-id-${random}` as string;
+          }
+          await addFlatmatesProperty({
+            data: data,
+            phoneNo: userPhoneNo,
+          }).unwrap();
+          break;
+        }
       }
+      openDialog("list-property-success-dialog");
     } catch (error) {
+      setCurrentStep(AddPropertyFormStep.ADDITIONAL_INFO);
+      setRoute(AddPropertyRouteStep.ADDITIONAL_INFO);
       console.error("Error posting property:", error);
     }
   };
@@ -469,7 +513,6 @@ export default function AddPropertyTypeLayout({
                 {!isMobile && (
                   <h2 className="text-3xl text-gray-800">Congratulations!</h2>
                 )}
-                <h2 className="text-3xl text-gray-800">Congratulations!</h2>
                 <p className="text-gray-600 text-lg">
                   You have successfully posted your property,
                   <br />

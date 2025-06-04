@@ -28,19 +28,10 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
   const [actionMenuPosition, setActionMenuPosition] = useState<DOMRect | null>(
     null,
   );
-  //   const [actionMenuListPosition, setActionMenuListPosition] =
-  //     useState<DOMRect | null>(null);
 
   const actionMenuRef = useRef<HTMLDivElement>(null);
   const actionMenuListRef = useRef<HTMLDivElement>(null);
   const optionRefs = useRef<React.RefObject<HTMLDivElement>[]>([]);
-
-  // Initialize refs for keyboard navigation
-  //   useEffect(() => {
-  //     optionRefs.current = Array(options.length)
-  //       .fill(null)
-  //       .map((_, i) => React.createRef<HTMLDivElement>());
-  //   }, [options.length]);
 
   // Close action menu when clicking outside
   useEffect(() => {
@@ -149,7 +140,6 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
   useEffect(() => {
     if (isOpen && actionMenuRef.current) {
       setActionMenuPosition(actionMenuRef.current.getBoundingClientRect());
-      //   setActionMenuListPosition(actionMenuListRef.current.getBoundingClientRect());
     }
   }, [isOpen]);
 

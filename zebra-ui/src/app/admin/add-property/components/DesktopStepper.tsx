@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { FileImage, FileText, Home, IndianRupee, MapPin } from "lucide-react";
 
 import {
@@ -38,44 +37,18 @@ const DesktopStepper: React.FC<DesktopStepperProps> = ({
   const steps = getSteps();
 
   return (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      className="flex"
-      variants={{
-        visible: {
-          transition: {
-            staggerChildren: 0.4,
-          },
-        },
-      }}
-    >
+    <div className="flex">
       {steps.map((item, idx, arr) => (
-        <motion.div
+        <StepNavigationButton
           key={item.step}
-          className="flex-1"
-          variants={{
-            hidden: { opacity: 0, y: 20 },
-            visible: {
-              opacity: 1,
-              y: 0,
-              transition: {
-                duration: 0.6,
-                ease: "easeOut",
-              },
-            },
-          }}
-        >
-          <StepNavigationButton
-            step={item.step}
-            currentStep={currentStep}
-            completedSteps={completedSteps}
-            Icon={item.Icon}
-            isLast={idx === arr.length - 1}
-          />
-        </motion.div>
+          step={item.step}
+          currentStep={currentStep}
+          completedSteps={completedSteps}
+          Icon={item.Icon}
+          isLast={idx === arr.length - 1}
+        />
       ))}
-    </motion.div>
+    </div>
   );
 };
 

@@ -1,12 +1,11 @@
-import { store } from "@/store/store";
-import { apiSlice } from "@/store/apiSlice";
-
 // Import the three fake pages:
 import {
   fakeUsersPage0,
   fakeUsersPage1,
   fakeUsersPage2,
 } from "@/mock/usersDummyData"; // adjust the path if needed
+import { apiSlice } from "@/store/apiSlice";
+import { store } from "@/store/store";
 
 export function seedUsersCache() {
   // 1) Upsert page 0 (when page = 0, size = 12)

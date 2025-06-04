@@ -1,14 +1,16 @@
 "use client";
 
-import { ReactNode, useMemo, useState } from "react";
-import { SearchFilterBar } from "../../user-management/components/SearchFilterBar";
-import { Pagination } from "../../user-management/components/Pagination";
+import { ChevronsRight } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { UserCard } from "./UserCard";
-import { ChevronsRight, CircleArrowRight } from "lucide-react";
+import { ReactNode, useMemo, useState } from "react";
+
 import { Column, DataTable } from "@/components/DataTable";
-import { useGetLeadsQuery } from "@/store/apiSlice";
 import { LeadQueryParam, LeadStatus, LeadType, TLead } from "@/interfaces/Lead";
+import { useGetLeadsQuery } from "@/store/apiSlice";
+
+import { Pagination } from "../../user-management/components/Pagination";
+import { SearchFilterBar } from "../../user-management/components/SearchFilterBar";
+import { UserCard } from "./UserCard";
 
 interface LeadTableViewProps {
   leadType: LeadType;
@@ -21,14 +23,17 @@ export const LeadTableView = ({ leadType }: LeadTableViewProps) => {
   const rowsPerPage = 12;
 
   const queryParam = LeadQueryParam[leadType];
-  const { data, isLoading, isError, error } = useGetLeadsQuery({
+  const { data, isLoading, isError } = useGetLeadsQuery({
     type: queryParam,
     page: currentPage - 1,
     size: rowsPerPage,
   });
 
-  const allLeads: TLead[] = data?.content ?? [];
+  const allLeads = useMemo<TLead[]>(() => {
+    return data?.content ?? [];
+  }, [data?.content]);
   console.log(allLeads);
+
   const totalPages = data?.totalPages ?? 0;
   const isFirst = data?.first ?? true;
   const isLast = data?.last ?? true;

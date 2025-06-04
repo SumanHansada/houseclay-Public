@@ -1,17 +1,17 @@
 "use client";
 
-import { RootState } from "@/store/store";
-import Image from "next/image";
-import Link from "next/link";
-import HouseClaySvg from "public/icons/houseclay.svg";
-import { useDispatch, useSelector } from "react-redux";
-import ActionMenu from "../ActionMenu";
 import { ChevronDown, UserRound } from "lucide-react";
-import { useEffect } from "react";
-
-import { useLogoutMutation } from "@/store/apiSlice";
-import { logout as logoutAction, initializeToken } from "@/store/adminSlice";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import HouseClaySvg from "public/icons/houseclay.svg";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { initializeToken, logout as logoutAction } from "@/store/adminSlice";
+import { useLogoutMutation } from "@/store/apiSlice";
+import { RootState } from "@/store/store";
+
+import ActionMenu from "../ActionMenu";
 
 const HouseClay = HouseClaySvg as React.FC<React.SVGProps<SVGSVGElement>>;
 

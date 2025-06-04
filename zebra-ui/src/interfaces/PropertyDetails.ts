@@ -7,7 +7,7 @@ export interface PropertyDetails {
   ownershipType: string;
   propertyAge: string;
   floor: number;
-  totalFloor: number;
+  totalFloors: number;
   floorType: string;
   description: string;
 }

@@ -6,7 +6,7 @@ export interface TUser {
   blacklisted: boolean;
 }
 
-export interface TUsersResponse {
+export interface TGetUsersResponse {
   content: TUser[];
   pageable: {
     pageNumber: number;

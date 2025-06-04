@@ -1,13 +1,16 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-import { RootState } from "./store";
-import { TUsersResponse } from "@/interfaces/User";
+import { TAddFlatmatesProperty } from "@/interfaces/FlatmatesDetails";
 import {
-  TLeadByIdResponse,
   LeadParamType,
+  TLeadByIdResponse,
   TLeadsResponse,
-  LeadActions,
 } from "@/interfaces/Lead";
+import { TAddRentPropertyResponse } from "@/interfaces/RentalDetails";
+import { TAddResalePropertyResponse } from "@/interfaces/ResaleDetails";
+import { TGetUsersResponse } from "@/interfaces/User";
+
+import { RootState } from "./store";
 
 const baseUrl = process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL;
 
@@ -59,7 +62,7 @@ export const apiSlice = createApi({
     }),
 
     // ──────────────── USERS ────────────────
-    getUsers: builder.query<TUsersResponse, { page: number; size: number }>({
+    getUsers: builder.query<TGetUsersResponse, { page: number; size: number }>({
       query: ({ page, size }) => ({
         url: `/admin/users?page=${page}&size=${size}`,
         method: "GET",
@@ -156,45 +159,12 @@ export const apiSlice = createApi({
         message: string;
         propertyID: number;
       },
-      {
-        propertyID: string;
-        propertyCategory: string;
-        propertyType: string;
-        builtUpArea: number;
-        facing: string;
-        bhkType: string;
-        propertyAge: string;
-        ownershipType: string;
-        floor: number;
-        totalFloor: number;
-        floorType: string;
-        description: string;
-        city: string;
-        locationOrSocietyName: string;
-        landmark: string;
-        latitude: number;
-        longitude: number;
-        rent: number;
-        deposit: number;
-        maintenanceCharges: number;
-        rentNegotiable: boolean;
-        availableFrom: string;
-        preferredTenants: string[];
-        waterSupply: string;
-        powerBackup: string;
-        furnishing: string;
-        parking: boolean;
-        nonVegAllowed: boolean;
-        amenities: string[];
-        images: string[];
-        whoWillShowProperty?: string;
-        secondaryPhoneNumber?: string;
-      }
+      { data: TAddRentPropertyResponse; phoneNo: string }
     >({
-      query: (data) => ({
-        url: "property/add",
+      query: ({ data, phoneNo }) => ({
+        url: `property/admin/add?phoneNo=${phoneNo}`,
         method: "POST",
-        body: data,
+        body: { ...data },
         headers: {
           "Content-Type": "application/json",
         },
@@ -206,44 +176,14 @@ export const apiSlice = createApi({
         propertyID: number;
       },
       {
-        propertyID: string;
-        propertyCategory: string;
-        builtUpArea: number;
-        facing: string;
-        bhkType: string;
-        ownershipType: string;
-        propertyAge: string;
-        floor: number;
-        totalFloor: number;
-        floorType: string;
-        description: string;
-        city: string;
-        locationOrSocietyName: string;
-        landmark: string;
-        latitude: number;
-        longitude: number;
-        price: number;
-        availableFrom: string;
-        bathrooms: number;
-        balcony: number;
-        priceNegotiable: boolean;
-        underLoan: boolean;
-        waterSupply: string;
-        powerBackup: string;
-        furnishing: string;
-        parking: boolean;
-        amenities: string[];
-        images: string[];
-        khataCertificate?: string;
-        saleDeed?: boolean;
-        propertyTax?: boolean;
-        secondaryPhoneNumber?: string;
+        data: TAddResalePropertyResponse;
+        phoneNo: string;
       }
     >({
-      query: (data) => ({
-        url: "property/add",
+      query: ({ data, phoneNo }) => ({
+        url: `property/admin/add?phoneNo=${phoneNo}`,
         method: "POST",
-        body: data,
+        body: { ...data },
         headers: {
           "Content-Type": "application/json",
         },
@@ -255,42 +195,14 @@ export const apiSlice = createApi({
         propertyID: number;
       },
       {
-        propertyID: string;
-        propertyCategory: string;
-        builtUpArea: number;
-        bhkType: string;
-        floor: number;
-        totalFloor: number;
-        description: string;
-        city: string;
-        locationOrSocietyName: string;
-        landmark: string;
-        latitude: number;
-        longitude: number;
-        rent: number;
-        maintenanceCharges: number;
-        deposit: number;
-        availableFrom: string;
-        furnishing: string;
-        waterSupply: string;
-        powerBackup: string;
-        parking: boolean;
-        nonVegAllowed: boolean;
-        amenities: string[];
-        tenantType: string;
-        attachedBathroom: boolean;
-        bathroomType: string;
-        smokingPreference: string;
-        drinkingPreference: string;
-        images: string[];
-        whoWillShowProperty?: string;
-        secondaryPhoneNumber?: string;
+        data: TAddFlatmatesProperty;
+        phoneNo: string;
       }
     >({
-      query: (data) => ({
-        url: "property/add",
+      query: ({ data, phoneNo }) => ({
+        url: `property/admin/add?phoneNo=${phoneNo}`,
         method: "POST",
-        body: data,
+        body: { ...data },
         headers: {
           "Content-Type": "application/json",
         },

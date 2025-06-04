@@ -1,15 +1,17 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import { SearchFilterBar } from "./SearchFilterBar";
-import { Pagination } from "./Pagination";
-import { UserCard } from "./UserCard";
-import { ActionMenu } from "./ActionMenu";
-import { UserStatus } from "./UserStatus";
 import { useRouter } from "next/navigation";
-import { TUser } from "@/interfaces/User";
+import React, { useMemo, useState } from "react";
+
 import { Column, DataTable } from "@/components/DataTable";
+import { TUser } from "@/interfaces/User";
 import { useGetUsersQuery } from "@/store/apiSlice";
+
+import { ActionMenu } from "./ActionMenu";
+import { Pagination } from "./Pagination";
+import { SearchFilterBar } from "./SearchFilterBar";
+import { UserCard } from "./UserCard";
+import { UserStatus } from "./UserStatus";
 
 export const UsersManagement = () => {
   const router = useRouter();
@@ -17,13 +19,15 @@ export const UsersManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 12;
 
-  const { data, isLoading, isError, error } = useGetUsersQuery({
+  const { data, isLoading, isError } = useGetUsersQuery({
     page: currentPage - 1,
     size: rowsPerPage,
   });
 
-  const allUsers: TUser[] = data?.content ?? [];
-  console.log(allUsers);
+  const allUsers = useMemo<TUser[]>(() => {
+    return data?.content ?? [];
+  }, [data?.content]);
+
   const totalPages = data?.totalPages ?? 0;
   const isFirst = data?.first ?? true;
   const isLast = data?.last ?? true;

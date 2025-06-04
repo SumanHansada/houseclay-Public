@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useEffect } from "react";
 import { Form, Formik, FormikHelpers } from "formik";
 import { useRouter } from "next/navigation";
-import * as Yup from "yup";
 import HouseClaySvg from "public/icons/houseclay.svg";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import * as Yup from "yup";
 
 import FormInputField from "@/components/common/FormInputField";
-import { loginStart, loginSuccess, loginFailure } from "@/store/adminSlice";
+import { loginFailure, loginStart, loginSuccess } from "@/store/adminSlice";
 import { useLoginMutation } from "@/store/apiSlice";
+import { RootState } from "@/store/store";
 
 const loginSchema = Yup.object().shape({
   username: Yup.string().required("Username is required"),
@@ -29,16 +29,13 @@ export default function AdminLogin() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  // Pull token & any error state from Redux; loading is handled by RTK Query
   const { token, error: reduxError } = useSelector(
     (state: RootState) => state.admin,
   );
 
-  // Use the RTK Query login mutation (expects `{ username, password }`)
   const [loginUser, { isLoading: loginLoading, isError: loginError }] =
     useLoginMutation();
 
-  // If already authenticated, redirect to /admin/dashboard
   useEffect(() => {
     if (token) {
       router.push("/admin/dashboard");
@@ -52,14 +49,12 @@ export default function AdminLogin() {
     try {
       dispatch(loginStart());
 
-      // Call RTK Query login, passing { username, password }
       const returnedToken = await loginUser({
         username: values.username,
         password: values.password,
       }).unwrap();
 
       dispatch(loginSuccess(returnedToken));
-      // console.log(returnedToken);
 
       router.push("/admin/dashboard");
     } catch (err) {
@@ -135,7 +130,6 @@ export default function AdminLogin() {
                     </a>
                   </div>
 
-                  {/* Display any Redux error message */}
                   {(reduxError || loginError) && (
                     <div className="text-red-500 text-sm text-center">
                       {reduxError || "Invalid username or password"}

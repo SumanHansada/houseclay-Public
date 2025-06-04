@@ -1,7 +1,3 @@
-// export type LeadStatus = "NEW" | "FOLLOW_UP" | "RESOLVED";
-
-// export type LeadActions = "FOLLOW_UP" | "RESOLVED";
-
 export enum LeadStatus {
   NEW = "NEW",
   FOLLOW_UP = "FOLLOW_UP",

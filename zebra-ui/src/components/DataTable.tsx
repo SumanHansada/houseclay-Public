@@ -1,14 +1,13 @@
 "use client";
-
-import React from "react";
 import {
   Table,
-  TableHeader,
-  TableColumn,
   TableBody,
-  TableRow,
   TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
 } from "@heroui/table";
+import React from "react";
 
 export interface Column<T> {
   key: string;
@@ -22,6 +21,14 @@ export interface DataTableProps<T> {
   columns: Column<T>[];
   data: T[];
   getRowId?: (item: T, index: number) => string;
+}
+
+function hasStringOrNumberId(obj: unknown): obj is { id: string | number } {
+  if (typeof obj !== "object" || obj === null) return false;
+  if (!("id" in obj)) return false;
+
+  const idValue = (obj as { id: unknown }).id;
+  return typeof idValue === "string" || typeof idValue === "number";
 }
 
 export function DataTable<T extends object>({
@@ -49,11 +56,17 @@ export function DataTable<T extends object>({
       <TableBody className="flex flex-col items-center justify-center h-full">
         {data.length > 0 ? (
           data.map((item, rowIndex) => {
-            const rowId =
-              getRowId?.(item, rowIndex) ??
-              (typeof (item as any).id === "string"
-                ? ((item as any).id as string)
-                : rowIndex.toString());
+            // const rowId =
+            //   getRowId?.(item, rowIndex) ??
+            //   (typeof (item as any).id === "string"
+            //     ? ((item as any).id as string)
+            //     : rowIndex.toString());
+
+            let fallbackId = rowIndex.toString();
+            if (hasStringOrNumberId(item)) {
+              fallbackId = String(item.id);
+            }
+            const rowId = getRowId ? getRowId(item, rowIndex) : fallbackId;
 
             return (
               <TableRow
@@ -90,77 +103,3 @@ export function DataTable<T extends object>({
     </Table>
   );
 }
-
-// "use client";
-
-// import React from "react";
-// import {
-//   Table,
-//   TableHeader,
-//   TableColumn,
-//   TableBody,
-//   TableRow,
-//   TableCell,
-// } from "@heroui/table";
-
-// export interface Column<T> {
-//   key: keyof T;
-//   label: string;
-// }
-
-// export interface DataTableProps<T> {
-//   columns: Column<T>[];
-//   data: T[];
-//   renderCell: (item: T, columnKey: keyof T) => React.ReactNode;
-// }
-
-// export function DataTable<T extends Record<string, any>>({
-//   columns,
-//   data,
-//   renderCell,
-// }: DataTableProps<T>) {
-//   return (
-//     <Table
-//       aria-label="User table"
-//       className="w-full bg-white h-full"
-//       removeWrapper
-//     >
-//       <TableHeader columns={columns}>
-//         {(column) => (
-//           <TableColumn
-//             key={String(column.key)}
-//             className="text-left text-lg font-bold"
-//           >
-//             {column.label}
-//           </TableColumn>
-//         )}
-//       </TableHeader>
-
-//       <TableBody className="flex flex-col items-center justify-center h-full">
-//         {data.length > 0 ? (
-//           data.map((item, rowIndex) => (
-//             <TableRow
-//               key={String((item as any).id ?? rowIndex)}
-//               className={`${rowIndex % 2 === 1 ? "bg-gray-200" : "bg-gray-50 border border-gray-300"}`}
-//             >
-//               {(columnKey) => (
-//                 <TableCell className="px-2 py-px">
-//                   {renderCell(item, columnKey as keyof T)}
-//                 </TableCell>
-//               )}
-//             </TableRow>
-//           ))
-//         ) : (
-//           <TableRow>
-//             <TableCell
-//               colSpan={columns.length}
-//               className="pt-20 text-2xl text-center text-red-400"
-//             >
-//               No users found
-//             </TableCell>
-//           </TableRow>
-//         )}
-//       </TableBody>
-//     </Table>
-//   );
-// }

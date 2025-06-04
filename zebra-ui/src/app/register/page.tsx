@@ -1,14 +1,15 @@
 "use client";
 
-import React from "react";
 import { Form, Formik, FormikHelpers } from "formik";
 import { useRouter } from "next/navigation";
-import * as Yup from "yup";
 import HouseClaySvg from "public/icons/houseclay.svg";
-import { useRegisterMutation } from "@/store/apiSlice";
-import FormInputField from "@/components/common/FormInputField";
+import React from "react";
 import { useDispatch } from "react-redux";
+import * as Yup from "yup";
+
+import FormInputField from "@/components/common/FormInputField";
 import { loginSuccess } from "@/store/adminSlice";
+import { useRegisterMutation } from "@/store/apiSlice";
 import { useLoginMutation } from "@/store/apiSlice";
 
 const registerSchema = Yup.object().shape({
@@ -63,7 +64,6 @@ export default function AdminRegister() {
 
       console.log(message);
       dispatch(loginSuccess(returnedToken));
-      // console.log(returnedToken);
 
       router.push("/admin/dashboard");
     } catch (err) {
@@ -127,7 +127,6 @@ export default function AdminRegister() {
                     required
                   />
 
-                  {/* Display generic error if registration fails */}
                   {isError && (
                     <div className="text-red-500 text-sm text-center">
                       Registration failed. Please verify your inputs and try

@@ -1,9 +1,10 @@
 "use client";
 
-import PropertyTypeOptions from "@/components/PropertyTypeOptions";
-import { RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
+
+import PropertyTypeOptions from "@/components/PropertyTypeOptions";
+import { RootState } from "@/store/store";
 
 const AddPropertyPage = () => {
   const { propertyType } = useSelector(

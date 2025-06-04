@@ -1,4 +1,5 @@
 import { User } from "lucide-react";
+import Image from "next/image";
 import React from "react";
 
 interface UserCardProps {
@@ -21,7 +22,7 @@ export const UserCard = ({
     >
       <div className="w-10 h-10 overflow-hidden bg-gray-200 rounded-lg">
         {avatar?.trim() ? (
-          <img
+          <Image
             src={avatar}
             alt={`${name} avatar`}
             className="object-cover w-full h-full"

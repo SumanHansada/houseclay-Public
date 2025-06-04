@@ -19,10 +19,6 @@ const adminSlice = createSlice({
   name: "admin",
   initialState,
   reducers: {
-    // setToken: (state, action: PayloadAction<string>) => {
-    //   state.token = action.payload;
-    //   localStorage.setItem("adminToken", action.payload);
-    // },
     loginStart: (state) => {
       state.loading = true;
       state.error = null;
@@ -66,6 +62,5 @@ export const {
   loginFailure,
   logout,
   initializeToken,
-  // setToken,
 } = adminSlice.actions;
 export default adminSlice.reducer;
