@@ -54,6 +54,7 @@ public class PropertyMapper {
     private static void copyBaseFields(Property source, PropertyDTO target) {
         target.setPropertyID(source.getPropertyID());
         target.setTitle(source.getTitle());
+        target.setPropertyType(source.getPropertyType());
         target.setManaged(source.isManaged());
         target.setPremium(source.isPremium());
         target.setBuiltUpArea(source.getBuiltUpArea());

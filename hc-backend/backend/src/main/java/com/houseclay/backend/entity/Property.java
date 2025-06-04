@@ -32,6 +32,7 @@ public class Property {
     @Id
     String propertyID;
     String title;
+    String propertyType;
     boolean isManaged;
     boolean isPremium;
 

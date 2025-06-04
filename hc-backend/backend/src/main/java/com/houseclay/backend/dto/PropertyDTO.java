@@ -10,6 +10,7 @@ import java.util.List;
 public class PropertyDTO {
     private String propertyID;
     private String title;
+    private String propertyType;
     private boolean isManaged;
     private boolean isPremium;
     private Double builtUpArea;
