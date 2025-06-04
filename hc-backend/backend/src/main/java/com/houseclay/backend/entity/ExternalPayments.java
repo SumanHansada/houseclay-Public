@@ -12,19 +12,19 @@ import java.sql.Timestamp;
 public class ExternalPayments {
 
     @Id
-    String paymentId;
-    double amount;
-    ExternalPaymentStatus status;
-    String signature;
-    String razorPaymentId;
-    Timestamp createdAt;
-    Timestamp completedAt;
+    private String paymentId;
+    private double amount;
+    private ExternalPaymentStatus status;
+    private String signature;
+    private String razorPaymentId;
+    private Timestamp createdAt;
+    private Timestamp completedAt;
 
     @ManyToOne
     @JoinColumn(name = "phoneNo")
-    User user;
+    private User user;
 
     @OneToOne
     @NotFound(action= NotFoundAction.IGNORE)
-    ConnectTransaction connectTransaction;
+    private ConnectTransaction connectTransaction;
 }

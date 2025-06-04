@@ -74,7 +74,6 @@ public class PropertyAdminService {
 
     public Property verifyProperty(String propertyId, Admin admin) throws APIException {
         Optional<Property> propertyOpt = propertyRepository.findById(propertyId);
-
         if (propertyOpt.isEmpty()) {
             throw new APIException("Property not found", HttpStatus.BAD_REQUEST);
         }

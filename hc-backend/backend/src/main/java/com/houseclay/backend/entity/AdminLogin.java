@@ -15,7 +15,7 @@ public class AdminLogin {
 
     @ManyToOne
     @JoinColumn(name = "username")
-    Admin admin;
+    private Admin admin;
 
     @Column(nullable = false, unique = true)
     private String authToken;

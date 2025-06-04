@@ -13,17 +13,17 @@ import java.sql.Timestamp;
 public class ReportProperty {
 
     @Id
-    String reportId;
+    private String reportId;
 
-    ReportType reportType;
+    private ReportType reportType;
 
-    Timestamp reportTime;
+    private Timestamp reportTime;
 
     @ManyToOne
     @JoinColumn(name = "propertyID")
-    Property property;
+    private Property property;
 
     @ManyToOne
     @JoinColumn(name = "phoneNo")
-    User user;
+    private User user;
 }

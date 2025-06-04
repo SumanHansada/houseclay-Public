@@ -30,9 +30,9 @@ import java.util.List;
 public class Property {
 
     @Id
-    String propertyID;
-    String title;
-    String propertyType;
+    private String propertyID;
+    private String title;
+    private String propertyType;
     boolean isManaged;
     boolean isPremium;
 
@@ -70,18 +70,18 @@ public class Property {
 
     @ManyToOne
     @JoinColumn(name = "phoneNo")
-    User owner;
+    private User owner;
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<PropertyAction> propertyActions;
+    private List<PropertyAction> propertyActions;
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<ReportProperty> reportedProperties;
+    private List<ReportProperty> reportedProperties;
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<PropertyUpdateLog> propertUpdateLogs = new ArrayList<>();
+    private List<PropertyUpdateLog> propertUpdateLogs = new ArrayList<>();
 
     @OneToOne
     @NotFound(action= NotFoundAction.IGNORE)
-    ConnectTransaction connectTransaction;
+    private ConnectTransaction connectTransaction;
 }

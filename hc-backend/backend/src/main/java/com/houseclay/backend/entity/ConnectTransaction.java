@@ -12,19 +12,19 @@ import java.sql.Timestamp;
 public class ConnectTransaction {
 
     @Id
-    String transactionId;
-    int connectQuantity;
-    Timestamp transactionTime;
+    private String transactionId;
+    private int connectQuantity;
+    private Timestamp transactionTime;
 
     @ManyToOne
     @JoinColumn(name = "phoneNo")
-    User user;
+    private User user;
 
     @OneToOne(mappedBy="connectTransaction")
     @NotFound(action=NotFoundAction.IGNORE)
-    Property property;
+    private Property property;
 
     @OneToOne(mappedBy="connectTransaction", cascade = CascadeType.ALL)
     @NotFound(action=NotFoundAction.IGNORE)
-    ExternalPayments externalPayments;
+    private ExternalPayments externalPayments;
 }

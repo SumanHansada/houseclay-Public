@@ -13,14 +13,14 @@ public class PropertyAction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    UserActionType userActionType;
+    private UserActionType userActionType;
 
     private LocalDateTime createdAt;
 
     @ManyToOne
-    Property property;
+    private Property property;
 
     @ManyToOne
-    User user;
+    private User user;
 
 }

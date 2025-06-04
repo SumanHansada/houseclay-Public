@@ -13,19 +13,16 @@ import java.util.List;
 public class Admin {
 
     @Id
-    String username;
-    String password;
-    String name;
-    enum role {
-        CAPTAIN,
-        ADMIN
-    }
+    private String username;
+    private String password;
+    private String  name;
+
 
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<User> blacklistedUsers;
+    private List<User> blacklistedUsers;
 
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<AdminLogin> adminLogins;
+    private List<AdminLogin> adminLogins;
 
     @Override
     public String toString() {

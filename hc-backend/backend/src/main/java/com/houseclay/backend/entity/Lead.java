@@ -15,18 +15,17 @@ public class Lead {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    LeadStatus status;
+    private LeadStatus status;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private LeadCategory leadCategory;
 
-    Timestamp createdAt;
+    private Timestamp createdAt;
 
     @ManyToOne
     @JoinColumn(name = "phoneNo")
-    User user;
-
+    private User user;
 
     @OneToMany(mappedBy = "lead", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LeadComment> comments = new ArrayList<>();

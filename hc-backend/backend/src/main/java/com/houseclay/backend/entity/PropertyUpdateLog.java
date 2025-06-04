@@ -13,7 +13,7 @@ public class PropertyUpdateLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    PropertyUpdateType updateType;
+    private PropertyUpdateType updateType;
 
     private Timestamp updatedAt;
 

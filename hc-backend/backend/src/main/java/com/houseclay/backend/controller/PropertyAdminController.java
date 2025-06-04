@@ -4,7 +4,6 @@ import com.houseclay.backend.dto.PropertyDTO;
 import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.entity.Property;
 import com.houseclay.backend.entity.PropertyState;
-import com.houseclay.backend.entity.User;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.mapper.PropertyMapper;
 import com.houseclay.backend.service.PropertyAdminService;
@@ -75,7 +74,7 @@ public class PropertyAdminController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getPropertyById(@PathVariable String id, @RequestAttribute("authenticatedAdmin") Admin admin) {
+    public ResponseEntity<Object> getPropertyById(@PathVariable String id) {
         try {
             Property property = propertyService.getProperty(id);
             return ResponseEntity.ok(PropertyMapper.toDTO(property));
@@ -89,7 +88,7 @@ public class PropertyAdminController {
     @GetMapping("/properties-to-verify")
     public ResponseEntity<Page<PropertyDTO>> getPropertiesToVerify(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size, @RequestAttribute("authenticatedAdmin") Admin admin) {
+            @RequestParam(defaultValue = "10") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<PropertyDTO> properties = propertyAdminService.getPropertyByState(PropertyState.PENDING_VERIFICATION, pageable);
@@ -99,7 +98,7 @@ public class PropertyAdminController {
     @GetMapping("/properties-to-re-verify")
     public ResponseEntity<Page<PropertyDTO>> getPropertiesToReVerify(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size, @RequestAttribute("authenticatedAdmin") Admin admin) {
+            @RequestParam(defaultValue = "10") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<PropertyDTO> properties = propertyAdminService.getPropertyByState(PropertyState.PENDING_RE_VERIFICATION, pageable);
@@ -127,13 +126,11 @@ public class PropertyAdminController {
     @PostMapping("/re-verify-property")
     public ResponseEntity reVerifyProperty(@RequestParam String propertyId, @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
-            Property verifiedProperty = propertyAdminService.verifyProperty(propertyId, admin);
-
+            Property reVerifyProperty = propertyAdminService.reVerifyProperty(propertyId, admin);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Property verified successfully");
-            response.put("propertyId", verifiedProperty.getPropertyID());
+            response.put("propertyId", reVerifyProperty.getPropertyID());
             response.put("reVerifiedBy", admin.getName());
-
             return ResponseEntity.ok(response);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());

@@ -1,24 +1,16 @@
 package com.houseclay.backend.service;
 
-import com.houseclay.backend.dto.PropertyDTO;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
-import com.houseclay.backend.mapper.PropertyMapper;
-import com.houseclay.backend.repository.AdminRepository;
 import com.houseclay.backend.repository.PropertyRepository;
 import com.houseclay.backend.repository.PropertySearchRepository;
 import com.houseclay.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PropertyService {
@@ -32,7 +24,8 @@ public class PropertyService {
     @Autowired
     private PropertySearchRepository propertySearchRepository;
 
-
+    @Autowired
+    private PhotoService photoService;
 
     public Property getPropertyForUser(String id, User user) throws APIException {
         Property property = getProperty(id);
@@ -45,6 +38,12 @@ public class PropertyService {
     public Property getProperty(String id) throws APIException {
         Optional<Property> propertyOpt = propertyRepository.findById(id);
         if (propertyOpt.isPresent()) {
+            Property property = propertyOpt.get();
+            property.setImages(
+                    property.getImages().stream()
+                            .map(photoService::getObjectPresignedUrl)
+                            .collect(Collectors.toList())
+            );
             return propertyOpt.get();
         }
         throw new APIException("Invalid property ID", HttpStatus.BAD_REQUEST);

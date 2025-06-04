@@ -1,15 +1,13 @@
 package com.houseclay.backend.service;
 
-import com.houseclay.backend.entity.User;
 import com.houseclay.backend.payload.PresignedURLRequest;
 import com.houseclay.backend.payload.PresignedURLResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
@@ -25,14 +23,13 @@ public class PhotoService {
     @Value("${aws.s3.bucketName}")
     private String bucketName;
 
-    @Value("${aws.region}")
-    private String region;
+    private final static int EXPIRATION_TIME = 1;
 
-    @Value("${aws.accessKeyId}")
-    private String accessKeyId;
+    private final S3Presigner presigner;
 
-    @Value("${aws.secretAccessKey}")
-    private String secretAccessKey;
+    public PhotoService(S3Presigner presigner) {
+        this.presigner = presigner;
+    }
 
     public PresignedURLResponse getURLs(PresignedURLRequest request) {
         Map<String, String> fileURLs = new HashMap<>();
@@ -44,14 +41,6 @@ public class PhotoService {
     }
 
     public String generatePresignedUrl(String filename, String contentType, String propertyID) {
-        S3Presigner presigner = S3Presigner.builder()
-                .region(Region.of(region))
-                .credentialsProvider(
-                        StaticCredentialsProvider.create(
-                                AwsBasicCredentials.create(accessKeyId, secretAccessKey)
-                        )
-                )
-                .build();
 
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
@@ -72,5 +61,20 @@ public class PhotoService {
         presigner.close();
 
         return url.toString();
+    }
+
+    public String getObjectPresignedUrl(String objectKey) {
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucketName)
+                .key(objectKey)
+                .build();
+
+        GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+                .getObjectRequest(getObjectRequest)
+                .signatureDuration(Duration.ofMinutes(EXPIRATION_TIME))
+                .build();
+
+        URL presignedUrl = presigner.presignGetObject(presignRequest).url();
+        return presignedUrl.toString();
     }
 }

@@ -9,20 +9,18 @@ public class UserLogin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long loginID;
+    private long loginID;
 
-    String token;
+    private String token;
 
     @ManyToOne
     @JoinColumn(name = "phoneNo")
-    User user;
-
+    private User user;
 
     public UserLogin(String token, User user) {
         this.token = token;
         this.user = user;
     }
-
 
     public UserLogin() {
 

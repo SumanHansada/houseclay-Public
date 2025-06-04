@@ -1,6 +1,5 @@
 package com.houseclay.backend.controller;
 
-import com.houseclay.backend.entity.User;
 import com.houseclay.backend.payload.PresignedURLRequest;
 import com.houseclay.backend.payload.PresignedURLResponse;
 import com.houseclay.backend.service.PhotoService;

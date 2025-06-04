@@ -13,15 +13,15 @@ import java.util.List;
 public class User {
 
     @Id
-    String phoneNo;
-    String name;
-    String emailID;
-    int connectBal;
-    boolean isBlacklisted;
-    boolean isDeleted;
-    Timestamp createdAt;
-    Timestamp blacklistedAt;
-    Timestamp deletedAt;
+    private String phoneNo;
+    private String name;
+    private String emailID;
+    private int connectBal;
+    private boolean isBlacklisted;
+    private boolean isDeleted;
+    private Timestamp createdAt;
+    private Timestamp blacklistedAt;
+    private Timestamp deletedAt;
 
     public User(String phoneNo, String name, String emailID) {
         this.phoneNo = phoneNo;
@@ -34,28 +34,28 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "username")
-    Admin admin;
+    private Admin admin;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Property> ownedProperties;
+    private List<Property> ownedProperties;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<PropertyAction> propertyActions;
+    private List<PropertyAction> propertyActions;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<ReportProperty> reportedProperties;
+    private List<ReportProperty> reportedProperties;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<ExternalPayments> externalPayments;
+    private List<ExternalPayments> externalPayments;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<ConnectTransaction> connectTransactions;
+    private List<ConnectTransaction> connectTransactions;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<UserLogin> userLogins;
+    private List<UserLogin> userLogins;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Lead> leads;
+    private List<Lead> leads;
 
     public User() {
 
