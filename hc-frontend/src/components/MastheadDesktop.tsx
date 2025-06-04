@@ -25,7 +25,7 @@ const MastHeadDesktop: React.FC<MastHeadDesktopProps> = ({
           priority
         />
       </div>
-      <div className="absolute h-full flex flex-col justify-center xl:pl-40 lg:pl-14 pl-14 xl:w-2/3 lg:w-4/5 md:w-5/6 w-5/6">
+      <div className="absolute h-full flex flex-col justify-center xl:pl-40 lg:pl-14 pl-14 xl:w-2/4 lg:w-7/12 md:w-7/12 w-3/6">
         {/* Headings */}
         <div className="max-w-md mb-8">
           <h1 className="xl:text-6xl lg:text-5xl text-5xl font-bold text-gray-900 mb-2">

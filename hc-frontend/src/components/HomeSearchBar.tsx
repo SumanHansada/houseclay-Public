@@ -28,27 +28,13 @@ const HomeSearchBar: React.FC = () => {
       </div>
 
       {/* Location */}
-      <div className="flex-1 px-3 py-2 border-r border-gray-200">
+      <div className="flex-1 px-3 py-2 border-gray-200">
         <div className="text-sm font-medium text-gray-900 mb-1">Location</div>
         <input
           type="text"
           placeholder="Type localities..."
           className="text-gray-500 text-sm w-full"
         />
-      </div>
-
-      {/* Property Type */}
-      <div className="flex-1 px-3 py-2 border-r border-gray-200">
-        <div className="text-sm font-medium text-gray-900 mb-1">
-          Property Type
-        </div>
-        <div className="text-gray-500 text-sm flex items-center">House</div>
-      </div>
-
-      {/* Beds */}
-      <div className="flex-1 px-3 py-2">
-        <div className="text-sm font-medium text-gray-900 mb-1">Beds</div>
-        <div className="text-gray-500 text-sm flex items-center">2 BHK</div>
       </div>
 
       {/* Search Button */}
