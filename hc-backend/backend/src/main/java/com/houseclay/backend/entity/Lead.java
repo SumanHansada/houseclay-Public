@@ -3,6 +3,7 @@ package com.houseclay.backend.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +21,12 @@ public class Lead {
     @Column(nullable = false)
     private LeadCategory leadCategory;
 
+    Timestamp createdAt;
+
     @ManyToOne
     @JoinColumn(name = "phoneNo")
     User user;
+
 
     @OneToMany(mappedBy = "lead", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LeadComment> comments = new ArrayList<>();

@@ -14,6 +14,7 @@ public class LeadMapper {
         leadDetailDTO.setEmail(lead.getUser().getEmailID());
         leadDetailDTO.setPhoneNo(lead.getUser().getPhoneNo());
         leadDetailDTO.setStatus(lead.getStatus());
+        leadDetailDTO.setCreatedAt(lead.getCreatedAt());
         leadDetailDTO.setComments(lead.getComments().stream().map(LeadMapper::toComment).toList());
         return leadDetailDTO;
     }
