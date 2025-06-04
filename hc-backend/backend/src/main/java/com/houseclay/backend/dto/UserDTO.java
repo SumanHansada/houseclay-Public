@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 public class UserDTO {
 
-    String phoneNo;
-    String email;
-    String name;
-    boolean isBlacklisted;
+    private String phoneNo;
+    private String email;
+    private String name;
+    private boolean isBlacklisted;
 }

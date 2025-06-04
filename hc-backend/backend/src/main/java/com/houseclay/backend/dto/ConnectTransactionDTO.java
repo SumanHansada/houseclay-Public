@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 
 @Data
 public class ConnectTransactionDTO {
-    String transactionId;
-    int connectQuantity;
-    Timestamp transactionTime;
+    private String transactionId;
+    private int connectQuantity;
+    private Timestamp transactionTime;
 }

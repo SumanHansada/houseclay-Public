@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class UserPropertyDTO {
-    String propertyID;
-    String title;
-    String description;
+    private String propertyID;
+    private String title;
+    private String description;
 }

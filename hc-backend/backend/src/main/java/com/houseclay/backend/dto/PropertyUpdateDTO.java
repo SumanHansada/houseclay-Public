@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
 @Data
 public class PropertyUpdateDTO {
 
-    PropertyUpdateType updateType;
+    private PropertyUpdateType updateType;
 
-    Timestamp updateTime;
+    private Timestamp updateTime;
 
-    String updateBy;
+    private String updateBy;
 
-    String userType;
+    private String userType;
 }

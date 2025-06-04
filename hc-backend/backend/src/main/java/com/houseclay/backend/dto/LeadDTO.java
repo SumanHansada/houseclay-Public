@@ -6,11 +6,11 @@ import lombok.Data;
 
 @Data
 public class LeadDTO {
-    Long leadId;
-    String phoneNo;
-    String email;
-    String name;
-    LeadStatus status;
+    private Long leadId;
+    private String phoneNo;
+    private String email;
+    private String name;
+    private LeadStatus status;
 
     public LeadDTO(Lead lead) {
         this.leadId = lead.getId();

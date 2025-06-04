@@ -7,11 +7,11 @@ import java.sql.Timestamp;
 
 @Data
 public class ExternalPaymentDTO {
-    String paymentId;
-    double amount;
-    ExternalPaymentStatus status;
-    String signature;
-    String razorPaymentId;
-    Timestamp createdAt;
-    Timestamp completedAt;
+    private String paymentId;
+    private double amount;
+    private ExternalPaymentStatus status;
+    private String signature;
+    private String razorPaymentId;
+    private Timestamp createdAt;
+    private Timestamp completedAt;
 }

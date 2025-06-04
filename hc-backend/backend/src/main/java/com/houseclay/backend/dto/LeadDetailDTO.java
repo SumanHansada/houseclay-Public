@@ -8,11 +8,11 @@ import java.util.List;
 
 @Data
 public class LeadDetailDTO {
-    Long leadId;
-    String phoneNo;
-    String email;
-    String name;
-    LeadStatus status;
-    Timestamp createdAt;
-    List<LeadCommentDTO> comments;
+    private Long leadId;
+    private String phoneNo;
+    private String email;
+    private String name;
+    private LeadStatus status;
+    private Timestamp createdAt;
+    private List<LeadCommentDTO> comments;
 }
