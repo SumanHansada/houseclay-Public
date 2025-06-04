@@ -31,7 +31,7 @@ const Header: React.FC = () => {
       const logoutResponse = await logoutApi().unwrap();
       console.log(logoutResponse.message);
       dispatch(logoutAction());
-      router.replace("/admin/login");
+      router.replace("/login");
     } catch (err) {
       console.error("Logout failed:", err);
     }

@@ -1,22 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { RootState } from "./store";
-import { TUser } from "@/interfaces/User";
-
-export interface UsersResponse {
-  content: TUser[];
-  pageable: {
-    pageNumber: number;
-    pageSize: number;
-  };
-  totalPages: number;
-  totalElements: number;
-  last: boolean;
-  first: boolean;
-  numberOfElements: number;
-  size: number;
-  number: number;
-}
+import { TUsersResponse } from "@/interfaces/User";
+import {
+  TLeadByIdResponse,
+  LeadParamType,
+  TLeadsResponse,
+  LeadActions,
+} from "@/interfaces/Lead";
 
 const baseUrl = process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL;
 
@@ -29,14 +20,17 @@ export const apiSlice = createApi({
       "https://jsonplaceholder.typicode.com",
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).admin.token;
-      // Cookies.get("token") || (getState() as RootState).admin.token;
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }
       return headers;
     },
   }),
+
+  tagTypes: ["Leads", "LeadDetail"],
+
   endpoints: (builder) => ({
+    // ──────────────── AUTH ────────────────
     login: builder.mutation<string, { username: string; password: string }>({
       query: (data) => ({
         url: "/admin/login",
@@ -61,12 +55,79 @@ export const apiSlice = createApi({
         url: "/admin/logout",
         method: "POST",
       }),
+      invalidatesTags: ["Leads", "LeadDetail"],
     }),
-    getUsers: builder.query<UsersResponse, { page: number; size: number }>({
+
+    // ──────────────── USERS ────────────────
+    getUsers: builder.query<TUsersResponse, { page: number; size: number }>({
       query: ({ page, size }) => ({
         url: `/admin/users?page=${page}&size=${size}`,
         method: "GET",
       }),
+    }),
+
+    // ──────────────── LEADS ────────────────
+    getLeads: builder.query<
+      TLeadsResponse,
+      { type: LeadParamType; page: number; size: number }
+    >({
+      query: ({ type, page, size }) => ({
+        url: `/leads?leadCategory=${type}&page=${page}&size=${size}`,
+        method: "GET",
+      }),
+      providesTags: (result) =>
+        result
+          ? [
+              { type: "Leads" as const, id: "LIST" },
+              ...result.content.map((lead) => ({
+                type: "LeadDetail" as const,
+                id: lead.leadId,
+              })),
+            ]
+          : [{ type: "Leads" as const, id: "LIST" }],
+    }),
+    getLeadById: builder.query<TLeadByIdResponse, { id: number }>({
+      query: ({ id }) => ({
+        url: `/leads/${id}`,
+        method: "GET",
+      }),
+      providesTags: (result, error, { id }) => [
+        { type: "LeadDetail" as const, id },
+      ],
+    }),
+    leadStatusUpdate: builder.mutation<
+      string,
+      { id: number; newStatus: string }
+    >({
+      query: ({ id, newStatus }) => ({
+        url: `/leads/${id}/status`,
+        method: "PUT",
+        headers: {
+          "Content-Type": "text/plain",
+        },
+        body: newStatus,
+      }),
+      invalidatesTags: (result, error, { id }) => [
+        { type: "LeadDetail" as const, id },
+        { type: "Leads" as const, id: "LIST" },
+      ],
+    }),
+    leadAddComment: builder.mutation<
+      string,
+      { id: number; newComment: string }
+    >({
+      query: ({ id, newComment }) => ({
+        url: `/leads/${id}/comments`,
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain",
+        },
+        body: newComment,
+      }),
+      invalidatesTags: (result, error, { id }) => [
+        { type: "LeadDetail" as const, id },
+        { type: "Leads" as const, id: "LIST" },
+      ],
     }),
     checkUser: builder.query<
       { exists: boolean; message: string }, // Response type
@@ -242,7 +303,10 @@ export const {
   useLoginMutation,
   useRegisterMutation,
   useGetUsersQuery,
-  // useGenerateOtpMutation,
+  useGetLeadsQuery,
+  useGetLeadByIdQuery,
+  useLeadStatusUpdateMutation,
+  useLeadAddCommentMutation,
   useCheckUserQuery,
   useLazyCheckUserQuery,
   useLogoutMutation,

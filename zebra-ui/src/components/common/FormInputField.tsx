@@ -5,7 +5,7 @@ interface FormInputFieldProps {
   name: string;
   id?: string;
   label?: string;
-  dataType?: "number" | "text"; // Determines how the value is handled
+  dataType?: "number" | "text" | "password"; // Determines how the value is handled
   required?: boolean;
   placeholder?: string;
   className?: string;

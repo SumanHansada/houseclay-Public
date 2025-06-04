@@ -2,8 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
-  // Only protect /admin/dashboard and its subroutes
-  if (request.nextUrl.pathname.startsWith("/admin/")) {
+  if (request.nextUrl.pathname.startsWith("/admin")) {
     const token = request.cookies.get("adminToken");
     if (!token) {
       const loginUrl = new URL("/login", request.url);

@@ -1,15 +1,12 @@
+import { LeadType } from "@/interfaces/Lead";
 import { LeadTableView } from "../../components/LeadTableView";
-import { LeadType, TLead } from "@/common/Types";
+import { use } from "react";
 
-import { default as LeadData } from "@/mock/dummyData.json";
+interface TParams {
+  params: Promise<{ type: LeadType }>;
+}
 
-export default async function TableViewPage({
-  params,
-}: {
-  params: { type: LeadType };
-}) {
-  const leads: TLead[] = LeadData;
-  const leadType = params.type as LeadType;
-
-  return <LeadTableView leads={leads} leadType={leadType} />;
+export default function TableViewPage({ params }: TParams) {
+  const { type } = use(params);
+  return <LeadTableView leadType={type} />;
 }

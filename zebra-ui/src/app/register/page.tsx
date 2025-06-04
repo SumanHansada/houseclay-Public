@@ -115,7 +115,7 @@ export default function AdminRegister() {
                     name="password"
                     label="Password"
                     placeholder="••••••••"
-                    dataType="text"
+                    dataType="password"
                     required
                   />
 
@@ -123,7 +123,7 @@ export default function AdminRegister() {
                     name="confirmPassword"
                     label="Confirm Password"
                     placeholder="••••••••"
-                    dataType="text"
+                    dataType="password"
                     required
                   />
 
@@ -146,7 +146,7 @@ export default function AdminRegister() {
                   <p className="text-sm font-light text-gray-500 dark:text-gray-400 text-center">
                     Already have an account?{" "}
                     <a
-                      href="/admin/login"
+                      href="/login"
                       className="font-medium text-red-600 hover:underline dark:text-red-500"
                     >
                       Sign in

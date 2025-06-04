@@ -1,7 +1,7 @@
 "use client";
 
+import { LeadType } from "@/interfaces/Lead";
 import { redirect, useParams } from "next/navigation";
-import { LeadType } from "@/common/Types";
 
 export const dynamicParams = true;
 

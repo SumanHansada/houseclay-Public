@@ -28,23 +28,17 @@ export const UsersManagement = () => {
   const isFirst = data?.first ?? true;
   const isLast = data?.last ?? true;
 
-  const filtered = useMemo(
+  const viewProfile = (phoneNo: string) => {
+    router.push(`/admin/user-details/${phoneNo}`);
+  };
+
+  const filteredUsers = useMemo(
     () =>
       allUsers.filter((user) =>
         user.phoneNo.includes(searchValue.toLowerCase()),
       ),
     [allUsers, searchValue],
   );
-
-  const viewProfile = (phoneNo: string) => {
-    router.push(`/admin/user-details/${phoneNo}`);
-  };
-
-  // const totalPages = Math.ceil(filtered.length / rowsPerPage);
-  // const paged = filtered.slice((page - 1) * rowsPerPage, page * rowsPerPage);
-  // const isFirst = page === 1;
-  // const isLast = page === totalPages;
-  // 6) Handle loading / error states
 
   if (isLoading) {
     return (
@@ -113,7 +107,7 @@ export const UsersManagement = () => {
         <div className="flex items-center flex-1 overflow-auto px-8">
           <DataTable
             columns={columns}
-            data={filtered}
+            data={filteredUsers}
             getRowId={(user) => user.phoneNo}
           />
         </div>

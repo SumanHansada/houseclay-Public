@@ -13,7 +13,7 @@ export default function Home() {
     if (token) {
       router.replace("/admin/dashboard");
     } else {
-      router.replace("/admin/login");
+      router.replace("/login");
     }
   }, [router, token]);
   return null;
