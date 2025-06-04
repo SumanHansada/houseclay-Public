@@ -3,7 +3,7 @@ package com.houseclay.backend.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Data
 @Entity
@@ -15,7 +15,7 @@ public class PropertyAction {
 
     private UserActionType userActionType;
 
-    private LocalDateTime createdAt;
+    private Timestamp createdAt;
 
     @ManyToOne
     private Property property;

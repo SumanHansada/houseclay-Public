@@ -3,7 +3,7 @@ package com.houseclay.backend.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Entity
 @Data
@@ -16,7 +16,7 @@ public class LeadComment {
     @Column(length = 1000, nullable = false)
     private String comment;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lead_id", nullable = false)

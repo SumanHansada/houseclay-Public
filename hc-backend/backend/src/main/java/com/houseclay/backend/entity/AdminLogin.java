@@ -3,7 +3,7 @@ package com.houseclay.backend.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Entity
 @Data
@@ -21,14 +21,14 @@ public class AdminLogin {
     private String authToken;
 
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    private Timestamp createdAt;
 
     public AdminLogin() {}
 
     public AdminLogin(Admin admin, String authToken) {
         this.admin = admin;
         this.authToken = authToken;
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = new Timestamp(System.currentTimeMillis());
     }
 }
 

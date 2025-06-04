@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -95,7 +95,7 @@ public class PropertyUserService {
         PropertyAction propertyAction = new PropertyAction();
         propertyAction.setProperty(property);
         propertyAction.setUser(user);
-        propertyAction.setCreatedAt(LocalDateTime.now());
+        propertyAction.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         propertyAction.setUserActionType(UserActionType.CONTACT);
         user.getPropertyActions().add(propertyAction);
         userRepository.save(user);

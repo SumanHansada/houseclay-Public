@@ -2,11 +2,11 @@ package com.houseclay.backend.dto;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Data
 public class LeadCommentDTO {
     private String comment;
-    private LocalDateTime date;
+    private Timestamp date;
     private String author;
 }

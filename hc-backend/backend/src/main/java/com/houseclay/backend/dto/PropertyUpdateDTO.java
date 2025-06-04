@@ -4,7 +4,6 @@ import com.houseclay.backend.entity.PropertyUpdateType;
 import lombok.Data;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Data
 public class PropertyUpdateDTO {

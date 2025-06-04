@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Configuration
@@ -186,21 +185,21 @@ public class DataInitializer {
             paymentRepo.saveAll(List.of(payment1, payment2, payment3));
 
             PropertyAction propertyAction1 = new PropertyAction();
-            propertyAction1.setCreatedAt(LocalDateTime.now());
+            propertyAction1.setCreatedAt(new Timestamp(System.currentTimeMillis()));
             propertyAction1.setProperty(sale);
             propertyAction1.setUser(user);
             propertyAction1.setUserActionType(UserActionType.SHORTLIST);
             propertyActionRepo.save(propertyAction1);
 
             PropertyAction propertyAction2 = new PropertyAction();
-            propertyAction2.setCreatedAt(LocalDateTime.now());
+            propertyAction2.setCreatedAt(new Timestamp(System.currentTimeMillis()));
             propertyAction2.setProperty(rent);
             propertyAction2.setUser(user);
             propertyAction2.setUserActionType(UserActionType.VIEW);
             propertyActionRepo.save(propertyAction2);
 
             PropertyAction propertyAction3 = new PropertyAction();
-            propertyAction3.setCreatedAt(LocalDateTime.now());
+            propertyAction3.setCreatedAt(new Timestamp(System.currentTimeMillis()));
             propertyAction3.setProperty(flatmate);
             propertyAction3.setUser(user);
             propertyAction3.setUserActionType(UserActionType.CONTACT);
