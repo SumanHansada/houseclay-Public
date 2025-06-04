@@ -7,14 +7,14 @@ import lombok.Data;
 @Data
 public class LeadDTO {
     Long leadId;
-    String phone;
+    String phoneNo;
     String email;
     String name;
     LeadStatus status;
 
     public LeadDTO(Lead lead) {
         this.leadId = lead.getId();
-        this.phone = lead.getUser().getPhoneNo();
+        this.phoneNo = lead.getUser().getPhoneNo();
         this.email = lead.getUser().getEmailID();
         this.name = lead.getUser().getName();
         this.status = lead.getStatus();

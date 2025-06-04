@@ -4,6 +4,7 @@ import com.houseclay.backend.dto.UserDTO;
 import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.entity.User;
 import com.houseclay.backend.exception.APIException;
+import com.houseclay.backend.mapper.UserMapper;
 import com.houseclay.backend.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -51,7 +52,7 @@ public class AdminUserController {
         try {
             User user = adminService.searchUser(phoneNo);
             Map<String, Object> response = new HashMap<>();
-            response.put("user", user);
+            response.put("user", UserMapper.toDetailDTO(user));
             return ResponseEntity.ok(response);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());

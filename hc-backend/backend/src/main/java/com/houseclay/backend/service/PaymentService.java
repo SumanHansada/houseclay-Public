@@ -1,6 +1,7 @@
 package com.houseclay.backend.service;
 
 import com.houseclay.backend.entity.ConnectTransaction;
+import com.houseclay.backend.entity.ExternalPaymentStatus;
 import com.razorpay.Utils;
 import com.houseclay.backend.entity.ExternalPayments;
 import com.houseclay.backend.entity.User;
@@ -71,7 +72,7 @@ public class PaymentService {
         externalPayments.setPaymentId(orderID);
         externalPayments.setAmount(amount);
         externalPayments.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        externalPayments.setStatus(ExternalPayments.Status.IN_PROGRESS);
+        externalPayments.setStatus(ExternalPaymentStatus.IN_PROGRESS);
         externalPayments.setUser(user);
         externalPaymentsRepository.save(externalPayments);
 
@@ -124,7 +125,7 @@ public class PaymentService {
         ExternalPayments payment =  optionalExternalPayments.get();
         payment.setSignature(signature);
         payment.setRazorPaymentId(paymentId);
-        payment.setStatus(ExternalPayments.Status.COMPLETED);
+        payment.setStatus(ExternalPaymentStatus.COMPLETED);
         payment.setCompletedAt(new Timestamp(System.currentTimeMillis()));
 
         ConnectTransaction connectTransaction = new ConnectTransaction();

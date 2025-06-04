@@ -14,12 +14,7 @@ public class ExternalPayments {
     @Id
     String paymentId;
     double amount;
-    public enum Status {
-        IN_PROGRESS,
-        COMPLETED,
-        FAILED
-    }
-    Status status;
+    ExternalPaymentStatus status;
     String signature;
     String razorPaymentId;
     Timestamp createdAt;

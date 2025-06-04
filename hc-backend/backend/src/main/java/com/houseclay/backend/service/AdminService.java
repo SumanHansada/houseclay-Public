@@ -2,6 +2,7 @@ package com.houseclay.backend.service;
 
 import com.houseclay.backend.dto.AdminRegisterDTO;
 import com.houseclay.backend.dto.UserDTO;
+import com.houseclay.backend.dto.UserDetailDTO;
 import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.entity.AdminLogin;
 import com.houseclay.backend.entity.User;

@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Configuration
@@ -21,7 +22,8 @@ public class DataInitializer {
                                    ReportPropertyRepository reportRepo,
                                    LeadRepository leadRepo,
                                    ExternalPaymentsRepository paymentRepo,
-                                   ConnectTransactionRepository connectRepo) {
+                                   ConnectTransactionRepository connectRepo,
+                                   PropertyActionRepository propertyActionRepo) {
         return args -> {
 
             // ✅ Admin
@@ -41,7 +43,6 @@ public class DataInitializer {
             user.setBlacklisted(false);
             user.setDeleted(false);
             user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-            user.setAdmin(admin);
             userRepo.save(user);
 
             User blacklistedUser = new User("8888888888", "Blacklisted User", "blacklisted@example.com");
@@ -51,6 +52,7 @@ public class DataInitializer {
             blacklistedUser.setCreatedAt(new Timestamp(System.currentTimeMillis()));
             blacklistedUser.setBlacklistedAt(new Timestamp(System.currentTimeMillis()));
             blacklistedUser.setAdmin(admin);
+            blacklistedUser.setBlacklistedAt(new Timestamp(System.currentTimeMillis()));
             userRepo.save(blacklistedUser);
 
             // ✅ UserLogins
@@ -122,7 +124,7 @@ public class DataInitializer {
             ExternalPayments payment1 = new ExternalPayments();
             payment1.setPaymentId("PAY001");
             payment1.setAmount(100.0);
-            payment1.setStatus(ExternalPayments.Status.IN_PROGRESS);
+            payment1.setStatus(ExternalPaymentStatus.IN_PROGRESS);
             payment1.setSignature("sig001");
             payment1.setRazorPaymentId("rzp_001");
             payment1.setCreatedAt(now);
@@ -132,7 +134,7 @@ public class DataInitializer {
             ExternalPayments payment2 = new ExternalPayments();
             payment2.setPaymentId("PAY002");
             payment2.setAmount(200.0);
-            payment2.setStatus(ExternalPayments.Status.COMPLETED);
+            payment2.setStatus(ExternalPaymentStatus.COMPLETED);
             payment2.setSignature("sig002");
             payment2.setRazorPaymentId("rzp_002");
             payment2.setCreatedAt(now);
@@ -143,7 +145,7 @@ public class DataInitializer {
             ExternalPayments payment3 = new ExternalPayments();
             payment3.setPaymentId("PAY003");
             payment3.setAmount(300.0);
-            payment3.setStatus(ExternalPayments.Status.FAILED);
+            payment3.setStatus(ExternalPaymentStatus.FAILED);
             payment3.setSignature("sig003");
             payment3.setRazorPaymentId("rzp_003");
             payment3.setCreatedAt(now);
@@ -180,6 +182,29 @@ public class DataInitializer {
 
             // Save payments after transactions to retain linkage
             paymentRepo.saveAll(List.of(payment1, payment2, payment3));
+
+            PropertyAction propertyAction1 = new PropertyAction();
+            propertyAction1.setCreatedAt(LocalDateTime.now());
+            propertyAction1.setProperty(sale);
+            propertyAction1.setUser(user);
+            propertyAction1.setUserActionType(UserActionType.SHORTLIST);
+            propertyActionRepo.save(propertyAction1);
+
+            PropertyAction propertyAction2 = new PropertyAction();
+            propertyAction2.setCreatedAt(LocalDateTime.now());
+            propertyAction2.setProperty(rent);
+            propertyAction2.setUser(user);
+            propertyAction2.setUserActionType(UserActionType.VIEW);
+            propertyActionRepo.save(propertyAction2);
+
+            PropertyAction propertyAction3 = new PropertyAction();
+            propertyAction3.setCreatedAt(LocalDateTime.now());
+            propertyAction3.setProperty(flatmate);
+            propertyAction3.setUser(user);
+            propertyAction3.setUserActionType(UserActionType.CONTACT);
+            propertyActionRepo.save(propertyAction3);
+
+
 
             System.out.println("✅ All test data inserted successfully.");
         };

@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 public class LeadDetailDTO {
     Long leadId;
-    String phone;
+    String phoneNo;
     String email;
     String name;
     LeadStatus status;
