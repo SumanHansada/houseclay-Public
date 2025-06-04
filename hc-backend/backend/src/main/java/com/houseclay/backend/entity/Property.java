@@ -24,7 +24,7 @@ import java.util.List;
 })
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE) // All properties in one table
-@DiscriminatorColumn(name = "property_type", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(name = "property_category", discriminatorType = DiscriminatorType.STRING)
 @Table(name = "properties")
 @Data
 public class Property {
