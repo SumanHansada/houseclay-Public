@@ -1,12 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 
 import PropertyTypeOptions from "@/components/PropertyTypeOptions";
 import { RootState } from "@/store/store";
 
 const AddPropertyPage = () => {
+  const { userPhoneNo } = useParams() as { userPhoneNo: string };
   const { propertyType } = useSelector(
     (state: RootState) => state.listProperty,
   );
@@ -16,7 +17,7 @@ const AddPropertyPage = () => {
   };
 
   const handlePostListingClick = () => {
-    const url = `/admin/add-property/${propertyType.toLowerCase()}`;
+    const url = `/admin/add-property/${userPhoneNo}/${propertyType.toLowerCase()}`;
     router.push(url);
   };
 

@@ -1,6 +1,13 @@
 "use client";
 
-import { ChevronDown, ChevronUp, Home, UserCheck, Users } from "lucide-react";
+import {
+  Archive,
+  ChevronDown,
+  ChevronUp,
+  Home,
+  UserCheck,
+  Users,
+} from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -21,7 +28,7 @@ const sidebarItems = [
       //   label: "Add Flatmates",
       //   href: "/admin/add-property/flatmates/property-details",
       // },
-      { label: "Add Property", href: "/admin/add-property" },
+      // { label: "Add Property", href: "/admin/add-property" },
       { label: "View All Properties", href: "/admin/view-all-properties" },
       { label: "Verify Property", href: "#" },
       { label: "ReVerify Property", href: "#" },
@@ -50,6 +57,12 @@ const sidebarItems = [
       { label: "HouseClay Users", href: "/admin/user-management" },
       // { label: "Zebra Admins", href: "#" },
     ],
+    href: "#",
+  },
+  {
+    label: "UI",
+    icon: <Archive size={20} />,
+    children: [{ label: "current task", href: "#" }],
     href: "#",
   },
   // {

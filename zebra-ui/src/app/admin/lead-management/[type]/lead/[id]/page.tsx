@@ -1,9 +1,5 @@
-"use client";
-
 import { use } from "react";
-
 import { LeadType } from "@/interfaces/Lead";
-
 import { LeadDetails } from "../../../components/LeadDetails";
 
 interface TParams {

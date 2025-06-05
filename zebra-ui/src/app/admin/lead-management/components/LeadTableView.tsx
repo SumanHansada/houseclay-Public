@@ -38,8 +38,8 @@ export const LeadTableView = ({ leadType }: LeadTableViewProps) => {
   const isFirst = data?.first ?? true;
   const isLast = data?.last ?? true;
 
-  const viewProfile = (phone: string) => {
-    router.push(`/admin/user-details/${phone}`);
+  const viewProfile = (phoneNo: string) => {
+    router.push(`/admin/user-details/${phoneNo}`);
   };
 
   const viewLead = (id: number) => {
@@ -96,11 +96,11 @@ export const LeadTableView = ({ leadType }: LeadTableViewProps) => {
           avatar={lead.avatar}
           name={lead.name}
           email={lead.email}
-          viewProfile={() => viewProfile(lead.phone)}
+          viewProfile={() => viewProfile(lead.phoneNo)}
         />
       ),
     },
-    { key: "phone", label: "Phone No.", accessor: "phone" },
+    { key: "phoneNo", label: "Phone No.", accessor: "phoneNo" },
     {
       key: "status",
       label: "Status",

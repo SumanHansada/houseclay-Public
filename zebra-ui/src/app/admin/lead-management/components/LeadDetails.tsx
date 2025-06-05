@@ -80,15 +80,14 @@ export const LeadDetails: React.FC<LeadDetailsProps> = ({
     }
   };
 
-  const isFollowUpDisabled =
-    currentLead.status === LeadStatus.FOLLOW_UP ||
-    currentLead.status === LeadStatus.RESOLVED;
+  const isFollowUpDisabled = currentLead.status === LeadStatus.FOLLOW_UP;
   const isResolvedDisabled = currentLead.status === LeadStatus.RESOLVED;
 
   const isLeadTypeProperty = leadType === "property";
 
   const handleFollowUp = async () => {
     try {
+      console.log(LeadActions.FOLLOW_UP);
       await leadStatusUpdate({
         id: leadId,
         newStatus: LeadActions.FOLLOW_UP,
@@ -104,6 +103,7 @@ export const LeadDetails: React.FC<LeadDetailsProps> = ({
 
   const handleResolved = async () => {
     try {
+      console.log(LeadActions.RESOLVED);
       await leadStatusUpdate({
         id: leadId,
         newStatus: LeadActions.RESOLVED,
@@ -153,8 +153,14 @@ export const LeadDetails: React.FC<LeadDetailsProps> = ({
               </div>
               <div className="flex flex-col">
                 <label className="text-gray-600 font-medium">Phone</label>
-                <span className="mt-1">{currentLead.phone}</span>
+                <span className="mt-1">{currentLead.phoneNo}</span>
               </div>
+              {/* {currentLead.createdAt && ( */}
+              <div className="flex flex-col">
+                <label className="text-gray-600 font-medium">Created At</label>
+                <span className="mt-1">{currentLead.createdAt}</span>
+              </div>
+              {/* )} */}
               <div className="flex flex-col">
                 <label className="text-gray-600 font-medium">Status</label>
                 <span className="mt-1">{renderStatus(currentLead.status)}</span>
@@ -169,7 +175,8 @@ export const LeadDetails: React.FC<LeadDetailsProps> = ({
             <h3 className="text-lg font-semibold">Comment History</h3>
           </div>
 
-          <div className="flex-1 overflow-y-auto bg-white min-h-0 scrollbar-thin">
+          <div className="flex-1 overflow-y-auto bg-white min-h-0">
+            {/* <div className="flex-1 overflow-y-auto bg-white min-h-0 scrollbar-thin"> */}
             <ul className="p-4 space-y-4">
               {Array.isArray(currentLead.comments) &&
               currentLead.comments.length > 0 ? (
@@ -224,7 +231,9 @@ export const LeadDetails: React.FC<LeadDetailsProps> = ({
       >
         {isLeadTypeProperty && (
           <button
-            onClick={() => router.push("/admin/add-property")}
+            onClick={() =>
+              router.push(`/admin/add-property/${currentLead.phoneNo}`)
+            }
             className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white"
           >
             Add Property

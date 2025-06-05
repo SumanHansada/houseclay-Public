@@ -49,9 +49,11 @@ export default function AddPropertyTypeLayout({
   children: React.ReactNode;
 }) {
   const [getPresignedUrls] = usePresignedUrlsMutation();
-  const params = useParams();
+  const { type, userPhoneNo } = useParams() as {
+    type: string;
+    userPhoneNo: string;
+  };
   const dispatch = useDispatch();
-  const type = params?.type as string; // Optional: add type assertion
   const router = useRouter();
   const { openDialog, isDialogOpen, closeDialog } = useDialog();
   const uploadFiles = useS3Uploader();
@@ -101,7 +103,7 @@ export default function AddPropertyTypeLayout({
   };
 
   const setRoute = (stepSlug: string) => {
-    const route = `/admin/add-property/${type}/${stepSlug}`;
+    const route = `/admin/add-property/${userPhoneNo}/${type}/${stepSlug}`;
     router.push(route);
   };
 
@@ -117,6 +119,7 @@ export default function AddPropertyTypeLayout({
           S3Url: imagesS3Url[photo.file.name],
         };
       });
+      console.log(photosToUpload);
       uploadFiles(photosToUpload);
     }
   };
@@ -259,9 +262,6 @@ export default function AddPropertyTypeLayout({
         images: imagesS3Keys,
       };
 
-      // We need owner phone no as param to add property using an admin account
-      // Currently, I added a dummy users number but will add a form to ask for owner details in the add-property flow
-      const userPhoneNo = "9999999999" as string;
       switch (type) {
         case "rent": {
           const rentalDetails = formState.data!.rentalDetails!;
@@ -277,11 +277,10 @@ export default function AddPropertyTypeLayout({
             ...rentalDetails,
             ...rentalAdditionalInfo,
           };
-          if (data.propertyID === "") {
-            const random = Math.floor(Math.random() * 10000);
-            data.propertyID = `hard-coded-id-${random}` as string;
-          }
-          await addRentProperty({ data: data, phoneNo: userPhoneNo }).unwrap();
+          await addRentProperty({
+            data: data,
+            phoneNo: userPhoneNo.toString(),
+          }).unwrap();
           break;
         }
         case "resale": {
@@ -296,13 +295,9 @@ export default function AddPropertyTypeLayout({
             ...resaleDetails,
             ...resaleAdditionalInfo,
           };
-          if (data.propertyID === "") {
-            const random = Math.floor(Math.random() * 10000);
-            data.propertyID = `hard-coded-id-${random}` as string;
-          }
           await addResaleProperty({
             data: data,
-            phoneNo: userPhoneNo,
+            phoneNo: userPhoneNo.toString(),
           }).unwrap();
           break;
         }
@@ -327,13 +322,9 @@ export default function AddPropertyTypeLayout({
             ...flatmatesDetails,
             ...flatmatesAdditionalInfo,
           };
-          if (data.propertyID === "") {
-            const random = Math.floor(Math.random() * 10000);
-            data.propertyID = `hard-coded-id-${random}` as string;
-          }
           await addFlatmatesProperty({
             data: data,
-            phoneNo: userPhoneNo,
+            phoneNo: userPhoneNo.toString(),
           }).unwrap();
           break;
         }

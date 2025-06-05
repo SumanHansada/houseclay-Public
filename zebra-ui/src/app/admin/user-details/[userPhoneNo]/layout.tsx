@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { UserDetailsNavbar } from "../components/UserDetailsNavbar";
+import Tabs, { Tab, TabContent, TabHeader } from "@/components/common/Tabs";
 
 export default function UserDetailsIdLayout({
   children,
@@ -15,6 +16,21 @@ export default function UserDetailsIdLayout({
         <div className="sticky top-0 z-10 bg-black text-white px-28">
           <UserDetailsNavbar />
         </div>
+        {/* <Tabs>
+          <TabHeader>
+            <Tab label="Profile" value="profile" />
+            <Tab label="Listed Properties" value="listed-properties" />
+            <Tab
+              label="Shortlisted Properties"
+              value="shortlisted-properties"
+            />
+          </TabHeader>
+        </Tabs>
+        <TabContent value="profile">
+          <div className="flex-1 bg-gray-100 px-28 py-4 min-h-0">
+            {children}
+          </div>
+        </TabContent> */}
 
         <div className="flex-1 bg-gray-100 px-28 py-4 min-h-0">{children}</div>
 

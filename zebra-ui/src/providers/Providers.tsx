@@ -9,6 +9,7 @@ import QueryProvider from "./QueryProvider";
 import ReduxProvider from "./ReduxProvider";
 import { SkeletonProvider } from "./SkeletonProvider";
 import ToastProvider from "./ToastProvider";
+import { TokenHydrator } from "./TokenHydrator";
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -17,17 +18,19 @@ interface ProvidersProps {
 const Providers: React.FC<ProvidersProps> = ({ children }) => {
   return (
     <ReduxProvider>
-      <QueryProvider>
-        <DeviceContextProvider>
-          <DialogContextProvider>
-            <SkeletonProvider>
-              <ToastProvider>
-                <AnimatePresence mode="wait">{children}</AnimatePresence>
-              </ToastProvider>
-            </SkeletonProvider>
-          </DialogContextProvider>
-        </DeviceContextProvider>
-      </QueryProvider>
+      <TokenHydrator>
+        <QueryProvider>
+          <DeviceContextProvider>
+            <DialogContextProvider>
+              <SkeletonProvider>
+                <ToastProvider>
+                  <AnimatePresence mode="wait">{children}</AnimatePresence>
+                </ToastProvider>
+              </SkeletonProvider>
+            </DialogContextProvider>
+          </DeviceContextProvider>
+        </QueryProvider>
+      </TokenHydrator>
     </ReduxProvider>
   );
 };

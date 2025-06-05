@@ -11,8 +11,8 @@ export enum LeadStatus {
 // }
 
 export enum LeadActions {
-  FOLLOW_UP = "FOLLOW_UP",
-  RESOLVED = "RESOLVED",
+  FOLLOW_UP = `"FOLLOW_UP"`,
+  RESOLVED = `"RESOLVED"`,
 }
 
 export type LeadType = "property" | "support";
@@ -29,7 +29,7 @@ export interface TLead {
   name: string;
   email: string;
   avatar?: string;
-  phone: string;
+  phoneNo: string;
   status: LeadStatus;
 }
 
@@ -56,10 +56,11 @@ export interface LeadComment {
 
 export interface TLeadByIdResponse {
   leadId: number;
-  phone: string;
+  phoneNo: string;
   email: string;
   name: string;
   avatar?: string;
+  createdAt?: string;
   status: LeadStatus;
   comments: LeadComment[];
 }

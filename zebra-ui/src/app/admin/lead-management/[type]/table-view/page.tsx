@@ -1,7 +1,5 @@
 import { use } from "react";
-
 import { LeadType } from "@/interfaces/Lead";
-
 import { LeadTableView } from "../../components/LeadTableView";
 
 interface TParams {

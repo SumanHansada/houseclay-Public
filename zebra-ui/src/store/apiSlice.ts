@@ -106,7 +106,7 @@ export const apiSlice = createApi({
         url: `/leads/${id}/status`,
         method: "PUT",
         headers: {
-          "Content-Type": "text/plain",
+          "Content-Type": "application/json",
         },
         body: newStatus,
       }),
@@ -146,7 +146,7 @@ export const apiSlice = createApi({
       { fileMap: Record<string, string> } // Request body type
     >({
       query: (data) => ({
-        url: "photo/presigned-urls",
+        url: "photo/admin/presigned-urls",
         method: "POST",
         body: data,
         headers: {
