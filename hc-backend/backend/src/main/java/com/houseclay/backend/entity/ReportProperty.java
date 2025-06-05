@@ -11,7 +11,7 @@ public class ReportProperty {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String reportId;
+    private long reportId;
 
     private ReportType reportType;
 

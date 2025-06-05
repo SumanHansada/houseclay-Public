@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 
 @Data
 public class ReportPropertyDTO {
-    private String reportId;
+    private long reportId;
     private ReportType reportType;
     private Timestamp reportTime;
     private UserPropertyDTO userProperty;
