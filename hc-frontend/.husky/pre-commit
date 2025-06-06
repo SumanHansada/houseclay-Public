@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run format and format:fix, exit if there are any errors
+npm run format && npm run format:fix || {
+  echo "❌ Formatting failed. Please fix the errors before committing."
+  exit 1
+}
+
+# Run lint to check for any remaining errors
+npm run lint || {
+  echo "❌ Linting failed. Please fix the errors before committing."
+  exit 1
+}

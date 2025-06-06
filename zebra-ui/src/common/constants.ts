@@ -1,1 +1,1 @@
-// Test comment for pre-commit hook 
+// Test comment for pre-commit hook
