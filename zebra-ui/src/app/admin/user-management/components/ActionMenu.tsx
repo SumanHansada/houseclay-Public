@@ -1,4 +1,3 @@
-"use client";
 import { Eye } from "lucide-react";
 
 interface ActionMenuProps {
@@ -9,7 +8,7 @@ export const ActionMenu: React.FC<ActionMenuProps> = ({ viewProfile }) => {
   return (
     <button
       onClick={viewProfile}
-      className="px-3 py-2 rounded-full cursor-pointer hover:bg-gray-300"
+      className="cursor-pointer ml-5 flex items-center"
     >
       <Eye />
     </button>

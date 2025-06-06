@@ -10,6 +10,7 @@ import { ResaleDetails } from "./ResaleDetails";
 
 export interface ListPropertyState {
   propertyID: string;
+  imagesS3Url: Record<string, string>;
   propertyType: PropertyType;
   listingType: PropertyListingType;
   rentForm: {

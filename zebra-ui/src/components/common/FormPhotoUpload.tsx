@@ -1,4 +1,5 @@
 import { useField } from "formik";
+import { motion } from "framer-motion";
 import {
   Image as ImageIcon,
   Lightbulb,
@@ -70,7 +71,6 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
         file: fileData,
         url: URL.createObjectURL(file),
         isCover: photos.length === 0 && index === 0, // Only set first photo as cover if there were no photos before
-        S3Url: "", // Default value for S3Url
       };
     });
 
@@ -101,10 +101,21 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
 
   // Make a photo the cover
   const handleMakeCover = (photoId: string) => {
-    const updatedPhotos = photos.map((photo) => ({
-      ...photo,
-      isCover: photo.id === photoId,
-    }));
+    // Find the photo to make cover
+    const photoToMakeCover = photos.find((photo) => photo.id === photoId);
+    if (!photoToMakeCover) return;
+
+    // Create new array with the cover photo first, followed by all other photos
+    const updatedPhotos = [
+      { ...photoToMakeCover, isCover: true },
+      ...photos
+        .filter((photo) => photo.id !== photoId)
+        .map((photo) => ({
+          ...photo,
+          isCover: false,
+        })),
+    ];
+
     helpers.setValue(updatedPhotos);
     setActiveMenuId(null);
   };
@@ -232,8 +243,13 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
             onClick={() => setActiveMenuId(null)}
           >
             {photos.map((photo) => (
-              <div
+              <motion.div
                 key={photo.id}
+                layout
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
                 className="relative rounded-md overflow-hidden"
                 onMouseEnter={() => setHoveredPhotoId(photo.id)}
                 onMouseLeave={() => {
@@ -246,26 +262,41 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
                   setActiveMenuId(null);
                 }}
               >
-                <Image
-                  src={photo.url}
-                  alt={photo.file.name || "Property"}
-                  width={100}
-                  height={100}
-                  className={`aspect-square w-full object-cover ${hoveredPhotoId === photo.id ? "blur-sm" : ""}`}
-                />
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Image
+                    src={photo.url}
+                    alt={photo.file.name || "Property"}
+                    width={100}
+                    height={100}
+                    className={`aspect-square w-full object-cover transition-all duration-300 ${hoveredPhotoId === photo.id ? "blur-sm" : ""}`}
+                  />
+                </motion.div>
 
                 {photo.isCover && (
-                  <div className="absolute flex top-2 left-2 text-gray-500 gap-2 bg-white text-sm p-2 rounded-lg">
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute flex top-2 left-2 text-gray-500 gap-2 bg-white text-sm p-2 rounded-lg"
+                  >
                     <Star
                       size={20}
                       className="text-yellow-600 bg-yellow-200 rounded-full"
                     />
                     Cover Image
-                  </div>
+                  </motion.div>
                 )}
 
                 {(hoveredPhotoId === photo.id || activeMenuId === photo.id) && (
-                  <button
+                  <motion.button
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ duration: 0.2 }}
                     type="button"
                     className="absolute top-2 right-2 bg-white rounded-full shadow-md"
                     onClick={(e) => {
@@ -275,12 +306,20 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
                     disabled={noPhotos}
                   >
                     <MoreHorizontal size={28} />
-                  </button>
+                  </motion.button>
                 )}
 
                 {activeMenuId === photo.id && (
-                  <div className="absolute top-10 right-2 bg-white rounded-lg shadow-lg p-2 z-10">
-                    <button
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-10 right-2 bg-white rounded-lg shadow-lg p-2 z-10"
+                  >
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                       type="button"
                       className="w-full text-left text-gray-500 px-2 py-1 hover:bg-gray-100 text-sm flex gap-2 items-center"
                       onClick={() => handleMakeCover(photo.id)}
@@ -288,9 +327,11 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
                     >
                       <Star size={20} className="text-yellow-500" />
                       Make Cover
-                    </button>
+                    </motion.button>
                     <div className="divider border-t"></div>
-                    <button
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                       type="button"
                       className="w-full text-left text-gray-500 px-2 py-1 hover:bg-gray-100 text-sm flex gap-2 items-center"
                       onClick={() => handleDeletePhoto(photo.id)}
@@ -298,10 +339,10 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
                     >
                       <Trash2 size={20} className="text-red-500" />
                       Delete
-                    </button>
-                  </div>
+                    </motion.button>
+                  </motion.div>
                 )}
-              </div>
+              </motion.div>
             ))}
 
             {photos.length < maxPhotos && (

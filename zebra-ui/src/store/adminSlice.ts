@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import Cookies from "js-cookie";
 
 interface AdminState {
   isAuthenticated: boolean;
@@ -18,33 +19,39 @@ const adminSlice = createSlice({
   name: "admin",
   initialState,
   reducers: {
-    setToken: (state, action: PayloadAction<string>) => {
-      state.token = action.payload;
-      localStorage.setItem("adminToken", action.payload);
-    },
-    initializeToken: (state) => {
-      const token = localStorage.getItem("adminToken");
-      if (token) {
-        state.token = token;
-      }
-    },
-    logout: (state) => {
-      state.token = null;
-      localStorage.removeItem("adminToken");
-    },
     loginStart: (state) => {
       state.loading = true;
       state.error = null;
+    },
+    initializeToken: (state) => {
+      const token = Cookies.get("adminToken");
+      if (token) {
+        state.isAuthenticated = true;
+        state.token = token;
+      } else {
+        state.isAuthenticated = false;
+        state.token = null;
+      }
     },
     loginSuccess: (state, action: PayloadAction<string>) => {
       state.isAuthenticated = true;
       state.token = action.payload;
       state.loading = false;
       state.error = null;
+      // Store token in cookie for 7 days
+      Cookies.set("adminToken", action.payload, { expires: 7 });
     },
     loginFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.error = action.payload;
+    },
+    logout: (state) => {
+      state.isAuthenticated = false;
+      state.token = null;
+      state.loading = false;
+      state.error = null;
+      // Remove cookie
+      Cookies.remove("adminToken");
     },
   },
 });
@@ -55,6 +62,5 @@ export const {
   loginFailure,
   logout,
   initializeToken,
-  setToken,
 } = adminSlice.actions;
 export default adminSlice.reducer;

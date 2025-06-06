@@ -4,8 +4,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Nunito } from "next/font/google";
 
-import Header from "@/components/common/Header";
-import Sidebar from "@/components/common/Sidebar";
 import Providers from "@/providers/Providers";
 
 const inter = Inter({
@@ -37,11 +35,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${nutino.variable}`}>
         <Providers>
-          <div className="min-h-screen bg-gray-50">
-            <Sidebar />
-            <Header />
-            <main className="pl-72 lg:pl-80 pt-16">{children}</main>
-          </div>
+          <main>{children}</main>
         </Providers>
       </body>
     </html>

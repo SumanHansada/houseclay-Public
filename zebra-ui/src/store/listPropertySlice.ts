@@ -29,7 +29,7 @@ const initialData: {
     ownershipType: "Self Owned",
     propertyAge: "More than 10 year",
     floor: 0,
-    totalFloor: 2,
+    totalFloors: 10,
     floorType: "Mosaic",
     description:
       "Top floor nicely placed. This lovely three bedroom for sale is only 1.95 Crores rupees without any extra brokerage & could be your new home. This West facing home is over 1536 sqft. & is in a convenient location. Situated on the 29th floor this home can comfortably serve your space for car and bike parking needs.",
@@ -79,7 +79,7 @@ const initialData: {
   flatmatesDetails: {
     rent: 0,
     maintenanceCharges: 0,
-    deposit: 0,
+    depositCharges: 0,
     availableFrom: "",
     furnishing: "",
     waterSupply: "",
@@ -89,7 +89,7 @@ const initialData: {
     amenities: [],
     tenantType: "",
     attachedBathroom: false,
-    bathroomType: "",
+    attachedBalcony: false,
     smokingPreference: "",
     drinkingPreference: "",
   },
@@ -97,6 +97,7 @@ const initialData: {
 
 const initialState: ListPropertyState = {
   propertyID: "",
+  imagesS3Url: {},
   propertyType: PropertyType.RENT,
   listingType: PropertyListingType.DIY,
   rentForm: {
@@ -177,10 +178,12 @@ const listPropertySlice = createSlice({
         data: Record<string, string>;
       }>,
     ) => {
-      const { type, data } = action.payload;
-      state[type].data?.images?.forEach((image: PropertyPhoto) => {
-        image.S3Url = data[image.file.name];
-      });
+      // const { type, data } = action.payload;
+      // state[type].data?.images?.forEach((image: PropertyPhoto) => {
+      //   image.S3Url = data[image.file.name];
+      // });
+      const { data } = action.payload;
+      state.imagesS3Url = data;
     },
     setPropertyID: (state, action: PayloadAction<string>) => {
       state.propertyID = action.payload;

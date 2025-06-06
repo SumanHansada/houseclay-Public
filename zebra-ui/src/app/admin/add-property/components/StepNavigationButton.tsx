@@ -21,7 +21,7 @@ const StepNavigationButton: React.FC<StepNavProps> = ({
   const isCompleted = completedSteps.has(step);
 
   return (
-    <div className="relative flex-col items-center text-center">
+    <div className="relative flex-col items-center text-center flex-1">
       {/* Icon */}
       <div
         className={`

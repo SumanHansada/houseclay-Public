@@ -1,16 +1,6 @@
 "use client";
 
-import {
-  BookCopy,
-  ChevronDown,
-  ChevronUp,
-  CreditCard,
-  Home,
-  IndianRupee,
-  Settings,
-  UserCheck,
-  Users,
-} from "lucide-react";
+import { ChevronDown, ChevronUp, Home, UserCheck, Users } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -48,8 +38,8 @@ const sidebarItems = [
     label: "Lead Management",
     icon: <UserCheck size={20} />,
     children: [
-      { label: "Property Lead", href: "/admin/lead-management" },
-      { label: "Support Lead", href: "/admin/lead-management" },
+      { label: "Property Lead", href: "/admin/lead-management/property" },
+      { label: "Support Lead", href: "/admin/lead-management/support" },
     ],
     href: "#",
   },
@@ -58,7 +48,7 @@ const sidebarItems = [
     icon: <Users size={20} />,
     children: [
       { label: "HouseClay Users", href: "/admin/user-management" },
-      { label: "Zebra Admins", href: "#" },
+      // { label: "Zebra Admins", href: "#" },
     ],
     href: "#",
   },
