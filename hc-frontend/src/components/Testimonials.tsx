@@ -101,7 +101,13 @@ export const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
       </div>
 
       {/* Testimonials grid */}
-      <Carousel2D slideWidth={isMobile ? 300 : 400} gap={24} showDots={true}>
+      <Carousel2D
+        slideWidth={isMobile ? 300 : 400}
+        gap={4}
+        showDots={true}
+        containerClassName=""
+        showArrows={true}
+      >
         {testimonials.map((testimonial) => (
           <TestimonialCard key={testimonial.id} testimonial={testimonial} />
         ))}

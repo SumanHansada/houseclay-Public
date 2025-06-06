@@ -68,6 +68,8 @@ const Standouts: React.FC<StandoutsProps> = ({
         slideWidth={isMobile ? 325 : 370}
         gap={4}
         showDots={isMobile ? true : false}
+        showArrows={true}
+        containerClassName="xl:px-28 lg:px-14 md:px-14 px-8"
       >
         {properties.map((property) => (
           <Properties

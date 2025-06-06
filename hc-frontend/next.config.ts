@@ -2,6 +2,13 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        hostname: "houseclay-properties-photos.s3.ap-southeast-2.amazonaws.com",
+      },
+    ],
+  },
   turbopack: {
     rules: {
       "*.svg": {

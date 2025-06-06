@@ -9,6 +9,7 @@ interface Carousel2DProps {
   showDots?: boolean; // Option to show/hide dots
   autoScroll?: boolean; // Auto scroll feature
   autoScrollInterval?: number; // Interval for auto scroll in ms
+  containerClassName?: string;
 }
 
 const Carousel2D: React.FC<Carousel2DProps> = ({
@@ -20,6 +21,7 @@ const Carousel2D: React.FC<Carousel2DProps> = ({
   showDots = false,
   autoScroll = false,
   autoScrollInterval = 3000,
+  containerClassName = "",
 }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -113,7 +115,7 @@ const Carousel2D: React.FC<Carousel2DProps> = ({
       {showArrows && (
         <button
           onClick={() => handleScroll("left")}
-          className={`absolute xl:-left-16 left-2 top-1/2 -translate-y-1/2 z-10 bg-white bg-opacity-70 hover:bg-opacity-90 rounded-full p-2 shadow-md transition-opacity duration-300 flex items-center justify-center ${
+          className={`absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white bg-opacity-70 hover:bg-opacity-90 rounded-full p-2 shadow-md transition-opacity duration-300 flex items-center justify-center ${
             canScrollLeft ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
           aria-label="Scroll left"
@@ -138,7 +140,7 @@ const Carousel2D: React.FC<Carousel2DProps> = ({
       {/* Carousel container */}
       <div
         ref={scrollContainerRef}
-        className={`grid grid-flow-col auto-cols-max ${gap ? `gap-${gap}` : ""} px-8 py-2 overflow-x-scroll scrollbar-hide scroll-smooth`}
+        className={`grid grid-flow-col auto-cols-max ${gap ? `gap-${gap}` : ""} py-2 overflow-x-scroll scrollbar-hide scroll-smooth ${containerClassName}`}
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {/* Apply width to child elements if specified */}
@@ -157,7 +159,7 @@ const Carousel2D: React.FC<Carousel2DProps> = ({
       {showArrows && (
         <button
           onClick={() => handleScroll("right")}
-          className={`absolute xl:-right-16 right-2 top-1/2 -translate-y-1/2 z-10 bg-white bg-opacity-70 hover:bg-opacity-90 rounded-full p-2 shadow-md transition-opacity duration-300 flex items-center justify-center ${
+          className={`absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white bg-opacity-70 hover:bg-opacity-90 rounded-full p-2 shadow-md transition-opacity duration-300 flex items-center justify-center ${
             canScrollRight ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
           aria-label="Scroll right"

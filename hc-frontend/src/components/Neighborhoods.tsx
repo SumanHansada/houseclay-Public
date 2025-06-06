@@ -63,7 +63,13 @@ const Neighbourhoods: React.FC<NeighbourhoodsProps> = ({
         role="list"
         className="scrollbar-hide flex overflow-x-auto md:hidden"
       >
-        <Carousel2D slideWidth={245} gap={4} showDots={true}>
+        <Carousel2D
+          slideWidth={245}
+          gap={4}
+          showDots={true}
+          showArrows={true}
+          containerClassName="px-8"
+        >
           {neighbourhoods.map((neighbourhood, index) => (
             <div key={index}>
               <NeighbourhoodCard

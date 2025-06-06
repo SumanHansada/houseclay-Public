@@ -31,6 +31,7 @@ import {
   Wine,
 } from "lucide-react";
 import { EditIcon } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
 import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
@@ -53,7 +54,12 @@ import { useEffect } from "react";
 import React from "react";
 import { useDispatch } from "react-redux";
 
-import { formatINRCurrency, pascalCase } from "@/common/utils";
+import {
+  formatINRCurrency,
+  pascalCase,
+  shimmer,
+  toBase64,
+} from "@/common/utils";
 import Carousel2D from "@/components/Carousel2D";
 import {
   NonTab,
@@ -750,7 +756,7 @@ export function PropertyDetailsClient({
                           slideWidth={300}
                           gap={4}
                           showArrows={true}
-                          showDots={true}
+                          showDots={false}
                           autoScroll={false}
                         >
                           {property?.images?.map(
@@ -759,12 +765,14 @@ export function PropertyDetailsClient({
                                 key={idx}
                                 className="relative w-full aspect-[4/3] rounded-lg overflow-hidden border"
                               >
-                                {/* <Image 
-                            src={imgUrl} 
-                            alt={`Property image ${idx + 1}`} 
-                            fill
-                            className="object-cover"
-                          /> */}
+                                <Image
+                                  src={imgUrl}
+                                  alt={`Property image ${idx + 1}`}
+                                  fill
+                                  className="object-cover"
+                                  placeholder="blur"
+                                  blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(300, 400))}`}
+                                />
                               </div>
                             ),
                           )}
