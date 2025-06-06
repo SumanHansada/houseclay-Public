@@ -15,10 +15,10 @@ import {
 import { extractS3KeyFromUrl } from "@/common/utils";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
-import { TAddFlatmatesProperty } from "@/interfaces/FlatmatesDetails";
+import { AddFlatmatesPropertyRequest } from "@/interfaces/FlatmatesDetails";
 import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
-import { TAddRentPropertyResponse } from "@/interfaces/RentalDetails";
-import { TAddResalePropertyResponse } from "@/interfaces/ResaleDetails";
+import { AddRentPropertyRequest } from "@/interfaces/RentalDetails";
+import { AddResalePropertyRequest } from "@/interfaces/ResaleDetails";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -119,7 +119,7 @@ export default function AddPropertyTypeLayout({
           S3Url: imagesS3Url[photo.file.name],
         };
       });
-      console.log(photosToUpload);
+      // console.log(photosToUpload);
       uploadFiles(photosToUpload);
     }
   };
@@ -132,7 +132,6 @@ export default function AddPropertyTypeLayout({
     photos.forEach((f: PropertyPhoto) => {
       fileMap[encodeURIComponent(f.file.name)] = f.file.type;
     });
-    console.log(fileMap);
     const presignedUrlsResponse = await getPresignedUrls({
       fileMap,
     })
@@ -271,7 +270,7 @@ export default function AddPropertyTypeLayout({
             propertyTax: _propertyTax,
             ...rentalAdditionalInfo
           } = additionalInfo || {};
-          const data: TAddRentPropertyResponse = {
+          const data: AddRentPropertyRequest = {
             ...basePropertyData,
             ...propertyDetails,
             ...rentalDetails,
@@ -289,7 +288,7 @@ export default function AddPropertyTypeLayout({
             whoWillShowProperty: _whoWillShowProperty,
             ...resaleAdditionalInfo
           } = additionalInfo || {};
-          const data: TAddResalePropertyResponse = {
+          const data: AddResalePropertyRequest = {
             ...basePropertyData,
             ...propertyDetails,
             ...resaleDetails,
@@ -316,7 +315,7 @@ export default function AddPropertyTypeLayout({
             propertyTax: _propertyTax,
             ...flatmatesAdditionalInfo
           } = additionalInfo || {};
-          const data: TAddFlatmatesProperty = {
+          const data: AddFlatmatesPropertyRequest = {
             ...basePropertyData,
             ...flatmatesPropertyDetails,
             ...flatmatesDetails,

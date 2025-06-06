@@ -1,14 +1,16 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import React, { ReactNode, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { LeadActions, LeadStatus } from "@/interfaces/Lead";
+import { LeadActionsEnum, LeadStatusEnum } from "@/interfaces/Lead";
 import {
   useGetLeadByIdQuery,
   useLeadAddCommentMutation,
   useLeadStatusUpdateMutation,
 } from "@/store/apiSlice";
+
+import { RenderLeadStatus } from "../../../components/RenderLeadStatus";
 
 interface LeadDetailsProps {
   leadType: string;
@@ -35,6 +37,19 @@ export const LeadDetails: React.FC<LeadDetailsProps> = ({
 
   const [newCommentText, setNewCommentText] = useState<string>("");
 
+  // ─── A ref to the scrollable container for all comments ───
+  const commentsContainerRef = useRef<HTMLUListElement | null>(null);
+
+  // ─── SCROLL TO BOTTOM LOGIC ───
+  useEffect(() => {
+    if (!commentsContainerRef.current) return;
+    const container = commentsContainerRef.current;
+    container.scrollTo({
+      top: container.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [currentLead?.comments.length]);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
@@ -55,65 +70,28 @@ export const LeadDetails: React.FC<LeadDetailsProps> = ({
     );
   }
 
-  const renderStatus = (status: LeadStatus): ReactNode => {
-    switch (status) {
-      case LeadStatus.NEW:
-        return (
-          <span className="px-2 py-1 bg-blue-400 text-blue-900 rounded-full text-sm">
-            New
-          </span>
-        );
-      case LeadStatus.FOLLOW_UP:
-        return (
-          <span className="px-2 py-1 bg-red-300 text-red-800 rounded-full text-sm">
-            Follow Up
-          </span>
-        );
-      case LeadStatus.RESOLVED:
-        return (
-          <span className="px-2 py-1 bg-green-400 text-green-900 rounded-full text-sm">
-            Resolved
-          </span>
-        );
-      default:
-        return null;
-    }
-  };
-
-  const isFollowUpDisabled = currentLead.status === LeadStatus.FOLLOW_UP;
-  const isResolvedDisabled = currentLead.status === LeadStatus.RESOLVED;
-
+  const isFollowUpDisabled = currentLead.status === LeadStatusEnum.FOLLOW_UP;
+  const isResolvedDisabled = currentLead.status === LeadStatusEnum.RESOLVED;
   const isLeadTypeProperty = leadType === "property";
 
   const handleFollowUp = async () => {
     try {
-      console.log(LeadActions.FOLLOW_UP);
       await leadStatusUpdate({
         id: leadId,
-        newStatus: LeadActions.FOLLOW_UP,
+        newStatus: LeadActionsEnum.FOLLOW_UP,
       });
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        console.error("Failed to update to FOLLOW_UP:", err.message);
-      } else {
-        console.error("Failed to update to FOLLOW_UP (non‐Error):", err);
-      }
+      console.error("Failed to update to FOLLOW_UP:", err);
     }
   };
-
   const handleResolved = async () => {
     try {
-      console.log(LeadActions.RESOLVED);
       await leadStatusUpdate({
         id: leadId,
-        newStatus: LeadActions.RESOLVED,
+        newStatus: LeadActionsEnum.RESOLVED,
       });
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        console.error("Failed to update to RESOLVE:", err.message);
-      } else {
-        console.error("Failed to update to RESOLVE (non‐Error):", err);
-      }
+      console.error("Failed to update to RESOLVED:", err);
     }
   };
 
@@ -126,11 +104,7 @@ export const LeadDetails: React.FC<LeadDetailsProps> = ({
     try {
       await leadAddComment({ id: leadId, newComment: text });
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        console.error("Failed to post comment:", err.message);
-      } else {
-        console.error("Failed to post comment (non‐Error):", err);
-      }
+      console.error("Failed to post comment:", err);
       setNewCommentText(text);
     }
   };
@@ -155,15 +129,17 @@ export const LeadDetails: React.FC<LeadDetailsProps> = ({
                 <label className="text-gray-600 font-medium">Phone</label>
                 <span className="mt-1">{currentLead.phoneNo}</span>
               </div>
-              {/* {currentLead.createdAt && ( */}
               <div className="flex flex-col">
                 <label className="text-gray-600 font-medium">Created At</label>
-                <span className="mt-1">{currentLead.createdAt}</span>
+                <span className="mt-1">
+                  {new Date(currentLead.createdAt).toLocaleString()}
+                </span>
               </div>
-              {/* )} */}
               <div className="flex flex-col">
                 <label className="text-gray-600 font-medium">Status</label>
-                <span className="mt-1">{renderStatus(currentLead.status)}</span>
+                <span className="mt-1">
+                  <RenderLeadStatus status={currentLead.status} />
+                </span>
               </div>
             </div>
           </div>
@@ -175,29 +151,31 @@ export const LeadDetails: React.FC<LeadDetailsProps> = ({
             <h3 className="text-lg font-semibold">Comment History</h3>
           </div>
 
-          <div className="flex-1 overflow-y-auto bg-white min-h-0">
-            {/* <div className="flex-1 overflow-y-auto bg-white min-h-0 scrollbar-thin"> */}
-            <ul className="p-4 space-y-4">
-              {Array.isArray(currentLead.comments) &&
-              currentLead.comments.length > 0 ? (
-                currentLead.comments.map((comment) => (
-                  <li
-                    key={`${comment.date}-${comment.author}`}
-                    className="bg-gray-50 border border-gray-300 rounded-lg p-3"
-                  >
-                    <p className="text-sm text-gray-800">{comment.comment}</p>
-                    <div className="mt-1 flex justify-between text-xs text-gray-500">
-                      <span>Author: {comment.author}</span>
-                      <span>{new Date(comment.date).toLocaleString()}</span>
-                    </div>
-                  </li>
-                ))
-              ) : (
-                <li className="text-center text-gray-500 py-8">No Comments.</li>
-              )}
-            </ul>
-          </div>
+          {/* ─── Scrollable Comments List ─── */}
+          <ul
+            ref={commentsContainerRef}
+            className="flex-1 overflow-y-auto bg-white min-h-0 p-4 space-y-4"
+          >
+            {Array.isArray(currentLead.comments) &&
+            currentLead.comments.length > 0 ? (
+              currentLead.comments.map((comment, idx) => (
+                <li
+                  key={`${comment.date}-${comment.author}-${idx}`}
+                  className="bg-gray-50 border border-gray-300 rounded-lg p-3"
+                >
+                  <p className="text-sm text-gray-800">{comment.comment}</p>
+                  <div className="mt-1 flex justify-between text-xs text-gray-500">
+                    <span>Author: {comment.author}</span>
+                    <span>{new Date(comment.date).toLocaleString()}</span>
+                  </div>
+                </li>
+              ))
+            ) : (
+              <li className="text-center text-gray-500 py-8">No Comments.</li>
+            )}
+          </ul>
 
+          {/* ─── New Comment Input Area ─── */}
           <div className="bg-gray-100 px-4 py-3 border-t border-gray-300">
             <textarea
               name="comment"
@@ -212,7 +190,7 @@ export const LeadDetails: React.FC<LeadDetailsProps> = ({
               <button
                 onClick={handleAddComment}
                 disabled={isPostingComment || !newCommentText.trim()}
-                className={`px-4 py-2 rounded-lg text-white ${
+                className={`px-4 py-2 rounded-lg text-white cursor-pointer ${
                   isPostingComment
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-black hover:bg-gray-800"
@@ -226,19 +204,26 @@ export const LeadDetails: React.FC<LeadDetailsProps> = ({
       </div>
 
       {/* ───────── Footer ───────── */}
-      <div
-        className={`bg-gray-100 px-4 py-3 border-t border-gray-300 flex ${isLeadTypeProperty ? "justify-between" : "justify-end"}`}
-      >
-        {isLeadTypeProperty && (
+      <div className="bg-gray-100 px-4 py-3 border-t border-gray-300 flex justify-between">
+        <div className="flex gap-2">
           <button
-            onClick={() =>
-              router.push(`/admin/add-property/${currentLead.phoneNo}`)
-            }
-            className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white"
+            className="py-2 px-4 rounded-lg bg-gray-100 hover:bg-gray-300 border border-gray-400"
+            onClick={() => router.back()}
           >
-            Add Property
+            Back
           </button>
-        )}
+
+          {isLeadTypeProperty && (
+            <button
+              onClick={() =>
+                router.push(`/admin/add-property/${currentLead.phoneNo}`)
+              }
+              className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white"
+            >
+              Add Property
+            </button>
+          )}
+        </div>
 
         <div className="flex gap-2">
           <button
@@ -250,7 +235,7 @@ export const LeadDetails: React.FC<LeadDetailsProps> = ({
                 : "bg-red-500 hover:bg-red-600"
             }`}
           >
-            {isUpdatingStatus && currentLead.status === LeadStatus.NEW
+            {isUpdatingStatus && currentLead.status === LeadStatusEnum.NEW
               ? "Updating…"
               : "Follow Up"}
           </button>
@@ -264,7 +249,7 @@ export const LeadDetails: React.FC<LeadDetailsProps> = ({
                 : "bg-green-600 hover:bg-green-700"
             }`}
           >
-            {isUpdatingStatus && currentLead.status === LeadStatus.FOLLOW_UP
+            {isUpdatingStatus && currentLead.status === LeadStatusEnum.FOLLOW_UP
               ? "Updating…"
               : "Resolved"}
           </button>

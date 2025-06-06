@@ -13,7 +13,7 @@ export interface RentalDetails {
   amenities: string[];
 }
 
-export interface TAddRentPropertyResponse {
+export interface AddRentPropertyRequest {
   propertyID: string;
   propertyCategory: string;
   propertyType: string;

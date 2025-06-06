@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
-import { LeadType } from "@/interfaces/Lead";
 import { use } from "react";
+
+import { LeadType } from "@/interfaces/Lead";
 
 export const dynamicParams = true;
 

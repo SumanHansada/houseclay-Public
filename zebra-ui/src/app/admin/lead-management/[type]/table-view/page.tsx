@@ -1,6 +1,8 @@
 import { use } from "react";
+
 import { LeadType } from "@/interfaces/Lead";
-import { LeadTableView } from "../../components/LeadTableView";
+
+import { LeadTableView } from "./LeadTableView";
 
 interface TParams {
   params: Promise<{ type: LeadType }>;

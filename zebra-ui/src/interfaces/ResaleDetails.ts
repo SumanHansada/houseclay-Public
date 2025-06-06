@@ -12,7 +12,7 @@ export interface ResaleDetails {
   amenities: string[];
 }
 
-export interface TAddResalePropertyResponse {
+export interface AddResalePropertyRequest {
   propertyID: string;
   propertyCategory: string;
   builtUpArea: number;

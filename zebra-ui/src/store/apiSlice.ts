@@ -1,14 +1,17 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-import { TAddFlatmatesProperty } from "@/interfaces/FlatmatesDetails";
+import { AddFlatmatesPropertyRequest } from "@/interfaces/FlatmatesDetails";
 import {
-  LeadParamType,
-  TLeadByIdResponse,
-  TLeadsResponse,
+  GetAllLeadsResponse,
+  LeadByIdResponse,
+  LeadQueryParamEnum,
 } from "@/interfaces/Lead";
-import { TAddRentPropertyResponse } from "@/interfaces/RentalDetails";
-import { TAddResalePropertyResponse } from "@/interfaces/ResaleDetails";
-import { TGetUsersResponse } from "@/interfaces/User";
+import { AddRentPropertyRequest } from "@/interfaces/RentalDetails";
+import { AddResalePropertyRequest } from "@/interfaces/ResaleDetails";
+import {
+  GetAllUsersResponse,
+  GetUserByPhoneNoResponse,
+} from "@/interfaces/User";
 
 import { RootState } from "./store";
 
@@ -62,17 +65,30 @@ export const apiSlice = createApi({
     }),
 
     // ──────────────── USERS ────────────────
-    getUsers: builder.query<TGetUsersResponse, { page: number; size: number }>({
+    getUsers: builder.query<
+      GetAllUsersResponse,
+      { page: number; size: number }
+    >({
       query: ({ page, size }) => ({
         url: `/admin/users?page=${page}&size=${size}`,
         method: "GET",
       }),
     }),
 
+    getUserByPhoneNo: builder.query<
+      GetUserByPhoneNoResponse,
+      { phoneNo: string }
+    >({
+      query: ({ phoneNo }) => ({
+        url: `/admin/search-user?phoneNo=${phoneNo}`,
+        method: "GET",
+      }),
+    }),
+
     // ──────────────── LEADS ────────────────
     getLeads: builder.query<
-      TLeadsResponse,
-      { type: LeadParamType; page: number; size: number }
+      GetAllLeadsResponse,
+      { type: LeadQueryParamEnum; page: number; size: number }
     >({
       query: ({ type, page, size }) => ({
         url: `/leads?leadCategory=${type}&page=${page}&size=${size}`,
@@ -89,7 +105,7 @@ export const apiSlice = createApi({
             ]
           : [{ type: "Leads" as const, id: "LIST" }],
     }),
-    getLeadById: builder.query<TLeadByIdResponse, { id: number }>({
+    getLeadById: builder.query<LeadByIdResponse, { id: number }>({
       query: ({ id }) => ({
         url: `/leads/${id}`,
         method: "GET",
@@ -159,7 +175,7 @@ export const apiSlice = createApi({
         message: string;
         propertyID: number;
       },
-      { data: TAddRentPropertyResponse; phoneNo: string }
+      { data: AddRentPropertyRequest; phoneNo: string }
     >({
       query: ({ data, phoneNo }) => ({
         url: `property/admin/add?phoneNo=${phoneNo}`,
@@ -176,7 +192,7 @@ export const apiSlice = createApi({
         propertyID: number;
       },
       {
-        data: TAddResalePropertyResponse;
+        data: AddResalePropertyRequest;
         phoneNo: string;
       }
     >({
@@ -195,7 +211,7 @@ export const apiSlice = createApi({
         propertyID: number;
       },
       {
-        data: TAddFlatmatesProperty;
+        data: AddFlatmatesPropertyRequest;
         phoneNo: string;
       }
     >({
@@ -215,6 +231,7 @@ export const {
   useLoginMutation,
   useRegisterMutation,
   useGetUsersQuery,
+  useGetUserByPhoneNoQuery,
   useGetLeadsQuery,
   useGetLeadByIdQuery,
   useLeadStatusUpdateMutation,

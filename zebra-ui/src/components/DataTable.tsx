@@ -37,69 +37,67 @@ export function DataTable<T extends object>({
   getRowId,
 }: DataTableProps<T>) {
   return (
-    <Table
-      aria-label="Data table"
-      className="w-full bg-white h-full"
-      removeWrapper
-    >
-      <TableHeader columns={columns}>
-        {(col) => (
-          <TableColumn
-            key={col.key}
-            className={`${col.className} text-left text-[22px] font-bold`}
-          >
-            {col.label}
-          </TableColumn>
-        )}
-      </TableHeader>
-
-      <TableBody className="flex flex-col items-center justify-center h-full">
-        {data.length > 0 ? (
-          data.map((item, rowIndex) => {
-            // const rowId =
-            //   getRowId?.(item, rowIndex) ??
-            //   (typeof (item as any).id === "string"
-            //     ? ((item as any).id as string)
-            //     : rowIndex.toString());
-
-            let fallbackId = rowIndex.toString();
-            if (hasStringOrNumberId(item)) {
-              fallbackId = String(item.id);
-            }
-            const rowId = getRowId ? getRowId(item, rowIndex) : fallbackId;
-
-            return (
-              <TableRow
-                key={rowId}
-                className={
-                  rowIndex % 2 === 1
-                    ? "bg-gray-100"
-                    : "bg-gray-50 border border-gray-200"
-                }
-              >
-                {columns.map((col) => (
-                  <TableCell key={col.key} className="px-2 py-px">
-                    {col.render
-                      ? col.render(item)
-                      : col.accessor
-                        ? (item[col.accessor] as React.ReactNode)
-                        : null}
-                  </TableCell>
-                ))}
-              </TableRow>
-            );
-          })
-        ) : (
-          <TableRow>
-            <TableCell
-              colSpan={columns.length}
-              className="pt-20 text-2xl text-center text-red-400"
+    <div className="dataTableWrapper">
+      <Table
+        aria-label="Data table"
+        className="w-full bg-white h-full"
+        removeWrapper
+      >
+        <TableHeader columns={columns} className="mb-0">
+          {(col) => (
+            <TableColumn
+              key={col.key}
+              className={`${col.className} text-left text-lg font-normal border border-gray-200`}
             >
-              No data found
-            </TableCell>
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+              {col.label}
+            </TableColumn>
+          )}
+        </TableHeader>
+
+        <TableBody className="flex flex-col items-center justify-center h-full">
+          {data.length > 0 ? (
+            data.map((item, rowIndex) => {
+              // const rowId =
+              //   getRowId?.(item, rowIndex) ??
+              //   (typeof (item as any).id === "string"
+              //     ? ((item as any).id as string)
+              //     : rowIndex.toString());
+
+              let fallbackId = rowIndex.toString();
+              if (hasStringOrNumberId(item)) {
+                fallbackId = String(item.id);
+              }
+              const rowId = getRowId ? getRowId(item, rowIndex) : fallbackId;
+
+              return (
+                <TableRow key={rowId}>
+                  {columns.map((col) => (
+                    <TableCell
+                      key={col.key}
+                      className="px-3 py-2 border border-gray-200 font-light text-lg"
+                    >
+                      {col.render
+                        ? col.render(item)
+                        : col.accessor
+                          ? (item[col.accessor] as React.ReactNode)
+                          : null}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              );
+            })
+          ) : (
+            <TableRow>
+              <TableCell
+                colSpan={columns.length}
+                className="pt-20 text-2xl text-center text-red-400"
+              >
+                No data found
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
   );
 }

@@ -1,40 +1,34 @@
-export enum LeadStatus {
+export enum LeadStatusEnum {
   NEW = "NEW",
   FOLLOW_UP = "FOLLOW_UP",
   RESOLVED = "RESOLVED",
 }
 
-// export enum LeadActions {
-//   NEW,
-//   FOLLOW_UP,
-//   RESOLVED,
-// }
-
-export enum LeadActions {
+export enum LeadActionsEnum {
   FOLLOW_UP = `"FOLLOW_UP"`,
   RESOLVED = `"RESOLVED"`,
 }
 
 export type LeadType = "property" | "support";
 
-export type LeadParamType = "PROPERTY_LISTING" | "SEARCH_SUPPORT";
+// export type LeadParamType = "PROPERTY_LISTING" | "SEARCH_SUPPORT";
 
-export enum LeadQueryParam {
+export enum LeadQueryParamEnum {
   property = "PROPERTY_LISTING",
   support = "SEARCH_SUPPORT",
 }
 
-export interface TLead {
+export interface Lead {
   leadId: number;
   name: string;
   email: string;
   avatar?: string;
   phoneNo: string;
-  status: LeadStatus;
+  status: LeadStatusEnum;
 }
 
-export interface TLeadsResponse {
-  content: TLead[];
+export interface GetAllLeadsResponse {
+  content: Lead[];
   pageable: {
     pageNumber: number;
     pageSize: number;
@@ -54,13 +48,13 @@ export interface LeadComment {
   author: string;
 }
 
-export interface TLeadByIdResponse {
+export interface LeadByIdResponse {
   leadId: number;
   phoneNo: string;
   email: string;
   name: string;
   avatar?: string;
-  createdAt?: string;
-  status: LeadStatus;
+  createdAt: string;
+  status: LeadStatusEnum;
   comments: LeadComment[];
 }

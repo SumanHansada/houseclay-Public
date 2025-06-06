@@ -16,7 +16,7 @@ export interface FlatmatesDetails {
   drinkingPreference: string;
 }
 
-export interface TAddFlatmatesProperty {
+export interface AddFlatmatesPropertyRequest {
   propertyID: string;
   propertyCategory: string;
   builtUpArea: number;

@@ -1,13 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import React from "react";
 
-type Tab = {
+interface TProps {
+  id: string;
+}
+
+interface Tab {
   label: string;
   slug: string;
-};
+}
 
 const tabs: Tab[] = [
   { label: "Profile", slug: "profile" },
@@ -19,10 +23,8 @@ const tabs: Tab[] = [
   { label: "Viewed Properties*", slug: "viewed-properties" },
 ];
 
-export const UserDetailsNavbar: React.FC = () => {
-  const params = useParams();
+export const UserDetailsNavbar: React.FC<TProps> = ({ id }) => {
   const pathname = usePathname();
-  const id = params?.id;
 
   return (
     <ul className="flex gap-5 py-3 text-lg">

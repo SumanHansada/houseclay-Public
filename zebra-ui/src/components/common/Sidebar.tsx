@@ -16,31 +16,12 @@ const sidebarItems = [
     label: "Properties",
     icon: <Home size={20} />,
     children: [
-      // {
-      //   label: "Add Rental Property",
-      //   href: "/admin/add-property/rent/property-details",
-      // },
-      // {
-      //   label: "Add Sale Property",
-      //   href: "/admin/add-property/resale/property-details",
-      // },
-      // {
-      //   label: "Add Flatmates",
-      //   href: "/admin/add-property/flatmates/property-details",
-      // },
-      // { label: "Add Property", href: "/admin/add-property" },
       { label: "View All Properties", href: "/admin/view-all-properties" },
       { label: "Verify Property", href: "#" },
       { label: "ReVerify Property", href: "#" },
     ],
     href: "#",
   },
-  // {
-  //   label: "ClayManage",
-  //   icon: <BookCopy size={20} />,
-  //   children: ["Subitem 1", "Subitem 2"],
-  //   href: "#",
-  // },
   {
     label: "Lead Management",
     icon: <UserCheck size={20} />,
@@ -60,29 +41,11 @@ const sidebarItems = [
     href: "#",
   },
   {
-    label: "UI",
+    label: "UI - Testing",
     icon: <Archive size={20} />,
     children: [{ label: "current task", href: "#" }],
     href: "#",
   },
-  // {
-  //   label: "Payments",
-  //   icon: <CreditCard size={20} />,
-  //   children: ["Subitem 1", "Subitem 2"],
-  //   href: "#",
-  // },
-  // {
-  //   label: "Config",
-  //   icon: <Settings size={20} />,
-  //   children: ["Subitem 1", "Subitem 2"],
-  //   href: "#",
-  // },
-  // {
-  //   label: "Expense Tracker",
-  //   icon: <IndianRupee size={20} />,
-  //   children: ["Subitem 1", "Subitem 2"],
-  //   href: "#",
-  // },
 ];
 
 const Sidebar = () => {
