@@ -21,7 +21,7 @@ jobs:
         run: |
           echo "${{ secrets.ZEBRA_SECURITY_KEY }}" > zebra_key.pem
           chmod 600 zebra_key.pem
-          rsync -az -e "ssh -o StrictHostKeyChecking=no -i zebra_key.pem" hc-frontend ec2-user@${{ secrets.ZEBRA_HOST }}:/home/ec2-user/
+          rsync -az --delete -e "ssh -o StrictHostKeyChecking=no -i zebra_key.pem" hc-frontend ec2-user@${{ secrets.ZEBRA_HOST }}:/home/ec2-user/
 
       - name: Install pm2 on Zebra Host
         run: |
