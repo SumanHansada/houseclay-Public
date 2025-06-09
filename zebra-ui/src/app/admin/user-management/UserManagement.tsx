@@ -4,27 +4,26 @@ import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
-import { TUser } from "@/interfaces/User";
+import { SearchFilterBar } from "@/components/SearchFilterBar";
+import { TablePagination } from "@/components/TablePagination";
+import { User } from "@/interfaces/User";
 import { useGetUsersQuery } from "@/store/apiSlice";
 
-import { ActionMenu } from "./ActionMenu";
-import { Pagination } from "./Pagination";
-import { SearchFilterBar } from "./SearchFilterBar";
-import { UserCard } from "./UserCard";
-import { UserStatus } from "./UserStatus";
+import { RenderUserStatus } from "./components/RenderUserStatus";
+import { TableCellActions } from "./components/TableCellActions";
 
 export const UsersManagement = () => {
   const router = useRouter();
   const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 12;
+  const rowsPerPage = 10;
 
   const { data, isLoading, isError } = useGetUsersQuery({
     page: currentPage - 1,
     size: rowsPerPage,
   });
 
-  const allUsers = useMemo<TUser[]>(() => {
+  const allUsers = useMemo<User[]>(() => {
     return data?.content ?? [];
   }, [data?.content]);
 
@@ -67,13 +66,16 @@ export const UsersManagement = () => {
   const nextPage = () => !isLast && setCurrentPage((p) => p + 1);
   const prevPage = () => !isFirst && setCurrentPage((p) => p - 1);
 
-  const columns: Column<TUser>[] = [
+  const columns: Column<User>[] = [
     {
       key: "name",
       label: "Name",
-      render: (user) => (
-        <UserCard avatar={user.avatar} name={user.name} email={user.email} />
-      ),
+      accessor: "name",
+    },
+    {
+      key: "email",
+      label: "Email",
+      accessor: "email",
     },
     {
       key: "phoneNo",
@@ -83,13 +85,13 @@ export const UsersManagement = () => {
     {
       key: "blacklisted",
       label: "Status",
-      render: (user) => <UserStatus isBlacklisted={user.blacklisted} />,
+      render: (user) => <RenderUserStatus isBlacklisted={user.blacklisted} />,
     },
     {
       key: "action",
       label: "Action",
       render: (user) => (
-        <ActionMenu viewProfile={() => viewProfile(user.phoneNo)} />
+        <TableCellActions viewProfile={() => viewProfile(user.phoneNo)} />
       ),
     },
   ];
@@ -104,21 +106,24 @@ export const UsersManagement = () => {
             onSearchChange={(v) => {
               setSearchValue(v);
             }}
+            title={"HouseClay Users - DataTable"}
           />
         </div>
 
         {/* Table area */}
-        <div className="flex items-center flex-1 overflow-auto px-8">
-          <DataTable
-            columns={columns}
-            data={filteredUsers}
-            getRowId={(user) => user.phoneNo}
-          />
+        <div className="flex flex-1 bg-gray-100 p-6">
+          <div className="flex flex-col flex-1 bg-white shadow-sm rounded-lg px-6 py-8">
+            <DataTable
+              columns={columns}
+              data={filteredUsers}
+              getRowId={(user) => user.phoneNo}
+            />
+          </div>
         </div>
 
         {/* Sticky bottom pagination */}
-        <div className="sticky bottom-0 z-10 border border-b-gray-200 shadow-sm">
-          <Pagination
+        <div className="sticky bottom-0 z-10 border border-t-gray-200 shadow-sm">
+          <TablePagination
             currentPage={currentPage}
             totalPages={totalPages}
             isFirst={isFirst}

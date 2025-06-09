@@ -1,10 +1,8 @@
-"use client";
-
 import { use } from "react";
 
 import { LeadType } from "@/interfaces/Lead";
 
-import { LeadDetails } from "../../../components/LeadDetails";
+import { LeadDetails } from "./LeadDetails";
 
 interface TParams {
   params: Promise<{ type: LeadType; id: number }>;

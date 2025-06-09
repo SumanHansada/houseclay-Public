@@ -46,6 +46,10 @@ body {
   all: unset !important;
 }
 
+.dataTableWrapper thead tr[aria-hidden="true"] {
+  display: none !important;
+}
+
 /* Fixes input styling */
 .custom-phone-input input {
   all: unset !important; /* Removes default styles */

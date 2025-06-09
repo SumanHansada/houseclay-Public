@@ -105,7 +105,7 @@ const FormPlacesAutocomplete = ({
             latitude: place.location.lat(),
             longitude: place.location.lng(),
           }));
-          console.log("formattedPredictions", formattedPredictions);
+          // console.log("formattedPredictions", formattedPredictions);
           setPredictions(formattedPredictions);
           setShowDropdown(true);
         } else {

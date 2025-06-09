@@ -3,13 +3,16 @@ import React from "react";
 interface SearchFilterBarProps {
   searchValue: string;
   onSearchChange: (v: string) => void;
+  title: string;
 }
 
 export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
   searchValue,
   onSearchChange,
+  title,
 }) => (
-  <div className="flex justify-end py-4 px-28 bg-white">
+  <div className="flex justify-between items-center py-4 px-28 bg-white">
+    <span className="text-2xl font-medium">{title}</span>
     <input
       type="text"
       placeholder="Search by phone..."

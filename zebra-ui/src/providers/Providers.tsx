@@ -5,6 +5,7 @@ import React from "react";
 
 import { DeviceContextProvider } from "./DeviceContextProvider";
 import { DialogContextProvider } from "./DialogContextProvider";
+import { InitializeAuthToken } from "./InitializeAuthToken";
 import QueryProvider from "./QueryProvider";
 import ReduxProvider from "./ReduxProvider";
 import { SkeletonProvider } from "./SkeletonProvider";
@@ -17,17 +18,19 @@ interface ProvidersProps {
 const Providers: React.FC<ProvidersProps> = ({ children }) => {
   return (
     <ReduxProvider>
-      <QueryProvider>
-        <DeviceContextProvider>
-          <DialogContextProvider>
-            <SkeletonProvider>
-              <ToastProvider>
-                <AnimatePresence mode="wait">{children}</AnimatePresence>
-              </ToastProvider>
-            </SkeletonProvider>
-          </DialogContextProvider>
-        </DeviceContextProvider>
-      </QueryProvider>
+      <InitializeAuthToken>
+        <QueryProvider>
+          <DeviceContextProvider>
+            <DialogContextProvider>
+              <SkeletonProvider>
+                <ToastProvider>
+                  <AnimatePresence mode="wait">{children}</AnimatePresence>
+                </ToastProvider>
+              </SkeletonProvider>
+            </DialogContextProvider>
+          </DeviceContextProvider>
+        </QueryProvider>
+      </InitializeAuthToken>
     </ReduxProvider>
   );
 };

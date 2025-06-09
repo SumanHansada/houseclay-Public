@@ -2,8 +2,8 @@
 
 import React from "react";
 
-interface PaginationProps {
-  currentPage: number; // 1-based
+interface TablePaginationProps {
+  currentPage: number;
   totalPages: number;
   isFirst: boolean;
   isLast: boolean;
@@ -12,7 +12,7 @@ interface PaginationProps {
   prevPage: () => void;
 }
 
-export const Pagination: React.FC<PaginationProps> = ({
+export const TablePagination: React.FC<TablePaginationProps> = ({
   currentPage,
   totalPages,
   isFirst,

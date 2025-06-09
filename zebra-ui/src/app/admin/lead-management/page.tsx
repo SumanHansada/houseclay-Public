@@ -1,5 +1,5 @@
 const LeadManagementPage: React.FC = () => {
-  return <div>Lead Management Page</div>;
+  return null;
 };
 
 export default LeadManagementPage;

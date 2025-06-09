@@ -1,4 +1,4 @@
-export interface TUser {
+export interface User {
   name: string;
   email: string;
   avatar?: string;
@@ -6,8 +6,8 @@ export interface TUser {
   blacklisted: boolean;
 }
 
-export interface TGetUsersResponse {
-  content: TUser[];
+export interface GetAllUsersResponse {
+  content: User[];
   pageable: {
     pageNumber: number;
     pageSize: number;
@@ -19,4 +19,54 @@ export interface TGetUsersResponse {
   numberOfElements: number;
   size: number;
   number: number;
+}
+
+export interface UserPropertyInfo {
+  propertyID: string;
+  title: string;
+  description: string;
+}
+
+export interface UserExternalPayment {
+  paymentId: string;
+  amount: number;
+  status: string;
+  signature: string;
+  razorPaymentId: string;
+  createdAt: string;
+  completedAt: string;
+}
+
+export interface UserConnectTransaction {
+  transactionId: string;
+  connectQuantity: number;
+  transactionTime: string;
+}
+
+export interface UserReportProperty {
+  reportId: number;
+  reportType: string;
+  reportTime: string;
+  userProperty: UserPropertyInfo;
+}
+
+export interface UserDetails {
+  phoneNo: string;
+  email: string;
+  name: string;
+  createdAt: string;
+  blacklistedAt: string;
+  blacklistedBy: string;
+  ownedProperties: UserPropertyInfo[];
+  shortlistedProperties: UserPropertyInfo[];
+  viewedProperties: UserPropertyInfo[];
+  contactedProperties: UserPropertyInfo[];
+  externalPayments: UserExternalPayment[];
+  connectTransactions: UserConnectTransaction[];
+  reportProperties: UserReportProperty[];
+  blacklisted: boolean;
+}
+
+export interface GetUserByPhoneNoResponse {
+  user: UserDetails;
 }
