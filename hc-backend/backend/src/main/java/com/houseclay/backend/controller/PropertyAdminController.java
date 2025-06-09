@@ -30,7 +30,7 @@ public class PropertyAdminController {
     private PropertyService propertyService;
 
     @PostMapping("/add")
-    public ResponseEntity addProperty(@RequestBody Property property, String phoneNo, @RequestAttribute("authenticatedAdmin") Admin admin) {
+    public ResponseEntity<?> addProperty(@RequestBody Property property, String phoneNo, @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
             Property savedProperty = propertyAdminService.addProperty(property, phoneNo, admin);
             Map<String, Object> response = new HashMap<>();
@@ -45,7 +45,7 @@ public class PropertyAdminController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity updateProperty(@RequestBody Property property, String phoneNo, @RequestAttribute("authenticatedAdmin") Admin admin) {
+    public ResponseEntity<?> updateProperty(@RequestBody Property property, String phoneNo, @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
             Property savedProperty = propertyAdminService.updateProperty(admin, property, phoneNo);
             Map<String, Object> response = new HashMap<>();
@@ -60,7 +60,7 @@ public class PropertyAdminController {
     }
 
     @PutMapping("/deactivate")
-    public ResponseEntity deactivateProperty(@RequestBody String propertyID, String phoneNo, @RequestAttribute("authenticatedAdmin") Admin admin) {
+    public ResponseEntity<?> deactivateProperty(@RequestBody String propertyID, String phoneNo, @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
             propertyAdminService.deactivateProperty(admin, propertyID, phoneNo);
             Map<String, Object> response = new HashMap<>();
@@ -106,7 +106,7 @@ public class PropertyAdminController {
     }
 
     @PostMapping("/verify-property")
-    public ResponseEntity verifyProperty(@RequestParam String propertyId, @RequestAttribute("authenticatedAdmin") Admin admin) {
+    public ResponseEntity<?> verifyProperty(@RequestParam String propertyId, @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
             Property verifiedProperty = propertyAdminService.verifyProperty(propertyId, admin);
 
@@ -124,7 +124,7 @@ public class PropertyAdminController {
     }
 
     @PostMapping("/re-verify-property")
-    public ResponseEntity reVerifyProperty(@RequestParam String propertyId, @RequestAttribute("authenticatedAdmin") Admin admin) {
+    public ResponseEntity<?> reVerifyProperty(@RequestParam String propertyId, @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
             Property reVerifyProperty = propertyAdminService.reVerifyProperty(propertyId, admin);
             Map<String, Object> response = new HashMap<>();

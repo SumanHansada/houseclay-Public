@@ -83,12 +83,16 @@ public class AdminService {
     }
 
     public User blacklistUser(String phoneNo, Admin admin) throws Exception {
+        Optional<Admin> adminOptional = adminRepository.findByUsername(admin.getUsername());
+        if (adminOptional.isEmpty()) {
+            throw new APIException("Invalid token", HttpStatus.BAD_REQUEST);
+        }
+        admin = adminOptional.get();
         User user = searchUser(phoneNo);
         user.setBlacklisted(true);
         user.setBlacklistedAt(new Timestamp(System.currentTimeMillis()));
         admin.getBlacklistedUsers().add(user);
         adminRepository.save(admin);
-        userRepository.save(user);
         return user;
     }
 

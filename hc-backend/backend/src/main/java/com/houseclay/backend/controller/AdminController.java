@@ -2,22 +2,14 @@ package com.houseclay.backend.controller;
 
 import com.houseclay.backend.dto.AdminRegisterDTO;
 import com.houseclay.backend.entity.Admin;
-import com.houseclay.backend.entity.Property;
-import com.houseclay.backend.entity.User;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.payload.AdminLoginPayload;
-import com.houseclay.backend.payload.AdminLogoutPayload;
 import com.houseclay.backend.service.AdminService;
-import com.houseclay.backend.service.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -28,7 +20,7 @@ public class AdminController {
     private AdminService adminService;
 
     @PostMapping("/register")
-    public ResponseEntity createAdmin(@RequestBody AdminRegisterDTO adminRegisterDTO) {
+    public ResponseEntity<?> createAdmin(@RequestBody AdminRegisterDTO adminRegisterDTO) {
         try {
             adminService.registerAdmin(adminRegisterDTO);
             return ResponseEntity.ok().body("Admin registered successfully");
@@ -37,7 +29,6 @@ public class AdminController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-
     }
 
     @PostMapping("/login")
@@ -52,7 +43,7 @@ public class AdminController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity logoutAdmin(@RequestHeader("Authorization") String authToken, @RequestAttribute("authenticatedAdmin") Admin admin) {
+    public ResponseEntity<?> logoutAdmin(@RequestHeader("Authorization") String authToken, @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
             adminService.logoutAdmin(authToken.replace("Bearer ", ""));
             return ResponseEntity.ok(Map.of("message", "Logout successful"));

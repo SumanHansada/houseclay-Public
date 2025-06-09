@@ -1,17 +1,13 @@
 package com.houseclay.backend.controller;
 
-import com.houseclay.backend.entity.Lead;
 import com.houseclay.backend.entity.LeadCategory;
-import com.houseclay.backend.entity.Property;
 import com.houseclay.backend.entity.User;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.payload.LoginPayload;
 import com.houseclay.backend.payload.UserPayload;
 
 import com.houseclay.backend.service.LeadService;
-import com.houseclay.backend.service.ShortlistPropertyService;
 import com.houseclay.backend.service.UserService;
-import com.houseclay.backend.service.ViewPropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -34,7 +29,7 @@ public class UserController {
 
 
     @RequestMapping (method = RequestMethod.POST, value = "/register",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createUser(@RequestBody UserPayload payload) {
+    public ResponseEntity<?> createUser(@RequestBody UserPayload payload) {
         try {
             String token = userService.createUser(payload);
             return ResponseEntity.ok().body(token);
@@ -46,7 +41,7 @@ public class UserController {
     }
 
     @RequestMapping (method = RequestMethod.POST, value = "/login",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity login(@RequestBody LoginPayload payload) {
+    public ResponseEntity<?> login(@RequestBody LoginPayload payload) {
         try {
             String token = userService.loginUser(payload);
             return ResponseEntity.ok().body(token);
@@ -74,7 +69,7 @@ public class UserController {
     }
 
     @RequestMapping (method = RequestMethod.POST, value = "/logout",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity logout(@RequestHeader("Authorization") String authToken,
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String authToken,
                                  @RequestAttribute("authenticatedUser") User user) {
         try {
             userService.logoutUser(authToken.replace("Bearer ", "")); // Remove "Bearer " prefix
@@ -87,7 +82,7 @@ public class UserController {
     }
 
     @PostMapping("/generate-lead")
-    public ResponseEntity generateLead(
+    public ResponseEntity<?> generateLead(
             @RequestParam LeadCategory leadCategory,
             @RequestAttribute("authenticatedUser") User user) {
         try {

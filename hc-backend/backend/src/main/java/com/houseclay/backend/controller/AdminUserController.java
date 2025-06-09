@@ -26,7 +26,7 @@ public class AdminUserController {
 
 
     @PostMapping("/blacklist-user")
-    public ResponseEntity blacklistUser(
+    public ResponseEntity<?> blacklistUser(
             @RequestParam String phoneNo,
             @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
@@ -46,7 +46,7 @@ public class AdminUserController {
     }
 
     @GetMapping("/search-user")
-    public ResponseEntity searchUser(
+    public ResponseEntity<?> searchUser(
             @RequestParam String phoneNo,
             @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
