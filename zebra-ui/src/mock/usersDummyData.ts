@@ -1,4 +1,5 @@
-import { TGetUsersResponse } from "@/interfaces/User";
+import { UsersResponse } from "@/store/apiSlice";
+
 // 30 dummy users
 export const dummyUsers: Array<{
   name: string;
@@ -222,7 +223,7 @@ export const dummyUsers: Array<{
 // ------------------------------------------
 // PAGE 0 (indexes 0..11) → 12 items
 // ------------------------------------------
-export const fakeUsersPage0: TGetUsersResponse = {
+export const fakeUsersPage0: UsersResponse = {
   content: dummyUsers.slice(0, 12),
   pageable: {
     pageNumber: 0,
@@ -240,7 +241,7 @@ export const fakeUsersPage0: TGetUsersResponse = {
 // ------------------------------------------
 // PAGE 1 (indexes 12..23) → 12 items
 // ------------------------------------------
-export const fakeUsersPage1: TGetUsersResponse = {
+export const fakeUsersPage1: UsersResponse = {
   content: dummyUsers.slice(12, 24),
   pageable: {
     pageNumber: 1,
@@ -258,7 +259,7 @@ export const fakeUsersPage1: TGetUsersResponse = {
 // ------------------------------------------
 // PAGE 2 (indexes 24..29) → 6 items
 // ------------------------------------------
-export const fakeUsersPage2: TGetUsersResponse = {
+export const fakeUsersPage2: UsersResponse = {
   content: dummyUsers.slice(24, 30),
   pageable: {
     pageNumber: 2,
