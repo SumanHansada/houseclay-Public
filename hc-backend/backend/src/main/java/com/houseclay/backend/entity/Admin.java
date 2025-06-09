@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,7 +23,7 @@ public class Admin {
     private List<User> blacklistedUsers;
 
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AdminLogin> adminLogins;
+    private List<AdminLogin> adminLogins = new ArrayList<>();
 
     @Override
     public String toString() {

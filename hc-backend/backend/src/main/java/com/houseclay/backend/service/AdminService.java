@@ -2,7 +2,6 @@ package com.houseclay.backend.service;
 
 import com.houseclay.backend.dto.AdminRegisterDTO;
 import com.houseclay.backend.dto.UserDTO;
-import com.houseclay.backend.dto.UserDetailDTO;
 import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.entity.AdminLogin;
 import com.houseclay.backend.entity.User;
@@ -53,10 +52,10 @@ public class AdminService {
     public String loginAdmin(String username, String password) throws Exception {
         Optional<Admin> adminOptional = adminRepository.findByUsername(username);
         if (adminOptional.isEmpty()) {
-            throw new APIException("Invalid username", HttpStatus.BAD_REQUEST);
+            throw new APIException("Incorrect username", HttpStatus.BAD_REQUEST);
         }
         if (!passwordEncoder.matches(password, adminOptional.get().getPassword())) {
-            throw new APIException("Invalid username or password", HttpStatus.BAD_REQUEST);
+            throw new APIException("Incorrect password", HttpStatus.BAD_REQUEST);
         }
 
         Admin admin = adminOptional.get();
