@@ -17,7 +17,7 @@ const Standouts: React.FC<StandoutsProps> = ({
   const { isMobile } = useDeviceContext();
   return (
     <>
-      <div className="bg-white bg-center bg-cover flex-col items-center pt-20 xl:px-28 lg:px-14 md:px-14 max-md:pt-4 px-8">
+      <div className="bg-white bg-center bg-cover flex-col items-center py-20 xl:px-28 lg:px-14 md:px-14 max-md:py-4 px-8">
         {/* Header Section */}
         <div className="flex items-center mb-8 max-md:hidden">
           <h1 className="text-3xl font-bold text-gray-800">
@@ -62,14 +62,31 @@ const Standouts: React.FC<StandoutsProps> = ({
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        {/* Property Grid */}
+        <Carousel2D
+          slideWidth={isMobile ? 325 : 370}
+          gap={4}
+          showDots={isMobile ? true : false}
+          showArrows={true}
+          className="max-md:hidden"
+          containerClassName="px-2"
+        >
+          {properties.map((property) => (
+            <Properties
+              key={property.id}
+              property={property}
+              badgeType={property.type}
+            />
+          ))}
+        </Carousel2D>
       </div>
-      {/* Property Grid */}
       <Carousel2D
         slideWidth={isMobile ? 325 : 370}
         gap={4}
         showDots={isMobile ? true : false}
         showArrows={true}
-        containerClassName="xl:px-28 lg:px-14 md:px-14 px-8"
+        className="md:hidden"
+        containerClassName="px-2 md:hidden"
       >
         {properties.map((property) => (
           <Properties

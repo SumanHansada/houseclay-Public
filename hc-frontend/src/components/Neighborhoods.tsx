@@ -83,7 +83,7 @@ const Neighbourhoods: React.FC<NeighbourhoodsProps> = ({
       </div>
 
       {/* Grid layout for larger screens */}
-      <div className="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-4 max-md:hidden">
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4 max-md:hidden">
         {neighbourhoods.map((neighbourhood, index) => (
           <NeighbourhoodCard
             key={index}

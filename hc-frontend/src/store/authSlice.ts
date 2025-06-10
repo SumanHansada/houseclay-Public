@@ -9,6 +9,7 @@ interface AuthState {
   phoneNo: string;
   emailID: string;
   name: string;
+  loginFromAddProperty: boolean;
 }
 
 const initialState: AuthState = {
@@ -17,6 +18,7 @@ const initialState: AuthState = {
   phoneNo: "", // Initialize phoneNo as null
   emailID: "", // Initialize emailID as null
   name: "", // Initialize name as null
+  loginFromAddProperty: false,
 };
 
 const authSlice = createSlice({
@@ -66,6 +68,9 @@ const authSlice = createSlice({
     clearName: (state) => {
       state.name = "";
     },
+    setLoginFromAddProperty: (state, action: PayloadAction<boolean>) => {
+      state.loginFromAddProperty = action.payload;
+    },
   },
 });
 
@@ -81,5 +86,6 @@ export const {
   clearEmailID,
   setName,
   clearName,
+  setLoginFromAddProperty,
 } = authSlice.actions;
 export default authSlice.reducer;

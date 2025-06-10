@@ -107,7 +107,7 @@ const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
                 }}
                 containerClassName="w-full relative"
                 labelClassName="text-sm font-medium text-gray-900 mb-1"
-                inputClassName="w-full p-3"
+                inputClassName="w-full p-2"
                 dropdownClassName="absolute z-10 mt-1 py-1 w-full bg-white shadow-lg max-h-60 overflow-auto rounded-b-xl"
                 dropdownItemClassName="py-1 px-3 hover:bg-gray-100 cursor-pointer flex items-center"
                 errorClassName="mt-1 text-sm text-red-600"

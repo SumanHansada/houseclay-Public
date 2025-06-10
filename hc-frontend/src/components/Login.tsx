@@ -3,6 +3,7 @@
 import "react-international-phone/style.css";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import loginImage from "public/images/login.webp";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PhoneInput } from "react-international-phone";
@@ -20,6 +21,7 @@ import {
 import {
   setAuthStep,
   setEmailID,
+  setLoginFromAddProperty,
   setName,
   setPhoneNo,
   setToken,
@@ -35,6 +37,9 @@ const Login = () => {
   const phoneNo = useSelector((state: RootState) => state.auth.phoneNo);
   const emailID = useSelector((state: RootState) => state.auth.emailID);
   const name = useSelector((state: RootState) => state.auth.name);
+  const loginFromAddProperty = useSelector(
+    (state: RootState) => state.auth.loginFromAddProperty,
+  );
   const checkUser = useSelector((state: RootState) => state.user.checkUser);
   const [login] = useLoginMutation();
   const [triggerCheckUser] = useLazyCheckUserQuery();
@@ -42,6 +47,7 @@ const Login = () => {
   const [generateOtp] = useGenerateOtpMutation();
   const dispatch = useDispatch();
   const { isMobile } = useDeviceContext();
+  const router = useRouter();
 
   const [otpCode, setOtpCode] = useState<string[]>(["", "", "", ""]);
 
@@ -111,6 +117,10 @@ const Login = () => {
       }
       dispatch(setAuthStep(AuthStep.EMPTY));
       closeDialog("login-dialog");
+      if (loginFromAddProperty) {
+        router.push("/list-property");
+        dispatch(setLoginFromAddProperty(false));
+      }
     } catch (err) {
       console.error(err);
     }

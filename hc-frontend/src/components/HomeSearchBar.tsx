@@ -36,12 +36,14 @@ const HomeSearchBar: React.FC = () => {
     name?: string;
     address?: string;
   } | null>(null);
-  const [trigger, { data: _data, isLoading: _isLoading, error: _error }] =
-    useLazyGetPropertiesByLocationQuery();
+  const [
+    triggerPropertySearch,
+    { data: _data, isLoading: _isLoading, error: _error },
+  ] = useLazyGetPropertiesByLocationQuery();
 
   const handleSearch = () => {
     if (location && location.latitude && location.longitude) {
-      trigger({
+      triggerPropertySearch({
         latitude: location.latitude,
         longitude: location.longitude,
       });
@@ -74,7 +76,6 @@ const HomeSearchBar: React.FC = () => {
           placeholder="Type Localities..."
           value={location?.name || ""}
           onChange={(value) => {
-            console.log(value);
             setLocation((prev) => {
               return {
                 ...prev,
@@ -83,7 +84,6 @@ const HomeSearchBar: React.FC = () => {
             });
           }}
           onLocationSelect={(value) => {
-            console.log(value);
             setLocation((prev) => {
               return {
                 ...prev,
@@ -94,9 +94,7 @@ const HomeSearchBar: React.FC = () => {
               };
             });
           }}
-          onBlur={() => {
-            console.log("blur");
-          }}
+          onBlur={() => {}}
           containerClassName="w-full relative"
           labelClassName="text-sm font-medium text-gray-900 mb-1"
           inputClassName="w-full p-3"

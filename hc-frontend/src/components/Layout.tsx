@@ -30,7 +30,7 @@ import StickyNavbar from "@/components/StickyNavbar";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useLogoutMutation } from "@/store/apiSlice";
-import { clearToken } from "@/store/authSlice";
+import { clearToken, setLoginFromAddProperty } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 
 const Property = PropertySvg as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -57,6 +57,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const toggleQuickLinks = () => setQuickLinksExpanded(!quickLinksExpanded);
 
   const onLogin = () => {
+    dispatch(setLoginFromAddProperty(true));
     closeAllDialogs();
     openDialog("login-dialog");
   };

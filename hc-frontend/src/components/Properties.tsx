@@ -52,7 +52,7 @@ const Properties: React.FC<PropertiesProps> = ({
   }, [autoplay, autoplayInterval, nextImage]);
 
   return (
-    <div className="flex-col gap-8 bg-white border border-gray-100 rounded-lg shadow-lg relative p-3">
+    <div className="flex-col gap-8 bg-white border border-gray-100 rounded-lg drop-shadow relative p-3">
       {/* Image Carousel */}
       <div className="relative h-72 max-md:h-60">
         <Image
