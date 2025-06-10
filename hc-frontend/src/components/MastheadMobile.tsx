@@ -8,8 +8,23 @@ import WeeklyStandoutsSvg from "public/icons/weekly-standouts.svg";
 import ZeroPercentSvg from "public/icons/zero-percent.svg";
 import bannerBackgroundMobile from "public/images/banner-background-mobile.webp";
 import bannerPeopleMobile from "public/images/banner-people-mobile.webp";
+import { useState } from "react";
 
 import { useDialog } from "@/providers/DialogContextProvider";
+
+import PlacesAutocomplete from "./common/PlacesAutocomplete";
+
+const Search = SearchSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const FindFlatmates = FindFlatmatesSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const FindRooms = FindRoomsSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const WeeklyStandouts = WeeklyStandoutsSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const ListProperty = ListPropertySvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const Deal = DealSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const ZeroPercent = ZeroPercentSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 interface MastHeadMobileProps {
   activeTab: string;
@@ -21,19 +36,13 @@ const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
   setActiveTab,
 }) => {
   const { openDialog } = useDialog();
-  const Search = SearchSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-  const FindFlatmates = FindFlatmatesSvg as React.FC<
-    React.SVGProps<SVGSVGElement>
-  >;
-  const FindRooms = FindRoomsSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-  const WeeklyStandouts = WeeklyStandoutsSvg as React.FC<
-    React.SVGProps<SVGSVGElement>
-  >;
-  const ListProperty = ListPropertySvg as React.FC<
-    React.SVGProps<SVGSVGElement>
-  >;
-  const Deal = DealSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-  const ZeroPercent = ZeroPercentSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+
+  const [location, setLocation] = useState<{
+    latitude?: number;
+    longitude?: number;
+    name?: string;
+    address?: string;
+  } | null>(null);
 
   return (
     <div className="relative flex flex-col px-8 pt-8 pb-14 gap-6">
@@ -68,11 +77,40 @@ const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
         {/* Search */}
         <div>
           <div className="flex pl-8 pr-2 py-2 rounded-full bg-white border border-gray-200">
-            <div className="flex-1 justify-center items-center self-center bg-white opacity-50">
-              <input
-                type="text"
+            <div className="flex-1 pr-2 justify-center items-center self-center bg-white">
+              <PlacesAutocomplete
+                id="location"
+                name="location"
                 placeholder="Enter a locality or location..."
-                className="w-full h-full text-gray-500"
+                value={location?.name || ""}
+                onChange={(value) => {
+                  setLocation((prev) => {
+                    return {
+                      ...prev,
+                      name: value,
+                    };
+                  });
+                }}
+                onLocationSelect={(value) => {
+                  setLocation((prev) => {
+                    return {
+                      ...prev,
+                      latitude: value.latitude,
+                      longitude: value.longitude,
+                      name: value.name,
+                      address: value.address,
+                    };
+                  });
+                }}
+                onBlur={() => {
+                  console.log("blur");
+                }}
+                containerClassName="w-full relative"
+                labelClassName="text-sm font-medium text-gray-900 mb-1"
+                inputClassName="w-full p-3"
+                dropdownClassName="absolute z-10 mt-1 py-1 w-full bg-white shadow-lg max-h-60 overflow-auto rounded-b-xl"
+                dropdownItemClassName="py-1 px-3 hover:bg-gray-100 cursor-pointer flex items-center"
+                errorClassName="mt-1 text-sm text-red-600"
               />
             </div>
             {/* Search Button */}

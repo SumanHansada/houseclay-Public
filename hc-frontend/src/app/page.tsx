@@ -40,7 +40,7 @@ export default function Home() {
   return (
     <>
       {/* Masthead Desktop Section */}
-      <section className="relative xl:h-[600px] lg:h-[500px] h-[500px] w-full overflow-hidden max-md:hidden">
+      <section className="relative xl:h-[600px] lg:h-[500px] h-[500px] w-full max-md:hidden">
         <MastHeadDesktop activeTab={activeTab} setActiveTab={setActiveTab} />
       </section>
       {/* Masthead Mobile Section */}

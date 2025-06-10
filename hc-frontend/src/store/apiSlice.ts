@@ -233,6 +233,14 @@ export const apiSlice = createApi({
     getPropertyById: builder.query<any, string>({
       query: (id) => `/property/user/${id}`,
     }),
+
+    getPropertiesByLocation: builder.query<
+      unknown,
+      { latitude: number; longitude: number }
+    >({
+      query: ({ latitude, longitude }) =>
+        `/property/search?lat=${latitude}&lon=${longitude}`,
+    }),
   }),
 });
 
@@ -249,4 +257,6 @@ export const {
   usePropertyAddFlatmatesMutation,
   useGetPropertyByIdQuery,
   useLazyGetPropertyByIdQuery,
+  useGetPropertiesByLocationQuery,
+  useLazyGetPropertiesByLocationQuery,
 } = apiSlice;

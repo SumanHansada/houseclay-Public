@@ -1,21 +1,34 @@
 "use client";
 
-import "../../app/google-places-autocomplete.css"; // Import the CSS
+import "../../app/google-places-autocomplete.css";
 
-import { useField, useFormikContext } from "formik";
+import { APIProvider } from "@vis.gl/react-google-maps";
 import { MapPin } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-import { FormValues } from "@/interfaces/FormValues";
-
-interface FormPlacesAutocompleteProps {
-  label: string;
-  name: string;
+interface PlacesAutocompleteProps {
+  label?: string;
   id: string;
+  name: string;
+  value: string;
+  onChange: (value: string) => void;
+  onBlur?: () => void;
+  error?: string;
   placeholder?: string;
   required?: boolean;
-  pairWithGoogleMaps?: boolean;
-  googleMapsFieldName?: string;
+  onLocationSelect?: (location: {
+    latitude: number;
+    longitude: number;
+    name?: string;
+    address?: string;
+  }) => void;
+  // Styling props
+  containerClassName?: string;
+  labelClassName?: string;
+  inputClassName?: string;
+  dropdownClassName?: string;
+  dropdownItemClassName?: string;
+  errorClassName?: string;
 }
 
 interface PlacePrediction {
@@ -23,19 +36,29 @@ interface PlacePrediction {
   mainText: string;
   secondaryText: string;
   placeId: string;
+  latitude?: number;
+  longitude?: number;
 }
 
-const FormPlacesAutocomplete = ({
+const PlacesAutocompleteBase = ({
   label,
-  name,
   id,
+  name,
+  value,
+  onChange,
+  onBlur,
+  error,
   placeholder = "Search places",
   required = false,
-  pairWithGoogleMaps = false,
-  googleMapsFieldName = "",
-}: FormPlacesAutocompleteProps) => {
-  const [field, meta, helpers] = useField(name);
-  const { setFieldValue } = useFormikContext<FormValues>();
+  onLocationSelect,
+  // Styling props with defaults
+  containerClassName = "w-full relative",
+  labelClassName = "block text-sm font-medium text-gray-700 mb-1",
+  inputClassName = "w-full p-3 border rounded-xl",
+  dropdownClassName = "absolute z-10 mt-1 py-1 w-full bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-auto",
+  dropdownItemClassName = "py-1 px-3 hover:bg-gray-100 cursor-pointer flex items-center",
+  errorClassName = "mt-1 text-sm text-red-600",
+}: PlacesAutocompleteProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [predictions, setPredictions] = useState<PlacePrediction[]>([]);
@@ -60,32 +83,40 @@ const FormPlacesAutocomplete = ({
     };
   }, []);
 
-  // Add effect to handle place changes
-  useEffect(() => {
-    if (field.value && pairWithGoogleMaps) {
-      const geocoder = new google.maps.Geocoder();
-      geocoder.geocode({ address: field.value }, (results, status) => {
-        if (status === google.maps.GeocoderStatus.OK && results && results[0]) {
-          const location = results[0].geometry.location;
-          setFieldValue(`${googleMapsFieldName}.latitude`, location.lat());
-          setFieldValue(`${googleMapsFieldName}.longitude`, location.lng());
-        }
-      });
-    }
-  }, [field.value, pairWithGoogleMaps, googleMapsFieldName, setFieldValue]);
-
   // Handle manual input changes
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    await helpers.setValue(value);
-    await helpers.setTouched(true);
+    const newValue = e.target.value;
+    onChange(newValue);
 
-    if (value.length > 2 && isLoaded) {
+    if (newValue.length > 2 && isLoaded) {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const places = (await google.maps.importLibrary("places")) as any;
-        const result = await places.Place.searchByText({
-          textQuery: value,
+        const places = (await google.maps.importLibrary("places")) as unknown;
+        // Type guard or cast to the expected type
+        const placeLib = places as {
+          Place: {
+            searchByText: (args: {
+              textQuery: string;
+              fields: string[];
+              region: string;
+              locationBias: {
+                center: { lat: number; lng: number };
+                radius: number;
+              };
+            }) => Promise<{
+              places?: {
+                id: string;
+                displayName?: string;
+                formattedAddress?: string;
+                location: {
+                  lat: () => number;
+                  lng: () => number;
+                };
+              }[];
+            }>;
+          };
+        };
+        const result = await placeLib.Place.searchByText({
+          textQuery: newValue,
           fields: ["id", "displayName", "formattedAddress", "location"],
           region: "IN",
           locationBias: {
@@ -95,9 +126,7 @@ const FormPlacesAutocomplete = ({
         });
 
         if (result.places && result.places.length > 0) {
-          // Transform the places into a format we can display
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const formattedPredictions = result.places.map((place: any) => ({
+          const formattedPredictions = result.places.map((place) => ({
             id: place.id,
             mainText: place.displayName || "",
             secondaryText: place.formattedAddress || "",
@@ -105,7 +134,6 @@ const FormPlacesAutocomplete = ({
             latitude: place.location.lat(),
             longitude: place.location.lng(),
           }));
-          console.log("formattedPredictions", formattedPredictions);
           setPredictions(formattedPredictions);
           setShowDropdown(true);
         } else {
@@ -137,31 +165,19 @@ const FormPlacesAutocomplete = ({
 
         if (result.place) {
           const placeData = result.place;
-          const formattedPlaceData = {
-            id: placeData.id,
-            mainText: placeData.displayName || "",
-            secondaryText: placeData.formattedAddress || "",
-            placeId: placeData.id,
-            latitude: placeData.location.lat(),
-            longitude: placeData.location.lng(),
-          };
-          console.log("formattedPlaceData", formattedPlaceData);
-          helpers.setValue(`${placeData.displayName}` || "");
-          helpers.setTouched(true);
+          onChange(placeData.displayName || "");
 
-          if (pairWithGoogleMaps && placeData.location) {
+          if (placeData.location && onLocationSelect) {
             const lat = Number(placeData.location.lat());
             const lng = Number(placeData.location.lng());
 
             if (!isNaN(lat) && !isNaN(lng)) {
-              setFieldValue(`${googleMapsFieldName}.latitude`, lat);
-              setFieldValue(`${googleMapsFieldName}.longitude`, lng);
-            }
-            if (placeData.formattedAddress) {
-              setFieldValue(
-                `${googleMapsFieldName}.landmark`,
-                placeData.formattedAddress,
-              );
+              onLocationSelect({
+                latitude: lat,
+                longitude: lng,
+                name: placeData.displayName,
+                address: placeData.formattedAddress,
+              });
             }
           }
           setShowDropdown(false);
@@ -172,43 +188,38 @@ const FormPlacesAutocomplete = ({
     }
   };
 
-  const hasError = meta.touched && meta.error;
-
   return (
-    <div className="w-full relative">
-      <label
-        htmlFor={id}
-        className="block text-sm font-medium text-gray-700 mb-1"
-      >
-        {label} {required && <span className="text-red-500">*</span>}
-      </label>
+    <div className={containerClassName}>
+      {label && (
+        <label htmlFor={id} className={labelClassName}>
+          {label} {required && <span className="text-red-500">*</span>}
+        </label>
+      )}
       <input
         ref={inputRef}
         id={id}
         name={name}
-        value={field.value}
+        value={value}
         onChange={handleInputChange}
         onBlur={() => {
-          helpers.setTouched(true);
+          onBlur?.();
           setTimeout(() => {
             setShowDropdown(false);
           }, 200);
         }}
         placeholder={placeholder}
-        className={`w-full p-3 border ${
-          hasError ? "border-red-500" : "border-gray-300"
-        } rounded-xl`}
+        className={`${inputClassName} ${error ? "border-red-500" : "border-gray-300"}`}
         type="text"
         autoComplete="off"
         role="presentation"
       />
 
       {showDropdown && predictions.length > 0 && (
-        <div className="absolute z-10 mt-1 py-1 w-full bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-auto">
+        <div className={dropdownClassName}>
           {predictions.map((prediction) => (
             <div
               key={prediction.placeId}
-              className="py-1 px-3 hover:bg-gray-100 cursor-pointer flex items-center"
+              className={dropdownItemClassName}
               onClick={() => selectPrediction(prediction)}
             >
               <span className="text-gray-500 mr-2">
@@ -225,13 +236,24 @@ const FormPlacesAutocomplete = ({
         </div>
       )}
 
-      {hasError && (
-        <div className="mt-1 text-sm text-red-600" id={`${id || name}-error`}>
-          {meta.error}
+      {error && (
+        <div className={errorClassName} id={`${id || name}-error`}>
+          {error}
         </div>
       )}
     </div>
   );
 };
 
-export default FormPlacesAutocomplete;
+const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
+  return (
+    <APIProvider
+      apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""}
+      libraries={["places"]}
+    >
+      <PlacesAutocompleteBase {...props} />
+    </APIProvider>
+  );
+};
+
+export default PlacesAutocomplete;

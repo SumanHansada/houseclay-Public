@@ -24,6 +24,7 @@ interface DropdownProps {
   itemsPerPage?: number;
   dropdownClass?: string;
   selectedLabelClass?: string;
+  disabled?: boolean;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
@@ -34,6 +35,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   itemsPerPage = 4,
   dropdownClass = "",
   selectedLabelClass = "",
+  disabled = false,
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selected, setSelected] = useState<Option>(
@@ -216,14 +218,17 @@ const Dropdown: React.FC<DropdownProps> = ({
     <div className="min-w-fit" ref={dropdownRef}>
       {/* Selected value display */}
       <div
-        className={`flex items-center justify-between ${dropdownClass} cursor-pointer`}
-        onClick={() => setIsOpen(!isOpen)}
-        onKeyDown={handleToggleKeyDown}
-        tabIndex={0}
+        className={`flex items-center justify-between ${dropdownClass} ${
+          disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+        }`}
+        onClick={() => !disabled && setIsOpen(!isOpen)}
+        onKeyDown={disabled ? undefined : handleToggleKeyDown}
+        tabIndex={disabled ? -1 : 0}
         role="combobox"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         aria-controls="dropdown-list"
+        aria-disabled={disabled}
       >
         <span className={`text-gray-700 ${selectedLabelClass}`}>
           {selected.label}
