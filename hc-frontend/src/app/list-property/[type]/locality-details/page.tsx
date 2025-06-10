@@ -9,9 +9,9 @@ import * as Yup from "yup";
 
 import FormDropdown from "@/components/common/FormDropdown";
 import FormInputField from "@/components/common/FormInputField";
+import GoogleMaps from "@/components/common/GoogleMaps";
 import PlacesAutocomplete from "@/components/common/PlacesAutocomplete";
 import withFormikField from "@/hoc/withFormikField";
-import GoogleMaps from "@/components/common/GoogleMaps";
 import { FormValues } from "@/interfaces/FormValues";
 import {
   FormType,
