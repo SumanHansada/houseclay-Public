@@ -29,12 +29,12 @@ export const UserProfile: React.FC<Props> = ({
 
   return (
     <div className="px-28">
-      <h2 className="sticky top-0 z-10 text-3xl font-medium mb-4 border-b-2 border-b-gray-400">
+      <h2 className="sticky top-0 z-10 text-3xl mb-4 border-b-2 border-b-gray-400 px-4">
         User Details
       </h2>
       <div className="flex gap-16 h-full">
-        <div className="w-56 h-56 bg-gray-900 rounded-full flex-shrink-0" />
-        <form className="flex flex-col justify-between flex-1 gap-5">
+        <div className="w-52 h-52 bg-gray-900 rounded-full flex-shrink-0" />
+        <form className="flex flex-col justify-between flex-1 gap-3">
           {[
             { label: "Name", value: name },
             { label: "Phone", value: phoneNo },
@@ -42,7 +42,7 @@ export const UserProfile: React.FC<Props> = ({
             { label: "Joined On", value: new Date(createdAt).toLocaleString() },
             { label: "Blacklisted Status", value: currentStatus },
           ].map(({ label, value }) => (
-            <div key={label} className="flex flex-col gap-2 text-2xl">
+            <div key={label} className="flex flex-col gap-2 text-lg">
               <label className="">{label}</label>
               <input
                 type="text"
@@ -52,7 +52,7 @@ export const UserProfile: React.FC<Props> = ({
               />
             </div>
           ))}
-          <div className="flex justify-end">
+          <div className="flex justify-end mt-2">
             <button
               type="button"
               onClick={toggle}

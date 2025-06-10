@@ -11,7 +11,7 @@ export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
   onSearchChange,
   title,
 }) => (
-  <div className="flex justify-between items-center py-4 px-28 bg-white">
+  <div className="flex justify-between items-center py-4 px-16 bg-white">
     <span className="text-2xl font-medium">{title}</span>
     <input
       type="text"

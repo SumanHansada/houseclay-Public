@@ -1,18 +1,20 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Tabs, { Tab, TabContent, TabHeader } from "@/components/common/Tabs";
+import { PropertyStatusEnum } from "@/interfaces/Property";
+import { UserPropertyInfo } from "@/interfaces/User";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 import { RootState } from "@/store/store";
 import { clearUser, setUser } from "@/store/userSlice";
 
-import { ListedProperties } from "../components/ListedProperties";
-import { UserProfile } from "../components/UserProfile";
-import { ShortlistedProperties } from "../components/ShortlistedProperties";
 import { ContactedProperties } from "../components/ContactedProperties";
+import { ListedProperties } from "../components/ListedProperties";
+import { ShortlistedProperties } from "../components/ShortlistedProperties";
+import { UserProfile } from "../components/UserProfile";
 import { ViewedProperties } from "../components/ViewedProperties";
 // import { UserDetailsNavbar } from "../components/UserDetailsNavbar";
 
@@ -23,7 +25,7 @@ import { ViewedProperties } from "../components/ViewedProperties";
 // }) {
 export default function UserDetailsIdLayout() {
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
-  const router = useRouter();
+  // const router = useRouter();
   const dispatch = useDispatch();
 
   const { data, isLoading, isError } = useGetUserByPhoneNoQuery({
@@ -57,6 +59,207 @@ export default function UserDetailsIdLayout() {
     );
   }
 
+  const dummyProperties: UserPropertyInfo[] = [
+    {
+      propertyID: "1",
+      title: "3BHK Flat for sale",
+      type: "sale",
+      config: "3BHK",
+      location: "Krishvi Gavakshi, ORR, Bengaluru",
+      price: "1,00,00,000",
+      status: PropertyStatusEnum.VERIFIED,
+    },
+    {
+      propertyID: "2",
+      title: "2BHK Flat looking for a roommate",
+      type: "flatmate",
+      config: "2BHK",
+      location: "Krishvi Gavakshi, ORR, Bengaluru",
+      price: "30,000",
+      status: PropertyStatusEnum.PENDING,
+    },
+    {
+      propertyID: "3",
+      title: "1BHK Flat looking for a roommate",
+      type: "rent",
+      config: "1BHK",
+      location: "Krishvi Gavakshi, ORR, Bengaluru",
+      price: "30,000",
+      status: PropertyStatusEnum.REPORTED,
+    },
+    {
+      propertyID: "4",
+      title: "2BHK Flat looking for a roommate",
+      type: "flatmate",
+      config: "2BHK",
+      location: "Krishvi Gavakshi, ORR, Bengaluru",
+      price: "30,000",
+      status: PropertyStatusEnum.PENDING,
+    },
+    {
+      propertyID: "5",
+      title: "2BHK Flat looking for a roommate",
+      type: "flatmate",
+      config: "2BHK",
+      location: "Krishvi Gavakshi, ORR, Bengaluru",
+      price: "30,000",
+      status: PropertyStatusEnum.PENDING,
+    },
+    {
+      propertyID: "6",
+      title: "2BHK Flat looking for a roommate",
+      type: "flatmate",
+      config: "2BHK",
+      location: "Krishvi Gavakshi, ORR, Bengaluru",
+      price: "30,000",
+      status: PropertyStatusEnum.PENDING,
+    },
+    {
+      propertyID: "7",
+      title: "2BHK Flat looking for a roommate",
+      type: "flatmate",
+      config: "2BHK",
+      location: "Krishvi Gavakshi, ORR, Bengaluru",
+      price: "30,000",
+      status: PropertyStatusEnum.PENDING,
+    },
+    {
+      propertyID: "8",
+      title: "2BHK Flat looking for a roommate",
+      type: "flatmate",
+      config: "2BHK",
+      location: "Krishvi Gavakshi, ORR, Bengaluru",
+      price: "30,000",
+      status: PropertyStatusEnum.PENDING,
+    },
+    {
+      propertyID: "9",
+      title: "2BHK Flat looking for a roommate",
+      type: "flatmate",
+      config: "2BHK",
+      location: "Krishvi Gavakshi, ORR, Bengaluru",
+      price: "30,000",
+      status: PropertyStatusEnum.PENDING,
+    },
+    {
+      propertyID: "10",
+      title: "2BHK Flat looking for a roommate",
+      type: "flatmate",
+      config: "2BHK",
+      location: "Krishvi Gavakshi, ORR, Bengaluru",
+      price: "30,000",
+      status: PropertyStatusEnum.PENDING,
+    },
+    {
+      propertyID: "11",
+      title: "2BHK Flat looking for a roommate",
+      type: "flatmate",
+      config: "2BHK",
+      location: "Krishvi Gavakshi, ORR, Bengaluru",
+      price: "30,000",
+      status: PropertyStatusEnum.PENDING,
+    },
+    {
+      propertyID: "12",
+      title: "2BHK Flat looking for a roommate",
+      type: "flatmate",
+      config: "2BHK",
+      location: "Krishvi Gavakshi, ORR, Bengaluru",
+      price: "30,000",
+      status: PropertyStatusEnum.PENDING,
+    },
+    {
+      propertyID: "13",
+      title: "2BHK Flat looking for a roommate",
+      type: "flatmate",
+      config: "2BHK",
+      location: "Krishvi Gavakshi, ORR, Bengaluru",
+      price: "30,000",
+      status: PropertyStatusEnum.PENDING,
+    },
+    {
+      propertyID: "14",
+      title: "2BHK Flat looking for a roommate",
+      type: "flatmate",
+      config: "2BHK",
+      location: "Krishvi Gavakshi, ORR, Bengaluru",
+      price: "30,000",
+      status: PropertyStatusEnum.PENDING,
+    },
+    {
+      propertyID: "15",
+      title: "2BHK Flat looking for a roommate",
+      type: "flatmate",
+      config: "2BHK",
+      location: "Krishvi Gavakshi, ORR, Bengaluru",
+      price: "30,000",
+      status: PropertyStatusEnum.PENDING,
+    },
+    {
+      propertyID: "16",
+      title: "2BHK Flat looking for a roommate",
+      type: "flatmate",
+      config: "2BHK",
+      location: "Krishvi Gavakshi, ORR, Bengaluru",
+      price: "30,000",
+      status: PropertyStatusEnum.PENDING,
+    },
+    {
+      propertyID: "17",
+      title: "2BHK Flat looking for a roommate",
+      type: "flatmate",
+      config: "2BHK",
+      location: "Krishvi Gavakshi, ORR, Bengaluru",
+      price: "30,000",
+      status: PropertyStatusEnum.PENDING,
+    },
+    {
+      propertyID: "18",
+      title: "2BHK Flat looking for a roommate",
+      type: "flatmate",
+      config: "2BHK",
+      location: "Krishvi Gavakshi, ORR, Bengaluru",
+      price: "30,000",
+      status: PropertyStatusEnum.PENDING,
+    },
+    {
+      propertyID: "19",
+      title: "2BHK Flat looking for a roommate",
+      type: "flatmate",
+      config: "2BHK",
+      location: "Krishvi Gavakshi, ORR, Bengaluru",
+      price: "30,000",
+      status: PropertyStatusEnum.PENDING,
+    },
+    {
+      propertyID: "20",
+      title: "2BHK Flat looking for a roommate",
+      type: "flatmate",
+      config: "2BHK",
+      location: "Krishvi Gavakshi, ORR, Bengaluru",
+      price: "30,000",
+      status: PropertyStatusEnum.PENDING,
+    },
+    {
+      propertyID: "21",
+      title: "2BHK Flat looking for a roommate",
+      type: "flatmate",
+      config: "2BHK",
+      location: "Krishvi Gavakshi, ORR, Bengaluru",
+      price: "30,000",
+      status: PropertyStatusEnum.PENDING,
+    },
+    {
+      propertyID: "22",
+      title: "4BHK Flat looking for a roommate",
+      type: "sale",
+      config: "2BHK",
+      location: "Krishvi Gavakshi, ORR, Bengaluru",
+      price: "3,00,00,000",
+      status: PropertyStatusEnum.PENDING,
+    },
+  ];
+
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">
       <Tabs className="flex flex-col flex-1 overflow-hidden">
@@ -83,17 +286,13 @@ export default function UserDetailsIdLayout() {
         </TabContent>
 
         <TabContent value="listed-properties">
-          <div className="h-[calc(100vh-12rem)] overflow-auto">
-            <ListedProperties ownedProperties={currentUser.ownedProperties} />
-          </div>
+          <ListedProperties ownedProperties={dummyProperties} />
         </TabContent>
 
         <TabContent value="shortlisted-properties">
-          <div className="h-[calc(100vh-12rem)] overflow-auto">
-            <ShortlistedProperties
-              shortlistedProperties={currentUser.shortlistedProperties}
-            />
-          </div>
+          {/* <div className="h-[calc(100vh-12rem)] overflow-auto"> */}
+          <ShortlistedProperties shortlistedProperties={dummyProperties} />
+          {/* </div> */}
         </TabContent>
 
         <TabContent value="connect-history">
@@ -162,23 +361,13 @@ export default function UserDetailsIdLayout() {
         </TabContent>
 
         <TabContent value="contacted-properties">
-          <ContactedProperties
-            contactedProperties={currentUser.contactedProperties}
-          />
+          <ContactedProperties contactedProperties={dummyProperties} />
         </TabContent>
 
         <TabContent value="viewed-properties">
-          <ViewedProperties viewedProperties={currentUser.viewedProperties} />
+          <ViewedProperties viewedProperties={dummyProperties} />
         </TabContent>
       </Tabs>
-      <footer className="sticky bottom-0 bg-white border-t border-gray-300 py-2 text-center px-8 flex items-start">
-        <button
-          className="py-2 px-4 rounded-lg bg-gray-100 hover:bg-gray-300 border border-gray-400"
-          onClick={() => router.back()}
-        >
-          Back
-        </button>
-      </footer>
     </div>
   );
 }
