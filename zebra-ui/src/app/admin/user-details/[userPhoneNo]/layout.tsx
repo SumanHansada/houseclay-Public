@@ -16,6 +16,8 @@ import { ListedProperties } from "../components/ListedProperties";
 import { ShortlistedProperties } from "../components/ShortlistedProperties";
 import { UserProfile } from "../components/UserProfile";
 import { ViewedProperties } from "../components/ViewedProperties";
+import { UserPropertyInfo } from "@/interfaces/User";
+import { PropertyStatusEnum } from "@/interfaces/Property";
 // import { UserDetailsNavbar } from "../components/UserDetailsNavbar";
 
 // export default function UserDetailsIdLayout({
