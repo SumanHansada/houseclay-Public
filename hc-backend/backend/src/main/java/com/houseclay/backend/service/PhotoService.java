@@ -46,6 +46,7 @@ public class PhotoService {
                 .bucket(bucketName)
                 .key(String.format("properties/%s/photos/%s", propertyID, filename))
                 .contentType(contentType)
+                .cacheControl("public, max-age=86400, must-revalidate")
                 .build();
 
         PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
