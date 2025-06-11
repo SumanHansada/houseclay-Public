@@ -2,6 +2,7 @@
 
 import SearchSvg from "public/icons/search.svg";
 import { useRef, useState } from "react";
+import toast from "react-hot-toast";
 
 import { useLazyGetPropertiesByLocationQuery } from "@/store/apiSlice";
 
@@ -35,6 +36,7 @@ const HomeSearchBar: React.FC = () => {
     longitude?: number;
     name?: string;
     address?: string;
+    city?: string;
   } | null>(null);
   const [
     triggerPropertySearch,
@@ -84,6 +86,22 @@ const HomeSearchBar: React.FC = () => {
             });
           }}
           onLocationSelect={(value) => {
+            console.log(value);
+            if (value.city) {
+              const selectedCity = value.city.toLowerCase();
+              const isCityAllowed =
+                CITY_OPTIONS[2].label.toLowerCase() === selectedCity;
+              if (!isCityAllowed) {
+                toast.error(
+                  `Please select a location within ${CITY_OPTIONS[2].label}`,
+                  {
+                    duration: 5000,
+                  },
+                );
+                setLocation(null);
+                return;
+              }
+            }
             setLocation((prev) => {
               return {
                 ...prev,
@@ -91,6 +109,7 @@ const HomeSearchBar: React.FC = () => {
                 longitude: value.longitude,
                 name: value.name,
                 address: value.address,
+                city: value.city,
               };
             });
           }}

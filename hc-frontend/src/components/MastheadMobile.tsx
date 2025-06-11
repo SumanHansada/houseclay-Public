@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import Image from "next/image";
 import DealSvg from "public/icons/deal.svg";
 import FindFlatmatesSvg from "public/icons/find-flatmates.svg";
@@ -9,6 +10,7 @@ import ZeroPercentSvg from "public/icons/zero-percent.svg";
 import bannerBackgroundMobile from "public/images/banner-background-mobile.webp";
 import bannerPeopleMobile from "public/images/banner-people-mobile.webp";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 import { useDialog } from "@/providers/DialogContextProvider";
 
@@ -36,6 +38,7 @@ const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
   setActiveTab,
 }) => {
   const { openDialog } = useDialog();
+  const [isTyping, setIsTyping] = useState(false);
 
   const [location, setLocation] = useState<{
     latitude?: number;
@@ -76,7 +79,7 @@ const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
 
         {/* Search */}
         <div>
-          <div className="flex pl-8 pr-2 py-2 rounded-full bg-white border border-gray-200">
+          <div className="flex pl-4 pr-2 py-2 rounded-full bg-white border border-gray-200">
             <div className="flex-1 pr-2 justify-center items-center self-center bg-white">
               <PlacesAutocomplete
                 id="location"
@@ -84,6 +87,7 @@ const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
                 placeholder="Enter a locality or location..."
                 value={location?.name || ""}
                 onChange={(value) => {
+                  setIsTyping(true);
                   setLocation((prev) => {
                     return {
                       ...prev,
@@ -92,6 +96,23 @@ const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
                   });
                 }}
                 onLocationSelect={(value) => {
+                  setIsTyping(false);
+                  console.log(value);
+                  if (value.city) {
+                    const selectedCity = value.city.toLowerCase();
+                    const isCityAllowed =
+                      "Bengaluru".toLowerCase() === selectedCity;
+                    if (!isCityAllowed) {
+                      toast.error(
+                        `Please select a location within ${"Bengaluru"}`,
+                        {
+                          duration: 5000,
+                        },
+                      );
+                      setLocation(null);
+                      return;
+                    }
+                  }
                   setLocation((prev) => {
                     return {
                       ...prev,
@@ -99,10 +120,12 @@ const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
                       longitude: value.longitude,
                       name: value.name,
                       address: value.address,
+                      city: value.city,
                     };
                   });
                 }}
                 onBlur={() => {
+                  setIsTyping(false);
                   console.log("blur");
                 }}
                 containerClassName="w-full relative"
@@ -114,9 +137,17 @@ const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
               />
             </div>
             {/* Search Button */}
-            <button className=" text-white flex items-center justify-center">
-              <Search width={40} height={40} />
-            </button>
+            {!isTyping && (
+              <motion.button
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.2 }}
+                className="text-white flex items-center justify-center"
+              >
+                <Search width={40} height={40} />
+              </motion.button>
+            )}
           </div>
         </div>
       </div>

@@ -21,6 +21,7 @@ interface PlacesAutocompleteProps {
     longitude: number;
     name?: string;
     address?: string;
+    city?: string;
   }) => void;
   // Styling props
   containerClassName?: string;
@@ -160,12 +161,31 @@ const PlacesAutocompleteBase = ({
         const place = new places.Place({ id: prediction.placeId });
 
         const result = await place.fetchFields({
-          fields: ["id", "formattedAddress", "location", "displayName"],
+          fields: [
+            "id",
+            "formattedAddress",
+            "location",
+            "displayName",
+            "addressComponents",
+          ],
         });
 
         if (result.place) {
           const placeData = result.place;
           onChange(placeData.displayName || "");
+          let city = "";
+          if (placeData.addressComponents) {
+            for (const component of placeData.addressComponents) {
+              const componentType = component.types[0];
+              if (
+                componentType === "locality" ||
+                componentType === "administrative_area_level_1"
+              ) {
+                city = component.longText;
+                break;
+              }
+            }
+          }
 
           if (placeData.location && onLocationSelect) {
             const lat = Number(placeData.location.lat());
@@ -177,6 +197,7 @@ const PlacesAutocompleteBase = ({
                 longitude: lng,
                 name: placeData.displayName,
                 address: placeData.formattedAddress,
+                city: city,
               });
             }
           }
