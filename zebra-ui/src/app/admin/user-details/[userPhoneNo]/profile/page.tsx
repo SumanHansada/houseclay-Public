@@ -1,12 +1,18 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-
-import { RootState } from "@/store/store";
+import React, { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
+import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 
 const ProfilePage: React.FC = () => {
-  const { currentUser } = useSelector((state: RootState) => state.user);
-  const [isBlacklisted, setIsBlacklisted] = useState<boolean>(false);
+  const { userPhoneNo } = useParams() as { userPhoneNo: string };
+  const { data } = useGetUserByPhoneNoQuery({ phoneNo: userPhoneNo });
+
+  // const [updateBlacklist, { isLoading: isUpdating }] = useUpdateUserBlacklistMutation();
+
+  const currentUser = data!.user;
+  const [isBlacklisted, setIsBlacklisted] = useState<boolean>(
+    currentUser.blacklisted,
+  );
 
   useEffect(() => {
     if (currentUser) {
@@ -14,31 +20,24 @@ const ProfilePage: React.FC = () => {
     }
   }, [currentUser]);
 
-  if (!currentUser) {
-    return (
-      <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-        <span className="text-gray-500">Loading user details…</span>
-      </div>
-    );
-  }
+  const handleBlacklistUser = () => {
+    // updateUserBlacklist({ phoneNo: user.phoneNo, blacklisted: true });
+    setIsBlacklisted(true);
+  };
+
+  const handleActivateUser = () => {
+    // updateUserBlacklist({ phoneNo: user.phoneNo, blacklisted: false });
+    setIsBlacklisted(false);
+  };
 
   const { name, email, phoneNo, createdAt } = currentUser;
   const currentStatus = isBlacklisted
     ? "The user is blacklisted"
     : "The user is active";
 
-  const handleBlacklistUser = () => {
-    // call your blacklist API…
-    setIsBlacklisted(true);
-  };
-  const handleActivateUser = () => {
-    // call your activate API…
-    setIsBlacklisted(false);
-  };
-
   return (
-    <div className="px-16 py-6 bg-gray-100 h-full">
-      <div className="p-4 rounded-xl bg-white shadow-sm flex flex-col gap-5">
+    <div className="px-16 py-8 bg-gray-100 h-full">
+      <div className="p-5 rounded-xl bg-white shadow-sm flex flex-col gap-4">
         <h2 className="text-3xl">User Details</h2>
         <div className="flex gap-16 h-full">
           <div className="w-52 h-52 bg-gray-900 rounded-full flex-shrink-0" />

@@ -2,15 +2,12 @@ import { PropertyStatusEnum } from "@/interfaces/Property";
 import {
   PaymentStatusEnum,
   UserConnectTransaction,
-  UserDetails,
   UserExternalPayment,
-  UserPropertyInfo,
-  UserReportProperty,
 } from "@/interfaces/User";
 
 // export const dummyProperties: UserPropertyInfo[] = [];
 
-export const dummyUserProfile: UserDetails = {
+export const dummyUserProfile = {
   phoneNo: "9999999999",
   email: "user@example.com",
   name: "Test User",
@@ -27,7 +24,7 @@ export const dummyUserProfile: UserDetails = {
   reportProperties: [],
 };
 
-export const dummyProperties: UserPropertyInfo[] = [
+export const dummyProperties = [
   {
     propertyID: "1",
     title: "3BHK Flat for sale",
@@ -35,6 +32,8 @@ export const dummyProperties: UserPropertyInfo[] = [
     config: "3BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "1,00,00,000",
+    createdAt: "2025-06-09T19:05:27.661+00:00",
+    lastModified: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.VERIFIED,
   },
   {
@@ -44,6 +43,8 @@ export const dummyProperties: UserPropertyInfo[] = [
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
+    createdAt: "2025-06-09T19:05:27.661+00:00",
+    lastModified: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -53,7 +54,9 @@ export const dummyProperties: UserPropertyInfo[] = [
     config: "1BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
-    status: PropertyStatusEnum.REPORTED,
+    createdAt: "2025-06-09T19:05:27.661+00:00",
+    lastModified: "2025-06-09T19:05:27.661+00:00",
+    status: PropertyStatusEnum.REPORT,
   },
   {
     propertyID: "4",
@@ -62,6 +65,8 @@ export const dummyProperties: UserPropertyInfo[] = [
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
+    createdAt: "2025-06-09T19:05:27.661+00:00",
+    lastModified: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -71,6 +76,8 @@ export const dummyProperties: UserPropertyInfo[] = [
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
+    createdAt: "2025-06-09T19:05:27.661+00:00",
+    lastModified: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -80,6 +87,8 @@ export const dummyProperties: UserPropertyInfo[] = [
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
+    createdAt: "2025-06-09T19:05:27.661+00:00",
+    lastModified: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -89,7 +98,9 @@ export const dummyProperties: UserPropertyInfo[] = [
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
-    status: PropertyStatusEnum.PENDING,
+    createdAt: "2025-06-09T19:05:27.661+00:00",
+    lastModified: "2025-06-09T19:05:27.661+00:00",
+    status: PropertyStatusEnum.REPORT,
   },
   {
     propertyID: "8",
@@ -98,7 +109,9 @@ export const dummyProperties: UserPropertyInfo[] = [
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
-    status: PropertyStatusEnum.PENDING,
+    createdAt: "2025-06-09T19:05:27.661+00:00",
+    lastModified: "2025-06-09T19:05:27.661+00:00",
+    status: PropertyStatusEnum.REPORT,
   },
   {
     propertyID: "9",
@@ -107,7 +120,9 @@ export const dummyProperties: UserPropertyInfo[] = [
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
-    status: PropertyStatusEnum.PENDING,
+    createdAt: "2025-06-09T19:05:27.661+00:00",
+    lastModified: "2025-06-09T19:05:27.661+00:00",
+    status: PropertyStatusEnum.REPORT,
   },
   {
     propertyID: "10",
@@ -116,7 +131,9 @@ export const dummyProperties: UserPropertyInfo[] = [
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
-    status: PropertyStatusEnum.PENDING,
+    createdAt: "2025-06-09T19:05:27.661+00:00",
+    lastModified: "2025-06-09T19:05:27.661+00:00",
+    status: PropertyStatusEnum.REPORT,
   },
   {
     propertyID: "11",
@@ -125,6 +142,8 @@ export const dummyProperties: UserPropertyInfo[] = [
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
+    createdAt: "2025-06-09T19:05:27.661+00:00",
+    lastModified: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -134,6 +153,8 @@ export const dummyProperties: UserPropertyInfo[] = [
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
+    createdAt: "2025-06-09T19:05:27.661+00:00",
+    lastModified: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -143,6 +164,8 @@ export const dummyProperties: UserPropertyInfo[] = [
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
+    createdAt: "2025-06-09T19:05:27.661+00:00",
+    lastModified: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -152,6 +175,8 @@ export const dummyProperties: UserPropertyInfo[] = [
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
+    createdAt: "2025-06-09T19:05:27.661+00:00",
+    lastModified: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -161,6 +186,8 @@ export const dummyProperties: UserPropertyInfo[] = [
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
+    createdAt: "2025-06-09T19:05:27.661+00:00",
+    lastModified: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -170,6 +197,8 @@ export const dummyProperties: UserPropertyInfo[] = [
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
+    createdAt: "2025-06-09T19:05:27.661+00:00",
+    lastModified: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -179,6 +208,8 @@ export const dummyProperties: UserPropertyInfo[] = [
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
+    createdAt: "2025-06-09T19:05:27.661+00:00",
+    lastModified: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -188,6 +219,8 @@ export const dummyProperties: UserPropertyInfo[] = [
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
+    createdAt: "2025-06-09T19:05:27.661+00:00",
+    lastModified: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -197,6 +230,8 @@ export const dummyProperties: UserPropertyInfo[] = [
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
+    createdAt: "2025-06-09T19:05:27.661+00:00",
+    lastModified: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -206,6 +241,8 @@ export const dummyProperties: UserPropertyInfo[] = [
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
+    createdAt: "2025-06-09T19:05:27.661+00:00",
+    lastModified: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -215,6 +252,8 @@ export const dummyProperties: UserPropertyInfo[] = [
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
+    createdAt: "2025-06-09T19:05:27.661+00:00",
+    lastModified: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -224,11 +263,13 @@ export const dummyProperties: UserPropertyInfo[] = [
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "3,00,00,000",
+    createdAt: "2025-06-09T19:05:27.661+00:00",
+    lastModified: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
 ];
 
-export const dummyReportProperties: UserReportProperty[] = [
+export const dummyReportProperties = [
   {
     reportId: 1,
     reportType: "BROKER",
@@ -240,7 +281,9 @@ export const dummyReportProperties: UserReportProperty[] = [
       config: "3BHK",
       location: "Krishvi Gavakshi, ORR, Bengaluru",
       price: "1,00,00,000",
-      status: PropertyStatusEnum.REPORTED,
+      createdAt: "2025-06-09T19:05:27.661+00:00",
+      lastModified: "2025-06-09T19:05:27.661+00:00",
+      status: PropertyStatusEnum.REPORT,
     },
   },
   {
@@ -254,12 +297,14 @@ export const dummyReportProperties: UserReportProperty[] = [
       config: "2BHK",
       location: "Krishvi Gavakshi, ORR, Bengaluru",
       price: "1,00,00,000",
-      status: PropertyStatusEnum.REPORTED,
+      createdAt: "2025-06-09T19:05:27.661+00:00",
+      lastModified: null,
+      status: PropertyStatusEnum.REPORT,
     },
   },
 ];
 
-export const dummyExternalPayments: UserExternalPayment[] = [
+export const dummyExternalPayments = [
   {
     paymentId: "PAY002",
     amount: 200.0,
@@ -289,7 +334,7 @@ export const dummyExternalPayments: UserExternalPayment[] = [
   },
 ];
 
-export const dummyConnectTransactions: UserConnectTransaction[] = [
+export const dummyConnectTransactions = [
   {
     transactionId: "TXN002",
     connectQuantity: 3,

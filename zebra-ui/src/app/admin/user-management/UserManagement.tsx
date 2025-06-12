@@ -112,7 +112,7 @@ export const UsersManagement = () => {
 
         {/* Table area */}
         <div className="flex flex-1 bg-gray-100 py-6 px-16">
-          <div className="flex flex-col flex-1 bg-white shadow-sm rounded-lg p-4">
+          <div className="flex flex-col flex-1 bg-white shadow-sm rounded-xl p-4">
             <DataTable
               columns={columns}
               data={filteredUsers}

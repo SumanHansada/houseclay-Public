@@ -1,4 +1,4 @@
-import { PropertyStatusEnum } from "./Property";
+import { PropertyInfo } from "./Property";
 
 export enum PaymentStatusEnum {
   COMPLETED = "COMPLETED",
@@ -29,16 +29,6 @@ export interface GetAllUsersResponse {
   number: number;
 }
 
-export interface UserPropertyInfo {
-  propertyID: string;
-  title: string;
-  type: string;
-  config: string;
-  location: string;
-  price: string;
-  status: PropertyStatusEnum;
-}
-
 export interface UserExternalPayment {
   paymentId: string;
   amount: number;
@@ -59,7 +49,7 @@ export interface UserReportProperty {
   reportId: number;
   reportType: string;
   reportTime: string;
-  userProperty: UserPropertyInfo;
+  userProperty: PropertyInfo;
 }
 
 export interface UserDetails {
@@ -69,10 +59,10 @@ export interface UserDetails {
   createdAt: string;
   blacklistedAt: string;
   blacklistedBy: string;
-  ownedProperties: UserPropertyInfo[];
-  shortlistedProperties: UserPropertyInfo[];
-  viewedProperties: UserPropertyInfo[];
-  contactedProperties: UserPropertyInfo[];
+  ownedProperties: PropertyInfo[];
+  shortlistedProperties: PropertyInfo[];
+  viewedProperties: PropertyInfo[];
+  contactedProperties: PropertyInfo[];
   externalPayments: UserExternalPayment[];
   connectTransactions: UserConnectTransaction[];
   reportProperties: UserReportProperty[];

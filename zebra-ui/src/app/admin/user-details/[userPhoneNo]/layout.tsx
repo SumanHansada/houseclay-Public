@@ -1,70 +1,28 @@
 "use client";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-
 import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
-import { RootState } from "@/store/store";
-import { setUser } from "@/store/userSlice";
+import { UserDetailsTabEnum } from "@/common/enums";
 
 export default function UserDetailsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [isClient, setIsClient] = useState(false);
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
   const router = useRouter();
   const pathname = usePathname();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   const { data, isLoading, isError } = useGetUserByPhoneNoQuery(
     { phoneNo: userPhoneNo },
-    { skip: !isClient || !userPhoneNo },
+    { skip: !userPhoneNo },
   );
-
-  const { currentUser } = useSelector((state: RootState) => state.user);
-
-  useEffect(() => {
-    if (data?.user) {
-      dispatch(setUser(data.user));
-    }
-  }, [data, dispatch]);
-
-  const pathSegments = pathname.split("/");
-  const currentTabFromUrl = pathSegments[pathSegments.length - 1];
-  const validTabs = [
-    "profile",
-    "listed-properties",
-    "shortlisted-properties",
-    "connect-history",
-    "payment-history",
-    "contacted-properties",
-    "viewed-properties",
-    "reported-properties",
-  ];
-  const activeTab = validTabs.includes(currentTabFromUrl)
-    ? currentTabFromUrl
-    : "profile";
 
   const handleTabChange = (value: string) => {
     router.push(`/admin/user-details/${userPhoneNo}/${value}`);
   };
 
-  if (!isClient) {
-    return (
-      <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-        <span className="text-gray-500">Loading...</span>
-      </div>
-    );
-  }
-
-  if (isLoading || !currentUser) {
+  if (isLoading || !data) {
     return (
       <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
         <span className="text-gray-500">Loading user details…</span>
@@ -80,22 +38,30 @@ export default function UserDetailsLayout({
     );
   }
 
+  const validTabValues = Object.values(UserDetailsTabEnum) as readonly string[];
+  const isValidTab = (currentTab: string): currentTab is UserDetailsTabEnum => {
+    return validTabValues.includes(currentTab);
+  };
+
+  const pathSegments = pathname.split("/");
+  const currentTabFromUrl = pathSegments[pathSegments.length - 1];
+
+  const activeTab: UserDetailsTabEnum = isValidTab(currentTabFromUrl)
+    ? currentTabFromUrl
+    : UserDetailsTabEnum.PROFILE;
+
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">
-      <Tabs
-        onTabChange={handleTabChange}
-        defaultActive={activeTab}
-        className="flex flex-col"
-      >
+      <Tabs onTabChange={handleTabChange} defaultActive={activeTab}>
         <TabHeader>
-          <Tab label="Profile" value="profile" />
-          <Tab label="Listed Properties" value="listed-properties" />
-          <Tab label="Shortlisted" value="shortlisted-properties" />
-          <Tab label="Connect History" value="connect-history" />
-          <Tab label="Payment History" value="payment-history" />
-          <Tab label="Contacted" value="contacted-properties" />
-          <Tab label="Viewed" value="viewed-properties" />
-          <Tab label="Reported" value="reported-properties" />
+          <Tab label="Profile" value={UserDetailsTabEnum.PROFILE} />
+          <Tab label="Listed Properties" value={UserDetailsTabEnum.LISTED} />
+          <Tab label="Shortlisted" value={UserDetailsTabEnum.SHORTLISTED} />
+          <Tab label="Connect History" value={UserDetailsTabEnum.CONNECT} />
+          <Tab label="Payment History" value={UserDetailsTabEnum.PAYMENT} />
+          <Tab label="Contacted" value={UserDetailsTabEnum.CONTACTED} />
+          <Tab label="Viewed" value={UserDetailsTabEnum.VIEWED} />
+          <Tab label="Reported" value={UserDetailsTabEnum.REPORT} />
         </TabHeader>
       </Tabs>
       <div className="flex-1 overflow-auto">{children}</div>

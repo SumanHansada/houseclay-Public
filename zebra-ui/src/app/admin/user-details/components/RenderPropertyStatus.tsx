@@ -21,7 +21,7 @@ export const RenderPropertyStatus: React.FC<RenderPropertyStatusProps> = ({
             Verified
           </div>
         );
-      case PropertyStatusEnum.REPORTED:
+      case PropertyStatusEnum.REPORT:
         return (
           <div className="px-[8px] py-[4px] bg-red-200 border border-red-900 text-red-900 rounded-full w-fit">
             Reported

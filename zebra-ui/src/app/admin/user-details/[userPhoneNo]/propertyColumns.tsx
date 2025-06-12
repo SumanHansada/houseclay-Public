@@ -1,5 +1,5 @@
 import { Column } from "@/components/DataTable";
-import { UserPropertyInfo } from "@/interfaces/User";
+import { PropertyInfo } from "@/interfaces/Property";
 
 import { RenderPropertyStatus } from "../components/RenderPropertyStatus";
 import { TableCellActions } from "../components/TableCellActions";
@@ -8,7 +8,7 @@ type ViewDetailsFunction = (propertyID: string) => void;
 
 export const createCommonColumns = (
   viewDetails: ViewDetailsFunction,
-): Column<UserPropertyInfo & { _serial: number }>[] => [
+): Column<PropertyInfo & { _serial: number }>[] => [
   {
     key: "serial",
     label: "Sr. No.",
@@ -29,6 +29,14 @@ export const createCommonColumns = (
     key: "config",
     label: "Config",
     accessor: "config",
+  },
+  {
+    key: "createdAt",
+    label: "Last Modified",
+    render: (p) =>
+      p.lastModified
+        ? new Date(p.lastModified).toLocaleString()
+        : new Date(p.createdAt).toLocaleString(),
   },
   {
     key: "status",

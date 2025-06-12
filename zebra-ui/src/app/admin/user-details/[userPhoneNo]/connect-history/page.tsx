@@ -1,12 +1,12 @@
 "use client";
 import { ArrowDownToLine } from "lucide-react";
 import React, { useMemo, useState } from "react";
-import { useSelector } from "react-redux";
 
 import { Column, DataTable } from "@/components/DataTable";
 import { TablePagination } from "@/components/TablePagination";
 import { UserConnectTransaction } from "@/interfaces/User";
-import { RootState } from "@/store/store";
+import { useParams } from "next/navigation";
+import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 
 interface RowType extends UserConnectTransaction {
   _serial: number;
@@ -14,15 +14,15 @@ interface RowType extends UserConnectTransaction {
 
 const ConnectHistoryPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const { currentUser } = useSelector((state: RootState) => state.user);
+  const { userPhoneNo } = useParams() as { userPhoneNo: string };
+  const { data } = useGetUserByPhoneNoQuery({ phoneNo: userPhoneNo });
 
-  const rows: RowType[] = useMemo(() => {
-    if (!currentUser) return [];
-    return currentUser.connectTransactions.map((tx, idx) => ({
-      ...tx,
-      _serial: idx + 1,
-    }));
-  }, [currentUser]);
+  const { connectTransactions } = data!.user;
+
+  const rows: RowType[] = connectTransactions.map((transactionInfo, index) => ({
+    ...transactionInfo,
+    _serial: index + 1,
+  }));
 
   const rowsPerPage = 10;
   const totalRows = rows.length;
@@ -40,14 +40,6 @@ const ConnectHistoryPage: React.FC = () => {
   };
   const nextPage = () => !isLast && setCurrentPage((p) => p + 1);
   const prevPage = () => !isFirst && setCurrentPage((p) => p - 1);
-
-  if (!currentUser) {
-    return (
-      <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-        <span className="text-gray-500">Loading user details…</span>
-      </div>
-    );
-  }
 
   const columns: Column<RowType>[] = [
     {
@@ -82,8 +74,8 @@ const ConnectHistoryPage: React.FC = () => {
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1 flex flex-col">
-        <div className="bg-gray-100 flex-1 py-6 px-16">
-          <div className="bg-white shadow-sm rounded-xl p-4 flex flex-col gap-5 h-full">
+        <div className="bg-gray-100 flex-1 py-8 px-16">
+          <div className="bg-white shadow-sm rounded-xl p-5 flex flex-col gap-4 h-full">
             <h2 className="text-3xl">Connect History</h2>
             <DataTable<RowType>
               columns={columns}

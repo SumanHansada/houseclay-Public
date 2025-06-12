@@ -113,7 +113,7 @@ export const LeadTableView = ({ leadType }: LeadTableViewProps) => {
 
         {/* Table area */}
         <div className="flex flex-1 bg-gray-100 px-16 py-6">
-          <div className="flex flex-col flex-1 bg-white shadow-sm rounded-lg p-4">
+          <div className="flex flex-col flex-1 bg-white shadow-sm rounded-xl p-4">
             <DataTable
               columns={columns}
               data={allLeads}

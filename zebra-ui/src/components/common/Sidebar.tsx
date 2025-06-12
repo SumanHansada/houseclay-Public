@@ -17,8 +17,8 @@ const sidebarItems = [
     icon: <Home size={20} />,
     children: [
       { label: "View All Properties", href: "/admin/view-all-properties" },
-      { label: "Verify Property", href: "#" },
-      { label: "ReVerify Property", href: "#" },
+      { label: "Verify Property", href: "/admin/verify-property" },
+      { label: "ReVerify Property", href: "/admin/reverify-property" },
     ],
     href: "#",
   },

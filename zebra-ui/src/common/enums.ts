@@ -28,3 +28,14 @@ export enum PropertyListingType {
   DIY = "DIY",
   CALL = "CALL",
 }
+
+export enum UserDetailsTabEnum {
+  PROFILE = "profile",
+  LISTED = "listed-properties",
+  SHORTLISTED = "shortlisted-properties",
+  CONNECT = "connect-history",
+  PAYMENT = "payment-history",
+  CONTACTED = "contacted-properties",
+  VIEWED = "viewed-properties",
+  REPORT = "reported-properties",
+}

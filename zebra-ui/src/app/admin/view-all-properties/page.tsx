@@ -1,12 +1,14 @@
 import React from "react";
+import { ListProperties } from "./ListProperties";
+import { dummyGetAllProperties } from "@/mock/getAllProperties";
 
-const ViewAllPropertiesPage = () => {
-  return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">All Properties</h1>
-      <p>Property list goes here.</p>
-    </div>
-  );
+const ViewAllPropertyPage: React.FC = () => {
+  //   const { data, isLoading, isError } = useGetPropertiesQuery({
+  //     page: currentPage - 1,
+  //     size: rowsPerPage,
+  //   });
+  const data = dummyGetAllProperties;
+  return <ListProperties propertyList={data} />;
 };
 
-export default ViewAllPropertiesPage;
+export default ViewAllPropertyPage;
