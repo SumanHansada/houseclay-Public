@@ -12,6 +12,7 @@ export interface PropertyInfo {
   location: string;
   price: string;
   createdAt: string;
+  availableFrom: string;
   lastModified: string | null;
   status: PropertyStatusEnum;
 }

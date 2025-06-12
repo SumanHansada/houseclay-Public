@@ -39,6 +39,11 @@ export const createCommonColumns = (
         : new Date(p.createdAt).toLocaleString(),
   },
   {
+    key: "availableFrom",
+    label: "Available From",
+    render: (p) => new Date(p.availableFrom).toLocaleString(),
+  },
+  {
     key: "status",
     label: "Status",
     render: (p) => <RenderPropertyStatus status={p.status} />,

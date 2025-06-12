@@ -11,6 +11,7 @@ export const dummyGetAllProperties = {
       price: "1,00,00,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: null,
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.VERIFIED,
     },
     {
@@ -22,6 +23,7 @@ export const dummyGetAllProperties = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: "2025-06-09T19:05:27.661+00:00",
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.PENDING,
     },
     {
@@ -33,6 +35,7 @@ export const dummyGetAllProperties = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: null,
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.REPORT,
     },
     {
@@ -44,6 +47,7 @@ export const dummyGetAllProperties = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: "2025-06-09T19:05:27.661+00:00",
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.PENDING,
     },
     {
@@ -55,6 +59,7 @@ export const dummyGetAllProperties = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: "2025-06-09T19:05:27.661+00:00",
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.PENDING,
     },
     {
@@ -66,6 +71,7 @@ export const dummyGetAllProperties = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: "2025-06-09T19:05:27.661+00:00",
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.PENDING,
     },
     {
@@ -77,6 +83,7 @@ export const dummyGetAllProperties = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: null,
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.PENDING,
     },
     {
@@ -88,6 +95,7 @@ export const dummyGetAllProperties = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: null,
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.PENDING,
     },
     {
@@ -99,6 +107,7 @@ export const dummyGetAllProperties = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: "2025-06-09T19:05:27.661+00:00",
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.PENDING,
     },
     {
@@ -110,6 +119,7 @@ export const dummyGetAllProperties = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: "2025-06-09T19:05:27.661+00:00",
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.PENDING,
     },
   ],
@@ -151,6 +161,7 @@ export const dummyGetPropertiesToBeVerified = {
       price: "1,00,00,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: null,
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.PENDING,
     },
     {
@@ -162,6 +173,7 @@ export const dummyGetPropertiesToBeVerified = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: null,
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.PENDING,
     },
     {
@@ -173,6 +185,7 @@ export const dummyGetPropertiesToBeVerified = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: null,
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.PENDING,
     },
     {
@@ -184,6 +197,7 @@ export const dummyGetPropertiesToBeVerified = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: null,
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.PENDING,
     },
     {
@@ -195,6 +209,7 @@ export const dummyGetPropertiesToBeVerified = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: null,
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.PENDING,
     },
     {
@@ -206,6 +221,7 @@ export const dummyGetPropertiesToBeVerified = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: "2025-06-09T19:05:27.661+00:00",
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.PENDING,
     },
     {
@@ -217,6 +233,7 @@ export const dummyGetPropertiesToBeVerified = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: "2025-06-09T19:05:27.661+00:00",
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.PENDING,
     },
     {
@@ -228,6 +245,7 @@ export const dummyGetPropertiesToBeVerified = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: "2025-06-09T19:05:27.661+00:00",
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.PENDING,
     },
     {
@@ -239,6 +257,7 @@ export const dummyGetPropertiesToBeVerified = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: "2025-06-09T19:05:27.661+00:00",
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.PENDING,
     },
     {
@@ -250,6 +269,7 @@ export const dummyGetPropertiesToBeVerified = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: "2025-06-09T19:05:27.661+00:00",
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.PENDING,
     },
   ],
@@ -291,6 +311,7 @@ export const dummyGetPropertiesToBeReVerified = {
       price: "1,00,00,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: "2025-06-09T19:05:27.661+00:00",
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.REPORT,
     },
     {
@@ -302,6 +323,7 @@ export const dummyGetPropertiesToBeReVerified = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: "2025-06-09T19:05:27.661+00:00",
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.REPORT,
     },
     {
@@ -313,6 +335,7 @@ export const dummyGetPropertiesToBeReVerified = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: "2025-06-09T19:05:27.661+00:00",
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.REPORT,
     },
     {
@@ -324,6 +347,7 @@ export const dummyGetPropertiesToBeReVerified = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: "2025-06-09T19:05:27.661+00:00",
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.REPORT,
     },
     {
@@ -335,6 +359,7 @@ export const dummyGetPropertiesToBeReVerified = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: "2025-06-09T19:05:27.661+00:00",
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.REPORT,
     },
     {
@@ -346,6 +371,7 @@ export const dummyGetPropertiesToBeReVerified = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: null,
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.REPORT,
     },
     {
@@ -357,6 +383,7 @@ export const dummyGetPropertiesToBeReVerified = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: null,
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.REPORT,
     },
     {
@@ -368,6 +395,7 @@ export const dummyGetPropertiesToBeReVerified = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: null,
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.REPORT,
     },
     {
@@ -379,6 +407,7 @@ export const dummyGetPropertiesToBeReVerified = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: null,
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.REPORT,
     },
     {
@@ -390,6 +419,7 @@ export const dummyGetPropertiesToBeReVerified = {
       price: "30,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: null,
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.REPORT,
     },
   ],

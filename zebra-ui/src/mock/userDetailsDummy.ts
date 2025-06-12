@@ -34,6 +34,7 @@ export const dummyProperties = [
     price: "1,00,00,000",
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
+    availableFrom: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.VERIFIED,
   },
   {
@@ -45,6 +46,7 @@ export const dummyProperties = [
     price: "30,000",
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
+    availableFrom: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -56,6 +58,7 @@ export const dummyProperties = [
     price: "30,000",
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
+    availableFrom: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.REPORT,
   },
   {
@@ -67,6 +70,7 @@ export const dummyProperties = [
     price: "30,000",
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
+    availableFrom: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -78,6 +82,7 @@ export const dummyProperties = [
     price: "30,000",
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
+    availableFrom: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -89,6 +94,7 @@ export const dummyProperties = [
     price: "30,000",
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
+    availableFrom: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -100,6 +106,7 @@ export const dummyProperties = [
     price: "30,000",
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
+    availableFrom: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.REPORT,
   },
   {
@@ -111,6 +118,7 @@ export const dummyProperties = [
     price: "30,000",
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
+    availableFrom: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.REPORT,
   },
   {
@@ -122,6 +130,7 @@ export const dummyProperties = [
     price: "30,000",
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
+    availableFrom: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.REPORT,
   },
   {
@@ -133,6 +142,7 @@ export const dummyProperties = [
     price: "30,000",
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
+    availableFrom: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.REPORT,
   },
   {
@@ -144,6 +154,7 @@ export const dummyProperties = [
     price: "30,000",
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
+    availableFrom: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -155,6 +166,7 @@ export const dummyProperties = [
     price: "30,000",
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
+    availableFrom: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -166,6 +178,7 @@ export const dummyProperties = [
     price: "30,000",
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
+    availableFrom: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -177,6 +190,7 @@ export const dummyProperties = [
     price: "30,000",
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
+    availableFrom: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -188,6 +202,7 @@ export const dummyProperties = [
     price: "30,000",
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
+    availableFrom: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -199,6 +214,7 @@ export const dummyProperties = [
     price: "30,000",
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
+    availableFrom: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -210,6 +226,7 @@ export const dummyProperties = [
     price: "30,000",
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
+    availableFrom: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -221,6 +238,7 @@ export const dummyProperties = [
     price: "30,000",
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
+    availableFrom: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -232,6 +250,7 @@ export const dummyProperties = [
     price: "30,000",
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
+    availableFrom: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -243,6 +262,7 @@ export const dummyProperties = [
     price: "30,000",
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
+    availableFrom: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -254,6 +274,7 @@ export const dummyProperties = [
     price: "30,000",
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
+    availableFrom: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
   {
@@ -265,6 +286,7 @@ export const dummyProperties = [
     price: "3,00,00,000",
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
+    availableFrom: "2025-06-09T19:05:27.661+00:00",
     status: PropertyStatusEnum.PENDING,
   },
 ];
@@ -283,6 +305,7 @@ export const dummyReportProperties = [
       price: "1,00,00,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: "2025-06-09T19:05:27.661+00:00",
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.REPORT,
     },
   },
@@ -299,6 +322,7 @@ export const dummyReportProperties = [
       price: "1,00,00,000",
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: null,
+      availableFrom: "2025-06-09T19:05:27.661+00:00",
       status: PropertyStatusEnum.REPORT,
     },
   },

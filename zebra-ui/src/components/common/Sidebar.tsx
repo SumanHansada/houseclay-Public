@@ -19,6 +19,7 @@ const sidebarItems = [
       { label: "View All Properties", href: "/admin/view-all-properties" },
       { label: "Verify Property", href: "/admin/verify-property" },
       { label: "ReVerify Property", href: "/admin/reverify-property" },
+      { label: "Property Verification", href: "/admin/property-verification" },
     ],
     href: "#",
   },
