@@ -55,6 +55,7 @@ const LocalityDetailsPage: React.FC = () => {
     longitude: number;
     name?: string;
     address?: string;
+    city?: string;
   }) => {
     setFieldValue("localityDetails.latitude", location.latitude);
     setFieldValue("localityDetails.longitude", location.longitude);

@@ -58,3 +58,8 @@ body {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+/* Toaster custom styles */
+.toaster-container {
+  top: 4rem !important; /* equivalent to top-16 */
+}

@@ -32,7 +32,6 @@ import {
   Wine,
 } from "lucide-react";
 import { EditIcon } from "lucide-react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
 import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
@@ -62,6 +61,7 @@ import {
   toBase64,
 } from "@/common/utils";
 import Carousel2D from "@/components/Carousel2D";
+import ImageWithLoader from "@/components/common/ImageWithLoader";
 import {
   NonTab,
   Tab,
@@ -783,14 +783,15 @@ export function PropertyDetailsClient({
                             (imgUrl: string, idx: number) => (
                               <div
                                 key={idx}
-                                className="relative w-full aspect-[4/3] rounded-lg overflow-hidden border cursor-pointer"
+                                className="relative w-full aspect-[4/3] rounded-lg overflow-hidden border cursor-zoom-in"
                                 onClick={() => handleImageClick(imgUrl)}
                               >
-                                <Image
+                                <ImageWithLoader
                                   src={imgUrl}
                                   alt={`Property image ${idx + 1}`}
                                   fill
-                                  className="object-cover"
+                                  loading="lazy"
+                                  className="object-cover transition-transform duration-300 ease-in-out"
                                   placeholder="blur"
                                   blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(300, 400))}`}
                                 />
@@ -919,12 +920,13 @@ export function PropertyDetailsClient({
               className="relative w-full h-full max-w-7xl max-h-[90vh] p-4"
             >
               <div className="relative w-full h-full rounded-xl overflow-hidden">
-                <Image
+                <ImageWithLoader
                   src={selectedImage}
                   alt="Fullscreen property image"
                   fill
-                  className="object-contain"
+                  className="object-contain transition-transform duration-300 ease-in-out"
                   priority
+                  style={{ transformOrigin: "center" }}
                 />
               </div>
             </motion.div>

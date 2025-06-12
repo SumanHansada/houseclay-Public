@@ -12,9 +12,9 @@ import Dropdown from "./Dropdown";
 const Search = SearchSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 const cityLatLngMapping: Record<string, { lat: number; lng: number }> = {
+  Bengaluru: { lat: 12.9716, lng: 77.5946 },
   Mumbai: { lat: 19.076, lng: 72.8777 },
   Delhi: { lat: 28.6139, lng: 77.209 },
-  Bengaluru: { lat: 12.9716, lng: 77.5946 },
   Hyderabad: { lat: 17.385, lng: 78.4867 },
   Chennai: { lat: 13.0827, lng: 80.2707 },
   Kolkata: { lat: 22.5726, lng: 88.3639 },
@@ -55,15 +55,15 @@ const HomeSearchBar: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      className="flex pl-8 pr-2 rounded-full bg-white shadow-lg justify-between items-center h-16"
+      className="flex pl-4 pr-2 rounded-full bg-white shadow-lg justify-between items-center h-16"
     >
       {/* City */}
-      <div className="w-1/4 px-3 py-2 border-r border-gray-200">
+      <div className="w px-3 py-2 border-r border-gray-200">
         <div className="text-sm font-medium text-gray-900 mb-1">City</div>
         <div className="text-gray-500 text-sm flex items-center">
           <Dropdown
             options={CITY_OPTIONS}
-            defaultSelected={CITY_OPTIONS[2]}
+            defaultSelected={CITY_OPTIONS[0]}
             onChange={(option) => console.log(option)}
             disabled={true}
           />
@@ -90,10 +90,10 @@ const HomeSearchBar: React.FC = () => {
             if (value.city) {
               const selectedCity = value.city.toLowerCase();
               const isCityAllowed =
-                CITY_OPTIONS[2].label.toLowerCase() === selectedCity;
+                CITY_OPTIONS[0].label.toLowerCase() === selectedCity;
               if (!isCityAllowed) {
                 toast.error(
-                  `Please select a location within ${CITY_OPTIONS[2].label}`,
+                  `Please select a location within ${CITY_OPTIONS[0].label}`,
                   {
                     duration: 5000,
                   },

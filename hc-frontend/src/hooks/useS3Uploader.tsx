@@ -34,6 +34,7 @@ export const useS3Uploader = () => {
           method: "PUT",
           headers: {
             "Content-Type": file.type,
+            "Cache-Control": "public, max-age=86400, must-revalidate",
           },
           body: file,
         });
