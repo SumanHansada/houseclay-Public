@@ -1,10 +1,9 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import SearchSvg from "public/icons/search.svg";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
-
-import { useLazyGetPropertiesByLocationQuery } from "@/store/apiSlice";
 
 import PlacesAutocomplete from "./common/PlacesAutocomplete";
 import Dropdown from "./Dropdown";
@@ -31,6 +30,7 @@ const CITY_OPTIONS = Object.keys(cityLatLngMapping).map((city) => ({
 
 const HomeSearchBar: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
   const [location, setLocation] = useState<{
     latitude?: number;
     longitude?: number;
@@ -38,17 +38,12 @@ const HomeSearchBar: React.FC = () => {
     address?: string;
     city?: string;
   } | null>(null);
-  const [
-    triggerPropertySearch,
-    { data: _data, isLoading: _isLoading, error: _error },
-  ] = useLazyGetPropertiesByLocationQuery();
 
   const handleSearch = () => {
     if (location && location.latitude && location.longitude) {
-      triggerPropertySearch({
-        latitude: location.latitude,
-        longitude: location.longitude,
-      });
+      router.push(
+        `/property-search?lat=${location.latitude}&lon=${location.longitude}`,
+      );
     }
   };
 

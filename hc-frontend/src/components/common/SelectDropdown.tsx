@@ -1,4 +1,3 @@
-import { useField } from "formik";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
@@ -7,17 +6,28 @@ interface DropdownOption {
   label: string;
 }
 
-interface FormDropdownProps {
-  label: string;
+interface SelectDropdownProps {
+  label?: string;
   name: string;
   id: string;
   options: DropdownOption[];
   required?: boolean;
   placeholder?: string;
   disabled?: boolean;
+  value: string | number | boolean;
+  onChange: (value: string | number | boolean) => void;
+  onBlur?: () => void;
+  error?: string;
+  // Styling props
+  containerClassName?: string;
+  labelClassName?: string;
+  buttonClassName?: string;
+  dropdownClassName?: string;
+  dropdownItemClassName?: string;
+  errorClassName?: string;
 }
 
-const FormDropdown: React.FC<FormDropdownProps> = ({
+const SelectDropdown: React.FC<SelectDropdownProps> = ({
   label,
   name,
   id,
@@ -25,25 +35,34 @@ const FormDropdown: React.FC<FormDropdownProps> = ({
   required = false,
   placeholder = "Select an option",
   disabled = false,
-}: FormDropdownProps) => {
-  const [field, meta, helpers] = useField(name);
+  value,
+  onChange,
+  onBlur,
+  error,
+  // Styling props with defaults
+  containerClassName = "relative w-full",
+  labelClassName = "block text-sm font-medium text-gray-700 mb-1",
+  buttonClassName = "flex justify-between items-center w-full p-3 border rounded-xl text-left",
+  dropdownClassName = "absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-auto",
+  dropdownItemClassName = "px-3 py-2 cursor-pointer hover:bg-gray-100",
+  errorClassName = "mt-1 text-sm text-red-600",
+}: SelectDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const hasError = meta.touched && meta.error;
+  const hasError = error;
 
   // Find the selected option
-  const selectedOption = options.find((opt) => opt.value === field.value);
+  const selectedOption = options.find((opt) => opt.value === value);
   const displayText = selectedOption ? selectedOption.label : placeholder;
 
-  // Function to handle option selection with immediate validation
-  const handleSelect = async (value: string | number | boolean) => {
-    await helpers.setValue(value);
-    await helpers.setTouched(true);
+  // Function to handle option selection
+  const handleSelect = (value: string | number | boolean) => {
+    onChange(value);
     setIsOpen(false);
   };
 
   // Add keyboard accessibility to the dropdown
   const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
-    const currentIndex = options.findIndex((opt) => opt.value === field.value);
+    const currentIndex = options.findIndex((opt) => opt.value === value);
     let newIndex = currentIndex;
 
     switch (event.key) {
@@ -71,17 +90,14 @@ const FormDropdown: React.FC<FormDropdownProps> = ({
     }
 
     if (newIndex !== currentIndex && options[newIndex]) {
-      helpers.setValue(options[newIndex].value);
+      onChange(options[newIndex].value);
     }
   };
 
   return (
-    <div className="relative w-full">
+    <div className={containerClassName}>
       {label && (
-        <label
-          htmlFor={id || name}
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
+        <label htmlFor={id || name} className={labelClassName}>
           {label} {required && <span className="text-red-500">*</span>}
         </label>
       )}
@@ -90,13 +106,13 @@ const FormDropdown: React.FC<FormDropdownProps> = ({
         <button
           type="button"
           id={id || name}
-          className={`flex justify-between items-center w-full p-3 border ${
+          className={`${buttonClassName} ${
             hasError ? "border-red-500" : "border-gray-300"
-          } rounded-xl  text-left ${disabled ? "cursor-not-allowed disabled:bg-gray-300" : "bg-white"}`}
+          } ${disabled ? "cursor-not-allowed disabled:bg-gray-300" : "bg-white"}`}
           onClick={() => !disabled && setIsOpen(!isOpen)}
           onKeyDown={handleKeyDown}
           onBlur={() => {
-            helpers.setTouched(true);
+            onBlur?.();
             // Don't close immediately to allow for click on option
             setTimeout(() => setIsOpen(false), 150);
           }}
@@ -114,15 +130,15 @@ const FormDropdown: React.FC<FormDropdownProps> = ({
         </button>
 
         {isOpen && (
-          <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-auto">
+          <div className={dropdownClassName}>
             <ul className="py-1" role="listbox" aria-labelledby={id || name}>
               {/* Add placeholder option if needed */}
-              {!field.value && field.value !== false && (
+              {!value && value !== false && (
                 <li
-                  className="px-3 py-2 cursor-pointer hover:bg-gray-100 text-gray-400"
+                  className={`${dropdownItemClassName} text-gray-400`}
                   onClick={() => handleSelect("")}
                   role="option"
-                  aria-selected={field.value === ""}
+                  aria-selected={value === ""}
                 >
                   {placeholder}
                 </li>
@@ -133,14 +149,14 @@ const FormDropdown: React.FC<FormDropdownProps> = ({
                 <li
                   key={String(option.value)} // Ensure unique keys for boolean values
                   id={`${id || name}-${String(option.value)}`}
-                  className={`px-3 py-2 cursor-pointer hover:bg-gray-100 ${
-                    field.value === option.value
+                  className={`${dropdownItemClassName} ${
+                    value === option.value
                       ? "bg-red-50 text-red-700 font-medium"
                       : "text-gray-900"
                   }`}
                   onClick={() => handleSelect(option.value)}
                   role="option"
-                  aria-selected={field.value === option.value}
+                  aria-selected={value === option.value}
                 >
                   {option.label}
                 </li>
@@ -151,12 +167,12 @@ const FormDropdown: React.FC<FormDropdownProps> = ({
       </div>
 
       {hasError ? (
-        <div className="mt-1 text-sm text-red-600" id={`${id || name}-error`}>
-          {meta.error}
+        <div className={errorClassName} id={`${id || name}-error`}>
+          {error}
         </div>
       ) : null}
     </div>
   );
 };
 
-export default FormDropdown;
+export default SelectDropdown;

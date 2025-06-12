@@ -26,10 +26,10 @@ import * as Yup from "yup";
 
 import FormCalendarField from "@/components/common/FormCalendarField";
 import FormCheckbox from "@/components/common/FormCheckbox";
-import FormDropdown from "@/components/common/FormDropdown";
-import FormINRCurrencyField from "@/components/common/FormINRCurrencyField";
+import FormCurrencyField from "@/components/common/FormCurrencyField";
 import FormFormNumberField from "@/components/common/FormNumberField";
 import FormRadioGroup from "@/components/common/FormRadioGroup";
+import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 import { FormValues } from "@/interfaces/FormValues";
 import {
   FormType,
@@ -165,7 +165,7 @@ const ResaleDetailsPage: React.FC = () => {
       <div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
-            <FormINRCurrencyField
+            <FormCurrencyField
               name="resaleDetails.price"
               id="resaleDetails.price"
               label="Expected Price"
@@ -229,7 +229,7 @@ const ResaleDetailsPage: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
-            <FormDropdown
+            <FormSelectDropdown
               label="Water Supply"
               name="resaleDetails.waterSupply"
               id="resaleDetails.waterSupply"
@@ -254,7 +254,7 @@ const ResaleDetailsPage: React.FC = () => {
             />
           </div>
           <div className="col-span-1">
-            <FormDropdown
+            <FormSelectDropdown
               label="Power Backup"
               name="resaleDetails.powerBackup"
               id="resaleDetails.powerBackup"
@@ -281,7 +281,7 @@ const ResaleDetailsPage: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
-            <FormDropdown
+            <FormSelectDropdown
               label="Furnishing"
               name="resaleDetails.furnishing"
               id="resaleDetails.furnishing"
@@ -307,7 +307,7 @@ const ResaleDetailsPage: React.FC = () => {
             />
           </div>
           <div className="col-span-1">
-            <FormDropdown
+            <FormSelectDropdown
               label="Parking"
               name="resaleDetails.parking"
               id="resaleDetails.parking"

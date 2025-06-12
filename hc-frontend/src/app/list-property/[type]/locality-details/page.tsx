@@ -7,11 +7,10 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
-import FormDropdown from "@/components/common/FormDropdown";
 import FormInputField from "@/components/common/FormInputField";
 import GoogleMaps from "@/components/common/GoogleMaps";
-import PlacesAutocomplete from "@/components/common/PlacesAutocomplete";
-import withFormikField from "@/hoc/withFormikField";
+import FormPlacesAutocomplete from "@/form-components/FormPlacesAutocomplete";
+import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 import { FormValues } from "@/interfaces/FormValues";
 import {
   FormType,
@@ -19,8 +18,6 @@ import {
   setLocalityDetails,
 } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
-
-const FormPlacesAutocomplete = withFormikField(PlacesAutocomplete);
 
 export const dynamicParams = true;
 
@@ -153,7 +150,7 @@ const LocalityDetailsPage: React.FC = () => {
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
           <div className="col-span-1">
-            <FormDropdown
+            <FormSelectDropdown
               label="City"
               name="localityDetails.city"
               id="localityDetails.city"
