@@ -42,7 +42,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
   }
 
   return (
-    <div className="flex items-center justify-between space-x-2 py-2 px-28 bg-white w-full">
+    <div className="flex items-center justify-between space-x-2 py-2 px-16 bg-white w-full">
       <div className="flex gap-2">
         {" "}
         <button

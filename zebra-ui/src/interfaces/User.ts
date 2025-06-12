@@ -1,3 +1,5 @@
+import { PropertyStatusEnum } from "./Property";
+
 export interface User {
   name: string;
   email: string;
@@ -24,7 +26,11 @@ export interface GetAllUsersResponse {
 export interface UserPropertyInfo {
   propertyID: string;
   title: string;
-  description: string;
+  type: string;
+  config: string;
+  location: string;
+  price: string;
+  status: PropertyStatusEnum;
 }
 
 export interface UserExternalPayment {

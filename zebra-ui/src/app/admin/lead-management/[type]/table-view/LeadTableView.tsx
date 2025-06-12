@@ -65,14 +65,6 @@ export const LeadTableView = ({ leadType }: LeadTableViewProps) => {
       key: "name",
       label: "Name",
       accessor: "name",
-      // render: (lead) => (
-      //   <span
-      //     className="hover:underline hover:cursor-pointer"
-      //     onClick={() => viewProfile(lead.phoneNo)}
-      //   >
-      //     {lead.name}
-      //   </span>
-      // ),
     },
     { key: "email", label: "Email", accessor: "email" },
     { key: "phoneNo", label: "Phone No.", accessor: "phoneNo" },
@@ -120,7 +112,7 @@ export const LeadTableView = ({ leadType }: LeadTableViewProps) => {
         </div>
 
         {/* Table area */}
-        <div className="flex flex-1 bg-gray-100 p-6">
+        <div className="flex flex-1 bg-gray-100 px-16 py-6">
           <div className="flex flex-col flex-1 bg-white shadow-sm rounded-lg p-4">
             <DataTable
               columns={columns}

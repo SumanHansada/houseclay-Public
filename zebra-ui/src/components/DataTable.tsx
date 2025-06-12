@@ -47,7 +47,7 @@ export function DataTable<T extends object>({
           {(col) => (
             <TableColumn
               key={col.key}
-              className={`${col.className} text-left text-lg font-normal border border-gray-200`}
+              className={`${col.className} text-left text-lg font-normal border border-gray-200 py-[10px]`}
             >
               {col.label}
             </TableColumn>
@@ -57,12 +57,6 @@ export function DataTable<T extends object>({
         <TableBody className="flex flex-col items-center justify-center h-full">
           {data.length > 0 ? (
             data.map((item, rowIndex) => {
-              // const rowId =
-              //   getRowId?.(item, rowIndex) ??
-              //   (typeof (item as any).id === "string"
-              //     ? ((item as any).id as string)
-              //     : rowIndex.toString());
-
               let fallbackId = rowIndex.toString();
               if (hasStringOrNumberId(item)) {
                 fallbackId = String(item.id);
