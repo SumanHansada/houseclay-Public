@@ -1,14 +1,14 @@
 "use client";
 import { ArrowDownToLine } from "lucide-react";
+import { useParams } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
 import { TablePagination } from "@/components/TablePagination";
 import { UserExternalPayment } from "@/interfaces/User";
+import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 
 import { RenderPaymentStatus } from "../../components/RenderPaymentStatus";
-import { useParams } from "next/navigation";
-import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 // import { dummyExternalPayments } from "@/mock/userDetailsDummy";
 
 interface RowType extends UserExternalPayment {

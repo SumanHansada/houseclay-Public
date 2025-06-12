@@ -4,10 +4,10 @@ import { useParams, useRouter } from "next/navigation";
 import { Column } from "@/components/DataTable";
 import { PropertyInfo } from "@/interfaces/Property";
 import { dummyReportProperties } from "@/mock/userDetailsDummy";
+import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 
 import { PropertiesTableView } from "../../components/PropertiesTableView";
 import { createCommonColumns } from "../propertyColumns";
-import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 
 export interface PropertyRow extends PropertyInfo {
   _serial: number;

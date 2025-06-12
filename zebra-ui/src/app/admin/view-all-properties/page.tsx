@@ -1,6 +1,8 @@
 import React from "react";
-import { ListProperties } from "./ListProperties";
+
 import { dummyGetAllProperties } from "@/mock/getAllProperties";
+
+import { ListProperties } from "./ListProperties";
 
 const ViewAllPropertyPage: React.FC = () => {
   //   const { data, isLoading, isError } = useGetPropertiesQuery({

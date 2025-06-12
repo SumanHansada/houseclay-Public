@@ -7,9 +7,10 @@ import { Column, DataTable } from "@/components/DataTable";
 import { SearchFilterBar } from "@/components/SearchFilterBar";
 import { TablePagination } from "@/components/TablePagination";
 import { PropertyInfo } from "@/interfaces/Property";
+import { dummyGetPropertiesToBeReVerified } from "@/mock/getAllProperties";
+
 import { RenderPropertyStatus } from "../user-details/components/RenderPropertyStatus";
 import { TableCellActions } from "../user-details/components/TableCellActions";
-import { dummyGetPropertiesToBeReVerified } from "@/mock/getAllProperties";
 
 interface PropertyRow extends PropertyInfo {
   _serial: number;
@@ -19,7 +20,7 @@ export const ReVerifyProperties = () => {
   const router = useRouter();
   const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 10;
+  // const rowsPerPage = 10;
 
   //   const { data, isLoading, isError } = useGetPropertiesQuery({
   //     page: currentPage - 1,

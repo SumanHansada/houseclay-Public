@@ -1,8 +1,9 @@
 "use client";
 import { useParams, usePathname, useRouter } from "next/navigation";
+
+import { UserDetailsTabEnum } from "@/common/enums";
 import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
-import { UserDetailsTabEnum } from "@/common/enums";
 
 export default function UserDetailsLayout({
   children,

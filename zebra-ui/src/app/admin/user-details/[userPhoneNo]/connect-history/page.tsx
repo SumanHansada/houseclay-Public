@@ -1,11 +1,11 @@
 "use client";
 import { ArrowDownToLine } from "lucide-react";
+import { useParams } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
 import { TablePagination } from "@/components/TablePagination";
 import { UserConnectTransaction } from "@/interfaces/User";
-import { useParams } from "next/navigation";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 
 interface RowType extends UserConnectTransaction {

@@ -7,6 +7,7 @@ import { Column, DataTable } from "@/components/DataTable";
 import { SearchFilterBar } from "@/components/SearchFilterBar";
 import { TablePagination } from "@/components/TablePagination";
 import { GetAllPropertiesResponse, PropertyInfo } from "@/interfaces/Property";
+
 import { RenderPropertyStatus } from "../user-details/components/RenderPropertyStatus";
 import { TableCellActions } from "../user-details/components/TableCellActions";
 
@@ -22,7 +23,7 @@ export const ListProperties = ({ propertyList }: ListPropertiesProps) => {
   const router = useRouter();
   const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 10;
+  // const rowsPerPage = 10;
 
   const allProperties = useMemo<PropertyInfo[]>(() => {
     return propertyList.content ?? [];

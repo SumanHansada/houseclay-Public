@@ -1,9 +1,5 @@
 import { PropertyStatusEnum } from "@/interfaces/Property";
-import {
-  PaymentStatusEnum,
-  UserConnectTransaction,
-  UserExternalPayment,
-} from "@/interfaces/User";
+import { PaymentStatusEnum } from "@/interfaces/User";
 
 // export const dummyProperties: UserPropertyInfo[] = [];
 

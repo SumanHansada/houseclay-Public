@@ -1,4 +1,5 @@
 import React from "react";
+
 import { VerifyProperties } from "./VerifyProperties";
 
 const VerifyPropertyPage: React.FC = () => {
