@@ -1,7 +1,7 @@
-import Image from "next/image";
 import React from "react";
 
 import Carousel2D from "./Carousel2D";
+import ImageWithLoader from "./common/ImageWithLoader";
 
 // Define types for our component props
 export interface Neighbourhood {
@@ -30,11 +30,12 @@ const NeighbourhoodCard: React.FC<NeighbourhoodCardProps> = ({
       role="listitem"
       className="relative max-md:h-96 md:aspect-square max-w-[280px] max-md:min-w-[245px] overflow-hidden rounded-lg shadow-md transition-transform duration-300 md:hover:scale-105"
     >
-      <Image
+      <ImageWithLoader
         src={image}
         alt={`${name} neighbourhood`}
         className="h-full w-full object-cover"
-        layout="fill"
+        fill
+        loading="lazy"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent max-md:from-transparent max-md:to-black/60">
         <div className="absolute bottom-0 max-md:top-0 left-0 p-6">

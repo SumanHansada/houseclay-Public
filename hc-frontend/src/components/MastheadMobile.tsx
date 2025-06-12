@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 
 import { useDialog } from "@/providers/DialogContextProvider";
 
+import ImageWithLoader from "./common/ImageWithLoader";
 import PlacesAutocomplete from "./common/PlacesAutocomplete";
 
 const Search = SearchSvg as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -228,12 +229,13 @@ const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
       <div className="relative w-full flex justify-center">
         <div className="rounded-2xl p-5 relative overflow-hidden w-full">
           <div className="absolute inset-0 pointer-events-none">
-            <Image
-              src={bannerPeopleMobile}
+            <ImageWithLoader
+              src={bannerPeopleMobile.src}
               alt="Banner People"
               fill
               className="object-cover object-right"
               sizes="100vw"
+              priority
             />
           </div>
           <div className="w-full relative">

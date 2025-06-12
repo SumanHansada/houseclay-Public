@@ -1,8 +1,7 @@
-// components/ImageWithSkeleton.tsx
 import "react-loading-skeleton/dist/skeleton.css";
 
 import Image, { ImageProps } from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 
 interface ImageWithLoaderProps extends Omit<ImageProps, "src" | "alt"> {
@@ -31,22 +30,32 @@ export default function ImageWithLoader({
 }: ImageWithLoaderProps) {
   const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => {
+    if (priority) {
+      setIsLoading(false); // assume priority images load instantly
+    }
+  }, [priority]);
+
+  const skeletonStyles: React.CSSProperties = {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    zIndex: 1,
+    opacity: isLoading ? 1 : 0,
+    transition: "opacity 0.5s ease",
+  };
+
   return (
     <div
       className={`relative ${fill ? "w-full h-full" : ""} ${className}`}
       style={!fill ? { width: rest.width, height: rest.height } : {}}
     >
-      {isLoading && (
+      {!priority && isLoading && (
         <Skeleton
           height={skeletonHeight ?? (fill ? "100%" : rest.height)}
           width={skeletonWidth ?? (fill ? "100%" : rest.width)}
           borderRadius={rounded ? 8 : 0}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            zIndex: 1,
-          }}
+          style={skeletonStyles}
         />
       )}
 
@@ -56,12 +65,14 @@ export default function ImageWithLoader({
         fill={fill}
         width={fill ? undefined : rest.width}
         height={fill ? undefined : rest.height}
-        onLoad={() => setIsLoading(false)}
         loading={loading}
         priority={priority}
-        className={`object-cover transition-opacity duration-500 ${
-          isLoading ? "opacity-0" : "opacity-100"
-        }`}
+        onLoad={(e) => {
+          if (e.currentTarget.complete) {
+            setIsLoading(false);
+          }
+        }}
+        className={`object-cover ${className ?? ""}`}
         {...rest}
       />
     </div>

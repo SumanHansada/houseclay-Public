@@ -1,9 +1,10 @@
 // pages/index.js
 import { Crown, Heart, MapPin, Star } from "lucide-react";
-import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 
 import { BadgeType } from "@/common/enums";
+
+import ImageWithLoader from "./common/ImageWithLoader";
 
 export interface Property {
   id: number;
@@ -55,12 +56,12 @@ const Properties: React.FC<PropertiesProps> = ({
     <div className="flex-col gap-8 bg-white border border-gray-100 rounded-lg drop-shadow relative p-3">
       {/* Image Carousel */}
       <div className="relative h-72 max-md:h-60">
-        <Image
+        <ImageWithLoader
           src={property?.images[currentImageIndex]}
           alt={`Property ${property?.id}`}
-          layout="fill"
-          objectFit="cover"
+          fill
           className="rounded-lg"
+          loading="lazy"
         />
 
         {/* Badge: Featured or Exclusive */}

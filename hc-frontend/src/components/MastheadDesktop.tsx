@@ -1,7 +1,8 @@
-import Image from "next/image";
 import bannerBackground from "public/images/banner-background.webp";
 
 import HomeSearchBar from "@/components/HomeSearchBar";
+
+import ImageWithLoader from "./common/ImageWithLoader";
 
 interface MastHeadDesktopProps {
   activeTab: string;
@@ -15,13 +16,12 @@ const MastHeadDesktop: React.FC<MastHeadDesktopProps> = ({
   return (
     <>
       <div className="absolute inset-0">
-        <Image
-          src={bannerBackground}
+        <ImageWithLoader
+          src={bannerBackground.src}
           alt="Banner Background"
           fill
           className="object-cover object-right"
           sizes="100vw"
-          placeholder="blur"
           priority
         />
       </div>

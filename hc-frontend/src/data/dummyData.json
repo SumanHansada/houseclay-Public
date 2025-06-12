@@ -25,9 +25,9 @@
       "area": "1,360",
       "location": "Varthur, Gunjur, Bangalore",
       "images": [
+        "/photos/House2.webp",
         "/photos/House1.webp",
         "/photos/House3.webp",
-        "/photos/House2.webp",
         "/photos/House4.webp"
       ],
       "type": ""
@@ -57,8 +57,8 @@
       "area": "1240",
       "location": "Doddenakundi, Marathahalli, Bangalore",
       "images": [
-        "/photos/House4.webp",
         "/photos/House3.webp",
+        "/photos/House4.webp",
         "/photos/House2.webp",
         "/photos/House1.webp"
       ],
