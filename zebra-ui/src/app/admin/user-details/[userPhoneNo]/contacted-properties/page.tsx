@@ -1,13 +1,14 @@
 "use client";
-
-import { dummyProperties } from "@/mock/dummyData";
-import { PropertiesTableView } from "../../components/PropertiesTableView";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { createCommonColumns } from "../propertyColumns";
-import { UserPropertyInfo } from "@/interfaces/User";
-import { Column } from "@/components/DataTable";
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+
+import { Column } from "@/components/DataTable";
+import { UserPropertyInfo } from "@/interfaces/User";
+import { dummyProperties } from "@/mock/userDetailsDummy";
+import { RootState } from "@/store/store";
+
+import { PropertiesTableView } from "../../components/PropertiesTableView";
+import { createCommonColumns } from "../propertyColumns";
 
 interface PropertyRow extends UserPropertyInfo {
   _serial: number;
@@ -22,14 +23,15 @@ const ContactedPropertiesPage: React.FC = () => {
       </div>
     );
   }
-  // const { contactedProperties } = currentUser;
+  const { contactedProperties } = currentUser;
+  console.log(contactedProperties);
 
   const viewPropertyDetails = (propertyID: string) => {
     router.push(`/admin/property-details/${propertyID}`);
   };
 
-  // const rows: PropertyRow[] = contactedProperties.map((propertyInfo, index) => ({
   const rows: PropertyRow[] = dummyProperties.map((propertyInfo, index) => ({
+    // const rows: PropertyRow[] = contactedProperties.map((propertyInfo, index) => ({
     ...propertyInfo,
     _serial: index + 1,
   }));
@@ -40,7 +42,7 @@ const ContactedPropertiesPage: React.FC = () => {
   return (
     <div className="h-full">
       <PropertiesTableView
-        tableTitle="User Contacted Properties"
+        tableTitle="Contacted Properties"
         columns={columns}
         rows={rows}
       />

@@ -1,24 +1,12 @@
 "use client";
-
-import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useParams, usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import Tabs, { Tab, TabContent, TabHeader } from "@/components/common/Tabs";
-import { PropertyStatusEnum } from "@/interfaces/Property";
-import { UserPropertyInfo } from "@/interfaces/User";
+import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 import { RootState } from "@/store/store";
-import { clearUser, setUser } from "@/store/userSlice";
-
-import { ContactedProperties } from "../components/ContactedProperties";
-import { ListedProperties } from "../components/ListedProperties";
-import { ShortlistedProperties } from "../components/ShortlistedProperties";
-import { UserProfile } from "../components/UserProfile";
-import { ViewedProperties } from "../components/ViewedProperties";
-import { UserPropertyInfo } from "@/interfaces/User";
-import { PropertyStatusEnum } from "@/interfaces/Property";
-// import { UserDetailsNavbar } from "../components/UserDetailsNavbar";
+import { setUser } from "@/store/userSlice";
 
 export default function UserDetailsLayout({
   children,
@@ -110,7 +98,7 @@ export default function UserDetailsLayout({
           <Tab label="Reported" value="reported-properties" />
         </TabHeader>
       </Tabs>
-      <div className="flex-1">{children}</div>
+      <div className="flex-1 overflow-auto">{children}</div>
     </div>
   );
 }

@@ -1,7 +1,31 @@
 import { PropertyStatusEnum } from "@/interfaces/Property";
-import { UserPropertyInfo, UserReportProperty } from "@/interfaces/User";
+import {
+  PaymentStatusEnum,
+  UserConnectTransaction,
+  UserDetails,
+  UserExternalPayment,
+  UserPropertyInfo,
+  UserReportProperty,
+} from "@/interfaces/User";
 
 // export const dummyProperties: UserPropertyInfo[] = [];
+
+export const dummyUserProfile: UserDetails = {
+  phoneNo: "9999999999",
+  email: "user@example.com",
+  name: "Test User",
+  createdAt: "2025-06-09T19:04:27.458+00:00",
+  blacklistedAt: "",
+  blacklistedBy: "",
+  blacklisted: false,
+  ownedProperties: [],
+  viewedProperties: [],
+  shortlistedProperties: [],
+  contactedProperties: [],
+  connectTransactions: [],
+  externalPayments: [],
+  reportProperties: [],
+};
 
 export const dummyProperties: UserPropertyInfo[] = [
   {
@@ -232,5 +256,48 @@ export const dummyReportProperties: UserReportProperty[] = [
       price: "1,00,00,000",
       status: PropertyStatusEnum.REPORTED,
     },
+  },
+];
+
+export const dummyExternalPayments: UserExternalPayment[] = [
+  {
+    paymentId: "PAY002",
+    amount: 200.0,
+    status: PaymentStatusEnum.COMPLETED,
+    signature: "sig002",
+    razorPaymentId: "rzp_002",
+    createdAt: "2025-06-09T19:04:27.661+00:00",
+    completedAt: "2025-06-09T19:05:27.661+00:00",
+  },
+  {
+    paymentId: "PAY003",
+    amount: 300.0,
+    status: PaymentStatusEnum.FAILED,
+    signature: "sig003",
+    razorPaymentId: "rzp_003",
+    createdAt: "2025-06-09T19:04:27.661+00:00",
+    completedAt: null,
+  },
+  {
+    paymentId: "PAY001",
+    amount: 100.0,
+    status: PaymentStatusEnum.PROGRESS,
+    signature: "sig001",
+    razorPaymentId: "rzp_001",
+    createdAt: "2025-06-09T19:04:27.661+00:00",
+    completedAt: null,
+  },
+];
+
+export const dummyConnectTransactions: UserConnectTransaction[] = [
+  {
+    transactionId: "TXN002",
+    connectQuantity: 3,
+    transactionTime: "2025-06-09T19:05:27.661+00:00",
+  },
+  {
+    transactionId: "TXN003",
+    connectQuantity: 10,
+    transactionTime: "2025-06-09T19:06:27.661+00:00",
   },
 ];

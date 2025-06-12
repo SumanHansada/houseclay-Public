@@ -1,6 +1,6 @@
-// src/utils/propertyColumns.ts
 import { Column } from "@/components/DataTable";
 import { UserPropertyInfo } from "@/interfaces/User";
+
 import { RenderPropertyStatus } from "../components/RenderPropertyStatus";
 import { TableCellActions } from "../components/TableCellActions";
 

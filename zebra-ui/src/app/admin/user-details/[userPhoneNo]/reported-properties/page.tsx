@@ -1,12 +1,14 @@
 "use client";
-import { dummyReportProperties } from "@/mock/dummyData";
-import { PropertiesTableView } from "../../components/PropertiesTableView";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { createCommonColumns } from "../propertyColumns";
-import { UserPropertyInfo } from "@/interfaces/User";
-import { Column } from "@/components/DataTable";
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+
+import { Column } from "@/components/DataTable";
+import { UserPropertyInfo } from "@/interfaces/User";
+import { dummyReportProperties } from "@/mock/userDetailsDummy";
+import { RootState } from "@/store/store";
+
+import { PropertiesTableView } from "../../components/PropertiesTableView";
+import { createCommonColumns } from "../propertyColumns";
 
 export interface PropertyRow extends UserPropertyInfo {
   _serial: number;
@@ -39,6 +41,7 @@ const ReportedPropertiesPage: React.FC = () => {
     );
   }
   const { reportProperties } = currentUser;
+  console.log(reportProperties);
 
   const viewPropertyDetails = (propertyID: string) => {
     router.push(`/admin/property-details/${propertyID}`);
@@ -68,7 +71,7 @@ const ReportedPropertiesPage: React.FC = () => {
   return (
     <div className="h-full">
       <PropertiesTableView
-        tableTitle="User Reported Properties"
+        tableTitle="Reported Properties"
         columns={columns}
         rows={rows}
       />
