@@ -1,109 +1,50 @@
-"use client";
-import { X } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { headers } from "next/headers";
+import { Suspense } from "react";
 
 import Advantages from "@/components/Advantages";
-import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import Footer from "@/components/Footer";
-import MastHeadDesktop from "@/components/MastheadDesktop";
-import MastHeadMobile from "@/components/MastheadMobile";
-import Neighbourhoods from "@/components/Neighborhoods";
-import PropertyOwners from "@/components/PropertyOwners";
-import Standouts from "@/components/Standouts";
-import { Testimonials } from "@/components/Testimonials";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { useDialog } from "@/providers/DialogContextProvider";
-import {
-  setHideFooter,
-  setHideHeader,
-  setHideStickyNavBar,
-} from "@/store/appSlice";
+import MastheadDesktopClient from "@/components/MastheadDesktopClient";
+import MastHeadMobileClient from "@/components/MastheadMobileClient";
 
 import dummyData from "../data/dummyData.json";
+import ClientPage from "./ClientPage";
 
-export default function Home() {
-  const [activeTab, setActiveTab] = useState("rent");
+// Server component to detect device type
+async function getDeviceType() {
+  const headersList = await headers();
+  const userAgent = headersList.get("user-agent") || "";
+  const isMobile = /Mobile|Android|iPhone/i.test(userAgent);
+  return { isMobile };
+}
+
+export default async function Home() {
+  const { isMobile } = await getDeviceType();
   const properties = dummyData.properties;
   const neighbourhoods = dummyData.neighbourhoods;
   const testimonials = dummyData.testimonials;
-  const { isDialogOpen, closeDialog } = useDialog();
-  const { isMobile } = useDeviceContext();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(setHideHeader(false));
-    dispatch(setHideFooter(false));
-    dispatch(setHideStickyNavBar(false));
-  }, [dispatch]);
 
   return (
     <>
-      {/* Masthead Desktop Section */}
-      <section className="relative xl:h-[600px] lg:h-[500px] h-[500px] w-full max-md:hidden">
-        <MastHeadDesktop activeTab={activeTab} setActiveTab={setActiveTab} />
+      {/* Masthead Section - Server-side rendered based on device */}
+      <section className="relative xl:h-[600px] lg:h-[500px] h-[500px] w-full">
+        {isMobile ? <MastHeadMobileClient /> : <MastheadDesktopClient />}
       </section>
-      {/* Masthead Mobile Section */}
-      <section className={"min-h-[500px] w-full overflow-hidden md:hidden"}>
-        <MastHeadMobile activeTab={activeTab} setActiveTab={setActiveTab} />
-      </section>
+
       {/* Advantages Section */}
       <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
         <Advantages />
       </section>
-      {/* Standouts Section */}
-      <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
-        <Standouts
-          listingType={activeTab}
+
+      {/* Client-side interactive components */}
+      <Suspense fallback={<div>Loading...</div>}>
+        <ClientPage
           properties={properties}
-          setActiveTab={setActiveTab}
-        />
-      </section>
-      {/* neighbourhoods Section */}
-      <section className="min-h-[500px] w-full overflow-hidden">
-        <Neighbourhoods
-          listingType={activeTab}
           neighbourhoods={neighbourhoods}
+          testimonials={testimonials}
         />
-      </section>
-      {/* Testimonials Section */}
-      <section className="min-h-[500px] w-full overflow-hidden">
-        <Testimonials testimonials={testimonials} />
-      </section>
-      {/* Property Owners Section */}
-      <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
-        <PropertyOwners />
-      </section>
+      </Suspense>
+
       <Footer />
-      {/* Standouts Dialog */}
-      {isDialogOpen("standouts-dialog") && (
-        <Dialog
-          id="standouts-dialog"
-          type="bottom-sheet"
-          onClose={() => closeDialog("standouts-dialog")}
-          height={80}
-          entryAnimation="animate-slide-in-bottom"
-          exitAnimation="animate-slide-out-bottom"
-        >
-          {isMobile && (
-            <DialogHeader>
-              <div className="py-2 px-8 flex flex-col justify-between items-center w-full">
-                <h1 className="text-xl mt-1 mb-2 text-black">Standouts</h1>
-              </div>
-              <button className="absolute top-4 right-4 border border-gray-200 rounded-full">
-                <X onClick={() => closeDialog("standouts-dialog")} size={25} />
-              </button>
-            </DialogHeader>
-          )}
-          <DialogContent>
-            <Standouts
-              listingType={activeTab}
-              properties={properties}
-              setActiveTab={setActiveTab}
-            />
-          </DialogContent>
-        </Dialog>
-      )}
     </>
   );
 }

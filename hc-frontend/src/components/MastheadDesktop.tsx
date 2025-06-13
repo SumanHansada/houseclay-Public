@@ -5,14 +5,11 @@ import HomeSearchBar from "@/components/HomeSearchBar";
 import ImageWithLoader from "./common/ImageWithLoader";
 
 interface MastHeadDesktopProps {
-  activeTab: string;
+  activeTab: "rent" | "sale";
   setActiveTab: (tab: "rent" | "sale") => void;
 }
 
-const MastHeadDesktop: React.FC<MastHeadDesktopProps> = ({
-  activeTab,
-  setActiveTab,
-}) => {
+const MastHeadDesktop = ({ activeTab, setActiveTab }: MastHeadDesktopProps) => {
   return (
     <>
       <div className="absolute inset-0">
@@ -22,10 +19,11 @@ const MastHeadDesktop: React.FC<MastHeadDesktopProps> = ({
           fill
           className="object-cover object-right"
           sizes="100vw"
+          fetchPriority="high"
           priority
         />
       </div>
-      <div className="absolute h-full flex flex-col justify-center xl:pl-40 lg:pl-14 pl-14 xl:w-7/12 lg:w-7/12 md:w-3/5 w-3/5">
+      <div className="absolute h-full flex flex-col justify-center xl:pl-40 lg:pl-14 pl-14 xl:w-7/12 lg:w-7/12 md:w-4/5 w-4/5">
         {/* Headings */}
         <div className="max-w-md mb-8">
           <h1 className="xl:text-6xl lg:text-5xl text-5xl font-bold text-gray-900 mb-2">

@@ -1,53 +1,41 @@
-import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 import Image from "next/image";
-import DealSvg from "public/icons/deal.svg";
-import FindFlatmatesSvg from "public/icons/find-flatmates.svg";
-import FindRoomsSvg from "public/icons/find-rooms.svg";
-import ListPropertySvg from "public/icons/list-property.svg";
-import SearchSvg from "public/icons/search.svg";
-import WeeklyStandoutsSvg from "public/icons/weekly-standouts.svg";
-import ZeroPercentSvg from "public/icons/zero-percent.svg";
 import bannerBackgroundMobile from "public/images/banner-background-mobile.webp";
 import bannerPeopleMobile from "public/images/banner-people-mobile.webp";
-import { useState } from "react";
-import toast from "react-hot-toast";
-
-import { useDialog } from "@/providers/DialogContextProvider";
 
 import ImageWithLoader from "./common/ImageWithLoader";
-import PlacesAutocomplete from "./common/PlacesAutocomplete";
+import HomeSearchBar from "./HomeSearchBar";
 
-const Search = SearchSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const FindFlatmates = FindFlatmatesSvg as React.FC<
+const FindFlatmates = dynamic(
+  () => import("public/icons/find-flatmates.svg"),
+) as React.FC<React.SVGProps<SVGSVGElement>>;
+const FindRooms = dynamic(
+  () => import("public/icons/find-rooms.svg"),
+) as React.FC<React.SVGProps<SVGSVGElement>>;
+const WeeklyStandouts = dynamic(
+  () => import("public/icons/weekly-standouts.svg"),
+) as React.FC<React.SVGProps<SVGSVGElement>>;
+const ListProperty = dynamic(
+  () => import("public/icons/list-property.svg"),
+) as React.FC<React.SVGProps<SVGSVGElement>>;
+const Deal = dynamic(() => import("public/icons/deal.svg")) as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
-const FindRooms = FindRoomsSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const WeeklyStandouts = WeeklyStandoutsSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const ListProperty = ListPropertySvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const Deal = DealSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const ZeroPercent = ZeroPercentSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const ZeroPercent = dynamic(
+  () => import("public/icons/zero-percent.svg"),
+) as React.FC<React.SVGProps<SVGSVGElement>>;
 
 interface MastHeadMobileProps {
-  activeTab: string;
+  activeTab: "rent" | "buy";
   setActiveTab: (tab: "rent" | "buy") => void;
+  openDialog: (dialogName: string) => void;
 }
 
 const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
   activeTab,
   setActiveTab,
+  openDialog,
 }) => {
-  const { openDialog } = useDialog();
-  const [isTyping, setIsTyping] = useState(false);
-
-  const [location, setLocation] = useState<{
-    latitude?: number;
-    longitude?: number;
-    name?: string;
-    address?: string;
-  } | null>(null);
-
   return (
     <div className="relative flex flex-col px-8 pt-8 pb-14 gap-6">
       <div className="absolute inset-0 -z-10">
@@ -79,78 +67,7 @@ const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
         </div>
 
         {/* Search */}
-        <div>
-          <div className="flex pl-4 pr-2 py-2 rounded-full bg-white border border-gray-200">
-            <div className="flex-1 pr-2 justify-center items-center self-center bg-white">
-              <PlacesAutocomplete
-                id="location"
-                name="location"
-                placeholder="Enter a locality or location..."
-                value={location?.name || ""}
-                onChange={(value) => {
-                  setIsTyping(true);
-                  setLocation((prev) => {
-                    return {
-                      ...prev,
-                      name: value,
-                    };
-                  });
-                }}
-                onLocationSelect={(value) => {
-                  setIsTyping(false);
-                  console.log(value);
-                  if (value.city) {
-                    const selectedCity = value.city.toLowerCase();
-                    const isCityAllowed =
-                      "Bengaluru".toLowerCase() === selectedCity;
-                    if (!isCityAllowed) {
-                      toast.error(
-                        `Please select a location within ${"Bengaluru"}`,
-                        {
-                          duration: 5000,
-                        },
-                      );
-                      setLocation(null);
-                      return;
-                    }
-                  }
-                  setLocation((prev) => {
-                    return {
-                      ...prev,
-                      latitude: value.latitude,
-                      longitude: value.longitude,
-                      name: value.name,
-                      address: value.address,
-                      city: value.city,
-                    };
-                  });
-                }}
-                onBlur={() => {
-                  setIsTyping(false);
-                  console.log("blur");
-                }}
-                containerClassName="w-full relative"
-                labelClassName="text-sm font-medium text-gray-900 mb-1"
-                inputClassName="w-full p-2"
-                dropdownClassName="absolute z-10 mt-1 py-1 w-full bg-white shadow-lg max-h-60 overflow-auto rounded-b-xl"
-                dropdownItemClassName="py-1 px-3 hover:bg-gray-100 cursor-pointer flex items-center"
-                errorClassName="mt-1 text-sm text-red-600"
-              />
-            </div>
-            {/* Search Button */}
-            {!isTyping && (
-              <motion.button
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.2 }}
-                className="text-white flex items-center justify-center"
-              >
-                <Search width={40} height={40} />
-              </motion.button>
-            )}
-          </div>
-        </div>
+        <HomeSearchBar />
       </div>
       {/* Tagline */}
       <div className="flex justify-center items-center">
@@ -235,6 +152,7 @@ const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
               fill
               className="object-cover object-right"
               sizes="100vw"
+              fetchPriority="high"
               priority
             />
           </div>
