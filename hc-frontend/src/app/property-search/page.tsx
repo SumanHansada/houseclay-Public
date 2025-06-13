@@ -28,9 +28,12 @@ export default function PropertySearchPage() {
 
   // Memoize property list
   const properties: Property[] = useMemo(() => {
+    if (error) {
+      return error as Property[];
+    }
     if (!data || !Array.isArray(data)) return [];
     return data as Property[];
-  }, [data]);
+  }, [data, error]);
 
   type PropertySearchState = {
     propertyType: string | number | boolean;
@@ -77,7 +80,7 @@ export default function PropertySearchPage() {
 
   return (
     <>
-      <section className="fixed flex w-full xl:gap-16 border-b border-t bg-white border-gray-200 lg:gap-8 md:gap-0 gap-0  xl:px-24 md:px-12 px-12 max-md:pt-4 max-md:pb-8 h-16">
+      <section className="fixed z-50 flex w-full xl:gap-16 border-b border-t bg-white border-gray-200 lg:gap-8 md:gap-0 gap-0  xl:px-24 md:px-12 px-12 max-md:pt-4 max-md:pb-8 h-16">
         <div className="flex justify-between items-center border-gray-200 w-full gap-4">
           <div className="flex-1">
             <Autocomplete
@@ -196,7 +199,7 @@ export default function PropertySearchPage() {
           </div>
         </div>
       </section>
-      <section className="w-full pt-[64px] bg-gray-50">
+      <section className="w-full pt-[64px] bg-gray-50 relative">
         <div className="min-h-screen bg-gray-50 pb-10 xl:px-24 md:px-12 px-12">
           {/* Header Bar */}
           <div className="">
@@ -204,9 +207,6 @@ export default function PropertySearchPage() {
               {/* Filter/Search Bar */}
 
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-1">
-                  Properties for rent in Bangalore
-                </h1>
                 <p className="text-gray-500 text-sm">
                   {properties.length} properties
                 </p>
@@ -215,26 +215,22 @@ export default function PropertySearchPage() {
           </div>
 
           {/* Property List */}
-          <div className="container mx-auto xl:px-28 lg:px-14 md:px-8 px-4">
+          <div className="mx-auto">
             {isLoading ? (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                 {/* {Array.from({ length: 6 }).map((_, i) => (
                   <P key={i} />
                 ))} */}
               </div>
-            ) : error ? (
-              <div className="text-center text-red-500 py-12">
-                Failed to load properties. Please try again.
-              </div>
             ) : properties.length === 0 ? (
               <div className="text-center text-gray-500 py-12">
                 No properties found for this location.
               </div>
             ) : (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4 max-md:hidden">
                 {properties.map((property, idx) => (
                   <Properties
-                    key={property.id || idx}
+                    key={`${property.id}-${idx}`}
                     property={property}
                     badgeType={
                       // eslint-disable-next-line @typescript-eslint/no-explicit-any
