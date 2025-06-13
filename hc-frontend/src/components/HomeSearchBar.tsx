@@ -122,11 +122,17 @@ const HomeSearchBar: React.FC = () => {
       </div>
 
       {/* Search Button */}
-      <button className="text-white flex items-center justify-center rounded-full md:hidden">
-        <Search height={40} width={40} onClick={handleSearch} />
+      <button
+        className="text-white flex items-center justify-center rounded-full md:hidden"
+        onClick={handleSearch}
+      >
+        <Search height={40} width={40} />
       </button>
-      <button className="text-white flex items-center justify-center rounded-full max-md:hidden">
-        <Search height={50} width={50} onClick={handleSearch} />
+      <button
+        className="text-white flex items-center justify-center rounded-full max-md:hidden"
+        onClick={handleSearch}
+      >
+        <Search height={50} width={50} />
       </button>
     </div>
   );

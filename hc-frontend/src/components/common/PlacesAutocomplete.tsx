@@ -65,6 +65,7 @@ const PlacesAutocompleteBase = ({
   const [predictions, setPredictions] = useState<PlacePrediction[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const [focusedIndex, setFocusedIndex] = useState(-1);
 
   useEffect(() => {
     const checkGoogleMapsLoaded = async () => {
@@ -209,6 +210,40 @@ const PlacesAutocompleteBase = ({
     }
   };
 
+  // Handle keyboard navigation
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!showDropdown || predictions.length === 0) return;
+
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        setFocusedIndex((prev) =>
+          prev < predictions.length - 1 ? prev + 1 : prev,
+        );
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setFocusedIndex((prev) => (prev > 0 ? prev - 1 : prev));
+        break;
+      case "Enter":
+        e.preventDefault();
+        if (focusedIndex >= 0 && focusedIndex < predictions.length) {
+          selectPrediction(predictions[focusedIndex]);
+        }
+        break;
+      case "Escape":
+        e.preventDefault();
+        setShowDropdown(false);
+        setFocusedIndex(-1);
+        break;
+    }
+  };
+
+  // Reset focused index when predictions change
+  useEffect(() => {
+    setFocusedIndex(-1);
+  }, [predictions]);
+
   return (
     <div className={containerClassName}>
       {label && (
@@ -222,26 +257,42 @@ const PlacesAutocompleteBase = ({
         name={name}
         value={value}
         onChange={handleInputChange}
+        onKeyDown={handleKeyDown}
         onBlur={() => {
           onBlur?.();
           setTimeout(() => {
             setShowDropdown(false);
+            setFocusedIndex(-1);
           }, 200);
         }}
         placeholder={placeholder}
         className={`${inputClassName} ${error ? "border-red-500" : "border-gray-300"}`}
         type="text"
         autoComplete="off"
-        role="presentation"
+        role="combobox"
+        aria-expanded={showDropdown}
+        aria-controls={`${id}-listbox`}
+        aria-activedescendant={
+          focusedIndex >= 0 ? `${id}-option-${focusedIndex}` : undefined
+        }
       />
 
       {showDropdown && predictions.length > 0 && (
-        <div className={dropdownClassName}>
-          {predictions.map((prediction) => (
+        <div
+          className={dropdownClassName}
+          role="listbox"
+          id={`${id}-listbox`}
+          aria-label="Location suggestions"
+        >
+          {predictions.map((prediction, index) => (
             <div
               key={prediction.placeId}
-              className={dropdownItemClassName}
+              id={`${id}-option-${index}`}
+              className={`${dropdownItemClassName} ${index === focusedIndex ? "bg-gray-100" : ""}`}
               onClick={() => selectPrediction(prediction)}
+              role="option"
+              aria-selected={index === focusedIndex}
+              tabIndex={-1}
             >
               <span className="text-gray-500 mr-2">
                 <MapPin size={20} />
@@ -258,7 +309,7 @@ const PlacesAutocompleteBase = ({
       )}
 
       {error && (
-        <div className={errorClassName} id={`${id || name}-error`}>
+        <div className={errorClassName} id={`${id || name}-error`} role="alert">
           {error}
         </div>
       )}
