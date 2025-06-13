@@ -18,12 +18,17 @@ interface SelectDropdownProps {
   onChange: (value: string | number | boolean) => void;
   onBlur?: () => void;
   error?: string;
+  size?: "sm" | "md" | "lg";
+  variant?: "primary" | "secondary" | "outline";
+  dropdownWidth?: "auto" | "full" | "fit";
   // Styling props
   containerClassName?: string;
   labelClassName?: string;
   buttonClassName?: string;
   dropdownClassName?: string;
   dropdownItemClassName?: string;
+  selectedOptionClassName?: string;
+  displayTextClassName?: string;
   errorClassName?: string;
 }
 
@@ -39,20 +44,45 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
   onChange,
   onBlur,
   error,
+  size = "md",
+  variant = "primary",
+  dropdownWidth = "full",
   // Styling props with defaults
   containerClassName = "relative w-full",
   labelClassName = "block text-sm font-medium text-gray-700 mb-1",
   buttonClassName = "flex justify-between items-center w-full p-3 border rounded-xl text-left",
   dropdownClassName = "absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-auto",
   dropdownItemClassName = "px-3 py-2 cursor-pointer hover:bg-gray-100",
+  selectedOptionClassName = "bg-red-50 text-red-700 font-medium",
+  displayTextClassName = "text-gray-900",
   errorClassName = "mt-1 text-sm text-red-600",
 }: SelectDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const hasError = error;
 
   // Find the selected option
   const selectedOption = options.find((opt) => opt.value === value);
   const displayText = selectedOption ? selectedOption.label : placeholder;
+
+  // Size styles
+  const sizeStyles = {
+    sm: "p-2 text-sm",
+    md: "p-3 text-base",
+    lg: "p-4 text-lg",
+  };
+
+  // Variant styles
+  const variantStyles = {
+    primary: "bg-white border-gray-300 hover:border-gray-400",
+    secondary: "bg-gray-50 border-gray-200 hover:border-gray-300",
+    outline: "bg-transparent border-gray-300 hover:border-gray-400",
+  };
+
+  // Dropdown width styles
+  const dropdownWidthStyles = {
+    auto: "w-auto",
+    full: "w-full",
+    fit: "w-fit",
+  };
 
   // Function to handle option selection
   const handleSelect = (value: string | number | boolean) => {
@@ -106,9 +136,9 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
         <button
           type="button"
           id={id || name}
-          className={`${buttonClassName} ${
-            hasError ? "border-red-500" : "border-gray-300"
-          } ${disabled ? "cursor-not-allowed disabled:bg-gray-300" : "bg-white"}`}
+          className={`${buttonClassName} ${sizeStyles[size]} ${variantStyles[variant]} ${
+            error ? "border-red-500" : ""
+          } ${disabled ? "cursor-not-allowed disabled:bg-gray-300" : ""}`}
           onClick={() => !disabled && setIsOpen(!isOpen)}
           onKeyDown={handleKeyDown}
           onBlur={() => {
@@ -120,17 +150,21 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
           aria-expanded={isOpen}
           disabled={disabled}
         >
-          <span className={!selectedOption ? "text-gray-400" : "text-gray-900"}>
+          <span
+            className={`${!selectedOption ? "text-gray-400" : displayTextClassName}`}
+          >
             {displayText}
           </span>
           <ChevronDown
             size={20}
-            className={`text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+            className={`text-gray-400 transition-transform duration-200 ${displayTextClassName} ${isOpen ? "rotate-180" : ""}`}
           />
         </button>
 
         {isOpen && (
-          <div className={dropdownClassName}>
+          <div
+            className={`${dropdownClassName} ${dropdownWidthStyles[dropdownWidth]}`}
+          >
             <ul className="py-1" role="listbox" aria-labelledby={id || name}>
               {/* Add placeholder option if needed */}
               {!value && value !== false && (
@@ -151,7 +185,7 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
                   id={`${id || name}-${String(option.value)}`}
                   className={`${dropdownItemClassName} ${
                     value === option.value
-                      ? "bg-red-50 text-red-700 font-medium"
+                      ? selectedOptionClassName
                       : "text-gray-900"
                   }`}
                   onClick={() => handleSelect(option.value)}
@@ -166,7 +200,7 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
         )}
       </div>
 
-      {hasError ? (
+      {error ? (
         <div className={errorClassName} id={`${id || name}-error`}>
           {error}
         </div>

@@ -50,23 +50,26 @@ const HomeSearchBar: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      className="flex pl-4 pr-2 rounded-full bg-white shadow-lg justify-between items-center h-16"
+      className="flex pl-4 pr-2 rounded-full bg-white shadow-lg justify-between items-center md:h-16 h-14"
     >
       {/* City */}
-      <div className="w px-3 py-2 border-r border-gray-200">
+      <div className="w-1/4 px-3 py-2 border-r border-gray-200 max-md:hidden">
         <div className="text-sm font-medium text-gray-900 mb-1">City</div>
         <div className="text-gray-500 text-sm flex items-center">
-          <Dropdown
-            options={CITY_OPTIONS}
-            defaultSelected={CITY_OPTIONS[0]}
-            onChange={(option) => console.log(option)}
-            disabled={true}
-          />
+          <div className="w-full">
+            <Dropdown
+              options={CITY_OPTIONS}
+              defaultSelected={CITY_OPTIONS[0]}
+              onChange={(option) => console.log(option)}
+              disabled={true}
+              dropdownClass="gap-1 w-full justify-start"
+            />
+          </div>
         </div>
       </div>
 
       {/* Location */}
-      <div className="w-3/4 px-3 py-2 border-gray-200">
+      <div className="w-3/4 max-md:w-full max-md:flex-1 md:px-3 px-2 md:py-2 py-1 border-gray-200">
         <PlacesAutocomplete
           id="location"
           name="location"
@@ -119,7 +122,10 @@ const HomeSearchBar: React.FC = () => {
       </div>
 
       {/* Search Button */}
-      <button className="text-white flex items-center justify-center rounded-full">
+      <button className="text-white flex items-center justify-center rounded-full md:hidden">
+        <Search height={40} width={40} onClick={handleSearch} />
+      </button>
+      <button className="text-white flex items-center justify-center rounded-full max-md:hidden">
         <Search height={50} width={50} onClick={handleSearch} />
       </button>
     </div>

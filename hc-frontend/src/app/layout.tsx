@@ -48,6 +48,10 @@ export default function RootLayout({
         />
         <meta name="theme-color" content="#EA3934" />
         <meta name="apple-mobile-web-app-title" content="Houseclay" />
+        <meta
+          name="description"
+          content="Houseclay - No Middleman, Just Connects"
+        />
       </head>
       <body className={`${inter.variable} ${nutino.variable}`}>
         <Providers>

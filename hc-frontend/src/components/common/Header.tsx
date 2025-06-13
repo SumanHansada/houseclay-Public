@@ -76,17 +76,17 @@ const Header: React.FC<HeaderProps> = () => {
         {/* Center - Navigation */}
         <div className="flex justify-between items-center w-full text-sm">
           <nav className="hidden md:flex xl:gap-12 lg:gap-6 md:gap-3 gap-3 text-gray-800">
-            <Link href="/rent" className="hover:text-red-500">
+            <Link href="#" className="hover:text-red-500">
               Rent
             </Link>
-            <Link href="/buy" className="relative text-red-500">
+            <Link href="#" className="relative text-red-500">
               Buy
               <span className="absolute left-0 -bottom-1/2 w-full h-[2px] bg-red-500"></span>
             </Link>
-            <Link href="/buy-connects" className="hover:text-red-500">
+            <Link href="#" className="hover:text-red-500">
               Buy Connects
             </Link>
-            <Link href="/about-us" className="hover:text-red-500">
+            <Link href="#" className="hover:text-red-500">
               About Us
             </Link>
           </nav>

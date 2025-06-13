@@ -3,20 +3,9 @@ import { Crown, Heart, MapPin, Star } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
 import { BadgeType } from "@/common/enums";
+import { Property } from "@/interfaces/Property";
 
 import ImageWithLoader from "./common/ImageWithLoader";
-
-export interface Property {
-  id: number;
-  complex: string;
-  beds: number;
-  baths: number;
-  price: string;
-  area: string;
-  location: string;
-  images: string[];
-  type: string;
-}
 
 interface PropertiesProps {
   property: Property;

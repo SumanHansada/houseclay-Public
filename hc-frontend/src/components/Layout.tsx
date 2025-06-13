@@ -84,7 +84,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Header />
-      <main className="mx-auto my-0 t-[55px] pt-[55px] min-h-fit flex-1 flex flex-wrap justify-center">
+      <main className="mx-auto my-0 t-[54px] pt-[54px] min-h-fit flex-1 flex flex-wrap justify-center">
         {children}
       </main>
       {/* Login Dialog */}

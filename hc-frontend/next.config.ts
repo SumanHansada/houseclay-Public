@@ -17,6 +17,7 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  productionBrowserSourceMaps: true,
   webpack(config) {
     // This webpack config will only apply when NOT using Turbopack
     config.module.rules.push({

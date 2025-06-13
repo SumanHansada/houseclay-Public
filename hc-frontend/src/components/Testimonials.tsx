@@ -2,22 +2,9 @@ import { Quote, Star } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
+import { Testimonial } from "@/interfaces/Testimonial";
 
 import Carousel2D from "./Carousel2D";
-
-export interface Testimonial {
-  id: number;
-  name: string;
-  initial: string;
-  avatar: string;
-  rating: number;
-  content: string;
-}
-
-interface TestimonialProps {
-  testimonials: Testimonial[];
-}
 
 const StarRating: React.FC<{ rating: number }> = ({ rating }) => {
   return (
@@ -31,6 +18,10 @@ const StarRating: React.FC<{ rating: number }> = ({ rating }) => {
     </div>
   );
 };
+
+interface TestimonialProps {
+  testimonials: Testimonial[];
+}
 
 export const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({
   testimonial,
@@ -76,7 +67,6 @@ export const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
   // const prevSlide = () => {
   //   setActiveSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
   // };
-  const { isMobile } = useDeviceContext();
   return (
     <div className="mx-auto xl:px-28 lg:px-14 md:px-14 px-8 py-20">
       {/* Top user avatars row */}
@@ -102,10 +92,21 @@ export const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
 
       {/* Testimonials grid */}
       <Carousel2D
-        slideWidth={isMobile ? 300 : 400}
+        slideWidth={300}
         gap={4}
         showDots={true}
-        containerClassName=""
+        containerClassName="md:hidden"
+        showArrows={true}
+      >
+        {testimonials.map((testimonial) => (
+          <TestimonialCard key={testimonial.id} testimonial={testimonial} />
+        ))}
+      </Carousel2D>
+      <Carousel2D
+        slideWidth={400}
+        gap={4}
+        showDots={true}
+        containerClassName="max-md:hidden"
         showArrows={true}
       >
         {testimonials.map((testimonial) => (

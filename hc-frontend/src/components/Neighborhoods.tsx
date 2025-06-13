@@ -1,13 +1,9 @@
 import React from "react";
 
+import { Neighbourhood } from "@/interfaces/Neighbourhood";
+
 import Carousel2D from "./Carousel2D";
 import ImageWithLoader from "./common/ImageWithLoader";
-
-// Define types for our component props
-export interface Neighbourhood {
-  name: string;
-  image: string;
-}
 
 interface NeighbourhoodCardProps {
   image: string;

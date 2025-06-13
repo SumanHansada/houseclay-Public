@@ -218,7 +218,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     <div className="min-w-fit" ref={dropdownRef}>
       {/* Selected value display */}
       <div
-        className={`flex items-center justify-between ${dropdownClass} ${
+        className={`flex items-center ${dropdownClass} ${
           disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
         }`}
         onClick={() => !disabled && setIsOpen(!isOpen)}
@@ -255,6 +255,7 @@ const Dropdown: React.FC<DropdownProps> = ({
               style={{
                 top: dropdownPosition.bottom + window.scrollY,
                 left: dropdownPosition.left + window.scrollX,
+                width: dropdownPosition.width,
               }}
               ref={dropdownListRef}
               role="listbox"
