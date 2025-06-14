@@ -39,7 +39,7 @@ const getDialogStyles = (
       }`;
     case "card":
       return `fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl ${
-        isMobile ? "hidden" : "w-1/2 h-auto"
+        isMobile ? "hidden" : "w-1/2 h-auto min-w-[700px]"
       }`;
     default:
       return "";
@@ -119,7 +119,6 @@ export const Dialog: React.FC<DialogProps> = ({
             height: height ? `${height}%` : "auto",
             width: width ? `${width}%` : undefined,
             maxHeight: "calc(100svh - 4rem)", // Prevent dialog from exceeding viewport height
-            minWidth: "700px",
           }}
           onClick={(e) => e.stopPropagation()}
         >
