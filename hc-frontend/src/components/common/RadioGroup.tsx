@@ -1,4 +1,3 @@
-import { useField } from "formik";
 import React from "react";
 
 interface RadioOption {
@@ -7,7 +6,7 @@ interface RadioOption {
   icon?: React.ReactNode;
 }
 
-interface FormRadioGroupProps {
+interface RadioGroupProps {
   name: string;
   label?: string;
   options: RadioOption[];
@@ -16,10 +15,22 @@ interface FormRadioGroupProps {
   horizontal?: boolean;
   withIcons?: boolean;
   selectedColor?: string;
-  className?: string;
+  // Styling props
+  containerClassName?: string;
+  labelClassName?: string;
+  radioGroupClassName?: string;
+  radioOptionClassName?: string;
+  radioLabelClassName?: string;
+  radioInputClassName?: string;
+  radioTextClassName?: string;
+  errorClassName?: string;
+  value: string | boolean;
+  onChange: (value: string | boolean) => void;
+  onBlur?: () => void;
+  error?: string;
 }
 
-const FormRadioGroup: React.FC<FormRadioGroupProps> = ({
+const RadioGroup: React.FC<RadioGroupProps> = ({
   name,
   label,
   options,
@@ -28,22 +39,22 @@ const FormRadioGroup: React.FC<FormRadioGroupProps> = ({
   horizontal = true,
   withIcons = false,
   selectedColor = "border-red-500",
-  className = "",
+  // Styling props with defaults
+  containerClassName = "mb-4",
+  labelClassName = "block text-gray-700 text-sm font-medium mb-1",
+  radioGroupClassName = "flex w-full justify-between",
+  radioOptionClassName = "flex-1 rounded-xl w-full relative",
+  radioLabelClassName = "block cursor-pointer p-3 w-full h-full",
+  radioInputClassName = "sr-only",
+  radioTextClassName = "",
+  errorClassName = "text-red-500 text-sm mt-1",
+  value,
+  onChange,
+  onBlur,
+  error,
 }) => {
-  const [field, meta, helpers] = useField(name);
-  const hasError = meta.touched && meta.error;
-
-  const handleFocus = () => {
-    helpers.setTouched(true);
-  };
-
-  const handleChange = (value: string | boolean) => {
-    helpers.setValue(value);
-    helpers.setTouched(true);
-  };
-
   const isSelected = (optionValue: string | boolean) => {
-    return field.value === optionValue;
+    return value === optionValue;
   };
 
   // Define grid columns based on the columns prop
@@ -55,19 +66,16 @@ const FormRadioGroup: React.FC<FormRadioGroupProps> = ({
   };
 
   return (
-    <div className={`mb-4 ${className}`}>
+    <div className={containerClassName}>
       {label && (
-        <label
-          id={`${name}-group-label`}
-          className="block text-gray-700 text-sm font-medium mb-1"
-        >
+        <label id={`${name}-group-label`} className={labelClassName}>
           {label}
           {required && <span className="text-red-500">*</span>}
         </label>
       )}
 
       <div
-        className={`flex w-full justify-between ${
+        className={`${radioGroupClassName} ${
           horizontal
             ? `grid ${gridCols[columns]} gap-3 xl:gap-6`
             : "grid grid-cols-1 gap-2"
@@ -79,21 +87,22 @@ const FormRadioGroup: React.FC<FormRadioGroupProps> = ({
           <div
             key={String(option.value)}
             className={`
-              flex-1 rounded-xl w-full relative
+              ${radioOptionClassName}
               ${
                 isSelected(option.value)
                   ? `${selectedColor} border`
                   : "border border-gray-300 hover:border-gray-400"
               }
-               focus-within:shadow-[inset_0_0_0_2px_royalBlue] focus-within:border-transparent
+              focus-within:shadow-[inset_0_0_0_2px_royalBlue] focus-within:border-transparent
             `}
           >
             <label
               htmlFor={`${name}-${String(option.value)}`}
               className={`
-                block cursor-pointer p-3 w-full h-full
+                ${radioLabelClassName}
                 ${withIcons ? "text-center flex flex-col " : "flex "}
-              items-center justify-center`}
+                items-center justify-center
+              `}
             >
               <input
                 type="radio"
@@ -101,14 +110,16 @@ const FormRadioGroup: React.FC<FormRadioGroupProps> = ({
                 name={name}
                 value={String(option.value)}
                 checked={isSelected(option.value)}
-                onChange={() => handleChange(option.value)}
-                onFocus={handleFocus}
-                className="sr-only"
+                onChange={() => onChange(option.value)}
+                onBlur={onBlur}
+                className={radioInputClassName}
                 aria-label={option.label}
                 aria-hidden="true"
               />
               {withIcons && option.icon}
-              <span className={`${withIcons ? "text-sm" : ""}`}>
+              <span
+                className={`${withIcons ? "text-sm" : ""} ${radioTextClassName}`}
+              >
                 {option.label}
               </span>
             </label>
@@ -116,11 +127,9 @@ const FormRadioGroup: React.FC<FormRadioGroupProps> = ({
         ))}
       </div>
 
-      {hasError ? (
-        <div className="text-red-500 text-sm mt-1">{meta.error}</div>
-      ) : null}
+      {error ? <div className={errorClassName}>{error}</div> : null}
     </div>
   );
 };
 
-export default FormRadioGroup;
+export default RadioGroup;

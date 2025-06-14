@@ -38,7 +38,7 @@ const getDialogStyles = (
         isMobile ? "w-full h-auto" : "hidden"
       }`;
     case "card":
-      return `fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg ${
+      return `fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl ${
         isMobile ? "hidden" : "w-1/2 h-auto"
       }`;
     default:
@@ -119,6 +119,7 @@ export const Dialog: React.FC<DialogProps> = ({
             height: height ? `${height}%` : "auto",
             width: width ? `${width}%` : undefined,
             maxHeight: "calc(100svh - 4rem)", // Prevent dialog from exceeding viewport height
+            minWidth: "700px",
           }}
           onClick={(e) => e.stopPropagation()}
         >
@@ -153,8 +154,4 @@ export const DialogContent: React.FC<{ children: React.ReactNode }> = ({
 
 export const DialogFooter: React.FC<{ children: React.ReactNode }> = ({
   children,
-}) => (
-  <div className="border-t border-gray-200 py-2 px-4 flex justify-end">
-    {children}
-  </div>
-);
+}) => <div className="border-t border-gray-200 flex">{children}</div>;

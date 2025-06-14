@@ -111,24 +111,24 @@ const Properties: React.FC<PropertiesProps> = ({
       {/* Property Info */}
       <div className="flex-col mt-4">
         <div className="flex justify-between items-center mb-2">
-          <p className="text-gray-500 text-sm">Apartment</p>
-          <p className="text-gray-500 text-sm">{property.complex}</p>
+          <p className="text-gray-500 text-xs">Apartment</p>
+          <p className="text-gray-500 text-xs">{property.complex}</p>
         </div>
 
         <div className="flex justify-between items-center mb-2">
-          <p className="font-medium">
+          <p className="font-medium text-xs">
             {property.beds} Beds | {property.baths} Bath | Semi furnished
           </p>
           <p className="font-bold">₹ {property.price} Cr</p>
         </div>
 
-        <div className="flex justify-between items-center text-sm">
+        <div className="flex justify-between items-center text-xs">
           <p className="text-gray-600">Buildup Area {property.area} sq.ft.</p>
         </div>
 
-        <div className="mt-2 text-sm text-gray-500 flex items-center">
+        <div className="mt-2 text-xs text-gray-500 flex items-center">
           <i className="mr-1">
-            <MapPin size={16} />
+            <MapPin size={12} />
           </i>
           <p className="truncate">{property.location}</p>
         </div>

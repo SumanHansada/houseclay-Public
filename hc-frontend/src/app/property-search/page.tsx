@@ -10,7 +10,10 @@ import Button from "@/components/common/Button";
 import SelectDropdown from "@/components/common/SelectDropdown";
 import Properties from "@/components/Properties";
 import { Property } from "@/interfaces/Property";
+import { useDialog } from "@/providers/DialogContextProvider";
 import { useGetPropertiesByLocationQuery } from "@/store/apiSlice";
+
+import FilterDialog from "./components/filters";
 
 export default function PropertySearchPage() {
   const searchParams = useSearchParams();
@@ -77,6 +80,7 @@ export default function PropertySearchPage() {
   };
 
   const [state, dispatch] = useReducer(propertyReducer, initialState);
+  const { openDialog, closeDialog, isDialogOpen } = useDialog();
 
   return (
     <>
@@ -185,6 +189,7 @@ export default function PropertySearchPage() {
               variant="outline"
               size="md"
               className="min-h-[46px] text-black rounded-xl border text-sm"
+              onClick={() => openDialog("property-filters")}
             >
               Filters
             </Button>
@@ -243,6 +248,14 @@ export default function PropertySearchPage() {
           </div>
         </div>
       </section>
+      {isDialogOpen("property-filters") && (
+        <FilterDialog
+          id="property-filters"
+          onClose={() => closeDialog("property-filters")}
+          onReset={() => {}}
+          onApply={() => closeDialog("property-filters")}
+        />
+      )}
     </>
   );
 }
