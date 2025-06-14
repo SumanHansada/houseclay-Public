@@ -158,18 +158,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <DialogContent>
             <div className="container px-8 py-4 flex flex-col gap-8">
               {/* Profile Section */}
-              <div className="flex items-center p-4 gap-4 border border-gray-100 rounded-full shadow-md inset-shadow-xs">
-                <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-white">
-                  <UserRound size={32} />
+              {token && (
+                <div className="flex items-center p-4 gap-4 border border-gray-100 rounded-full shadow-md inset-shadow-xs">
+                  <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-white">
+                    <UserRound size={32} />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-semibold">{name}</p>
+                    <p className="text-sm text-gray-500">+{phoneNo}</p>
+                  </div>
+                  <div>
+                    <ChevronRight size={20} />
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <p className="font-semibold">{name}</p>
-                  <p className="text-sm text-gray-500">+{phoneNo}</p>
-                </div>
-                <div>
-                  <ChevronRight size={20} />
-                </div>
-              </div>
+              )}
               {/* Property Banner */}
               <div
                 onClick={handlePropertyBannerClick}

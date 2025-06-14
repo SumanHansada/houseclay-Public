@@ -20,6 +20,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
   iconClassName?: string;
   loaderClassName?: string;
+  buttonTextClassName?: string;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -34,6 +35,7 @@ const Button: React.FC<ButtonProps> = ({
   className = "",
   iconClassName = "",
   loaderClassName = "",
+  buttonTextClassName = "",
   type = "button",
   ...props
 }) => {
@@ -87,7 +89,7 @@ const Button: React.FC<ButtonProps> = ({
               {leftIcon}
             </span>
           )}
-          <span>{children}</span>
+          <span className={buttonTextClassName}>{children}</span>
           {rightIcon && (
             <span className={iconStyles} aria-hidden="true">
               {rightIcon}

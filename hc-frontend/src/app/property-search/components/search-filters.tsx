@@ -56,8 +56,9 @@ const NonVegIcon = NonVegIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 import Button from "@/components/common/Button";
 import RadioGroup from "@/components/common/RadioGroup";
 import RangeSlider from "@/components/common/RangeSlider";
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
 
-interface FilterDialogProps {
+interface SearchFilterDialogProps {
   id: string;
   onClose: () => void;
   onReset: () => void;
@@ -135,7 +136,7 @@ const amenities = [
   { label: "First Aid Kit", icon: <FirstAidKitIcon /> },
 ];
 
-const FilterDialog: React.FC<FilterDialogProps> = ({
+const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
   id,
   onClose,
   onReset,
@@ -159,11 +160,12 @@ const FilterDialog: React.FC<FilterDialogProps> = ({
   const [priceRange, setPriceRange] = useState<[number, number]>([
     10000, 80000,
   ]);
+  const { isMobile } = useDeviceContext();
 
   return (
     <Dialog
       id={id}
-      type="card"
+      type={isMobile ? "fullscreen" : "card"}
       onClose={onClose}
       entryAnimation="animate-fade-in"
       exitAnimation="animate-fade-out"
@@ -328,7 +330,7 @@ const FilterDialog: React.FC<FilterDialogProps> = ({
                 { value: true, label: "Attached" },
                 { value: false, label: "Non-Attached" },
               ]}
-              containerClassName="w-1/2"
+              containerClassName="w-1/2 max-md:w-full"
               value={selectedBathroomType}
               onChange={(value) => setSelectedBathroomType(value as string)}
             />
@@ -353,7 +355,7 @@ const FilterDialog: React.FC<FilterDialogProps> = ({
               ]}
               rangeClassName="absolute h-2 bg-red-500 rounded-full top-1/2 transform -translate-y-1/2"
               thumbClassName="absolute w-6 h-6 flex justify-center items-center bg-white border-2 border-white-500 rounded-full shadow-md cursor-pointer transform -translate-x-1/2 -translate-y-1/2 hover:shadow-lg transition-shadow focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
-              showInputs={true}
+              showInputs={isMobile ? false : true}
             />
           </div>
           {/* Furnishing */}
@@ -423,7 +425,7 @@ const FilterDialog: React.FC<FilterDialogProps> = ({
                 { label: "Available", value: true },
                 { label: "Not Available", value: false },
               ]}
-              containerClassName="w-1/2"
+              containerClassName="w-1/2 max-md:w-full"
               value={selectedParking}
               onChange={(value) => setSelectedParking(value as string)}
             />
@@ -455,4 +457,4 @@ const FilterDialog: React.FC<FilterDialogProps> = ({
   );
 };
 
-export default FilterDialog;
+export default SearchFilterDialog;

@@ -1,19 +1,24 @@
 "use client";
 
-import { SearchIcon, SlidersHorizontal } from "lucide-react";
+import { ChevronLeft, SearchIcon, SlidersHorizontal } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useMemo, useReducer } from "react";
+import router from "next/router";
+import { useEffect, useMemo, useReducer } from "react";
+import { useDispatch } from "react-redux";
 
 import { BadgeType } from "@/common/enums";
 import Autocomplete from "@/components/common/Autocomplete";
 import Button from "@/components/common/Button";
 import SelectDropdown from "@/components/common/SelectDropdown";
+import Footer from "@/components/Footer";
 import Properties from "@/components/Properties";
 import { Property } from "@/interfaces/Property";
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useGetPropertiesByLocationQuery } from "@/store/apiSlice";
+import { setHideFooter, setHideHeader } from "@/store/appSlice";
 
-import FilterDialog from "./components/filters";
+import SearchFilterDialog from "./components/search-filters";
 
 export default function PropertySearchPage() {
   const searchParams = useSearchParams();
@@ -79,12 +84,56 @@ export default function PropertySearchPage() {
     }
   };
 
-  const [state, dispatch] = useReducer(propertyReducer, initialState);
+  const [searchState, searchDispatch] = useReducer(
+    propertyReducer,
+    initialState,
+  );
+  const { isMobile } = useDeviceContext();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isMobile) {
+      dispatch(setHideHeader(true));
+      dispatch(setHideFooter(true));
+    } else {
+      dispatch(setHideHeader(false));
+      dispatch(setHideFooter(false));
+    }
+  }, [dispatch, isMobile]);
+
   const { openDialog, closeDialog, isDialogOpen } = useDialog();
 
   return (
     <>
-      <section className="fixed z-50 flex w-full xl:gap-16 border-b border-t bg-white border-gray-200 lg:gap-8 md:gap-0 gap-0  xl:px-24 md:px-12 px-12 max-md:pt-4 max-md:pb-8 h-16">
+      <section
+        className={`py-2 px-4 fixed top-0 left-0 right-0 z-50 h-[55px] border-b border-gray-200 bg-white flex gap-2 justify-center items-center w-full md:hidden`}
+      >
+        <button className="rounded-full md:border-none items-center justify-center">
+          <ChevronLeft onClick={() => router.back()} size={25} />
+        </button>
+        <Autocomplete
+          items={[
+            "The Godfather",
+            "12 Angry Men",
+            "The Shawshank Redemption",
+            "Schindler's List",
+            "Pulp Fiction",
+          ]}
+          inputClassName="flex items-center h-10 bg-gray-100 w-full p-2 border-none rounded-full"
+          placeholder="Search for a property"
+        />
+        <Button
+          leftIcon={<SlidersHorizontal size={16} />}
+          variant="outline"
+          size="sm"
+          className="h-10 text-black text-sm bg-gray-100 rounded-full p-2 border-none"
+          onClick={() => openDialog("property-filters")}
+          buttonTextClassName="hidden"
+        >
+          Filters
+        </Button>
+      </section>
+      <section className="fixed z-50 flex w-full xl:gap-16 border-b border-t bg-white border-gray-200 lg:gap-8 md:gap-0 gap-0  xl:px-24 md:px-12 px-12 max-md:pt-4 max-md:pb-8 h-16 max-md:hidden">
         <div className="flex justify-between items-center border-gray-200 w-full gap-4">
           <div className="flex-1">
             <Autocomplete
@@ -99,9 +148,13 @@ export default function PropertySearchPage() {
               placeholder="Search for a property"
             />
           </div>
-          <div className="flex items-center gap-2 flex-row">
+          <div className="flex flex-1 items-center gap-2 flex-row">
             <SelectDropdown
               options={[
+                {
+                  value: "flatmates",
+                  label: "Flatmates",
+                },
                 {
                   value: "rent",
                   label: "Rent",
@@ -110,22 +163,20 @@ export default function PropertySearchPage() {
                   value: "buy",
                   label: "Buy",
                 },
-                {
-                  value: "flatmates",
-                  label: "Flatmates",
-                },
               ]}
               name="property-category"
               id="property-category"
-              value={state.propertyCategory}
+              value={searchState.propertyCategory}
               onChange={(value: string | number | boolean) =>
-                dispatch({ type: "SET_PROPERTY_CATEGORY", payload: value })
+                searchDispatch({
+                  type: "SET_PROPERTY_CATEGORY",
+                  payload: value,
+                })
               }
               size="sm"
-              dropdownWidth="fit"
+              dropdownWidth="auto"
               containerClassName="relative w-20"
               buttonClassName="flex justify-between items-center w-full p-3 border rounded-xl text-left border-red-500 text-red-500 hover:border-red-500 hover:text-red-500"
-              selectedOptionClassName="bg-red-50 text-red-700 font-medium"
               displayTextClassName="text-red-500"
             />
             <SelectDropdown
@@ -138,14 +189,14 @@ export default function PropertySearchPage() {
               ]}
               name="property-type"
               id="property-type"
-              value={state.propertyType}
+              value={searchState.propertyType}
               placeholder="Property type"
               onChange={(value: string | number | boolean) =>
-                dispatch({ type: "SET_PROPERTY_TYPE", payload: value })
+                searchDispatch({ type: "SET_PROPERTY_TYPE", payload: value })
               }
               size="sm"
               dropdownWidth="full"
-              containerClassName="relative w-40"
+              containerClassName="relative w-36 md:w-36 xl:w-40 md:hidden lg:block"
             />
             <SelectDropdown
               options={[
@@ -157,14 +208,14 @@ export default function PropertySearchPage() {
               ]}
               name="property-bhk"
               id="property-bhk"
-              value={state.propertyBhk}
+              value={searchState.propertyBhk}
               placeholder="Beds"
               onChange={(value: string | number | boolean) =>
-                dispatch({ type: "SET_PROPERTY_BHK", payload: value })
+                searchDispatch({ type: "SET_PROPERTY_BHK", payload: value })
               }
               size="sm"
               dropdownWidth="full"
-              containerClassName="relative w-32"
+              containerClassName="relative w-28 md:w-24 lg:w-28"
             />
             <SelectDropdown
               options={[
@@ -175,10 +226,10 @@ export default function PropertySearchPage() {
               ]}
               name="tenant-type"
               id="tenant-type"
-              value={state.tenantType}
+              value={searchState.tenantType}
               placeholder="Tenant type"
               onChange={(value: string | number | boolean) =>
-                dispatch({ type: "SET_TENANT_TYPE", payload: value })
+                searchDispatch({ type: "SET_TENANT_TYPE", payload: value })
               }
               size="sm"
               dropdownWidth="full"
@@ -190,6 +241,7 @@ export default function PropertySearchPage() {
               size="md"
               className="min-h-[46px] text-black rounded-xl border text-sm"
               onClick={() => openDialog("property-filters")}
+              buttonTextClassName="lg:block md:hidden"
             >
               Filters
             </Button>
@@ -198,14 +250,15 @@ export default function PropertySearchPage() {
               variant="primary"
               size="md"
               className="min-h-[46px] rounded-xl text-sm"
+              buttonTextClassName="lg:block md:hidden"
             >
               Search
             </Button>
           </div>
         </div>
       </section>
-      <section className="w-full pt-[64px] bg-gray-50 relative">
-        <div className="min-h-screen bg-gray-50 pb-10 xl:px-24 md:px-12 px-12">
+      <section className="w-full md:pt-[64px] bg-gray-50 relative max-md:pb-12">
+        <div className="min-h-screen bg-gray-50 pb-10 xl:px-24 md:px-12 px-8">
           {/* Header Bar */}
           <div className="">
             <div className="flex flex-col gap-4 py-6">
@@ -232,7 +285,7 @@ export default function PropertySearchPage() {
                 No properties found for this location.
               </div>
             ) : (
-              <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4 max-md:hidden">
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
                 {properties.map((property, idx) => (
                   <Properties
                     key={`${property.id}-${idx}`}
@@ -248,8 +301,9 @@ export default function PropertySearchPage() {
           </div>
         </div>
       </section>
+      <Footer />
       {isDialogOpen("property-filters") && (
-        <FilterDialog
+        <SearchFilterDialog
           id="property-filters"
           onClose={() => closeDialog("property-filters")}
           onReset={() => {}}

@@ -167,7 +167,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
           >
             <Search className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
 
-            <div className="flex flex-wrap gap-1 flex-1 min-w-0">
+            <div className="flex flex-nowrap gap-1 flex-1 min-w-0 overflow-x-auto whitespace-nowrap">
               {selectedItems.map((item, index) => (
                 <span key={index} className={tagClassName}>
                   {item}
@@ -193,7 +193,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                 onBlur={handleInputBlur}
                 placeholder={selectedItems.length === 0 ? placeholder : ""}
                 disabled={disabled}
-                className="flex-1 min-w-[120px] outline-none text-sm disabled:cursor-not-allowed"
+                className="flex-1 min-w-[120px] outline-none text-sm disabled:cursor-not-allowed bg-transparent"
               />
             </div>
 

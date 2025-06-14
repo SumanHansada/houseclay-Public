@@ -146,9 +146,8 @@ const Header: React.FC<HeaderProps> = () => {
       {/* Mobile Header */}
       <header className="fixed top-0 left-0 right-0 bg-white z-50 border-b border-gray-200 flex justify-between w-full px-4 py-2 shadow-sm md:hidden">
         {/* Left Section - Logo */}
-
         <div className="flex items-center gap-2">
-          <Menu onClick={onMenuClick} />
+          <Menu role="button" onClick={onMenuClick} />
           <Link href="/" className="flex items-center gap-1">
             <HouseClay />
             <span className="text-red-600 text-lg font-nunito font-bold">
