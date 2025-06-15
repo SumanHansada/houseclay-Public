@@ -95,7 +95,7 @@ const ListPropertyPage = dynamic(
       }, [dispatch, isMobile]);
 
       const goToHomePage = () => {
-        router.push("/");
+        router.back();
       };
 
       const GetMobileHeader = () => {
