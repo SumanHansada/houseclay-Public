@@ -262,7 +262,7 @@ export default function PropertySearchPage() {
         </div>
       </section>
       <section className="w-full md:pt-[64px] bg-gray-50 relative max-md:pb-12">
-        <div className="min-h-screen bg-gray-50 pb-10 xl:px-24 md:px-12 px-8">
+        <div className="min-h-screen bg-gray-50 pb-10 xl:px-24 md:px-12 px-6">
           {/* Header Bar */}
           <div className="">
             <div className="flex flex-col gap-4 py-6">
