@@ -96,6 +96,7 @@ export const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
         gap={4}
         showDots={true}
         containerClassName="md:hidden"
+        className="md:hidden"
         showArrows={true}
       >
         {testimonials.map((testimonial) => (
@@ -107,6 +108,7 @@ export const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
         gap={4}
         showDots={true}
         containerClassName="max-md:hidden"
+        className="max-md:hidden"
         showArrows={true}
       >
         {testimonials.map((testimonial) => (

@@ -38,7 +38,7 @@ const NeighbourhoodCard: React.FC<NeighbourhoodCardProps> = ({
           <p className="mb-1 font-light text-gray-50 opacity-90 font-nunito">
             Flats for {listingType} in
           </p>
-          <h3 className="text-3xl text-white font-nunito">{name}</h3>
+          <p className="text-3xl text-white font-nunito">{name}</p>
         </div>
       </div>
     </div>
@@ -80,7 +80,7 @@ const Neighbourhoods: React.FC<NeighbourhoodsProps> = ({
       </div>
 
       {/* Grid layout for larger screens */}
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4 max-md:hidden">
+      <div className="grid xl:grid-cols-[repeat(auto-fill,minmax(225px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4 max-md:hidden">
         {neighbourhoods.map((neighbourhood, index) => (
           <NeighbourhoodCard
             key={index}
