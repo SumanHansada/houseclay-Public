@@ -22,6 +22,7 @@ interface TabProps {
 interface TabContentProps {
   children: ReactNode;
   value: string;
+  className?: string;
 }
 
 interface TabsProps {
@@ -33,6 +34,7 @@ interface TabsProps {
 
 interface TabHeaderProps {
   children: ReactNode;
+  className?: string;
 }
 
 interface NonTabProps {
@@ -67,7 +69,7 @@ const NonTab: React.FC<NonTabProps> = ({ children, className = "" }) => {
   return <div className={className}>{children}</div>;
 };
 
-const TabHeader: React.FC<TabHeaderProps> = ({ children }) => {
+const TabHeader: React.FC<TabHeaderProps> = ({ children, className = "" }) => {
   // Separate Tab and NonTab children
   const tabChildren: ReactElement[] = [];
   const nonTabChildren: ReactElement[] = [];
@@ -81,7 +83,7 @@ const TabHeader: React.FC<TabHeaderProps> = ({ children }) => {
   });
 
   return (
-    <div className="flex w-full items-center justify-between">
+    <div className={`flex w-full items-center justify-between ${className}`}>
       <div className="inline-flex gap-2 border-b border-gray-200 max-md:w-full max-md:justify-between max-md:border max-md:rounded-lg max-md:p-2">
         {tabChildren}
       </div>
@@ -90,11 +92,15 @@ const TabHeader: React.FC<TabHeaderProps> = ({ children }) => {
   );
 };
 
-const TabContent: React.FC<TabContentProps> = ({ children, value }) => {
+const TabContent: React.FC<TabContentProps> = ({
+  children,
+  value,
+  className = "",
+}) => {
   const context = useContext(TabContext);
   if (!context) throw new Error("TabContent must be used within Tabs");
   if (context.active !== value) return null;
-  return <div className="py-4 max-md:py-2">{children}</div>;
+  return <div className={`py-4 max-md:py-2 ${className}`}>{children}</div>;
 };
 
 const Tabs: React.FC<TabsProps> = ({

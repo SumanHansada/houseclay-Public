@@ -1,5 +1,11 @@
 import { PropertyStatusEnum } from "./Property";
 
+export enum PaymentStatusEnum {
+  COMPLETED = "COMPLETED",
+  FAILED = "FAILED",
+  PROGRESS = "IN_PROGRESS",
+}
+
 export interface User {
   name: string;
   email: string;
@@ -36,11 +42,11 @@ export interface UserPropertyInfo {
 export interface UserExternalPayment {
   paymentId: string;
   amount: number;
-  status: string;
+  status: PaymentStatusEnum;
   signature: string;
   razorPaymentId: string;
   createdAt: string;
-  completedAt: string;
+  completedAt: string | null;
 }
 
 export interface UserConnectTransaction {
