@@ -31,7 +31,7 @@ const getDialogStyles = (
   switch (type) {
     case "fullscreen":
       return `fixed inset-0 bg-white flex flex-col ${
-        isMobile ? "" : "rounded-lg"
+        isMobile ? "h-auto" : "rounded-lg"
       }`;
     case "bottom-sheet":
       return `fixed ${hideStickyFooter ? "bottom-0" : "bottom-[4rem]"} bg-white rounded-t-xl ${
@@ -86,9 +86,14 @@ export const Dialog: React.FC<DialogProps> = ({
   }, [isOpen]);
 
   useEffect(() => {
-    document.body.classList.toggle("overflow-hidden", isOpen);
+    if (isOpen) {
+      document.body.classList.add("dialog-open");
+    } else {
+      document.body.classList.remove("dialog-open");
+    }
+
     return () => {
-      document.body.classList.remove("overflow-hidden");
+      document.body.classList.remove("dialog-open");
     };
   }, [isOpen]);
 
@@ -116,7 +121,7 @@ export const Dialog: React.FC<DialogProps> = ({
             isClosing ? exitAnimation : entryAnimation
           }`}
           style={{
-            height: height ? `${height}%` : "auto",
+            height: height ? `${height}%` : undefined,
             width: width ? `${width}%` : undefined,
             maxHeight: "calc(100svh - 4rem)", // Prevent dialog from exceeding viewport height
           }}
@@ -146,7 +151,7 @@ export const DialogHeader: React.FC<{ children: React.ReactNode }> = ({
 export const DialogContent: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <div className="overflow-y-auto overflow-x-hidden flex-grow max-h-[calc(100vh-4rem)] scroll-smooth">
+  <div className="overflow-y-auto overflow-x-hidden flex-grow max-h-svh max-md:pb-16 scroll-smooth">
     {children}
   </div>
 );

@@ -1,7 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
@@ -35,9 +35,11 @@ export default function ClientPage({
   const dispatch = useDispatch();
 
   // Initialize app state
-  dispatch(setHideHeader(false));
-  dispatch(setHideFooter(false));
-  dispatch(setHideStickyNavBar(false));
+  useEffect(() => {
+    dispatch(setHideHeader(false));
+    dispatch(setHideFooter(false));
+    dispatch(setHideStickyNavBar(false));
+  }, [dispatch]);
 
   return (
     <>

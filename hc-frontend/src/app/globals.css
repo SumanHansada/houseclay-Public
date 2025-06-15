@@ -23,6 +23,14 @@ body {
     var(--font-nunito) sans-serif;
 }
 
+body.dialog-open {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+
 .no-scroll {
   overflow: hidden;
 }

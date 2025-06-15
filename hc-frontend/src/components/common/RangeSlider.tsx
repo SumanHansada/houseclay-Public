@@ -191,6 +191,56 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
     onChange([minValue, newMax]);
   };
 
+  // Handle touch start on thumbs
+  const handleTouchStart = useCallback(
+    (thumb: "min" | "max") => (e: React.TouchEvent) => {
+      e.preventDefault();
+      setIsDragging(thumb);
+      setShowLabels((prev) => ({ ...prev, [thumb]: true }));
+    },
+    [],
+  );
+
+  // Handle touch move
+  useEffect(() => {
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isDragging) return;
+
+      const touch = e.touches[0];
+      const newValue = getValue(touch.clientX);
+
+      if (isDragging === "min") {
+        const newMinValue = Math.min(newValue, maxValue - step);
+        onChange([newMinValue, maxValue]);
+      } else {
+        const newMaxValue = Math.max(newValue, minValue + step);
+        onChange([minValue, newMaxValue]);
+      }
+    };
+
+    const handleTouchEnd = () => {
+      if (isDragging) {
+        setShowLabels({ min: false, max: false });
+        setIsDragging(null);
+        onBlur?.();
+      }
+    };
+
+    if (isDragging) {
+      document.addEventListener("touchmove", handleTouchMove, {
+        passive: false,
+      });
+      document.addEventListener("touchend", handleTouchEnd);
+      document.addEventListener("touchcancel", handleTouchEnd);
+    }
+
+    return () => {
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
+      document.removeEventListener("touchcancel", handleTouchEnd);
+    };
+  }, [isDragging, getValue, minValue, maxValue, step, onChange, onBlur]);
+
   const minPercentage = getPercentage(minValue);
   const maxPercentage = getPercentage(maxValue);
 
@@ -251,6 +301,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
             className={thumbClassName}
             style={{ left: `${minPercentage}%`, top: "50%" }}
             onMouseDown={handleMouseDown("min")}
+            onTouchStart={handleTouchStart("min")}
             onKeyDown={handleKeyDown("min")}
             tabIndex={0}
             role="slider"
@@ -273,6 +324,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
             className={thumbClassName}
             style={{ left: `${maxPercentage}%`, top: "50%" }}
             onMouseDown={handleMouseDown("max")}
+            onTouchStart={handleTouchStart("max")}
             onKeyDown={handleKeyDown("max")}
             tabIndex={0}
             role="slider"

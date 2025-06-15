@@ -110,7 +110,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </h1>
               )}
               <button className="absolute top-4 right-4 border border-gray-200 rounded-full md:border-none">
-                <X onClick={() => closeDialog("login-dialog")} size={25} />
+                <X onClick={() => closeDialog("login-dialog")} size={24} />
               </button>
             </div>
           </DialogHeader>
@@ -156,7 +156,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
           </DialogHeader>
           <DialogContent>
-            <div className="container px-8 py-4 flex flex-col gap-8">
+            <div className="px-8 py-4 flex flex-col gap-8">
               {/* Profile Section */}
               {token && (
                 <div className="flex items-center p-4 gap-4 border border-gray-100 rounded-full shadow-md inset-shadow-xs">

@@ -171,8 +171,8 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
       exitAnimation="animate-fade-out"
     >
       <DialogHeader>
-        <div className="flex border-b border-gray-200 items-center w-full justify-between py-4 px-6">
-          <span className="text-xl">More Filters</span>
+        <div className="flex md:border-b border-gray-200 items-center w-full justify-between py-4 px-6 max-md:py-2 max-md:px-4">
+          <span className="text-xl max-md:py-1.5">More Filters</span>
           <button onClick={onClose} className="rounded-full hover:bg-gray-100">
             <X size={24} />
           </button>
@@ -263,7 +263,7 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
             />
           </div>
           {/* Preferred Tenants & Preferences */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
             <div>
               <div className="flex items-center gap-2 mb-2 text-lg">
                 <span className="flex">
@@ -433,7 +433,7 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
         </div>
       </DialogContent>
       <DialogFooter>
-        <div className="flex w-full px-6 py-3 justify-between">
+        <div className="flex w-full px-6 py-3 justify-between max-md:px-4">
           <Button
             variant="outline"
             leftIcon={<RefreshCcw size={20} />}

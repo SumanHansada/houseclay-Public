@@ -1,8 +1,7 @@
 "use client";
 
 import { ChevronLeft, SearchIcon, SlidersHorizontal } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import router from "next/router";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useReducer } from "react";
 import { useDispatch } from "react-redux";
 
@@ -24,6 +23,7 @@ export default function PropertySearchPage() {
   const searchParams = useSearchParams();
   const lat = searchParams.get("lat");
   const lon = searchParams.get("lon");
+  const router = useRouter();
 
   // Only fetch if lat/lon are present and valid
   const shouldFetch = lat && lon && !isNaN(Number(lat)) && !isNaN(Number(lon));
@@ -148,7 +148,7 @@ export default function PropertySearchPage() {
               placeholder="Search for a property"
             />
           </div>
-          <div className="flex flex-1 items-center gap-2 flex-row">
+          <div className="flex items-center gap-2 flex-row">
             <SelectDropdown
               options={[
                 {
