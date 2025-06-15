@@ -311,7 +311,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
             aria-valuenow={minValue}
           >
             {/* Min Value Label */}
-            <div className="border-2 border-white-500 rounded-full w-2 h-2 bg-red-500">
+            <div className="rounded-full w-2 h-2 bg-red-500">
               <div
                 className={`${valueLabelClassName} ${showLabels.min ? "opacity-100" : ""}`}
               >
