@@ -2,13 +2,14 @@
 
 import { FocusTrap } from "focus-trap-react";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   DeviceContextProps,
   useDeviceContext,
 } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
+import { setHideStickyNavBar } from "@/store/appSlice";
 import { RootState } from "@/store/store";
 
 interface DialogProps {
@@ -31,7 +32,7 @@ const getDialogStyles = (
   switch (type) {
     case "fullscreen":
       return `fixed inset-0 bg-white flex flex-col ${
-        isMobile ? "h-auto" : "rounded-lg"
+        isMobile ? "h-auto" : "rounded-lg max-h-[calc(100svh-4rem)]"
       }`;
     case "bottom-sheet":
       return `fixed ${hideStickyFooter ? "bottom-0" : "bottom-[4rem]"} bg-white rounded-t-xl ${
@@ -39,7 +40,7 @@ const getDialogStyles = (
       }`;
     case "card":
       return `fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl ${
-        isMobile ? "hidden" : "w-1/2 h-auto min-w-[700px]"
+        isMobile ? "hidden" : "w-1/2 max-h-[calc(100svh-4rem)] min-w-[700px]"
       }`;
     default:
       return "";
@@ -72,6 +73,7 @@ export const Dialog: React.FC<DialogProps> = ({
   const { isDialogOpen, closeDialog } = useDialog();
   const isOpen = isDialogOpen(id);
   const deviceContext = useDeviceContext();
+  const dispatch = useDispatch();
   const hideStickyFooter = useSelector(
     (state: RootState) => state.app.hideStickyNavBar,
   );
@@ -84,6 +86,14 @@ export const Dialog: React.FC<DialogProps> = ({
       setTimeout(() => setIsClosing(false), 300); // Animation duration
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (deviceContext?.isMobile && type === "fullscreen") {
+      dispatch(setHideStickyNavBar(true));
+    } else if (!deviceContext?.isMobile && type === "bottom-sheet") {
+      dispatch(setHideStickyNavBar(false));
+    }
+  }, [deviceContext?.isMobile, type, dispatch]);
 
   useEffect(() => {
     if (isOpen) {
@@ -123,7 +133,6 @@ export const Dialog: React.FC<DialogProps> = ({
           style={{
             height: height ? `${height}%` : undefined,
             width: width ? `${width}%` : undefined,
-            maxHeight: "calc(100svh - 4rem)", // Prevent dialog from exceeding viewport height
           }}
           onClick={(e) => e.stopPropagation()}
         >
