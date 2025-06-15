@@ -15,7 +15,11 @@ import { Property } from "@/interfaces/Property";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useGetPropertiesByLocationQuery } from "@/store/apiSlice";
-import { setHideFooter, setHideHeader } from "@/store/appSlice";
+import {
+  setHideFooter,
+  setHideHeader,
+  setHideStickyNavBar,
+} from "@/store/appSlice";
 
 import SearchFilterDialog from "./components/search-filters";
 
@@ -305,9 +309,15 @@ export default function PropertySearchPage() {
       {isDialogOpen("property-filters") && (
         <SearchFilterDialog
           id="property-filters"
-          onClose={() => closeDialog("property-filters")}
+          onClose={() => {
+            closeDialog("property-filters");
+            dispatch(setHideStickyNavBar(false));
+          }}
           onReset={() => {}}
-          onApply={() => closeDialog("property-filters")}
+          onApply={() => {
+            closeDialog("property-filters");
+            dispatch(setHideStickyNavBar(false));
+          }}
         />
       )}
     </>

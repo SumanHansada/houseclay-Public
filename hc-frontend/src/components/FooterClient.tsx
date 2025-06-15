@@ -211,7 +211,7 @@ const FooterClient: React.FC = () => {
       </footer>
       {/* Mobile Footer */}
       <footer
-        className={`${hideFooter ? "hidden" : "flex"} flex-col gap-6 md:hidden bg-gray-100 px-8 pt-8 pb-16`}
+        className={`${hideFooter ? "hidden" : "flex"} flex-col gap-6 md:hidden bg-gray-100 px-6 pt-8 pb-16`}
       >
         <Link href="/" className="flex items-center gap-1">
           <HouseClay />

@@ -182,7 +182,7 @@ const ListPropertyPage = dynamic(
             </div>
           </section>
           {/* Mobile Content */}
-          <section className="w-full my-0 min-h-[calc(100svh-55px)] flex-col container pt-4 pb-2 px-8 mx-auto flex justify-between gap-16 md:hidden">
+          <section className="w-full my-0 min-h-[calc(100svh-55px)] flex-col container pt-4 pb-2 px-6 mx-auto flex justify-between gap-16 md:hidden">
             {mobileStep === ListPropertyMobileStep.GET_STARTED && (
               <GetStarted onGetStarted={handleGetStarted} />
             )}
@@ -353,7 +353,10 @@ const ListPropertyPage = dynamic(
             <Dialog
               id="call-with-captain-dialog"
               type={isMobile ? "bottom-sheet" : "card"}
-              onClose={() => closeDialog("call-with-captain-dialog")}
+              onClose={() => {
+                closeDialog("call-with-captain-dialog");
+                dispatch(setHideStickyNavBar(true));
+              }}
               width={isMobile ? 100 : 40}
               entryAnimation={
                 isMobile ? "animate-slide-in-bottom" : "animate-fade-in"
@@ -371,9 +374,10 @@ const ListPropertyPage = dynamic(
                       <h1 className="text-xl py-1.5 text-black">Awesome!</h1>
                       <button className="absolute top-4 right-4 border border-gray-200 rounded-full md:border-none">
                         <X
-                          onClick={() =>
-                            closeDialog("call-with-captain-dialog")
-                          }
+                          onClick={() => {
+                            closeDialog("call-with-captain-dialog");
+                            dispatch(setHideStickyNavBar(true));
+                          }}
                           size={25}
                         />
                       </button>
@@ -383,7 +387,7 @@ const ListPropertyPage = dynamic(
               </DialogHeader>
               <DialogContent>
                 <div
-                  className={`flex flex-col items-center justify-center text-center ${isMobile ? "p-6" : "p-8"}`}
+                  className={`flex flex-col items-center justify-center text-center ${isMobile ? "pt-6 pb-2 px-6" : "p-8"}`}
                 >
                   <div className="relative overflow-hidden rounded-lg">
                     <div className="absolute inset-0 shadow-[inset_0_0_25px_25px_rgba(255,255,255,0.8)] z-20"></div>

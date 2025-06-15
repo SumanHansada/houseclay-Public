@@ -75,8 +75,10 @@ export default function ClientPage({
         <Dialog
           id="standouts-dialog"
           type="bottom-sheet"
-          onClose={() => closeDialog("standouts-dialog")}
-          height={80}
+          onClose={() => {
+            closeDialog("standouts-dialog");
+            dispatch(setHideStickyNavBar(false));
+          }}
           entryAnimation="animate-slide-in-bottom"
           exitAnimation="animate-slide-out-bottom"
         >
@@ -85,7 +87,13 @@ export default function ClientPage({
               <h1 className="text-xl mt-1 mb-2 text-black">Standouts</h1>
             </div>
             <button className="absolute top-4 right-4 border border-gray-200 rounded-full">
-              <X onClick={() => closeDialog("standouts-dialog")} size={25} />
+              <X
+                onClick={() => {
+                  closeDialog("standouts-dialog");
+                  dispatch(setHideStickyNavBar(false));
+                }}
+                size={25}
+              />
             </button>
           </DialogHeader>
           <DialogContent>

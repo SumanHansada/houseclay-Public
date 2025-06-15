@@ -417,7 +417,7 @@ export default function ListPropertyTypeLayout({
             {renderStepper()}
           </div>
         </div>
-        <div className="container right-0 ml-[33.33%] max-md:ml-auto pt-4 md:pt-12 pb-20 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
+        <div className="container right-0 ml-[33.33%] max-md:ml-auto pt-4 md:pt-12 pb-20 mx-auto xl:px-28 lg:px-14 md:px-8 px-6">
           <div className="flex flex-col">
             <Formik
               initialValues={initialValues}
@@ -435,7 +435,7 @@ export default function ListPropertyTypeLayout({
               )}
             </Formik>
           </div>
-          <div className="fixed bottom-0 left-0 ml-[33.33%] max-md:ml-auto right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 border-t border-t-gray-300 bg-white">
+          <div className="fixed bottom-0 left-0 ml-[33.33%] max-md:ml-auto right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
             <button
               type="button"
               className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 disabled:bg-gray-300 disabled:cursor-not-allowed"
@@ -460,7 +460,10 @@ export default function ListPropertyTypeLayout({
           <Dialog
             id="list-property-success-dialog"
             type={isMobile ? "bottom-sheet" : "card"}
-            onClose={() => closeDialog("list-property-success-dialog")}
+            onClose={() => {
+              closeDialog("list-property-success-dialog");
+              dispatch(setHideStickyNavBar(false));
+            }}
             entryAnimation="animate-fade-in"
             exitAnimation="animate-fade-out"
           >
@@ -473,11 +476,12 @@ export default function ListPropertyTypeLayout({
                     <h1 className="text-xl py-1.5 text-black">
                       Woohoo! It&apos;s all done.
                     </h1>
-                    <button className="absolute top-4 right-4 border border-gray-200 rounded-full md:border-none">
+                    <button className="absolute top-4 right-4 rounded-full">
                       <X
-                        onClick={() =>
-                          closeDialog("list-property-success-dialog")
-                        }
+                        onClick={() => {
+                          closeDialog("list-property-success-dialog");
+                          dispatch(setHideStickyNavBar(false));
+                        }}
                         size={25}
                       />
                     </button>
@@ -486,7 +490,7 @@ export default function ListPropertyTypeLayout({
               </div>
             </DialogHeader>
             <DialogContent>
-              <div className="flex flex-col items-center justify-center text-center p-8 gap-4">
+              <div className="flex flex-col items-center justify-center text-center px-6 pb-2 pt-6 gap-4">
                 <div className="relative overflow-hidden rounded-lg">
                   <div className="absolute inset-0 shadow-[inset_0_0_25px_25px_rgba(255,255,255,0.8)] z-20"></div>
                   <ListPropertySuccess />

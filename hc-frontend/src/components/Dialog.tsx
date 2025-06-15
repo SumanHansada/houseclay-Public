@@ -90,8 +90,8 @@ export const Dialog: React.FC<DialogProps> = ({
   useEffect(() => {
     if (deviceContext?.isMobile && type === "fullscreen") {
       dispatch(setHideStickyNavBar(true));
-    } else if (!deviceContext?.isMobile && type === "bottom-sheet") {
-      dispatch(setHideStickyNavBar(false));
+    } else if (deviceContext?.isMobile && type === "bottom-sheet") {
+      dispatch(setHideStickyNavBar(true));
     }
   }, [deviceContext?.isMobile, type, dispatch]);
 
@@ -160,7 +160,7 @@ export const DialogHeader: React.FC<{ children: React.ReactNode }> = ({
 export const DialogContent: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <div className="overflow-y-auto overflow-x-hidden flex-grow max-h-svh max-md:pb-16 scroll-smooth">
+  <div className="overflow-y-auto overflow-x-hidden flex-grow max-h-svh scroll-smooth">
     {children}
   </div>
 );

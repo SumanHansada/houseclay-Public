@@ -18,7 +18,7 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({
 }) => {
   return (
     <>
-      <div className="bg-white bg-center bg-cover flex-col items-center py-20 xl:px-28 lg:px-14 md:px-14 max-md:py-4 px-8">
+      <div className="bg-white bg-center bg-cover flex-col items-center py-20 xl:px-28 lg:px-14 md:px-14 max-md:py-4 px-6">
         {/* Header Section */}
         <div className="flex items-center mb-8 max-md:hidden">
           <h1 className="text-3xl font-bold text-gray-800">

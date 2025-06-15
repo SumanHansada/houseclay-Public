@@ -51,7 +51,7 @@ const Neighbourhoods: React.FC<NeighbourhoodsProps> = ({
 }) => {
   return (
     <div className="mx-auto xl:px-28 lg:px-14 md:px-14 py-20 max-md:py-10 bg-gray-100">
-      <h1 className="mb-6 max-md:px-8 text-3xl max-md:text-2xl font-bold text-gray-800">
+      <h1 className="mb-6 max-md:px-6 text-3xl max-md:text-2xl font-bold text-gray-800">
         Popular Neighbourhoods
       </h1>
 
@@ -65,7 +65,7 @@ const Neighbourhoods: React.FC<NeighbourhoodsProps> = ({
           gap={4}
           showDots={true}
           showArrows={true}
-          containerClassName="px-8"
+          containerClassName="px-6"
         >
           {neighbourhoods.map((neighbourhood, index) => (
             <div key={index}>

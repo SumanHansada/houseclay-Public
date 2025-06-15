@@ -30,6 +30,7 @@ import StickyNavbar from "@/components/StickyNavbar";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useLogoutMutation } from "@/store/apiSlice";
+import { setHideStickyNavBar } from "@/store/appSlice";
 import { clearToken, setLoginFromAddProperty } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 
@@ -92,7 +93,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <Dialog
           id="login-dialog"
           type={isMobile ? "fullscreen" : "card"}
-          onClose={() => closeDialog("login-dialog")}
+          onClose={() => {
+            closeDialog("login-dialog");
+            dispatch(setHideStickyNavBar(false));
+          }}
           entryAnimation={
             isMobile ? "animate-slide-in-right" : "animate-fade-in"
           }
@@ -109,8 +113,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   Log In to Your Account
                 </h1>
               )}
-              <button className="absolute top-4 right-4 border border-gray-200 rounded-full md:border-none">
-                <X onClick={() => closeDialog("login-dialog")} size={24} />
+              <button className="absolute top-4 right-4 rounded-full">
+                <X
+                  onClick={() => {
+                    closeDialog("login-dialog");
+                    dispatch(setHideStickyNavBar(false));
+                  }}
+                  size={24}
+                />
               </button>
             </div>
           </DialogHeader>
@@ -125,7 +135,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <Dialog
           id="menu-dialog"
           type="fullscreen"
-          onClose={() => closeDialog("menu-dialog")}
+          onClose={() => {
+            closeDialog("menu-dialog");
+            dispatch(setHideStickyNavBar(false));
+          }}
           entryAnimation="animate-slide-in-left"
           exitAnimation="animate-slide-out-left"
         >
@@ -133,8 +146,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div
               className={`py-2 px-4 flex justify-between items-center w-full`}
             >
-              <button className="border border-gray-200 rounded-full md:border-none items-center justify-center">
-                <X onClick={() => closeDialog("menu-dialog")} size={25} />
+              <button className="rounded-full items-center justify-center">
+                <X
+                  onClick={() => {
+                    closeDialog("menu-dialog");
+                    dispatch(setHideStickyNavBar(false));
+                  }}
+                  size={25}
+                />
               </button>
               <div className="text-sm">
                 {token ? (
@@ -156,7 +175,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
           </DialogHeader>
           <DialogContent>
-            <div className="px-8 py-4 flex flex-col gap-8">
+            <div className="px-6 py-4 flex flex-col gap-8">
               {/* Profile Section */}
               {token && (
                 <div className="flex items-center p-4 gap-4 border border-gray-100 rounded-full shadow-md inset-shadow-xs">
