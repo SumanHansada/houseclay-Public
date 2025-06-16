@@ -38,7 +38,7 @@ const getDialogStyles = (
         isMobile ? "w-full h-auto" : "hidden"
       }`;
     case "card":
-      return `fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg ${
+      return `fixed top-1/2 left-[60%] transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg ${
         isMobile ? "hidden" : "w-1/2 h-auto"
       }`;
     default:

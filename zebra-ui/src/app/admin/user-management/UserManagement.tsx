@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
-import { TitleAndSearchBar } from "@/components/TitleAndSearchBar";
 import { TablePagination } from "@/components/TablePagination";
+import { TitleAndSearchBar } from "@/components/TitleAndSearchBar";
 import { User } from "@/interfaces/User";
 import { useGetUsersQuery } from "@/store/apiSlice";
 
@@ -111,8 +111,8 @@ export const UsersManagement = () => {
         </div>
 
         {/* Table area */}
-        <div className="flex flex-1 bg-gray-100 py-6 px-16">
-          <div className="flex flex-col flex-1 bg-white shadow-sm rounded-xl p-4">
+        <div className="flex flex-1 bg-gray-100 py-8 px-16">
+          <div className="flex flex-col flex-1 bg-white shadow-sm rounded-xl p-6">
             <DataTable
               columns={columns}
               data={filteredUsers}

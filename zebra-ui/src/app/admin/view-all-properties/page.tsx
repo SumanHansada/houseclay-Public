@@ -1,4 +1,5 @@
 import React from "react";
+
 import { ListProperties } from "./ListProperties";
 
 const ViewAllPropertyPage: React.FC = () => {

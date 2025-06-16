@@ -3,14 +3,29 @@ import { PaymentStatusEnum } from "@/interfaces/User";
 
 // export const dummyProperties: UserPropertyInfo[] = [];
 
-export const dummyUserProfile = {
-  phoneNo: "9999999999",
-  email: "user@example.com",
-  name: "Test User",
-  createdAt: "2025-06-09T19:04:27.458+00:00",
-  blacklistedAt: "",
-  blacklistedBy: "",
-  blacklisted: false,
+export const dummyUserDataList = [
+  {
+    phoneNo: "9999999999",
+    email: "user99@example.com",
+    name: "Test User 9",
+    createdAt: "2025-06-09T19:04:27.458+00:00",
+    blacklistedAt: "",
+    blacklistedBy: "",
+    blacklisted: false,
+  },
+  {
+    phoneNo: "8888888888",
+    email: "user88@example.com",
+    name: "Test User 8",
+    createdAt: "2025-06-09T19:04:27.458+00:00",
+    blacklistedAt: "",
+    blacklistedBy: "",
+    blacklisted: true,
+  },
+];
+
+export const dummyUserDetailsByID = {
+  ...dummyUserDataList[0],
   ownedProperties: [],
   viewedProperties: [],
   shortlistedProperties: [],

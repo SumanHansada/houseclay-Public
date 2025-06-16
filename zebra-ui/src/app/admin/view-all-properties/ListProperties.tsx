@@ -4,13 +4,11 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
-import { TitleAndSearchBar } from "@/components/TitleAndSearchBar";
+import { SearchAndFilterBar } from "@/components/SearchAndFilterBar";
 import { TablePagination } from "@/components/TablePagination";
 import { GetAllPropertiesResponse, PropertyInfo } from "@/interfaces/Property";
-
-import { RenderPropertyStatus } from "../user-details/components/RenderPropertyStatus";
-import { TableCellActions } from "../user-details/components/TableCellActions";
 import { dummyGetAllProperties } from "@/mock/getAllProperties";
+
 import { createCommonColumns } from "../user-details/[userPhoneNo]/propertyColumns";
 
 interface PropertyRow extends PropertyInfo {
@@ -19,7 +17,7 @@ interface PropertyRow extends PropertyInfo {
 
 export const ListProperties = () => {
   const router = useRouter();
-  const [searchValue, setSearchValue] = useState("");
+  // const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   // const rowsPerPage = 10;
 
@@ -71,69 +69,12 @@ export const ListProperties = () => {
   const columns: Column<PropertyRow>[] =
     createCommonColumns(viewPropertyDetails);
 
-  // const columns: Column<PropertyRow>[] = [
-  //   {
-  //     key: "serial",
-  //     label: "Sr. No.",
-  //     accessor: "_serial",
-  //     className: "w-20",
-  //   },
-  //   {
-  //     key: "location",
-  //     label: "Location",
-  //     accessor: "location",
-  //   },
-  //   {
-  //     key: "type",
-  //     label: "Type",
-  //     accessor: "type",
-  //   },
-  //   {
-  //     key: "config",
-  //     label: "Config",
-  //     accessor: "config",
-  //   },
-  //   {
-  //     key: "createdAt",
-  //     label: "Last Modified",
-  //     render: (p) =>
-  //       p.lastModified
-  //         ? new Date(p.lastModified).toLocaleString()
-  //         : new Date(p.createdAt).toLocaleString(),
-  //   },
-  //   {
-  //     key: "availableFrom",
-  //     label: "Available From",
-  //     render: (p) => new Date(p.availableFrom).toLocaleString(),
-  //   },
-  //   {
-  //     key: "status",
-  //     label: "Status",
-  //     render: (p) => <RenderPropertyStatus status={p.status} />,
-  //   },
-  //   {
-  //     key: "action",
-  //     label: "Action",
-  //     render: (p) => (
-  //       <TableCellActions
-  //         viewDetails={() => viewPropertyDetails(p.propertyID, p.type)}
-  //       />
-  //     ),
-  //   },
-  // ];
-
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">
       <div className="flex flex-col flex-1 h-full">
         {/* Sticky top filter bar */}
-        <div className="sticky top-0 z-10 border border-b-gray-200 shadow-sm">
-          <TitleAndSearchBar
-            searchValue={searchValue}
-            onSearchChange={(v) => {
-              setSearchValue(v);
-            }}
-            title={"Filter Bar"}
-          />
+        <div className="sticky top-0 z-10 border border-b-gray-200 shadow-sm px-16 py-2">
+          <SearchAndFilterBar />
         </div>
 
         {/* Table area */}

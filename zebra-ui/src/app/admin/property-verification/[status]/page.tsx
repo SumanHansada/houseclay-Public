@@ -1,16 +1,16 @@
 "use client";
 
+import { useParams, useRouter } from "next/navigation";
+import { useMemo } from "react";
+
+import { VerifyPropertyStatusEnum } from "@/common/enums";
 import { Column, DataTable } from "@/components/DataTable";
 import { PropertyInfo } from "@/interfaces/Property";
 import {
   dummyGetPropertiesToBeReVerified,
   dummyGetPropertiesToBeVerified,
 } from "@/mock/getAllProperties";
-import { useParams, useRouter } from "next/navigation";
-import { useMemo } from "react";
-import { RenderPropertyStatus } from "../../user-details/components/RenderPropertyStatus";
-import { TableCellActions } from "../../user-details/components/TableCellActions";
-import { VerifyPropertyStatusEnum } from "@/common/enums";
+
 import { createCommonColumns } from "../../user-details/[userPhoneNo]/propertyColumns";
 
 interface PropertyRow extends PropertyInfo {
@@ -40,64 +40,40 @@ const PropertyVerificationTable: React.FC = () => {
 
   const columns: Column<PropertyRow>[] =
     createCommonColumns(viewPropertyDetails);
-  // const columns: Column<PropertyRow>[] = [
-  //   {
-  //     key: "serial",
-  //     label: "Sr. No.",
-  //     accessor: "_serial",
-  //     className: "w-20",
-  //   },
-  //   {
-  //     key: "location",
-  //     label: "Location",
-  //     accessor: "location",
-  //   },
-  //   {
-  //     key: "type",
-  //     label: "Type",
-  //     accessor: "type",
-  //   },
-  //   {
-  //     key: "config",
-  //     label: "Config",
-  //     accessor: "config",
-  //   },
-  //   {
-  //     key: "createdAt",
-  //     label: "Last Modified",
-  //     render: (p) =>
-  //       p.lastModified
-  //         ? new Date(p.lastModified).toLocaleString()
-  //         : new Date(p.createdAt).toLocaleString(),
-  //   },
-  //   {
-  //     key: "availableFrom",
-  //     label: "Available From",
-  //     render: (p) => new Date(p.availableFrom).toLocaleString(),
-  //   },
-  //   {
-  //     key: "status",
-  //     label: "Status",
-  //     render: (p) => <RenderPropertyStatus status={p.status} />,
-  //   },
-  //   {
-  //     key: "action",
-  //     label: "Action",
-  //     render: (p) => (
-  //       <TableCellActions
-  //         viewDetails={() => viewPropertyDetails(p.type, p.propertyID)}
-  //       />
-  //     ),
-  //   },
-  // ];
 
   return (
     <div className="flex flex-col flex-1 bg-white shadow-sm rounded-xl p-4 gap-4">
-      <h1 className="text-3xl">
-        {status === VerifyPropertyStatusEnum.VERIFY
-          ? "Properties to be Verified"
-          : "Properties to be Re-verified"}
-      </h1>
+      <div className="flex justify-between">
+        <h1 className="text-3xl">
+          {status === VerifyPropertyStatusEnum.VERIFY
+            ? "Properties to be Verified"
+            : "Properties to be Re-verified"}
+        </h1>
+        <div className="flex gap-3 items-center">
+          <h1 className="text-2xl font-medium">Status:</h1>
+          <button
+            className={`py-2 px-3 rounded-xl border border-red-500 ${status === VerifyPropertyStatusEnum.VERIFY ? "bg-red-500 text-white" : "bg-white text-red-500"}`}
+            onClick={() =>
+              router.push(
+                `/admin/property-verification/${VerifyPropertyStatusEnum.VERIFY}`,
+              )
+            }
+          >
+            Pending
+          </button>
+          <button
+            className={`py-2 px-3 rounded-xl border border-red-500 ${status === VerifyPropertyStatusEnum.REVERIFY ? "bg-red-500 text-white" : "bg-white text-red-500"}`}
+            onClick={() =>
+              router.push(
+                `/admin/property-verification/${VerifyPropertyStatusEnum.REVERIFY}`,
+              )
+            }
+          >
+            Reported
+          </button>
+        </div>
+      </div>
+
       <DataTable
         columns={columns}
         data={rows}

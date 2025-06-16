@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
-import { TitleAndSearchBar } from "@/components/TitleAndSearchBar";
 import { TablePagination } from "@/components/TablePagination";
+import { TitleAndSearchBar } from "@/components/TitleAndSearchBar";
 import { Lead, LeadQueryParamEnum, LeadType } from "@/interfaces/Lead";
 import { useGetLeadsQuery } from "@/store/apiSlice";
 
@@ -76,6 +76,7 @@ export const LeadTableView = ({ leadType }: LeadTableViewProps) => {
     {
       key: "action",
       label: "Action",
+      className: "w-80",
       render: (lead) => (
         <TableCellActions
           viewLeadDetails={() => viewLeadDetails(lead.leadId)}
