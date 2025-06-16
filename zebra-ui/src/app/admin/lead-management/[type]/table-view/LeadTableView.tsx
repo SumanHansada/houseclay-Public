@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
-import { SearchFilterBar } from "@/components/SearchFilterBar";
+import { TitleAndSearchBar } from "@/components/TitleAndSearchBar";
 import { TablePagination } from "@/components/TablePagination";
 import { Lead, LeadQueryParamEnum, LeadType } from "@/interfaces/Lead";
 import { useGetLeadsQuery } from "@/store/apiSlice";
@@ -102,7 +102,7 @@ export const LeadTableView = ({ leadType }: LeadTableViewProps) => {
       <div className="flex flex-col flex-1 h-full">
         {/* Sticky top filter bar */}
         <div className="sticky top-0 z-10 border border-b-gray-200 shadow-sm">
-          <SearchFilterBar
+          <TitleAndSearchBar
             searchValue={searchValue}
             onSearchChange={(v) => {
               setSearchValue(v);

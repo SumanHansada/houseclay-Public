@@ -1,12 +1,12 @@
 import React from "react";
 
-interface SearchFilterBarProps {
+interface TitleAndSearchBarProps {
   searchValue: string;
   onSearchChange: (v: string) => void;
   title: string;
 }
 
-export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
+export const TitleAndSearchBar: React.FC<TitleAndSearchBarProps> = ({
   searchValue,
   onSearchChange,
   title,

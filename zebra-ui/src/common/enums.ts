@@ -39,3 +39,18 @@ export enum UserDetailsTabEnum {
   VIEWED = "viewed-properties",
   REPORT = "reported-properties",
 }
+
+export enum VerifyPropertyStatusEnum {
+  VERIFY = "pending",
+  REVERIFY = "report",
+}
+
+export enum PropertyDetailsTabEnum {
+  OVERVIEW = "overview",
+  RENT_DETAILS = "rent-details",
+  RESALE_DETAILS = "resale-details",
+  FLATMATE_DETAILS = "flatmate-details",
+  CONTACTED = "contacted",
+  SHORTLISTED = "shortlisted",
+  VIEWED = "viewed",
+}

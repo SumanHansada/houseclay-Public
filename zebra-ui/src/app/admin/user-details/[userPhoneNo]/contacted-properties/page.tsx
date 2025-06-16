@@ -21,8 +21,8 @@ const ContactedPropertiesPage: React.FC = () => {
   // const { contactedProperties } = data!.user;
   const contactedProperties = dummyProperties;
 
-  const viewPropertyDetails = (propertyID: string) => {
-    router.push(`/admin/property-details/${propertyID}`);
+  const viewPropertyDetails = (type: string, propertyID: string) => {
+    router.push(`/admin/property-details/${type}/${propertyID}`);
   };
 
   const rows: PropertyRow[] = contactedProperties.map(

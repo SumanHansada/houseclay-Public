@@ -23,8 +23,8 @@ const ViewedPropertiesPage: React.FC = () => {
   // const { viewedProperties } = data!.user;
   const viewedProperties = dummyProperties;
 
-  const viewPropertyDetails = (propertyID: string) => {
-    router.push(`/admin/property-details/${propertyID}`);
+  const viewPropertyDetails = (type: string, propertyID: string) => {
+    router.push(`/admin/property-details/${type}/${propertyID}`);
   };
 
   const rows: PropertyRow[] = viewedProperties.map((propertyInfo, index) => ({

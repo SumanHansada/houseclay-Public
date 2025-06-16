@@ -38,8 +38,8 @@ const ReportedPropertiesPage: React.FC = () => {
   // const { reportProperties } = data!.user;
   const reportProperties = dummyReportProperties;
 
-  const viewPropertyDetails = (propertyID: string) => {
-    router.push(`/admin/property-details/${propertyID}`);
+  const viewPropertyDetails = (type: string, propertyID: string) => {
+    router.push(`/admin/property-details/${type}/${propertyID}`);
   };
 
   const rows: PropertyRow[] = reportProperties.map(

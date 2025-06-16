@@ -22,8 +22,8 @@ const ListedPropertiesPage: React.FC = () => {
   // const { ownedProperties }: { ownedProperties: PropertyInfo[] } = data!.user;
   const ownedProperties: PropertyInfo[] = dummyProperties;
 
-  const viewPropertyDetails = (propertyID: string) => {
-    router.push(`/admin/property-details/${propertyID}`);
+  const viewPropertyDetails = (type: string, propertyID: string) => {
+    router.push(`/admin/property-details/${type}/${propertyID}`);
   };
 
   const rows: PropertyRow[] = ownedProperties.map((propertyInfo, index) => ({

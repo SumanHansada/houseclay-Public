@@ -22,8 +22,8 @@ const ShortlistedPropertiesPage: React.FC = () => {
   // const { shortlistedProperties } = data!.user;
   const shortlistedProperties = dummyProperties;
 
-  const viewPropertyDetails = (propertyID: string) => {
-    router.push(`/admin/property-details/${propertyID}`);
+  const viewPropertyDetails = (type: string, propertyID: string) => {
+    router.push(`/admin/property-details/${type}/${propertyID}`);
   };
 
   const rows: PropertyRow[] = shortlistedProperties.map(

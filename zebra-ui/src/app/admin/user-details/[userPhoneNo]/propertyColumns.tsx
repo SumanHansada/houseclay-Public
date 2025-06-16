@@ -4,7 +4,7 @@ import { PropertyInfo } from "@/interfaces/Property";
 import { RenderPropertyStatus } from "../components/RenderPropertyStatus";
 import { TableCellActions } from "../components/TableCellActions";
 
-type ViewDetailsFunction = (propertyID: string) => void;
+type ViewDetailsFunction = (propertyID: string, type: string) => void;
 
 export const createCommonColumns = (
   viewDetails: ViewDetailsFunction,
@@ -52,7 +52,7 @@ export const createCommonColumns = (
     key: "action",
     label: "Action",
     render: (p) => (
-      <TableCellActions viewDetails={() => viewDetails(p.propertyID)} />
+      <TableCellActions viewDetails={() => viewDetails(p.type, p.propertyID)} />
     ),
   },
 ];
