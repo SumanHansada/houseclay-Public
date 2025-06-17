@@ -13,7 +13,7 @@ import ClientPage from "./ClientPage";
 async function getDeviceType() {
   const headersList = await headers();
   const userAgent = headersList.get("user-agent") || "";
-  const isMobile = /Mobile|Android|iPhone/i.test(userAgent);
+  const isMobile = /Android|iPhone/i.test(userAgent);
   return { isMobile };
 }
 
