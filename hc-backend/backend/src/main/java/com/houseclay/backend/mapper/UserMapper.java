@@ -2,6 +2,7 @@ package com.houseclay.backend.mapper;
 
 import com.houseclay.backend.dto.*;
 import com.houseclay.backend.entity.*;
+import com.houseclay.backend.utils.PropertyUtils;
 
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -82,7 +83,10 @@ public class UserMapper {
         UserPropertyDTO dto = new UserPropertyDTO();
         dto.setPropertyID(property.getPropertyID());
         dto.setTitle(property.getTitle());
-        dto.setDescription(property.getDescription());
+        dto.setPropertyState(property.getPropertyState());
+        dto.setPropertyCategory(PropertyUtils.getPropertyCategory(property));
+        dto.setBhkType(property.getBhkType());
+        dto.setLocation(property.getLocationOrSocietyName());
         return dto;
     }
 

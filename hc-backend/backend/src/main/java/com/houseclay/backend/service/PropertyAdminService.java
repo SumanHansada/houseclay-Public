@@ -6,6 +6,7 @@ import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.mapper.PropertyMapper;
 import com.houseclay.backend.repository.PropertyRepository;
 import com.houseclay.backend.repository.UserRepository;
+import com.houseclay.backend.utils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +33,7 @@ public class PropertyAdminService {
             User user = userOpt.get();
             property.setPropertyState(PropertyState.PENDING_VERIFICATION);
             property.setOwner(user);
+            property.setTitle(PropertyUtils.getTitle(property));
             property.getPropertUpdateLogs().add(new PropertyUpdateLog(property, admin, PropertyUpdateType.CREATE));
             user.getOwnedProperties().add(property);
             propertyService.indexPropertyInElastic(property);

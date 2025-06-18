@@ -4,6 +4,7 @@ import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.repository.PropertyRepository;
 import com.houseclay.backend.repository.UserRepository;
+import com.houseclay.backend.utils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class PropertyUserService {
         if (userOpt.isPresent()) {
             user = userOpt.get();
             property.setOwner(user);
+            property.setTitle(PropertyUtils.getTitle(property));
             property.setPropertyState(PropertyState.PENDING_VERIFICATION);
             property.getPropertUpdateLogs().add(new PropertyUpdateLog(property, user, PropertyUpdateType.CREATE));
             user.getOwnedProperties().add(property);
