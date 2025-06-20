@@ -7,9 +7,9 @@ import { Column, DataTable } from "@/components/DataTable";
 import { SearchAndFilterBar } from "@/components/SearchAndFilterBar";
 import { TablePagination } from "@/components/TablePagination";
 import { GetAllPropertiesResponse, PropertyInfo } from "@/interfaces/Property";
-import { dummyGetAllProperties } from "@/mock/getAllProperties";
+import { dummyGetAllProperties } from "@/mock/propertyDetailsDummy";
 
-import { createCommonColumns } from "../user-details/[userPhoneNo]/propertyColumns";
+import { createCommonColumns } from "@/utils/commonPropertyColumns";
 
 interface PropertyRow extends PropertyInfo {
   _serial: number;

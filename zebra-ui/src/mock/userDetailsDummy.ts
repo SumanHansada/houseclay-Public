@@ -39,7 +39,7 @@ export const dummyProperties = [
   {
     propertyID: "1",
     title: "3BHK Flat for sale",
-    type: "sale",
+    type: "resale",
     config: "3BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "1,00,00,000",
@@ -51,7 +51,7 @@ export const dummyProperties = [
   {
     propertyID: "2",
     title: "2BHK Flat looking for a roommate",
-    type: "flatmate",
+    type: "flatmates",
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
@@ -75,7 +75,7 @@ export const dummyProperties = [
   {
     propertyID: "4",
     title: "2BHK Flat looking for a roommate",
-    type: "flatmate",
+    type: "flatmates",
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
@@ -87,7 +87,7 @@ export const dummyProperties = [
   {
     propertyID: "5",
     title: "2BHK Flat looking for a roommate",
-    type: "flatmate",
+    type: "flatmates",
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
@@ -99,7 +99,7 @@ export const dummyProperties = [
   {
     propertyID: "6",
     title: "2BHK Flat looking for a roommate",
-    type: "flatmate",
+    type: "flatmates",
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
@@ -111,7 +111,7 @@ export const dummyProperties = [
   {
     propertyID: "7",
     title: "2BHK Flat looking for a roommate",
-    type: "flatmate",
+    type: "flatmates",
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
@@ -123,7 +123,7 @@ export const dummyProperties = [
   {
     propertyID: "8",
     title: "2BHK Flat looking for a roommate",
-    type: "flatmate",
+    type: "flatmates",
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
@@ -135,7 +135,7 @@ export const dummyProperties = [
   {
     propertyID: "9",
     title: "2BHK Flat looking for a roommate",
-    type: "flatmate",
+    type: "flatmates",
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
@@ -147,7 +147,7 @@ export const dummyProperties = [
   {
     propertyID: "10",
     title: "2BHK Flat looking for a roommate",
-    type: "flatmate",
+    type: "flatmates",
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
@@ -159,7 +159,7 @@ export const dummyProperties = [
   {
     propertyID: "11",
     title: "2BHK Flat looking for a roommate",
-    type: "flatmate",
+    type: "flatmates",
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
@@ -171,7 +171,7 @@ export const dummyProperties = [
   {
     propertyID: "12",
     title: "2BHK Flat looking for a roommate",
-    type: "flatmate",
+    type: "flatmates",
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
@@ -183,7 +183,7 @@ export const dummyProperties = [
   {
     propertyID: "13",
     title: "2BHK Flat looking for a roommate",
-    type: "flatmate",
+    type: "flatmates",
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
@@ -195,7 +195,7 @@ export const dummyProperties = [
   {
     propertyID: "14",
     title: "2BHK Flat looking for a roommate",
-    type: "flatmate",
+    type: "flatmates",
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
@@ -207,7 +207,7 @@ export const dummyProperties = [
   {
     propertyID: "15",
     title: "2BHK Flat looking for a roommate",
-    type: "flatmate",
+    type: "flatmates",
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
@@ -219,7 +219,7 @@ export const dummyProperties = [
   {
     propertyID: "16",
     title: "2BHK Flat looking for a roommate",
-    type: "flatmate",
+    type: "flatmates",
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
@@ -231,7 +231,7 @@ export const dummyProperties = [
   {
     propertyID: "17",
     title: "2BHK Flat looking for a roommate",
-    type: "flatmate",
+    type: "flatmates",
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
@@ -243,7 +243,7 @@ export const dummyProperties = [
   {
     propertyID: "18",
     title: "2BHK Flat looking for a roommate",
-    type: "flatmate",
+    type: "flatmates",
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
@@ -255,7 +255,7 @@ export const dummyProperties = [
   {
     propertyID: "19",
     title: "2BHK Flat looking for a roommate",
-    type: "flatmate",
+    type: "flatmates",
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
@@ -267,7 +267,7 @@ export const dummyProperties = [
   {
     propertyID: "20",
     title: "2BHK Flat looking for a roommate",
-    type: "flatmate",
+    type: "flatmates",
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
@@ -279,7 +279,7 @@ export const dummyProperties = [
   {
     propertyID: "21",
     title: "2BHK Flat looking for a roommate",
-    type: "flatmate",
+    type: "flatmates",
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "30,000",
@@ -291,7 +291,7 @@ export const dummyProperties = [
   {
     propertyID: "22",
     title: "4BHK Flat looking for a roommate",
-    type: "sale",
+    type: "resale",
     config: "2BHK",
     location: "Krishvi Gavakshi, ORR, Bengaluru",
     price: "3,00,00,000",
@@ -310,7 +310,7 @@ export const dummyReportProperties = [
     userProperty: {
       propertyID: "1",
       title: "3BHK Flat for sale",
-      type: "sale",
+      type: "resale",
       config: "3BHK",
       location: "Krishvi Gavakshi, ORR, Bengaluru",
       price: "1,00,00,000",
@@ -327,7 +327,7 @@ export const dummyReportProperties = [
     userProperty: {
       propertyID: "3",
       title: "2BHK Flat for sale",
-      type: "sale",
+      type: "resale",
       config: "2BHK",
       location: "Krishvi Gavakshi, ORR, Bengaluru",
       price: "1,00,00,000",

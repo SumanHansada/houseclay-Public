@@ -50,6 +50,7 @@ export enum PropertyDetailsTabEnum {
   RENT_DETAILS = "rent-details",
   RESALE_DETAILS = "resale-details",
   FLATMATE_DETAILS = "flatmate-details",
+  DETAILS = "details",
   CONTACTED = "contacted",
   SHORTLISTED = "shortlisted",
   VIEWED = "viewed",

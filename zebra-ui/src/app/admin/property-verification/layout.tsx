@@ -4,7 +4,7 @@ import React, { useState } from "react";
 
 import { SearchAndFilterBar } from "@/components/SearchAndFilterBar";
 import { TablePagination } from "@/components/TablePagination";
-import { dummyGetPropertiesToBeVerified } from "@/mock/getAllProperties";
+import { dummyGetPropertiesToBeVerified } from "@/mock/propertyDetailsDummy";
 
 const PropertyVerificationLayout = ({
   children,

@@ -7,7 +7,7 @@ import { dummyProperties } from "@/mock/userDetailsDummy";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 
 import { PropertiesTableView } from "../../components/PropertiesTableView";
-import { createCommonColumns } from "../propertyColumns";
+import { createCommonColumns } from "@/utils/commonPropertyColumns";
 
 interface PropertyRow extends PropertyInfo {
   _serial: number;

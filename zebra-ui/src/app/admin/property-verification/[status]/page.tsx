@@ -9,9 +9,9 @@ import { PropertyInfo } from "@/interfaces/Property";
 import {
   dummyGetPropertiesToBeReVerified,
   dummyGetPropertiesToBeVerified,
-} from "@/mock/getAllProperties";
+} from "@/mock/propertyDetailsDummy";
 
-import { createCommonColumns } from "../../user-details/[userPhoneNo]/propertyColumns";
+import { createCommonColumns } from "@/utils/commonPropertyColumns";
 
 interface PropertyRow extends PropertyInfo {
   _serial: number;
