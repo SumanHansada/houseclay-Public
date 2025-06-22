@@ -1,8 +1,9 @@
 import { Column } from "@/components/DataTable";
 import { PropertyInfo } from "@/interfaces/Property";
 
-import { RenderPropertyStatus } from "@/app/admin/user-details/components/RenderPropertyStatus";
-import { TableCellActions } from "@/app/admin/user-details/components/TableCellActions";
+import { RenderPropertyStatus } from "@/components/property/RenderPropertyStatus";
+import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
+import { Eye, Pencil } from "lucide-react";
 
 type ViewDetailsFunction = (propertyID: string, type: string) => void;
 
@@ -52,7 +53,22 @@ export const createCommonColumns = (
     key: "action",
     label: "Action",
     render: (p) => (
-      <TableCellActions viewDetails={() => viewDetails(p.type, p.propertyID)} />
+      <div className="flex items-center gap-3">
+        <IconButtonWithTooltip
+          onClick={() => console.log("Edit")}
+          Icon={Pencil}
+          tooltipActive={true}
+          tooltip="View Profile"
+          classNameIconCustomize="size-5"
+        />
+        <IconButtonWithTooltip
+          onClick={() => viewDetails(p.type, p.propertyID)}
+          Icon={Eye}
+          tooltipActive={true}
+          tooltip="View Profile"
+          classNameIconCustomize="size-6"
+        />
+      </div>
     ),
   },
 ];

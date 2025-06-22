@@ -1,9 +1,9 @@
-interface TableCellActionsProps {
+interface TableActionButtonsProps {
   viewLeadDetails: () => void;
   viewUserProfile: () => void;
 }
 
-export const TableCellActions: React.FC<TableCellActionsProps> = ({
+export const TableActionButtons: React.FC<TableActionButtonsProps> = ({
   viewLeadDetails,
   viewUserProfile,
 }) => {

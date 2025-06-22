@@ -5,7 +5,7 @@ import React, { useState } from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
 import { SearchAndFilterBar } from "@/components/SearchAndFilterBar";
-import { TablePagination } from "@/components/TablePagination";
+import { PaginationFooter } from "@/components/PaginationFooter";
 import { GetAllPropertiesResponse, PropertyInfo } from "@/interfaces/Property";
 import { dummyGetAllProperties } from "@/mock/propertyDetailsDummy";
 
@@ -91,7 +91,7 @@ export const ListProperties = () => {
 
         {/* Sticky bottom pagination */}
         <div className="sticky bottom-0 z-10 border border-t-gray-200 shadow-sm">
-          <TablePagination
+          <PaginationFooter
             currentPage={currentPage}
             totalPages={totalPages}
             isFirst={isFirst}

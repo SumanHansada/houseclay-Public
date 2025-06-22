@@ -4,13 +4,14 @@ import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
-import { TablePagination } from "@/components/TablePagination";
+import { PaginationFooter } from "@/components/PaginationFooter";
 import { TitleAndSearchBar } from "@/components/TitleAndSearchBar";
 import { User } from "@/interfaces/User";
 import { useGetUsersQuery } from "@/store/apiSlice";
 
-import { RenderUserStatus } from "./components/RenderUserStatus";
-import { TableCellActions } from "./components/TableCellActions";
+import { RenderUserStatus } from "@/components/user/RenderUserStatus";
+import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
+import { Eye } from "lucide-react";
 
 export const UsersManagement = () => {
   const router = useRouter();
@@ -91,7 +92,12 @@ export const UsersManagement = () => {
       key: "action",
       label: "Action",
       render: (user) => (
-        <TableCellActions viewProfile={() => viewProfile(user.phoneNo)} />
+        <IconButtonWithTooltip
+          onClick={() => viewProfile(user.phoneNo)}
+          Icon={Eye}
+          tooltipActive={true}
+          tooltip="View Profile"
+        />
       ),
     },
   ];
@@ -117,13 +123,14 @@ export const UsersManagement = () => {
               columns={columns}
               data={filteredUsers}
               getRowId={(user) => user.phoneNo}
+              noDataMessage="No User Data Found!"
             />
           </div>
         </div>
 
         {/* Sticky bottom pagination */}
         <div className="sticky bottom-0 z-10 border border-t-gray-200 shadow-sm">
-          <TablePagination
+          <PaginationFooter
             currentPage={currentPage}
             totalPages={totalPages}
             isFirst={isFirst}

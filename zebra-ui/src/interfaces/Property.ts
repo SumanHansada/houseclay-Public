@@ -17,7 +17,7 @@ export interface PropertyInfo {
   createdAt: string;
   availableFrom: string;
   lastModified: string | null;
-  status: PropertyStatusEnum;
+  status: string;
 }
 
 export interface GetAllPropertiesResponse {

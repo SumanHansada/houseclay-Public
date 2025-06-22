@@ -1,4 +1,4 @@
-import { PropertyStatusEnum } from "@/interfaces/Property";
+import {} from "@/interfaces/Property";
 import { PaymentStatusEnum } from "@/interfaces/User";
 
 // export const dummyProperties: UserPropertyInfo[] = [];
@@ -46,7 +46,7 @@ export const dummyProperties = [
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
     availableFrom: "2025-06-09T19:05:27.661+00:00",
-    status: PropertyStatusEnum.VERIFIED,
+    status: "VERIFIED",
   },
   {
     propertyID: "2",
@@ -58,7 +58,7 @@ export const dummyProperties = [
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
     availableFrom: "2025-06-09T19:05:27.661+00:00",
-    status: PropertyStatusEnum.PENDING,
+    status: "PENDING_VERIFICATION",
   },
   {
     propertyID: "3",
@@ -70,7 +70,7 @@ export const dummyProperties = [
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
     availableFrom: "2025-06-09T19:05:27.661+00:00",
-    status: PropertyStatusEnum.REPORT,
+    status: "REPORT",
   },
   {
     propertyID: "4",
@@ -82,7 +82,7 @@ export const dummyProperties = [
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
     availableFrom: "2025-06-09T19:05:27.661+00:00",
-    status: PropertyStatusEnum.PENDING,
+    status: "PENDING_VERIFICATION",
   },
   {
     propertyID: "5",
@@ -94,7 +94,7 @@ export const dummyProperties = [
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
     availableFrom: "2025-06-09T19:05:27.661+00:00",
-    status: PropertyStatusEnum.PENDING,
+    status: "PENDING_VERIFICATION",
   },
   {
     propertyID: "6",
@@ -106,7 +106,7 @@ export const dummyProperties = [
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
     availableFrom: "2025-06-09T19:05:27.661+00:00",
-    status: PropertyStatusEnum.PENDING,
+    status: "PENDING_VERIFICATION",
   },
   {
     propertyID: "7",
@@ -118,7 +118,7 @@ export const dummyProperties = [
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
     availableFrom: "2025-06-09T19:05:27.661+00:00",
-    status: PropertyStatusEnum.REPORT,
+    status: "REPORT",
   },
   {
     propertyID: "8",
@@ -130,7 +130,7 @@ export const dummyProperties = [
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
     availableFrom: "2025-06-09T19:05:27.661+00:00",
-    status: PropertyStatusEnum.REPORT,
+    status: "PENDING",
   },
   {
     propertyID: "9",
@@ -142,7 +142,7 @@ export const dummyProperties = [
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
     availableFrom: "2025-06-09T19:05:27.661+00:00",
-    status: PropertyStatusEnum.REPORT,
+    status: "REPORT",
   },
   {
     propertyID: "10",
@@ -154,7 +154,7 @@ export const dummyProperties = [
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
     availableFrom: "2025-06-09T19:05:27.661+00:00",
-    status: PropertyStatusEnum.REPORT,
+    status: "REPORT",
   },
   {
     propertyID: "11",
@@ -166,7 +166,7 @@ export const dummyProperties = [
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
     availableFrom: "2025-06-09T19:05:27.661+00:00",
-    status: PropertyStatusEnum.PENDING,
+    status: "PENDING_VERIFICATION",
   },
   {
     propertyID: "12",
@@ -178,7 +178,7 @@ export const dummyProperties = [
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
     availableFrom: "2025-06-09T19:05:27.661+00:00",
-    status: PropertyStatusEnum.PENDING,
+    status: "PENDING_VERIFICATION",
   },
   {
     propertyID: "13",
@@ -190,7 +190,7 @@ export const dummyProperties = [
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
     availableFrom: "2025-06-09T19:05:27.661+00:00",
-    status: PropertyStatusEnum.PENDING,
+    status: "PENDING_VERIFICATION",
   },
   {
     propertyID: "14",
@@ -202,7 +202,7 @@ export const dummyProperties = [
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
     availableFrom: "2025-06-09T19:05:27.661+00:00",
-    status: PropertyStatusEnum.PENDING,
+    status: "PENDING_VERIFICATION",
   },
   {
     propertyID: "15",
@@ -214,7 +214,7 @@ export const dummyProperties = [
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
     availableFrom: "2025-06-09T19:05:27.661+00:00",
-    status: PropertyStatusEnum.PENDING,
+    status: "PENDING_VERIFICATION",
   },
   {
     propertyID: "16",
@@ -226,7 +226,7 @@ export const dummyProperties = [
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
     availableFrom: "2025-06-09T19:05:27.661+00:00",
-    status: PropertyStatusEnum.PENDING,
+    status: "PENDING_VERIFICATION",
   },
   {
     propertyID: "17",
@@ -238,7 +238,7 @@ export const dummyProperties = [
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
     availableFrom: "2025-06-09T19:05:27.661+00:00",
-    status: PropertyStatusEnum.PENDING,
+    status: "PENDING_VERIFICATION",
   },
   {
     propertyID: "18",
@@ -250,7 +250,7 @@ export const dummyProperties = [
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
     availableFrom: "2025-06-09T19:05:27.661+00:00",
-    status: PropertyStatusEnum.PENDING,
+    status: "PENDING_VERIFICATION",
   },
   {
     propertyID: "19",
@@ -262,7 +262,7 @@ export const dummyProperties = [
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
     availableFrom: "2025-06-09T19:05:27.661+00:00",
-    status: PropertyStatusEnum.PENDING,
+    status: "PENDING_VERIFICATION",
   },
   {
     propertyID: "20",
@@ -274,7 +274,7 @@ export const dummyProperties = [
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
     availableFrom: "2025-06-09T19:05:27.661+00:00",
-    status: PropertyStatusEnum.PENDING,
+    status: "PENDING_VERIFICATION",
   },
   {
     propertyID: "21",
@@ -286,7 +286,7 @@ export const dummyProperties = [
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
     availableFrom: "2025-06-09T19:05:27.661+00:00",
-    status: PropertyStatusEnum.PENDING,
+    status: "PENDING_VERIFICATION",
   },
   {
     propertyID: "22",
@@ -298,7 +298,7 @@ export const dummyProperties = [
     createdAt: "2025-06-09T19:05:27.661+00:00",
     lastModified: "2025-06-09T19:05:27.661+00:00",
     availableFrom: "2025-06-09T19:05:27.661+00:00",
-    status: PropertyStatusEnum.PENDING,
+    status: "PENDING_VERIFICATION",
   },
 ];
 
@@ -317,7 +317,7 @@ export const dummyReportProperties = [
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: "2025-06-09T19:05:27.661+00:00",
       availableFrom: "2025-06-09T19:05:27.661+00:00",
-      status: PropertyStatusEnum.REPORT,
+      status: "REPORT",
     },
   },
   {
@@ -334,7 +334,7 @@ export const dummyReportProperties = [
       createdAt: "2025-06-09T19:05:27.661+00:00",
       lastModified: null,
       availableFrom: "2025-06-09T19:05:27.661+00:00",
-      status: PropertyStatusEnum.REPORT,
+      status: "REPORT",
     },
   },
 ];

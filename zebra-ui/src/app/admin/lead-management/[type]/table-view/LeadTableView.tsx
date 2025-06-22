@@ -4,13 +4,13 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
-import { TablePagination } from "@/components/TablePagination";
+import { PaginationFooter } from "@/components/PaginationFooter";
 import { TitleAndSearchBar } from "@/components/TitleAndSearchBar";
 import { Lead, LeadQueryParamEnum, LeadType } from "@/interfaces/Lead";
 import { useGetLeadsQuery } from "@/store/apiSlice";
 
 import { RenderLeadStatus } from "../../components/RenderLeadStatus";
-import { TableCellActions } from "../../components/TableCellActions";
+import { TableActionButtons } from "../../components/TableActionButtons";
 
 interface LeadTableViewProps {
   leadType: LeadType;
@@ -78,7 +78,7 @@ export const LeadTableView = ({ leadType }: LeadTableViewProps) => {
       label: "Action",
       className: "w-80",
       render: (lead) => (
-        <TableCellActions
+        <TableActionButtons
           viewLeadDetails={() => viewLeadDetails(lead.leadId)}
           viewUserProfile={() => viewUserProfile(lead.phoneNo)}
         />
@@ -125,7 +125,7 @@ export const LeadTableView = ({ leadType }: LeadTableViewProps) => {
 
         {/* Sticky bottom pagination */}
         <div className="sticky bottom-0 z-10 border border-b-gray-200 shadow-sm">
-          <TablePagination
+          <PaginationFooter
             currentPage={currentPage}
             totalPages={totalPages}
             isFirst={isFirst}
