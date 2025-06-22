@@ -19,13 +19,13 @@ jobs:
 
       - name: Transfer hc-frontend source code to Zebra Host
         run: |
-          echo "${{ secrets.ZEBRA_SECURITY_KEY }}" > zebra_key.pem
+          echo "${{ secrets.FRONTEND_SECURITY_KEY }}" > zebra_key.pem
           chmod 600 zebra_key.pem
-          rsync -az --delete -e "ssh -o StrictHostKeyChecking=no -i zebra_key.pem" hc-frontend ec2-user@${{ secrets.ZEBRA_HOST }}:/home/ec2-user/
+          rsync -az --delete -e "ssh -o StrictHostKeyChecking=no -i zebra_key.pem" hc-frontend ec2-user@${{ secrets.FRONTEND_HOST }}:/home/ec2-user/
 
       - name: Install pm2 on Zebra Host
         run: |
-          ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.ZEBRA_HOST }} << EOF
+          ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.FRONTEND_HOST }} << EOF
           sudo npm install -g pm2
           EOF
 
@@ -34,7 +34,7 @@ jobs:
           NEXT_PUBLIC_HOUSECLAY_API_BASE_URL: ${{ secrets.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL }}
           NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
         run: |
-          ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.ZEBRA_HOST }} << EOF
+          ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.FRONTEND_HOST }} << EOF
           cd /home/ec2-user/hc-frontend
           rm -f .env.local
           echo "NEXT_PUBLIC_HOUSECLAY_API_BASE_URL=$NEXT_PUBLIC_HOUSECLAY_API_BASE_URL" >> .env.local
@@ -45,7 +45,7 @@ jobs:
       
       - name: Start hc-frontend on Zebra Host
         run: |
-          ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.ZEBRA_HOST }} << EOF
+          ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.FRONTEND_HOST }} << EOF
           cd /home/ec2-user/hc-frontend
           pm2 delete houseclay-ui-app || true
           pm2 start npm --name "houseclay-ui-app" -- start
