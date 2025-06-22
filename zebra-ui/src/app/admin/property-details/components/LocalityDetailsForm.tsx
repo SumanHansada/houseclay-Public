@@ -2,7 +2,7 @@
 
 import FormDropdown from "@/components/common/FormDropdown";
 import FormInputField from "@/components/common/FormInputField";
-// import FormPlacesAutocomplete from "@/components/common/FormPlacesAutoCompletes";
+import FormPlacesAutocomplete from "@/components/common/FormPlacesAutoCompletes";
 import GoogleMaps from "@/components/common/GoogleMaps";
 import { PropertyDetailsFormValues } from "@/interfaces/Property";
 import { useFormikContext } from "formik";

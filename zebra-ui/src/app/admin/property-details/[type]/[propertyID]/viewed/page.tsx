@@ -2,12 +2,13 @@
 import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
-import { RenderUserStatus } from "@/app/admin/user-management/components/RenderUserStatus";
-import { TableCellActions } from "@/app/admin/user-management/components/TableCellActions";
 import { Column, DataTable } from "@/components/DataTable";
-import { TablePagination } from "@/components/TablePagination";
+import { PaginationFooter } from "@/components/PaginationFooter";
 import { User } from "@/interfaces/User";
 import { dummyUserDataList } from "@/mock/userDetailsDummy";
+import { RenderUserStatus } from "@/components/user/RenderUserStatus";
+import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
+import { Eye } from "lucide-react";
 
 export default function ViewedUsersPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,13 +42,18 @@ export default function ViewedUsersPage() {
     {
       key: "blacklisted",
       label: "Status",
-      render: (u) => <RenderUserStatus isBlacklisted={u.blacklisted} />,
+      render: (user) => <RenderUserStatus isBlacklisted={user.blacklisted} />,
     },
     {
       key: "action",
       label: "Action",
-      render: (u) => (
-        <TableCellActions viewProfile={() => viewProfile(u.phoneNo)} />
+      render: (user) => (
+        <IconButtonWithTooltip
+          onClick={() => viewProfile(user.phoneNo)}
+          Icon={Eye}
+          tooltipActive={true}
+          tooltip="View Profile"
+        />
       ),
     },
   ];
@@ -65,7 +71,7 @@ export default function ViewedUsersPage() {
         </div>
       </div>
       <div className="sticky bottom-0 z-10 border-t bg-white">
-        <TablePagination
+        <PaginationFooter
           currentPage={currentPage}
           totalPages={totalPages}
           isFirst={isFirst}

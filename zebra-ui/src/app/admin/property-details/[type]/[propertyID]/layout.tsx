@@ -62,8 +62,11 @@ export default function PropertyDetailsLayout({
     <div className="flex flex-col h-[calc(100vh-4rem)]">
       <Tabs onTabChange={handleTabChange} defaultActive={activeTab}>
         <TabHeader>
-          {/* <Tab label="Overview" value={PropertyDetailsTabEnum.OVERVIEW} /> */}
           <Tab label="Details" value={PropertyDetailsTabEnum.DETAILS} />
+          <Tab
+            label="Owner Details"
+            value={PropertyDetailsTabEnum.OWNER_DETAILS}
+          />
           <Tab label="Shortlisted" value={PropertyDetailsTabEnum.SHORTLISTED} />
           <Tab label="Contacted" value={PropertyDetailsTabEnum.CONTACTED} />
           <Tab label="Viewed" value={PropertyDetailsTabEnum.VIEWED} />

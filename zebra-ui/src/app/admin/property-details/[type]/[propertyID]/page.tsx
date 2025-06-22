@@ -11,9 +11,6 @@ interface TParams {
 
 export default function UserDetailsRedirectPage({ params }: TParams) {
   const { propertyID, type } = use(params);
-  console.log(
-    `/admin/property-details/${type}/${propertyID}/${PropertyDetailsTabEnum.DETAILS}`,
-  );
   redirect(
     `/admin/property-details/${type}/${propertyID}/${PropertyDetailsTabEnum.DETAILS}`,
   );
