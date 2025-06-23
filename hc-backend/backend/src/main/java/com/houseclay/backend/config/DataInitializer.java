@@ -92,7 +92,7 @@ public class DataInitializer {
             flatmate.setAttachedBathroom(true);
             flatmate.setAttachedBalcony(true);
             flatmate.setSmokingPreference("No smoking");
-            flatmate.setDrinkingPreference("Occasional");
+            flatmate.setDrinkingPreference("Occasionally");
             propertyRepo.save(flatmate);
 
             // ✅ ReportProperty
