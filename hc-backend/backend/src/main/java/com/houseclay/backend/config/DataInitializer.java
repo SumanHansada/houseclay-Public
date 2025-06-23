@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @Configuration
 public class DataInitializer {
@@ -154,6 +155,10 @@ public class DataInitializer {
 
             // ✅ Connect Transactions
             ConnectTransaction ct1 = new ConnectTransaction();
+            Optional<Property> optionalProperty = propertyRepo.findById(rent.getPropertyID());
+            if (optionalProperty.isPresent()) {
+                rent = (RentProperty) optionalProperty.get();
+            }
             ct1.setTransactionId("TXN001");
             ct1.setConnectQuantity(5);
             ct1.setTransactionTime(now);

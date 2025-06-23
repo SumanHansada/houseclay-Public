@@ -73,7 +73,7 @@ public class Property {
     private User owner;
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PropertyAction> propertyActions;
+    private List<PropertyAction> propertyActions = new ArrayList<>();
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReportProperty> reportedProperties;
