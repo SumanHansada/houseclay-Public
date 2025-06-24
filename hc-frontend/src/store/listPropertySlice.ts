@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { PropertyListingType } from "@/common/enums";
-import { PropertyType } from "@/common/enums";
+import { PropertyCategory, PropertyListingType } from "@/common/enums";
 import { AdditionalInfo } from "@/interfaces/AdditionalInfo";
 import { FlatmatesDetails } from "@/interfaces/FlatmatesDetails";
 import { ListPropertyState } from "@/interfaces/ListPropertyState";
@@ -98,7 +97,7 @@ const initialData: {
 const initialState: ListPropertyState = {
   propertyID: "",
   imagesS3Url: {},
-  propertyType: PropertyType.RENT,
+  propertyCategory: PropertyCategory.RENT,
   listingType: PropertyListingType.DIY,
   rentForm: {
     isValid: false,
@@ -138,8 +137,8 @@ const listPropertySlice = createSlice({
   name: "listProperty",
   initialState,
   reducers: {
-    setPropertyType: (state, action: PayloadAction<PropertyType>) => {
-      state.propertyType = action.payload;
+    setPropertyCategory: (state, action: PayloadAction<PropertyCategory>) => {
+      state.propertyCategory = action.payload;
     },
     setListingType: (state, action: PayloadAction<PropertyListingType>) => {
       state.listingType = action.payload;
@@ -256,11 +255,63 @@ const listPropertySlice = createSlice({
         state[type].data.additionalInfo = additionalInfo;
       }
     },
+    clearFormData: (state, action: PayloadAction<FormType>) => {
+      const type = action.payload;
+      state[type] = {
+        isValid: false,
+        data: {
+          ...initialData,
+          propertyDetails: {
+            ...initialData.propertyDetails,
+            propertyCategory:
+              type === "rentForm"
+                ? "Rent"
+                : type === "resaleForm"
+                  ? "Sale"
+                  : "Flatmate",
+          },
+        },
+      };
+    },
+    clearAllFormData: (state) => {
+      state.rentForm = {
+        isValid: false,
+        data: {
+          ...initialData,
+          propertyDetails: {
+            ...initialData.propertyDetails,
+            propertyCategory: "Rent",
+          },
+        },
+      };
+      state.resaleForm = {
+        isValid: false,
+        data: {
+          ...initialData,
+          propertyDetails: {
+            ...initialData.propertyDetails,
+            propertyCategory: "Sale",
+          },
+        },
+      };
+      state.flatmatesForm = {
+        isValid: false,
+        data: {
+          ...initialData,
+          propertyDetails: {
+            ...initialData.propertyDetails,
+            propertyCategory: "Flatmate",
+          },
+        },
+      };
+      state.propertyID = "";
+      state.imagesS3Url = {};
+    },
   },
 });
 
 export const {
-  setPropertyType,
+  setPropertyCategory,
   setListingType,
   setFormValidity,
   setFormData,
@@ -273,5 +324,7 @@ export const {
   setFlatmatesDetails,
   setImages,
   setAdditionalInfo,
+  clearFormData,
+  clearAllFormData,
 } = listPropertySlice.actions;
 export default listPropertySlice.reducer;

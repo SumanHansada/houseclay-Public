@@ -39,6 +39,7 @@ import {
   setHideStickyNavBar,
 } from "@/store/appSlice";
 import { setAuthStep, setPhoneNo } from "@/store/authSlice";
+import { clearAllFormData } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 import { setCheckUser } from "@/store/userSlice";
 
@@ -60,8 +61,8 @@ const ListPropertyPage = dynamic(
       const listingType = useSelector(
         (state: RootState) => state.listProperty.listingType,
       );
-      const propertyType = useSelector(
-        (state: RootState) => state.listProperty.propertyType,
+      const propertyCategory = useSelector(
+        (state: RootState) => state.listProperty.propertyCategory,
       );
       const handlePhoneChange = (data: string) => {
         // Remove '+' sign and update the phone number
@@ -123,13 +124,21 @@ const ListPropertyPage = dynamic(
       };
 
       const handlePostListingClick = () => {
-        if (!propertyType) {
+        if (!propertyCategory) {
           console.error("Property type is not selected");
           return;
         }
-        const url = `/list-property/${propertyType.toLowerCase()}`;
+        const url = `/list-property/${propertyCategory.toLowerCase()}`;
         console.log("Navigating to URL:", url);
         router.push(url);
+        dispatch(clearAllFormData());
+      };
+
+      const handlePrefetch = () => {
+        if (propertyCategory) {
+          const url = `/list-property/${propertyCategory.toLowerCase()}`;
+          router.prefetch(url);
+        }
       };
 
       const handleGetStarted = () => {
@@ -194,6 +203,7 @@ const ListPropertyPage = dynamic(
                 isMobile={true}
                 onNext={handlePostListingClick}
                 onBack={handleBack}
+                handlePrefetch={handlePrefetch}
               />
             )}
           </section>
@@ -292,6 +302,7 @@ const ListPropertyPage = dynamic(
                           isMobile={false}
                           onNext={handlePostListingClick}
                           onBack={handleBack}
+                          handlePrefetch={handlePrefetch}
                         />
                       )}
                     </>

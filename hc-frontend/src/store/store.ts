@@ -1,5 +1,7 @@
 // src/store/store.ts
 import { configureStore } from "@reduxjs/toolkit";
+import { persistReducer, persistStore } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
 import { apiSlice } from "./apiSlice";
 import appReducer from "./appSlice";
@@ -8,23 +10,48 @@ import listPropertyReducer from "./listPropertySlice";
 import uploadToS3SliceReducer from "./uploadToS3Slice";
 import userReducer from "./userSlice";
 
+// Configure persistence for listProperty slice
+const listPropertyPersistConfig = {
+  key: "listProperty",
+  storage,
+  whitelist: [
+    "rentForm",
+    "resaleForm",
+    "flatmatesForm",
+    "propertyID",
+    "imagesS3Url",
+  ], // Only persist these fields
+};
+
+const persistedListPropertyReducer = persistReducer(
+  listPropertyPersistConfig,
+  listPropertyReducer,
+);
+
 export function makeStore() {
   return configureStore({
     reducer: {
       app: appReducer,
       auth: authReducer,
-      listProperty: listPropertyReducer,
+      listProperty: persistedListPropertyReducer,
       user: userReducer,
       uploadToS3: uploadToS3SliceReducer,
       [apiSlice.reducerPath]: apiSlice.reducer,
     },
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(apiSlice.middleware),
+      getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
+        },
+      }).concat(apiSlice.middleware),
   });
 }
 
 // Create a store instance
 export const store = makeStore();
+
+// Create persistor
+export const persistor = persistStore(store);
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;

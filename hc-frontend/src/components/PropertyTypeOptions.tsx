@@ -3,8 +3,8 @@ import RentSvg from "public/icons/rent.svg";
 import ResaleSvg from "public/icons/resale.svg";
 import { useDispatch, useSelector } from "react-redux";
 
-import { PropertyType } from "@/common/enums";
-import { setPropertyType } from "@/store/listPropertySlice";
+import { PropertyCategory } from "@/common/enums";
+import { setPropertyCategory } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
 import PropertyTypeOption from "./PropertyTypeOption";
@@ -17,16 +17,18 @@ interface PropertyTypeOptionsProps {
   isMobile?: boolean;
   onBack?: () => void;
   onNext?: () => void;
+  handlePrefetch?: () => void;
 }
 
 const PropertyTypeOptions = ({
   isMobile = false,
   onBack,
   onNext,
+  handlePrefetch,
 }: PropertyTypeOptionsProps) => {
   const dispatch = useDispatch();
-  const propertyType = useSelector(
-    (state: RootState) => state.listProperty.propertyType,
+  const propertyCategory = useSelector(
+    (state: RootState) => state.listProperty.propertyCategory,
   );
 
   const propertyTypes = [
@@ -34,19 +36,19 @@ const PropertyTypeOptions = ({
       id: "rent",
       label: "Rent",
       icon: <Rent />,
-      type: PropertyType.RENT,
+      type: PropertyCategory.RENT,
     },
     {
       id: "resale",
       label: "Resale",
       icon: <Resale />,
-      type: PropertyType.RESALE,
+      type: PropertyCategory.RESALE,
     },
     {
       id: "flatmates",
       label: "Flatmates",
       icon: <Flatmates />,
-      type: PropertyType.FLATMATES,
+      type: PropertyCategory.FLATMATES,
     },
   ];
 
@@ -67,11 +69,11 @@ const PropertyTypeOptions = ({
             label={option.label}
             icon={option.icon}
             className={isMobile ? "px-4 items-center" : ""}
-            isSelected={propertyType === option.type}
+            isSelected={propertyCategory === option.type}
             iconClassName={`${
-              propertyType === option.type ? "opacity-100" : "opacity-50"
+              propertyCategory === option.type ? "opacity-100" : "opacity-50"
             } transition-opacity duration-200`}
-            onChange={() => dispatch(setPropertyType(option.type))}
+            onChange={() => dispatch(setPropertyCategory(option.type))}
           />
         ))}
       </div>
@@ -89,6 +91,8 @@ const PropertyTypeOptions = ({
           type="button"
           className={`text-center ${isMobile ? "w-full" : "flex-1"} bg-red-500 hover:bg-red-600 text-white lg:py-4 py-3 rounded-lg font-medium transition duration-200`}
           onClick={onNext}
+          onMouseEnter={handlePrefetch}
+          onFocus={handlePrefetch}
         >
           {isMobile ? "Next" : "Start Posting Your Free Listing"}
         </button>

@@ -1,4 +1,4 @@
-import { PropertyListingType, PropertyType } from "@/common/enums";
+import { PropertyCategory, PropertyListingType } from "@/common/enums";
 
 import { AdditionalInfo } from "./AdditionalInfo";
 import { FlatmatesDetails } from "./FlatmatesDetails";
@@ -11,7 +11,7 @@ import { ResaleDetails } from "./ResaleDetails";
 export interface ListPropertyState {
   propertyID: string;
   imagesS3Url: Record<string, string>;
-  propertyType: PropertyType;
+  propertyCategory: PropertyCategory;
   listingType: PropertyListingType;
   rentForm: {
     isValid: boolean;

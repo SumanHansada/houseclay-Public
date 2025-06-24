@@ -10,7 +10,7 @@ export enum PropertyListingType {
   CALL = "CALL",
 }
 
-export enum PropertyType {
+export enum PropertyCategory {
   RENT = "RENT",
   RESALE = "RESALE",
   FLATMATES = "FLATMATES",

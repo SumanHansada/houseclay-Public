@@ -47,6 +47,14 @@ const HomeSearchBar: React.FC = () => {
     }
   };
 
+  const handlePrefetch = () => {
+    if (location && location.latitude && location.longitude) {
+      router.prefetch(
+        `/property-search?lat=${location.latitude}&lon=${location.longitude}`,
+      );
+    }
+  };
+
   return (
     <div
       ref={containerRef}
@@ -82,6 +90,7 @@ const HomeSearchBar: React.FC = () => {
                 name: value,
               };
             });
+            handlePrefetch();
           }}
           onLocationSelect={(value) => {
             console.log(value);
@@ -111,7 +120,6 @@ const HomeSearchBar: React.FC = () => {
               };
             });
           }}
-          onBlur={() => {}}
           containerClassName="w-full relative"
           labelClassName="text-sm font-medium text-gray-900 mb-1"
           inputClassName="w-full p-3"
@@ -131,6 +139,8 @@ const HomeSearchBar: React.FC = () => {
       <button
         className="text-white flex items-center justify-center rounded-full max-md:hidden"
         onClick={handleSearch}
+        onMouseEnter={handlePrefetch}
+        onFocus={handlePrefetch}
       >
         <Search height={50} width={50} />
       </button>

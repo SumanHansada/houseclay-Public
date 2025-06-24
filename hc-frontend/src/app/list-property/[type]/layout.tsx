@@ -3,15 +3,15 @@
 import { Form, Formik, FormikProvider } from "formik";
 import { X } from "lucide-react";
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import ListPropertySuccessSvg from "public/icons/list-property-success.svg";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
   ListPropertyFormStep,
   ListPropertyRouteStep,
-  PropertyType,
+  PropertyCategory,
 } from "@/common/enums";
 import { extractS3KeyFromUrl } from "@/common/utils";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
@@ -30,10 +30,14 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
-import { setFileURLMap, setPropertyID } from "@/store/listPropertySlice";
+import {
+  clearAllFormData,
+  setFileURLMap,
+  setPropertyID,
+} from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
-import DesktopStepper from "../components/DesktopStepper";
+import ListPropertyStepper from "../components/ListPropertyStepper";
 
 const ListPropertySuccess = ListPropertySuccessSvg as React.FC<
   React.SVGProps<SVGSVGElement>
@@ -48,19 +52,65 @@ export default function ListPropertyTypeLayout({
 }) {
   const [getPresignedUrls] = usePresignedUrlsMutation();
   const params = useParams();
+  const pathname = usePathname();
   const dispatch = useDispatch();
   const uploadFiles = useS3Uploader();
-  const type = params?.type as string; // Optional: add type assertion
+  const type = params?.type as string;
   const router = useRouter();
   const { openDialog, isDialogOpen, closeDialog } = useDialog();
   const { isMobile } = useDeviceContext();
 
-  const [currentStep, setCurrentStep] = useState<ListPropertyFormStep>(
-    ListPropertyFormStep.PROPERTY_DETAILS,
-  );
-  const [completedSteps, setCompletedSteps] = useState<
-    Set<ListPropertyFormStep>
-  >(new Set());
+  // Function to derive current step from URL path
+  const getCurrentStepFromPath = (): ListPropertyFormStep => {
+    const pathSegments = pathname.split("/");
+    const lastSegment = pathSegments[pathSegments.length - 1];
+
+    switch (lastSegment) {
+      case ListPropertyRouteStep.PROPERTY_DETAILS:
+        return ListPropertyFormStep.PROPERTY_DETAILS;
+      case ListPropertyRouteStep.LOCALITY_DETAILS:
+        return ListPropertyFormStep.LOCALITY_DETAILS;
+      case ListPropertyRouteStep.RENTAL_DETAILS:
+        return ListPropertyFormStep.RENTAL_DETAILS;
+      case ListPropertyRouteStep.RESALE_DETAILS:
+        return ListPropertyFormStep.RESALE_DETAILS;
+      case ListPropertyRouteStep.GALLERY:
+        return ListPropertyFormStep.GALLERY;
+      case ListPropertyRouteStep.ADDITIONAL_INFO:
+        return ListPropertyFormStep.ADDITIONAL_INFO;
+      default:
+        return ListPropertyFormStep.PROPERTY_DETAILS;
+    }
+  };
+
+  // Function to get completed steps based on current step
+  const getCompletedSteps = (): Set<ListPropertyFormStep> => {
+    const currentStep = getCurrentStepFromPath();
+    const completedSteps = new Set<ListPropertyFormStep>();
+
+    const allSteps = [
+      ListPropertyFormStep.PROPERTY_DETAILS,
+      ListPropertyFormStep.LOCALITY_DETAILS,
+      type === "resale"
+        ? ListPropertyFormStep.RESALE_DETAILS
+        : ListPropertyFormStep.RENTAL_DETAILS,
+      ListPropertyFormStep.GALLERY,
+      ListPropertyFormStep.ADDITIONAL_INFO,
+    ];
+
+    const currentIndex = allSteps.indexOf(currentStep);
+
+    // Mark all steps before current as completed
+    for (let i = 0; i < currentIndex; i++) {
+      completedSteps.add(allSteps[i]);
+    }
+
+    return completedSteps;
+  };
+
+  const currentStep = getCurrentStepFromPath();
+  const completedSteps = getCompletedSteps();
+
   const formKey = `${type}Form` as "rentForm" | "resaleForm" | "flatmatesForm";
   const [addRentProperty] = usePropertyAddRentMutation();
   const [addResaleProperty] = usePropertyAddResaleMutation();
@@ -90,11 +140,6 @@ export default function ListPropertyTypeLayout({
       dispatch(setHideStickyNavBar(false));
     }
   }, [dispatch, isMobile]);
-
-  // Update the markStepAsCompleted function to manage step completion state
-  const markStepAsCompleted = (step: ListPropertyFormStep) => {
-    setCompletedSteps((prev) => new Set(prev).add(step));
-  };
 
   const setRoute = (stepSlug: string) => {
     const route = `/list-property/${type}/${stepSlug}`;
@@ -188,43 +233,32 @@ export default function ListPropertyTypeLayout({
 
     const currentStepConfig = stepMap[currentStep];
     if (currentStepConfig) {
-      setCompletedSteps((prev) => {
-        const updatedSteps = new Set(prev);
-        updatedSteps.delete(currentStepConfig.prevStep);
-        return updatedSteps;
-      });
-      setCurrentStep(currentStepConfig.prevStep);
+      // No need to manage completedSteps state since it's derived from route
       setRoute(currentStepConfig.route);
     }
   };
 
   const handleSaveAndNext = async () => {
-    markStepAsCompleted(currentStep);
     if (currentStep === ListPropertyFormStep.PROPERTY_DETAILS) {
-      setCurrentStep(ListPropertyFormStep.LOCALITY_DETAILS);
       setRoute(ListPropertyRouteStep.LOCALITY_DETAILS);
     } else if (currentStep === ListPropertyFormStep.LOCALITY_DETAILS) {
       if (type === "resale") {
-        setCurrentStep(ListPropertyFormStep.RESALE_DETAILS);
         setRoute(ListPropertyRouteStep.RESALE_DETAILS);
       } else {
-        setCurrentStep(ListPropertyFormStep.RENTAL_DETAILS);
         setRoute(ListPropertyRouteStep.RENTAL_DETAILS);
       }
     } else if (
       currentStep === ListPropertyFormStep.RENTAL_DETAILS ||
       currentStep === ListPropertyFormStep.RESALE_DETAILS
     ) {
-      setCurrentStep(ListPropertyFormStep.GALLERY);
       setRoute(ListPropertyRouteStep.GALLERY);
     } else if (currentStep === ListPropertyFormStep.GALLERY) {
       // Make API call to get presigned-urls
       await getPresignedPhotoUrls();
-      setCurrentStep(ListPropertyFormStep.ADDITIONAL_INFO);
       setRoute(ListPropertyRouteStep.ADDITIONAL_INFO);
     } else if (currentStep === ListPropertyFormStep.ADDITIONAL_INFO) {
       uploadFilesToS3();
-      setCurrentStep(ListPropertyFormStep.DONE);
+      // Don't navigate to a route for DONE step, just handle the API call
       // Make API call to post property
       await handlePostProperty();
     }
@@ -311,7 +345,6 @@ export default function ListPropertyTypeLayout({
       openDialog("list-property-success-dialog");
     } catch (error) {
       // openDialog("list-property-success-dialog");
-      setCurrentStep(ListPropertyFormStep.ADDITIONAL_INFO);
       setRoute(ListPropertyRouteStep.ADDITIONAL_INFO);
       console.error("Error posting property:", error);
     }
@@ -319,89 +352,26 @@ export default function ListPropertyTypeLayout({
 
   const renderStepper = () => {
     return (
-      <DesktopStepper
+      <ListPropertyStepper
         currentStep={currentStep}
         completedSteps={completedSteps}
-        type={type.toUpperCase() as PropertyType}
+        propertyCategory={type.toUpperCase() as PropertyCategory}
+        isMobile={isMobile}
+        onGoToHome={goToHomePage}
       />
     );
   };
 
   const goToHomePage = () => {
+    // Clear form data when user navigates away
+    dispatch(clearAllFormData());
     router.push("/");
-  };
-
-  const getStepsForPropertyType = (type: string): string[] => {
-    const baseSteps = [
-      ListPropertyFormStep.PROPERTY_DETAILS,
-      ListPropertyFormStep.LOCALITY_DETAILS,
-      ListPropertyFormStep.GALLERY,
-      ListPropertyFormStep.ADDITIONAL_INFO,
-      ListPropertyFormStep.DONE,
-    ];
-
-    if (
-      type.toUpperCase() === PropertyType.RENT ||
-      type.toUpperCase() === PropertyType.FLATMATES
-    ) {
-      return [
-        ...baseSteps.slice(0, 2),
-        ListPropertyFormStep.RENTAL_DETAILS,
-        ...baseSteps.slice(2),
-      ];
-    } else if (type.toUpperCase() === PropertyType.RESALE) {
-      return [
-        ...baseSteps.slice(0, 2),
-        ListPropertyFormStep.RESALE_DETAILS,
-        ...baseSteps.slice(2),
-      ];
-    }
-    return baseSteps;
-  };
-
-  const calculateProgressPercent = (type: string, currentStep: string) => {
-    const steps = getStepsForPropertyType(type);
-    const currentIndex = steps.findIndex((step) => step === currentStep);
-    return ((currentIndex + 1) / steps.length) * 100;
-  };
-
-  const renderStepperMobile = () => {
-    const steps = getStepsForPropertyType(type);
-    const currentIndex = steps.findIndex((step) => step === currentStep);
-
-    // Fallback for enum value vs string
-    const displayStep =
-      typeof currentStep === "string"
-        ? currentStep
-        : currentStep === ListPropertyFormStep.DONE
-          ? steps[steps.length - 1]
-          : steps[currentIndex] || steps[0];
-
-    return (
-      <>
-        <div className="flex justify-center items-center align-middle w-full md:hidden">
-          <h1 className="text-lg my-auto text-black ml-auto">{displayStep}</h1>
-          <button className="border border-gray-200 rounded-full md:border-none ml-auto">
-            <X onClick={goToHomePage} size={25} />
-          </button>
-        </div>
-      </>
-    );
   };
 
   return (
     <>
-      <section
-        className={`py-2 px-4 fixed top-0 left-0 right-0 z-50 h-[55px] border-gray-200 bg-white flex flex-col justify-center items-center w-full md:hidden`}
-      >
-        {renderStepperMobile()}
-      </section>
-      <div className="h-[2px] fixed w-full bg-gray-200 mt-auto z-50">
-        <div
-          className="h-[2px] bg-red-500 absolute top-0 left-0 transition-all duration-300"
-          style={{ width: `${calculateProgressPercent(type, currentStep)}%` }}
-        />
-      </div>
+      {/* Mobile stepper is now handled inside ListPropertyStepper */}
+      {isMobile && renderStepper()}
       <div className="flex w-full h-full top-14">
         {/* Background SVG behind left section only */}
         <div className="left-0 top-14 bottom-0 z-40 w-[33.33%] fixed  bg-gray-50 max-md:hidden">
@@ -414,7 +384,7 @@ export default function ListPropertyTypeLayout({
           />
           {/* Left side - Steps navigation */}
           <div className="absolute right-8 top-12 flex flex-col z-50">
-            {renderStepper()}
+            {!isMobile && renderStepper()}
           </div>
         </div>
         <div className="container right-0 ml-[33.33%] max-md:ml-auto pt-4 md:pt-12 pb-20 mx-auto xl:px-28 lg:px-14 md:px-8 px-6">
