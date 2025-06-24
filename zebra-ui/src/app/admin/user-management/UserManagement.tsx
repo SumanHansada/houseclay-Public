@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
-import { SearchFilterBar } from "@/components/SearchFilterBar";
 import { TablePagination } from "@/components/TablePagination";
+import { TitleAndSearchBar } from "@/components/TitleAndSearchBar";
 import { User } from "@/interfaces/User";
 import { useGetUsersQuery } from "@/store/apiSlice";
 
@@ -101,7 +101,7 @@ export const UsersManagement = () => {
       <div className="flex flex-col flex-1 h-full">
         {/* Sticky top filter bar */}
         <div className="sticky top-0 z-10 border border-b-gray-200 shadow-sm">
-          <SearchFilterBar
+          <TitleAndSearchBar
             searchValue={searchValue}
             onSearchChange={(v) => {
               setSearchValue(v);
@@ -111,8 +111,8 @@ export const UsersManagement = () => {
         </div>
 
         {/* Table area */}
-        <div className="flex flex-1 bg-gray-100 py-6 px-16">
-          <div className="flex flex-col flex-1 bg-white shadow-sm rounded-lg p-4">
+        <div className="flex flex-1 bg-gray-100 py-8 px-16">
+          <div className="flex flex-col flex-1 bg-white shadow-sm rounded-xl p-6">
             <DataTable
               columns={columns}
               data={filteredUsers}

@@ -1,16 +1,15 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
+import { useParams, useRouter } from "next/navigation";
 
 import { Column } from "@/components/DataTable";
-import { UserPropertyInfo } from "@/interfaces/User";
+import { PropertyInfo } from "@/interfaces/Property";
 import { dummyReportProperties } from "@/mock/userDetailsDummy";
-import { RootState } from "@/store/store";
+import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 
 import { PropertiesTableView } from "../../components/PropertiesTableView";
 import { createCommonColumns } from "../propertyColumns";
 
-export interface PropertyRow extends UserPropertyInfo {
+export interface PropertyRow extends PropertyInfo {
   _serial: number;
   reportType: string;
   reportTime: string;
@@ -31,24 +30,19 @@ const extraCols: Column<PropertyRow>[] = [
 ];
 
 const ReportedPropertiesPage: React.FC = () => {
-  const { currentUser } = useSelector((state: RootState) => state.user);
   const router = useRouter();
-  if (!currentUser) {
-    return (
-      <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-        <span className="text-gray-500">Loading user details…</span>
-      </div>
-    );
-  }
-  const { reportProperties } = currentUser;
-  console.log(reportProperties);
+  const { userPhoneNo } = useParams() as { userPhoneNo: string };
+  const { data } = useGetUserByPhoneNoQuery({ phoneNo: userPhoneNo });
+  console.log(data!.user.reportProperties);
 
-  const viewPropertyDetails = (propertyID: string) => {
-    router.push(`/admin/property-details/${propertyID}`);
+  // const { reportProperties } = data!.user;
+  const reportProperties = dummyReportProperties;
+
+  const viewPropertyDetails = (type: string, propertyID: string) => {
+    router.push(`/admin/property-details/${type}/${propertyID}`);
   };
 
-  const rows: PropertyRow[] = dummyReportProperties.map(
-    // const rows: PropertyRow[] = reportProperties.map(
+  const rows: PropertyRow[] = reportProperties.map(
     (reportPropertyInfo, index) => ({
       _serial: index + 1,
       ...reportPropertyInfo.userProperty,

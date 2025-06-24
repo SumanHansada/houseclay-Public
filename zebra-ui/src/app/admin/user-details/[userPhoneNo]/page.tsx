@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { use } from "react";
 
+import { UserDetailsTabEnum } from "@/common/enums";
+
 export const dynamicParams = true;
 
 interface TParams {
@@ -9,5 +11,5 @@ interface TParams {
 
 export default function UserDetailsRedirectPage({ params }: TParams) {
   const { userPhoneNo } = use(params);
-  redirect(`/admin/user-details/${userPhoneNo}/profile`);
+  redirect(`/admin/user-details/${userPhoneNo}/${UserDetailsTabEnum.PROFILE}`);
 }

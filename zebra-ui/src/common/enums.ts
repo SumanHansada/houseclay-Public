@@ -28,3 +28,29 @@ export enum PropertyListingType {
   DIY = "DIY",
   CALL = "CALL",
 }
+
+export enum UserDetailsTabEnum {
+  PROFILE = "profile",
+  LISTED = "listed-properties",
+  SHORTLISTED = "shortlisted-properties",
+  CONNECT = "connect-history",
+  PAYMENT = "payment-history",
+  CONTACTED = "contacted-properties",
+  VIEWED = "viewed-properties",
+  REPORT = "reported-properties",
+}
+
+export enum VerifyPropertyStatusEnum {
+  VERIFY = "pending",
+  REVERIFY = "report",
+}
+
+export enum PropertyDetailsTabEnum {
+  OVERVIEW = "overview",
+  RENT_DETAILS = "rent-details",
+  RESALE_DETAILS = "resale-details",
+  FLATMATE_DETAILS = "flatmate-details",
+  CONTACTED = "contacted",
+  SHORTLISTED = "shortlisted",
+  VIEWED = "viewed",
+}

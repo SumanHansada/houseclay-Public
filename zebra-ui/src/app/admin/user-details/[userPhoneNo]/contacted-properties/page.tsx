@@ -1,40 +1,36 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
+import { useParams, useRouter } from "next/navigation";
 
 import { Column } from "@/components/DataTable";
-import { UserPropertyInfo } from "@/interfaces/User";
+import { PropertyInfo } from "@/interfaces/Property";
 import { dummyProperties } from "@/mock/userDetailsDummy";
-import { RootState } from "@/store/store";
+import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 
 import { PropertiesTableView } from "../../components/PropertiesTableView";
 import { createCommonColumns } from "../propertyColumns";
 
-interface PropertyRow extends UserPropertyInfo {
+interface PropertyRow extends PropertyInfo {
   _serial: number;
 }
 const ContactedPropertiesPage: React.FC = () => {
-  const { currentUser } = useSelector((state: RootState) => state.user);
+  const { userPhoneNo } = useParams() as { userPhoneNo: string };
   const router = useRouter();
-  if (!currentUser) {
-    return (
-      <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-        <span className="text-gray-500">Loading user details…</span>
-      </div>
-    );
-  }
-  const { contactedProperties } = currentUser;
-  console.log(contactedProperties);
+  const { data } = useGetUserByPhoneNoQuery({ phoneNo: userPhoneNo });
+  console.log(data!.user.contactedProperties);
 
-  const viewPropertyDetails = (propertyID: string) => {
-    router.push(`/admin/property-details/${propertyID}`);
+  // const { contactedProperties } = data!.user;
+  const contactedProperties = dummyProperties;
+
+  const viewPropertyDetails = (type: string, propertyID: string) => {
+    router.push(`/admin/property-details/${type}/${propertyID}`);
   };
 
-  const rows: PropertyRow[] = dummyProperties.map((propertyInfo, index) => ({
-    // const rows: PropertyRow[] = contactedProperties.map((propertyInfo, index) => ({
-    ...propertyInfo,
-    _serial: index + 1,
-  }));
+  const rows: PropertyRow[] = contactedProperties.map(
+    (propertyInfo, index) => ({
+      ...propertyInfo,
+      _serial: index + 1,
+    }),
+  );
 
   const columns: Column<PropertyRow>[] =
     createCommonColumns(viewPropertyDetails);

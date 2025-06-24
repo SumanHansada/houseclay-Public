@@ -1,7 +1,35 @@
 export enum PropertyStatusEnum {
   PENDING = "PENDING_VERIFICATION",
   VERIFIED = "VERIFIED",
-  REPORTED = "REPORT",
+  REPORT = "REPORT",
+}
+
+export interface PropertyInfo {
+  propertyID: string;
+  title: string;
+  type: string;
+  config: string;
+  location: string;
+  price: string;
+  createdAt: string;
+  availableFrom: string;
+  lastModified: string | null;
+  status: PropertyStatusEnum;
+}
+
+export interface GetAllPropertiesResponse {
+  content: PropertyInfo[];
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
+  };
+  totalPages: number;
+  totalElements: number;
+  last: boolean;
+  first: boolean;
+  numberOfElements: number;
+  size: number;
+  number: number;
 }
 
 interface PropertyBase {

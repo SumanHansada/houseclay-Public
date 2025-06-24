@@ -1,5 +1,3 @@
-import { ChevronsRight, Eye } from "lucide-react";
-
 interface TableCellActionsProps {
   viewLeadDetails: () => void;
   viewUserProfile: () => void;
@@ -10,27 +8,18 @@ export const TableCellActions: React.FC<TableCellActionsProps> = ({
   viewUserProfile,
 }) => {
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-3 w-fit">
       <button
         onClick={viewUserProfile}
-        className="relative group flex items-center cursor-pointer"
+        className="group flex items-center cursor-pointer bg-teal-600 rounded-lg px-[8px] py-[4px] gap-2 text-white"
       >
-        <Eye className="text-gray-600" />
-
-        <div className="absolute bottom-full left-1/2 mb-px hidden w-max -translate-x-1/2 rounded-xl bg-gray-300 px-3 py-2 text-sm group-hover:block">
-          View user profile
-        </div>
+        View User
       </button>
       <button
         onClick={viewLeadDetails}
-        className="relative group flex items-center cursor-pointer"
+        className="flex items-center cursor-pointer bg-red-600 rounded-lg px-[8px] py-[4px] gap-2 text-white"
       >
-        <ChevronsRight className="text-gray-600" />
-        {/* <CircleArrowRight /> */}
-
-        <div className="absolute bottom-full left-1/2 mb-px hidden w-max -translate-x-1/2 rounded-xl bg-gray-300 px-3 py-2 text-sm group-hover:block">
-          View lead details
-        </div>
+        View Lead
       </button>
     </div>
   );

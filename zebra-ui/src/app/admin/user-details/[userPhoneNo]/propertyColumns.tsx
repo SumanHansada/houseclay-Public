@@ -1,14 +1,14 @@
 import { Column } from "@/components/DataTable";
-import { UserPropertyInfo } from "@/interfaces/User";
+import { PropertyInfo } from "@/interfaces/Property";
 
 import { RenderPropertyStatus } from "../components/RenderPropertyStatus";
 import { TableCellActions } from "../components/TableCellActions";
 
-type ViewDetailsFunction = (propertyID: string) => void;
+type ViewDetailsFunction = (propertyID: string, type: string) => void;
 
 export const createCommonColumns = (
   viewDetails: ViewDetailsFunction,
-): Column<UserPropertyInfo & { _serial: number }>[] => [
+): Column<PropertyInfo & { _serial: number }>[] => [
   {
     key: "serial",
     label: "Sr. No.",
@@ -31,6 +31,19 @@ export const createCommonColumns = (
     accessor: "config",
   },
   {
+    key: "createdAt",
+    label: "Last Modified",
+    render: (p) =>
+      p.lastModified
+        ? new Date(p.lastModified).toLocaleString()
+        : new Date(p.createdAt).toLocaleString(),
+  },
+  {
+    key: "availableFrom",
+    label: "Available From",
+    render: (p) => new Date(p.availableFrom).toLocaleString(),
+  },
+  {
     key: "status",
     label: "Status",
     render: (p) => <RenderPropertyStatus status={p.status} />,
@@ -39,7 +52,7 @@ export const createCommonColumns = (
     key: "action",
     label: "Action",
     render: (p) => (
-      <TableCellActions viewDetails={() => viewDetails(p.propertyID)} />
+      <TableCellActions viewDetails={() => viewDetails(p.type, p.propertyID)} />
     ),
   },
 ];
