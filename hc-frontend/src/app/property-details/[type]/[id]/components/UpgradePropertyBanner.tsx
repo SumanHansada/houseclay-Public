@@ -1,7 +1,11 @@
 import { BadgeCheck, TrendingUp, Users } from "lucide-react";
 import Image from "next/image";
 
-export default function UpgradePropertyBanner() {
+export default function UpgradePropertyBanner({
+  onUpgrade,
+}: {
+  onUpgrade: () => void;
+}) {
   return (
     <div
       className="relative p-6 mb-6 max-md:p-3 max-md:mb-3 rounded-xl border bg-white overflow-hidden flex flex-col gap-4"
@@ -57,7 +61,10 @@ export default function UpgradePropertyBanner() {
             <span className="">Hassle-Free Management</span>
           </div>
         </div>
-        <button className="mt-2 px-8 py-3 border border-red-500 text-red-500 rounded-xl w-full text-base max-md:text-sm hover:bg-red-50 transition-colors">
+        <button
+          className="mt-2 px-8 py-3 border border-red-500 text-red-500 rounded-xl w-full text-base max-md:text-sm hover:bg-red-50 transition-colors"
+          onClick={onUpgrade}
+        >
           Upgrade Now
         </button>
       </div>

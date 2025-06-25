@@ -11,6 +11,7 @@ import Button from "@/components/common/Button";
 import SelectDropdown from "@/components/common/SelectDropdown";
 import Footer from "@/components/Footer";
 import Properties from "@/components/Properties";
+import SearchFilterDialog from "@/dialogs/search-filters";
 import { Property } from "@/interfaces/Property";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -20,8 +21,6 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
-
-import SearchFilterDialog from "./components/search-filters";
 
 export default function PropertySearchPage() {
   const searchParams = useSearchParams();

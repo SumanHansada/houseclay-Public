@@ -1,7 +1,6 @@
 "use client";
 
 import { format } from "date-fns";
-import { motion } from "framer-motion";
 import {
   BanknoteArrowUp,
   Bath,
@@ -54,6 +53,7 @@ import { useEffect, useState } from "react";
 import React from "react";
 import { useDispatch } from "react-redux";
 
+import { LeadCategory } from "@/common/enums";
 import {
   formatINRCurrency,
   pascalCase,
@@ -61,6 +61,7 @@ import {
   toBase64,
 } from "@/common/utils";
 import Carousel2D from "@/components/Carousel2D";
+import FullscreenPhotoViewer from "@/components/common/FullscreenPhotoViewer";
 import ImageWithLoader from "@/components/common/ImageWithLoader";
 import {
   NonTab,
@@ -70,8 +71,13 @@ import {
   Tabs,
 } from "@/components/common/Tabs";
 import Footer from "@/components/Footer";
+import UpgradePropertyDialog from "@/dialogs/upgrade-property";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { useGetPropertyByIdQuery } from "@/store/apiSlice";
+import { useDialog } from "@/providers/DialogContextProvider";
+import {
+  useGenerateLeadMutation,
+  useGetPropertyByIdQuery,
+} from "@/store/apiSlice";
 import { setHideHeader } from "@/store/appSlice";
 import { setHideFooter } from "@/store/appSlice";
 import { setHideStickyNavBar } from "@/store/appSlice";
@@ -168,18 +174,11 @@ export function PropertyDetailsClient({
     });
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+  const [generateLead, { isLoading: _isGeneratingLead }] =
+    useGenerateLeadMutation();
 
-  useEffect(() => {
-    if (selectedImage) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [selectedImage]);
+  const { isDialogOpen, openDialog, closeDialog } = useDialog();
 
   const handleEdit = async () => {
     router.push(`/list-property/${type}/`);
@@ -197,12 +196,30 @@ export function PropertyDetailsClient({
     }
   }, [dispatch, isMobile]);
 
-  const handleImageClick = (imgUrl: string) => {
+  const handleImageClick = (imgUrl: string, index: number) => {
     setSelectedImage(imgUrl);
+    setCurrentImageIndex(index);
   };
 
   const handleCloseFullscreen = () => {
     setSelectedImage(null);
+    setCurrentImageIndex(0);
+  };
+
+  const handleNavigateImage = (index: number) => {
+    setCurrentImageIndex(index);
+  };
+
+  const handleUpgrade = async () => {
+    try {
+      const response = await generateLead({
+        leadCategory: LeadCategory.UPGRADE_PROPERTY,
+      });
+      console.log(response);
+      openDialog("upgrade-property-dialog");
+    } catch (error) {
+      console.error("Error generating lead:", error);
+    }
   };
 
   return (
@@ -257,7 +274,7 @@ export function PropertyDetailsClient({
                 </TabHeader>
                 <TabContent value="details">
                   <section className="py-3 md:hidden">
-                    <UpgradePropertyBanner />
+                    <UpgradePropertyBanner onUpgrade={handleUpgrade} />
                     <PostedAndRentDetails property={property} />
                   </section>
                   {/* Description Section */}
@@ -785,7 +802,7 @@ export function PropertyDetailsClient({
                               <div
                                 key={idx}
                                 className="relative w-full aspect-[4/3] rounded-lg overflow-hidden border cursor-zoom-in"
-                                onClick={() => handleImageClick(imgUrl)}
+                                onClick={() => handleImageClick(imgUrl, idx)}
                               >
                                 <ImageWithLoader
                                   src={imgUrl}
@@ -852,7 +869,7 @@ export function PropertyDetailsClient({
             <div className="pt-4">
               <PostedAndRentDetails property={property} />
             </div>
-            <UpgradePropertyBanner />
+            <UpgradePropertyBanner onUpgrade={handleUpgrade} />
           </section>
         </section>
         <section className="md:hidden">
@@ -878,62 +895,25 @@ export function PropertyDetailsClient({
         </section>
       </section>
       <Footer />
-
-      {/* Fullscreen Image View */}
-      {selectedImage && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
-          onClick={handleCloseFullscreen}
-        >
-          <div className="relative w-full h-full flex items-center justify-center">
-            <motion.button
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ delay: 0.1 }}
-              className="absolute top-4 right-4 text-white p-2 rounded-full hover:bg-white/10 transition-colors duration-200"
-              onClick={handleCloseFullscreen}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </motion.button>
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="relative w-full h-full max-w-7xl max-h-[90vh] p-4"
-            >
-              <div className="relative w-full h-full rounded-xl overflow-hidden">
-                <ImageWithLoader
-                  src={selectedImage}
-                  alt="Fullscreen property image"
-                  fill
-                  className="object-contain transition-transform duration-300 ease-in-out"
-                  priority
-                  style={{ transformOrigin: "center" }}
-                />
-              </div>
-            </motion.div>
-          </div>
-        </motion.div>
+      {/* Upgrade Property Dialog */}
+      {isDialogOpen("upgrade-property-dialog") && (
+        <UpgradePropertyDialog
+          id="upgrade-property-dialog"
+          onClose={() => {
+            closeDialog("upgrade-property-dialog");
+            dispatch(setHideStickyNavBar(false));
+          }}
+        />
       )}
+
+      {/* Fullscreen Photo Viewer */}
+      <FullscreenPhotoViewer
+        images={property?.images || []}
+        currentIndex={currentImageIndex}
+        isOpen={!!selectedImage}
+        onClose={handleCloseFullscreen}
+        onNavigate={handleNavigateImage}
+      />
     </>
   );
 }

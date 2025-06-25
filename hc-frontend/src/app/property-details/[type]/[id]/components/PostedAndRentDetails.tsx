@@ -7,12 +7,10 @@ import { PropertyUpdate } from "@/interfaces/PropertyUpdate";
 export default function PostedAndRentDetails(props: any) {
   const { property } = props;
   if (!property) return null;
-  console.log("property", property);
   const lastPropertyUpdate: PropertyUpdate | null =
     property && property.propertyUpdates.length > 0
       ? property.propertyUpdates[property.propertyUpdates.length - 1]
       : null;
-  console.log(lastPropertyUpdate);
   return (
     <section className="grid grid-flow-row 2xl:grid-cols-2 max-md:grid-cols-2 gap-2 w-full py-6 max-md:py-3">
       <div className="flex-col flex-1 px-4 py-2 border rounded-xl">

@@ -250,6 +250,15 @@ export const apiSlice = createApi({
         ];
       },
     }),
+    generateLead: builder.mutation<
+      { message: string },
+      { leadCategory: string }
+    >({
+      query: ({ leadCategory }) => ({
+        url: `/user/generate-lead?leadCategory=${leadCategory}`,
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -268,4 +277,5 @@ export const {
   useLazyGetPropertyByIdQuery,
   useGetPropertiesByLocationQuery,
   useLazyGetPropertiesByLocationQuery,
+  useGenerateLeadMutation,
 } = apiSlice;
