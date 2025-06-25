@@ -31,7 +31,7 @@ import { OwnerDetails } from "@/app/admin/property-details/components/OwnerDetai
 import { VerificationSection } from "@/app/admin/property-details/components/VerificationSection";
 import { dummyUserDataList } from "@/mock/userDetailsDummy";
 
-export default function VerifyPropertyDetailsPage() {
+export default function ReverifyPropertyDetailsPage() {
   const { type } = useParams() as { type: "rent" | "resale" | "flatmate" };
   const router = useRouter();
   const dispatch = useDispatch();
@@ -212,7 +212,7 @@ export default function VerifyPropertyDetailsPage() {
               <div className="w-1/3 bg-white rounded-xl p-6 flex flex-col justify-between shadow-sm">
                 <div className="flex flex-col gap-6">
                   <h1 className="text-3xl font-bold border-b pb-4">
-                    Verification Panel
+                    Reverification Panel
                   </h1>
                   <VerificationSection
                     title="Property Details"
@@ -247,7 +247,7 @@ export default function VerifyPropertyDetailsPage() {
                   disabled={!isFormFullyVerified}
                   className="w-full bg-green-500 hover:bg-green-600 text-white rounded-xl py-3 px-4 text-xl font-bold transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
-                  Verify Property
+                  Re-Verify Property
                 </button>
               </div>
             </Form>

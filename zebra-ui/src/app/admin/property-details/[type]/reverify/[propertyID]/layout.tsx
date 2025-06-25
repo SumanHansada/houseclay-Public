@@ -1,11 +1,11 @@
 "use client";
 import { useParams, usePathname, useRouter } from "next/navigation";
 
-import { VerifyPropertyTabEnum } from "@/common/enums";
+import { ReverifyPropertyTabEnum } from "@/common/enums";
 import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
 // import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 
-export default function VerifyPropertyLayout({
+export default function ReverifyPropertyLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -23,7 +23,9 @@ export default function VerifyPropertyLayout({
   //   );
 
   const handleTabChange = (tab: string) => {
-    router.push(`/admin/property-details/${type}/verify/${propertyID}/${tab}`);
+    router.push(
+      `/admin/property-details/${type}/reverify/${propertyID}/${tab}`,
+    );
   };
 
   //   if (isLoading || !data) {
@@ -43,26 +45,26 @@ export default function VerifyPropertyLayout({
   //   }
 
   const validTabValues = Object.values(
-    VerifyPropertyTabEnum,
+    ReverifyPropertyTabEnum,
   ) as readonly string[];
   const isValidTab = (
     currentTab: string,
-  ): currentTab is VerifyPropertyTabEnum => {
+  ): currentTab is ReverifyPropertyTabEnum => {
     return validTabValues.includes(currentTab);
   };
 
   const pathSegments = pathname.split("/");
   const currentTabFromUrl = pathSegments[pathSegments.length - 1];
 
-  const activeTab: VerifyPropertyTabEnum = isValidTab(currentTabFromUrl)
+  const activeTab: ReverifyPropertyTabEnum = isValidTab(currentTabFromUrl)
     ? currentTabFromUrl
-    : VerifyPropertyTabEnum.DETAILS;
+    : ReverifyPropertyTabEnum.DETAILS;
 
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">
       <Tabs onTabChange={handleTabChange} defaultActive={activeTab}>
         <TabHeader>
-          <Tab label="Details" value={VerifyPropertyTabEnum.DETAILS} />
+          <Tab label="Details" value={ReverifyPropertyTabEnum.DETAILS} />
         </TabHeader>
       </Tabs>
       <div className="flex-1 overflow-auto">{children}</div>
