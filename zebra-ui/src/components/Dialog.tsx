@@ -2,13 +2,14 @@
 
 import { FocusTrap } from "focus-trap-react";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   DeviceContextProps,
   useDeviceContext,
 } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
+import { setHideStickyNavBar } from "@/store/appSlice";
 import { RootState } from "@/store/store";
 
 interface DialogProps {
@@ -31,15 +32,15 @@ const getDialogStyles = (
   switch (type) {
     case "fullscreen":
       return `fixed inset-0 bg-white flex flex-col ${
-        isMobile ? "" : "rounded-lg"
+        isMobile ? "h-auto" : "rounded-lg max-h-[calc(100svh-4rem)]"
       }`;
     case "bottom-sheet":
       return `fixed ${hideStickyFooter ? "bottom-0" : "bottom-[4rem]"} bg-white rounded-t-xl ${
         isMobile ? "w-full h-auto" : "hidden"
       }`;
     case "card":
-      return `fixed top-1/2 left-[60%] transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg ${
-        isMobile ? "hidden" : "w-1/2 h-auto"
+      return `fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl ${
+        isMobile ? "hidden" : "w-1/2 max-h-[calc(100svh-4rem)] min-w-[700px]"
       }`;
     default:
       return "";
@@ -72,6 +73,7 @@ export const Dialog: React.FC<DialogProps> = ({
   const { isDialogOpen, closeDialog } = useDialog();
   const isOpen = isDialogOpen(id);
   const deviceContext = useDeviceContext();
+  const dispatch = useDispatch();
   const hideStickyFooter = useSelector(
     (state: RootState) => state.app.hideStickyNavBar,
   );
@@ -86,9 +88,22 @@ export const Dialog: React.FC<DialogProps> = ({
   }, [isOpen]);
 
   useEffect(() => {
-    document.body.classList.toggle("overflow-hidden", isOpen);
+    if (deviceContext?.isMobile && type === "fullscreen") {
+      dispatch(setHideStickyNavBar(true));
+    } else if (deviceContext?.isMobile && type === "bottom-sheet") {
+      dispatch(setHideStickyNavBar(true));
+    }
+  }, [deviceContext?.isMobile, type, dispatch]);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add("dialog-open");
+    } else {
+      document.body.classList.remove("dialog-open");
+    }
+
     return () => {
-      document.body.classList.remove("overflow-hidden");
+      document.body.classList.remove("dialog-open");
     };
   }, [isOpen]);
 
@@ -116,9 +131,8 @@ export const Dialog: React.FC<DialogProps> = ({
             isClosing ? exitAnimation : entryAnimation
           }`}
           style={{
-            height: height ? `${height}%` : "auto",
+            height: height ? `${height}%` : undefined,
             width: width ? `${width}%` : undefined,
-            maxHeight: "calc(100svh - 4rem)", // Prevent dialog from exceeding viewport height
           }}
           onClick={(e) => e.stopPropagation()}
         >
@@ -146,15 +160,11 @@ export const DialogHeader: React.FC<{ children: React.ReactNode }> = ({
 export const DialogContent: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <div className="overflow-y-auto overflow-x-hidden flex-grow max-h-[calc(100vh-4rem)] scroll-smooth">
+  <div className="overflow-y-auto overflow-x-hidden flex-grow max-h-svh scroll-smooth">
     {children}
   </div>
 );
 
 export const DialogFooter: React.FC<{ children: React.ReactNode }> = ({
   children,
-}) => (
-  <div className="border-t border-gray-200 py-2 px-4 flex justify-end">
-    {children}
-  </div>
-);
+}) => <div className="border-t border-gray-200 flex">{children}</div>;

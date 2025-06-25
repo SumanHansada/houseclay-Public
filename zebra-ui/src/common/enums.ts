@@ -52,3 +52,10 @@ export enum PropertyDetailsTabEnum {
   SHORTLISTED = "shortlisted",
   VIEWED = "viewed",
 }
+
+export enum VerifyPropertyTabEnum {
+  DETAILS = "details",
+}
+export enum ReverifyPropertyTabEnum {
+  DETAILS = "details",
+}

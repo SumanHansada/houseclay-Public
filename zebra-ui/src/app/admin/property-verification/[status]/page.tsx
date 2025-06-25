@@ -51,7 +51,11 @@ const PropertyVerificationTablePage: React.FC = () => {
 
   // --- EVENT HANDLERS ---
   const viewPropertyDetails = (type: string, propertyID: string) => {
-    router.push(`/admin/property-details/${type}/${propertyID}`);
+    const path =
+      status === "pending"
+        ? `/admin/property-details/${type}/verify/${propertyID}`
+        : `/admin/property-details/${type}/reverify/${propertyID}`;
+    router.push(path);
   };
 
   const handleStatusChange = (newStatus: VerifyPropertyStatusEnum) => {
@@ -120,7 +124,6 @@ const PropertyVerificationTablePage: React.FC = () => {
         </div>
       </div>
 
-      {/* Table area: flex-1 makes it grow to fill available space, pushing pagination to the bottom */}
       {/* overflow-y-auto ensures only the table scrolls if content is too long */}
       <div className="flex-1 px-4 py-2 overflow-y-auto">
         <DataTable

@@ -11,9 +11,7 @@ export default function PropertyDetailsOverviewPage() {
   const { propertyID, type } = useParams();
   const router = useRouter();
   const currentUser = dummyUserDataList[0];
-  const [isBlacklisted, setIsBlacklisted] = useState<boolean>(
-    currentUser.blacklisted,
-  );
+  const [isBlacklisted] = useState<boolean>(currentUser.blacklisted);
   const { name, email, phoneNo, createdAt } = currentUser;
   const currentStatus = isBlacklisted
     ? "The user is blacklisted"
@@ -61,37 +59,13 @@ export default function PropertyDetailsOverviewPage() {
                   />
                 </div>
               ))}
-              {/* <div className="flex justify-end mt-2">
-                <button
-                  type="button"
-                  onClick={handleActivateUser}
-                  className={`text-lg px-3 py-2 rounded-xl font-medium ${
-                    isBlacklisted
-                      ? "bg-green-500 hover:bg-green-600 text-white"
-                      : "bg-gray-400 text-gray-200 cursor-not-allowed"
-                  }`}
-                >
-                  Activate User
-                </button>
-                <button
-                  type="button"
-                  onClick={handleBlacklistUser}
-                  className={`ml-3 text-lg px-3 py-2 rounded-xl font-medium ${
-                    isBlacklisted
-                      ? "bg-gray-400 text-gray-200 cursor-not-allowed"
-                      : "bg-red-500 hover:bg-red-600 text-white"
-                  }`}
-                >
-                  Blacklist User
-                </button>
-              </div> */}
             </form>
           </div>
         </div>
         <div className="bg-white rounded-xl p-6 flex items-center gap-3">
           <h1 className="text-2xl">Verification Status:</h1>
-          {/* <RenderPropertyStatus status={PropertyStatusEnum.PENDING} /> */}
-          <RenderPropertyStatus status={"PENDING"} />
+          <RenderPropertyStatus status={PropertyStatusEnum.PENDING} />
+          {/* <RenderPropertyStatus status={"PENDING"} /> */}
         </div>
         <div className="bg-white rounded-xl p-6 flex items-center gap-3">
           <h1 className="text-2xl">Report History:</h1>
