@@ -2,38 +2,40 @@
 
 import { Form, Formik, FormikProvider } from "formik";
 import { useParams } from "next/navigation";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import {
+  AnyProperty,
+  GetPropertyByIDResponse,
+  PropertyCategory,
+  PropertyDetailsFormValues,
+} from "@/interfaces/Property";
+import { dummyGetRentPropertyDetails } from "@/mock/propertyDetailsDummy";
 // import { useGetPropertyByIDQuery } from "@/store/apiSlice";
 import {
   setPropertyData,
   setPropertyLoading,
-  setPropertyError,
 } from "@/store/propertyDetailsSlice";
-import { transformApiToFormValues } from "@/utils/dataTransformer";
 import { RootState } from "@/store/store";
-import {
-  GetPropertyByIDResponse,
-  PropertyDetailsFormValues,
-} from "@/interfaces/Property";
+import { transformApiToFormValues } from "@/utils/dataTransformer";
 
-// Import your DUMB form components
-import PropertyDetailsForm from "../../../components/PropertyDetailsForm";
-import LocalityDetailsForm from "../../../components/LocalityDetailsForm";
-import { dummyGetRentPropertyDetails } from "@/mock/propertyDetailsDummy";
 import AdditionalInfoForm from "../../../components/AdditionalInfoForm";
 import GalleryForm from "../../../components/GalleryForm";
+import LocalityDetailsForm from "../../../components/LocalityDetailsForm";
+// Import your DUMB form components
+import PropertyDetailsForm from "../../../components/PropertyDetailsForm";
 import RentalDetailsForm from "../../../components/RentalDetailsForm";
 import ResaleDetailsForm from "../../../components/ResaleDetailsForm";
 
 // import LocalityDetailsForm from "@/components/forms/LocalityDetailsForm"; // etc.
 
 export default function DetailsPage() {
-  const { propertyId, type } = useParams() as {
-    propertyId: string;
+  const { propertyID, type } = useParams() as {
+    propertyID: string;
     type: "rent" | "resale" | "flatmate";
   };
+  console.log(propertyID);
   const dispatch = useDispatch();
   const [editMode, setEditMode] = useState(false);
 
@@ -50,8 +52,16 @@ export default function DetailsPage() {
     dispatch(setPropertyLoading());
 
     const timer = setTimeout(() => {
-      const apiResponse: GetPropertyByIDResponse =
-        dummyGetRentPropertyDetails as any;
+      const category = dummyGetRentPropertyDetails.propertyDetails
+        .propertyCategory as PropertyCategory;
+
+      const apiResponse: GetPropertyByIDResponse = {
+        ...dummyGetRentPropertyDetails,
+        propertyDetails: {
+          ...dummyGetRentPropertyDetails.propertyDetails,
+          propertyCategory: category,
+        } as AnyProperty,
+      };
       dispatch(setPropertyData(apiResponse));
     }, 500);
     return () => clearTimeout(timer);

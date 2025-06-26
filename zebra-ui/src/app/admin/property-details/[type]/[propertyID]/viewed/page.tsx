@@ -1,14 +1,14 @@
 "use client";
+import { Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
+import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
 import { PaginationFooter } from "@/components/PaginationFooter";
+import { RenderUserStatus } from "@/components/user/RenderUserStatus";
 import { User } from "@/interfaces/User";
 import { dummyUserDataList } from "@/mock/userDetailsDummy";
-import { RenderUserStatus } from "@/components/user/RenderUserStatus";
-import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
-import { Eye } from "lucide-react";
 
 export default function ViewedUsersPage() {
   const [currentPage, setCurrentPage] = useState(1);

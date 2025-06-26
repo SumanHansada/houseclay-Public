@@ -1,11 +1,13 @@
-import { User } from "./User";
 import { PropertyPhoto } from "./PropertyPhoto";
+import { User } from "./User";
 
 export enum PropertyStatusEnum {
   PENDING = "PENDING_VERIFICATION",
   VERIFIED = "VERIFIED",
   REPORT = "REPORT",
 }
+
+export type PropertyCategory = "Rent" | "Flatmate" | "Resale";
 
 export interface PropertyInfo {
   propertyID: string;
@@ -128,7 +130,7 @@ export interface FlatmateProperty extends PropertyBase {
   drinkingPreference: string;
 }
 
-export interface SaleProperty extends PropertyBase {
+export interface ResaleProperty extends PropertyBase {
   propertyCategory: "Resale";
   ownershipType: string;
   priceNegotiable: boolean;
@@ -141,7 +143,7 @@ export interface SaleProperty extends PropertyBase {
   propertyTax: boolean;
 }
 
-export type AnyProperty = RentProperty | FlatmateProperty | SaleProperty;
+export type AnyProperty = RentProperty | FlatmateProperty | ResaleProperty;
 
 export interface GetPropertyByIDResponse {
   propertyDetails: AnyProperty;

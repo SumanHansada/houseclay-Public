@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+
 import { SearchAndFilterBar } from "@/components/SearchAndFilterBar";
 
 const PropertyVerificationLayout = ({

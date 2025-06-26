@@ -4,11 +4,10 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
-import { SearchAndFilterBar } from "@/components/SearchAndFilterBar";
 import { PaginationFooter } from "@/components/PaginationFooter";
+import { SearchAndFilterBar } from "@/components/SearchAndFilterBar";
 import { GetAllPropertiesResponse, PropertyInfo } from "@/interfaces/Property";
 import { dummyGetAllProperties } from "@/mock/propertyDetailsDummy";
-
 import { createCommonColumns } from "@/utils/commonPropertyColumns";
 
 interface PropertyRow extends PropertyInfo {

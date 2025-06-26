@@ -1,6 +1,7 @@
+import { JSX } from "react";
+
 import Pill from "@/components/Pill";
 import { LeadStatusEnum } from "@/interfaces/Lead";
-import { JSX } from "react";
 
 interface RenderLeadStatusProps {
   status: string;

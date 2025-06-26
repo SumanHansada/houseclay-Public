@@ -7,12 +7,12 @@ import { VerifyPropertyStatusEnum } from "@/common/enums";
 import { Column, DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/PaginationFooter";
 import { PropertyInfo } from "@/interfaces/Property";
-// import { useGetPropertiesQuery } from "@/redux/api/propertyApi"; // Assuming this is your hook
-import { createCommonColumns } from "@/utils/commonPropertyColumns";
 import {
   dummyGetPropertiesToBeReVerified,
   dummyGetPropertiesToBeVerified,
 } from "@/mock/propertyDetailsDummy";
+// import { useGetPropertiesQuery } from "@/redux/api/propertyApi"; // Assuming this is your hook
+import { createCommonColumns } from "@/utils/commonPropertyColumns";
 
 // Define a type for the row to include the serial number
 interface PropertyRow extends PropertyInfo {

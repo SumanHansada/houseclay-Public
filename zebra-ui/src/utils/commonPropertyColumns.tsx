@@ -1,9 +1,9 @@
-import { Column } from "@/components/DataTable";
-import { PropertyInfo } from "@/interfaces/Property";
-
-import { RenderPropertyStatus } from "@/components/property/RenderPropertyStatus";
-import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
 import { Eye, Pencil } from "lucide-react";
+
+import { Column } from "@/components/DataTable";
+import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
+import { RenderPropertyStatus } from "@/components/property/RenderPropertyStatus";
+import { PropertyInfo } from "@/interfaces/Property";
 
 type ViewDetailsFunction = (propertyID: string, type: string) => void;
 

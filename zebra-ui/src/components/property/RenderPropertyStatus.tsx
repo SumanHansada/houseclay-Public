@@ -1,4 +1,5 @@
 import React, { JSX } from "react";
+
 import Pill from "@/components/Pill";
 import { PropertyStatusEnum } from "@/interfaces/Property";
 

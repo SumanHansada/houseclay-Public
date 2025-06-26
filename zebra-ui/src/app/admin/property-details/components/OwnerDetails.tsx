@@ -1,5 +1,6 @@
-import { User } from "@/interfaces/User";
 import { SquareArrowOutUpRight } from "lucide-react";
+
+import { User } from "@/interfaces/User";
 
 interface OwnerDetailsProps {
   currentUser: User;

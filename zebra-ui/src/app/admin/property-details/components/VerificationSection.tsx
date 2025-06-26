@@ -1,7 +1,7 @@
 "use client";
 
-import { CheckCircle2, Pencil } from "lucide-react";
 import clsx from "clsx";
+import { CheckCircle2, Pencil } from "lucide-react";
 
 interface VerificationSectionProps {
   title: string;

@@ -1,13 +1,13 @@
 "use client";
 
-import FormDropdown from "@/components/common/FormDropdown";
-import FormInputField from "@/components/common/FormInputField";
-import FormPlacesAutocomplete from "@/components/common/FormPlacesAutoCompletes";
-import GoogleMaps from "@/components/common/GoogleMaps";
-import { PropertyDetailsFormValues } from "@/interfaces/Property";
 import { useFormikContext } from "formik";
 import { MapPin } from "lucide-react";
 import { useEffect } from "react";
+
+import FormDropdown from "@/components/common/FormDropdown";
+import FormInputField from "@/components/common/FormInputField";
+import GoogleMaps from "@/components/common/GoogleMaps";
+import { PropertyDetailsFormValues } from "@/interfaces/Property";
 
 interface LocalityDetailsFormProps {
   disabled: boolean;
@@ -18,6 +18,7 @@ const LocalityDetailsForm: React.FC<LocalityDetailsFormProps> = ({
   disabled,
   type,
 }) => {
+  console.log(disabled + type);
   const { values, setFieldValue } =
     useFormikContext<PropertyDetailsFormValues>();
   useEffect(() => {

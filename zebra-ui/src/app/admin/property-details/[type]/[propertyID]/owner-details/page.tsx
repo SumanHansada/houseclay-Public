@@ -1,14 +1,14 @@
 "use client";
 
+import { SquareArrowOutUpRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
 import { RenderPropertyStatus } from "@/components/property/RenderPropertyStatus";
 import { PropertyStatusEnum } from "@/interfaces/Property";
 import { dummyUserDataList } from "@/mock/userDetailsDummy";
-import { SquareArrowOutUpRight } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
 
 export default function PropertyDetailsOverviewPage() {
-  const { propertyID, type } = useParams();
   const router = useRouter();
   const currentUser = dummyUserDataList[0];
   const [isBlacklisted] = useState<boolean>(currentUser.blacklisted);

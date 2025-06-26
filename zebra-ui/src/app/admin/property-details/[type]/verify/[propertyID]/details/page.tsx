@@ -2,34 +2,34 @@
 
 import { Form, Formik, FormikProvider } from "formik";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import AdditionalInfoForm from "@/app/admin/property-details/components/AdditionalInfoForm";
+import GalleryForm from "@/app/admin/property-details/components/GalleryForm";
+import LocalityDetailsForm from "@/app/admin/property-details/components/LocalityDetailsForm";
+// Verification and Owner Details Components
+import { OwnerDetails } from "@/app/admin/property-details/components/OwnerDetails";
+// Form Section Components
+import PropertyDetailsForm from "@/app/admin/property-details/components/PropertyDetailsForm";
+import RentalDetailsForm from "@/app/admin/property-details/components/RentalDetailsForm";
+import ResaleDetailsForm from "@/app/admin/property-details/components/ResaleDetailsForm";
+import { VerificationSection } from "@/app/admin/property-details/components/VerificationSection";
 // --- Imports from both files ---
 import {
+  AnyProperty,
   GetPropertyByIDResponse,
+  PropertyCategory,
   PropertyDetailsFormValues,
 } from "@/interfaces/Property";
-import { RootState } from "@/store/store";
+import { dummyGetRentPropertyDetails } from "@/mock/propertyDetailsDummy";
+import { dummyUserDataList } from "@/mock/userDetailsDummy";
 import {
   setPropertyData,
   setPropertyLoading,
 } from "@/store/propertyDetailsSlice";
-import { dummyGetRentPropertyDetails } from "@/mock/propertyDetailsDummy";
+import { RootState } from "@/store/store";
 import { transformApiToFormValues } from "@/utils/dataTransformer";
-
-// Form Section Components
-import PropertyDetailsForm from "@/app/admin/property-details/components/PropertyDetailsForm";
-import LocalityDetailsForm from "@/app/admin/property-details/components/LocalityDetailsForm";
-import AdditionalInfoForm from "@/app/admin/property-details/components/AdditionalInfoForm";
-import GalleryForm from "@/app/admin/property-details/components/GalleryForm";
-import RentalDetailsForm from "@/app/admin/property-details/components/RentalDetailsForm";
-import ResaleDetailsForm from "@/app/admin/property-details/components/ResaleDetailsForm";
-
-// Verification and Owner Details Components
-import { OwnerDetails } from "@/app/admin/property-details/components/OwnerDetails";
-import { VerificationSection } from "@/app/admin/property-details/components/VerificationSection";
-import { dummyUserDataList } from "@/mock/userDetailsDummy";
 
 export default function VerifyPropertyDetailsPage() {
   const { type } = useParams() as { type: "rent" | "resale" | "flatmate" };
@@ -52,8 +52,16 @@ export default function VerifyPropertyDetailsPage() {
   useEffect(() => {
     dispatch(setPropertyLoading());
     const timer = setTimeout(() => {
-      const apiResponse: GetPropertyByIDResponse =
-        dummyGetRentPropertyDetails as any;
+      const category = dummyGetRentPropertyDetails.propertyDetails
+        .propertyCategory as PropertyCategory;
+
+      const apiResponse: GetPropertyByIDResponse = {
+        ...dummyGetRentPropertyDetails,
+        propertyDetails: {
+          ...dummyGetRentPropertyDetails.propertyDetails,
+          propertyCategory: category,
+        } as AnyProperty, // explicitly say this is one of the union types
+      };
       dispatch(setPropertyData(apiResponse));
     }, 500);
     return () => clearTimeout(timer);

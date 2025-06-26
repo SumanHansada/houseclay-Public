@@ -5,9 +5,9 @@ import { Column } from "@/components/DataTable";
 import { PropertyInfo } from "@/interfaces/Property";
 import { dummyReportProperties } from "@/mock/userDetailsDummy";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
+import { createCommonColumns } from "@/utils/commonPropertyColumns";
 
 import { PropertiesTableView } from "../../components/PropertiesTableView";
-import { createCommonColumns } from "@/utils/commonPropertyColumns";
 
 export interface PropertyRow extends PropertyInfo {
   _serial: number;

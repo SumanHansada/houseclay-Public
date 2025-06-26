@@ -1,5 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
 import { GetPropertyByIDResponse } from "@/interfaces/Property";
+
 import { RootState } from "./store";
 
 interface PropertyDetailsState {

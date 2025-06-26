@@ -4,9 +4,9 @@ import adminReducer from "./adminSlice";
 import { apiSlice } from "./apiSlice";
 import appReducer from "./appSlice";
 import listPropertyReducer from "./listPropertySlice";
+import { default as propertyDetailsReducer } from "./propertyDetailsSlice";
 import uploadToS3SliceReducer from "./uploadToS3Slice";
 import { default as userReducer } from "./userSlice";
-import { default as propertyDetailsReducer } from "./propertyDetailsSlice";
 
 export const store = configureStore({
   reducer: {

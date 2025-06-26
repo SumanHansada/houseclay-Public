@@ -1,8 +1,5 @@
 "use client";
 
-import FormDropdown from "@/components/common/FormDropdown";
-import FormINRCurrencyField from "@/components/common/FormINRCurrencyField";
-import { FormType } from "@/store/listPropertySlice";
 import { IndianRupee } from "lucide-react";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
 import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
@@ -29,9 +26,13 @@ import CoupleIconSvg from "public/icons/preferred-tenants/couple.svg";
 import FamilyIconSvg from "public/icons/preferred-tenants/family.svg";
 import FemaleIconSvg from "public/icons/preferred-tenants/female.svg";
 import MaleIconSvg from "public/icons/preferred-tenants/male.svg";
-import FormRadioGroup from "@/components/common/FormRadioGroup";
+
 import FormCalendarField from "@/components/common/FormCalendarField";
 import FormCheckbox from "@/components/common/FormCheckbox";
+import FormDropdown from "@/components/common/FormDropdown";
+import FormINRCurrencyField from "@/components/common/FormINRCurrencyField";
+import FormRadioGroup from "@/components/common/FormRadioGroup";
+import { FormType } from "@/store/listPropertySlice";
 
 interface RentalDetailsFormProps {
   disabled: boolean;

@@ -1,7 +1,6 @@
 "use client";
 
-import FormDropdown from "@/components/common/FormDropdown";
-import { FormType } from "@/store/listPropertySlice";
+import { IndianRupee } from "lucide-react";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
 import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
 import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
@@ -19,12 +18,14 @@ import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
 import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 import WifiIconSvg from "public/icons/amenities/wifi.svg";
-import { IndianRupee } from "lucide-react";
-import FormCheckbox from "@/components/common/FormCheckbox";
-import FormRadioGroup from "@/components/common/FormRadioGroup";
-import FormFormNumberField from "@/components/common/FormNumberField";
+
 import FormCalendarField from "@/components/common/FormCalendarField";
+import FormCheckbox from "@/components/common/FormCheckbox";
+import FormDropdown from "@/components/common/FormDropdown";
 import FormINRCurrencyField from "@/components/common/FormINRCurrencyField";
+import FormFormNumberField from "@/components/common/FormNumberField";
+import FormRadioGroup from "@/components/common/FormRadioGroup";
+import { FormType } from "@/store/listPropertySlice";
 
 interface ResaleDetailsFormProps {
   disabled: boolean;
@@ -76,6 +77,7 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({
   type,
 }) => {
   const formKey = `${type}Form` as FormType;
+  console.log(formKey);
   return (
     <div className="space-y-6">
       <div className="mb-8">

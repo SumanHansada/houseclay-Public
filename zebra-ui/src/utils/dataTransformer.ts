@@ -1,4 +1,4 @@
-import { GetPropertyByIDResponse, AnyProperty } from "@/interfaces/Property";
+import { GetPropertyByIDResponse } from "@/interfaces/Property";
 import { PropertyDetailsFormValues } from "@/interfaces/Property";
 
 const getEmptyFormValues = (): PropertyDetailsFormValues => ({
