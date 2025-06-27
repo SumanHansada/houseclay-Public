@@ -1,7 +1,7 @@
 import { useField } from "formik";
 import React from "react";
 
-interface FormINRCurrencyFieldProps {
+interface FormCurrencyFieldProps {
   name: string;
   id?: string;
   label?: string;
@@ -10,9 +10,10 @@ interface FormINRCurrencyFieldProps {
   className?: string;
   prefix?: React.ReactNode;
   suffix?: React.ReactNode;
+  currencyFormat?: "en-US" | "en-IN";
 }
 
-const FormINRCurrencyField: React.FC<FormINRCurrencyFieldProps> = ({
+const FormCurrencyField: React.FC<FormCurrencyFieldProps> = ({
   name,
   id,
   label,
@@ -21,11 +22,12 @@ const FormINRCurrencyField: React.FC<FormINRCurrencyFieldProps> = ({
   className = "",
   prefix,
   suffix,
+  currencyFormat = "en-IN",
 }) => {
   const [field, meta, helpers] = useField(name);
 
-  // Format for display (add commas according to Indian numbering system)
-  const formatINR = (value: number | string): string => {
+  // Format for display (add commas according to specified locale)
+  const formatCurrency = (value: number | string): string => {
     if (value === null || value === undefined || value === "") return "";
 
     // Convert to string and remove non-numeric characters
@@ -33,30 +35,30 @@ const FormINRCurrencyField: React.FC<FormINRCurrencyFieldProps> = ({
 
     if (!numericValue) return "";
 
-    // Convert to Indian numbering format (XX,XX,XXX)
+    // Convert to specified locale format
     const number = parseInt(numericValue, 10);
-    return number.toLocaleString("en-IN");
+    return number.toLocaleString(currencyFormat);
   };
 
   // Convert formatted string back to number for form value
-  const parseINR = (formattedValue: string): number => {
+  const parseCurrency = (formattedValue: string): number => {
     const numericValue = formattedValue.replace(/[^0-9]/g, "");
     return numericValue ? parseInt(numericValue, 10) : 0;
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formattedValue = formatINR(e.target.value);
+    const formattedValue = formatCurrency(e.target.value);
     e.target.value = formattedValue;
-    helpers.setValue(parseINR(formattedValue));
+    helpers.setValue(parseCurrency(formattedValue));
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     field.onBlur(e);
 
     // Ensure value is properly formatted when field loses focus
-    const formattedValue = formatINR(e.target.value);
+    const formattedValue = formatCurrency(e.target.value);
     e.target.value = formattedValue;
-    helpers.setValue(parseINR(formattedValue));
+    helpers.setValue(parseCurrency(formattedValue));
   };
 
   return (
@@ -85,7 +87,7 @@ const FormINRCurrencyField: React.FC<FormINRCurrencyFieldProps> = ({
           } ${suffix ? "rounded-none" : "rounded-r-xl"} ${className} ${
             meta.touched && meta.error ? "border-red-500" : "border-gray-300"
           }`}
-          value={formatINR(field.value)}
+          value={formatCurrency(field.value)}
           onChange={handleChange}
           onBlur={handleBlur}
         />
@@ -102,4 +104,4 @@ const FormINRCurrencyField: React.FC<FormINRCurrencyFieldProps> = ({
   );
 };
 
-export default FormINRCurrencyField;
+export default FormCurrencyField;

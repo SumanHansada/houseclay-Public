@@ -34,9 +34,6 @@ import * as Yup from "yup";
 
 import FormCalendarField from "@/components/common/FormCalendarField";
 import FormCheckbox from "@/components/common/FormCheckbox";
-import FormDropdown from "@/components/common/FormDropdown";
-import FormINRCurrencyField from "@/components/common/FormINRCurrencyField";
-import FormRadioGroup from "@/components/common/FormRadioGroup";
 import { FormValues } from "@/interfaces/FormValues";
 import {
   FormType,
@@ -45,6 +42,9 @@ import {
   setRentalDetails,
 } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
+import FormCurrencyField from "@/components/common/FormCurrencyField";
+import FormRadioGroup from "@/form-components/FormRadioGroup";
+import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 
 export const dynamicParams = true;
 
@@ -262,7 +262,7 @@ const RentalDetailsPage: React.FC = () => {
       <div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
-            <FormINRCurrencyField
+            <FormCurrencyField
               name={
                 formKey === "rentForm"
                   ? "rentalDetails.rent"
@@ -293,7 +293,7 @@ const RentalDetailsPage: React.FC = () => {
               />
             )}
             {formKey === "flatmatesForm" && (
-              <FormDropdown
+              <FormSelectDropdown
                 label="Parking"
                 name="flatmatesForm.parking"
                 id="flatmatesForm.parking"
@@ -318,7 +318,7 @@ const RentalDetailsPage: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
-            <FormINRCurrencyField
+            <FormCurrencyField
               name={
                 formKey === "rentForm"
                   ? "rentalDetails.maintenanceCharges"
@@ -335,7 +335,7 @@ const RentalDetailsPage: React.FC = () => {
             />
           </div>
           <div className="col-span-1">
-            <FormINRCurrencyField
+            <FormCurrencyField
               name={
                 formKey === "rentForm"
                   ? "rentalDetails.deposit"
@@ -367,7 +367,7 @@ const RentalDetailsPage: React.FC = () => {
             />
           </div>
           <div className="col-span-1">
-            <FormDropdown
+            <FormSelectDropdown
               label="Furnishing"
               name={
                 formKey === "rentForm"
@@ -484,7 +484,7 @@ const RentalDetailsPage: React.FC = () => {
         )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
-            <FormDropdown
+            <FormSelectDropdown
               label="Water Supply"
               name={
                 formKey === "rentForm"
@@ -523,7 +523,7 @@ const RentalDetailsPage: React.FC = () => {
             />
           </div>
           <div className="col-span-1">
-            <FormDropdown
+            <FormSelectDropdown
               label="Power Backup"
               name={
                 formKey === "rentForm"
@@ -565,7 +565,7 @@ const RentalDetailsPage: React.FC = () => {
         {formKey === "rentForm" && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="col-span-1">
-              <FormDropdown
+              <FormSelectDropdown
                 label="Parking"
                 name="rentalDetails.parking"
                 id="rentalDetails.parking"
@@ -622,8 +622,8 @@ const RentalDetailsPage: React.FC = () => {
                 label="Attached Balcony"
                 columns={2}
                 options={[
-                  { value: "true", label: "Yes" },
-                  { value: "false", label: "No" },
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
                 ]}
                 required
                 horizontal

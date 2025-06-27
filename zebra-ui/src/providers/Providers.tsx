@@ -8,8 +8,6 @@ import { DialogContextProvider } from "./DialogContextProvider";
 import { InitializeAuthToken } from "./InitializeAuthToken";
 import QueryProvider from "./QueryProvider";
 import ReduxProvider from "./ReduxProvider";
-import { SkeletonProvider } from "./SkeletonProvider";
-import ToastProvider from "./ToastProvider";
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -22,11 +20,7 @@ const Providers: React.FC<ProvidersProps> = ({ children }) => {
         <QueryProvider>
           <DeviceContextProvider>
             <DialogContextProvider>
-              <SkeletonProvider>
-                <ToastProvider>
-                  <AnimatePresence mode="wait">{children}</AnimatePresence>
-                </ToastProvider>
-              </SkeletonProvider>
+              <AnimatePresence mode="wait">{children}</AnimatePresence>
             </DialogContextProvider>
           </DeviceContextProvider>
         </QueryProvider>

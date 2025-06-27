@@ -12,7 +12,7 @@ import { setHideFooter, setHideHeader } from "@/store/appSlice";
 import Autocomplete from "./common/Autocomplete";
 import Button from "./common/Button";
 import SelectDropdown from "./common/SelectDropdown";
-import SearchFilterDialog from "./MoreSearchFilters";
+import SearchFilterDialog from "@/dialogs/search-filters";
 
 type PropertySearchState = {
   propertyType: string | number | boolean;
