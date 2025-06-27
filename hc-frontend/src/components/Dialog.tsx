@@ -40,7 +40,9 @@ const getDialogStyles = (
       }`;
     case "card":
       return `fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl ${
-        isMobile ? "hidden" : "w-1/2 max-h-[calc(100svh-4rem)] min-w-[700px]"
+        isMobile
+          ? "hidden"
+          : "max-lg:w-1/2 xl:w-1/3 2xl:w-1/4 max-h-[calc(100svh-4rem)] min-w-[700px]"
       }`;
     default:
       return "";
@@ -120,11 +122,22 @@ export const Dialog: React.FC<DialogProps> = ({
   const dialogStyles = getDialogStyles(type, deviceContext, hideStickyFooter);
 
   return (
-    <FocusTrap focusTrapOptions={{ allowOutsideClick: true }}>
+    <FocusTrap
+      focusTrapOptions={{
+        allowOutsideClick: true,
+        fallbackFocus: `#${id}`,
+        clickOutsideDeactivates: true,
+        returnFocusOnDeactivate: true,
+        // Make focus trap more lenient for dialogs without tabbable elements
+        initialFocus: false,
+        setReturnFocus: false,
+      }}
+    >
       <div
         id={id}
         className={`${dialogOverlayStyles} flex justify-center items-center z-50`}
         onClick={handleOverlayClick}
+        tabIndex={-1} // Make the container focusable as fallback
       >
         <div
           className={`${dialogStyles} flex flex-col transition-transform ${

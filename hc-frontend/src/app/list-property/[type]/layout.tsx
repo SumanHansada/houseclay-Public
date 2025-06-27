@@ -1,10 +1,8 @@
 "use client";
 
 import { Form, Formik, FormikProvider } from "formik";
-import { X } from "lucide-react";
 import Image from "next/image";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import ListPropertySuccessSvg from "public/icons/list-property-success.svg";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -14,7 +12,8 @@ import {
   PropertyCategory,
 } from "@/common/enums";
 import { extractS3KeyFromUrl } from "@/common/utils";
-import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
+import { ListPropertySuccessDialog } from "@/dialogs/list-property-success-dialog";
+import { UploadDialog } from "@/dialogs/upload-dialog";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
 import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
@@ -39,10 +38,6 @@ import { RootState } from "@/store/store";
 
 import ListPropertyStepper from "../components/ListPropertyStepper";
 
-const ListPropertySuccess = ListPropertySuccessSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-
 export const dynamicParams = true;
 
 export default function ListPropertyTypeLayout({
@@ -59,6 +54,9 @@ export default function ListPropertyTypeLayout({
   const router = useRouter();
   const { openDialog, isDialogOpen, closeDialog } = useDialog();
   const { isMobile } = useDeviceContext();
+
+  // Get upload state to monitor completion
+  const uploadState = useSelector((state: RootState) => state.uploadToS3);
 
   // Function to derive current step from URL path
   const getCurrentStepFromPath = (): ListPropertyFormStep => {
@@ -141,6 +139,23 @@ export default function ListPropertyTypeLayout({
     }
   }, [dispatch, isMobile]);
 
+  // Effect to handle upload completion and dialog transitions
+  useEffect(() => {
+    if (
+      uploadState.status === "success" &&
+      isDialogOpen("upload-photos-dialog")
+    ) {
+      // Close upload dialog
+      closeDialog("upload-photos-dialog");
+
+      // Small delay to ensure smooth transition
+      setTimeout(() => {
+        // Open success dialog
+        openDialog("list-property-success-dialog");
+      }, 300);
+    }
+  }, [uploadState.status, isDialogOpen, closeDialog, openDialog]);
+
   const setRoute = (stepSlug: string) => {
     const route = `/list-property/${type}/${stepSlug}`;
     router.push(route);
@@ -158,6 +173,11 @@ export default function ListPropertyTypeLayout({
           S3Url: imagesS3Url[photo.file.name],
         };
       });
+
+      // Open upload dialog before starting upload
+      openDialog("upload-photos-dialog");
+
+      // Start the upload process
       uploadFiles(photosToUpload);
     }
   };
@@ -264,11 +284,6 @@ export default function ListPropertyTypeLayout({
     }
   };
 
-  const handlePreviewListing = async () => {
-    closeDialog("list-property-success-dialog");
-    router.push(`/property-details/${type}/${propertyId}`);
-  };
-
   const handlePostProperty = async () => {
     try {
       const propertyDetails = formState.data!.propertyDetails;
@@ -342,7 +357,7 @@ export default function ListPropertyTypeLayout({
           break;
         }
       }
-      openDialog("list-property-success-dialog");
+      // Don't open success dialog here anymore - it will be opened automatically after upload completes
     } catch (error) {
       // openDialog("list-property-success-dialog");
       setRoute(ListPropertyRouteStep.ADDITIONAL_INFO);
@@ -426,74 +441,19 @@ export default function ListPropertyTypeLayout({
             </button>
           </div>
         </div>
-        {isDialogOpen("list-property-success-dialog") && (
-          <Dialog
-            id="list-property-success-dialog"
-            type={isMobile ? "bottom-sheet" : "card"}
-            onClose={() => {
-              closeDialog("list-property-success-dialog");
-              dispatch(setHideStickyNavBar(false));
-            }}
-            entryAnimation="animate-fade-in"
-            exitAnimation="animate-fade-out"
-          >
-            <DialogHeader>
-              <div
-                className={`${isMobile ? "py-2 px-8" : ""}  flex flex-col justify-between items-center w-full`}
-              >
-                {isMobile && (
-                  <>
-                    <h1 className="text-xl py-1.5 text-black">
-                      Woohoo! It&apos;s all done.
-                    </h1>
-                    <button className="absolute top-4 right-4 rounded-full">
-                      <X
-                        onClick={() => {
-                          closeDialog("list-property-success-dialog");
-                          dispatch(setHideStickyNavBar(false));
-                        }}
-                        size={25}
-                      />
-                    </button>
-                  </>
-                )}
-              </div>
-            </DialogHeader>
-            <DialogContent>
-              <div className="flex flex-col items-center justify-center text-center px-6 pb-2 pt-6 gap-4">
-                <div className="relative overflow-hidden rounded-lg">
-                  <div className="absolute inset-0 shadow-[inset_0_0_25px_25px_rgba(255,255,255,0.8)] z-20"></div>
-                  <ListPropertySuccess />
-                </div>
-                {!isMobile && (
-                  <h2 className="text-3xl text-gray-800">Congratulations!</h2>
-                )}
-                <p className="text-gray-600 text-lg">
-                  You have successfully posted your property,
-                  <br />
-                  it will be live within 2 Hrs.
-                </p>
 
-                {/* Action buttons */}
-                <div className="flex gap-4 w-full">
-                  <button
-                    onClick={() => {
-                      closeDialog("list-property-success-dialog");
-                    }}
-                    className="w-full py-3 text-black border font-medium rounded-lg hover:bg-red-600 hover:text-white transition duration-200"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={handlePreviewListing}
-                    className="w-full py-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200"
-                  >
-                    {isMobile ? "View Listing" : "Preview Listing"}
-                  </button>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
+        {/* Upload Dialog */}
+        {isDialogOpen("upload-photos-dialog") && (
+          <UploadDialog id="upload-photos-dialog" />
+        )}
+
+        {/* Success Dialog */}
+        {isDialogOpen("list-property-success-dialog") && (
+          <ListPropertySuccessDialog
+            id="list-property-success-dialog"
+            propertyId={propertyId}
+            propertyType={type}
+          />
         )}
       </div>
     </>
