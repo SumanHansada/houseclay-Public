@@ -1,9 +1,9 @@
 package com.houseclay.backend.service;
 
-import com.houseclay.backend.dto.PropertyDTO;
+import com.houseclay.backend.dto.UserPropertyDTO;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
-import com.houseclay.backend.mapper.PropertyMapper;
+import com.houseclay.backend.mapper.UserMapper;
 import com.houseclay.backend.repository.PropertyRepository;
 import com.houseclay.backend.repository.UserRepository;
 import com.houseclay.backend.utils.PropertyUtils;
@@ -69,9 +69,14 @@ public class PropertyAdminService {
         propertyRepository.save(property);
     }
 
-    public Page<PropertyDTO> getPropertyByState(PropertyState propertyState, Pageable pageable) {
+    public Page<UserPropertyDTO> getProperties(Pageable pageable) {
+        return propertyRepository.findAll(pageable)
+                .map(UserMapper::toUserPropertyDTO);
+    }
+
+    public Page<UserPropertyDTO> getPropertyByState(PropertyState propertyState, Pageable pageable) {
         return propertyRepository.findByPropertyState(propertyState, pageable)
-                .map(PropertyMapper::toDTO);
+                .map(UserMapper::toUserPropertyDTO);
     }
 
     public Property verifyProperty(String propertyId, Admin admin) throws APIException {

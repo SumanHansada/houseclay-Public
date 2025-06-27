@@ -1,6 +1,6 @@
 package com.houseclay.backend.controller;
 
-import com.houseclay.backend.dto.PropertyDTO;
+import com.houseclay.backend.dto.UserPropertyDTO;
 import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.entity.Property;
 import com.houseclay.backend.entity.PropertyState;
@@ -85,23 +85,34 @@ public class PropertyAdminController {
         }
     }
 
-    @GetMapping("/properties-to-verify")
-    public ResponseEntity<Page<PropertyDTO>> getPropertiesToVerify(
+
+    @GetMapping("/all")
+    public ResponseEntity<Page<UserPropertyDTO>> getProperties(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<PropertyDTO> properties = propertyAdminService.getPropertyByState(PropertyState.PENDING_VERIFICATION, pageable);
+        Page<UserPropertyDTO> properties = propertyAdminService.getProperties(pageable);
+        return ResponseEntity.ok(properties);
+    }
+
+    @GetMapping("/properties-to-verify")
+    public ResponseEntity<Page<UserPropertyDTO>> getPropertiesToVerify(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<UserPropertyDTO> properties = propertyAdminService.getPropertyByState(PropertyState.PENDING_VERIFICATION, pageable);
         return ResponseEntity.ok(properties);
     }
 
     @GetMapping("/properties-to-re-verify")
-    public ResponseEntity<Page<PropertyDTO>> getPropertiesToReVerify(
+    public ResponseEntity<Page<UserPropertyDTO>> getPropertiesToReVerify(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<PropertyDTO> properties = propertyAdminService.getPropertyByState(PropertyState.PENDING_RE_VERIFICATION, pageable);
+        Page<UserPropertyDTO> properties = propertyAdminService.getPropertyByState(PropertyState.PENDING_RE_VERIFICATION, pageable);
         return ResponseEntity.ok(properties);
     }
 

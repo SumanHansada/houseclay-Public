@@ -81,7 +81,7 @@ public class UserMapper {
         return dto;
     }
 
-    private static UserPropertyDTO toUserPropertyDTO(Property property) {
+    public static UserPropertyDTO toUserPropertyDTO(Property property) {
         UserPropertyDTO dto = new UserPropertyDTO();
         dto.setPropertyID(property.getPropertyID());
         dto.setPropertyState(property.getPropertyState());
