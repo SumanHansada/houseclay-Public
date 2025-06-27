@@ -37,6 +37,12 @@ public class PropertyDTO {
     private List<String> preferredTenants;
     private String propertyCategory; // to identify subtype like "Sale", "Rent", "Flatmate"
     List<PropertyUpdateDTO> propertyUpdates;
+
+    private UserDTO owner;
+    private List<UserDTO> viewUsers;
+    private List<UserDTO> shortlistUsers;
+    private List<UserDTO> contactUsers;
+    private List<ReportUserDTO> reportUsers;
 }
 
 

@@ -4,6 +4,7 @@ import com.houseclay.backend.dto.*;
 import com.houseclay.backend.entity.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PropertyMapper {
 
@@ -103,5 +104,39 @@ public class PropertyMapper {
 
             target.setPropertyUpdates(updates);
         }
+
+        target.setOwner(UserMapper.toDTO(source.getOwner()));
+
+        target.setContactUsers(source.getPropertyActions().stream()
+                .filter(propertyAction -> propertyAction.getUserActionType() == UserActionType.CONTACT)
+                .map(propertyAction -> UserMapper.toDTO(propertyAction.getUser()))
+                .collect(Collectors.toList())
+        );
+
+        target.setViewUsers(source.getPropertyActions().stream()
+                .filter(propertyAction -> propertyAction.getUserActionType() == UserActionType.VIEW)
+                .map(propertyAction -> UserMapper.toDTO(propertyAction.getUser()))
+                .collect(Collectors.toList())
+        );
+
+        target.setShortlistUsers(source.getPropertyActions().stream()
+                .filter(propertyAction -> propertyAction.getUserActionType() == UserActionType.SHORTLIST)
+                .map(propertyAction -> UserMapper.toDTO(propertyAction.getUser()))
+                .collect(Collectors.toList())
+        );
+
+        target.setReportUsers(source.getReportedProperties().stream()
+                .map(PropertyMapper::toReportUserDTO)
+                .collect(Collectors.toList()));
+
+    }
+
+    private static ReportUserDTO toReportUserDTO(ReportProperty reportProperty) {
+        ReportUserDTO dto = new ReportUserDTO();
+        dto.setReportId(reportProperty.getReportId());
+        dto.setReportType(reportProperty.getReportType());
+        dto.setReportTime(reportProperty.getReportTime());
+        dto.setUser(UserMapper.toDTO(reportProperty.getUser()));
+        return dto;
     }
 }
