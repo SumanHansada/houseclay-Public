@@ -4,6 +4,8 @@ import com.houseclay.backend.dto.*;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.utils.PropertyUtils;
 
+import java.sql.Timestamp;
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -82,11 +84,13 @@ public class UserMapper {
     private static UserPropertyDTO toUserPropertyDTO(Property property) {
         UserPropertyDTO dto = new UserPropertyDTO();
         dto.setPropertyID(property.getPropertyID());
-        dto.setTitle(property.getTitle());
         dto.setPropertyState(property.getPropertyState());
         dto.setPropertyCategory(PropertyUtils.getPropertyCategory(property));
         dto.setBhkType(property.getBhkType());
         dto.setLocation(property.getLocationOrSocietyName());
+        dto.setAvailableFrom(property.getAvailableFrom());
+        dto.setCreatedOn(getCreateTimestamp(property));
+        dto.setUpdatedOn(getUpdateTimestamp(property));
         return dto;
     }
 
@@ -118,4 +122,19 @@ public class UserMapper {
         dto.setUserProperty(toUserPropertyDTO(reportProperty.getProperty()));
         return dto;
     }
+
+    public static Timestamp getCreateTimestamp(Property property) {
+        return property.getPropertUpdateLogs().stream()
+                .filter(log -> log.getUpdateType() == PropertyUpdateType.CREATE)
+                .map(PropertyUpdateLog::getUpdatedAt)
+                .findFirst().orElse(null);
+    }
+
+    public static Timestamp getUpdateTimestamp(Property property) {
+        return property.getPropertUpdateLogs().stream()
+                .filter(log -> log.getUpdateType() == PropertyUpdateType.UPDATE)
+                .map(PropertyUpdateLog::getUpdatedAt)
+                .max(Comparator.naturalOrder()).orElse(null);
+    }
 }
+
