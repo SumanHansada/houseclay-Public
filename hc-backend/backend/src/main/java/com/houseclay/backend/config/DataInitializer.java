@@ -41,18 +41,16 @@ public class DataInitializer {
             User user = new User("9999999999", "Test User", "user@example.com");
             user.setConnectBal(10);
             user.setBlacklisted(false);
-            user.setDeleted(false);
+            user.getUserUpdateLogs().add(new UserUpdateLog(user, admin, new Timestamp(System.currentTimeMillis()), UserUpdateType.BLACKLISTED, "Bad user"));
+            user.getUserUpdateLogs().add(new UserUpdateLog(user, admin, new Timestamp(System.currentTimeMillis()), UserUpdateType.ACTIVATED, "Good user"));
             user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
             userRepo.save(user);
 
             User blacklistedUser = new User("8888888888", "Blacklisted User", "blacklisted@example.com");
             blacklistedUser.setConnectBal(0);
             blacklistedUser.setBlacklisted(true);
-            blacklistedUser.setDeleted(false);
             blacklistedUser.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-            blacklistedUser.setBlacklistedAt(new Timestamp(System.currentTimeMillis()));
-            blacklistedUser.setAdmin(admin);
-            blacklistedUser.setBlacklistedAt(new Timestamp(System.currentTimeMillis()));
+            blacklistedUser.getUserUpdateLogs().add(new UserUpdateLog(user, admin, new Timestamp(System.currentTimeMillis()), UserUpdateType.BLACKLISTED, "Very bad user"));
             userRepo.save(blacklistedUser);
 
             // ✅ UserLogins

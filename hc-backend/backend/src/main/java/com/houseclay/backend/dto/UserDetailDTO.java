@@ -13,7 +13,7 @@ public class UserDetailDTO {
     private Timestamp createdAt;
     private boolean isBlacklisted;
     private Timestamp blacklistedAt;
-    private String blacklistedBy;
+    private List<UserUpdateDTO> userUpdates;
     private List<UserPropertyDTO> ownedProperties;
     private List<UserPropertyDTO> shortlistedProperties;
     private List<UserPropertyDTO> viewedProperties;

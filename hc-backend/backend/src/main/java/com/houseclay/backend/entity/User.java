@@ -18,10 +18,7 @@ public class User {
     private String emailID;
     private int connectBal;
     private boolean isBlacklisted;
-    private boolean isDeleted;
     private Timestamp createdAt;
-    private Timestamp blacklistedAt;
-    private Timestamp deletedAt;
 
     public User(String phoneNo, String name, String emailID) {
         this.phoneNo = phoneNo;
@@ -30,11 +27,8 @@ public class User {
         this.createdAt = new Timestamp(System.currentTimeMillis());
         this.userLogins = new LinkedList<>();
         this.ownedProperties = new LinkedList<>();
+        this.userUpdateLogs = new LinkedList<>();
     }
-
-    @ManyToOne
-    @JoinColumn(name = "username")
-    private Admin admin;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Property> ownedProperties;
@@ -56,6 +50,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Lead> leads;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserUpdateLog> userUpdateLogs;
 
     public User() {
 

@@ -2,9 +2,7 @@ package com.houseclay.backend.service;
 
 import com.houseclay.backend.dto.AdminRegisterDTO;
 import com.houseclay.backend.dto.UserDTO;
-import com.houseclay.backend.entity.Admin;
-import com.houseclay.backend.entity.AdminLogin;
-import com.houseclay.backend.entity.User;
+import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.mapper.UserMapper;
 import com.houseclay.backend.repository.AdminLoginRepository;
@@ -81,7 +79,7 @@ public class AdminService {
         return true;
     }
 
-    public User blacklistUser(String phoneNo, Admin admin) throws Exception {
+    public User blacklistUser(String phoneNo, String comment, Admin admin) throws Exception {
         Optional<Admin> adminOptional = adminRepository.findByUsername(admin.getUsername());
         if (adminOptional.isEmpty()) {
             throw new APIException("Invalid token", HttpStatus.BAD_REQUEST);
@@ -89,8 +87,20 @@ public class AdminService {
         admin = adminOptional.get();
         User user = searchUser(phoneNo);
         user.setBlacklisted(true);
-        user.setBlacklistedAt(new Timestamp(System.currentTimeMillis()));
-        admin.getBlacklistedUsers().add(user);
+        admin.getUserUpdateLogs().add(new UserUpdateLog(user, admin, new Timestamp(System.currentTimeMillis()), UserUpdateType.BLACKLISTED, comment));
+        adminRepository.save(admin);
+        return user;
+    }
+
+    public User activateUser(String phoneNo, String comment, Admin admin) throws Exception {
+        Optional<Admin> adminOptional = adminRepository.findByUsername(admin.getUsername());
+        if (adminOptional.isEmpty()) {
+            throw new APIException("Invalid token", HttpStatus.BAD_REQUEST);
+        }
+        admin = adminOptional.get();
+        User user = searchUser(phoneNo);
+        user.setBlacklisted(false);
+        admin.getUserUpdateLogs().add(new UserUpdateLog(user, admin, new Timestamp(System.currentTimeMillis()), UserUpdateType.ACTIVATED, comment));
         adminRepository.save(admin);
         return user;
     }

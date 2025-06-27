@@ -27,11 +27,10 @@ public class UserMapper {
         dto.setEmail(user.getEmailID());
         dto.setCreatedAt(user.getCreatedAt());
         dto.setBlacklisted(user.isBlacklisted());
-        dto.setBlacklistedAt(user.getBlacklistedAt());
 
-        if (user.getAdmin() != null) {
-            dto.setBlacklistedBy(user.getAdmin().getUsername());
-        }
+        dto.setUserUpdates(user.getUserUpdateLogs().stream()
+                .map(UserMapper::toUserUpdateDTO)
+                .collect(Collectors.toList()));
 
         dto.setOwnedProperties(
                 user.getOwnedProperties().stream()
@@ -135,6 +134,15 @@ public class UserMapper {
                 .filter(log -> log.getUpdateType() == PropertyUpdateType.UPDATE)
                 .map(PropertyUpdateLog::getUpdatedAt)
                 .max(Comparator.naturalOrder()).orElse(null);
+    }
+
+    public static UserUpdateDTO toUserUpdateDTO(UserUpdateLog userUpdateLog) {
+        UserUpdateDTO dto = new UserUpdateDTO();
+        dto.setUpdateType(userUpdateLog.getUserUpdateType());
+        dto.setUpdateBy(userUpdateLog.getAdmin().getUsername());
+        dto.setUpdateTime(userUpdateLog.getUpdatedAt());
+        dto.setComment(userUpdateLog.getComment());
+        return dto;
     }
 }
 

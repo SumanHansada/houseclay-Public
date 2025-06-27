@@ -18,12 +18,11 @@ public class Admin {
     private String password;
     private String  name;
 
-
-    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<User> blacklistedUsers;
-
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AdminLogin> adminLogins = new ArrayList<>();
+
+    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserUpdateLog> userUpdateLogs;
 
     @Override
     public String toString() {
