@@ -4,6 +4,7 @@ import adminReducer from "./adminSlice";
 import { apiSlice } from "./apiSlice";
 import appReducer from "./appSlice";
 import listPropertyReducer from "./listPropertySlice";
+import { default as propertyDetailsReducer } from "./propertyDetailsSlice";
 import uploadToS3SliceReducer from "./uploadToS3Slice";
 import { default as userReducer } from "./userSlice";
 
@@ -14,6 +15,7 @@ export const store = configureStore({
     user: userReducer,
     listProperty: listPropertyReducer,
     uploadToS3: uploadToS3SliceReducer,
+    propertyDetails: propertyDetailsReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

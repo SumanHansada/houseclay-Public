@@ -1,86 +1,241 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 
 import { VerifyPropertyStatusEnum } from "@/common/enums";
 import { Column, DataTable } from "@/components/DataTable";
+import { PaginationFooter } from "@/components/PaginationFooter";
 import { PropertyInfo } from "@/interfaces/Property";
 import {
   dummyGetPropertiesToBeReVerified,
   dummyGetPropertiesToBeVerified,
-} from "@/mock/getAllProperties";
+} from "@/mock/propertyDetailsDummy";
+// import { useGetPropertiesQuery } from "@/redux/api/propertyApi"; // Assuming this is your hook
+import { createCommonColumns } from "@/utils/commonPropertyColumns";
 
-import { createCommonColumns } from "../../user-details/[userPhoneNo]/propertyColumns";
-
+// Define a type for the row to include the serial number
 interface PropertyRow extends PropertyInfo {
   _serial: number;
 }
 
-const PropertyVerificationTable: React.FC = () => {
+const PropertyVerificationTablePage: React.FC = () => {
   const router = useRouter();
   const { status } = useParams() as { status: VerifyPropertyStatusEnum };
+
+  // --- STATE MANAGEMENT ---
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 10;
+
+  // --- DATA FETCHING (SINGLE SOURCE OF TRUTH) ---
+  // The hook is called once, with status and pagination params.
+  // It will automatically refetch when `status` or `currentPage` changes.
+  // const { data, isLoading, isError } = useGetPropertiesQuery({
+  //   status: status, // Pass the status to your API
+  //   page: currentPage - 1,
+  //   size: rowsPerPage,
+  // });
   const data =
     status === "pending"
       ? dummyGetPropertiesToBeVerified
       : dummyGetPropertiesToBeReVerified;
 
-  const allProperties = useMemo<PropertyInfo[]>(() => {
-    return data?.content ?? [];
-  }, [data?.content]);
+  // Memoize data to prevent unnecessary recalculations
+  const allProperties = useMemo<PropertyInfo[]>(
+    () => data?.content ?? [],
+    [data?.content],
+  );
+  const totalPages = data?.totalPages ?? 0;
+  const isFirst = data?.first ?? true;
+  const isLast = data?.last ?? true;
 
+  // --- EVENT HANDLERS ---
   const viewPropertyDetails = (type: string, propertyID: string) => {
-    router.push(`/admin/property-details/${type}/${propertyID}`);
+    const path =
+      status === "pending"
+        ? `/admin/property-details/${type}/verify/${propertyID}`
+        : `/admin/property-details/${type}/reverify/${propertyID}`;
+    router.push(path);
   };
 
+  const handleStatusChange = (newStatus: VerifyPropertyStatusEnum) => {
+    setCurrentPage(1);
+    router.push(`/admin/property-verification/${newStatus}`);
+  };
+
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+  const nextPage = () => !isLast && setCurrentPage((p) => p + 1);
+  const prevPage = () => !isFirst && setCurrentPage((p) => p - 1);
+
+  // --- TABLE ROWS AND COLUMNS ---
   const rows: PropertyRow[] = allProperties.map((propertyInfo, index) => ({
     ...propertyInfo,
-    _serial: index + 1,
+    // For a consistent serial number across pages:
+    _serial: (currentPage - 1) * rowsPerPage + index + 1,
   }));
 
   const columns: Column<PropertyRow>[] =
     createCommonColumns(viewPropertyDetails);
 
+  // --- RENDER ---
   return (
-    <div className="flex flex-col flex-1 bg-white shadow-sm rounded-xl p-4 gap-4">
-      <div className="flex justify-between">
-        <h1 className="text-3xl">
-          {status === VerifyPropertyStatusEnum.VERIFY
-            ? "Properties to be Verified"
-            : "Properties to be Re-verified"}
-        </h1>
-        <div className="flex gap-3 items-center">
-          <h1 className="text-2xl font-medium">Status:</h1>
-          <button
-            className={`py-2 px-3 rounded-xl border border-red-500 ${status === VerifyPropertyStatusEnum.VERIFY ? "bg-red-500 text-white" : "bg-white text-red-500"}`}
-            onClick={() =>
-              router.push(
-                `/admin/property-verification/${VerifyPropertyStatusEnum.VERIFY}`,
-              )
-            }
-          >
-            Pending
-          </button>
-          <button
-            className={`py-2 px-3 rounded-xl border border-red-500 ${status === VerifyPropertyStatusEnum.REVERIFY ? "bg-red-500 text-white" : "bg-white text-red-500"}`}
-            onClick={() =>
-              router.push(
-                `/admin/property-verification/${VerifyPropertyStatusEnum.REVERIFY}`,
-              )
-            }
-          >
-            Reported
-          </button>
+    // This container uses flexbox to manage its children's layout
+    // h-full makes it take the full height of the <main> container from the layout
+    <div className="flex flex-col h-full bg-white shadow-sm rounded-xl">
+      {/* Top section with Title and Status buttons */}
+      <div className="p-4 border-b border-gray-200">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl">
+            {status === VerifyPropertyStatusEnum.VERIFY
+              ? "Properties to be Verified"
+              : "Properties to be Re-verified"}
+          </h1>
+          <div className="flex gap-3 items-center">
+            <h1 className="text-2xl font-medium">Status:</h1>
+            <button
+              className={`py-2 px-3 rounded-xl border border-red-500 ${
+                status === VerifyPropertyStatusEnum.VERIFY
+                  ? "bg-red-500 text-white"
+                  : "bg-white text-red-500"
+              }`}
+              onClick={() =>
+                handleStatusChange(VerifyPropertyStatusEnum.VERIFY)
+              }
+            >
+              Pending
+            </button>
+            <button
+              className={`py-2 px-3 rounded-xl border border-red-500 ${
+                status === VerifyPropertyStatusEnum.REVERIFY
+                  ? "bg-red-500 text-white"
+                  : "bg-white text-red-500"
+              }`}
+              onClick={() =>
+                handleStatusChange(VerifyPropertyStatusEnum.REVERIFY)
+              }
+            >
+              Reported
+            </button>
+          </div>
         </div>
       </div>
 
-      <DataTable
-        columns={columns}
-        data={rows}
-        getRowId={(prop) => prop.propertyID}
-      />
+      {/* overflow-y-auto ensures only the table scrolls if content is too long */}
+      <div className="flex-1 px-4 py-2 overflow-y-auto">
+        <DataTable
+          columns={columns}
+          data={rows}
+          getRowId={(prop) => prop.propertyID}
+          noDataMessage="No properties found for this status."
+        />
+      </div>
+
+      {/* Bottom section with Pagination */}
+      <div className="border-t border-gray-200">
+        <PaginationFooter
+          currentPage={currentPage}
+          totalPages={totalPages}
+          isFirst={isFirst}
+          isLast={isLast}
+          goToPage={goToPage}
+          nextPage={nextPage}
+          prevPage={prevPage}
+          footerPadding="px-4 py-2"
+        />
+      </div>
     </div>
   );
 };
 
-export default PropertyVerificationTable;
+export default PropertyVerificationTablePage;
+
+// "use client";
+
+// import { useParams, useRouter } from "next/navigation";
+// import { useMemo } from "react";
+
+// import { VerifyPropertyStatusEnum } from "@/common/enums";
+// import { Column, DataTable } from "@/components/DataTable";
+// import { PropertyInfo } from "@/interfaces/Property";
+// import {
+//   dummyGetPropertiesToBeReVerified,
+//   dummyGetPropertiesToBeVerified,
+// } from "@/mock/propertyDetailsDummy";
+
+// import { createCommonColumns } from "@/utils/commonPropertyColumns";
+
+// interface PropertyRow extends PropertyInfo {
+//   _serial: number;
+// }
+
+// const PropertyVerificationTable: React.FC = () => {
+//   const router = useRouter();
+//   const { status } = useParams() as { status: VerifyPropertyStatusEnum };
+//   const data =
+//     status === "pending"
+//       ? dummyGetPropertiesToBeVerified
+//       : dummyGetPropertiesToBeReVerified;
+
+//   const allProperties = useMemo<PropertyInfo[]>(() => {
+//     return data?.content ?? [];
+//   }, [data?.content]);
+
+//   const viewPropertyDetails = (type: string, propertyID: string) => {
+//     router.push(`/admin/property-details/${type}/${propertyID}`);
+//   };
+
+//   const rows: PropertyRow[] = allProperties.map((propertyInfo, index) => ({
+//     ...propertyInfo,
+//     _serial: index + 1,
+//   }));
+
+//   const columns: Column<PropertyRow>[] =
+//     createCommonColumns(viewPropertyDetails);
+
+//   return (
+//     <div className="flex flex-col flex-1 bg-white shadow-sm rounded-xl p-4 gap-4">
+//       <div className="flex justify-between">
+//         <h1 className="text-3xl">
+//           {status === VerifyPropertyStatusEnum.VERIFY
+//             ? "Properties to be Verified"
+//             : "Properties to be Re-verified"}
+//         </h1>
+//         <div className="flex gap-3 items-center">
+//           <h1 className="text-2xl font-medium">Status:</h1>
+//           <button
+//             className={`py-2 px-3 rounded-xl border border-red-500 ${status === VerifyPropertyStatusEnum.VERIFY ? "bg-red-500 text-white" : "bg-white text-red-500"}`}
+//             onClick={() =>
+//               router.push(
+//                 `/admin/property-verification/${VerifyPropertyStatusEnum.VERIFY}`,
+//               )
+//             }
+//           >
+//             Pending
+//           </button>
+//           <button
+//             className={`py-2 px-3 rounded-xl border border-red-500 ${status === VerifyPropertyStatusEnum.REVERIFY ? "bg-red-500 text-white" : "bg-white text-red-500"}`}
+//             onClick={() =>
+//               router.push(
+//                 `/admin/property-verification/${VerifyPropertyStatusEnum.REVERIFY}`,
+//               )
+//             }
+//           >
+//             Reported
+//           </button>
+//         </div>
+//       </div>
+
+//       <DataTable
+//         columns={columns}
+//         data={rows}
+//         getRowId={(prop) => prop.propertyID}
+//       />
+//     </div>
+//   );
+// };
+
+// export default PropertyVerificationTable;

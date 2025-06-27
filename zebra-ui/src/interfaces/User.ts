@@ -12,6 +12,7 @@ export interface User {
   avatar?: string;
   phoneNo: string;
   blacklisted: boolean;
+  createdAt: string;
 }
 
 export interface GetAllUsersResponse {

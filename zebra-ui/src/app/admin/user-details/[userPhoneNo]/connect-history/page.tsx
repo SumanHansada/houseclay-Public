@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
-import { TablePagination } from "@/components/TablePagination";
+import { PaginationFooter } from "@/components/PaginationFooter";
 import { UserConnectTransaction } from "@/interfaces/User";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 
@@ -85,7 +85,7 @@ const ConnectHistoryPage: React.FC = () => {
           </div>
         </div>
         <div className="sticky bottom-0 z-10 border-t border-gray-200 bg-white">
-          <TablePagination
+          <PaginationFooter
             currentPage={currentPage}
             totalPages={totalPages}
             isFirst={isFirst}

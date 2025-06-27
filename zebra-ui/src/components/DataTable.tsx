@@ -21,6 +21,7 @@ export interface DataTableProps<T> {
   columns: Column<T>[];
   data: T[];
   getRowId?: (item: T, index: number) => string;
+  noDataMessage?: string;
 }
 
 function hasStringOrNumberId(obj: unknown): obj is { id: string | number } {
@@ -35,6 +36,7 @@ export function DataTable<T extends object>({
   columns,
   data,
   getRowId,
+  noDataMessage = "No data found",
 }: DataTableProps<T>) {
   return (
     <div className="dataTableWrapper">
@@ -86,7 +88,7 @@ export function DataTable<T extends object>({
                 colSpan={columns.length}
                 className="pt-20 text-2xl text-center text-red-400"
               >
-                No data found
+                {noDataMessage}
               </TableCell>
             </TableRow>
           )}

@@ -1,0 +1,615 @@
+"use client";
+
+import { IndianRupee } from "lucide-react";
+import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
+import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
+import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
+import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
+import FireExtinguisherIconSvg from "public/icons/amenities/fire-extinguisher.svg";
+import FirstAidKitIconSvg from "public/icons/amenities/first-aid-kit.svg";
+import GatedSecurityIconSvg from "public/icons/amenities/gated-security.svg";
+import GymIconSvg from "public/icons/amenities/gym.svg";
+import LiftIconSvg from "public/icons/amenities/lift.svg";
+import OutdoorDiningAreaIconSvg from "public/icons/amenities/outdoor-dining-area.svg";
+import ParkingSpaceIconSvg from "public/icons/amenities/parking-space.svg";
+import PoolIconSvg from "public/icons/amenities/pool.svg";
+import PoolTableIconSvg from "public/icons/amenities/pool-table.svg";
+import SecurityIconSvg from "public/icons/amenities/security.svg";
+import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
+import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
+import WifiIconSvg from "public/icons/amenities/wifi.svg";
+import NonVegIconSvg from "public/icons/food-preferences/non-veg.svg";
+import VegIconSvg from "public/icons/food-preferences/veg.svg";
+import BachelorIconSvg from "public/icons/preferred-tenants/bachelor.svg";
+import CompanyIconSvg from "public/icons/preferred-tenants/company.svg";
+import CoupleIconSvg from "public/icons/preferred-tenants/couple.svg";
+import FamilyIconSvg from "public/icons/preferred-tenants/family.svg";
+import FemaleIconSvg from "public/icons/preferred-tenants/female.svg";
+import MaleIconSvg from "public/icons/preferred-tenants/male.svg";
+
+import FormCalendarField from "@/components/common/FormCalendarField";
+import FormCheckbox from "@/components/common/FormCheckbox";
+import FormDropdown from "@/components/common/FormDropdown";
+import FormINRCurrencyField from "@/components/common/FormINRCurrencyField";
+import FormRadioGroup from "@/components/common/FormRadioGroup";
+import { FormType } from "@/store/listPropertySlice";
+
+interface RentalDetailsFormProps {
+  disabled: boolean;
+  type: "rent" | "resale" | "flatmate";
+}
+
+const FamilyIcon = FamilyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const CompanyIcon = CompanyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const BachelorIcon = BachelorIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const CoupleIcon = CoupleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const MaleIcon = MaleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const FemaleIcon = FemaleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const VegIcon = VegIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const NonVegIcon = NonVegIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const ClubhouseIcon = ClubhouseIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const GymIcon = GymIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const OutdoorDiningAreaIcon = OutdoorDiningAreaIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const GatedSecurityIcon = GatedSecurityIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const PoolIcon = PoolIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const FireExtinguisherIcon = FireExtinguisherIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const SmokeAlarmIcon = SmokeAlarmIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const SwimmingPoolIcon = SwimmingPoolIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const TwentyFourSevenPowerIcon = TwentyFourSevenPowerIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const SecurityIcon = SecurityIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const ParkingSpaceIcon = ParkingSpaceIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const DedicatedWorkspaceIcon = DedicatedWorkspaceIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const WifiIcon = WifiIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const BBQGrillIcon = BBQGrillIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const PoolTableIcon = PoolTableIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const FirstAidKitIcon = FirstAidKitIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+
+const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
+  disabled,
+  type,
+}) => {
+  const formKey = `${type}Form` as FormType;
+  return (
+    <div className="space-y-6">
+      <div className="mb-8">
+        <h1 className="text-2xl md:text-3xl text-gray-800">
+          Provide rental details about your property
+        </h1>
+      </div>
+      <div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormINRCurrencyField
+              name={
+                formKey === "rentForm"
+                  ? "rentalDetails.rent"
+                  : "flatmatesDetails.rent"
+              }
+              id={
+                formKey === "rentForm"
+                  ? "rentalDetails.rent"
+                  : "flatmatesDetails.rent"
+              }
+              label="Rent"
+              prefix={<IndianRupee size={20} />}
+              suffix="/month"
+              // disabled={disabled}
+              required
+            />
+          </div>
+          <div className="col-span-1">
+            {formKey === "rentForm" && (
+              <FormRadioGroup
+                name="rentalDetails.rentNegotiable"
+                label="Rent Negotiable"
+                columns={2}
+                options={[
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
+                ]}
+                horizontal
+                // disabled={disabled}
+              />
+            )}
+            {formKey === "flatmatesForm" && (
+              <FormDropdown
+                label="Parking"
+                name="flatmatesForm.parking"
+                id="flatmatesForm.parking"
+                options={[
+                  { value: true, label: "Yes" },
+                  {
+                    value: false,
+                    label: "No",
+                  },
+                ]}
+                required={true}
+                placeholder="Select Parking"
+                disabled={disabled}
+                // aria-describedby={
+                //   errors?.flatmatesDetails?.parking &&
+                //   touched?.flatmatesDetails?.parking
+                //     ? "flatmatesDetails.parking-error"
+                //     : undefined
+                // }
+              />
+            )}
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormINRCurrencyField
+              name={
+                formKey === "rentForm"
+                  ? "rentalDetails.maintenanceCharges"
+                  : "flatmatesDetails.maintenanceCharges"
+              }
+              id={
+                formKey === "rentForm"
+                  ? "rentalDetails.maintenanceCharges"
+                  : "flatmatesDetails.maintenanceCharges"
+              }
+              label="Maintenance Charges"
+              prefix={<IndianRupee size={20} />}
+              suffix="/month"
+              // disabled={disabled}
+            />
+          </div>
+          <div className="col-span-1">
+            <FormINRCurrencyField
+              name={
+                formKey === "rentForm"
+                  ? "rentalDetails.deposit"
+                  : "flatmatesDetails.depositCharges"
+              }
+              id={
+                formKey === "rentForm"
+                  ? "rentalDetails.deposit"
+                  : "flatmatesDetails.depositCharges"
+              }
+              label="Deposit"
+              prefix={<IndianRupee size={20} />}
+              required
+              // disabled={disabled}
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormCalendarField
+              name={
+                formKey === "rentForm"
+                  ? "rentalDetails.availableFrom"
+                  : "flatmatesDetails.availableFrom"
+              }
+              label="Available From"
+              dateFormat="yyyy-MM-dd"
+              className="w-full"
+              required
+              // disabled={disabled}
+            />
+          </div>
+          <div className="col-span-1">
+            <FormDropdown
+              label="Furnishing"
+              name={
+                formKey === "rentForm"
+                  ? "rentalDetails.furnishing"
+                  : "flatmatesDetails.furnishing"
+              }
+              id={
+                formKey === "rentForm"
+                  ? "rentalDetails.furnishing"
+                  : "flatmatesDetails.furnishing"
+              }
+              options={[
+                {
+                  value: "Fully-furnished",
+                  label: "Fully Furnished",
+                },
+                {
+                  value: "Semi-funnished",
+                  label: "Semi Furnished",
+                },
+                { value: "Unfurnished", label: "UnFurnished" },
+              ]}
+              required={true}
+              placeholder="Select furnishing"
+              disabled={disabled}
+              // aria-describedby={
+              //   formKey === "rentForm"
+              //     ? errors?.rentalDetails?.furnishing &&
+              //       touched?.rentalDetails?.furnishing
+              //       ? "rentalDetails.furnishing-error"
+              //       : undefined
+              //     : errors?.flatmatesDetails?.furnishing &&
+              //         touched?.flatmatesDetails?.furnishing
+              //       ? "flatmatesDetails.furnishing-error"
+              //       : undefined
+              // }
+            />
+          </div>
+        </div>
+        {formKey === "rentForm" && (
+          <div className="mb-6">
+            <FormCheckbox
+              name="rentalDetails.preferredTenants"
+              label="Preferred Tenant"
+              columns={4}
+              options={[
+                {
+                  value: "Family",
+                  label: "Family",
+                  icon: <FamilyIcon />,
+                },
+                {
+                  value: "Company",
+                  label: "Company",
+                  icon: <CompanyIcon />,
+                },
+                {
+                  value: "Bachelor",
+                  label: "Bachelor",
+                  icon: <BachelorIcon />,
+                },
+                {
+                  value: "Couple",
+                  label: "Couple",
+                  icon: <CoupleIcon />,
+                },
+              ]}
+              withIcons={true}
+              required
+              // disabled={disabled}
+            />
+          </div>
+        )}
+        {formKey === "flatmatesForm" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <FormRadioGroup
+              name="flatmatesDetails.tenantType"
+              label="Preferred Tenant"
+              columns={2}
+              options={[
+                {
+                  value: "Female",
+                  label: "Female",
+                  icon: <FemaleIcon />,
+                },
+                {
+                  value: "Male",
+                  label: "Male",
+                  icon: <MaleIcon />,
+                },
+              ]}
+              withIcons={true}
+              required
+              horizontal
+              // disabled={disabled}
+            />
+            <FormRadioGroup
+              name="flatmatesDetails.nonVegAllowed"
+              label="Food Preferences"
+              columns={2}
+              options={[
+                {
+                  value: false,
+                  label: "Veg",
+                  icon: <VegIcon />,
+                },
+                {
+                  value: true,
+                  label: "Non-Veg",
+                  icon: <NonVegIcon />,
+                },
+              ]}
+              withIcons={true}
+              horizontal
+              // disabled={disabled}
+            />
+          </div>
+        )}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormDropdown
+              label="Water Supply"
+              name={
+                formKey === "rentForm"
+                  ? "rentalDetails.waterSupply"
+                  : "flatmatesDetails.waterSupply"
+              }
+              id={
+                formKey === "rentForm"
+                  ? "rentalDetails.waterSupply"
+                  : "flatmatesDetails.waterSupply"
+              }
+              options={[
+                { value: "borewell", label: "Borewell" },
+                {
+                  value: "tanker",
+                  label: "Tanker",
+                },
+                {
+                  value: "Ground-water",
+                  label: "Ground Water",
+                },
+              ]}
+              required={true}
+              placeholder="Select Water supply"
+              disabled={disabled}
+              // aria-describedby={
+              //   formKey === "rentForm"
+              //     ? errors?.rentalDetails?.waterSupply &&
+              //       touched?.rentalDetails?.waterSupply
+              //       ? "rentalDetails.waterSupply-error"
+              //       : undefined
+              //     : errors?.flatmatesDetails?.waterSupply &&
+              //         touched?.flatmatesDetails?.waterSupply
+              //       ? "flatmatesDetails.waterSupply-error"
+              //       : undefined
+              // }
+            />
+          </div>
+          <div className="col-span-1">
+            <FormDropdown
+              label="Power Backup"
+              name={
+                formKey === "rentForm"
+                  ? "rentalDetails.powerBackup"
+                  : "flatmatesDetails.powerBackup"
+              }
+              id={
+                formKey === "rentForm"
+                  ? "rentalDetails.powerBackup"
+                  : "flatmatesDetails.powerBackup"
+              }
+              options={[
+                { value: "full", label: "Full" },
+                {
+                  value: "partial",
+                  label: "Partial",
+                },
+                {
+                  value: "no",
+                  label: "No",
+                },
+              ]}
+              required={true}
+              placeholder="Select Power backup"
+              disabled={disabled}
+              // aria-describedby={
+              //   formKey === "rentForm"
+              //     ? errors?.rentalDetails?.powerBackup &&
+              //       touched?.rentalDetails?.powerBackup
+              //       ? "rentalDetails.powerBackup-error"
+              //       : undefined
+              //     : errors?.flatmatesDetails?.powerBackup &&
+              //         touched?.flatmatesDetails?.powerBackup
+              //       ? "flatmatesDetails.powerBackup-error"
+              //       : undefined
+              // }
+            />
+          </div>
+        </div>
+        {formKey === "rentForm" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div className="col-span-1">
+              <FormDropdown
+                label="Parking"
+                name="rentalDetails.parking"
+                id="rentalDetails.parking"
+                options={[
+                  { value: true, label: "Yes" },
+                  {
+                    value: false,
+                    label: "No",
+                  },
+                ]}
+                required={true}
+                placeholder="Select Parking"
+                disabled={disabled}
+                // aria-describedby={
+                //   errors?.rentalDetails?.parking &&
+                //   touched?.rentalDetails?.parking
+                //     ? "rentalDetails.parking-error"
+                //     : undefined
+                // }
+              />
+            </div>
+            <div className="col-span-1">
+              <FormRadioGroup
+                name="rentalDetails.nonVegAllowed"
+                label="Non Veg Allowed"
+                columns={2}
+                options={[
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
+                ]}
+                required
+                horizontal
+                // disabled={disabled}
+              />
+            </div>
+          </div>
+        )}
+        {formKey === "flatmatesForm" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div className="col-span-1">
+              <FormRadioGroup
+                name="flatmatesDetails.attachedBathroom"
+                label="Attached Bathroom"
+                columns={2}
+                options={[
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
+                ]}
+                required
+                horizontal
+                // disabled={disabled}
+              />
+            </div>
+            <div className="col-span-1">
+              <FormRadioGroup
+                name="flatmatesDetails.attachedBalcony"
+                label="Attached Balcony"
+                columns={2}
+                options={[
+                  { value: "true", label: "Yes" },
+                  { value: "false", label: "No" },
+                ]}
+                required
+                horizontal
+                // disabled={disabled}
+              />
+            </div>
+          </div>
+        )}
+        {formKey === "flatmatesForm" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div className="col-span-1">
+              <FormRadioGroup
+                name="flatmatesDetails.smokingPreference"
+                label="Smoking Allowed"
+                columns={2}
+                options={[
+                  { value: "Not Allowed", label: "Not Allowed" },
+                  { value: "Allowed", label: "Allowed" },
+                ]}
+                required
+                horizontal
+                // disabled={disabled}
+              />
+            </div>
+            <div className="col-span-1">
+              <FormRadioGroup
+                name="flatmatesDetails.drinkingPreference"
+                label="Drinking Allowed"
+                columns={2}
+                options={[
+                  { value: "No", label: "No" },
+                  { value: "Occasionally", label: "Occasionally" },
+                ]}
+                required
+                horizontal
+                // disabled={disabled}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+      <div className="mb-8">
+        <h1 className="text-2xl text-gray-800">
+          Select the available amenities
+        </h1>
+        <FormCheckbox
+          name={
+            formKey === "rentForm"
+              ? "rentalDetails.amenities"
+              : "flatmatesDetails.amenities"
+          }
+          columns={4}
+          options={[
+            { value: "Lift", label: "Lift", icon: <LiftIcon /> },
+            {
+              value: "Clubhouse",
+              label: "Club house",
+              icon: <ClubhouseIcon />,
+            },
+            { value: "Gym", label: "Gym", icon: <GymIcon /> },
+            {
+              value: "Outdoor Dining Area",
+              label: "Outdoor Dining Area",
+              icon: <OutdoorDiningAreaIcon />,
+            },
+            {
+              value: "Gated Security",
+              label: "Gated Security",
+              icon: <GatedSecurityIcon />,
+            },
+            { value: "Pool", label: "Pool ", icon: <PoolIcon /> },
+            {
+              value: "Fire Extinguisher",
+              label: "Fire Extinguisher",
+              icon: <FireExtinguisherIcon />,
+            },
+            {
+              value: "Smoke Alarm",
+              label: "Smoke Alarm",
+              icon: <SmokeAlarmIcon />,
+            },
+            {
+              value: "Swimming Pool",
+              label: "Swimming Pool",
+              icon: <SwimmingPoolIcon />,
+            },
+            {
+              value: "24/7 Power",
+              label: "24/7 Power",
+              icon: <TwentyFourSevenPowerIcon />,
+            },
+            {
+              value: "Security",
+              label: "Security",
+              icon: <SecurityIcon />,
+            },
+            {
+              value: "Parking Space",
+              label: "Parking Space",
+              icon: <ParkingSpaceIcon />,
+            },
+            {
+              value: "Dedicated Workspace",
+              label: "Dedicated Workspace",
+              icon: <DedicatedWorkspaceIcon />,
+            },
+            { value: "Wifi", label: "Wifi", icon: <WifiIcon /> },
+            {
+              value: "BBQ Grill",
+              label: "BBQ Grill",
+              icon: <BBQGrillIcon />,
+            },
+            {
+              value: "Pool Table",
+              label: "Pool Table",
+              icon: <PoolTableIcon />,
+            },
+            {
+              value: "First Aid Kit",
+              label: "First Aid Kit",
+              icon: <FirstAidKitIcon />,
+            },
+          ]}
+          withIcons={true}
+          alignment="start"
+          required
+          // disabled={disabled}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default RentalDetailsForm;

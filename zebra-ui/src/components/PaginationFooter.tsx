@@ -2,7 +2,7 @@
 
 import React from "react";
 
-interface TablePaginationProps {
+interface PaginationFooterProps {
   currentPage: number;
   totalPages: number;
   isFirst: boolean;
@@ -10,9 +10,10 @@ interface TablePaginationProps {
   goToPage: (page: number) => void;
   nextPage: () => void;
   prevPage: () => void;
+  footerPadding?: string;
 }
 
-export const TablePagination: React.FC<TablePaginationProps> = ({
+export const PaginationFooter: React.FC<PaginationFooterProps> = ({
   currentPage,
   totalPages,
   isFirst,
@@ -20,6 +21,8 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
   goToPage,
   prevPage,
   nextPage,
+  // default padding
+  footerPadding = "py-2 px-16",
 }) => {
   // totalPages = 30;
   const WINDOW_SIZE = 3;
@@ -42,9 +45,10 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
   }
 
   return (
-    <div className="flex items-center justify-between space-x-2 py-2 px-16 bg-white w-full">
+    <div
+      className={`flex items-center justify-between space-x-2 bg-white w-full ${footerPadding}`}
+    >
       <div className="flex gap-2">
-        {" "}
         <button
           type="button"
           disabled={isFirst}

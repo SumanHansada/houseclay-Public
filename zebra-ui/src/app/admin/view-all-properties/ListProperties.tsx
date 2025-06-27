@@ -4,12 +4,11 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
+import { PaginationFooter } from "@/components/PaginationFooter";
 import { SearchAndFilterBar } from "@/components/SearchAndFilterBar";
-import { TablePagination } from "@/components/TablePagination";
 import { GetAllPropertiesResponse, PropertyInfo } from "@/interfaces/Property";
-import { dummyGetAllProperties } from "@/mock/getAllProperties";
-
-import { createCommonColumns } from "../user-details/[userPhoneNo]/propertyColumns";
+import { dummyGetAllProperties } from "@/mock/propertyDetailsDummy";
+import { createCommonColumns } from "@/utils/commonPropertyColumns";
 
 interface PropertyRow extends PropertyInfo {
   _serial: number;
@@ -91,7 +90,7 @@ export const ListProperties = () => {
 
         {/* Sticky bottom pagination */}
         <div className="sticky bottom-0 z-10 border border-t-gray-200 shadow-sm">
-          <TablePagination
+          <PaginationFooter
             currentPage={currentPage}
             totalPages={totalPages}
             isFirst={isFirst}

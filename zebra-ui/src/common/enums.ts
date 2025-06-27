@@ -46,11 +46,16 @@ export enum VerifyPropertyStatusEnum {
 }
 
 export enum PropertyDetailsTabEnum {
-  OVERVIEW = "overview",
-  RENT_DETAILS = "rent-details",
-  RESALE_DETAILS = "resale-details",
-  FLATMATE_DETAILS = "flatmate-details",
+  DETAILS = "details",
+  OWNER_DETAILS = "owner-details",
   CONTACTED = "contacted",
   SHORTLISTED = "shortlisted",
   VIEWED = "viewed",
+}
+
+export enum VerifyPropertyTabEnum {
+  DETAILS = "details",
+}
+export enum ReverifyPropertyTabEnum {
+  DETAILS = "details",
 }
