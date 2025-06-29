@@ -1,7 +1,7 @@
 package com.houseclay.backend.entity;
 
 public enum PropertyCategory {
-    SALE,
+    RESALE,
     RENT,
     FLATMATE
 }

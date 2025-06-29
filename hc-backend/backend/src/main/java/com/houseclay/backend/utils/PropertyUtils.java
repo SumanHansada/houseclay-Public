@@ -10,7 +10,7 @@ public class PropertyUtils {
 
     public static PropertyCategory getPropertyCategory(Property property) {
         if(property instanceof SaleProperty)
-            return PropertyCategory.SALE;
+            return PropertyCategory.RESALE;
         if(property instanceof RentProperty)
             return PropertyCategory.RENT;
         if(property instanceof FlatmateProperty)
