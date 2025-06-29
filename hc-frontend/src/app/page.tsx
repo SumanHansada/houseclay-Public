@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import { Suspense } from "react";
 
 import Advantages from "@/components/Advantages";
@@ -9,25 +8,20 @@ import MastHeadMobileClient from "@/components/MastheadMobileClient";
 import dummyData from "../data/dummyData.json";
 import ClientPage from "./ClientPage";
 
-// Server component to detect device type
-async function getDeviceType() {
-  const headersList = await headers();
-  const userAgent = headersList.get("user-agent") || "";
-  const isMobile = /Android|iPhone/i.test(userAgent);
-  return { isMobile };
-}
-
 export default async function Home() {
-  const { isMobile } = await getDeviceType();
   const properties = dummyData.properties;
   const neighbourhoods = dummyData.neighbourhoods;
   const testimonials = dummyData.testimonials;
 
   return (
     <>
-      {/* Masthead Section - Server-side rendered based on device */}
-      <section className="relative xl:h-[600px] lg:h-[500px] h-[500px] w-full">
-        {isMobile ? <MastHeadMobileClient /> : <MastheadDesktopClient />}
+      {/* Masthead Desktop Section */}
+      <section className="relative xl:h-[600px] lg:h-[500px] h-[500px] w-full max-md:hidden">
+        <MastheadDesktopClient />
+      </section>
+      {/* Masthead Mobile Section */}
+      <section className={"min-h-[500px] w-full overflow-hidden md:hidden"}>
+        <MastHeadMobileClient />
       </section>
 
       {/* Advantages Section */}

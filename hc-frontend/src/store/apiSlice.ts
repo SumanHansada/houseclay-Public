@@ -234,6 +234,9 @@ export const apiSlice = createApi({
     getPropertyById: builder.query<any, string>({
       query: (id) => `/property/user/${id}`,
     }),
+    getPropertyByIdNoAuth: builder.query<unknown, string>({
+      query: (id) => `/property/${id}`,
+    }),
 
     getPropertiesByLocation: builder.query<
       unknown,
@@ -278,4 +281,6 @@ export const {
   useGetPropertiesByLocationQuery,
   useLazyGetPropertiesByLocationQuery,
   useGenerateLeadMutation,
+  useGetPropertyByIdNoAuthQuery,
+  useLazyGetPropertyByIdNoAuthQuery,
 } = apiSlice;

@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: "houseclay-properties-photos.s3.ap-southeast-2.amazonaws.com",
+        hostname: "houseclay.s3.ap-southeast-2.amazonaws.com",
       },
     ],
   },

@@ -357,10 +357,10 @@ const Login = () => {
           </div>
         )}
         {authStep === AuthStep.OTP && (
-          <div className="w-full flex flex-col align-center justify-center gap-8">
+          <div className="w-full flex flex-col align-center justify-center gap-4">
             {/* Form header */}
             <div>
-              <h1 className="text-2xl mb-3 text-black ">
+              <h1 className="text-2xl mb-1 text-black ">
                 Verify Your Phone Number
               </h1>
               <p className="text-gray-600 text-sm">
@@ -369,9 +369,10 @@ const Login = () => {
             </div>
 
             {/* Form fields */}
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
               <div className="flex gap-2">
                 <input
+                  id="otp-1"
                   type="text"
                   inputMode="numeric"
                   autoComplete="one-time-code"
@@ -380,42 +381,45 @@ const Login = () => {
                   onChange={(e) => handleChange(0, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(0, e)}
                   onPaste={handlePaste}
-                  className={`w-14 h-14 text-center text-xl font-medium border-2 ${otpCode[0] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
+                  className={`w-12 h-12 text-center text-xl font-medium border-2 ${otpCode[0] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
                   maxLength={1}
                 />
                 <input
+                  id="otp-2"
                   type="text"
                   inputMode="numeric"
                   ref={inputRefs[1]}
                   value={otpCode[1]}
                   onChange={(e) => handleChange(1, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(1, e)}
-                  className={`w-14 h-14 text-center text-xl font-medium border-2 ${otpCode[1] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
+                  className={`w-12 h-12 text-center text-xl font-medium border-2 ${otpCode[1] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
                   maxLength={1}
                 />
                 <input
+                  id="otp-3"
                   type="text"
                   inputMode="numeric"
                   ref={inputRefs[2]}
                   value={otpCode[2]}
                   onChange={(e) => handleChange(2, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(2, e)}
-                  className={`w-14 h-14 text-center text-xl font-medium border-2 ${otpCode[2] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
+                  className={`w-12 h-12 text-center text-xl font-medium border-2 ${otpCode[2] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
                   maxLength={1}
                 />
                 <input
+                  id="otp-4"
                   type="text"
                   inputMode="numeric"
                   ref={inputRefs[3]}
                   value={otpCode[3]}
                   onChange={(e) => handleChange(3, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(3, e)}
-                  className={`w-14 h-14 text-center text-xl font-medium border-2 ${otpCode[3] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
+                  className={`w-12 h-12 text-center text-xl font-medium border-2 ${otpCode[3] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
                   maxLength={1}
                 />
               </div>
               {/* Info box */}
-              <div className="bg-red-50 p-4 rounded-lg flex items-center gap-4">
+              <div className="bg-red-50 p-2 rounded-lg flex items-center gap-2">
                 <Image
                   src="/icons/coin-egg.svg"
                   alt="Info"
