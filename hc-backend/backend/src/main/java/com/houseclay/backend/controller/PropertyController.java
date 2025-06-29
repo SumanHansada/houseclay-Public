@@ -1,8 +1,13 @@
 package com.houseclay.backend.controller;
 
+import com.houseclay.backend.entity.Property;
 import com.houseclay.backend.entity.PropertyDocument;
+import com.houseclay.backend.exception.APIException;
+import com.houseclay.backend.mapper.PropertyBasicMapper;
+import com.houseclay.backend.service.PropertyService;
 import com.houseclay.backend.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +19,21 @@ public class PropertyController {
 
     @Autowired
     private SearchService searchService;
+
+    @Autowired
+    private PropertyService propertyService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getPropertyById(@PathVariable String id) {
+        try {
+            Property property = propertyService.getProperty(id);
+            return ResponseEntity.ok(PropertyBasicMapper.toBasicDTO(property));
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 
 
     @GetMapping("/search")
