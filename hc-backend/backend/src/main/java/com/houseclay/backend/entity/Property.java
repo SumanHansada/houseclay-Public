@@ -18,7 +18,7 @@ import java.util.List;
         visible = true
 )
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = SaleProperty.class, name = "Sale"),
+        @JsonSubTypes.Type(value = SaleProperty.class, name = "Resale"),
         @JsonSubTypes.Type(value = RentProperty.class, name = "Rent"),
         @JsonSubTypes.Type(value = FlatmateProperty.class, name = "Flatmate")
 })
