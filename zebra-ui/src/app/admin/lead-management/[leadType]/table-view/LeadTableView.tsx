@@ -23,7 +23,7 @@ export const LeadTableView = () => {
     leadType === "property" ? "Property Listing Leads" : "Search Support Leads";
 
   const {
-    data: paginatedData,
+    data: paginatedLeadData,
     isLoading,
     isError,
     error,
@@ -38,11 +38,11 @@ export const LeadTableView = () => {
     },
   );
 
-  if (isLoading || isError || !paginatedData) {
+  if (isLoading || isError || !paginatedLeadData) {
     return (
       <AsyncFallback
         isLoading={isLoading}
-        isError={isError || !paginatedData}
+        isError={isError || !paginatedLeadData}
         error={error}
         loadingMessage={`Loading ${statusBarTitle}…`}
         errorMessage="Failed to fetch Leads."
@@ -50,10 +50,10 @@ export const LeadTableView = () => {
     );
   }
 
-  const allLeads = paginatedData.content;
-  const totalPages = paginatedData.totalPages;
-  const isFirst = paginatedData.first;
-  const isLast = paginatedData.last;
+  const allLeads = paginatedLeadData.content;
+  const totalPages = paginatedLeadData.totalPages;
+  const isFirst = paginatedLeadData.first;
+  const isLast = paginatedLeadData.last;
 
   const goToPage = (page: number) => {
     if (page >= 1 && page <= totalPages) {

@@ -1,5 +1,5 @@
 import {} from "@/interfaces/Property";
-import { PaymentStatusEnum } from "@/interfaces/User";
+import { PaymentStatusEnum } from "@/common/enums";
 
 // export const dummyProperties: UserPropertyInfo[] = [];
 
@@ -371,12 +371,132 @@ export const dummyExternalPayments = [
 
 export const dummyConnectTransactions = [
   {
-    transactionId: "TXN002",
+    transactionId: "TXN001",
     connectQuantity: 3,
     transactionTime: "2025-06-09T19:05:27.661+00:00",
   },
   {
+    transactionId: "TXN002",
+    connectQuantity: 10,
+    transactionTime: "2025-06-09T19:06:27.661+00:00",
+  },
+  {
     transactionId: "TXN003",
+    connectQuantity: 3,
+    transactionTime: "2025-06-09T19:05:27.661+00:00",
+  },
+  {
+    transactionId: "TXN004",
+    connectQuantity: 10,
+    transactionTime: "2025-06-09T19:06:27.661+00:00",
+  },
+  {
+    transactionId: "TXN005",
+    connectQuantity: 3,
+    transactionTime: "2025-06-09T19:05:27.661+00:00",
+  },
+  {
+    transactionId: "TXN006",
+    connectQuantity: 10,
+    transactionTime: "2025-06-09T19:06:27.661+00:00",
+  },
+  {
+    transactionId: "TXN007",
+    connectQuantity: 3,
+    transactionTime: "2025-06-09T19:05:27.661+00:00",
+  },
+  {
+    transactionId: "TXN008",
+    connectQuantity: 10,
+    transactionTime: "2025-06-09T19:06:27.661+00:00",
+  },
+  {
+    transactionId: "TXN009",
+    connectQuantity: 3,
+    transactionTime: "2025-06-09T19:05:27.661+00:00",
+  },
+  {
+    transactionId: "TXN010",
+    connectQuantity: 10,
+    transactionTime: "2025-06-09T19:06:27.661+00:00",
+  },
+  {
+    transactionId: "TXN011",
+    connectQuantity: 3,
+    transactionTime: "2025-06-09T19:05:27.661+00:00",
+  },
+  {
+    transactionId: "TXN012",
+    connectQuantity: 10,
+    transactionTime: "2025-06-09T19:06:27.661+00:00",
+  },
+  {
+    transactionId: "TXN013",
+    connectQuantity: 3,
+    transactionTime: "2025-06-09T19:05:27.661+00:00",
+  },
+  {
+    transactionId: "TXN014",
+    connectQuantity: 10,
+    transactionTime: "2025-06-09T19:06:27.661+00:00",
+  },
+  {
+    transactionId: "TXN015",
+    connectQuantity: 3,
+    transactionTime: "2025-06-09T19:05:27.661+00:00",
+  },
+  {
+    transactionId: "TXN016",
+    connectQuantity: 10,
+    transactionTime: "2025-06-09T19:06:27.661+00:00",
+  },
+  {
+    transactionId: "TXN017",
+    connectQuantity: 3,
+    transactionTime: "2025-06-09T19:05:27.661+00:00",
+  },
+  {
+    transactionId: "TXN018",
+    connectQuantity: 10,
+    transactionTime: "2025-06-09T19:06:27.661+00:00",
+  },
+  {
+    transactionId: "TXN019",
+    connectQuantity: 3,
+    transactionTime: "2025-06-09T19:05:27.661+00:00",
+  },
+  {
+    transactionId: "TXN020",
+    connectQuantity: 10,
+    transactionTime: "2025-06-09T19:06:27.661+00:00",
+  },
+  {
+    transactionId: "TXN0021",
+    connectQuantity: 3,
+    transactionTime: "2025-06-09T19:05:27.661+00:00",
+  },
+  {
+    transactionId: "TXN0022",
+    connectQuantity: 10,
+    transactionTime: "2025-06-09T19:06:27.661+00:00",
+  },
+  {
+    transactionId: "TXN0023",
+    connectQuantity: 3,
+    transactionTime: "2025-06-09T19:05:27.661+00:00",
+  },
+  {
+    transactionId: "TXN0024",
+    connectQuantity: 10,
+    transactionTime: "2025-06-09T19:06:27.661+00:00",
+  },
+  {
+    transactionId: "TXN00225",
+    connectQuantity: 3,
+    transactionTime: "2025-06-09T19:05:27.661+00:00",
+  },
+  {
+    transactionId: "TXN00326",
     connectQuantity: 10,
     transactionTime: "2025-06-09T19:06:27.661+00:00",
   },

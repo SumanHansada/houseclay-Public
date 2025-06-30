@@ -1,6 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 
@@ -14,12 +14,6 @@ const ProfilePage: React.FC = () => {
   const [isBlacklisted, setIsBlacklisted] = useState<boolean>(
     currentUser.blacklisted,
   );
-
-  useEffect(() => {
-    if (currentUser) {
-      setIsBlacklisted(currentUser.blacklisted);
-    }
-  }, [currentUser]);
 
   const handleBlacklistUser = () => {
     // updateUserBlacklist({ phoneNo: user.phoneNo, blacklisted: true });

@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Column } from "@/components/DataTable";
 import { PropertyInfo } from "@/interfaces/Property";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
-import { createCommonColumns } from "@/utils/commonPropertyColumns";
+import { buildPropertyColumns } from "@/utils/buildPropertyColumns";
 
 import { PropertiesTableView } from "../../components/PropertiesTableView";
 
@@ -48,8 +48,7 @@ const ReportedPropertiesPage: React.FC = () => {
     }),
   );
 
-  const commonColumns: Column<PropertyRow>[] =
-    createCommonColumns(viewPropertyDetails);
+  const commonColumns = buildPropertyColumns(viewPropertyDetails);
 
   const actionIdx = commonColumns.findIndex((col) => col.key === "status");
 

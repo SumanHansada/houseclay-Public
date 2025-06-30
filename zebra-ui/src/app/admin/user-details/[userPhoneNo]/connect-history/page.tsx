@@ -1,19 +1,19 @@
 "use client";
 import { ArrowDownToLine } from "lucide-react";
 import { useParams } from "next/navigation";
-import React, { useMemo, useState } from "react";
+import React from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/PaginationFooter";
 import { UserConnectTransaction } from "@/interfaces/User";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
+import { useLocalPagination } from "@/hooks/useLocalPagination";
 
 interface RowType extends UserConnectTransaction {
   _serial: number;
 }
 
 const ConnectHistoryPage: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState(1);
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
   const { data } = useGetUserByPhoneNoQuery({ phoneNo: userPhoneNo });
 
@@ -24,22 +24,16 @@ const ConnectHistoryPage: React.FC = () => {
     _serial: index + 1,
   }));
 
-  const rowsPerPage = 10;
-  const totalRows = rows.length;
-  const totalPages = Math.ceil(totalRows / rowsPerPage);
-  const isFirst = currentPage === 1;
-  const isLast = currentPage >= totalPages;
-
-  const paginatedRows = useMemo(() => {
-    const start = (currentPage - 1) * rowsPerPage;
-    return rows.slice(start, start + rowsPerPage);
-  }, [rows, currentPage]);
-
-  const goToPage = (page: number) => {
-    if (page >= 1 && page <= totalPages) setCurrentPage(page);
-  };
-  const nextPage = () => !isLast && setCurrentPage((p) => p + 1);
-  const prevPage = () => !isFirst && setCurrentPage((p) => p - 1);
+  const {
+    currentPage,
+    paginatedRows,
+    totalPages,
+    isFirst,
+    isLast,
+    goToPage,
+    nextPage,
+    prevPage,
+  } = useLocalPagination(rows, 10);
 
   const columns: Column<RowType>[] = [
     {

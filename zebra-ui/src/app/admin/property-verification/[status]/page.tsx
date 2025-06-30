@@ -12,7 +12,7 @@ import {
   dummyGetPropertiesToBeVerified,
 } from "@/mock/propertyDetailsDummy";
 // import { useGetPropertiesQuery } from "@/redux/api/propertyApi"; // Assuming this is your hook
-import { createCommonColumns } from "@/utils/commonPropertyColumns";
+import { buildPropertyColumns } from "@/utils/buildPropertyColumns";
 
 // Define a type for the row to include the serial number
 interface PropertyRow extends PropertyInfo {
@@ -79,7 +79,7 @@ const PropertyVerificationTablePage: React.FC = () => {
   }));
 
   const columns: Column<PropertyRow>[] =
-    createCommonColumns(viewPropertyDetails);
+    buildPropertyColumns(viewPropertyDetails);
 
   // --- RENDER ---
   return (
@@ -166,7 +166,7 @@ export default PropertyVerificationTablePage;
 //   dummyGetPropertiesToBeVerified,
 // } from "@/mock/propertyDetailsDummy";
 
-// import { createCommonColumns } from "@/utils/commonPropertyColumns";
+// import { buildPropertyColumns } from "@/utils/commonPropertyColumns";
 
 // interface PropertyRow extends PropertyInfo {
 //   _serial: number;
@@ -194,7 +194,7 @@ export default PropertyVerificationTablePage;
 //   }));
 
 //   const columns: Column<PropertyRow>[] =
-//     createCommonColumns(viewPropertyDetails);
+//     buildPropertyColumns(viewPropertyDetails);
 
 //   return (
 //     <div className="flex flex-col flex-1 bg-white shadow-sm rounded-xl p-4 gap-4">

@@ -3,12 +3,13 @@
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-import { Column, DataTable } from "@/components/DataTable";
+import { DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/PaginationFooter";
 import { SearchAndFilterBar } from "@/components/SearchAndFilterBar";
 import { PropertyInfo } from "@/interfaces/Property";
-import { createCommonColumns } from "@/utils/commonPropertyColumns";
+import { buildPropertyColumns } from "@/utils/buildPropertyColumns";
 import { useGetPropertiesQuery } from "@/store/apiSlice";
+import AsyncFallback from "@/components/AsyncFallback";
 
 interface PropertyRow extends PropertyInfo {
   _serial: number;
@@ -24,6 +25,7 @@ export const ListProperties = () => {
     data: paginatedPropertyData,
     isLoading,
     isError,
+    error,
   } = useGetPropertiesQuery(
     {
       page: currentPage - 1,
@@ -34,18 +36,15 @@ export const ListProperties = () => {
     },
   );
 
-  if (isLoading || !paginatedPropertyData) {
+  if (isLoading || isError || !paginatedPropertyData) {
     return (
-      <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-        <span className="text-gray-500">Loading user details…</span>
-      </div>
-    );
-  }
-  if (isError) {
-    return (
-      <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-        <span className="text-red-500">Failed to fetch user details.</span>
-      </div>
+      <AsyncFallback
+        isLoading={isLoading}
+        isError={isError || !paginatedPropertyData}
+        error={error}
+        loadingMessage="Loading all properties…"
+        errorMessage="Failed to fetch Properties."
+      />
     );
   }
 
@@ -72,8 +71,7 @@ export const ListProperties = () => {
   const nextPage = () => !isLast && setCurrentPage((p) => p + 1);
   const prevPage = () => !isFirst && setCurrentPage((p) => p - 1);
 
-  const columns: Column<PropertyRow>[] =
-    createCommonColumns(viewPropertyDetails);
+  const columns = buildPropertyColumns(viewPropertyDetails);
 
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">

@@ -20,7 +20,7 @@ export const UsersManagement = () => {
   const rowsPerPage = 10;
 
   const {
-    data: paginatedData,
+    data: paginatedUserData,
     isLoading,
     isError,
     error,
@@ -34,11 +34,11 @@ export const UsersManagement = () => {
     },
   );
 
-  if (isLoading || isError || !paginatedData) {
+  if (isLoading || isError || !paginatedUserData) {
     return (
       <AsyncFallback
         isLoading={isLoading}
-        isError={isError || !paginatedData}
+        isError={isError || !paginatedUserData}
         error={error}
         loadingMessage="Loading all users…"
         errorMessage="Failed to fetch Users."
@@ -46,10 +46,10 @@ export const UsersManagement = () => {
     );
   }
 
-  const allUsers = paginatedData.content;
-  const totalPages = paginatedData.totalPages;
-  const isFirst = paginatedData.first;
-  const isLast = paginatedData.last;
+  const allUsers = paginatedUserData.content;
+  const totalPages = paginatedUserData.totalPages;
+  const isFirst = paginatedUserData.first;
+  const isLast = paginatedUserData.last;
 
   const filteredUsers = allUsers.filter((u) =>
     u.phoneNo.includes(searchValue.toLowerCase()),

@@ -1,10 +1,9 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
 
-import { Column } from "@/components/DataTable";
 import { PropertyInfo } from "@/interfaces/Property";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
-import { createCommonColumns } from "@/utils/commonPropertyColumns";
+import { buildPropertyColumns } from "@/utils/buildPropertyColumns";
 
 import { PropertiesTableView } from "../../components/PropertiesTableView";
 
@@ -28,8 +27,7 @@ const OwnedPropertiesPage: React.FC = () => {
     _serial: index + 1,
   }));
 
-  const columns: Column<PropertyRow>[] =
-    createCommonColumns(viewPropertyDetails);
+  const columns = buildPropertyColumns(viewPropertyDetails);
 
   return (
     <div className="h-full">
