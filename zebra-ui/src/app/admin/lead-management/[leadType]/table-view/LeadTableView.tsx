@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/PaginationFooter";
@@ -11,54 +11,66 @@ import { useGetLeadsQuery } from "@/store/apiSlice";
 
 import { RenderLeadStatus } from "../../components/RenderLeadStatus";
 import { TableActionButtons } from "../../components/TableActionButtons";
+import AsyncFallback from "@/components/AsyncFallback";
 
-interface LeadTableViewProps {
-  leadType: LeadType;
-}
-
-export const LeadTableView = ({ leadType }: LeadTableViewProps) => {
+export const LeadTableView = () => {
   const router = useRouter();
+  const { leadType } = useParams() as { leadType: LeadType };
   const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
+  const statusBarTitle =
+    leadType === "property" ? "Property Listing Leads" : "Search Support Leads";
 
-  const { data, isLoading, isError } = useGetLeadsQuery({
-    type: LeadQueryParamEnum[leadType],
-    page: currentPage - 1,
-    size: rowsPerPage,
-  });
+  const {
+    data: paginatedData,
+    isLoading,
+    isError,
+    error,
+  } = useGetLeadsQuery(
+    {
+      type: LeadQueryParamEnum[leadType],
+      page: currentPage - 1,
+      size: rowsPerPage,
+    },
+    {
+      refetchOnMountOrArgChange: true,
+    },
+  );
 
-  const allLeads = useMemo<Lead[]>(() => {
-    return data?.content ?? [];
-  }, [data?.content]);
+  if (isLoading || isError || !paginatedData) {
+    return (
+      <AsyncFallback
+        isLoading={isLoading}
+        isError={isError || !paginatedData}
+        error={error}
+        loadingMessage={`Loading ${statusBarTitle}…`}
+        errorMessage="Failed to fetch Leads."
+      />
+    );
+  }
 
-  const totalPages = data?.totalPages ?? 0;
-  const isFirst = data?.first ?? true;
-  const isLast = data?.last ?? true;
+  const allLeads = paginatedData.content;
+  const totalPages = paginatedData.totalPages;
+  const isFirst = paginatedData.first;
+  const isLast = paginatedData.last;
+
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const nextPage = () => !isLast && setCurrentPage((p) => p + 1);
+  const prevPage = () => !isFirst && setCurrentPage((p) => p - 1);
 
   const viewUserProfile = (phoneNo: string) => {
     router.push(`/admin/user-details/${phoneNo}`);
   };
 
   const viewLeadDetails = (id: number) => {
-    router.push(`/admin/lead-management/${leadType}/lead/${id}`);
+    router.push(`/admin/lead-management/${leadType}/${id}`);
   };
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <span>Loading leads…</span>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="flex justify-center items-center h-64 text-red-500">
-        <span>Error loading leads.</span>
-      </div>
-    );
-  }
 
   const columns: Column<Lead>[] = [
     {
@@ -85,18 +97,6 @@ export const LeadTableView = ({ leadType }: LeadTableViewProps) => {
       ),
     },
   ];
-
-  const goToPage = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
-  const nextPage = () => !isLast && setCurrentPage((p) => p + 1);
-  const prevPage = () => !isFirst && setCurrentPage((p) => p - 1);
-
-  const statusBarTitle =
-    leadType === "property" ? "Property Listing Leads" : "Search Support Leads";
 
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">

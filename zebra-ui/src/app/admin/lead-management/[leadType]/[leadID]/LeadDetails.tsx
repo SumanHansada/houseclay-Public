@@ -1,34 +1,30 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 
-import { LeadActionsEnum, LeadStatusEnum } from "@/interfaces/Lead";
+import { LeadActionsEnum, LeadStatusEnum, LeadType } from "@/interfaces/Lead";
 import {
   useGetLeadByIdQuery,
   useLeadAddCommentMutation,
   useLeadStatusUpdateMutation,
 } from "@/store/apiSlice";
 
-import { RenderLeadStatus } from "../../../components/RenderLeadStatus";
+import { RenderLeadStatus } from "../../components/RenderLeadStatus";
+import AsyncFallback from "@/components/AsyncFallback";
 
-interface LeadDetailsProps {
-  leadType: string;
-  leadId: number;
-}
-
-export const LeadDetails: React.FC<LeadDetailsProps> = ({
-  leadType,
-  leadId,
-}) => {
+export const LeadDetails = () => {
   const router = useRouter();
+  const params = useParams();
+  const leadType = params.leadType as LeadType;
+  const leadID = Number(params.leadID);
 
   const {
     data: currentLead,
     isLoading,
     isError,
     error,
-  } = useGetLeadByIdQuery({ id: leadId });
+  } = useGetLeadByIdQuery({ id: leadID });
 
   const [leadStatusUpdate, { isLoading: isUpdatingStatus }] =
     useLeadStatusUpdateMutation();
@@ -50,34 +46,27 @@ export const LeadDetails: React.FC<LeadDetailsProps> = ({
     });
   }, [currentLead?.comments.length]);
 
-  if (isLoading) {
+  if (isLoading || isError || !currentLead) {
     return (
-      <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-        <span className="text-gray-500">Loading lead details…</span>
-      </div>
-    );
-  }
-
-  if (isError || !currentLead) {
-    return (
-      <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-        <span className="text-red-500">
-          {typeof error === "object" && "message" in error
-            ? error.message
-            : `Failed to fetch lead #${leadId}.`}
-        </span>
-      </div>
+      <AsyncFallback
+        isLoading={isLoading}
+        isError={isError || !currentLead}
+        error={error}
+        loadingMessage="Loading lead details…"
+        errorMessage={`Failed to fetch lead #${leadID}.`}
+      />
     );
   }
 
   const isFollowUpDisabled = currentLead.status === LeadStatusEnum.FOLLOW_UP;
   const isResolvedDisabled = currentLead.status === LeadStatusEnum.RESOLVED;
+
   const isLeadTypeProperty = leadType === "property";
 
   const handleFollowUp = async () => {
     try {
       await leadStatusUpdate({
-        id: leadId,
+        id: leadID,
         newStatus: LeadActionsEnum.FOLLOW_UP,
       });
     } catch (err: unknown) {
@@ -87,7 +76,7 @@ export const LeadDetails: React.FC<LeadDetailsProps> = ({
   const handleResolved = async () => {
     try {
       await leadStatusUpdate({
-        id: leadId,
+        id: leadID,
         newStatus: LeadActionsEnum.RESOLVED,
       });
     } catch (err: unknown) {
@@ -102,7 +91,7 @@ export const LeadDetails: React.FC<LeadDetailsProps> = ({
     setNewCommentText("");
 
     try {
-      await leadAddComment({ id: leadId, newComment: text });
+      await leadAddComment({ id: leadID, newComment: text });
     } catch (err: unknown) {
       console.error("Failed to post comment:", err);
       setNewCommentText(text);
@@ -132,7 +121,7 @@ export const LeadDetails: React.FC<LeadDetailsProps> = ({
               <div className="flex flex-col">
                 <label className="text-gray-600 font-medium">Created At</label>
                 <span className="mt-1">
-                  {new Date(currentLead.createdAt).toLocaleString()}
+                  {new Date(currentLead.createdAt).toLocaleString("en-IN")}
                 </span>
               </div>
               <div className="flex flex-col">
@@ -166,7 +155,9 @@ export const LeadDetails: React.FC<LeadDetailsProps> = ({
                   <p className="text-sm text-gray-800">{comment.comment}</p>
                   <div className="mt-1 flex justify-between text-xs text-gray-500">
                     <span>Author: {comment.author}</span>
-                    <span>{new Date(comment.date).toLocaleString()}</span>
+                    <span>
+                      {new Date(comment.date).toLocaleString("en-IN")}
+                    </span>
                   </div>
                 </li>
               ))

@@ -28,7 +28,7 @@ const ConnectHistoryPage: React.FC = () => {
   const totalRows = rows.length;
   const totalPages = Math.ceil(totalRows / rowsPerPage);
   const isFirst = currentPage === 1;
-  const isLast = currentPage === totalPages;
+  const isLast = currentPage >= totalPages;
 
   const paginatedRows = useMemo(() => {
     const start = (currentPage - 1) * rowsPerPage;
@@ -58,7 +58,7 @@ const ConnectHistoryPage: React.FC = () => {
       label: "Transaction Time",
       accessor: "transactionTime",
       render: (connectInfo) =>
-        new Date(connectInfo.transactionTime).toLocaleString(),
+        new Date(connectInfo.transactionTime).toLocaleString("en-IN"),
     },
     {
       key: "invoice",

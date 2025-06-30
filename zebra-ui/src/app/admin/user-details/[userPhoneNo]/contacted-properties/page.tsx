@@ -3,7 +3,6 @@ import { useParams, useRouter } from "next/navigation";
 
 import { Column } from "@/components/DataTable";
 import { PropertyInfo } from "@/interfaces/Property";
-import { dummyProperties } from "@/mock/userDetailsDummy";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 import { createCommonColumns } from "@/utils/commonPropertyColumns";
 
@@ -16,10 +15,8 @@ const ContactedPropertiesPage: React.FC = () => {
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
   const router = useRouter();
   const { data } = useGetUserByPhoneNoQuery({ phoneNo: userPhoneNo });
-  console.log(data!.user.contactedProperties);
 
-  // const { contactedProperties } = data!.user;
-  const contactedProperties = dummyProperties;
+  const { contactedProperties } = data!.user;
 
   const viewPropertyDetails = (type: string, propertyID: string) => {
     router.push(`/admin/property-details/${type}/${propertyID}`);

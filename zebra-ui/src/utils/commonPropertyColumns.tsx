@@ -2,7 +2,7 @@ import { Eye, Pencil } from "lucide-react";
 
 import { Column } from "@/components/DataTable";
 import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
-import { RenderPropertyStatus } from "@/components/property/RenderPropertyStatus";
+import { RenderPropertyStatus } from "@/components/status/RenderPropertyStatus";
 import { PropertyInfo } from "@/interfaces/Property";
 
 type ViewDetailsFunction = (propertyID: string, type: string) => void;
@@ -22,32 +22,29 @@ export const createCommonColumns = (
     accessor: "location",
   },
   {
-    key: "type",
-    label: "Type",
-    accessor: "type",
+    key: "propertyCategory",
+    label: "Category",
+    accessor: "propertyCategory",
   },
   {
-    key: "config",
-    label: "Config",
-    accessor: "config",
+    key: "bhkType",
+    label: "BHK Type",
+    accessor: "bhkType",
   },
   {
-    key: "createdAt",
+    key: "createdOn",
     label: "Last Modified",
-    render: (p) =>
-      p.lastModified
-        ? new Date(p.lastModified).toLocaleString()
-        : new Date(p.createdAt).toLocaleString(),
+    render: (p) => new Date(p.updatedOn || p.createdOn).toLocaleString("en-IN"),
   },
   {
     key: "availableFrom",
     label: "Available From",
-    render: (p) => new Date(p.availableFrom).toLocaleString(),
+    render: (p) => new Date(p.availableFrom).toLocaleDateString("en-IN"),
   },
   {
     key: "status",
     label: "Status",
-    render: (p) => <RenderPropertyStatus status={p.status} />,
+    render: (p) => <RenderPropertyStatus status={p.propertyState} />,
   },
   {
     key: "action",
@@ -62,7 +59,7 @@ export const createCommonColumns = (
           classNameIconCustomize="size-5"
         />
         <IconButtonWithTooltip
-          onClick={() => viewDetails(p.type, p.propertyID)}
+          onClick={() => viewDetails(p.propertyCategory, p.propertyID)}
           Icon={Eye}
           tooltipActive={true}
           tooltip="View Profile"

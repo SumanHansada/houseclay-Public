@@ -6,9 +6,9 @@ import React, { useState } from "react";
 import { Column, DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/PaginationFooter";
 import { SearchAndFilterBar } from "@/components/SearchAndFilterBar";
-import { GetAllPropertiesResponse, PropertyInfo } from "@/interfaces/Property";
-import { dummyGetAllProperties } from "@/mock/propertyDetailsDummy";
+import { PropertyInfo } from "@/interfaces/Property";
 import { createCommonColumns } from "@/utils/commonPropertyColumns";
+import { useGetPropertiesQuery } from "@/store/apiSlice";
 
 interface PropertyRow extends PropertyInfo {
   _serial: number;
@@ -18,31 +18,38 @@ export const ListProperties = () => {
   const router = useRouter();
   // const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  // const rowsPerPage = 10;
+  const rowsPerPage = 10;
 
-  // const { data: paginatedPropertyData, isLoading, isError } = useGetAllProperties({
-  //   page: currentPage - 1,
-  //   size: rowsPerPage,
-  // });
-  const paginatedPropertyData: GetAllPropertiesResponse = dummyGetAllProperties;
+  const {
+    data: paginatedPropertyData,
+    isLoading,
+    isError,
+  } = useGetPropertiesQuery(
+    {
+      page: currentPage - 1,
+      size: rowsPerPage,
+    },
+    {
+      refetchOnMountOrArgChange: true,
+    },
+  );
 
-  // if (isLoading || !data) {
-  //   return (
-  //     <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-  //       <span className="text-gray-500">Loading user details…</span>
-  //     </div>
-  //   );
-  // }
-  // if (isError) {
-  //   return (
-  //     <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-  //       <span className="text-red-500">Failed to fetch user details.</span>
-  //     </div>
-  //   );
-  // }
+  if (isLoading || !paginatedPropertyData) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
+        <span className="text-gray-500">Loading user details…</span>
+      </div>
+    );
+  }
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
+        <span className="text-red-500">Failed to fetch user details.</span>
+      </div>
+    );
+  }
 
-  // const propertyList: PropertyInfo[] = data.content;
-  const propertyList: PropertyInfo[] = paginatedPropertyData.content;
+  const propertyList = paginatedPropertyData.content;
 
   const totalPages = paginatedPropertyData.totalPages;
   const isFirst = paginatedPropertyData.first;

@@ -64,6 +64,7 @@ export default function DetailsPage() {
       };
       dispatch(setPropertyData(apiResponse));
     }, 500);
+
     return () => clearTimeout(timer);
   }, [dispatch]);
 
@@ -167,11 +168,7 @@ export default function DetailsPage() {
                   </div>
 
                   <div className="bg-white rounded-xl p-6 shadow-sm">
-                    <LocalityDetailsForm
-                      // formik={formik}
-                      disabled={!editMode}
-                      type={type}
-                    />
+                    <LocalityDetailsForm disabled={!editMode} type={type} />
                   </div>
                   <div className="bg-white rounded-xl p-6 shadow-sm">
                     {type === "resale" ? (
@@ -181,11 +178,7 @@ export default function DetailsPage() {
                     )}
                   </div>
                   <div className="bg-white rounded-xl p-6 shadow-sm">
-                    <GalleryForm
-                      // formik={formik}
-                      disabled={!editMode}
-                      type={type}
-                    />
+                    <GalleryForm disabled={!editMode} type={type} />
                   </div>
                   <div className="bg-white rounded-xl p-6 shadow-sm">
                     <AdditionalInfoForm disabled={!editMode} type={type} />

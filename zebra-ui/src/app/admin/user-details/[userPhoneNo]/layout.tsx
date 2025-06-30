@@ -16,7 +16,7 @@ export default function UserDetailsLayout({
 
   const { data, isLoading, isError } = useGetUserByPhoneNoQuery(
     { phoneNo: userPhoneNo },
-    { skip: !userPhoneNo },
+    { skip: !userPhoneNo, refetchOnMountOrArgChange: true },
   );
 
   const handleTabChange = (value: string) => {
@@ -56,7 +56,7 @@ export default function UserDetailsLayout({
       <Tabs onTabChange={handleTabChange} defaultActive={activeTab}>
         <TabHeader>
           <Tab label="Profile" value={UserDetailsTabEnum.PROFILE} />
-          <Tab label="Listed Properties" value={UserDetailsTabEnum.LISTED} />
+          <Tab label="Owned Properties" value={UserDetailsTabEnum.OWNED} />
           <Tab label="Shortlisted" value={UserDetailsTabEnum.SHORTLISTED} />
           <Tab label="Connect History" value={UserDetailsTabEnum.CONNECT} />
           <Tab label="Payment History" value={UserDetailsTabEnum.PAYMENT} />

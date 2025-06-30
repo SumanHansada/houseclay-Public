@@ -1,25 +1,17 @@
+import { PropertyCategory, PropertyStatusEnum } from "@/common/enums";
 import { PropertyPhoto } from "./PropertyPhoto";
 import { User } from "./User";
 
-export enum PropertyStatusEnum {
-  PENDING = "PENDING_VERIFICATION",
-  VERIFIED = "VERIFIED",
-  REPORT = "REPORT",
-}
-
-export type PropertyCategory = "Rent" | "Flatmate" | "Resale";
-
 export interface PropertyInfo {
   propertyID: string;
-  title: string;
-  type: string;
-  config: string;
+  propertyCategory: PropertyCategory;
+  price: string | null;
   location: string;
-  price: string;
-  createdAt: string;
+  bhkType: string;
+  propertyState: PropertyStatusEnum;
+  createdOn: string;
+  updatedOn: string | null;
   availableFrom: string;
-  lastModified: string | null;
-  status: string;
 }
 
 export interface GetAllPropertiesResponse {
@@ -36,41 +28,6 @@ export interface GetAllPropertiesResponse {
   size: number;
   number: number;
 }
-
-// interface PropertyBase {
-//   propertyID: string;
-//   title: string | null;
-//   propertyType: "Apartment" | "Villa" | "House" | "Plot" | "Commercial";
-//   builtUpArea: number;
-//   facing: "East" | "West" | "North" | "South" | "North-East" | "North-West" | "South-East" | "South-West" | null;
-//   bhkType: "1BHK" | "2BHK" | "3BHK" | "4BHK" | "5+BHK";
-//   floor: number;
-//   totalFloors: number;
-//   floorType: "Mosaic" | "Marble" | "Granite" | "Vitrified" | "Wooden" | null;
-//   description: string;
-//   city: string;
-//   locationOrSocietyName: string;
-//   landmark: string;
-//   latitude: number;
-//   longitude: number;
-//   furnishing: "Unfurnished" | "Semi-funnished" | "Fully-furnished";
-//   propertyAge: "Under Construction" | "Less than 1 year" | "1-5 years" | "5-10 years" | "More than 10 year" | null;
-//   waterSupply: "borewell" | "tanker" | "municipal";
-//   powerBackup: "none" | "partial" | "full";
-//   parking: boolean;
-//   availableFrom: string; // ISO date string
-//   propertyState: "PENDING_VERIFICATION" | "ACTIVE" | "REJECTED" | "INACTIVE";
-//   images: string[];
-//   amenities: string[];
-//   propertyUpdates: Array<{
-//     updateType: string;
-//     updateTime: string;
-//     updateBy: string;
-//     userType: string;
-//   }>;
-//   premium: boolean;
-//   managed: boolean;
-// }
 
 interface PropertyBase {
   propertyID: string;

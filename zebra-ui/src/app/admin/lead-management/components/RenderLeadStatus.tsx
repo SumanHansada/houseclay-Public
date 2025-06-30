@@ -7,6 +7,10 @@ interface RenderLeadStatusProps {
   status: string;
 }
 
+function isValidStatus(status: string): status is LeadStatusEnum {
+  return Object.values(LeadStatusEnum).includes(status as LeadStatusEnum);
+}
+
 const statusMap: Record<LeadStatusEnum, JSX.Element> = {
   [LeadStatusEnum.NEW]: <Pill color="blue">New Lead</Pill>,
   [LeadStatusEnum.FOLLOW_UP]: <Pill color="red">Follow Up</Pill>,
@@ -16,13 +20,10 @@ const statusMap: Record<LeadStatusEnum, JSX.Element> = {
 export const RenderLeadStatus: React.FC<RenderLeadStatusProps> = ({
   status,
 }) => {
-  const key = status as LeadStatusEnum;
-  const pill = statusMap[key];
-
-  if (!pill) {
-    console.warn(`[RenderPropertyStatus] Unknown status: "${status}"`);
+  if (!isValidStatus(status)) {
+    console.warn(`[RenderLeadStatus] Invalid status: "${status}"`);
     return <Pill color="gray">Unknown</Pill>;
   }
 
-  return pill;
+  return statusMap[status];
 };

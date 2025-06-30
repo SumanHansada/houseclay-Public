@@ -22,7 +22,7 @@ export function PropertiesTableView<
   const totalRows = rows.length;
   const totalPages = Math.ceil(totalRows / rowsPerPage);
   const isFirst = currentPage === 1;
-  const isLast = currentPage === totalPages;
+  const isLast = currentPage >= totalPages;
 
   const paginatedRows = useMemo(() => {
     const start = (currentPage - 1) * rowsPerPage;

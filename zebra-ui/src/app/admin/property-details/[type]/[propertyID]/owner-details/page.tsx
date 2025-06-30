@@ -4,7 +4,7 @@ import { SquareArrowOutUpRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { RenderPropertyStatus } from "@/components/property/RenderPropertyStatus";
+import { RenderPropertyStatus } from "@/components/status/RenderPropertyStatus";
 import { PropertyStatusEnum } from "@/interfaces/Property";
 import { dummyUserDataList } from "@/mock/userDetailsDummy";
 

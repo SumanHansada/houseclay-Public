@@ -1,10 +1,5 @@
+import { PaymentStatusEnum } from "@/common/enums";
 import { PropertyInfo } from "./Property";
-
-export enum PaymentStatusEnum {
-  COMPLETED = "COMPLETED",
-  FAILED = "FAILED",
-  PROGRESS = "IN_PROGRESS",
-}
 
 export interface User {
   name: string;
@@ -28,6 +23,13 @@ export interface GetAllUsersResponse {
   numberOfElements: number;
   size: number;
   number: number;
+}
+
+export interface UserUpdatedInfo {
+  updateType: string;
+  updateTime: string;
+  updateBy: string;
+  comment: string;
 }
 
 export interface UserExternalPayment {
@@ -59,7 +61,7 @@ export interface UserDetails {
   name: string;
   createdAt: string;
   blacklistedAt: string;
-  blacklistedBy: string;
+  userUpdates: UserUpdatedInfo[];
   ownedProperties: PropertyInfo[];
   shortlistedProperties: PropertyInfo[];
   viewedProperties: PropertyInfo[];

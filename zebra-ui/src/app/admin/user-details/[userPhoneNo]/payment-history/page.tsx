@@ -9,7 +9,6 @@ import { UserExternalPayment } from "@/interfaces/User";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 
 import { RenderPaymentStatus } from "../../components/RenderPaymentStatus";
-// import { dummyExternalPayments } from "@/mock/userDetailsDummy";
 
 interface RowType extends UserExternalPayment {
   _serial: number;
@@ -22,7 +21,6 @@ const PaymentHistory: React.FC = () => {
   const { data } = useGetUserByPhoneNoQuery({ phoneNo: userPhoneNo });
 
   const { externalPayments } = data!.user;
-  // const externalPayments = dummyExternalPayments;
 
   const rows: RowType[] = externalPayments.map((paymentInfo, index) => ({
     ...paymentInfo,
@@ -33,7 +31,7 @@ const PaymentHistory: React.FC = () => {
   const totalRows = rows.length;
   const totalPages = Math.ceil(totalRows / rowsPerPage);
   const isFirst = currentPage === 1;
-  const isLast = currentPage === totalPages;
+  const isLast = currentPage >= totalPages;
 
   const paginatedRows = useMemo(() => {
     const start = (currentPage - 1) * rowsPerPage;
@@ -62,7 +60,7 @@ const PaymentHistory: React.FC = () => {
       key: "createdAt",
       label: "Created At",
       accessor: "createdAt",
-      render: (payment) => new Date(payment.createdAt).toLocaleString(),
+      render: (payment) => new Date(payment.createdAt).toLocaleString("en-IN"),
     },
     {
       key: "completedAt",
@@ -70,7 +68,7 @@ const PaymentHistory: React.FC = () => {
       accessor: "completedAt",
       render: (payment) =>
         payment.completedAt ? (
-          new Date(payment.completedAt).toLocaleString()
+          new Date(payment.completedAt).toLocaleString("en-IN")
         ) : (
           <div>N/A</div>
         ),

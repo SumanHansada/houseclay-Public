@@ -29,9 +29,32 @@ export enum PropertyListingType {
   CALL = "CALL",
 }
 
+export enum PropertyCategory {
+  RENT = "RENT",
+  RESALE = "RESALE",
+  FLATMATE = "FLATMATE",
+}
+
+export enum PaymentStatusEnum {
+  COMPLETED = "COMPLETED",
+  FAILED = "FAILED",
+  PROGRESS = "IN_PROGRESS",
+}
+
+export enum PropertyStatusEnum {
+  PENDING = "PENDING_VERIFICATION",
+  VERIFIED = "ACTIVE",
+  REPORT = "REPORT",
+}
+
+export enum UserStatusEnum {
+  ACTIVE = "ACTIVATED",
+  BLACKLIST = "BLACKLISTED",
+}
+
 export enum UserDetailsTabEnum {
   PROFILE = "profile",
-  LISTED = "listed-properties",
+  OWNED = "owned-properties",
   SHORTLISTED = "shortlisted-properties",
   CONNECT = "connect-history",
   PAYMENT = "payment-history",

@@ -6,10 +6,10 @@ import { LeadType } from "@/interfaces/Lead";
 export const dynamicParams = true;
 
 interface TParams {
-  params: Promise<{ type: LeadType }>;
+  params: Promise<{ leadType: LeadType }>;
 }
 
 export default function LeadManagementTypeRootPage({ params }: TParams) {
-  const { type } = use(params);
-  redirect(`/admin/lead-management/${type}/table-view`);
+  const { leadType } = use(params);
+  redirect(`/admin/lead-management/${leadType}/table-view`);
 }

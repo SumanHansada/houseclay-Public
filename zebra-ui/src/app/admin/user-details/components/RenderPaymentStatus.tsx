@@ -1,4 +1,4 @@
-import { PaymentStatusEnum } from "@/interfaces/User";
+import { PaymentStatusEnum } from "@/common/enums";
 
 interface RenderPaymentStatusProps {
   status: PaymentStatusEnum;
