@@ -1,5 +1,6 @@
 package com.houseclay.backend.dto;
 
+import com.houseclay.backend.entity.PropertyCategory;
 import com.houseclay.backend.entity.PropertyState;
 import lombok.Data;
 
@@ -35,7 +36,7 @@ public class PropertyDTO {
     private List<String> images;
     private List<String> amenities;
     private List<String> preferredTenants;
-    private String propertyCategory; // to identify subtype like "Sale", "Rent", "Flatmate"
+    private PropertyCategory propertyCategory;
     List<PropertyUpdateDTO> propertyUpdates;
 
     private UserDTO owner;

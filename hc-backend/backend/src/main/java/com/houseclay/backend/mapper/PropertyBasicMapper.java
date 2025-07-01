@@ -2,6 +2,7 @@ package com.houseclay.backend.mapper;
 
 import com.houseclay.backend.dto.*;
 import com.houseclay.backend.entity.*;
+import com.houseclay.backend.utils.PropertyUtils;
 
 public class PropertyBasicMapper {
 
@@ -78,6 +79,6 @@ public class PropertyBasicMapper {
         target.setImages(source.getImages());
         target.setAmenities(source.getAmenities());
         target.setPreferredTenants(source.getPreferredTenants());
-        target.setPropertyCategory(source.getClass().getSimpleName().replace("Property", ""));
+        target.setPropertyCategory(PropertyUtils.getPropertyCategory(source));
     }
 }
