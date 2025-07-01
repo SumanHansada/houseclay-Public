@@ -2,42 +2,21 @@ package com.houseclay.backend.mapper;
 
 import com.houseclay.backend.dto.*;
 import com.houseclay.backend.entity.*;
-import org.aspectj.weaver.patterns.PerObject;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class PropertyMapper {
 
     public static PropertyDTO toDTO(Property property) {
         PropertyDTO dto = PropertyBasicMapper.toBasicDTO(property);
-        copyBaseFields(property, dto);
+        copyAdditionalFields(property, dto);
         return dto;
     }
 
-    private static void copyBaseFields(Property source, PropertyDTO target) {
-        if (source.getPropertUpdateLogs() != null) {
-            List<PropertyUpdateDTO> updates = source.getPropertUpdateLogs().stream().map(updateLog -> {
-                PropertyUpdateDTO dto = new PropertyUpdateDTO();
-                dto.setUpdateType(updateLog.getUpdateType());
-                dto.setUpdateTime(updateLog.getUpdatedAt());
-
-                if (updateLog.getUpdatedByAdmin() != null) {
-                    dto.setUpdateBy(updateLog.getUpdatedByAdmin().getUsername());
-                    dto.setUserType("ADMIN");
-                } else if (updateLog.getUpdatedByUser() != null) {
-                    dto.setUpdateBy(updateLog.getUpdatedByUser().getPhoneNo());
-                    dto.setUserType("USER");
-                } else {
-                    dto.setUpdateBy("UNKNOWN");
-                    dto.setUserType("UNKNOWN");
-                }
-
-                return dto;
-            }).toList();
-
-            target.setPropertyUpdates(updates);
-        }
+    private static void copyAdditionalFields(Property source, PropertyDTO target) {
+        target.setPropertyUpdates(source.getPropertyUpdateLogs().stream()
+                .map(PropertyMapper::toPropertyUpdateDTO)
+                .collect(Collectors.toList()));
 
         target.setOwner(UserMapper.toDTO(source.getOwner()));
 
@@ -71,6 +50,26 @@ public class PropertyMapper {
         dto.setReportType(reportProperty.getReportType());
         dto.setReportTime(reportProperty.getReportTime());
         dto.setUser(UserMapper.toDTO(reportProperty.getUser()));
+        return dto;
+    }
+
+    private static PropertyUpdateDTO toPropertyUpdateDTO(PropertyUpdateLog propertyUpdateLog) {
+        PropertyUpdateDTO dto = new PropertyUpdateDTO();
+        dto.setUpdateType(propertyUpdateLog.getUpdateType());
+        dto.setUpdateTime(propertyUpdateLog.getUpdatedAt());
+        dto.setComment(propertyUpdateLog.getComment());
+
+        if (propertyUpdateLog.getUpdatedByAdmin() != null) {
+            dto.setUpdateBy(propertyUpdateLog.getUpdatedByAdmin().getUsername());
+            dto.setUserType("ADMIN");
+        } else if (propertyUpdateLog.getUpdatedByUser() != null) {
+            dto.setUpdateBy(propertyUpdateLog.getUpdatedByUser().getPhoneNo());
+            dto.setUserType("USER");
+        } else {
+            dto.setUpdateBy("UNKNOWN");
+            dto.setUserType("UNKNOWN");
+        }
+
         return dto;
     }
 }

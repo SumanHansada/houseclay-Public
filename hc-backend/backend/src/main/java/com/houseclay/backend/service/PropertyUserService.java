@@ -34,7 +34,7 @@ public class PropertyUserService {
             property.setOwner(user);
             property.setTitle(PropertyUtils.getTitle(property));
             property.setPropertyState(PropertyState.PENDING_VERIFICATION);
-            property.getPropertUpdateLogs().add(new PropertyUpdateLog(property, user, PropertyUpdateType.CREATE));
+            property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, user, "added by user", PropertyUpdateType.CREATE));
             user.getOwnedProperties().add(property);
             propertyService.indexPropertyInElastic(property);
             userRepository.save(user);
@@ -51,7 +51,7 @@ public class PropertyUserService {
         if (!propertyOpt.get().getOwner().getPhoneNo().equals(user.getPhoneNo())) {
             throw new APIException("user not allowed", HttpStatus.FORBIDDEN);
         }
-        property.getPropertUpdateLogs().add(new PropertyUpdateLog(property, user, PropertyUpdateType.UPDATE));
+        property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, user,"updated by user", PropertyUpdateType.UPDATE));
         return propertyRepository.save(property);
     }
 
@@ -65,7 +65,7 @@ public class PropertyUserService {
         }
         Property property = propertyOpt.get();
         property.setPropertyState(PropertyState.INACTIVE);
-        property.getPropertUpdateLogs().add(new PropertyUpdateLog(property, user, PropertyUpdateType.DEACTIVATE));
+        property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, user, "deactivated by user", PropertyUpdateType.DEACTIVATE));
         propertyRepository.save(property);
     }
 

@@ -17,6 +17,8 @@ public class PropertyUpdateLog {
 
     private Timestamp updatedAt;
 
+    private String comment;
+
     @ManyToOne
     private Property property;
 
@@ -26,10 +28,11 @@ public class PropertyUpdateLog {
     @ManyToOne
     private User updatedByUser;
 
-    public PropertyUpdateLog(Property property, Object updatedBy, PropertyUpdateType updateType) {
+    public PropertyUpdateLog(Property property, Object updatedBy, String comment, PropertyUpdateType updateType) {
         this.property = property;
         this.updateType = updateType;
         this.updatedAt = new Timestamp(System.currentTimeMillis());
+        this.comment = comment;
         if (updatedBy instanceof Admin admin) {
             this.setUpdatedByAdmin(admin);
         } else if (updatedBy instanceof User user) {

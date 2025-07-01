@@ -34,7 +34,7 @@ public class PropertyAdminService {
             property.setPropertyState(PropertyState.PENDING_VERIFICATION);
             property.setOwner(user);
             property.setTitle(PropertyUtils.getTitle(property));
-            property.getPropertUpdateLogs().add(new PropertyUpdateLog(property, admin, PropertyUpdateType.CREATE));
+            property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, admin, "added by admin", PropertyUpdateType.CREATE));
             user.getOwnedProperties().add(property);
             propertyService.indexPropertyInElastic(property);
             userRepository.save(user);
@@ -51,21 +51,19 @@ public class PropertyAdminService {
         if (!propertyOpt.get().getOwner().getPhoneNo().equals(phoneNo)) {
             throw new APIException("user not allowed", HttpStatus.FORBIDDEN);
         }
-        property.getPropertUpdateLogs().add(new PropertyUpdateLog(property, admin, PropertyUpdateType.UPDATE));
+        property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, admin, "updated by admin", PropertyUpdateType.UPDATE));
         return propertyRepository.save(property);
     }
 
-    public void deactivateProperty(Admin admin, String propertyID, String phoneNo) throws APIException {
+    public void deactivateProperty(Admin admin, String propertyID, String comment) throws APIException {
         Optional<Property> propertyOpt = propertyRepository.findById(propertyID);
         if (propertyOpt.isEmpty()) {
             throw new APIException("Invalid property", HttpStatus.BAD_REQUEST);
         }
-        if (!propertyOpt.get().getOwner().getPhoneNo().equals(phoneNo)) {
-            throw new APIException("user not allowed", HttpStatus.FORBIDDEN);
-        }
+
         Property property = propertyOpt.get();
         property.setPropertyState(PropertyState.INACTIVE);
-        property.getPropertUpdateLogs().add(new PropertyUpdateLog(property, admin, PropertyUpdateType.DEACTIVATE));
+        property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, admin, comment, PropertyUpdateType.DEACTIVATE));
         propertyRepository.save(property);
     }
 
@@ -79,19 +77,19 @@ public class PropertyAdminService {
                 .map(UserMapper::toUserPropertyDTO);
     }
 
-    public Property verifyProperty(String propertyId, Admin admin) throws APIException {
+    public Property verifyProperty(String propertyId, String comment, Admin admin) throws APIException {
         Optional<Property> propertyOpt = propertyRepository.findById(propertyId);
         if (propertyOpt.isEmpty()) {
             throw new APIException("Property not found", HttpStatus.BAD_REQUEST);
         }
 
         Property property = propertyOpt.get();
-        property.getPropertUpdateLogs().add(new PropertyUpdateLog(property, admin, PropertyUpdateType.VERIFIED));
+        property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, admin, comment, PropertyUpdateType.VERIFIED));
         property.setPropertyState(PropertyState.ACTIVE);
         return propertyRepository.save(property);
     }
 
-    public Property reVerifyProperty(String propertyId, Admin admin) throws APIException {
+    public Property reVerifyProperty(String propertyId, String comment, Admin admin) throws APIException {
         Optional<Property> propertyOpt = propertyRepository.findById(propertyId);
 
         if (propertyOpt.isEmpty()) {
@@ -99,7 +97,7 @@ public class PropertyAdminService {
         }
 
         Property property = propertyOpt.get();
-        property.getPropertUpdateLogs().add(new PropertyUpdateLog(property, admin, PropertyUpdateType.RE_VERIFIED));
+        property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, admin, comment, PropertyUpdateType.RE_VERIFIED));
         property.setPropertyState(PropertyState.ACTIVE);
         return propertyRepository.save(property);
     }

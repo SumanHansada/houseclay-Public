@@ -123,14 +123,14 @@ public class UserMapper {
     }
 
     public static Timestamp getCreateTimestamp(Property property) {
-        return property.getPropertUpdateLogs().stream()
+        return property.getPropertyUpdateLogs().stream()
                 .filter(log -> log.getUpdateType() == PropertyUpdateType.CREATE)
                 .map(PropertyUpdateLog::getUpdatedAt)
                 .findFirst().orElse(null);
     }
 
     public static Timestamp getUpdateTimestamp(Property property) {
-        return property.getPropertUpdateLogs().stream()
+        return property.getPropertyUpdateLogs().stream()
                 .filter(log -> log.getUpdateType() == PropertyUpdateType.UPDATE)
                 .map(PropertyUpdateLog::getUpdatedAt)
                 .max(Comparator.naturalOrder()).orElse(null);

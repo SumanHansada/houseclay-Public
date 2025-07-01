@@ -69,6 +69,7 @@ public class DataInitializer {
             sale.setKhataCertificate("Available");
             sale.setSaleDeed(true);
             sale.setPropertyTax(true);
+            sale.getPropertyUpdateLogs().add(new PropertyUpdateLog(sale, admin, "owner is very sexy", PropertyUpdateType.VERIFIED));
             propertyRepo.save(sale);
 
             RentProperty rent = new RentProperty();

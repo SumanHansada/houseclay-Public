@@ -12,6 +12,8 @@ public class PropertyUpdateDTO {
 
     private Timestamp updateTime;
 
+    private String comment;
+
     private String updateBy;
 
     private String userType;

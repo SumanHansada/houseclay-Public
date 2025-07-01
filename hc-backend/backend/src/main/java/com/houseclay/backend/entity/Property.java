@@ -79,7 +79,7 @@ public class Property {
     private List<ReportProperty> reportedProperties;
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PropertyUpdateLog> propertUpdateLogs = new ArrayList<>();
+    private List<PropertyUpdateLog> propertyUpdateLogs = new ArrayList<>();
 
     @OneToOne
     @NotFound(action= NotFoundAction.IGNORE)
