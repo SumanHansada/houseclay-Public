@@ -52,7 +52,6 @@ const PropertyVerificationTablePage: React.FC = () => {
     first: isFirst,
     last: isLast,
   } = paginatedPropertyData;
-  console.log(allProperties, totalPages, isFirst, isLast);
 
   const viewPropertyDetails = (type: string, propertyID: string) => {
     const verifyPath = `/admin/property-details/${type}/verify/${propertyID}`;

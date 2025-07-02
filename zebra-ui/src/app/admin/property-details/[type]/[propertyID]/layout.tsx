@@ -11,6 +11,15 @@ import { ensureEnumValue } from "@/utils/enum";
 import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 import AsyncFallback from "@/components/AsyncFallback";
 
+const tabs: { label: string; value: PropertyDetailsTabEnum }[] = [
+  { label: "Details", value: PropertyDetailsTabEnum.DETAILS },
+  { label: "Owner Details", value: PropertyDetailsTabEnum.OWNER_DETAILS },
+  { label: "Shortlist Users", value: PropertyDetailsTabEnum.SHORTLIST },
+  { label: "Contact Users", value: PropertyDetailsTabEnum.CONTACT },
+  { label: "View Users", value: PropertyDetailsTabEnum.VIEW },
+  { label: "Report Users", value: PropertyDetailsTabEnum.REPORT },
+];
+
 export default function PropertyDetailsLayout({
   children,
 }: {
@@ -42,11 +51,11 @@ export default function PropertyDetailsLayout({
     );
   }
 
-  const activeTab = ensureEnumValue(
-    PropertyDetailsTabEnum,
-    currentTabFromUrl,
-    PropertyDetailsTabEnum.DETAILS,
-  );
+  const activeTab = ensureEnumValue({
+    enumObj: PropertyDetailsTabEnum,
+    value: currentTabFromUrl,
+    fallback: PropertyDetailsTabEnum.DETAILS,
+  });
 
   const handleTabChange = (tab: string) => {
     router.push(`/admin/property-details/${type}/${propertyID}/${tab}`);
@@ -56,18 +65,9 @@ export default function PropertyDetailsLayout({
     <div className="flex flex-col h-[calc(100vh-4rem)]">
       <Tabs onTabChange={handleTabChange} defaultActive={activeTab}>
         <TabHeader>
-          <Tab label="Details" value={PropertyDetailsTabEnum.DETAILS} />
-          <Tab
-            label="Owner Details"
-            value={PropertyDetailsTabEnum.OWNER_DETAILS}
-          />
-          <Tab
-            label="Shortlist Users"
-            value={PropertyDetailsTabEnum.SHORTLIST}
-          />
-          <Tab label="Contact Users" value={PropertyDetailsTabEnum.CONTACT} />
-          <Tab label="View Users" value={PropertyDetailsTabEnum.VIEW} />
-          <Tab label="Report Users" value={PropertyDetailsTabEnum.REPORT} />
+          {tabs.map((tab) => (
+            <Tab key={tab.value} label={tab.label} value={tab.value} />
+          ))}
         </TabHeader>
       </Tabs>
       <div className="flex-1 overflow-auto">{children}</div>

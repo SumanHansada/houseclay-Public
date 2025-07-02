@@ -16,12 +16,7 @@ import RentalDetailsForm from "@/app/admin/property-details/components/RentalDet
 import ResaleDetailsForm from "@/app/admin/property-details/components/ResaleDetailsForm";
 import { VerificationSection } from "@/app/admin/property-details/components/VerificationSection";
 // --- Imports from both files ---
-import {
-  AnyProperty,
-  GetPropertyByIDResponse,
-  PropertyCategory,
-  PropertyDetailsFormValues,
-} from "@/interfaces/Property";
+import { AnyProperty, PropertyDetailsFormValues } from "@/interfaces/Property";
 import { dummyGetRentPropertyDetails } from "@/mock/propertyDetailsDummy";
 import { dummyUserDataList } from "@/mock/userDetailsDummy";
 import {
@@ -30,6 +25,8 @@ import {
 } from "@/store/propertyDetailsSlice";
 import { RootState } from "@/store/store";
 import { transformApiToFormValues } from "@/utils/transform/propertyToFormValues";
+import { PropertyCategoryEnum } from "@/common/enum";
+import { GetPropertyByIdResponse } from "@/interfaces/api";
 
 export default function ReverifyPropertyDetailsPage() {
   const { type } = useParams() as { type: "rent" | "resale" | "flatmate" };
@@ -53,9 +50,9 @@ export default function ReverifyPropertyDetailsPage() {
     dispatch(setPropertyLoading());
     const timer = setTimeout(() => {
       const category = dummyGetRentPropertyDetails.propertyDetails
-        .propertyCategory as PropertyCategory;
+        .propertyCategory as PropertyCategoryEnum;
 
-      const apiResponse: GetPropertyByIDResponse = {
+      const apiResponse: GetPropertyByIdResponse = {
         ...dummyGetRentPropertyDetails,
         propertyDetails: {
           ...dummyGetRentPropertyDetails.propertyDetails,

@@ -1,11 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { GetPropertyByIDResponse } from "@/interfaces/Property";
-
 import { RootState } from "./store";
+import { GetPropertyByIdResponse } from "@/interfaces/api";
 
 interface PropertyDetailsState {
-  data: GetPropertyByIDResponse | null;
+  data: GetPropertyByIdResponse | null;
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
@@ -22,7 +21,7 @@ const propertyDetailsSlice = createSlice({
   reducers: {
     setPropertyData: (
       state,
-      action: PayloadAction<GetPropertyByIDResponse>,
+      action: PayloadAction<GetPropertyByIdResponse>,
     ) => {
       state.data = action.payload;
       state.status = "succeeded";
@@ -42,9 +41,9 @@ export const { setPropertyData, setPropertyLoading, setPropertyError } =
   propertyDetailsSlice.actions;
 
 export const selectPropertyDetails = (state: RootState) =>
-  state.propertyDetails.data?.propertyDetails;
+  state.propertyDetails.data;
 export const selectUserDetails = (state: RootState) =>
-  state.propertyDetails.data?.userDetails;
+  state.propertyDetails.data;
 export const selectPropertyStatus = (state: RootState) =>
   state.propertyDetails.status;
 

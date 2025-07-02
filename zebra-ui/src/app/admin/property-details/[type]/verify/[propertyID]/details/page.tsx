@@ -16,12 +16,7 @@ import RentalDetailsForm from "@/app/admin/property-details/components/RentalDet
 import ResaleDetailsForm from "@/app/admin/property-details/components/ResaleDetailsForm";
 import { VerificationSection } from "@/app/admin/property-details/components/VerificationSection";
 // --- Imports from both files ---
-import {
-  AnyProperty,
-  GetPropertyByIDResponse,
-  PropertyCategory,
-  PropertyDetailsFormValues,
-} from "@/interfaces/Property";
+import { AnyProperty, PropertyDetailsFormValues } from "@/interfaces/Property";
 import { dummyGetRentPropertyDetails } from "@/mock/propertyDetailsDummy";
 import { dummyUserDataList } from "@/mock/userDetailsDummy";
 import {
@@ -30,6 +25,8 @@ import {
 } from "@/store/propertyDetailsSlice";
 import { RootState } from "@/store/store";
 import { transformApiToFormValues } from "@/utils/transform/propertyToFormValues";
+import { PropertyCategoryEnum } from "@/common/enum";
+import { GetPropertyByIdResponse } from "@/interfaces/api";
 
 export default function VerifyPropertyDetailsPage() {
   const { type } = useParams() as { type: "rent" | "resale" | "flatmate" };
@@ -49,23 +46,23 @@ export default function VerifyPropertyDetailsPage() {
   const [isOwnerVerified, setIsOwnerVerified] = useState(false);
 
   // --- From DetailsPage: Data Fetching and Formik Initialization ---
-  useEffect(() => {
-    dispatch(setPropertyLoading());
-    const timer = setTimeout(() => {
-      const category = dummyGetRentPropertyDetails.propertyDetails
-        .propertyCategory as PropertyCategory;
+  // useEffect(() => {
+  //   dispatch(setPropertyLoading());
+  //   const timer = setTimeout(() => {
+  //     const category = dummyGetRentPropertyDetails.propertyDetails
+  //       .propertyCategory as PropertyCategoryEnum;
 
-      const apiResponse: GetPropertyByIDResponse = {
-        ...dummyGetRentPropertyDetails,
-        propertyDetails: {
-          ...dummyGetRentPropertyDetails.propertyDetails,
-          propertyCategory: category,
-        } as AnyProperty, // explicitly say this is one of the union types
-      };
-      dispatch(setPropertyData(apiResponse));
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [dispatch]);
+  //     const apiResponse: GetPropertyByIdResponse = {
+  //       ...dummyGetRentPropertyDetails,
+  //       propertyDetails: {
+  //         ...dummyGetRentPropertyDetails.propertyDetails,
+  //         propertyCategory: category,
+  //       } as AnyProperty,
+  //     };
+  //     dispatch(setPropertyData(apiResponse));
+  //   }, 500);
+  //   return () => clearTimeout(timer);
+  // }, [dispatch]);
 
   const propertyDataFromStore = useSelector(
     (state: RootState) => state.propertyDetails.data,
@@ -188,18 +185,12 @@ export default function VerifyPropertyDetailsPage() {
                   {/* --- Form Sections from DetailsPage --- */}
                   <div className="bg-white rounded-xl p-6 shadow-sm flex flex-col gap-6">
                     <PropertyDetailsForm disabled={!editMode} type={type} />
-                    {/* </div> */}
-                    {/* <div className="bg-white rounded-xl p-6 shadow-sm"> */}
                     <LocalityDetailsForm disabled={!editMode} type={type} />
-                    {/* </div> */}
-                    {/* <div className="bg-white rounded-xl p-6 shadow-sm"> */}
                     {type === "resale" ? (
                       <ResaleDetailsForm disabled={!editMode} type={type} />
                     ) : (
                       <RentalDetailsForm disabled={!editMode} type={type} />
                     )}
-                    {/* </div> */}
-                    {/* <div className="bg-white rounded-xl p-6 shadow-sm"> */}
                     <AdditionalInfoForm disabled={!editMode} type={type} />
                   </div>
                   {/* Gallery Section */}

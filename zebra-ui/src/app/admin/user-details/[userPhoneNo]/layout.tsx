@@ -53,11 +53,11 @@ export default function UserDetailsLayout({
     );
   }
 
-  const activeTab = ensureEnumValue(
-    UserDetailsTabEnum,
-    currentTabFromUrl,
-    UserDetailsTabEnum.PROFILE,
-  );
+  const activeTab = ensureEnumValue({
+    enumObj: UserDetailsTabEnum,
+    value: currentTabFromUrl,
+    fallback: UserDetailsTabEnum.PROFILE,
+  });
 
   const handleTabChange = (value: string) => {
     router.push(`/admin/user-details/${userPhoneNo}/${value}`);
