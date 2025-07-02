@@ -27,6 +27,9 @@ public class PropertyUserService {
     @Autowired
     private PropertyService propertyService;
 
+    @Autowired
+    private PropertyElasticService propertyElasticService;
+
     public Property addProperty(User user, Property property) throws APIException {
         Optional<User> userOpt = userRepository.findById(user.getPhoneNo());
         if (userOpt.isPresent()) {
@@ -36,7 +39,6 @@ public class PropertyUserService {
             property.setPropertyState(PropertyState.PENDING_VERIFICATION);
             property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, user, "added by user", PropertyUpdateType.CREATE));
             user.getOwnedProperties().add(property);
-            propertyService.indexPropertyInElastic(property);
             userRepository.save(user);
             return property;
         }
@@ -67,6 +69,7 @@ public class PropertyUserService {
         property.setPropertyState(PropertyState.INACTIVE);
         property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, user, "deactivated by user", PropertyUpdateType.DEACTIVATE));
         propertyRepository.save(property);
+        propertyElasticService.deletePropertyInElastic(property);
     }
 
     public Property getPropertyForUser(String id, User user) throws APIException {

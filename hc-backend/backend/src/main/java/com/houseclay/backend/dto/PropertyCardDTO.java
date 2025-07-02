@@ -9,19 +9,18 @@ public class PropertyCardDTO {
     private String propertyID;
     private String propertyCategory;
     private String propertyType;
-    private double builtUpArea;
+    private Double builtUpArea;
     private String bhkType;
     private Integer bathrooms;
-    private Integer rent;
+    private Double rent;
     private String furnishing;
-    private Integer price;
+    private Double price;
     private String city;
     private String locationOrSocietyName;
     private String landmark;
     private double latitude;
     private double longitude;
-    private List<String> images;
-    private String badges;
-
+    private String image;
+    private List<String> badges;
 }
 

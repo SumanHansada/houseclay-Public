@@ -25,7 +25,7 @@ public class PropertyAdminService {
     private UserRepository userRepository;
 
     @Autowired
-    private PropertyService propertyService;
+    private PropertyElasticService propertyElasticService;
 
     public Property addProperty(Property property, String phoneNo, Admin admin) throws APIException {
         Optional<User> userOpt = userRepository.findById(phoneNo);
@@ -36,7 +36,6 @@ public class PropertyAdminService {
             property.setTitle(PropertyUtils.getTitle(property));
             property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, admin, "added by admin", PropertyUpdateType.CREATE));
             user.getOwnedProperties().add(property);
-            propertyService.indexPropertyInElastic(property);
             userRepository.save(user);
             return property;
         }
@@ -51,6 +50,7 @@ public class PropertyAdminService {
         if (!propertyOpt.get().getOwner().getPhoneNo().equals(phoneNo)) {
             throw new APIException("user not allowed", HttpStatus.FORBIDDEN);
         }
+        property.setPropertyState(PropertyState.PENDING_VERIFICATION);
         property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, admin, "updated by admin", PropertyUpdateType.UPDATE));
         return propertyRepository.save(property);
     }
@@ -65,6 +65,7 @@ public class PropertyAdminService {
         property.setPropertyState(PropertyState.INACTIVE);
         property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, admin, comment, PropertyUpdateType.DEACTIVATE));
         propertyRepository.save(property);
+        propertyElasticService.deletePropertyInElastic(property);
     }
 
     public Page<UserPropertyDTO> getProperties(Pageable pageable) {
@@ -86,7 +87,9 @@ public class PropertyAdminService {
         Property property = propertyOpt.get();
         property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, admin, comment, PropertyUpdateType.VERIFIED));
         property.setPropertyState(PropertyState.ACTIVE);
-        return propertyRepository.save(property);
+        property = propertyRepository.save(property);
+        propertyElasticService.indexPropertyInElastic(property);
+        return property;
     }
 
     public Property reVerifyProperty(String propertyId, String comment, Admin admin) throws APIException {
@@ -99,6 +102,8 @@ public class PropertyAdminService {
         Property property = propertyOpt.get();
         property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, admin, comment, PropertyUpdateType.RE_VERIFIED));
         property.setPropertyState(PropertyState.ACTIVE);
-        return propertyRepository.save(property);
+        property = propertyRepository.save(property);
+        propertyElasticService.indexPropertyInElastic(property);
+        return property;
     }
 }

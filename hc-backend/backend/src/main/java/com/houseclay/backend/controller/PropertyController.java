@@ -1,7 +1,8 @@
 package com.houseclay.backend.controller;
 
+import com.houseclay.backend.dto.PropertyCardDTO;
 import com.houseclay.backend.entity.Property;
-import com.houseclay.backend.entity.PropertyDocument;
+import com.houseclay.backend.entity.PropertyCategory;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.mapper.PropertyBasicMapper;
 import com.houseclay.backend.service.PropertyService;
@@ -38,15 +39,20 @@ public class PropertyController {
 
     @GetMapping("/search")
     public ResponseEntity<?> searchProperty(
+            @RequestParam PropertyCategory propertyCategory,
             @RequestParam double lat,
             @RequestParam double lon,
             @RequestParam(defaultValue = "5km") String distance,
             @RequestParam(required = false) String city,
             @RequestParam(required = false) String bhkType,
-            @RequestParam(required = false) String propertyCategory) {
+            @RequestParam(required = false) String furnishing,
+            @RequestParam(required = false) String propertyType,
+            @RequestParam(required = false) Boolean parking,
+            @RequestParam(required = false) String preferredTenant,
+            @RequestParam(required = false) List<String> amenities) {
 
-        List<PropertyDocument> results = searchService.searchNearbyWithFilters(
-                lat, lon, distance, city, bhkType, propertyCategory
+        List<PropertyCardDTO> results = searchService.searchNearbyWithFilters(
+                lat, lon, distance, city, bhkType, propertyCategory, furnishing, propertyType, parking, preferredTenant, amenities
         );
 
         return ResponseEntity.ok(results);
