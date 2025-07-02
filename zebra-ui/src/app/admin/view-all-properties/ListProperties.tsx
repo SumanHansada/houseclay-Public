@@ -7,7 +7,7 @@ import { DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/PaginationFooter";
 import { SearchAndFilterBar } from "@/components/SearchAndFilterBar";
 import { PropertyInfo } from "@/interfaces/Property";
-import { buildPropertyColumns } from "@/utils/buildPropertyColumns";
+import { buildPropertyColumns } from "@/utils/table/buildPropertyColumns";
 import { useGetPropertiesQuery } from "@/store/apiSlice";
 import AsyncFallback from "@/components/AsyncFallback";
 
@@ -48,11 +48,12 @@ export const ListProperties = () => {
     );
   }
 
-  const propertyList = paginatedPropertyData.content;
-
-  const totalPages = paginatedPropertyData.totalPages;
-  const isFirst = paginatedPropertyData.first;
-  const isLast = paginatedPropertyData.last;
+  const {
+    content: propertyList,
+    totalPages,
+    first: isFirst,
+    last: isLast,
+  } = paginatedPropertyData;
 
   const viewPropertyDetails = (type: string, propertyID: string) => {
     router.push(`/admin/property-details/${type}/${propertyID}`);

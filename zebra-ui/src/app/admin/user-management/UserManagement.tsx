@@ -46,10 +46,12 @@ export const UsersManagement = () => {
     );
   }
 
-  const allUsers = paginatedUserData.content;
-  const totalPages = paginatedUserData.totalPages;
-  const isFirst = paginatedUserData.first;
-  const isLast = paginatedUserData.last;
+  const {
+    content: allUsers,
+    totalPages,
+    first: isFirst,
+    last: isLast,
+  } = paginatedUserData;
 
   const filteredUsers = allUsers.filter((u) =>
     u.phoneNo.includes(searchValue.toLowerCase()),

@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Column } from "@/components/DataTable";
 import { PropertyInfo } from "@/interfaces/Property";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
-import { buildPropertyColumns } from "@/utils/buildPropertyColumns";
+import { buildPropertyColumns } from "@/utils/table/buildPropertyColumns";
 
 import { PropertiesTableView } from "../../components/PropertiesTableView";
 

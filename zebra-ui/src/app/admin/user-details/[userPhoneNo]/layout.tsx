@@ -5,11 +5,11 @@ import {
   useSelectedLayoutSegment,
 } from "next/navigation";
 
-import { UserDetailsTabEnum } from "@/common/enums";
+import { UserDetailsTabEnum } from "@/common/enum";
 import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 import AsyncFallback from "@/components/AsyncFallback";
-import { getActiveEnumValue } from "@/utils/getActiveEnumValue";
+import { ensureEnumValue } from "@/utils/enum";
 
 const tabs: { label: string; value: UserDetailsTabEnum }[] = [
   { label: "Profile", value: UserDetailsTabEnum.PROFILE },
@@ -29,7 +29,7 @@ export default function UserDetailsLayout({
 }) {
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
   const router = useRouter();
-  const segment = useSelectedLayoutSegment();
+  const currentTabFromUrl = useSelectedLayoutSegment();
 
   const {
     data: currentUser,
@@ -53,9 +53,9 @@ export default function UserDetailsLayout({
     );
   }
 
-  const activeTab = getActiveEnumValue(
+  const activeTab = ensureEnumValue(
     UserDetailsTabEnum,
-    segment,
+    currentTabFromUrl,
     UserDetailsTabEnum.PROFILE,
   );
 

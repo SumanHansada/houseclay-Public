@@ -6,12 +6,13 @@ import { useState } from "react";
 import { Column, DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/PaginationFooter";
 import { TitleAndSearchBar } from "@/components/TitleAndSearchBar";
-import { Lead, LeadQueryParamEnum, LeadType } from "@/interfaces/Lead";
+import { Lead, LeadType } from "@/interfaces/Lead";
 import { useGetLeadsQuery } from "@/store/apiSlice";
 
-import { RenderLeadStatus } from "../../components/RenderLeadStatus";
+import { RenderLeadStatus } from "@/components/status/RenderLeadStatus";
 import { TableActionButtons } from "../../components/TableActionButtons";
 import AsyncFallback from "@/components/AsyncFallback";
+import { LeadQueryParamEnum } from "@/common/enum";
 
 export const LeadTableView = () => {
   const router = useRouter();

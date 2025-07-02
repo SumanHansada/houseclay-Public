@@ -1,20 +1,21 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-import { AddFlatmatesPropertyRequest } from "@/interfaces/FlatmatesDetails";
-import {
-  GetAllLeadsResponse,
-  LeadByIdResponse,
-  LeadQueryParamEnum,
-} from "@/interfaces/Lead";
-import { AddRentPropertyRequest } from "@/interfaces/RentalDetails";
-import { AddResalePropertyRequest } from "@/interfaces/ResaleDetails";
 import {
   GetAllUsersResponse,
   GetUserByPhoneNoResponse,
-} from "@/interfaces/User";
+  GetAllLeadsResponse,
+  GetLeadByIdResponse,
+  PostRentPropertyRequest,
+  PostFlatmatesPropertyRequest,
+  PostResalePropertyRequest,
+  GetAllPropertiesResponse,
+  GetPropertyByIdResponse,
+  GetPropertiesToVerifyResponse,
+  GetPropertiesToReverifyResponse,
+} from "@/interfaces/api";
 
 import { RootState } from "./store";
-import { GetAllPropertiesResponse } from "@/interfaces/Property";
+import { LeadQueryParamEnum } from "@/common/enum";
 
 const baseUrl = process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL;
 
@@ -122,7 +123,7 @@ export const apiSlice = createApi({
           : [{ type: "Leads" as const, id: "LIST" }],
     }),
 
-    getLeadById: builder.query<LeadByIdResponse, { id: number }>({
+    getLeadById: builder.query<GetLeadByIdResponse, { id: number }>({
       query: ({ id }) => ({
         url: `/leads/${id}`,
         method: "GET",
@@ -175,7 +176,7 @@ export const apiSlice = createApi({
       { fileMap: Record<string, string> }
     >({
       query: (data) => ({
-        url: "photo/admin/presigned-urls",
+        url: "/photo/admin/presigned-urls",
         method: "POST",
         body: data,
         headers: {
@@ -190,10 +191,10 @@ export const apiSlice = createApi({
         message: string;
         propertyID: number;
       },
-      { data: AddRentPropertyRequest; phoneNo: string }
+      { data: PostRentPropertyRequest; phoneNo: string }
     >({
       query: ({ data, phoneNo }) => ({
-        url: `property/admin/add?phoneNo=${phoneNo}`,
+        url: `/property/admin/add?phoneNo=${phoneNo}`,
         method: "POST",
         body: { ...data },
         headers: {
@@ -212,12 +213,12 @@ export const apiSlice = createApi({
         propertyID: number;
       },
       {
-        data: AddResalePropertyRequest;
+        data: PostResalePropertyRequest;
         phoneNo: string;
       }
     >({
       query: ({ data, phoneNo }) => ({
-        url: `property/admin/add?phoneNo=${phoneNo}`,
+        url: `/property/admin/add?phoneNo=${phoneNo}`,
         method: "POST",
         body: { ...data },
         headers: {
@@ -236,12 +237,12 @@ export const apiSlice = createApi({
         propertyID: number;
       },
       {
-        data: AddFlatmatesPropertyRequest;
+        data: PostFlatmatesPropertyRequest;
         phoneNo: string;
       }
     >({
       query: ({ data, phoneNo }) => ({
-        url: `property/admin/add?phoneNo=${phoneNo}`,
+        url: `/property/admin/add?phoneNo=${phoneNo}`,
         method: "POST",
         body: { ...data },
         headers: {
@@ -253,6 +254,7 @@ export const apiSlice = createApi({
         { type: "UserDetail", id: phoneNo },
       ],
     }),
+
     getProperties: builder.query<
       GetAllPropertiesResponse,
       { page: number; size: number }
@@ -272,22 +274,52 @@ export const apiSlice = createApi({
             ]
           : [{ type: "Properties", id: "LIST" }],
     }),
+
+    getPropertyById: builder.query<GetPropertyByIdResponse, { id: string }>({
+      query: ({ id }) => ({
+        url: `/property/admin/${id}`,
+        method: "GET",
+      }),
+    }),
+
+    getPropertiesToVerify: builder.query<
+      GetPropertiesToVerifyResponse,
+      { page: number; size: number }
+    >({
+      query: ({ page, size }) => ({
+        url: `/property/admin/properties-to-verify?page=${page}&size=${size}`,
+        method: "GET",
+      }),
+    }),
+
+    getPropertiesToReverify: builder.query<
+      GetPropertiesToReverifyResponse,
+      { page: number; size: number }
+    >({
+      query: ({ page, size }) => ({
+        url: `/property/admin/properties-to-re-verify?page=${page}&size=${size}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
 export const {
   useLoginMutation,
   useRegisterMutation,
+  useLogoutMutation,
   useGetUsersQuery,
   useGetUserByPhoneNoQuery,
   useGetLeadsQuery,
   useGetLeadByIdQuery,
   useLeadStatusUpdateMutation,
   useLeadAddCommentMutation,
-  useLogoutMutation,
   usePresignedUrlsMutation,
   usePropertyAddRentMutation,
   usePropertyAddResaleMutation,
   usePropertyAddFlatmatesMutation,
   useGetPropertiesQuery,
+  useGetPropertyByIdQuery,
+  useGetPropertiesToVerifyQuery,
+  useGetPropertiesToReverifyQuery,
 } = apiSlice;

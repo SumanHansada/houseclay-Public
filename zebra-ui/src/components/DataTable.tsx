@@ -49,7 +49,7 @@ export function DataTable<T extends object>({
           {(col) => (
             <TableColumn
               key={col.key}
-              className={`${col.className} text-left text-lg font-normal border border-gray-200 py-[10px]`}
+              className={`${col.className} text-left text-lg font-normal border border-gray-200 py-2`}
             >
               {col.label}
             </TableColumn>
@@ -70,7 +70,7 @@ export function DataTable<T extends object>({
                   {columns.map((col) => (
                     <TableCell
                       key={col.key}
-                      className="px-3 py-2 border border-gray-200 font-light text-lg"
+                      className="px-3 py-1 border border-gray-200 font-light text-lg"
                     >
                       {col.render
                         ? col.render(item)

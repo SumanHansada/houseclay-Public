@@ -1,16 +1,11 @@
 import React, { JSX } from "react";
 
-import Pill from "@/components/Pill";
-import { PropertyStatusEnum } from "@/common/enums";
+import { Pill } from "@/components/Pill";
+import { PropertyStatusEnum } from "@/common/enum";
+import { isEnumValue } from "@/utils/enum";
 
 interface RenderPropertyStatusProps {
   status: string;
-}
-
-function isValidStatus(status: string): status is PropertyStatusEnum {
-  return Object.values(PropertyStatusEnum).includes(
-    status as PropertyStatusEnum,
-  );
 }
 
 const statusMap: Record<PropertyStatusEnum, JSX.Element> = {
@@ -22,7 +17,7 @@ const statusMap: Record<PropertyStatusEnum, JSX.Element> = {
 export const RenderPropertyStatus: React.FC<RenderPropertyStatusProps> = ({
   status,
 }) => {
-  if (!isValidStatus(status)) {
+  if (!isEnumValue(PropertyStatusEnum, status)) {
     console.warn(`[RenderPropertyStatus] Invalid status: "${status}"`);
     return <Pill color="gray">Unknown</Pill>;
   }

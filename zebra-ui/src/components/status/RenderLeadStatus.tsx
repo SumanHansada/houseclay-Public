@@ -1,14 +1,11 @@
 import { JSX } from "react";
 
-import Pill from "@/components/Pill";
-import { LeadStatusEnum } from "@/interfaces/Lead";
+import { Pill } from "@/components/Pill";
+import { isEnumValue } from "@/utils/enum";
+import { LeadStatusEnum } from "@/common/enum";
 
 interface RenderLeadStatusProps {
   status: string;
-}
-
-function isValidStatus(status: string): status is LeadStatusEnum {
-  return Object.values(LeadStatusEnum).includes(status as LeadStatusEnum);
 }
 
 const statusMap: Record<LeadStatusEnum, JSX.Element> = {
@@ -20,7 +17,7 @@ const statusMap: Record<LeadStatusEnum, JSX.Element> = {
 export const RenderLeadStatus: React.FC<RenderLeadStatusProps> = ({
   status,
 }) => {
-  if (!isValidStatus(status)) {
+  if (!isEnumValue(LeadStatusEnum, status)) {
     console.warn(`[RenderLeadStatus] Invalid status: "${status}"`);
     return <Pill color="gray">Unknown</Pill>;
   }

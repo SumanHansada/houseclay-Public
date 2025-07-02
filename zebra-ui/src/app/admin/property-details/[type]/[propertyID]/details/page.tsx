@@ -5,12 +5,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  AnyProperty,
-  GetPropertyByIDResponse,
-  PropertyCategory,
-  PropertyDetailsFormValues,
-} from "@/interfaces/Property";
+import { AnyProperty, PropertyDetailsFormValues } from "@/interfaces/Property";
 import { dummyGetRentPropertyDetails } from "@/mock/propertyDetailsDummy";
 // import { useGetPropertyByIDQuery } from "@/store/apiSlice";
 import {
@@ -18,7 +13,7 @@ import {
   setPropertyLoading,
 } from "@/store/propertyDetailsSlice";
 import { RootState } from "@/store/store";
-import { transformApiToFormValues } from "@/utils/dataTransformer";
+import { transformApiToFormValues } from "@/utils/transform/propertyToFormValues";
 
 import AdditionalInfoForm from "../../../components/AdditionalInfoForm";
 import GalleryForm from "../../../components/GalleryForm";
@@ -27,6 +22,8 @@ import LocalityDetailsForm from "../../../components/LocalityDetailsForm";
 import PropertyDetailsForm from "../../../components/PropertyDetailsForm";
 import RentalDetailsForm from "../../../components/RentalDetailsForm";
 import ResaleDetailsForm from "../../../components/ResaleDetailsForm";
+import { PropertyCategoryEnum } from "@/common/enum";
+import { GetPropertyByIdResponse } from "@/interfaces/api";
 
 // import LocalityDetailsForm from "@/components/forms/LocalityDetailsForm"; // etc.
 
@@ -35,7 +32,6 @@ export default function DetailsPage() {
     propertyID: string;
     type: "rent" | "resale" | "flatmate";
   };
-  console.log(propertyID);
   const dispatch = useDispatch();
   const [editMode, setEditMode] = useState(false);
 
@@ -53,9 +49,9 @@ export default function DetailsPage() {
 
     const timer = setTimeout(() => {
       const category = dummyGetRentPropertyDetails.propertyDetails
-        .propertyCategory as PropertyCategory;
+        .propertyCategory as PropertyCategoryEnum;
 
-      const apiResponse: GetPropertyByIDResponse = {
+      const apiResponse: GetPropertyByIdResponse = {
         ...dummyGetRentPropertyDetails,
         propertyDetails: {
           ...dummyGetRentPropertyDetails.propertyDetails,

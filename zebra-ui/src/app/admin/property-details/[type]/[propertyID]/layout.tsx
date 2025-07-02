@@ -1,9 +1,15 @@
 "use client";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import {
+  useParams,
+  useRouter,
+  useSelectedLayoutSegment,
+} from "next/navigation";
 
-import { PropertyDetailsTabEnum } from "@/common/enums";
+import { PropertyDetailsTabEnum } from "@/common/enum";
 import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
-// import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
+import { ensureEnumValue } from "@/utils/enum";
+import { useGetPropertyByIdQuery } from "@/store/apiSlice";
+import AsyncFallback from "@/components/AsyncFallback";
 
 export default function PropertyDetailsLayout({
   children,
@@ -15,48 +21,36 @@ export default function PropertyDetailsLayout({
     propertyID: string;
   };
   const router = useRouter();
-  const pathname = usePathname();
+  const currentTabFromUrl = useSelectedLayoutSegment();
 
-  //   const { data, isLoading, isError } = useGetUserByPhoneNoQuery(
-  //     { phoneNo: userPhoneNo },
-  //     { skip: !userPhoneNo },
-  //   );
+  const {
+    data: currentProperty,
+    isLoading,
+    isError,
+    error,
+  } = useGetPropertyByIdQuery({ id: propertyID });
+
+  if (isLoading || isError || !currentProperty) {
+    return (
+      <AsyncFallback
+        isLoading={isLoading}
+        isError={isError || !currentProperty}
+        error={error}
+        loadingMessage="Loading property details…"
+        errorMessage="Failed to fetch property."
+      />
+    );
+  }
+
+  const activeTab = ensureEnumValue(
+    PropertyDetailsTabEnum,
+    currentTabFromUrl,
+    PropertyDetailsTabEnum.DETAILS,
+  );
 
   const handleTabChange = (tab: string) => {
     router.push(`/admin/property-details/${type}/${propertyID}/${tab}`);
   };
-
-  //   if (isLoading || !data) {
-  //     return (
-  //       <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-  //         <span className="text-gray-500">Loading user details…</span>
-  //       </div>
-  //     );
-  //   }
-
-  //   if (isError) {
-  //     return (
-  //       <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-  //         <span className="text-red-500">Failed to fetch user details.</span>
-  //       </div>
-  //     );
-  //   }
-
-  const validTabValues = Object.values(
-    PropertyDetailsTabEnum,
-  ) as readonly string[];
-  const isValidTab = (
-    currentTab: string,
-  ): currentTab is PropertyDetailsTabEnum => {
-    return validTabValues.includes(currentTab);
-  };
-
-  const pathSegments = pathname.split("/");
-  const currentTabFromUrl = pathSegments[pathSegments.length - 1];
-
-  const activeTab: PropertyDetailsTabEnum = isValidTab(currentTabFromUrl)
-    ? currentTabFromUrl
-    : PropertyDetailsTabEnum.DETAILS;
 
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">
@@ -67,9 +61,13 @@ export default function PropertyDetailsLayout({
             label="Owner Details"
             value={PropertyDetailsTabEnum.OWNER_DETAILS}
           />
-          <Tab label="Shortlisted" value={PropertyDetailsTabEnum.SHORTLISTED} />
-          <Tab label="Contacted" value={PropertyDetailsTabEnum.CONTACTED} />
-          <Tab label="Viewed" value={PropertyDetailsTabEnum.VIEWED} />
+          <Tab
+            label="Shortlist Users"
+            value={PropertyDetailsTabEnum.SHORTLIST}
+          />
+          <Tab label="Contact Users" value={PropertyDetailsTabEnum.CONTACT} />
+          <Tab label="View Users" value={PropertyDetailsTabEnum.VIEW} />
+          <Tab label="Report Users" value={PropertyDetailsTabEnum.REPORT} />
         </TabHeader>
       </Tabs>
       <div className="flex-1 overflow-auto">{children}</div>

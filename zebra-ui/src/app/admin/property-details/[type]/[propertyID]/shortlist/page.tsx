@@ -1,37 +1,36 @@
 "use client";
 import { Eye } from "lucide-react";
-import { useRouter } from "next/navigation";
-import React, { useMemo, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import React from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
 import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
 import { PaginationFooter } from "@/components/PaginationFooter";
 import { RenderUserStatus } from "@/components/status/RenderUserStatus";
 import { User } from "@/interfaces/User";
-import { dummyUserDataList } from "@/mock/userDetailsDummy";
+import { useLocalPagination } from "@/hooks/useLocalPagination";
+import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 
-export default function ShortlistedUsersPage() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 10;
-
-  const shortlistedUsers: User[] = dummyUserDataList;
-
-  const totalRows = shortlistedUsers.length;
-  const totalPages = Math.ceil(totalRows / rowsPerPage);
-  const isFirst = currentPage === 1;
-  const isLast = currentPage === totalPages;
-
-  const paginatedRows = useMemo(() => {
-    const start = (currentPage - 1) * rowsPerPage;
-    return shortlistedUsers.slice(start, start + rowsPerPage);
-  }, [shortlistedUsers, currentPage]);
-
-  const goToPage = (p: number) =>
-    p >= 1 && p <= totalPages && setCurrentPage(p);
-  const nextPage = () => !isLast && setCurrentPage((p) => p + 1);
-  const prevPage = () => !isFirst && setCurrentPage((p) => p - 1);
-
+export default function ShortlistUsersPage() {
   const router = useRouter();
+  const { propertyID } = useParams() as { propertyID: string };
+  const rowsPerPage = 10;
+  const { data: currentProperty } = useGetPropertyByIdQuery({
+    id: propertyID,
+  });
+  const rows = currentProperty!.shortlistUsers;
+
+  const {
+    currentPage,
+    paginatedRows,
+    totalPages,
+    isFirst,
+    isLast,
+    goToPage,
+    nextPage,
+    prevPage,
+  } = useLocalPagination(rows, rowsPerPage);
+
   const viewProfile = (phoneNo: string) =>
     router.push(`/admin/user-details/${phoneNo}`);
 
@@ -62,11 +61,12 @@ export default function ShortlistedUsersPage() {
     <div className="flex flex-col h-full">
       <div className="flex-1 flex flex-col bg-gray-100 py-8 px-16">
         <div className="bg-white shadow-sm rounded-xl p-5 flex flex-col gap-4 h-full">
-          <h2 className="text-3xl">User Shortlisted</h2>
+          <h2 className="text-3xl">Shortlist Users</h2>
           <DataTable<User>
             columns={columns}
             data={paginatedRows}
             getRowId={(u) => u.phoneNo}
+            noDataMessage="No users found"
           />
         </div>
       </div>

@@ -1,22 +1,28 @@
-import React from "react";
+import clsx from "clsx";
 
-export interface PillProps {
-  color: string;
+const COLOUR_MAP = {
+  red: ["bg-red-200", "border-red-400", "text-red-900"],
+  green: ["bg-green-200", "border-green-400", "text-green-900"],
+  blue: ["bg-blue-200", "border-blue-400", "text-blue-900"],
+  gray: ["bg-gray-200", "border-gray-400", "text-gray-900"],
+} as const;
+
+type PillColour = keyof typeof COLOUR_MAP;
+
+interface PillProps {
+  color: PillColour;
   children: React.ReactNode;
   className?: string;
 }
 
-const Pill: React.FC<PillProps> = ({ color, children, className = "" }) => {
-  const base = "px-2 py-1 rounded-full inline-block";
-  const bg = `bg-${color}-200`;
-  const border = `border border-${color}-900`;
-  const text = `text-${color}-900`;
-
-  return (
-    <span className={`${base} ${bg} ${border} ${text} ${className}`.trim()}>
-      {children}
-    </span>
-  );
-};
-
-export default Pill;
+export const Pill: React.FC<PillProps> = ({ color, children, className }) => (
+  <span
+    className={clsx(
+      "px-2 py-1 rounded-full inline-block border",
+      COLOUR_MAP[color],
+      className,
+    )}
+  >
+    {children}
+  </span>
+);

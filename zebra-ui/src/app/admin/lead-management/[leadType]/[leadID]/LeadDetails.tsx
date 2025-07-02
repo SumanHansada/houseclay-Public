@@ -3,15 +3,16 @@
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 
-import { LeadActionsEnum, LeadStatusEnum, LeadType } from "@/interfaces/Lead";
+import { LeadType } from "@/interfaces/Lead";
 import {
   useGetLeadByIdQuery,
   useLeadAddCommentMutation,
   useLeadStatusUpdateMutation,
 } from "@/store/apiSlice";
 
-import { RenderLeadStatus } from "../../components/RenderLeadStatus";
+import { RenderLeadStatus } from "@/components/status/RenderLeadStatus";
 import AsyncFallback from "@/components/AsyncFallback";
+import { LeadActionsEnum, LeadStatusEnum } from "@/common/enum";
 
 export const LeadDetails = () => {
   const router = useRouter();

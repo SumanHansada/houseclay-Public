@@ -169,7 +169,8 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
       onClose={onClose}
       entryAnimation="animate-fade-in"
       exitAnimation="animate-fade-out"
-      height={84}
+      height={72}
+      width={40}
     >
       <DialogHeader>
         <div className="flex md:border-b border-gray-200 items-center w-full justify-between py-4 px-6 max-md:py-2 max-md:px-4">

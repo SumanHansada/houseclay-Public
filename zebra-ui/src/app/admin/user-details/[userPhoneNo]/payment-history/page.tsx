@@ -8,7 +8,7 @@ import { PaginationFooter } from "@/components/PaginationFooter";
 import { UserExternalPayment } from "@/interfaces/User";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 
-import { RenderPaymentStatus } from "../../components/RenderPaymentStatus";
+import { RenderPaymentStatus } from "@/components/status/RenderPaymentStatus";
 import { useLocalPagination } from "@/hooks/useLocalPagination";
 
 interface RowType extends UserExternalPayment {

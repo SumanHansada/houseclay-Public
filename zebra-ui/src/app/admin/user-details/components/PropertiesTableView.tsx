@@ -18,6 +18,7 @@ export function PropertiesTableView<
   RowType extends { propertyID: string; _serial: number },
 >(props: PropertiesTableViewProps<RowType>) {
   const { tableTitle, columns, rows, rowsPerPage = 10 } = props;
+
   const {
     currentPage,
     paginatedRows,

@@ -1,28 +1,11 @@
-import { PaymentStatusEnum } from "@/common/enums";
+import { PaymentStatusEnum } from "@/common/enum";
 import { PropertyInfo } from "./Property";
 
 export interface User {
   name: string;
   email: string;
-  avatar?: string;
   phoneNo: string;
   blacklisted: boolean;
-  createdAt: string;
-}
-
-export interface GetAllUsersResponse {
-  content: User[];
-  pageable: {
-    pageNumber: number;
-    pageSize: number;
-  };
-  totalPages: number;
-  totalElements: number;
-  last: boolean;
-  first: boolean;
-  numberOfElements: number;
-  size: number;
-  number: number;
 }
 
 export interface UserUpdatedInfo {
@@ -55,10 +38,10 @@ export interface UserReportProperty {
   userProperty: PropertyInfo;
 }
 
-export interface UserDetails {
-  phoneNo: string;
-  email: string;
-  name: string;
+export interface UserDetails extends User {
+  // phoneNo: string;
+  // email: string;
+  // name: string;
   createdAt: string;
   blacklistedAt: string;
   userUpdates: UserUpdatedInfo[];
@@ -69,9 +52,5 @@ export interface UserDetails {
   externalPayments: UserExternalPayment[];
   connectTransactions: UserConnectTransaction[];
   reportProperties: UserReportProperty[];
-  blacklisted: boolean;
-}
-
-export interface GetUserByPhoneNoResponse {
-  user: UserDetails;
+  // blacklisted: boolean;
 }

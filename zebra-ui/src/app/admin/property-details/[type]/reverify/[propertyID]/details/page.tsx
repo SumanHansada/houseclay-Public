@@ -29,7 +29,7 @@ import {
   setPropertyLoading,
 } from "@/store/propertyDetailsSlice";
 import { RootState } from "@/store/store";
-import { transformApiToFormValues } from "@/utils/dataTransformer";
+import { transformApiToFormValues } from "@/utils/transform/propertyToFormValues";
 
 export default function ReverifyPropertyDetailsPage() {
   const { type } = useParams() as { type: "rent" | "resale" | "flatmate" };

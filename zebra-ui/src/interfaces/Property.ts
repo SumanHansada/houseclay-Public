@@ -1,10 +1,9 @@
-import { PropertyCategory, PropertyStatusEnum } from "@/common/enums";
+import { PropertyCategoryEnum, PropertyStatusEnum } from "@/common/enum";
 import { PropertyPhoto } from "./PropertyPhoto";
-import { User } from "./User";
 
 export interface PropertyInfo {
   propertyID: string;
-  propertyCategory: PropertyCategory;
+  propertyCategory: PropertyCategoryEnum;
   price: string | null;
   location: string;
   bhkType: string;
@@ -14,22 +13,14 @@ export interface PropertyInfo {
   availableFrom: string;
 }
 
-export interface GetAllPropertiesResponse {
-  content: PropertyInfo[];
-  pageable: {
-    pageNumber: number;
-    pageSize: number;
-  };
-  totalPages: number;
-  totalElements: number;
-  last: boolean;
-  first: boolean;
-  numberOfElements: number;
-  size: number;
-  number: number;
+export interface PropertyUpdate {
+  updateType: string;
+  updateTime: string;
+  updateBy: string;
+  userType: string;
 }
 
-interface PropertyBase {
+export interface PropertyBase {
   propertyID: string;
   title: string | null;
   propertyType: string;
@@ -45,7 +36,7 @@ interface PropertyBase {
   landmark: string;
   latitude: number;
   longitude: number;
-  furnishing: string;
+  furnishing: string | null;
   propertyAge: string | null;
   waterSupply: string;
   powerBackup: string;
@@ -54,33 +45,29 @@ interface PropertyBase {
   propertyState: string;
   images: string[];
   amenities: string[];
-  propertyUpdates: Array<{
-    updateType: string;
-    updateTime: string;
-    updateBy: string;
-    userType: string;
-  }>;
+  preferredTenants: string[];
+  propertyCategory: PropertyCategoryEnum;
+  propertyUpdates: PropertyUpdate[];
   premium: boolean;
   managed: boolean;
 }
 
 export interface RentProperty extends PropertyBase {
-  propertyCategory: "Rent";
+  propertyCategory: PropertyCategoryEnum.RENT;
   rent: number;
   deposit: number;
   maintenanceCharges: number;
   rentNegotiable: boolean;
-  preferredTenants: string[];
   petsAllowed: boolean | null;
-  nonVegAllowed: boolean;
+  nonVegAllowed: boolean | null;
 }
 
 export interface FlatmateProperty extends PropertyBase {
-  propertyCategory: "Flatmate";
+  propertyCategory: PropertyCategoryEnum.FLATMATE;
   rent: number;
-  maintenanceCharges: number;
   depositCharges: number;
-  tenantType: string;
+  maintenanceCharges: number;
+  tenantType: "Male" | "Female" | "Any";
   attachedBathroom: boolean;
   attachedBalcony: boolean;
   smokingPreference: string;
@@ -88,11 +75,11 @@ export interface FlatmateProperty extends PropertyBase {
 }
 
 export interface ResaleProperty extends PropertyBase {
-  propertyCategory: "Resale";
-  ownershipType: string;
-  priceNegotiable: boolean;
-  underLoan: boolean;
+  propertyCategory: PropertyCategoryEnum.RESALE;
   price: number;
+  priceNegotiable: boolean;
+  ownershipType: string;
+  underLoan: boolean;
   bathrooms: number;
   balcony: number;
   khataCertificate: string;
@@ -101,14 +88,6 @@ export interface ResaleProperty extends PropertyBase {
 }
 
 export type AnyProperty = RentProperty | FlatmateProperty | ResaleProperty;
-
-export interface GetPropertyByIDResponse {
-  propertyDetails: AnyProperty;
-  userDetails: User;
-  contactedUsers: User[];
-  viewedUsers: User[];
-  shortlistedUsers: User[];
-}
 
 export interface PropertyDetailsFormValues {
   propertyDetails: {
