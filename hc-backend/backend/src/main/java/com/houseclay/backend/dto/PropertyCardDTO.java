@@ -7,11 +7,9 @@ import java.util.List;
 @Data
 public class PropertyCardDTO {
     private String propertyID;
-    private String propertyCategory;
     private String propertyType;
     private Double builtUpArea;
     private String bhkType;
-    private Integer bathrooms;
     private Double rent;
     private String furnishing;
     private Double price;

@@ -22,7 +22,7 @@ public class PropertyDocument {
     private String city;
     private String locationOrSocietyName;
     private String landmark;
-    private Timestamp availableFrom;
+    private Long availableFrom;
     private Boolean parking;
 
     @Field(type = FieldType.Keyword)

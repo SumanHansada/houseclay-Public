@@ -63,7 +63,7 @@ public class PropertyElasticService {
         propertyDocument.setCity(property.getCity());
         propertyDocument.setLocationOrSocietyName(property.getLocationOrSocietyName());
         propertyDocument.setLandmark(property.getLandmark());
-        propertyDocument.setAvailableFrom(property.getAvailableFrom());
+        propertyDocument.setAvailableFrom(property.getAvailableFrom().getTime());
         propertyDocument.setParking(property.getParking());
         propertyDocument.setImages(property.getImages());
         propertyDocument.setAmenities(property.getAmenities());
