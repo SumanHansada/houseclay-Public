@@ -1,7 +1,9 @@
-import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import { useDispatch } from "react-redux";
 
-import { RootState, store } from "../store/store";
+import { FileUploadProgress } from "@/interfaces/FileUploadProgress";
+
+import { store } from "../store/store";
 import {
   setFileCompleted,
   setFileError,
@@ -13,7 +15,6 @@ import {
 
 export const useS3Uploader = () => {
   const dispatch = useDispatch();
-  const uploadState = useSelector((state: RootState) => state.uploadToS3);
 
   const uploadFiles = async (
     images: {
@@ -41,9 +42,11 @@ export const useS3Uploader = () => {
           // Fetch the blob from the URL
           const blobResponse = await fetch(image.url);
           if (!blobResponse.ok) {
-            throw new Error(`Failed to fetch image: ${blobResponse.statusText}`);
+            throw new Error(
+              `Failed to fetch image: ${blobResponse.statusText}`,
+            );
           }
-          
+
           const blob = await blobResponse.blob();
           const file = new File([blob], image.name, { type: image.type });
 
@@ -56,13 +59,13 @@ export const useS3Uploader = () => {
             onUploadProgress: (progressEvent) => {
               if (progressEvent.total) {
                 const progress = Math.round(
-                  (progressEvent.loaded * 100) / progressEvent.total
+                  (progressEvent.loaded * 100) / progressEvent.total,
                 );
                 dispatch(
                   setFileProgress({
                     fileName: image.name,
                     progress: progress,
-                  })
+                  }),
                 );
               }
             },
@@ -71,13 +74,12 @@ export const useS3Uploader = () => {
 
           // File completed successfully
           dispatch(setFileCompleted({ fileName: image.name }));
-          
         } catch (error) {
           console.error(`Error uploading ${image.name}:`, error);
           let errorMessage = "Upload failed";
-          
+
           if (axios.isAxiosError(error)) {
-            if (error.code === 'ECONNABORTED') {
+            if (error.code === "ECONNABORTED") {
               errorMessage = "Upload timeout";
             } else if (error.response) {
               errorMessage = `Server error: ${error.response.status}`;
@@ -89,26 +91,25 @@ export const useS3Uploader = () => {
           } else if (error instanceof Error) {
             errorMessage = error.message;
           }
-          
+
           dispatch(setFileError({ fileName: image.name, error: errorMessage }));
         }
       }
 
-             // Check final status after all uploads complete
-       const finalState = store.getState().uploadToS3;
-       const hasErrors = finalState.fileProgress.some(
-         (file: any) => file.status === "error"
-       );
-       
-       if (hasErrors) {
-         const errorCount = finalState.fileProgress.filter(
-           (file: any) => file.status === "error"
-         ).length;
-         dispatch(uploadError(`${errorCount} file(s) failed to upload`));
-       } else {
-         dispatch(uploadSuccess());
-       }
-      
+      // Check final status after all uploads complete
+      const finalState = store.getState().uploadToS3;
+      const hasErrors = finalState.fileProgress.some(
+        (file: FileUploadProgress) => file.status === "error",
+      );
+
+      if (hasErrors) {
+        const errorCount = finalState.fileProgress.filter(
+          (file: FileUploadProgress) => file.status === "error",
+        ).length;
+        dispatch(uploadError(`${errorCount} file(s) failed to upload`));
+      } else {
+        dispatch(uploadSuccess());
+      }
     } catch (error) {
       console.error("Upload error:", error);
       const errorMessage =
