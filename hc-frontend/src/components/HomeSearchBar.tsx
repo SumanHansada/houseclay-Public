@@ -4,6 +4,10 @@ import { useRouter } from "next/navigation";
 import SearchSvg from "public/icons/search.svg";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+
+import { upperCase } from "@/common/utils";
+import { RootState } from "@/store/store";
 
 import PlacesAutocomplete from "./common/PlacesAutocomplete";
 import Dropdown from "./Dropdown";
@@ -38,11 +42,14 @@ const HomeSearchBar: React.FC = () => {
     address?: string;
     city?: string;
   } | null>(null);
+  const activeTab = useSelector((state: RootState) =>
+    upperCase(state.app.activeSearchTab),
+  );
 
   const handleSearch = () => {
     if (location && location.latitude && location.longitude) {
       router.push(
-        `/property-search?lat=${location.latitude}&lon=${location.longitude}`,
+        `/property-search?propertyCategory=${activeTab}&lat=${location.latitude}&lon=${location.longitude}`,
       );
     }
   };
@@ -50,7 +57,7 @@ const HomeSearchBar: React.FC = () => {
   const handlePrefetch = () => {
     if (location && location.latitude && location.longitude) {
       router.prefetch(
-        `/property-search?lat=${location.latitude}&lon=${location.longitude}`,
+        `/property-search?&propertyCategory=${activeTab}&lat=${location.latitude}&lon=${location.longitude}`,
       );
     }
   };
