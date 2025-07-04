@@ -3,10 +3,10 @@
 import { ChevronLeft, SearchIcon, SlidersHorizontal } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useReducer } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { BadgeType, PropertyCategory } from "@/common/enums";
-import { upperCase } from "@/common/utils";
+import { pascalCase } from "@/common/utils";
 import Autocomplete from "@/components/common/Autocomplete";
 import Button from "@/components/common/Button";
 import SelectDropdown from "@/components/common/SelectDropdown";
@@ -22,15 +22,12 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
-import { RootState } from "@/store/store";
 
 export default function PropertySearchPage() {
   const searchParams = useSearchParams();
-  const activeTab = useSelector(
-    (state: RootState) => state.app.activeSearchTab,
-  );
   const lat = searchParams.get("lat");
   const lon = searchParams.get("lon");
+  const propertyCategory = searchParams.get("propertyCategory");
   const router = useRouter();
 
   // Only fetch if lat/lon are present and valid
@@ -40,7 +37,7 @@ export default function PropertySearchPage() {
       ? {
           latitude: Number(lat),
           longitude: Number(lon),
-          propertyCategory: upperCase(activeTab),
+          propertyCategory: propertyCategory || "",
         }
       : { latitude: 0, longitude: 0, propertyCategory: "" },
     { skip: !shouldFetch },
@@ -60,7 +57,7 @@ export default function PropertySearchPage() {
 
   type PropertySearchState = {
     propertyType: string | number | boolean;
-    propertyCategory: PropertyCategory;
+    propertyCategory: string;
     propertyBhk: string | number | boolean;
     tenantType: string | number | boolean;
   };
@@ -76,7 +73,7 @@ export default function PropertySearchPage() {
 
   const initialState: PropertySearchState = {
     propertyType: "",
-    propertyCategory: activeTab,
+    propertyCategory: "",
     propertyBhk: "",
     tenantType: "",
   };
@@ -284,7 +281,8 @@ export default function PropertySearchPage() {
 
               <div>
                 <p className="text-gray-500 text-sm">
-                  {properties.length} Rooms for {activeTab}
+                  {properties.length} Rooms for{" "}
+                  {pascalCase(propertyCategory || "")}
                 </p>
               </div>
             </div>
