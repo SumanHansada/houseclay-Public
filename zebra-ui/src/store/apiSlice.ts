@@ -1,5 +1,6 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 
+// import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { LeadQueryParamEnum } from "@/common/enum";
 import {
   GetAllLeadsResponse,
@@ -15,25 +16,27 @@ import {
   PostResalePropertyRequest,
 } from "@/interfaces/api";
 
-import { RootState } from "./store";
+// import { RootState } from "./store";
+import { baseQueryWithAuth } from "./baseQueryWithAuth";
 
-const baseUrl = process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL;
+// const baseUrl = process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL;
 
 export const apiSlice = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({
-    baseUrl:
-      baseUrl ||
-      "http://ec2-13-210-204-208.ap-southeast-2.compute.amazonaws.com:8080/api" ||
-      "https://jsonplaceholder.typicode.com",
-    prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).admin.token;
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithAuth,
+  // baseQuery: fetchBaseQuery({
+  //   baseUrl:
+  //     baseUrl ||
+  //     "http://ec2-13-210-204-208.ap-southeast-2.compute.amazonaws.com:8080/api" ||
+  //     "https://jsonplaceholder.typicode.com",
+  //   prepareHeaders: (headers, { getState }) => {
+  //     const token = (getState() as RootState).admin.token;
+  //     if (token) {
+  //       headers.set("Authorization", `Bearer ${token}`);
+  //     }
+  //     return headers;
+  //   },
+  // }),
 
   tagTypes: [
     "UserDetail",
