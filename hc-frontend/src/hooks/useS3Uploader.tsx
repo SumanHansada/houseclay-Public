@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 
-import { RootState } from "../store/store";
+import { RootState, store } from "../store/store";
 import {
   setFileCompleted,
   setFileError,
@@ -32,94 +33,82 @@ export const useS3Uploader = () => {
     dispatch(startUpload({ files: fileNames }));
 
     try {
-      // Create Evaporate instance for multipart uploads
-      const _evaporateConfig = {
-        signerUrl: "/api/s3-sign", // You'll need to create this endpoint
-        aws_key: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
-        bucket: process.env.NEXT_PUBLIC_AWS_S3_BUCKET,
-        cloudfront: true,
-        computeContentMd5: true,
-        cryptoMd5Method: function (data: Uint8Array) {
-          // You'll need to implement MD5 calculation
-          return btoa(
-            String.fromCharCode.apply(null, Array.from(new Uint8Array(data))),
-          );
-        },
-        maxConcurrentParts: 3, // Upload 3 parts concurrently
-        partSize: 6 * 1024 * 1024, // 6MB parts
-        retryCount: 3,
-        awsSignatureVersion: "4",
-      };
-
-      // For now, fallback to the original implementation since we need backend support for Evaporate
-      // TODO: Implement proper Evaporate.js integration with backend signing
-
+      // Upload files sequentially to avoid overwhelming the server
       for (let i = 0; i < images.length; i++) {
         const image = images[i];
 
         try {
-          const blob = await fetch(image.url).then((r) => r.blob());
+          // Fetch the blob from the URL
+          const blobResponse = await fetch(image.url);
+          if (!blobResponse.ok) {
+            throw new Error(`Failed to fetch image: ${blobResponse.statusText}`);
+          }
+          
+          const blob = await blobResponse.blob();
           const file = new File([blob], image.name, { type: image.type });
 
-          // Simulate progress updates for each file
-          const simulateProgress = () => {
-            let progress = 0;
-            const interval = setInterval(() => {
-              progress += Math.random() * 20;
-              if (progress >= 100) {
-                progress = 100;
-                clearInterval(interval);
-                dispatch(setFileCompleted({ fileName: image.name }));
-              } else {
-                dispatch(
-                  setFileProgress({
-                    fileName: image.name,
-                    progress: Math.round(progress),
-                  }),
-                );
-              }
-            }, 200);
-          };
-
-          simulateProgress();
-
-          const uploadResp = await fetch(image.S3Url, {
-            method: "PUT",
+          // Upload using axios with progress tracking
+          await axios.put(image.S3Url, file, {
             headers: {
               "Content-Type": file.type,
               "Cache-Control": "public, max-age=86400, must-revalidate",
             },
-            body: file,
+            onUploadProgress: (progressEvent) => {
+              if (progressEvent.total) {
+                const progress = Math.round(
+                  (progressEvent.loaded * 100) / progressEvent.total
+                );
+                dispatch(
+                  setFileProgress({
+                    fileName: image.name,
+                    progress: progress,
+                  })
+                );
+              }
+            },
+            timeout: 30000, // 30 second timeout
           });
-
-          if (!uploadResp.ok) {
-            throw new Error(`Failed to upload ${image.name}`);
-          }
 
           // File completed successfully
           dispatch(setFileCompleted({ fileName: image.name }));
+          
         } catch (error) {
           console.error(`Error uploading ${image.name}:`, error);
-          const errorMessage =
-            error instanceof Error ? error.message : "Upload failed";
+          let errorMessage = "Upload failed";
+          
+          if (axios.isAxiosError(error)) {
+            if (error.code === 'ECONNABORTED') {
+              errorMessage = "Upload timeout";
+            } else if (error.response) {
+              errorMessage = `Server error: ${error.response.status}`;
+            } else if (error.request) {
+              errorMessage = "Network error";
+            } else {
+              errorMessage = error.message;
+            }
+          } else if (error instanceof Error) {
+            errorMessage = error.message;
+          }
+          
           dispatch(setFileError({ fileName: image.name, error: errorMessage }));
         }
       }
 
-      // Check if all files completed successfully
-      const allCompleted = () => {
-        const currentState = uploadState;
-        return (
-          currentState.fileProgress.length > 0 &&
-          currentState.fileProgress.every((file) => file.status === "completed")
-        );
-      };
-
-      if (allCompleted()) {
-        dispatch(uploadSuccess());
-      } else {
-        dispatch(uploadError("Some files failed to upload"));
-      }
+             // Check final status after all uploads complete
+       const finalState = store.getState().uploadToS3;
+       const hasErrors = finalState.fileProgress.some(
+         (file: any) => file.status === "error"
+       );
+       
+       if (hasErrors) {
+         const errorCount = finalState.fileProgress.filter(
+           (file: any) => file.status === "error"
+         ).length;
+         dispatch(uploadError(`${errorCount} file(s) failed to upload`));
+       } else {
+         dispatch(uploadSuccess());
+       }
+      
     } catch (error) {
       console.error("Upload error:", error);
       const errorMessage =
