@@ -1,68 +1,96 @@
 {
   "properties": [
     {
-      "id": 1,
-      "complex": "Sobha Royal Pavilion",
-      "beds": 3,
-      "baths": 3,
-      "price": "2.3",
-      "area": "1,790",
-      "location": "Nagavarapalya, 15th cross, Landmark - Life in...",
+      "propertyID": "1",
+      "propertyType": "Apartment",
+      "builtUpArea": 1790,
+      "bhkType": "3BHK",
+      "bathrooms": 3,
+      "rent": null,
+      "furnishing": "Semi-furnished",
+      "price": 2300000,
+      "city": "Bengaluru",
+      "locationOrSocietyName": "Sobha Royal Pavilion",
+      "landmark": "Nagavarapalya, 15th cross, Landmark - Life in...",
+      "latitude": 12.9716,
+      "longitude": 77.5946,
+      "image": "/photos/House1.webp",
       "images": [
         "/photos/House1.webp",
         "/photos/House2.webp",
         "/photos/House3.webp",
         "/photos/House4.webp"
       ],
-      "type": "Featured"
+      "badges": "Featured"
     },
     {
-      "id": 2,
-      "complex": "Prestige Lakeside Habitat",
-      "beds": 3,
-      "baths": 2,
-      "price": "1.7",
-      "area": "1,360",
-      "location": "Varthur, Gunjur, Bangalore",
+      "propertyID": "2",
+      "propertyType": "Apartment",
+      "builtUpArea": 1360,
+      "bhkType": "3BHK",
+      "bathrooms": 2,
+      "rent": null,
+      "furnishing": "Semi-furnished",
+      "price": 1700000,
+      "city": "Bengaluru",
+      "locationOrSocietyName": "Prestige Lakeside Habitat",
+      "landmark": "Varthur, Gunjur, Bangalore",
+      "latitude": 12.9716,
+      "longitude": 77.5946,
+      "image": "/photos/House2.webp",
       "images": [
         "/photos/House2.webp",
         "/photos/House1.webp",
         "/photos/House3.webp",
         "/photos/House4.webp"
       ],
-      "type": ""
+      "badges": null
     },
     {
-      "id": 3,
-      "complex": "Sobha Neopolis",
-      "beds": 2,
-      "baths": 2,
-      "price": "1.3",
-      "area": "1180",
-      "location": "Gunjur Road, Bangalore",
+      "propertyID": "3",
+      "propertyType": "Apartment",
+      "builtUpArea": 1180,
+      "bhkType": "2BHK",
+      "bathrooms": 2,
+      "rent": null,
+      "furnishing": "Semi-furnished",
+      "price": 1300000,
+      "city": "Bengaluru",
+      "locationOrSocietyName": "Sobha Neopolis",
+      "landmark": "Gunjur Road, Bangalore",
+      "latitude": 12.9716,
+      "longitude": 77.5946,
+      "image": "/photos/House4.webp",
       "images": [
         "/photos/House4.webp",
         "/photos/House1.webp",
         "/photos/House3.webp",
         "/photos/House2.webp"
       ],
-      "type": "Exclusive"
+      "badges": "Exclusive"
     },
     {
-      "id": 4,
-      "complex": "Durga Petals",
-      "beds": 2,
-      "baths": 2,
-      "price": "2.2",
-      "area": "1240",
-      "location": "Doddenakundi, Marathahalli, Bangalore",
+      "propertyID": "4",
+      "propertyType": "Apartment",
+      "builtUpArea": 1240,
+      "bhkType": "2BHK",
+      "bathrooms": 2,
+      "rent": null,
+      "furnishing": "Semi-furnished",
+      "price": 2200000,
+      "city": "Bengaluru",
+      "locationOrSocietyName": "Durga Petals",
+      "landmark": "Doddenakundi, Marathahalli, Bangalore",
+      "latitude": 12.9716,
+      "longitude": 77.5946,
+      "image": "/photos/House3.webp",
       "images": [
         "/photos/House3.webp",
         "/photos/House4.webp",
         "/photos/House2.webp",
         "/photos/House1.webp"
       ],
-      "type": "Exclusive"
+      "badges": "Exclusive"
     }
   ],
   "neighbourhoods": [

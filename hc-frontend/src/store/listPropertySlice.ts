@@ -105,7 +105,7 @@ const initialState: ListPropertyState = {
       ...initialData,
       propertyDetails: {
         ...initialData.propertyDetails,
-        propertyCategory: "Rent",
+        propertyCategory: PropertyCategory.RENT,
       },
     },
   },
@@ -115,7 +115,7 @@ const initialState: ListPropertyState = {
       ...initialData,
       propertyDetails: {
         ...initialData.propertyDetails,
-        propertyCategory: "Sale",
+        propertyCategory: PropertyCategory.RESALE,
       },
     },
   },
@@ -125,7 +125,7 @@ const initialState: ListPropertyState = {
       ...initialData,
       propertyDetails: {
         ...initialData.propertyDetails,
-        propertyCategory: "Flatmate",
+        propertyCategory: PropertyCategory.FLATMATE,
       },
     },
   },
@@ -265,10 +265,10 @@ const listPropertySlice = createSlice({
             ...initialData.propertyDetails,
             propertyCategory:
               type === "rentForm"
-                ? "Rent"
+                ? PropertyCategory.RENT
                 : type === "resaleForm"
-                  ? "Sale"
-                  : "Flatmate",
+                  ? PropertyCategory.RESALE
+                  : PropertyCategory.FLATMATE,
           },
         },
       };
@@ -280,7 +280,7 @@ const listPropertySlice = createSlice({
           ...initialData,
           propertyDetails: {
             ...initialData.propertyDetails,
-            propertyCategory: "Rent",
+            propertyCategory: PropertyCategory.RENT,
           },
         },
       };
@@ -290,7 +290,7 @@ const listPropertySlice = createSlice({
           ...initialData,
           propertyDetails: {
             ...initialData.propertyDetails,
-            propertyCategory: "Sale",
+            propertyCategory: PropertyCategory.RESALE,
           },
         },
       };
@@ -300,7 +300,7 @@ const listPropertySlice = createSlice({
           ...initialData,
           propertyDetails: {
             ...initialData.propertyDetails,
-            propertyCategory: "Flatmate",
+            propertyCategory: PropertyCategory.FLATMATE,
           },
         },
       };

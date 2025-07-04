@@ -2,6 +2,12 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import bannerBackgroundMobile from "public/images/banner-background-mobile.webp";
 import bannerPeopleMobile from "public/images/banner-people-mobile.webp";
+import { useDispatch, useSelector } from "react-redux";
+
+import { PropertyCategory } from "@/common/enums";
+import { useDialog } from "@/providers/DialogContextProvider";
+import { setActiveSearchTab } from "@/store/appSlice";
+import { RootState } from "@/store/store";
 
 import ImageWithLoader from "./common/ImageWithLoader";
 import HomeSearchBar from "./HomeSearchBar";
@@ -25,17 +31,12 @@ const ZeroPercent = dynamic(
   () => import("public/icons/zero-percent.svg"),
 ) as React.FC<React.SVGProps<SVGSVGElement>>;
 
-interface MastHeadMobileProps {
-  activeTab: "rent" | "buy";
-  setActiveTab: (tab: "rent" | "buy") => void;
-  openDialog: (dialogName: string) => void;
-}
-
-const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
-  activeTab,
-  setActiveTab,
-  openDialog,
-}) => {
+const MastHeadMobile: React.FC = () => {
+  const dispatch = useDispatch();
+  const { openDialog } = useDialog();
+  const activeTab = useSelector(
+    (state: RootState) => state.app.activeSearchTab,
+  );
   return (
     <div className="relative flex flex-col px-6 pt-8 pb-14 gap-6">
       <div className="absolute inset-0 -z-10">
@@ -53,14 +54,16 @@ const MastHeadMobile: React.FC<MastHeadMobileProps> = ({
         {/* Tabs */}
         <div className="flex justify-center">
           <button
-            onClick={() => setActiveTab("rent")}
-            className={`px-8 py-2 border-b-2 border-gray-300 ${activeTab === "rent" ? "text-red-500 border-red-500" : "text-gray-700 "}`}
+            onClick={() => dispatch(setActiveSearchTab(PropertyCategory.RENT))}
+            className={`px-8 py-2 border-b-2 border-gray-300 ${activeTab === PropertyCategory.RENT ? "text-red-500 border-red-500" : "text-gray-700 "}`}
           >
             Rent
           </button>
           <button
-            onClick={() => setActiveTab("buy")}
-            className={`px-8 py-2 border-b-2 border-gray-300 ${activeTab === "buy" ? "text-red-500 border-red-500" : "text-gray-700 "}`}
+            onClick={() =>
+              dispatch(setActiveSearchTab(PropertyCategory.RESALE))
+            }
+            className={`px-8 py-2 border-b-2 border-gray-300 ${activeTab === PropertyCategory.RESALE ? "text-red-500 border-red-500" : "text-gray-700 "}`}
           >
             Buy
           </button>

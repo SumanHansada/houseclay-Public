@@ -48,7 +48,7 @@ const PropertyTypeOptions = ({
       id: "flatmates",
       label: "Flatmates",
       icon: <Flatmates />,
-      type: PropertyCategory.FLATMATES,
+      type: PropertyCategory.FLATMATE,
     },
   ];
 

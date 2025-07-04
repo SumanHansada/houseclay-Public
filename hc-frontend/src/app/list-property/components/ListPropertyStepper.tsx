@@ -51,7 +51,7 @@ const ListPropertyStepper: React.FC<ListPropertyStepperProps> = ({
 
     if (
       propertyCategory === PropertyCategory.RENT ||
-      propertyCategory === PropertyCategory.FLATMATES
+      propertyCategory === PropertyCategory.FLATMATE
     ) {
       return [
         ...baseSteps.slice(0, 2),

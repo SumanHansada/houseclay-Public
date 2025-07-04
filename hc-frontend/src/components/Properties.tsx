@@ -3,13 +3,14 @@ import { Crown, Heart, MapPin, Star } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
 import { BadgeType } from "@/common/enums";
-import { Property } from "@/interfaces/Property";
+import { formatBhkType, formatINRCurrency } from "@/common/utils";
+import { PropertySearch } from "@/interfaces/PropertySearch";
 
 import ImageWithLoader from "./common/ImageWithLoader";
 
 interface PropertiesProps {
-  property: Property;
-  badgeType?: string;
+  property: PropertySearch;
+  badgeType?: string | null;
   autoplay?: boolean;
   autoplayInterval?: number;
 }
@@ -47,7 +48,7 @@ const Properties: React.FC<PropertiesProps> = ({
       <div className="relative h-72 max-md:h-60">
         <ImageWithLoader
           src={property?.images[currentImageIndex]}
-          alt={`Property ${property?.id}`}
+          alt={`Property ${property?.propertyID}`}
           fill
           className="rounded-lg"
           loading="lazy"
@@ -111,26 +112,36 @@ const Properties: React.FC<PropertiesProps> = ({
       {/* Property Info */}
       <div className="flex-col mt-4">
         <div className="flex justify-between items-center mb-2">
-          <p className="text-gray-500 text-xs">Apartment</p>
-          <p className="text-gray-500 text-xs">{property.complex}</p>
+          <p className="text-black text-xs border border-gray-200 py-1 px-1.5 rounded-full bg-gray-100">
+            {property.propertyType}
+          </p>
+          <p className="text-gray-500 text-xs">
+            {property.locationOrSocietyName}
+          </p>
         </div>
 
         <div className="flex justify-between items-center mb-2">
           <p className="font-medium text-xs">
-            {property.beds} Beds | {property.baths} Bath | Semi furnished
+            {formatBhkType(property.bhkType)} Beds |{" "}
+            {property.bathrooms ? `${property.bathrooms} Bath |` : ""}
+            {property.furnishing}
           </p>
-          <p className="font-bold">₹ {property.price} Cr</p>
+          <p className="font-bold">
+            {formatINRCurrency(property?.price || property?.rent || 0)}
+          </p>
         </div>
 
         <div className="flex justify-between items-center text-xs">
-          <p className="text-gray-600">Buildup Area {property.area} sq.ft.</p>
+          <p className="text-gray-600">
+            Buildup Area {property.builtUpArea} sq.ft.
+          </p>
         </div>
 
         <div className="mt-2 text-xs text-gray-500 flex items-center">
           <i className="mr-1">
             <MapPin size={12} />
           </i>
-          <p className="truncate">{property.location}</p>
+          <p className="truncate">{property.landmark}</p>
         </div>
       </div>
     </div>

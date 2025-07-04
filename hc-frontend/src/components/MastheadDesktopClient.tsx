@@ -1,13 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 
 import MastheadDesktop from "./MastheadDesktop";
 
 const MastheadDesktopClient: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"rent" | "sale">("rent");
-
-  return <MastheadDesktop activeTab={activeTab} setActiveTab={setActiveTab} />;
+  return <MastheadDesktop />;
 };
 
 export default MastheadDesktopClient;

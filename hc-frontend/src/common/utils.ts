@@ -35,6 +35,10 @@ export const pascalCase = (str: string) => {
   return str ? str.charAt(0).toUpperCase() + str.slice(1) : "-";
 };
 
+export const upperCase = (str: string) => {
+  return str ? str.toUpperCase() : "-";
+};
+
 export function shimmer(width: number, height: number) {
   return `
     <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" 
@@ -58,3 +62,7 @@ export function toBase64(str: string) {
     ? Buffer.from(str).toString("base64")
     : window.btoa(str);
 }
+
+export const formatBhkType = (bhkType: string) => {
+  return bhkType.replace(/BHK/g, "");
+};

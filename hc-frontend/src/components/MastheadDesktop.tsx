@@ -1,15 +1,19 @@
 import bannerBackground from "public/images/banner-background.webp";
+import { useDispatch, useSelector } from "react-redux";
 
+import { PropertyCategory } from "@/common/enums";
 import HomeSearchBar from "@/components/HomeSearchBar";
+import { setActiveSearchTab } from "@/store/appSlice";
+import { RootState } from "@/store/store";
 
 import ImageWithLoader from "./common/ImageWithLoader";
 
-interface MastHeadDesktopProps {
-  activeTab: "rent" | "sale";
-  setActiveTab: (tab: "rent" | "sale") => void;
-}
+const MastHeadDesktop = () => {
+  const activeTab = useSelector(
+    (state: RootState) => state.app.activeSearchTab,
+  );
+  const dispatch = useDispatch();
 
-const MastHeadDesktop = ({ activeTab, setActiveTab }: MastHeadDesktopProps) => {
   return (
     <>
       <div className="absolute inset-0">
@@ -37,14 +41,16 @@ const MastHeadDesktop = ({ activeTab, setActiveTab }: MastHeadDesktopProps) => {
         {/* Tabs */}
         <div className="max-w-5xl flex justify-start pl-8 mb-4">
           <button
-            className={`px-6 py-2 text-lg border-b-2 border-gray-300 ${activeTab === "rent" ? "text-red-500 border-b-2 border-red-500" : "text-gray-700"}`}
-            onClick={() => setActiveTab("rent")}
+            className={`px-6 py-2 text-lg border-b-2 border-gray-300 ${activeTab === PropertyCategory.RENT ? "text-red-500 border-b-2 border-red-500" : "text-gray-700"}`}
+            onClick={() => dispatch(setActiveSearchTab(PropertyCategory.RENT))}
           >
             Rent
           </button>
           <button
-            className={`px-6 py-2 text-lg border-b-2 border-gray-300 ${activeTab === "sale" ? "text-red-500 border-b-2 border-red-500" : "text-gray-700"}`}
-            onClick={() => setActiveTab("sale")}
+            className={`px-6 py-2 text-lg border-b-2 border-gray-300 ${activeTab === PropertyCategory.RESALE ? "text-red-500 border-b-2 border-red-500" : "text-gray-700"}`}
+            onClick={() =>
+              dispatch(setActiveSearchTab(PropertyCategory.RESALE))
+            }
           >
             Buy
           </button>

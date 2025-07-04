@@ -10,7 +10,7 @@ import PropertyOwners from "@/components/PropertyOwners";
 import Standouts from "@/components/Standouts";
 import { Testimonials } from "@/components/Testimonials";
 import { Neighbourhood } from "@/interfaces/Neighbourhood";
-import { Property } from "@/interfaces/Property";
+import { PropertySearch } from "@/interfaces/PropertySearch";
 import { Testimonial } from "@/interfaces/Testimonial";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -20,7 +20,7 @@ import {
 } from "@/store/appSlice";
 
 interface ClientPageProps {
-  properties: Property[];
+  properties: PropertySearch[];
   neighbourhoods: Neighbourhood[];
   testimonials: Testimonial[];
 }

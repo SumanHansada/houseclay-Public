@@ -53,7 +53,7 @@ import { useEffect, useState } from "react";
 import React from "react";
 import { useDispatch } from "react-redux";
 
-import { LeadCategory } from "@/common/enums";
+import { LeadCategory, PropertyCategory } from "@/common/enums";
 import {
   formatINRCurrency,
   pascalCase,
@@ -353,8 +353,10 @@ export function PropertyDetailsClient({
                           </div>
                         </div>
                       </div>
-                      {(property?.propertyCategory === "Sale" ||
-                        property?.propertyCategory === "Rent") && (
+                      {(property?.propertyCategory ===
+                        PropertyCategory.RESALE ||
+                        property?.propertyCategory ===
+                          PropertyCategory.RENT) && (
                         <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                           <div className="flex-col">
                             <div className="p-0.5">
@@ -371,8 +373,10 @@ export function PropertyDetailsClient({
                           </div>
                         </div>
                       )}
-                      {(property?.propertyCategory === "Sale" ||
-                        property?.propertyCategory === "Rent") && (
+                      {(property?.propertyCategory ===
+                        PropertyCategory.RESALE ||
+                        property?.propertyCategory ===
+                          PropertyCategory.RENT) && (
                         <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                           <div className="flex-col">
                             <div className="p-0.5">
@@ -389,8 +393,10 @@ export function PropertyDetailsClient({
                           </div>
                         </div>
                       )}
-                      {(property?.propertyCategory === "Sale" ||
-                        property?.propertyCategory === "Rent") && (
+                      {(property?.propertyCategory ===
+                        PropertyCategory.RESALE ||
+                        property?.propertyCategory ===
+                          PropertyCategory.RENT) && (
                         <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                           <div className="flex-col">
                             <div className="p-0.5">
@@ -407,8 +413,10 @@ export function PropertyDetailsClient({
                           </div>
                         </div>
                       )}
-                      {(property?.propertyCategory === "Sale" ||
-                        property?.propertyCategory === "Rent") && (
+                      {(property?.propertyCategory ===
+                        PropertyCategory.RESALE ||
+                        property?.propertyCategory ===
+                          PropertyCategory.RENT) && (
                         <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                           <div className="flex-col">
                             <div className="p-0.5">
@@ -512,7 +520,8 @@ export function PropertyDetailsClient({
                           </div>
                         </div>
                       </div>
-                      {property?.propertyCategory === "Sale" && (
+                      {property?.propertyCategory ===
+                        PropertyCategory.RESALE && (
                         <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                           <div className="flex-col">
                             <div className="p-0.5">
@@ -529,7 +538,8 @@ export function PropertyDetailsClient({
                           </div>
                         </div>
                       )}
-                      {property?.propertyCategory === "Sale" && (
+                      {property?.propertyCategory ===
+                        PropertyCategory.RESALE && (
                         <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                           <div className="flex-col">
                             <div className="p-0.5">
@@ -546,7 +556,8 @@ export function PropertyDetailsClient({
                           </div>
                         </div>
                       )}
-                      {property?.propertyCategory === "Sale" && (
+                      {property?.propertyCategory ===
+                        PropertyCategory.RESALE && (
                         <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                           <div className="flex-col">
                             <div className="p-0.5">
@@ -563,7 +574,8 @@ export function PropertyDetailsClient({
                           </div>
                         </div>
                       )}
-                      {property?.propertyCategory === "Sale" && (
+                      {property?.propertyCategory ===
+                        PropertyCategory.RESALE && (
                         <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                           <div className="flex-col">
                             <div className="p-0.5">
@@ -640,8 +652,9 @@ export function PropertyDetailsClient({
                           </div>
                         </div>
                       </div>
-                      {(property?.propertyCategory === "Rent" ||
-                        property?.propertyCategory === "Flatmate") && (
+                      {(property?.propertyCategory === PropertyCategory.RENT ||
+                        property?.propertyCategory ===
+                          PropertyCategory.FLATMATE) && (
                         <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                           <div className="flex-col">
                             <div className="p-0.5">
@@ -658,7 +671,7 @@ export function PropertyDetailsClient({
                           </div>
                         </div>
                       )}
-                      {property?.propertyCategory === "Rent" && (
+                      {property?.propertyCategory === PropertyCategory.RENT && (
                         <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                           <div className="flex-col">
                             <div className="p-0.5">
@@ -675,7 +688,8 @@ export function PropertyDetailsClient({
                           </div>
                         </div>
                       )}
-                      {property?.propertyCategory === "Flatmate" && (
+                      {property?.propertyCategory ===
+                        PropertyCategory.FLATMATE && (
                         <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                           <div className="flex-col">
                             <div className="p-0.5">
@@ -692,7 +706,8 @@ export function PropertyDetailsClient({
                           </div>
                         </div>
                       )}
-                      {property?.propertyCategory === "Flatmate" && (
+                      {property?.propertyCategory ===
+                        PropertyCategory.FLATMATE && (
                         <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                           <div className="flex-col">
                             <div className="p-0.5">
@@ -709,7 +724,8 @@ export function PropertyDetailsClient({
                           </div>
                         </div>
                       )}
-                      {property?.propertyCategory === "Flatmate" && (
+                      {property?.propertyCategory ===
+                        PropertyCategory.FLATMATE && (
                         <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                           <div className="flex-col">
                             <div className="p-0.5">
@@ -726,7 +742,8 @@ export function PropertyDetailsClient({
                           </div>
                         </div>
                       )}
-                      {property?.propertyCategory === "Flatmate" && (
+                      {property?.propertyCategory ===
+                        PropertyCategory.FLATMATE && (
                         <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                           <div className="flex-col">
                             <div className="p-0.5">
@@ -743,7 +760,8 @@ export function PropertyDetailsClient({
                           </div>
                         </div>
                       )}
-                      {property?.propertyCategory === "Flatmate" && (
+                      {property?.propertyCategory ===
+                        PropertyCategory.FLATMATE && (
                         <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                           <div className="flex-col">
                             <div className="p-0.5">
@@ -861,7 +879,7 @@ export function PropertyDetailsClient({
             <div className="flex py-0 ml-auto justify-end">
               <button className="border border-green-500 text-green-500 px-4 py-2 rounded-lg flex items-center gap-2">
                 <Stamp size={20} />{" "}
-                {property?.propertyCategory === "Sale"
+                {property?.propertyCategory === PropertyCategory.RESALE
                   ? "Mark as Sold"
                   : "Mark as Rented"}
               </button>
@@ -887,7 +905,7 @@ export function PropertyDetailsClient({
               className="flex gap-2 items-center px-6 py-3 border border-green-500 text-green-500 rounded-xl hover:bg-green-600 hover:text-white disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300"
             >
               <Stamp size={20} />{" "}
-              {property?.propertyCategory === "Sale"
+              {property?.propertyCategory === PropertyCategory.RESALE
                 ? "Mark as Sold"
                 : "Mark as Rented"}
             </button>

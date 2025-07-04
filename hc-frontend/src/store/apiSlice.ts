@@ -4,7 +4,6 @@ import Cookies from "js-cookie";
 import { RootState } from "./store";
 
 const baseUrl = process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL;
-import dummyData from "../data/dummyData.json";
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -240,18 +239,10 @@ export const apiSlice = createApi({
 
     getPropertiesByLocation: builder.query<
       unknown,
-      { latitude: number; longitude: number }
+      { latitude: number; longitude: number; propertyCategory: string }
     >({
-      query: ({ latitude, longitude }) =>
-        `/property/search?lat=${latitude}&lon=${longitude}`,
-      transformErrorResponse: () => {
-        // Return dummy data properties when there's an error
-        return [
-          ...dummyData.properties,
-          ...dummyData.properties,
-          ...dummyData.properties,
-        ];
-      },
+      query: ({ latitude, longitude, propertyCategory }) =>
+        `/property/search?lat=${latitude}&lon=${longitude}&propertyCategory=${propertyCategory}`,
     }),
     generateLead: builder.mutation<
       { message: string },

@@ -11,9 +11,9 @@ export enum PropertyListingType {
 }
 
 export enum PropertyCategory {
-  RENT = "RENT",
-  RESALE = "RESALE",
-  FLATMATES = "FLATMATES",
+  RENT = "Rent",
+  RESALE = "Resale",
+  FLATMATE = "Flatmate",
 }
 
 export enum ListPropertyRouteStep {

@@ -1,14 +1,15 @@
 "use client";
 
-import { Property } from "@/interfaces/Property";
+import { PropertyCategory } from "@/common/enums";
+import { PropertySearch } from "@/interfaces/PropertySearch";
 
 import Carousel2D from "./Carousel2D";
 import Properties from "./Properties";
 
 interface StandoutsClientProps {
-  properties: Property[];
+  properties: PropertySearch[];
   listingType: string;
-  setActiveTab: (tab: "rent" | "sale") => void;
+  setActiveTab: (tab: PropertyCategory) => void;
 }
 
 const StandoutsClient: React.FC<StandoutsClientProps> = ({
@@ -39,17 +40,17 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({
                   ? "text-red-500 border-red-500"
                   : "text-gray-700"
               }`}
-              onClick={() => setActiveTab("rent")}
+              onClick={() => setActiveTab(PropertyCategory.RENT)}
             >
               For Rent
             </button>
             <button
               className={`px-6 py-2 border-b-2 font-medium ${
-                listingType === "sale"
+                listingType === PropertyCategory.RESALE
                   ? "text-red-500 border-red-500"
                   : "text-gray-700"
               }`}
-              onClick={() => setActiveTab("sale")}
+              onClick={() => setActiveTab(PropertyCategory.RESALE)}
             >
               For Sale
             </button>
@@ -74,9 +75,9 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({
         >
           {properties.map((property) => (
             <Properties
-              key={property.id}
+              key={property.propertyID}
               property={property}
-              badgeType={property.type}
+              badgeType={property.badges}
             />
           ))}
         </Carousel2D>
@@ -92,9 +93,9 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({
         >
           {properties.map((property) => (
             <Properties
-              key={property.id}
+              key={property.propertyID}
               property={property}
-              badgeType={property.type}
+              badgeType={property.badges}
             />
           ))}
         </Carousel2D>

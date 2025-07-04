@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 
+import { PropertyCategory } from "@/common/enums";
 import { formatINRCurrency } from "@/common/utils";
 import { PropertyUpdate } from "@/interfaces/PropertyUpdate";
 
@@ -23,10 +24,12 @@ export default function PostedAndRentDetails(props: any) {
       </div>
       <div className="flex-col flex-1 px-4 py-2 border rounded-xl">
         <div className="text-sm text-gray-500 text-center">
-          {property?.propertyCategory === "Sale" ? "Price" : "Rent"}
+          {property?.propertyCategory === PropertyCategory.RESALE
+            ? "Price"
+            : "Rent"}
         </div>
         <div className="text-center text-lg">
-          {property?.propertyCategory === "Sale"
+          {property?.propertyCategory === PropertyCategory.RESALE
             ? formatINRCurrency(property?.price)
             : formatINRCurrency(property?.rent)}
         </div>

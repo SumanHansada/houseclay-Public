@@ -1,11 +1,12 @@
-import { Property } from "@/interfaces/Property";
+import { PropertyCategory } from "@/common/enums";
+import { PropertySearch } from "@/interfaces/PropertySearch";
 
 import StandoutsClient from "./StandoutsClient";
 
 interface StandoutsProps {
-  properties: Property[];
+  properties: PropertySearch[];
   listingType: string;
-  setActiveTab: (tab: "rent" | "sale") => void;
+  setActiveTab: (tab: PropertyCategory) => void;
 }
 
 const Standouts = (props: StandoutsProps) => {

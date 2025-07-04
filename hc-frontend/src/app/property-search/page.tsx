@@ -3,16 +3,17 @@
 import { ChevronLeft, SearchIcon, SlidersHorizontal } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useReducer } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { BadgeType } from "@/common/enums";
+import { BadgeType, PropertyCategory } from "@/common/enums";
+import { upperCase } from "@/common/utils";
 import Autocomplete from "@/components/common/Autocomplete";
 import Button from "@/components/common/Button";
 import SelectDropdown from "@/components/common/SelectDropdown";
 import Footer from "@/components/Footer";
 import Properties from "@/components/Properties";
 import SearchFilterDialog from "@/dialogs/search-filters";
-import { Property } from "@/interfaces/Property";
+import { PropertySearch } from "@/interfaces/PropertySearch";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useGetPropertiesByLocationQuery } from "@/store/apiSlice";
@@ -21,9 +22,13 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
+import { RootState } from "@/store/store";
 
 export default function PropertySearchPage() {
   const searchParams = useSearchParams();
+  const activeTab = useSelector(
+    (state: RootState) => state.app.activeSearchTab,
+  );
   const lat = searchParams.get("lat");
   const lon = searchParams.get("lon");
   const router = useRouter();
@@ -32,23 +37,30 @@ export default function PropertySearchPage() {
   const shouldFetch = lat && lon && !isNaN(Number(lat)) && !isNaN(Number(lon));
   const { data, isLoading, error } = useGetPropertiesByLocationQuery(
     shouldFetch
-      ? { latitude: Number(lat), longitude: Number(lon) }
-      : { latitude: 0, longitude: 0 },
+      ? {
+          latitude: Number(lat),
+          longitude: Number(lon),
+          propertyCategory: upperCase(activeTab),
+        }
+      : { latitude: 0, longitude: 0, propertyCategory: "" },
     { skip: !shouldFetch },
   );
 
   // Memoize property list
-  const properties: Property[] = useMemo(() => {
+  const properties: PropertySearch[] = useMemo(() => {
     if (error) {
-      return error as Property[];
+      return error as PropertySearch[];
     }
     if (!data || !Array.isArray(data)) return [];
-    return data as Property[];
+    return data.map((property) => ({
+      ...property,
+      images: property.image ? [property.image] : [],
+    })) as PropertySearch[];
   }, [data, error]);
 
   type PropertySearchState = {
     propertyType: string | number | boolean;
-    propertyCategory: string | number | boolean;
+    propertyCategory: PropertyCategory;
     propertyBhk: string | number | boolean;
     tenantType: string | number | boolean;
   };
@@ -64,7 +76,7 @@ export default function PropertySearchPage() {
 
   const initialState: PropertySearchState = {
     propertyType: "",
-    propertyCategory: "buy",
+    propertyCategory: activeTab,
     propertyBhk: "",
     tenantType: "",
   };
@@ -77,7 +89,10 @@ export default function PropertySearchPage() {
       case "SET_PROPERTY_TYPE":
         return { ...state, propertyType: action.payload };
       case "SET_PROPERTY_CATEGORY":
-        return { ...state, propertyCategory: action.payload };
+        return {
+          ...state,
+          propertyCategory: action.payload as PropertyCategory,
+        };
       case "SET_PROPERTY_BHK":
         return { ...state, propertyBhk: action.payload };
       case "SET_TENANT_TYPE":
@@ -155,15 +170,15 @@ export default function PropertySearchPage() {
             <SelectDropdown
               options={[
                 {
-                  value: "flatmates",
-                  label: "Flatmates",
+                  value: PropertyCategory.FLATMATE,
+                  label: "Flatmate",
                 },
                 {
-                  value: "rent",
+                  value: PropertyCategory.RENT,
                   label: "Rent",
                 },
                 {
-                  value: "buy",
+                  value: PropertyCategory.RESALE,
                   label: "Buy",
                 },
               ]}
@@ -173,7 +188,7 @@ export default function PropertySearchPage() {
               onChange={(value: string | number | boolean) =>
                 searchDispatch({
                   type: "SET_PROPERTY_CATEGORY",
-                  payload: value,
+                  payload: value as PropertyCategory,
                 })
               }
               size="sm"
@@ -269,7 +284,7 @@ export default function PropertySearchPage() {
 
               <div>
                 <p className="text-gray-500 text-sm">
-                  {properties.length} properties
+                  {properties.length} Rooms for {activeTab}
                 </p>
               </div>
             </div>
@@ -291,7 +306,7 @@ export default function PropertySearchPage() {
               <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
                 {properties.map((property, idx) => (
                   <Properties
-                    key={`${property.id}-${idx}`}
+                    key={`${property.propertyID}-${idx}`}
                     property={property}
                     badgeType={
                       // eslint-disable-next-line @typescript-eslint/no-explicit-any
