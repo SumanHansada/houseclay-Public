@@ -77,6 +77,7 @@ public class PropertyBasicMapper {
         target.setAvailableFrom(source.getAvailableFrom());
         target.setPropertyState(source.getPropertyState());
         target.setImages(source.getImages());
+        target.setCoverImage(source.getCoverImage());
         target.setAmenities(source.getAmenities());
         target.setPreferredTenants(source.getPreferredTenants());
         target.setPropertyCategory(PropertyUtils.getPropertyCategory(source));

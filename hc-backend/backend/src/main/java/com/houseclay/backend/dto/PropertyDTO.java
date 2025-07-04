@@ -12,6 +12,7 @@ public class PropertyDTO {
     private String propertyID;
     private String title;
     private String propertyType;
+    private String coverImage;
     private boolean isManaged;
     private boolean isPremium;
     private Double builtUpArea;

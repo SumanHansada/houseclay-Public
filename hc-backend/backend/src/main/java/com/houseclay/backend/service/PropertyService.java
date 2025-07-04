@@ -28,6 +28,7 @@ public class PropertyService {
                             .map(photoService::getObjectPresignedUrl)
                             .collect(Collectors.toList())
             );
+            property.setCoverImage(photoService.getObjectPresignedUrl(property.getCoverImage()));
             return propertyOpt.get();
         }
         throw new APIException("Invalid property ID", HttpStatus.BAD_REQUEST);

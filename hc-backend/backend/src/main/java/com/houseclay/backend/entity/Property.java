@@ -18,9 +18,9 @@ import java.util.List;
         visible = true
 )
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = SaleProperty.class, name = "Resale"),
-        @JsonSubTypes.Type(value = RentProperty.class, name = "Rent"),
-        @JsonSubTypes.Type(value = FlatmateProperty.class, name = "Flatmate")
+        @JsonSubTypes.Type(value = SaleProperty.class, name = "RESALE"),
+        @JsonSubTypes.Type(value = RentProperty.class, name = "RENT"),
+        @JsonSubTypes.Type(value = FlatmateProperty.class, name = "FLATMATE")
 })
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE) // All properties in one table
@@ -58,6 +58,7 @@ public class Property {
     private Boolean parking;
     private Timestamp availableFrom;
     private PropertyState propertyState;
+    private String coverImage;
 
     @ElementCollection
     private List<String> images;
