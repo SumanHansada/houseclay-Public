@@ -2,120 +2,48 @@
 
 import { Form, Formik, FormikProvider } from "formik";
 import { useParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 
-import { AnyProperty, PropertyDetailsFormValues } from "@/interfaces/Property";
-import { dummyGetRentPropertyDetails } from "@/mock/propertyDetailsDummy";
-// import { useGetPropertyByIDQuery } from "@/store/apiSlice";
-import {
-  setPropertyData,
-  setPropertyLoading,
-} from "@/store/propertyDetailsSlice";
+import { FormValues } from "@/interfaces/FormValues";
 import { RootState } from "@/store/store";
-import { transformApiToFormValues } from "@/utils/transform/propertyToFormValues";
+import { apiToForm } from "@/utils/transform/propertyToFormValues";
 
 import AdditionalInfoForm from "../../../components/AdditionalInfoForm";
 import GalleryForm from "../../../components/GalleryForm";
 import LocalityDetailsForm from "../../../components/LocalityDetailsForm";
-// Import your DUMB form components
 import PropertyDetailsForm from "../../../components/PropertyDetailsForm";
 import RentalDetailsForm from "../../../components/RentalDetailsForm";
 import ResaleDetailsForm from "../../../components/ResaleDetailsForm";
-import { PropertyCategoryEnum } from "@/common/enum";
-import { GetPropertyByIdResponse } from "@/interfaces/api";
-
-// import LocalityDetailsForm from "@/components/forms/LocalityDetailsForm"; // etc.
 
 export default function DetailsPage() {
-  const { propertyID, type } = useParams() as {
-    propertyID: string;
+  const { type } = useParams() as {
     type: "rent" | "resale" | "flatmate";
   };
-  const dispatch = useDispatch();
   const [editMode, setEditMode] = useState(false);
 
-  // 1. Fetch data using RTK Query
-  // const {
-  //   data: apiResponse,
-  //   isLoading,
-  //   isSuccess,
-  //   isError,
-  //   error,
-  // } = useGetPropertyByIDQuery(propertyId);
-
-  useEffect(() => {
-    dispatch(setPropertyLoading());
-
-    const timer = setTimeout(() => {
-      const category = dummyGetRentPropertyDetails.propertyDetails
-        .propertyCategory as PropertyCategoryEnum;
-
-      const apiResponse: GetPropertyByIdResponse = {
-        ...dummyGetRentPropertyDetails,
-        propertyDetails: {
-          ...dummyGetRentPropertyDetails.propertyDetails,
-          propertyCategory: category,
-        } as AnyProperty,
-      };
-      dispatch(setPropertyData(apiResponse));
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [dispatch]);
-
-  // 2. Populate Redux store when API call succeeds or fails
-  // useEffect(() => {
-  //   if (isLoading) {
-  //     dispatch(setPropertyLoading());
-  //   }
-  //   if (isSuccess && apiResponse) {
-  //     dispatch(setPropertyData(apiResponse));
-  //   }
-  //   if (isError) {
-  //     dispatch(setPropertyError(JSON.stringify(error)));
-  //   }
-  // }, [apiResponse, isLoading, isSuccess, isError, error, dispatch]);
-
-  const propertyDataFromStore = useSelector(
-    (state: RootState) => state.propertyDetails.data,
-  );
-  const status = useSelector(
-    (state: RootState) => state.propertyDetails.status,
+  const { data: propertyData, status } = useSelector(
+    (state: RootState) => state.propertyDetails,
   );
 
   const initialValues = useMemo(
-    () => transformApiToFormValues(propertyDataFromStore),
-    [propertyDataFromStore],
+    () => (propertyData ? apiToForm(propertyData) : undefined),
+    [propertyData],
   );
 
-  const handleSaveChanges = async (values: PropertyDetailsFormValues) => {
+  if (status !== "succeeded" || !initialValues) {
+    return null;
+  }
+
+  const handleSaveChanges = async (values: FormValues) => {
     console.log("Submitting all changes:", values);
-    // await updateProperty({ propertyId, data: transformFormToApi(values) }).unwrap();
     setEditMode(false);
   };
-
-  if (status === "loading" || status === "idle" || !initialValues) {
-    return (
-      <div className="h-full flex items-center justify-center text-lg">
-        Loading property details...
-      </div>
-    );
-  }
-
-  if (status === "failed") {
-    return (
-      <div className="h-full flex items-center justify-center text-lg">
-        Error loading property. Please try again.
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col bg-gray-100 h-full overflow-auto">
       <Formik
         initialValues={initialValues}
-        // validationSchema={validationSchema}
         onSubmit={handleSaveChanges}
         enableReinitialize
       >

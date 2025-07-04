@@ -26,7 +26,11 @@ import * as Yup from "yup";
 
 import FormCalendarField from "@/components/common/FormCalendarField";
 import FormCheckbox from "@/components/common/FormCheckbox";
+import FormCurrencyField from "@/components/common/FormCurrencyField";
 import FormFormNumberField from "@/components/common/FormNumberField";
+import FormRadioGroup from "@/form-components/FormRadioGroup";
+import FormSelectDropdown from "@/form-components/FormSelectDropdown";
+import { useFormikSection } from "@/hooks/useFormikSection";
 import { FormValues } from "@/interfaces/FormValues";
 import {
   FormType,
@@ -34,9 +38,6 @@ import {
   setResaleDetails,
 } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
-import FormSelectDropdown from "@/form-components/FormSelectDropdown";
-import FormRadioGroup from "@/form-components/FormRadioGroup";
-import FormCurrencyField from "@/components/common/FormCurrencyField";
 
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ClubhouseIcon = ClubhouseIconSvg as React.FC<
@@ -109,6 +110,11 @@ const ResaleDetailsPage: React.FC = () => {
 
   const resaleDetailsString = JSON.stringify(values.resaleDetails);
 
+  const { errors: rdErrors, touched: rdTouched } = useFormikSection<
+    FormValues,
+    "resaleDetails"
+  >(errors, touched, "resaleDetails");
+
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {
@@ -116,12 +122,14 @@ const ResaleDetailsPage: React.FC = () => {
         // Clear any previous errors
         setErrors({});
         // Set form data in the store
-        dispatch(
-          setResaleDetails({
-            type: formKey,
-            resaleDetails: values.resaleDetails,
-          }),
-        );
+        if (values.resaleDetails) {
+          dispatch(
+            setResaleDetails({
+              type: formKey,
+              resaleDetails: values.resaleDetails,
+            }),
+          );
+        }
         // Form is valid
         if (!isFormValid) {
           dispatch(setFormValidity({ type: formKey, isValid: true }));
@@ -246,8 +254,7 @@ const ResaleDetailsPage: React.FC = () => {
               ]}
               placeholder="Select Water supply"
               aria-describedby={
-                errors?.resaleDetails?.waterSupply &&
-                touched.resaleDetails?.waterSupply
+                rdErrors?.waterSupply && rdTouched?.waterSupply
                   ? "resaleDetails.waterSupply-error"
                   : undefined
               }
@@ -271,8 +278,7 @@ const ResaleDetailsPage: React.FC = () => {
               ]}
               placeholder="Select Power backup"
               aria-describedby={
-                errors?.resaleDetails?.powerBackup &&
-                touched?.resaleDetails?.powerBackup
+                rdErrors?.powerBackup && rdTouched?.powerBackup
                   ? "resaleDetails.powerBackup-error"
                   : undefined
               }
@@ -299,8 +305,7 @@ const ResaleDetailsPage: React.FC = () => {
               required={true}
               placeholder="Select furnishing"
               aria-describedby={
-                errors?.resaleDetails?.furnishing &&
-                touched?.resaleDetails?.furnishing
+                rdErrors?.furnishing && rdTouched?.furnishing
                   ? "resaleDetails.furnishing-error"
                   : undefined
               }
@@ -321,8 +326,7 @@ const ResaleDetailsPage: React.FC = () => {
               required={true}
               placeholder="Select Parking"
               aria-describedby={
-                errors?.resaleDetails?.parking &&
-                touched?.resaleDetails?.parking
+                rdErrors?.parking && rdTouched?.parking
                   ? "resaleDetails.parking-error"
                   : undefined
               }

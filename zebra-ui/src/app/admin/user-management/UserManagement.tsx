@@ -4,14 +4,14 @@ import { Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
+import AsyncFallback from "@/components/AsyncFallback";
 import { Column, DataTable } from "@/components/DataTable";
 import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
 import { PaginationFooter } from "@/components/PaginationFooter";
-import { TitleAndSearchBar } from "@/components/TitleAndSearchBar";
 import { RenderUserStatus } from "@/components/status/RenderUserStatus";
+import { TitleAndSearchBar } from "@/components/TitleAndSearchBar";
 import { User } from "@/interfaces/User";
 import { useGetUsersQuery } from "@/store/apiSlice";
-import AsyncFallback from "@/components/AsyncFallback";
 
 export const UsersManagement = () => {
   const router = useRouter();

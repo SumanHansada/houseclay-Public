@@ -1,7 +1,7 @@
 import React, { JSX } from "react";
 
-import { Pill } from "@/components/Pill";
 import { PropertyStatusEnum } from "@/common/enum";
+import { Pill } from "@/components/Pill";
 import { isEnumValue } from "@/utils/enum";
 
 interface RenderPropertyStatusProps {

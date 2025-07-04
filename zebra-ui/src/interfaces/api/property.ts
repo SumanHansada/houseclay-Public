@@ -1,4 +1,5 @@
 import { AnyProperty, PropertyInfo } from "@/interfaces/Property";
+
 import { User } from "../User";
 
 // usePropertyAddRentMutation()

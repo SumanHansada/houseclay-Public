@@ -3,16 +3,16 @@
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { LeadQueryParamEnum } from "@/common/enum";
+import AsyncFallback from "@/components/AsyncFallback";
 import { Column, DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/PaginationFooter";
+import { RenderLeadStatus } from "@/components/status/RenderLeadStatus";
 import { TitleAndSearchBar } from "@/components/TitleAndSearchBar";
 import { Lead, LeadType } from "@/interfaces/Lead";
 import { useGetLeadsQuery } from "@/store/apiSlice";
 
-import { RenderLeadStatus } from "@/components/status/RenderLeadStatus";
 import { TableActionButtons } from "../../components/TableActionButtons";
-import AsyncFallback from "@/components/AsyncFallback";
-import { LeadQueryParamEnum } from "@/common/enum";
 
 export const LeadTableView = () => {
   const router = useRouter();
@@ -51,10 +51,12 @@ export const LeadTableView = () => {
     );
   }
 
-  const allLeads = paginatedLeadData.content;
-  const totalPages = paginatedLeadData.totalPages;
-  const isFirst = paginatedLeadData.first;
-  const isLast = paginatedLeadData.last;
+  const {
+    content: allLeads,
+    totalPages,
+    first: isFirst,
+    last: isLast,
+  } = paginatedLeadData;
 
   const goToPage = (page: number) => {
     if (page >= 1 && page <= totalPages) {

@@ -1,5 +1,4 @@
 import { PropertyCategoryEnum, PropertyStatusEnum } from "@/common/enum";
-import { PropertyPhoto } from "./PropertyPhoto";
 
 export interface PropertyInfo {
   propertyID: string;
@@ -71,6 +70,7 @@ export interface FlatmateProperty extends PropertyBase {
   attachedBathroom: boolean;
   attachedBalcony: boolean;
   smokingPreference: string;
+  nonVegAllowed: boolean | null;
   drinkingPreference: string;
 }
 
@@ -89,60 +89,60 @@ export interface ResaleProperty extends PropertyBase {
 
 export type AnyProperty = RentProperty | FlatmateProperty | ResaleProperty;
 
-export interface PropertyDetailsFormValues {
-  propertyDetails: {
-    propertyType: string;
-    bhkType: string;
-    builtUpArea: number | "";
-    floor: number | "";
-    totalFloors: number | "";
-    propertyAge: string;
-    facing: string;
-    floorType: string;
-    description: string;
-    bathrooms: number | "";
-    balcony: number | "";
-  };
-  localityDetails: {
-    city: string;
-    locationOrSocietyName: string;
-    landmark: string;
-    latitude: number;
-    longitude: number;
-  };
-  rentalDetails?: {
-    // Only for Rent/Flatmate
-    rent: number | "";
-    deposit: number | "";
-    maintenanceCharges: number | "";
-    rentNegotiable: boolean;
-    preferredTenants: string[];
-    petsAllowed: boolean;
-    nonVegAllowed: boolean;
-    // Flatmate specific
-    tenantType: string;
-    attachedBathroom: boolean;
-    attachedBalcony: boolean;
-    smokingPreference: string;
-    drinkingPreference: string;
-  };
-  resaleDetails?: {
-    // Only for Resale
-    price: number | "";
-    priceNegotiable: boolean;
-    ownershipType: string;
-    underLoan: boolean;
-  };
-  additionalInfo: {
-    furnishing: string;
-    parking: boolean;
-    waterSupply: string;
-    powerBackup: string;
-    availableFrom: Date | null;
-    // Resale specific
-    khataCertificate: string;
-    saleDeed: boolean;
-    propertyTax: boolean;
-  };
-  images: PropertyPhoto[];
-}
+// export interface PropertyDetailsFormValues {
+//   propertyDetails: {
+//     propertyType: string;
+//     bhkType: string;
+//     builtUpArea: number | "";
+//     floor: number | "";
+//     totalFloors: number | "";
+//     propertyAge: string;
+//     facing: string;
+//     floorType: string;
+//     description: string;
+//     bathrooms: number | "";
+//     balcony: number | "";
+//   };
+//   localityDetails: {
+//     city: string;
+//     locationOrSocietyName: string;
+//     landmark: string;
+//     latitude: number;
+//     longitude: number;
+//   };
+//   rentalDetails?: {
+//     // Only for Rent/Flatmate
+//     rent: number | "";
+//     deposit: number | "";
+//     maintenanceCharges: number | "";
+//     rentNegotiable: boolean;
+//     preferredTenants: string[];
+//     petsAllowed: boolean;
+//     nonVegAllowed: boolean;
+//     // Flatmate specific
+//     tenantType: string;
+//     attachedBathroom: boolean;
+//     attachedBalcony: boolean;
+//     smokingPreference: string;
+//     drinkingPreference: string;
+//   };
+//   resaleDetails?: {
+//     // Only for Resale
+//     price: number | "";
+//     priceNegotiable: boolean;
+//     ownershipType: string;
+//     underLoan: boolean;
+//   };
+//   additionalInfo: {
+//     furnishing: string;
+//     parking: boolean;
+//     waterSupply: string;
+//     powerBackup: string;
+//     availableFrom: Date | null;
+//     // Resale specific
+//     khataCertificate: string;
+//     saleDeed: boolean;
+//     propertyTax: boolean;
+//   };
+//   images: PropertyPhoto[];
+// }

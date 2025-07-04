@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import FormPhoneInput from "@/components/common/FormPhoneInput";
+import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 import { FormValues } from "@/interfaces/FormValues";
 import {
   FormType,
@@ -14,7 +15,6 @@ import {
   setFormValidity,
 } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
-import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 
 export const dynamicParams = true;
 

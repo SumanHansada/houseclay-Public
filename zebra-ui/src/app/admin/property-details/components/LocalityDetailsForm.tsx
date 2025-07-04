@@ -6,9 +6,9 @@ import { useEffect } from "react";
 
 import FormInputField from "@/components/common/FormInputField";
 import GoogleMaps from "@/components/common/GoogleMaps";
-import { PropertyDetailsFormValues } from "@/interfaces/Property";
-import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 import FormPlacesAutocomplete from "@/form-components/FormPlacesAutocomplete";
+import FormSelectDropdown from "@/form-components/FormSelectDropdown";
+import { FormValues } from "@/interfaces/FormValues";
 
 interface LocalityDetailsFormProps {
   disabled: boolean;
@@ -20,8 +20,7 @@ const LocalityDetailsForm: React.FC<LocalityDetailsFormProps> = ({
   type,
 }) => {
   console.log(disabled + type);
-  const { values, setFieldValue } =
-    useFormikContext<PropertyDetailsFormValues>();
+  const { values, setFieldValue } = useFormikContext<FormValues>();
 
   const onLocationSelect = (location: {
     latitude: number;
@@ -66,6 +65,7 @@ const LocalityDetailsForm: React.FC<LocalityDetailsFormProps> = ({
     setFieldValue("localityDetails.latitude", defaultLatLng.lat);
     setFieldValue("localityDetails.longitude", defaultLatLng.lng);
   }, [values.localityDetails.city, setFieldValue]);
+
   return (
     <div className="space-y-6">
       <div className="mb-8">

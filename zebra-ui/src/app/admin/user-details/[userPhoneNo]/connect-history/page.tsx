@@ -5,9 +5,9 @@ import React from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/PaginationFooter";
+import { useLocalPagination } from "@/hooks/useLocalPagination";
 import { UserConnectTransaction } from "@/interfaces/User";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
-import { useLocalPagination } from "@/hooks/useLocalPagination";
 
 interface RowType extends UserConnectTransaction {
   _serial: number;

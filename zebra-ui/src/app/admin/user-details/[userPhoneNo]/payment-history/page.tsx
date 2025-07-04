@@ -5,11 +5,10 @@ import React from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/PaginationFooter";
-import { UserExternalPayment } from "@/interfaces/User";
-import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
-
 import { RenderPaymentStatus } from "@/components/status/RenderPaymentStatus";
 import { useLocalPagination } from "@/hooks/useLocalPagination";
+import { UserExternalPayment } from "@/interfaces/User";
+import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 
 interface RowType extends UserExternalPayment {
   _serial: number;

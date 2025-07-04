@@ -12,7 +12,6 @@ export const OwnerDetails = ({
   viewUserDetails,
 }: OwnerDetailsProps) => {
   const { name, email, phoneNo, blacklisted } = currentUser;
-  console.log(currentUser);
   const currentStatus = blacklisted
     ? "The user is blacklisted"
     : "The user is active";

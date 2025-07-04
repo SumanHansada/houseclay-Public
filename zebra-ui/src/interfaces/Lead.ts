@@ -1,4 +1,4 @@
-import { LeadStatusEnum } from "@/common/enums";
+import { LeadStatusEnum } from "@/common/enum";
 
 export type LeadType = "property" | "support";
 

@@ -21,11 +21,11 @@ import WifiIconSvg from "public/icons/amenities/wifi.svg";
 
 import FormCalendarField from "@/components/common/FormCalendarField";
 import FormCheckbox from "@/components/common/FormCheckbox";
-import FormFormNumberField from "@/components/common/FormNumberField";
-import { FormType } from "@/store/listPropertySlice";
-import FormSelectDropdown from "@/form-components/FormSelectDropdown";
-import FormRadioGroup from "@/form-components/FormRadioGroup";
 import FormCurrencyField from "@/components/common/FormCurrencyField";
+import FormFormNumberField from "@/components/common/FormNumberField";
+import FormRadioGroup from "@/form-components/FormRadioGroup";
+import FormSelectDropdown from "@/form-components/FormSelectDropdown";
+import { FormType } from "@/store/listPropertySlice";
 
 interface ResaleDetailsFormProps {
   disabled: boolean;

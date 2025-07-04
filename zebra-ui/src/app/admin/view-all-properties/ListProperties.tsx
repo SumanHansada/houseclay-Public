@@ -3,13 +3,13 @@
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
+import AsyncFallback from "@/components/AsyncFallback";
 import { DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/PaginationFooter";
 import { SearchAndFilterBar } from "@/components/SearchAndFilterBar";
 import { PropertyInfo } from "@/interfaces/Property";
-import { buildPropertyColumns } from "@/utils/table/buildPropertyColumns";
 import { useGetPropertiesQuery } from "@/store/apiSlice";
-import AsyncFallback from "@/components/AsyncFallback";
+import { buildPropertyColumns } from "@/utils/table/buildPropertyColumns";
 
 interface PropertyRow extends PropertyInfo {
   _serial: number;

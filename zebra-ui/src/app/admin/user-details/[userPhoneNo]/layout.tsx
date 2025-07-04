@@ -6,9 +6,9 @@ import {
 } from "next/navigation";
 
 import { UserDetailsTabEnum } from "@/common/enum";
+import AsyncFallback from "@/components/AsyncFallback";
 import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
-import AsyncFallback from "@/components/AsyncFallback";
 import { ensureEnumValue } from "@/utils/enum";
 
 const tabs: { label: string; value: UserDetailsTabEnum }[] = [

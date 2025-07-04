@@ -29,10 +29,10 @@ import MaleIconSvg from "public/icons/preferred-tenants/male.svg";
 
 import FormCalendarField from "@/components/common/FormCalendarField";
 import FormCheckbox from "@/components/common/FormCheckbox";
-import { FormType } from "@/store/listPropertySlice";
+import FormCurrencyField from "@/components/common/FormCurrencyField";
 import FormRadioGroup from "@/form-components/FormRadioGroup";
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
-import FormCurrencyField from "@/components/common/FormCurrencyField";
+import { FormType } from "@/store/listPropertySlice";
 
 interface RentalDetailsFormProps {
   disabled: boolean;

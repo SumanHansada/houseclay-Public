@@ -1,7 +1,7 @@
 import { VerifyPropertyStatusEnum } from "@/common/enum";
 import {
-  useGetPropertiesToVerifyQuery,
   useGetPropertiesToReverifyQuery,
+  useGetPropertiesToVerifyQuery,
 } from "@/store/apiSlice";
 
 interface StatusFetchParams {

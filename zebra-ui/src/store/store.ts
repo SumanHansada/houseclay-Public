@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import adminReducer from "./adminSlice";
+import { default as adminReducer } from "./adminSlice";
 import { apiSlice } from "./apiSlice";
 import appReducer from "./appSlice";
 import listPropertyReducer from "./listPropertySlice";

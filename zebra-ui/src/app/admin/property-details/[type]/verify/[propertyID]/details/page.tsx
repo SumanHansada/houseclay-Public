@@ -2,37 +2,28 @@
 
 import { Form, Formik, FormikProvider } from "formik";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 
 import AdditionalInfoForm from "@/app/admin/property-details/components/AdditionalInfoForm";
 import GalleryForm from "@/app/admin/property-details/components/GalleryForm";
 import LocalityDetailsForm from "@/app/admin/property-details/components/LocalityDetailsForm";
-// Verification and Owner Details Components
 import { OwnerDetails } from "@/app/admin/property-details/components/OwnerDetails";
-// Form Section Components
 import PropertyDetailsForm from "@/app/admin/property-details/components/PropertyDetailsForm";
 import RentalDetailsForm from "@/app/admin/property-details/components/RentalDetailsForm";
 import ResaleDetailsForm from "@/app/admin/property-details/components/ResaleDetailsForm";
 import { VerificationSection } from "@/app/admin/property-details/components/VerificationSection";
-// --- Imports from both files ---
-import { AnyProperty, PropertyDetailsFormValues } from "@/interfaces/Property";
-import { dummyGetRentPropertyDetails } from "@/mock/propertyDetailsDummy";
-import { dummyUserDataList } from "@/mock/userDetailsDummy";
-import {
-  setPropertyData,
-  setPropertyLoading,
-} from "@/store/propertyDetailsSlice";
+import { FormValues } from "@/interfaces/FormValues";
+import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 import { RootState } from "@/store/store";
-import { transformApiToFormValues } from "@/utils/transform/propertyToFormValues";
-import { PropertyCategoryEnum } from "@/common/enum";
-import { GetPropertyByIdResponse } from "@/interfaces/api";
+import { apiToForm } from "@/utils/transform/propertyToFormValues";
 
 export default function VerifyPropertyDetailsPage() {
-  const { type } = useParams() as { type: "rent" | "resale" | "flatmate" };
+  const { type, propertyID } = useParams() as {
+    type: "rent" | "resale" | "flatmate";
+    propertyID: string;
+  };
   const router = useRouter();
-  const dispatch = useDispatch();
-  const currentUser = dummyUserDataList[0];
 
   // --- From DetailsPage: Formik & Edit Mode State ---
   const [editMode, setEditMode] = useState(false);
@@ -45,35 +36,8 @@ export default function VerifyPropertyDetailsPage() {
   const [isGalleryVerified, setIsGalleryVerified] = useState(false);
   const [isOwnerVerified, setIsOwnerVerified] = useState(false);
 
-  // --- From DetailsPage: Data Fetching and Formik Initialization ---
-  // useEffect(() => {
-  //   dispatch(setPropertyLoading());
-  //   const timer = setTimeout(() => {
-  //     const category = dummyGetRentPropertyDetails.propertyDetails
-  //       .propertyCategory as PropertyCategoryEnum;
-
-  //     const apiResponse: GetPropertyByIdResponse = {
-  //       ...dummyGetRentPropertyDetails,
-  //       propertyDetails: {
-  //         ...dummyGetRentPropertyDetails.propertyDetails,
-  //         propertyCategory: category,
-  //       } as AnyProperty,
-  //     };
-  //     dispatch(setPropertyData(apiResponse));
-  //   }, 500);
-  //   return () => clearTimeout(timer);
-  // }, [dispatch]);
-
-  const propertyDataFromStore = useSelector(
-    (state: RootState) => state.propertyDetails.data,
-  );
-  const status = useSelector(
-    (state: RootState) => state.propertyDetails.status,
-  );
-  const initialValues = useMemo(
-    () => transformApiToFormValues(propertyDataFromStore),
-    [propertyDataFromStore],
-  );
+  const { data: currentProperty } = useGetPropertyByIdQuery({ id: propertyID });
+  const currentUser = currentProperty!.owner;
 
   // --- From VerifyPage: Derived state for verification logic ---
   const isPropertyCommentValid = useMemo(
@@ -93,8 +57,21 @@ export default function VerifyPropertyDetailsPage() {
     [isPropertyVerified, isGalleryVerified, isOwnerVerified],
   );
 
+  const { data: propertyData, status } = useSelector(
+    (state: RootState) => state.propertyDetails,
+  );
+
+  const initialValues = useMemo(
+    () => (propertyData ? apiToForm(propertyData) : undefined),
+    [propertyData],
+  );
+
+  if (status !== "succeeded" || !initialValues) {
+    return null;
+  }
+
   // --- Event Handlers ---
-  const handleSaveChanges = async (values: PropertyDetailsFormValues) => {
+  const handleSaveChanges = async (values: FormValues) => {
     console.log("Submitting all changes:", values);
     setEditMode(false);
   };
@@ -111,26 +88,6 @@ export default function VerifyPropertyDetailsPage() {
   const viewUserDetails = (userPhoneNo: string) => {
     router.push(`/admin/user-details/${userPhoneNo}`);
   };
-
-  // --- Loading and Error States ---
-  if (
-    status === "loading" ||
-    status === "idle" ||
-    !initialValues.propertyDetails
-  ) {
-    return (
-      <div className="h-full flex items-center justify-center text-lg">
-        Loading property details...
-      </div>
-    );
-  }
-  if (status === "failed") {
-    return (
-      <div className="h-full flex items-center justify-center text-lg">
-        Error loading property. Please try again.
-      </div>
-    );
-  }
 
   return (
     <div className="h-full bg-gray-100 flex flex-col px-4 py-8">

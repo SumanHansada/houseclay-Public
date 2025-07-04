@@ -1,154 +1,117 @@
-import { GetPropertyByIDResponse } from "@/interfaces/Property";
-import { PropertyDetailsFormValues } from "@/interfaces/Property";
+import { AdditionalInfo } from "@/interfaces/AdditionalInfo";
+import { GetPropertyByIdResponse } from "@/interfaces/api";
+import { FlatmatesDetails } from "@/interfaces/FlatmatesDetails";
+import { FormValues } from "@/interfaces/FormValues";
+import { LocalityDetails } from "@/interfaces/LocalityDetails";
+import { PropertyDetails } from "@/interfaces/PropertyDetails";
+import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
+import { RentalDetails } from "@/interfaces/RentalDetails";
+import { ResaleDetails } from "@/interfaces/ResaleDetails";
+import { isFlatmate, isRent, isResale } from "@/utils/typeGuard";
 
-const getEmptyFormValues = (): PropertyDetailsFormValues => ({
-  propertyDetails: {
-    propertyType: "",
-    bhkType: "",
-    builtUpArea: "",
-    floor: "",
-    totalFloors: "",
-    propertyAge: "",
-    facing: "",
-    floorType: "",
-    description: "",
-    bathrooms: "",
-    balcony: "",
-  },
-  localityDetails: {
-    city: "Bengaluru",
-    locationOrSocietyName: "",
-    landmark: "",
-    latitude: 0,
-    longitude: 0,
-  },
-  rentalDetails: {
-    rent: "",
-    deposit: "",
-    maintenanceCharges: "",
-    rentNegotiable: false,
-    preferredTenants: [],
-    petsAllowed: false,
-    nonVegAllowed: false,
-    tenantType: "",
-    attachedBathroom: false,
-    attachedBalcony: false,
-    smokingPreference: "",
-    drinkingPreference: "",
-  },
-  resaleDetails: {
-    price: "",
-    priceNegotiable: false,
-    ownershipType: "",
-    underLoan: false,
-  },
-  additionalInfo: {
-    furnishing: "",
-    parking: false,
-    waterSupply: "",
-    powerBackup: "",
-    availableFrom: null,
-    khataCertificate: "",
-    saleDeed: false,
-    propertyTax: false,
-  },
-  images: [],
-});
+import { fileDataFromUrl } from "../extract";
 
-export const transformApiToFormValues = (
-  apiData: GetPropertyByIDResponse | null,
-): PropertyDetailsFormValues => {
-  const formValues = getEmptyFormValues();
-
-  if (!apiData?.propertyDetails) {
-    return formValues;
-  }
-
-  const { propertyDetails } = apiData;
-
-  formValues.propertyDetails = {
-    propertyType: propertyDetails.propertyType || "",
-    bhkType: propertyDetails.bhkType || "",
-    builtUpArea: propertyDetails.builtUpArea || "",
-    floor: propertyDetails.floor ?? "", // Use nullish coalescing for 0
-    totalFloors: propertyDetails.totalFloors || "",
-    propertyAge: propertyDetails.propertyAge || "",
-    facing: propertyDetails.facing || "",
-    floorType: propertyDetails.floorType || "",
-    description: propertyDetails.description || "",
-    // Sale-specific, default to empty
-    bathrooms: "bathrooms" in propertyDetails ? propertyDetails.bathrooms : "",
-    balcony: "balcony" in propertyDetails ? propertyDetails.balcony : "",
+export function apiToForm(api: GetPropertyByIdResponse): FormValues {
+  /* ---------- common blocks ---------- */
+  const propertyDetails: PropertyDetails = {
+    propertyCategory: api.propertyCategory,
+    propertyType: api.propertyType,
+    builtUpArea: api.builtUpArea,
+    facing: api.facing ?? "",
+    bhkType: api.bhkType,
+    ownershipType: isResale(api) ? api.ownershipType : "",
+    propertyAge: api.propertyAge ?? "",
+    floor: api.floor,
+    totalFloors: api.totalFloors,
+    floorType: api.floorType ?? "",
+    description: api.description,
   };
-  formValues.localityDetails = {
-    city: propertyDetails.city || "Bengaluru",
-    locationOrSocietyName: propertyDetails.locationOrSocietyName || "",
-    landmark: propertyDetails.landmark || "",
-    latitude: propertyDetails.latitude || 0,
-    longitude: propertyDetails.longitude || 0,
-  };
-  formValues.additionalInfo = {
-    furnishing: propertyDetails.furnishing || "",
-    parking: propertyDetails.parking || false,
-    waterSupply: propertyDetails.waterSupply || "",
-    powerBackup: propertyDetails.powerBackup || "",
-    availableFrom: propertyDetails.availableFrom
-      ? new Date(propertyDetails.availableFrom)
-      : null,
-    // Sale-specific
-    khataCertificate:
-      "khataCertificate" in propertyDetails
-        ? propertyDetails.khataCertificate
-        : "",
-    saleDeed: "saleDeed" in propertyDetails ? propertyDetails.saleDeed : false,
-    propertyTax:
-      "propertyTax" in propertyDetails ? propertyDetails.propertyTax : false,
-  };
-  formValues.images = [];
 
-  if (propertyDetails.propertyCategory === "Rent") {
-    formValues.rentalDetails = {
-      rent: propertyDetails.rent || "",
-      deposit: propertyDetails.deposit || "",
-      maintenanceCharges: propertyDetails.maintenanceCharges || "",
-      rentNegotiable: propertyDetails.rentNegotiable || false,
-      preferredTenants: propertyDetails.preferredTenants || [],
-      petsAllowed: propertyDetails.petsAllowed ?? false,
-      nonVegAllowed: propertyDetails.nonVegAllowed ?? false,
-      tenantType: "",
-      attachedBathroom: false,
-      attachedBalcony: false,
-      smokingPreference: "",
-      drinkingPreference: "",
+  const localityDetails: LocalityDetails = {
+    city: api.city,
+    locationOrSocietyName: api.locationOrSocietyName,
+    landmark: api.landmark,
+    latitude: api.latitude,
+    longitude: api.longitude,
+  };
+
+  const additionalInfo: AdditionalInfo = {
+    whoWillShowProperty: "",
+    secondaryPhoneNumber: "",
+    khataCertificate: isResale(api) ? api.khataCertificate : "",
+    saleDeed: isResale(api) ? api.saleDeed : false,
+    propertyTax: isResale(api) ? api.propertyTax : false,
+  };
+
+  /* ---------- category‑specific blocks ---------- */
+  let rentalDetails: RentalDetails | undefined;
+  let flatmatesDetails: FlatmatesDetails | undefined;
+  let resaleDetails: ResaleDetails | undefined;
+
+  if (isRent(api)) {
+    rentalDetails = {
+      rent: api.rent,
+      rentNegotiable: api.rentNegotiable,
+      maintenanceCharges: api.maintenanceCharges,
+      deposit: api.deposit,
+      availableFrom: api.availableFrom,
+      furnishing: api.furnishing ?? "",
+      preferredTenants: api.preferredTenants,
+      waterSupply: api.waterSupply,
+      powerBackup: api.powerBackup,
+      parking: api.parking,
+      nonVegAllowed: api.nonVegAllowed ?? false,
+      amenities: api.amenities,
+    };
+  } else if (isFlatmate(api)) {
+    flatmatesDetails = {
+      rent: api.rent,
+      maintenanceCharges: api.maintenanceCharges,
+      depositCharges: api.depositCharges,
+      availableFrom: api.availableFrom,
+      furnishing: api.furnishing ?? "",
+      waterSupply: api.waterSupply,
+      powerBackup: api.powerBackup,
+      parking: api.parking,
+      nonVegAllowed: api.nonVegAllowed ?? false,
+      amenities: api.amenities,
+      tenantType: api.tenantType,
+      attachedBathroom: api.attachedBathroom,
+      attachedBalcony: api.attachedBalcony,
+      smokingPreference: api.smokingPreference,
+      drinkingPreference: api.drinkingPreference,
+    };
+  } else {
+    resaleDetails = {
+      price: api.price,
+      availableFrom: api.availableFrom,
+      bathrooms: api.bathrooms,
+      balcony: api.balcony,
+      priceNegotiable: api.priceNegotiable,
+      underLoan: api.underLoan,
+      waterSupply: api.waterSupply,
+      powerBackup: api.powerBackup,
+      furnishing: api.furnishing ?? "",
+      parking: api.parking,
+      amenities: api.amenities,
     };
   }
 
-  if (propertyDetails.propertyCategory === "Flatmate") {
-    formValues.rentalDetails = {
-      rent: propertyDetails.rent || "",
-      deposit: propertyDetails.depositCharges || "", // Note the field name difference
-      maintenanceCharges: propertyDetails.maintenanceCharges || "",
-      tenantType: propertyDetails.tenantType || "",
-      attachedBathroom: propertyDetails.attachedBathroom || false,
-      attachedBalcony: propertyDetails.attachedBalcony || false,
-      smokingPreference: propertyDetails.smokingPreference || "",
-      drinkingPreference: propertyDetails.drinkingPreference || "",
-      // Default rent fields
-      rentNegotiable: false,
-      preferredTenants: [],
-      petsAllowed: false,
-      nonVegAllowed: false,
-    };
-  }
+  /* ---------- images ---------- */
+  const images: PropertyPhoto[] = api.images.map((url, i) => ({
+    id: `photo-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+    file: fileDataFromUrl(url),
+    url,
+    isCover: i === 0,
+  }));
 
-  if (propertyDetails.propertyCategory === "Resale") {
-    formValues.resaleDetails = {
-      price: propertyDetails.price || "",
-      priceNegotiable: propertyDetails.priceNegotiable || false,
-      ownershipType: propertyDetails.ownershipType || "",
-      underLoan: propertyDetails.underLoan || false,
-    };
-  }
-
-  return formValues;
-};
+  return {
+    propertyDetails,
+    localityDetails,
+    rentalDetails,
+    flatmatesDetails,
+    resaleDetails,
+    additionalInfo,
+    images,
+  };
+}

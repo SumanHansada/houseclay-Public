@@ -1,8 +1,8 @@
 import { JSX } from "react";
 
+import { LeadStatusEnum } from "@/common/enum";
 import { Pill } from "@/components/Pill";
 import { isEnumValue } from "@/utils/enum";
-import { LeadStatusEnum } from "@/common/enum";
 
 interface RenderLeadStatusProps {
   status: string;

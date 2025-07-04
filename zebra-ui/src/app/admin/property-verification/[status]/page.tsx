@@ -1,17 +1,15 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 
 import { VerifyPropertyStatusEnum } from "@/common/enum";
+import AsyncFallback from "@/components/AsyncFallback";
 import { Column, DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/PaginationFooter";
-import { PropertyInfo } from "@/interfaces/Property";
-
-import { buildPropertyColumns } from "@/utils/table/buildPropertyColumns";
-
-import AsyncFallback from "@/components/AsyncFallback";
 import { useStatusBasedPropertyFetch } from "@/hooks/useStatusBasedPropertyFetch";
+import { PropertyInfo } from "@/interfaces/Property";
+import { buildPropertyColumns } from "@/utils/table/buildPropertyColumns";
 
 interface PropertyRow extends PropertyInfo {
   _serial: number;

@@ -1,21 +1,21 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+import { LeadQueryParamEnum } from "@/common/enum";
 import {
-  GetAllUsersResponse,
-  GetUserByPhoneNoResponse,
   GetAllLeadsResponse,
-  GetLeadByIdResponse,
-  PostRentPropertyRequest,
-  PostFlatmatesPropertyRequest,
-  PostResalePropertyRequest,
   GetAllPropertiesResponse,
-  GetPropertyByIdResponse,
-  GetPropertiesToVerifyResponse,
+  GetAllUsersResponse,
+  GetLeadByIdResponse,
   GetPropertiesToReverifyResponse,
+  GetPropertiesToVerifyResponse,
+  GetPropertyByIdResponse,
+  GetUserByPhoneNoResponse,
+  PostFlatmatesPropertyRequest,
+  PostRentPropertyRequest,
+  PostResalePropertyRequest,
 } from "@/interfaces/api";
 
 import { RootState } from "./store";
-import { LeadQueryParamEnum } from "@/common/enum";
 
 const baseUrl = process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL;
 

@@ -1,7 +1,8 @@
+import { JSX } from "react";
+
 import { PaymentStatusEnum } from "@/common/enum";
 import { Pill } from "@/components/Pill";
 import { isEnumValue } from "@/utils/enum";
-import { JSX } from "react";
 
 interface RenderPaymentStatusProps {
   status: PaymentStatusEnum;

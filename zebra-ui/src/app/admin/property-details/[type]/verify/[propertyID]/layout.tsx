@@ -4,17 +4,19 @@ import {
   useRouter,
   useSelectedLayoutSegment,
 } from "next/navigation";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 import { VerifyPropertyTabEnum } from "@/common/enum";
-import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
-import { ensureEnumValue } from "@/utils/enum";
-import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 import AsyncFallback from "@/components/AsyncFallback";
-import { useDispatch } from "react-redux";
+import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
+import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 import {
-  setPropertyData,
-  setPropertyLoading,
+  setFulfilled,
+  setPending,
+  setRejected,
 } from "@/store/propertyDetailsSlice";
+import { ensureEnumValue } from "@/utils/enum";
 
 const tabs: { label: string; value: VerifyPropertyTabEnum }[] = [
   { label: "Details", value: VerifyPropertyTabEnum.DETAILS },
@@ -40,6 +42,18 @@ export default function VerifyPropertyLayout({
     error,
   } = useGetPropertyByIdQuery({ id: propertyID });
 
+  useEffect(() => {
+    if (isLoading) {
+      dispatch(setPending());
+    } else if (isError) {
+      const errMsg =
+        typeof error === "string" ? error : "Unknown error fetching property";
+      dispatch(setRejected(errMsg));
+    } else if (currentProperty) {
+      dispatch(setFulfilled(currentProperty));
+    }
+  }, [isLoading, isError, currentProperty, error, dispatch]);
+
   if (isLoading || isError || !currentProperty) {
     return (
       <AsyncFallback
@@ -51,9 +65,6 @@ export default function VerifyPropertyLayout({
       />
     );
   }
-  console.log("property-details/verify/layout: ", currentProperty);
-  dispatch(setPropertyLoading());
-  dispatch(setPropertyData(currentProperty));
 
   const activeTab = ensureEnumValue({
     enumObj: VerifyPropertyTabEnum,

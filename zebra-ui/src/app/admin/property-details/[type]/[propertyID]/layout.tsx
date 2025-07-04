@@ -4,12 +4,19 @@ import {
   useRouter,
   useSelectedLayoutSegment,
 } from "next/navigation";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 import { PropertyDetailsTabEnum } from "@/common/enum";
-import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
-import { ensureEnumValue } from "@/utils/enum";
-import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 import AsyncFallback from "@/components/AsyncFallback";
+import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
+import { useGetPropertyByIdQuery } from "@/store/apiSlice";
+import {
+  setFulfilled,
+  setPending,
+  setRejected,
+} from "@/store/propertyDetailsSlice";
+import { ensureEnumValue } from "@/utils/enum";
 
 const tabs: { label: string; value: PropertyDetailsTabEnum }[] = [
   { label: "Details", value: PropertyDetailsTabEnum.DETAILS },
@@ -31,6 +38,7 @@ export default function PropertyDetailsLayout({
   };
   const router = useRouter();
   const currentTabFromUrl = useSelectedLayoutSegment();
+  const dispatch = useDispatch();
 
   const {
     data: currentProperty,
@@ -38,6 +46,18 @@ export default function PropertyDetailsLayout({
     isError,
     error,
   } = useGetPropertyByIdQuery({ id: propertyID });
+
+  useEffect(() => {
+    if (isLoading) {
+      dispatch(setPending());
+    } else if (isError) {
+      const errMsg =
+        typeof error === "string" ? error : "Unknown error fetching property";
+      dispatch(setRejected(errMsg));
+    } else if (currentProperty) {
+      dispatch(setFulfilled(currentProperty));
+    }
+  }, [isLoading, isError, currentProperty, error, dispatch]);
 
   if (isLoading || isError || !currentProperty) {
     return (

@@ -7,8 +7,8 @@ import { Column, DataTable } from "@/components/DataTable";
 import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
 import { PaginationFooter } from "@/components/PaginationFooter";
 import { RenderUserStatus } from "@/components/status/RenderUserStatus";
-import { User } from "@/interfaces/User";
 import { useLocalPagination } from "@/hooks/useLocalPagination";
+import { User } from "@/interfaces/User";
 import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 
 export default function ShortlistUsersPage() {

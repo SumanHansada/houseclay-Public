@@ -15,12 +15,12 @@ import {
 import { extractS3KeyFromUrl } from "@/common/utils";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
-import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
 import {
-  PostRentPropertyRequest,
   PostFlatmatesPropertyRequest,
+  PostRentPropertyRequest,
   PostResalePropertyRequest,
 } from "@/interfaces/api";
+import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -121,7 +121,6 @@ export default function AddPropertyTypeLayout({
           S3Url: imagesS3Url[photo.file.name],
         };
       });
-      // console.log(photosToUpload);
       uploadFiles(photosToUpload);
     }
   };
