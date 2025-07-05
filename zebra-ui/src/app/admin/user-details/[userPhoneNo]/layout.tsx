@@ -1,9 +1,26 @@
 "use client";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import {
+  useParams,
+  useRouter,
+  useSelectedLayoutSegment,
+} from "next/navigation";
 
-import { UserDetailsTabEnum } from "@/common/enums";
+import { UserDetailsTabEnum } from "@/common/enum";
+import AsyncFallback from "@/components/AsyncFallback";
 import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
+import { ensureEnumValue } from "@/utils/enum";
+
+const tabs: { label: string; value: UserDetailsTabEnum }[] = [
+  { label: "Profile", value: UserDetailsTabEnum.PROFILE },
+  { label: "Owned Properties", value: UserDetailsTabEnum.OWNED },
+  { label: "Shortlisted", value: UserDetailsTabEnum.SHORTLISTED },
+  { label: "Connect History", value: UserDetailsTabEnum.CONNECT },
+  { label: "Payment History", value: UserDetailsTabEnum.PAYMENT },
+  { label: "Contacted", value: UserDetailsTabEnum.CONTACTED },
+  { label: "Viewed", value: UserDetailsTabEnum.VIEWED },
+  { label: "Reported", value: UserDetailsTabEnum.REPORT },
+];
 
 export default function UserDetailsLayout({
   children,
@@ -12,57 +29,47 @@ export default function UserDetailsLayout({
 }) {
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
   const router = useRouter();
-  const pathname = usePathname();
+  const currentTabFromUrl = useSelectedLayoutSegment();
 
-  const { data, isLoading, isError } = useGetUserByPhoneNoQuery(
+  const {
+    data: currentUser,
+    isLoading,
+    isError,
+    error,
+  } = useGetUserByPhoneNoQuery(
     { phoneNo: userPhoneNo },
     { skip: !userPhoneNo },
   );
+
+  if (isLoading || isError || !currentUser) {
+    return (
+      <AsyncFallback
+        isLoading={isLoading}
+        isError={isError || !currentUser}
+        error={error}
+        loadingMessage="Loading user details…"
+        errorMessage="Failed to fetch user."
+      />
+    );
+  }
+
+  const activeTab = ensureEnumValue({
+    enumObj: UserDetailsTabEnum,
+    value: currentTabFromUrl,
+    fallback: UserDetailsTabEnum.PROFILE,
+  });
 
   const handleTabChange = (value: string) => {
     router.push(`/admin/user-details/${userPhoneNo}/${value}`);
   };
 
-  if (isLoading || !data) {
-    return (
-      <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-        <span className="text-gray-500">Loading user details…</span>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-        <span className="text-red-500">Failed to fetch user details.</span>
-      </div>
-    );
-  }
-
-  const validTabValues = Object.values(UserDetailsTabEnum) as readonly string[];
-  const isValidTab = (currentTab: string): currentTab is UserDetailsTabEnum => {
-    return validTabValues.includes(currentTab);
-  };
-
-  const pathSegments = pathname.split("/");
-  const currentTabFromUrl = pathSegments[pathSegments.length - 1];
-
-  const activeTab: UserDetailsTabEnum = isValidTab(currentTabFromUrl)
-    ? currentTabFromUrl
-    : UserDetailsTabEnum.PROFILE;
-
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">
       <Tabs onTabChange={handleTabChange} defaultActive={activeTab}>
         <TabHeader>
-          <Tab label="Profile" value={UserDetailsTabEnum.PROFILE} />
-          <Tab label="Listed Properties" value={UserDetailsTabEnum.LISTED} />
-          <Tab label="Shortlisted" value={UserDetailsTabEnum.SHORTLISTED} />
-          <Tab label="Connect History" value={UserDetailsTabEnum.CONNECT} />
-          <Tab label="Payment History" value={UserDetailsTabEnum.PAYMENT} />
-          <Tab label="Contacted" value={UserDetailsTabEnum.CONTACTED} />
-          <Tab label="Viewed" value={UserDetailsTabEnum.VIEWED} />
-          <Tab label="Reported" value={UserDetailsTabEnum.REPORT} />
+          {tabs.map((tab) => (
+            <Tab key={tab.value} label={tab.label} value={tab.value} />
+          ))}
         </TabHeader>
       </Tabs>
       <div className="flex-1 overflow-auto">{children}</div>

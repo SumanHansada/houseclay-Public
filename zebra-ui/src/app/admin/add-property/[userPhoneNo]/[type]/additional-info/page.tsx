@@ -6,8 +6,8 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
-import FormDropdown from "@/components/common/FormDropdown";
 import FormPhoneInput from "@/components/common/FormPhoneInput";
+import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 import { FormValues } from "@/interfaces/FormValues";
 import {
   FormType,
@@ -113,7 +113,7 @@ const AdditionalInfoPage = () => {
         {(formKey === "rentForm" || formKey === "flatmatesForm") && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <div className="col-span-1">
-              <FormDropdown
+              <FormSelectDropdown
                 name="additionalInfo.whoWillShowProperty"
                 id="additionalInfo.whoWillShowProperty"
                 label="Who will show the property?"
@@ -149,7 +149,7 @@ const AdditionalInfoPage = () => {
           <>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
               <div className="col-span-1">
-                <FormDropdown
+                <FormSelectDropdown
                   label="Do You have Khata Certificate?"
                   name="additionalInfo.khataCertificate"
                   id="additionalInfo.khataCertificate"
@@ -175,7 +175,7 @@ const AdditionalInfoPage = () => {
                 />
               </div>
               <div className="col-span-1">
-                <FormDropdown
+                <FormSelectDropdown
                   label="Do You have Sale Deed Certificate?"
                   name="additionalInfo.saleDeed"
                   id="additionalInfo.saleDeed"
@@ -202,7 +202,7 @@ const AdditionalInfoPage = () => {
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
               <div className="col-span-1">
-                <FormDropdown
+                <FormSelectDropdown
                   label="Have you paid Property Tax?"
                   name="additionalInfo.propertyTax"
                   id="additionalInfo.propertyTax"

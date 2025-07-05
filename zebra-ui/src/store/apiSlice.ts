@@ -1,39 +1,50 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 
-import { AddFlatmatesPropertyRequest } from "@/interfaces/FlatmatesDetails";
+// import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { LeadQueryParamEnum } from "@/common/enum";
 import {
   GetAllLeadsResponse,
-  LeadByIdResponse,
-  LeadQueryParamEnum,
-} from "@/interfaces/Lead";
-import { AddRentPropertyRequest } from "@/interfaces/RentalDetails";
-import { AddResalePropertyRequest } from "@/interfaces/ResaleDetails";
-import {
+  GetAllPropertiesResponse,
   GetAllUsersResponse,
+  GetLeadByIdResponse,
+  GetPropertiesToReverifyResponse,
+  GetPropertiesToVerifyResponse,
+  GetPropertyByIdResponse,
   GetUserByPhoneNoResponse,
-} from "@/interfaces/User";
+  PostFlatmatesPropertyRequest,
+  PostRentPropertyRequest,
+  PostResalePropertyRequest,
+} from "@/interfaces/api";
 
-import { RootState } from "./store";
+// import { RootState } from "./store";
+import { baseQueryWithAuth } from "./baseQueryWithAuth";
 
-const baseUrl = process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL;
+// const baseUrl = process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL;
 
 export const apiSlice = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({
-    baseUrl:
-      baseUrl ||
-      "http://ec2-3-107-183-183.ap-southeast-2.compute.amazonaws.com:8080/api" ||
-      "https://jsonplaceholder.typicode.com",
-    prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).admin.token;
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithAuth,
+  // baseQuery: fetchBaseQuery({
+  //   baseUrl:
+  //     baseUrl ||
+  //     "http://ec2-13-210-204-208.ap-southeast-2.compute.amazonaws.com:8080/api" ||
+  //     "https://jsonplaceholder.typicode.com",
+  //   prepareHeaders: (headers, { getState }) => {
+  //     const token = (getState() as RootState).admin.token;
+  //     if (token) {
+  //       headers.set("Authorization", `Bearer ${token}`);
+  //     }
+  //     return headers;
+  //   },
+  // }),
 
-  tagTypes: ["Leads", "LeadDetail"],
+  tagTypes: [
+    "UserDetail",
+    "Leads",
+    "LeadDetail",
+    "Properties",
+    "PropertyDetail",
+  ],
 
   endpoints: (builder) => ({
     // ──────────────── AUTH ────────────────
@@ -46,8 +57,8 @@ export const apiSlice = createApi({
       }),
     }),
     register: builder.mutation<
-      string,
-      { username: string; password: string; name: string }
+      string, // Response Type
+      { username: string; password: string; name: string } // Request Body Type
     >({
       query: (data) => ({
         url: "/admin/register",
@@ -61,7 +72,13 @@ export const apiSlice = createApi({
         url: "/admin/logout",
         method: "POST",
       }),
-      invalidatesTags: ["Leads", "LeadDetail"],
+      invalidatesTags: [
+        "UserDetail",
+        "Leads",
+        "LeadDetail",
+        "Properties",
+        "PropertyDetail",
+      ],
     }),
 
     // ──────────────── USERS ────────────────
@@ -83,6 +100,9 @@ export const apiSlice = createApi({
         url: `/admin/search-user?phoneNo=${phoneNo}`,
         method: "GET",
       }),
+      providesTags: (result, error, { phoneNo }) => [
+        { type: "UserDetail", id: phoneNo },
+      ],
     }),
 
     // ──────────────── LEADS ────────────────
@@ -105,15 +125,15 @@ export const apiSlice = createApi({
             ]
           : [{ type: "Leads" as const, id: "LIST" }],
     }),
-    getLeadById: builder.query<LeadByIdResponse, { id: number }>({
+
+    getLeadById: builder.query<GetLeadByIdResponse, { id: number }>({
       query: ({ id }) => ({
         url: `/leads/${id}`,
         method: "GET",
       }),
-      providesTags: (result, error, { id }) => [
-        { type: "LeadDetail" as const, id },
-      ],
+      providesTags: (_, __, { id }) => [{ type: "LeadDetail" as const, id }],
     }),
+
     leadStatusUpdate: builder.mutation<
       string,
       { id: number; newStatus: string }
@@ -126,11 +146,12 @@ export const apiSlice = createApi({
         },
         body: newStatus,
       }),
-      invalidatesTags: (result, error, { id }) => [
+      invalidatesTags: (_, __, { id }) => [
         { type: "LeadDetail" as const, id },
         { type: "Leads" as const, id: "LIST" },
       ],
     }),
+
     leadAddComment: builder.mutation<
       string,
       { id: number; newComment: string }
@@ -143,26 +164,22 @@ export const apiSlice = createApi({
         },
         body: newComment,
       }),
-      invalidatesTags: (result, error, { id }) => [
+      invalidatesTags: (_, __, { id }) => [
         { type: "LeadDetail" as const, id },
         { type: "Leads" as const, id: "LIST" },
       ],
     }),
-    checkUser: builder.query<
-      { exists: boolean; message: string }, // Response type
-      { phoneNo: string } // Query parameter type
-    >({
-      query: ({ phoneNo }) => `/user/check-user?phoneNo=${phoneNo}`,
-    }),
+
+    // ──────────────── PHOTO ────────────────
     presignedUrls: builder.mutation<
       {
         propertyID: string;
         fileURLMap: Record<string, string>;
-      }, // Response type
-      { fileMap: Record<string, string> } // Request body type
+      },
+      { fileMap: Record<string, string> }
     >({
       query: (data) => ({
-        url: "photo/admin/presigned-urls",
+        url: "/photo/admin/presigned-urls",
         method: "POST",
         body: data,
         headers: {
@@ -170,58 +187,121 @@ export const apiSlice = createApi({
         },
       }),
     }),
+
+    // ──────────────── PROPERTY ────────────────
     propertyAddRent: builder.mutation<
       {
         message: string;
         propertyID: number;
       },
-      { data: AddRentPropertyRequest; phoneNo: string }
+      { data: PostRentPropertyRequest; phoneNo: string }
     >({
       query: ({ data, phoneNo }) => ({
-        url: `property/admin/add?phoneNo=${phoneNo}`,
+        url: `/property/admin/add?phoneNo=${phoneNo}`,
         method: "POST",
         body: { ...data },
         headers: {
           "Content-Type": "application/json",
         },
       }),
+      invalidatesTags: (_, __, { phoneNo }) => [
+        { type: "Properties", id: "LIST" },
+        { type: "UserDetail", id: phoneNo },
+      ],
     }),
+
     propertyAddResale: builder.mutation<
       {
         message: string;
         propertyID: number;
       },
       {
-        data: AddResalePropertyRequest;
+        data: PostResalePropertyRequest;
         phoneNo: string;
       }
     >({
       query: ({ data, phoneNo }) => ({
-        url: `property/admin/add?phoneNo=${phoneNo}`,
+        url: `/property/admin/add?phoneNo=${phoneNo}`,
         method: "POST",
         body: { ...data },
         headers: {
           "Content-Type": "application/json",
         },
       }),
+      invalidatesTags: (_, __, { phoneNo }) => [
+        { type: "Properties", id: "LIST" },
+        { type: "UserDetail", id: phoneNo },
+      ],
     }),
+
     propertyAddFlatmates: builder.mutation<
       {
         message: string;
         propertyID: number;
       },
       {
-        data: AddFlatmatesPropertyRequest;
+        data: PostFlatmatesPropertyRequest;
         phoneNo: string;
       }
     >({
       query: ({ data, phoneNo }) => ({
-        url: `property/admin/add?phoneNo=${phoneNo}`,
+        url: `/property/admin/add?phoneNo=${phoneNo}`,
         method: "POST",
         body: { ...data },
         headers: {
           "Content-Type": "application/json",
         },
+      }),
+      invalidatesTags: (_, __, { phoneNo }) => [
+        { type: "Properties", id: "LIST" },
+        { type: "UserDetail", id: phoneNo },
+      ],
+    }),
+
+    getProperties: builder.query<
+      GetAllPropertiesResponse,
+      { page: number; size: number }
+    >({
+      query: ({ page, size }) => ({
+        url: `/property/admin/all?page=${page}&size=${size}`,
+        method: "GET",
+      }),
+      providesTags: (result) =>
+        result
+          ? [
+              { type: "Properties" as const, id: "LIST" },
+              ...result.content.map((property) => ({
+                type: "PropertyDetail" as const,
+                id: property.propertyID,
+              })),
+            ]
+          : [{ type: "Properties", id: "LIST" }],
+    }),
+
+    getPropertyById: builder.query<GetPropertyByIdResponse, { id: string }>({
+      query: ({ id }) => ({
+        url: `/property/admin/${id}`,
+        method: "GET",
+      }),
+    }),
+
+    getPropertiesToVerify: builder.query<
+      GetPropertiesToVerifyResponse,
+      { page: number; size: number }
+    >({
+      query: ({ page, size }) => ({
+        url: `/property/admin/properties-to-verify?page=${page}&size=${size}`,
+        method: "GET",
+      }),
+    }),
+
+    getPropertiesToReverify: builder.query<
+      GetPropertiesToReverifyResponse,
+      { page: number; size: number }
+    >({
+      query: ({ page, size }) => ({
+        url: `/property/admin/properties-to-re-verify?page=${page}&size=${size}`,
+        method: "GET",
       }),
     }),
   }),
@@ -230,17 +310,19 @@ export const apiSlice = createApi({
 export const {
   useLoginMutation,
   useRegisterMutation,
+  useLogoutMutation,
   useGetUsersQuery,
   useGetUserByPhoneNoQuery,
   useGetLeadsQuery,
   useGetLeadByIdQuery,
   useLeadStatusUpdateMutation,
   useLeadAddCommentMutation,
-  useCheckUserQuery,
-  useLazyCheckUserQuery,
-  useLogoutMutation,
   usePresignedUrlsMutation,
   usePropertyAddRentMutation,
   usePropertyAddResaleMutation,
   usePropertyAddFlatmatesMutation,
+  useGetPropertiesQuery,
+  useGetPropertyByIdQuery,
+  useGetPropertiesToVerifyQuery,
+  useGetPropertiesToReverifyQuery,
 } = apiSlice;

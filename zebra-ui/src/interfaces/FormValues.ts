@@ -9,9 +9,9 @@ import { ResaleDetails } from "./ResaleDetails";
 export interface FormValues {
   propertyDetails: PropertyDetails;
   localityDetails: LocalityDetails;
-  rentalDetails: RentalDetails;
-  flatmatesDetails: FlatmatesDetails;
-  resaleDetails: ResaleDetails;
+  rentalDetails?: RentalDetails;
+  flatmatesDetails?: FlatmatesDetails;
+  resaleDetails?: ResaleDetails;
   additionalInfo: AdditionalInfo;
   images: PropertyPhoto[];
 }

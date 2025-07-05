@@ -5,6 +5,7 @@ import { SearchIcon, SlidersHorizontal } from "lucide-react";
 import React, { useEffect, useReducer } from "react";
 import { useDispatch } from "react-redux";
 
+import SearchFilterDialog from "@/dialogs/search-filters";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setHideFooter, setHideHeader } from "@/store/appSlice";
@@ -12,7 +13,6 @@ import { setHideFooter, setHideHeader } from "@/store/appSlice";
 import Autocomplete from "./common/Autocomplete";
 import Button from "./common/Button";
 import SelectDropdown from "./common/SelectDropdown";
-import SearchFilterDialog from "./MoreSearchFilters";
 
 type PropertySearchState = {
   propertyType: string | number | boolean;

@@ -1,8 +1,8 @@
 "use client";
 
-import FormDropdown from "@/components/common/FormDropdown";
 import FormInputField from "@/components/common/FormInputField";
 import FormTextArea from "@/components/common/FormTextArea";
+import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 import { FormType } from "@/store/listPropertySlice";
 
 interface PropertyDetailsFormProps {
@@ -24,8 +24,9 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
           listing.
         </p>
       </div>
+
       {/* PROPERTY TYPE */}
-      <FormDropdown
+      <FormSelectDropdown
         label="Property Type"
         name="propertyDetails.propertyType"
         id="propertyDetails.propertyType"
@@ -57,11 +58,10 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
             dataType="number"
             placeholder="Enter built up area"
             suffix="Sq.ft"
-            // disabled={disabled}
             required
           />
 
-          <FormDropdown
+          <FormSelectDropdown
             label="Facing"
             name="propertyDetails.facing"
             id="propertyDetails.facing"
@@ -91,7 +91,7 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
       {/* BHK TYPE, OWNERSHIP, AGE */}
       {(formKey === "rentForm" || formKey === "resaleForm") && (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          <FormDropdown
+          <FormSelectDropdown
             label="BHK Type"
             name="propertyDetails.bhkType"
             id="propertyDetails.bhkType"
@@ -113,7 +113,7 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
             // }
           />
 
-          <FormDropdown
+          <FormSelectDropdown
             label="Ownership Type"
             name="propertyDetails.ownershipType"
             id="propertyDetails.ownershipType"
@@ -137,7 +137,7 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
             // }
           />
 
-          <FormDropdown
+          <FormSelectDropdown
             label="Property Age"
             name="propertyDetails.propertyAge"
             id="propertyDetails.propertyAge"
@@ -170,11 +170,10 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
             dataType="number"
             placeholder="Enter built up area"
             suffix="Sq.ft"
-            // disabled={disabled}
             required
           />
 
-          <FormDropdown
+          <FormSelectDropdown
             label="BHK Type"
             name="propertyDetails.bhkType"
             id="propertyDetails.bhkType"
@@ -202,7 +201,7 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
       <div
         className={`grid grid-cols-1 md:grid-cols-2 ${formKey === "rentForm" || formKey === "resaleForm" ? "xl:grid-cols-3" : ""} gap-6`}
       >
-        <FormDropdown
+        <FormSelectDropdown
           label="Total Floor"
           name="propertyDetails.totalFloors"
           id="totalFloors"
@@ -221,7 +220,7 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
           // }
         />
 
-        <FormDropdown
+        <FormSelectDropdown
           label="Floor"
           name="propertyDetails.floor"
           id="propertyDetails.floor"
@@ -243,7 +242,7 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
         />
 
         {(formKey === "rentForm" || formKey === "resaleForm") && (
-          <FormDropdown
+          <FormSelectDropdown
             label="Floor Type"
             name="propertyDetails.floorType"
             id="floorType"
@@ -272,7 +271,6 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
           id="propertyDetails.description"
           label="Description"
           placeholder="Enter property description"
-          // disabled={disabled}
           rows={5}
         />
       </div>

@@ -1,20 +1,16 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 
-import { VerifyPropertyStatusEnum } from "@/common/enums";
+import { VerifyPropertyStatusEnum } from "@/common/enum";
+import AsyncFallback from "@/components/AsyncFallback";
 import { Column, DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/PaginationFooter";
+import { useStatusBasedPropertyFetch } from "@/hooks/useStatusBasedPropertyFetch";
 import { PropertyInfo } from "@/interfaces/Property";
-import {
-  dummyGetPropertiesToBeReVerified,
-  dummyGetPropertiesToBeVerified,
-} from "@/mock/propertyDetailsDummy";
-// import { useGetPropertiesQuery } from "@/redux/api/propertyApi"; // Assuming this is your hook
-import { createCommonColumns } from "@/utils/commonPropertyColumns";
+import { buildPropertyColumns } from "@/utils/table/buildPropertyColumns";
 
-// Define a type for the row to include the serial number
 interface PropertyRow extends PropertyInfo {
   _serial: number;
 }
@@ -22,40 +18,45 @@ interface PropertyRow extends PropertyInfo {
 const PropertyVerificationTablePage: React.FC = () => {
   const router = useRouter();
   const { status } = useParams() as { status: VerifyPropertyStatusEnum };
-
-  // --- STATE MANAGEMENT ---
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
 
-  // --- DATA FETCHING (SINGLE SOURCE OF TRUTH) ---
-  // The hook is called once, with status and pagination params.
-  // It will automatically refetch when `status` or `currentPage` changes.
-  // const { data, isLoading, isError } = useGetPropertiesQuery({
-  //   status: status, // Pass the status to your API
-  //   page: currentPage - 1,
-  //   size: rowsPerPage,
-  // });
-  const data =
-    status === "pending"
-      ? dummyGetPropertiesToBeVerified
-      : dummyGetPropertiesToBeReVerified;
+  const {
+    data: paginatedPropertyData,
+    isLoading,
+    isError,
+    error,
+  } = useStatusBasedPropertyFetch({
+    status,
+    page: currentPage - 1,
+    size: rowsPerPage,
+  });
 
-  // Memoize data to prevent unnecessary recalculations
-  const allProperties = useMemo<PropertyInfo[]>(
-    () => data?.content ?? [],
-    [data?.content],
-  );
-  const totalPages = data?.totalPages ?? 0;
-  const isFirst = data?.first ?? true;
-  const isLast = data?.last ?? true;
+  if (isLoading || isError || !paginatedPropertyData) {
+    return (
+      <AsyncFallback
+        isLoading={isLoading}
+        isError={isError || !paginatedPropertyData}
+        error={error}
+        loadingMessage="Loading all properties…"
+        errorMessage="Failed to fetch Properties."
+      />
+    );
+  }
 
-  // --- EVENT HANDLERS ---
+  const {
+    content: allProperties,
+    totalPages,
+    first: isFirst,
+    last: isLast,
+  } = paginatedPropertyData;
+
   const viewPropertyDetails = (type: string, propertyID: string) => {
-    const path =
-      status === "pending"
-        ? `/admin/property-details/${type}/verify/${propertyID}`
-        : `/admin/property-details/${type}/reverify/${propertyID}`;
-    router.push(path);
+    const verifyPath = `/admin/property-details/${type}/verify/${propertyID}`;
+    const reverifyPath = `/admin/property-details/${type}/reverify/${propertyID}`;
+    const currentPath =
+      status === VerifyPropertyStatusEnum.VERIFY ? verifyPath : reverifyPath;
+    router.push(currentPath);
   };
 
   const handleStatusChange = (newStatus: VerifyPropertyStatusEnum) => {
@@ -71,20 +72,15 @@ const PropertyVerificationTablePage: React.FC = () => {
   const nextPage = () => !isLast && setCurrentPage((p) => p + 1);
   const prevPage = () => !isFirst && setCurrentPage((p) => p - 1);
 
-  // --- TABLE ROWS AND COLUMNS ---
   const rows: PropertyRow[] = allProperties.map((propertyInfo, index) => ({
     ...propertyInfo,
-    // For a consistent serial number across pages:
     _serial: (currentPage - 1) * rowsPerPage + index + 1,
   }));
 
   const columns: Column<PropertyRow>[] =
-    createCommonColumns(viewPropertyDetails);
+    buildPropertyColumns(viewPropertyDetails);
 
-  // --- RENDER ---
   return (
-    // This container uses flexbox to manage its children's layout
-    // h-full makes it take the full height of the <main> container from the layout
     <div className="flex flex-col h-full bg-white shadow-sm rounded-xl">
       {/* Top section with Title and Status buttons */}
       <div className="p-4 border-b border-gray-200">
@@ -166,7 +162,7 @@ export default PropertyVerificationTablePage;
 //   dummyGetPropertiesToBeVerified,
 // } from "@/mock/propertyDetailsDummy";
 
-// import { createCommonColumns } from "@/utils/commonPropertyColumns";
+// import { buildPropertyColumns } from "@/utils/commonPropertyColumns";
 
 // interface PropertyRow extends PropertyInfo {
 //   _serial: number;
@@ -194,7 +190,7 @@ export default PropertyVerificationTablePage;
 //   }));
 
 //   const columns: Column<PropertyRow>[] =
-//     createCommonColumns(viewPropertyDetails);
+//     buildPropertyColumns(viewPropertyDetails);
 
 //   return (
 //     <div className="flex flex-col flex-1 bg-white shadow-sm rounded-xl p-4 gap-4">

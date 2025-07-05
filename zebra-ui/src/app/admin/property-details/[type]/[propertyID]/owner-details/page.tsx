@@ -1,18 +1,24 @@
 "use client";
 
 import { SquareArrowOutUpRight } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { RenderPropertyStatus } from "@/components/property/RenderPropertyStatus";
-import { PropertyStatusEnum } from "@/interfaces/Property";
-import { dummyUserDataList } from "@/mock/userDetailsDummy";
+import { RenderPropertyStatus } from "@/components/status/RenderPropertyStatus";
+import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 
 export default function PropertyDetailsOverviewPage() {
   const router = useRouter();
-  const currentUser = dummyUserDataList[0];
-  const [isBlacklisted] = useState<boolean>(currentUser.blacklisted);
-  const { name, email, phoneNo, createdAt } = currentUser;
+  const { propertyID } = useParams() as { propertyID: string };
+
+  const { data: currentProperty } = useGetPropertyByIdQuery({ id: propertyID });
+  const ownerDetails = currentProperty!.owner;
+  const verificationStatus = currentProperty!.propertyState;
+  const propertyUpdates = currentProperty!.propertyUpdates;
+  const latestUpdate = propertyUpdates[propertyUpdates.length - 1] ?? null;
+
+  const [isBlacklisted] = useState<boolean>(ownerDetails.blacklisted);
+  const { name, email, phoneNo } = ownerDetails;
   const currentStatus = isBlacklisted
     ? "The user is blacklisted"
     : "The user is active";
@@ -43,10 +49,6 @@ export default function PropertyDetailsOverviewPage() {
                 { label: "Name", value: name },
                 { label: "Phone", value: phoneNo },
                 { label: "Email", value: email },
-                {
-                  label: "Joined On",
-                  value: new Date(createdAt).toLocaleString(),
-                },
                 { label: "Blacklisted Status", value: currentStatus },
               ].map(({ label, value }) => (
                 <div key={label} className="flex flex-col gap-2 text-lg">
@@ -64,13 +66,32 @@ export default function PropertyDetailsOverviewPage() {
         </div>
         <div className="bg-white rounded-xl p-6 flex items-center gap-3">
           <h1 className="text-2xl">Verification Status:</h1>
-          <RenderPropertyStatus status={PropertyStatusEnum.PENDING} />
-          {/* <RenderPropertyStatus status={"PENDING"} /> */}
+          <RenderPropertyStatus status={verificationStatus} />
         </div>
-        <div className="bg-white rounded-xl p-6 flex items-center gap-3">
-          <h1 className="text-2xl">Report History:</h1>
-          <span className="text-lg">No Reports</span>
-        </div>
+        {latestUpdate ? (
+          <div className="bg-white rounded-xl p-6 flex flex-col gap-3">
+            <h1 className="text-2xl">Property Updates:</h1>
+            <ul className="ml-4 list-disc">
+              <li>
+                Update Type:&nbsp;
+                <span className="text-lg">{latestUpdate.updateType}</span>
+              </li>
+              <li>
+                Update Time:&nbsp;
+                <span className="text-lg">
+                  {new Date(latestUpdate.updateTime).toLocaleString("en-IN")}
+                </span>
+              </li>
+              <li>
+                Updated By:&nbsp;
+                <span className="text-lg">{latestUpdate.updateBy}</span>
+                <span className="text-sm text-gray-700 ml-1">
+                  [{latestUpdate.userType}]
+                </span>
+              </li>
+            </ul>
+          </div>
+        ) : null}
       </div>
     </div>
   );

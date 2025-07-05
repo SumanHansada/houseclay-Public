@@ -29,9 +29,9 @@ import MaleIconSvg from "public/icons/preferred-tenants/male.svg";
 
 import FormCalendarField from "@/components/common/FormCalendarField";
 import FormCheckbox from "@/components/common/FormCheckbox";
-import FormDropdown from "@/components/common/FormDropdown";
-import FormINRCurrencyField from "@/components/common/FormINRCurrencyField";
-import FormRadioGroup from "@/components/common/FormRadioGroup";
+import FormCurrencyField from "@/components/common/FormCurrencyField";
+import FormRadioGroup from "@/form-components/FormRadioGroup";
+import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 import { FormType } from "@/store/listPropertySlice";
 
 interface RentalDetailsFormProps {
@@ -102,7 +102,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
       <div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
-            <FormINRCurrencyField
+            <FormCurrencyField
               name={
                 formKey === "rentForm"
                   ? "rentalDetails.rent"
@@ -116,8 +116,8 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
               label="Rent"
               prefix={<IndianRupee size={20} />}
               suffix="/month"
-              // disabled={disabled}
               required
+              // disabled={disabled}
             />
           </div>
           <div className="col-span-1">
@@ -135,7 +135,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
               />
             )}
             {formKey === "flatmatesForm" && (
-              <FormDropdown
+              <FormSelectDropdown
                 label="Parking"
                 name="flatmatesForm.parking"
                 id="flatmatesForm.parking"
@@ -161,7 +161,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
-            <FormINRCurrencyField
+            <FormCurrencyField
               name={
                 formKey === "rentForm"
                   ? "rentalDetails.maintenanceCharges"
@@ -179,7 +179,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
             />
           </div>
           <div className="col-span-1">
-            <FormINRCurrencyField
+            <FormCurrencyField
               name={
                 formKey === "rentForm"
                   ? "rentalDetails.deposit"
@@ -209,11 +209,11 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
               dateFormat="yyyy-MM-dd"
               className="w-full"
               required
-              // disabled={disabled}
+              disabled={disabled}
             />
           </div>
           <div className="col-span-1">
-            <FormDropdown
+            <FormSelectDropdown
               label="Furnishing"
               name={
                 formKey === "rentForm"
@@ -334,7 +334,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
         )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
-            <FormDropdown
+            <FormSelectDropdown
               label="Water Supply"
               name={
                 formKey === "rentForm"
@@ -374,7 +374,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
             />
           </div>
           <div className="col-span-1">
-            <FormDropdown
+            <FormSelectDropdown
               label="Power Backup"
               name={
                 formKey === "rentForm"
@@ -417,7 +417,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
         {formKey === "rentForm" && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="col-span-1">
-              <FormDropdown
+              <FormSelectDropdown
                 label="Parking"
                 name="rentalDetails.parking"
                 id="rentalDetails.parking"
@@ -477,8 +477,8 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
                 label="Attached Balcony"
                 columns={2}
                 options={[
-                  { value: "true", label: "Yes" },
-                  { value: "false", label: "No" },
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
                 ]}
                 required
                 horizontal

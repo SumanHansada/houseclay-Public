@@ -4,10 +4,11 @@ import { useFormikContext } from "formik";
 import { MapPin } from "lucide-react";
 import { useEffect } from "react";
 
-import FormDropdown from "@/components/common/FormDropdown";
 import FormInputField from "@/components/common/FormInputField";
 import GoogleMaps from "@/components/common/GoogleMaps";
-import { PropertyDetailsFormValues } from "@/interfaces/Property";
+import FormPlacesAutocomplete from "@/form-components/FormPlacesAutocomplete";
+import FormSelectDropdown from "@/form-components/FormSelectDropdown";
+import { FormValues } from "@/interfaces/FormValues";
 
 interface LocalityDetailsFormProps {
   disabled: boolean;
@@ -19,8 +20,25 @@ const LocalityDetailsForm: React.FC<LocalityDetailsFormProps> = ({
   type,
 }) => {
   console.log(disabled + type);
-  const { values, setFieldValue } =
-    useFormikContext<PropertyDetailsFormValues>();
+  const { values, setFieldValue } = useFormikContext<FormValues>();
+
+  const onLocationSelect = (location: {
+    latitude: number;
+    longitude: number;
+    name?: string;
+    address?: string;
+    city?: string;
+  }) => {
+    setFieldValue("localityDetails.latitude", location.latitude);
+    setFieldValue("localityDetails.longitude", location.longitude);
+    if (location.name) {
+      setFieldValue("localityDetails.locationOrSocietyName", location.name);
+    }
+    if (location.address) {
+      setFieldValue("localityDetails.landmark", location.address);
+    }
+  };
+
   useEffect(() => {
     if (!values.localityDetails.city) {
       setFieldValue("localityDetails.city", "Bengaluru");
@@ -47,6 +65,7 @@ const LocalityDetailsForm: React.FC<LocalityDetailsFormProps> = ({
     setFieldValue("localityDetails.latitude", defaultLatLng.lat);
     setFieldValue("localityDetails.longitude", defaultLatLng.lng);
   }, [values.localityDetails.city, setFieldValue]);
+
   return (
     <div className="space-y-6">
       <div className="mb-8">
@@ -57,7 +76,7 @@ const LocalityDetailsForm: React.FC<LocalityDetailsFormProps> = ({
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
           <div className="col-span-1">
-            <FormDropdown
+            <FormSelectDropdown
               label="City"
               name="localityDetails.city"
               id="localityDetails.city"
@@ -73,28 +92,33 @@ const LocalityDetailsForm: React.FC<LocalityDetailsFormProps> = ({
               required={true}
               disabled={true}
               placeholder="Select city"
-              //   aria-describedby={
-              //     errors?.localityDetails?.city && touched?.localityDetails?.city
-              //       ? "localityDetails.city-error"
-              //       : undefined
-              //   }
+              // aria-describedby={
+              //   errors?.localityDetails?.city && touched?.localityDetails?.city
+              //     ? "localityDetails.city-error"
+              //     : undefined
+              // }
             />
           </div>
           <div className="col-span-1 xl:col-span-2">
-            {/* <FormPlacesAutocomplete
+            <FormPlacesAutocomplete
               label="Location / Society Name"
               name="localityDetails.locationOrSocietyName"
               id="localityDetails.locationOrSocietyName"
               placeholder="Location / Society Name"
               required
-              pairWithGoogleMaps
-              googleMapsFieldName="localityDetails"
-              //   disabled={disabled}
-            /> */}
-            <h1>Location or Society name</h1>
+              onLocationSelect={onLocationSelect}
+              containerClassName="w-full relative"
+              labelClassName="block text-sm font-medium text-gray-700 mb-1"
+              inputClassName="w-full p-3 border rounded-xl"
+              dropdownClassName="absolute z-10 mt-1 py-1 w-full bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-auto"
+              dropdownItemClassName="py-1 px-3 hover:bg-gray-100 cursor-pointer flex items-center"
+              errorClassName="mt-1 text-sm text-red-600"
+              // disabled={disabled}
+            />
+            {/* <h1>Location or Society name</h1>
             <div className="bg-gray-300 w-full h-12 rounded-xl p-4 flex items-center text-lg text-red-500">
               Error
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="mb-6">

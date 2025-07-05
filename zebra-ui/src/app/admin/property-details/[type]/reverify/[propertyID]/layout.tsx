@@ -1,9 +1,26 @@
 "use client";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import {
+  useParams,
+  useRouter,
+  useSelectedLayoutSegment,
+} from "next/navigation";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
-import { ReverifyPropertyTabEnum } from "@/common/enums";
+import { ReverifyPropertyTabEnum } from "@/common/enum";
+import AsyncFallback from "@/components/AsyncFallback";
 import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
-// import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
+import { useGetPropertyByIdQuery } from "@/store/apiSlice";
+import {
+  setFulfilled,
+  setPending,
+  setRejected,
+} from "@/store/propertyDetailsSlice";
+import { ensureEnumValue } from "@/utils/enum";
+
+const tabs: { label: string; value: ReverifyPropertyTabEnum }[] = [
+  { label: "Details", value: ReverifyPropertyTabEnum.DETAILS },
+];
 
 export default function ReverifyPropertyLayout({
   children,
@@ -15,12 +32,45 @@ export default function ReverifyPropertyLayout({
     propertyID: string;
   };
   const router = useRouter();
-  const pathname = usePathname();
+  const currentTabFromUrl = useSelectedLayoutSegment();
+  const dispatch = useDispatch();
 
-  //   const { data, isLoading, isError } = useGetUserByPhoneNoQuery(
-  //     { phoneNo: userPhoneNo },
-  //     { skip: !userPhoneNo },
-  //   );
+  const {
+    data: currentProperty,
+    isLoading,
+    isError,
+    error,
+  } = useGetPropertyByIdQuery({ id: propertyID });
+
+  useEffect(() => {
+    if (isLoading) {
+      dispatch(setPending());
+    } else if (isError) {
+      const errMsg =
+        typeof error === "string" ? error : "Unknown error fetching property";
+      dispatch(setRejected(errMsg));
+    } else if (currentProperty) {
+      dispatch(setFulfilled(currentProperty));
+    }
+  }, [isLoading, isError, currentProperty, error, dispatch]);
+
+  if (isLoading || isError || !currentProperty) {
+    return (
+      <AsyncFallback
+        isLoading={isLoading}
+        isError={isError || !currentProperty}
+        error={error}
+        loadingMessage="Loading property details…"
+        errorMessage="Failed to fetch property."
+      />
+    );
+  }
+
+  const activeTab = ensureEnumValue({
+    enumObj: ReverifyPropertyTabEnum,
+    value: currentTabFromUrl,
+    fallback: ReverifyPropertyTabEnum.DETAILS,
+  });
 
   const handleTabChange = (tab: string) => {
     router.push(
@@ -28,43 +78,14 @@ export default function ReverifyPropertyLayout({
     );
   };
 
-  //   if (isLoading || !data) {
-  //     return (
-  //       <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-  //         <span className="text-gray-500">Loading user details…</span>
-  //       </div>
-  //     );
-  //   }
-
-  //   if (isError) {
-  //     return (
-  //       <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-  //         <span className="text-red-500">Failed to fetch user details.</span>
-  //       </div>
-  //     );
-  //   }
-
-  const validTabValues = Object.values(
-    ReverifyPropertyTabEnum,
-  ) as readonly string[];
-  const isValidTab = (
-    currentTab: string,
-  ): currentTab is ReverifyPropertyTabEnum => {
-    return validTabValues.includes(currentTab);
-  };
-
-  const pathSegments = pathname.split("/");
-  const currentTabFromUrl = pathSegments[pathSegments.length - 1];
-
-  const activeTab: ReverifyPropertyTabEnum = isValidTab(currentTabFromUrl)
-    ? currentTabFromUrl
-    : ReverifyPropertyTabEnum.DETAILS;
-
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">
+      {/* Using Tabs - for future scaling */}
       <Tabs onTabChange={handleTabChange} defaultActive={activeTab}>
         <TabHeader>
-          <Tab label="Details" value={ReverifyPropertyTabEnum.DETAILS} />
+          {tabs.map((tab) => (
+            <Tab key={tab.value} label={tab.label} value={tab.value} />
+          ))}
         </TabHeader>
       </Tabs>
       <div className="flex-1 overflow-auto">{children}</div>

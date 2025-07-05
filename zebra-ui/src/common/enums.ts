@@ -28,34 +28,3 @@ export enum PropertyListingType {
   DIY = "DIY",
   CALL = "CALL",
 }
-
-export enum UserDetailsTabEnum {
-  PROFILE = "profile",
-  LISTED = "listed-properties",
-  SHORTLISTED = "shortlisted-properties",
-  CONNECT = "connect-history",
-  PAYMENT = "payment-history",
-  CONTACTED = "contacted-properties",
-  VIEWED = "viewed-properties",
-  REPORT = "reported-properties",
-}
-
-export enum VerifyPropertyStatusEnum {
-  VERIFY = "pending",
-  REVERIFY = "report",
-}
-
-export enum PropertyDetailsTabEnum {
-  DETAILS = "details",
-  OWNER_DETAILS = "owner-details",
-  CONTACTED = "contacted",
-  SHORTLISTED = "shortlisted",
-  VIEWED = "viewed",
-}
-
-export enum VerifyPropertyTabEnum {
-  DETAILS = "details",
-}
-export enum ReverifyPropertyTabEnum {
-  DETAILS = "details",
-}

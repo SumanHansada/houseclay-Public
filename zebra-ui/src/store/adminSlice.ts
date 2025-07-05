@@ -15,6 +15,8 @@ const initialState: AdminState = {
   error: null,
 };
 
+const COOKIE_OPTS = { sameSite: "lax" as const, path: "/" };
+
 const adminSlice = createSlice({
   name: "admin",
   initialState,
@@ -25,13 +27,15 @@ const adminSlice = createSlice({
     },
     initializeToken: (state) => {
       const token = Cookies.get("adminToken");
-      if (token) {
-        state.isAuthenticated = true;
-        state.token = token;
-      } else {
-        state.isAuthenticated = false;
-        state.token = null;
-      }
+      state.isAuthenticated = !!token;
+      state.token = token ?? null;
+      // if (token) {
+      //   state.isAuthenticated = true;
+      //   state.token = token;
+      // } else {
+      //   state.isAuthenticated = false;
+      //   state.token = null;
+      // }
     },
     loginSuccess: (state, action: PayloadAction<string>) => {
       state.isAuthenticated = true;
@@ -39,7 +43,7 @@ const adminSlice = createSlice({
       state.loading = false;
       state.error = null;
       // Store token in cookie for 7 days
-      Cookies.set("adminToken", action.payload, { expires: 7 });
+      Cookies.set("adminToken", action.payload, { ...COOKIE_OPTS, expires: 7 });
     },
     loginFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
@@ -51,7 +55,7 @@ const adminSlice = createSlice({
       state.loading = false;
       state.error = null;
       // Remove cookie
-      Cookies.remove("adminToken");
+      Cookies.remove("adminToken", COOKIE_OPTS);
     },
   },
 });

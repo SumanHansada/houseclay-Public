@@ -1,7 +1,7 @@
 "use client";
 
-import FormDropdown from "@/components/common/FormDropdown";
 import FormPhoneInput from "@/components/common/FormPhoneInput";
+import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 import { FormType } from "@/store/listPropertySlice";
 
 interface AdditionalInfoFormProps {
@@ -25,7 +25,7 @@ const AdditionalInfoForm: React.FC<AdditionalInfoFormProps> = ({
         {(formKey === "rentForm" || formKey === "flatmatesForm") && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <div className="col-span-1">
-              <FormDropdown
+              <FormSelectDropdown
                 name="additionalInfo.whoWillShowProperty"
                 id="additionalInfo.whoWillShowProperty"
                 label="Who will show the property?"
@@ -63,7 +63,7 @@ const AdditionalInfoForm: React.FC<AdditionalInfoFormProps> = ({
           <>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
               <div className="col-span-1">
-                <FormDropdown
+                <FormSelectDropdown
                   label="Do You have Khata Certificate?"
                   name="additionalInfo.khataCertificate"
                   id="additionalInfo.khataCertificate"
@@ -81,16 +81,16 @@ const AdditionalInfoForm: React.FC<AdditionalInfoFormProps> = ({
                   required={true}
                   placeholder="Select Khata Certificate"
                   disabled={disabled}
-                  //   aria-describedby={
-                  //     errors?.additionalInfo?.khataCertificate &&
-                  //     touched?.additionalInfo?.khataCertificate
-                  //       ? "additionalInfo.khataCertificate-error"
-                  //       : undefined
-                  //   }
+                  // aria-describedby={
+                  //   errors?.additionalInfo?.khataCertificate &&
+                  //   touched?.additionalInfo?.khataCertificate
+                  //     ? "additionalInfo.khataCertificate-error"
+                  //     : undefined
+                  // }
                 />
               </div>
               <div className="col-span-1">
-                <FormDropdown
+                <FormSelectDropdown
                   label="Do You have Sale Deed Certificate?"
                   name="additionalInfo.saleDeed"
                   id="additionalInfo.saleDeed"
@@ -107,18 +107,18 @@ const AdditionalInfoForm: React.FC<AdditionalInfoFormProps> = ({
                   required={true}
                   placeholder="Select Sale Deed Certificate"
                   disabled={disabled}
-                  //   aria-describedby={
-                  //     errors?.additionalInfo?.saleDeed &&
-                  //     touched?.additionalInfo?.saleDeed
-                  //       ? "additionalInfo.saleDeed-error"
-                  //       : undefined
-                  //   }
+                  // aria-describedby={
+                  //   errors?.additionalInfo?.saleDeed &&
+                  //   touched?.additionalInfo?.saleDeed
+                  //     ? "additionalInfo.saleDeed-error"
+                  //     : undefined
+                  // }
                 />
               </div>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
               <div className="col-span-1">
-                <FormDropdown
+                <FormSelectDropdown
                   label="Have you paid Property Tax?"
                   name="additionalInfo.propertyTax"
                   id="additionalInfo.propertyTax"
@@ -135,12 +135,12 @@ const AdditionalInfoForm: React.FC<AdditionalInfoFormProps> = ({
                   required={true}
                   placeholder="Select Property Tax Status"
                   disabled={disabled}
-                  //   aria-describedby={
-                  //     errors?.additionalInfo?.propertyTax &&
-                  //     touched?.additionalInfo?.propertyTax
-                  //       ? "additionalInfo.propertyTax-error"
-                  //       : undefined
-                  //   }
+                  // aria-describedby={
+                  //   errors?.additionalInfo?.propertyTax &&
+                  //   touched?.additionalInfo?.propertyTax
+                  //     ? "additionalInfo.propertyTax-error"
+                  //     : undefined
+                  // }
                 />
               </div>
               <div className="col-span-1">

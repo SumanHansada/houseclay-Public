@@ -2,13 +2,14 @@
 
 import { Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 
+import AsyncFallback from "@/components/AsyncFallback";
 import { Column, DataTable } from "@/components/DataTable";
 import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
 import { PaginationFooter } from "@/components/PaginationFooter";
+import { RenderUserStatus } from "@/components/status/RenderUserStatus";
 import { TitleAndSearchBar } from "@/components/TitleAndSearchBar";
-import { RenderUserStatus } from "@/components/user/RenderUserStatus";
 import { User } from "@/interfaces/User";
 import { useGetUsersQuery } from "@/store/apiSlice";
 
@@ -18,70 +19,61 @@ export const UsersManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 10;
 
-  const { data, isLoading, isError } = useGetUsersQuery({
-    page: currentPage - 1,
-    size: rowsPerPage,
-  });
-
-  const allUsers = useMemo<User[]>(() => {
-    return data?.content ?? [];
-  }, [data?.content]);
-
-  const totalPages = data?.totalPages ?? 0;
-  const isFirst = data?.first ?? true;
-  const isLast = data?.last ?? true;
-
-  const viewProfile = (phoneNo: string) => {
-    router.push(`/admin/user-details/${phoneNo}`);
-  };
-
-  const filteredUsers = useMemo(
-    () =>
-      allUsers.filter((user) =>
-        user.phoneNo.includes(searchValue.toLowerCase()),
-      ),
-    [allUsers, searchValue],
+  const {
+    data: paginatedUserData,
+    isLoading,
+    isError,
+    error,
+  } = useGetUsersQuery(
+    {
+      page: currentPage - 1,
+      size: rowsPerPage,
+    },
+    {
+      refetchOnMountOrArgChange: true,
+    },
   );
 
-  if (isLoading) {
+  if (isLoading || isError || !paginatedUserData) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <span>Loading users…</span>
-      </div>
+      <AsyncFallback
+        isLoading={isLoading}
+        isError={isError || !paginatedUserData}
+        error={error}
+        loadingMessage="Loading all users…"
+        errorMessage="Failed to fetch Users."
+      />
     );
   }
 
-  if (isError) {
-    return (
-      <div className="flex justify-center items-center h-64 text-red-500">
-        <span>Error loading users.</span>
-      </div>
-    );
-  }
+  const {
+    content: allUsers,
+    totalPages,
+    first: isFirst,
+    last: isLast,
+  } = paginatedUserData;
+
+  const filteredUsers = allUsers.filter((u) =>
+    u.phoneNo.includes(searchValue.toLowerCase()),
+  );
+
   const goToPage = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
+
   const nextPage = () => !isLast && setCurrentPage((p) => p + 1);
   const prevPage = () => !isFirst && setCurrentPage((p) => p - 1);
 
+  const viewProfile = (phoneNo: string) => {
+    router.push(`/admin/user-details/${phoneNo}`);
+  };
+
   const columns: Column<User>[] = [
-    {
-      key: "name",
-      label: "Name",
-      accessor: "name",
-    },
-    {
-      key: "email",
-      label: "Email",
-      accessor: "email",
-    },
-    {
-      key: "phoneNo",
-      label: "Phone No.",
-      accessor: "phoneNo",
-    },
+    { key: "name", label: "Name", accessor: "name" },
+    { key: "email", label: "Email", accessor: "email" },
+    { key: "phoneNo", label: "Phone No.", accessor: "phoneNo" },
     {
       key: "blacklisted",
       label: "Status",

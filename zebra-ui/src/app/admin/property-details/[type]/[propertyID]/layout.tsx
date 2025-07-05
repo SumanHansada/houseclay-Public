@@ -1,9 +1,31 @@
 "use client";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import {
+  useParams,
+  useRouter,
+  useSelectedLayoutSegment,
+} from "next/navigation";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
-import { PropertyDetailsTabEnum } from "@/common/enums";
+import { PropertyDetailsTabEnum } from "@/common/enum";
+import AsyncFallback from "@/components/AsyncFallback";
 import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
-// import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
+import { useGetPropertyByIdQuery } from "@/store/apiSlice";
+import {
+  setFulfilled,
+  setPending,
+  setRejected,
+} from "@/store/propertyDetailsSlice";
+import { ensureEnumValue } from "@/utils/enum";
+
+const tabs: { label: string; value: PropertyDetailsTabEnum }[] = [
+  { label: "Details", value: PropertyDetailsTabEnum.DETAILS },
+  { label: "Owner Details", value: PropertyDetailsTabEnum.OWNER_DETAILS },
+  { label: "Shortlist Users", value: PropertyDetailsTabEnum.SHORTLIST },
+  { label: "Contact Users", value: PropertyDetailsTabEnum.CONTACT },
+  { label: "View Users", value: PropertyDetailsTabEnum.VIEW },
+  { label: "Report Users", value: PropertyDetailsTabEnum.REPORT },
+];
 
 export default function PropertyDetailsLayout({
   children,
@@ -15,61 +37,57 @@ export default function PropertyDetailsLayout({
     propertyID: string;
   };
   const router = useRouter();
-  const pathname = usePathname();
+  const currentTabFromUrl = useSelectedLayoutSegment();
+  const dispatch = useDispatch();
 
-  //   const { data, isLoading, isError } = useGetUserByPhoneNoQuery(
-  //     { phoneNo: userPhoneNo },
-  //     { skip: !userPhoneNo },
-  //   );
+  const {
+    data: currentProperty,
+    isLoading,
+    isError,
+    error,
+  } = useGetPropertyByIdQuery({ id: propertyID });
+
+  useEffect(() => {
+    if (isLoading) {
+      dispatch(setPending());
+    } else if (isError) {
+      const errMsg =
+        typeof error === "string" ? error : "Unknown error fetching property";
+      dispatch(setRejected(errMsg));
+    } else if (currentProperty) {
+      dispatch(setFulfilled(currentProperty));
+    }
+  }, [isLoading, isError, currentProperty, error, dispatch]);
+
+  if (isLoading || isError || !currentProperty) {
+    return (
+      <AsyncFallback
+        isLoading={isLoading}
+        isError={isError || !currentProperty}
+        error={error}
+        loadingMessage="Loading property details…"
+        errorMessage="Failed to fetch property."
+      />
+    );
+  }
+
+  const activeTab = ensureEnumValue({
+    enumObj: PropertyDetailsTabEnum,
+    value: currentTabFromUrl,
+    fallback: PropertyDetailsTabEnum.DETAILS,
+  });
 
   const handleTabChange = (tab: string) => {
     router.push(`/admin/property-details/${type}/${propertyID}/${tab}`);
   };
 
-  //   if (isLoading || !data) {
-  //     return (
-  //       <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-  //         <span className="text-gray-500">Loading user details…</span>
-  //       </div>
-  //     );
-  //   }
-
-  //   if (isError) {
-  //     return (
-  //       <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-  //         <span className="text-red-500">Failed to fetch user details.</span>
-  //       </div>
-  //     );
-  //   }
-
-  const validTabValues = Object.values(
-    PropertyDetailsTabEnum,
-  ) as readonly string[];
-  const isValidTab = (
-    currentTab: string,
-  ): currentTab is PropertyDetailsTabEnum => {
-    return validTabValues.includes(currentTab);
-  };
-
-  const pathSegments = pathname.split("/");
-  const currentTabFromUrl = pathSegments[pathSegments.length - 1];
-
-  const activeTab: PropertyDetailsTabEnum = isValidTab(currentTabFromUrl)
-    ? currentTabFromUrl
-    : PropertyDetailsTabEnum.DETAILS;
-
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">
       <Tabs onTabChange={handleTabChange} defaultActive={activeTab}>
         <TabHeader>
-          <Tab label="Details" value={PropertyDetailsTabEnum.DETAILS} />
-          <Tab
-            label="Owner Details"
-            value={PropertyDetailsTabEnum.OWNER_DETAILS}
-          />
-          <Tab label="Shortlisted" value={PropertyDetailsTabEnum.SHORTLISTED} />
-          <Tab label="Contacted" value={PropertyDetailsTabEnum.CONTACTED} />
-          <Tab label="Viewed" value={PropertyDetailsTabEnum.VIEWED} />
+          {tabs.map((tab) => (
+            <Tab key={tab.value} label={tab.label} value={tab.value} />
+          ))}
         </TabHeader>
       </Tabs>
       <div className="flex-1 overflow-auto">{children}</div>

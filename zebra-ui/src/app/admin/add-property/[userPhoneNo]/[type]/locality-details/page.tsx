@@ -7,10 +7,10 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
-import FormDropdown from "@/components/common/FormDropdown";
 import FormInputField from "@/components/common/FormInputField";
-import FormPlacesAutocomplete from "@/components/common/FormPlacesAutoCompletes";
 import GoogleMaps from "@/components/common/GoogleMaps";
+import FormPlacesAutocomplete from "@/form-components/FormPlacesAutocomplete";
+import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 import { FormValues } from "@/interfaces/FormValues";
 import {
   FormType,
@@ -46,6 +46,23 @@ const LocalityDetailsPage: React.FC = () => {
   );
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
+
+  const onLocationSelect = (location: {
+    latitude: number;
+    longitude: number;
+    name?: string;
+    address?: string;
+    city?: string;
+  }) => {
+    setFieldValue("localityDetails.latitude", location.latitude);
+    setFieldValue("localityDetails.longitude", location.longitude);
+    if (location.name) {
+      setFieldValue("localityDetails.locationOrSocietyName", location.name);
+    }
+    if (location.address) {
+      setFieldValue("localityDetails.landmark", location.address);
+    }
+  };
 
   const localityDetailsString = JSON.stringify(values.localityDetails);
 
@@ -133,7 +150,7 @@ const LocalityDetailsPage: React.FC = () => {
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
           <div className="col-span-1">
-            <FormDropdown
+            <FormSelectDropdown
               label="City"
               name="localityDetails.city"
               id="localityDetails.city"
@@ -163,8 +180,13 @@ const LocalityDetailsPage: React.FC = () => {
               id="localityDetails.locationOrSocietyName"
               placeholder="Location / Society Name"
               required
-              pairWithGoogleMaps
-              googleMapsFieldName="localityDetails"
+              onLocationSelect={onLocationSelect}
+              containerClassName="w-full relative"
+              labelClassName="block text-sm font-medium text-gray-700 mb-1"
+              inputClassName="w-full p-3 border rounded-xl"
+              dropdownClassName="absolute z-10 mt-1 py-1 w-full bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-auto"
+              dropdownItemClassName="py-1 px-3 hover:bg-gray-100 cursor-pointer flex items-center"
+              errorClassName="mt-1 text-sm text-red-600"
             />
           </div>
         </div>

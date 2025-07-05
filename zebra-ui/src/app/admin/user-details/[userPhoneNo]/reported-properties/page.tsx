@@ -3,9 +3,8 @@ import { useParams, useRouter } from "next/navigation";
 
 import { Column } from "@/components/DataTable";
 import { PropertyInfo } from "@/interfaces/Property";
-import { dummyReportProperties } from "@/mock/userDetailsDummy";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
-import { createCommonColumns } from "@/utils/commonPropertyColumns";
+import { buildPropertyColumns } from "@/utils/table/buildPropertyColumns";
 
 import { PropertiesTableView } from "../../components/PropertiesTableView";
 
@@ -25,7 +24,7 @@ const extraCols: Column<PropertyRow>[] = [
     key: "reportTime",
     label: "Report Time",
     accessor: "reportTime",
-    render: (row) => new Date(row.reportTime).toLocaleString(),
+    render: (row) => new Date(row.reportTime).toLocaleString("en-IN"),
   },
 ];
 
@@ -33,10 +32,8 @@ const ReportedPropertiesPage: React.FC = () => {
   const router = useRouter();
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
   const { data } = useGetUserByPhoneNoQuery({ phoneNo: userPhoneNo });
-  console.log(data!.user.reportProperties);
 
-  // const { reportProperties } = data!.user;
-  const reportProperties = dummyReportProperties;
+  const { reportProperties } = data!.user;
 
   const viewPropertyDetails = (type: string, propertyID: string) => {
     router.push(`/admin/property-details/${type}/${propertyID}`);
@@ -51,8 +48,7 @@ const ReportedPropertiesPage: React.FC = () => {
     }),
   );
 
-  const commonColumns: Column<PropertyRow>[] =
-    createCommonColumns(viewPropertyDetails);
+  const commonColumns = buildPropertyColumns(viewPropertyDetails);
 
   const actionIdx = commonColumns.findIndex((col) => col.key === "status");
 

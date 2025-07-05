@@ -15,10 +15,12 @@ import {
 import { extractS3KeyFromUrl } from "@/common/utils";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
-import { AddFlatmatesPropertyRequest } from "@/interfaces/FlatmatesDetails";
+import {
+  PostFlatmatesPropertyRequest,
+  PostRentPropertyRequest,
+  PostResalePropertyRequest,
+} from "@/interfaces/api";
 import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
-import { AddRentPropertyRequest } from "@/interfaces/RentalDetails";
-import { AddResalePropertyRequest } from "@/interfaces/ResaleDetails";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -119,7 +121,6 @@ export default function AddPropertyTypeLayout({
           S3Url: imagesS3Url[photo.file.name],
         };
       });
-      // console.log(photosToUpload);
       uploadFiles(photosToUpload);
     }
   };
@@ -270,7 +271,7 @@ export default function AddPropertyTypeLayout({
             propertyTax: _propertyTax,
             ...rentalAdditionalInfo
           } = additionalInfo || {};
-          const data: AddRentPropertyRequest = {
+          const data: PostRentPropertyRequest = {
             ...basePropertyData,
             ...propertyDetails,
             ...rentalDetails,
@@ -288,7 +289,7 @@ export default function AddPropertyTypeLayout({
             whoWillShowProperty: _whoWillShowProperty,
             ...resaleAdditionalInfo
           } = additionalInfo || {};
-          const data: AddResalePropertyRequest = {
+          const data: PostResalePropertyRequest = {
             ...basePropertyData,
             ...propertyDetails,
             ...resaleDetails,
@@ -315,7 +316,7 @@ export default function AddPropertyTypeLayout({
             propertyTax: _propertyTax,
             ...flatmatesAdditionalInfo
           } = additionalInfo || {};
-          const data: AddFlatmatesPropertyRequest = {
+          const data: PostFlatmatesPropertyRequest = {
             ...basePropertyData,
             ...flatmatesPropertyDetails,
             ...flatmatesDetails,

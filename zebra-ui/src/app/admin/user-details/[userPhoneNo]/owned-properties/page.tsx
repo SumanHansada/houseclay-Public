@@ -1,0 +1,43 @@
+"use client";
+import { useParams, useRouter } from "next/navigation";
+
+import { PropertyInfo } from "@/interfaces/Property";
+import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
+import { buildPropertyColumns } from "@/utils/table/buildPropertyColumns";
+
+import { PropertiesTableView } from "../../components/PropertiesTableView";
+
+interface PropertyRow extends PropertyInfo {
+  _serial: number;
+}
+
+const OwnedPropertiesPage: React.FC = () => {
+  const { userPhoneNo } = useParams() as { userPhoneNo: string };
+  const router = useRouter();
+  const { data } = useGetUserByPhoneNoQuery({ phoneNo: userPhoneNo });
+
+  const { ownedProperties } = data!.user;
+
+  const viewPropertyDetails = (type: string, propertyID: string) => {
+    router.push(`/admin/property-details/${type}/${propertyID}`);
+  };
+
+  const rows: PropertyRow[] = ownedProperties.map((propertyInfo, index) => ({
+    ...propertyInfo,
+    _serial: index + 1,
+  }));
+
+  const columns = buildPropertyColumns(viewPropertyDetails);
+
+  return (
+    <div className="h-full">
+      <PropertiesTableView
+        tableTitle="Owned Properties"
+        columns={columns}
+        rows={rows}
+      />
+    </div>
+  );
+};
+
+export default OwnedPropertiesPage;

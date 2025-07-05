@@ -11,12 +11,12 @@ export const OwnerDetails = ({
   currentUser,
   viewUserDetails,
 }: OwnerDetailsProps) => {
-  const { name, email, phoneNo, createdAt, blacklisted } = currentUser;
+  const { name, email, phoneNo, blacklisted } = currentUser;
   const currentStatus = blacklisted
     ? "The user is blacklisted"
     : "The user is active";
   return (
-    <>
+    <div>
       <div className="flex justify-between items-center">
         <h2 className="text-3xl">Owner Details</h2>
         <button
@@ -34,10 +34,6 @@ export const OwnerDetails = ({
             { label: "Name", value: name },
             { label: "Phone", value: phoneNo },
             { label: "Email", value: email },
-            {
-              label: "Joined On",
-              value: new Date(createdAt).toLocaleDateString(),
-            },
             { label: "Blacklisted Status", value: currentStatus },
           ].map(({ label, value }) => (
             <div key={label} className="flex flex-col gap-2 text-lg">
@@ -52,6 +48,6 @@ export const OwnerDetails = ({
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };

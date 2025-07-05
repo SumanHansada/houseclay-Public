@@ -34,9 +34,10 @@ import * as Yup from "yup";
 
 import FormCalendarField from "@/components/common/FormCalendarField";
 import FormCheckbox from "@/components/common/FormCheckbox";
-import FormDropdown from "@/components/common/FormDropdown";
-import FormINRCurrencyField from "@/components/common/FormINRCurrencyField";
-import FormRadioGroup from "@/components/common/FormRadioGroup";
+import FormCurrencyField from "@/components/common/FormCurrencyField";
+import FormRadioGroup from "@/form-components/FormRadioGroup";
+import FormSelectDropdown from "@/form-components/FormSelectDropdown";
+import { useFormikSection } from "@/hooks/useFormikSection";
 import { FormValues } from "@/interfaces/FormValues";
 import {
   FormType,
@@ -185,6 +186,15 @@ const RentalDetailsPage: React.FC = () => {
   const rentalDetailsString = JSON.stringify(values.rentalDetails);
   const flatmatesDetailsString = JSON.stringify(values.flatmatesDetails);
 
+  const { errors: rdErrors, touched: rdTouched } = useFormikSection<
+    FormValues,
+    "rentalDetails"
+  >(errors, touched, "rentalDetails");
+  const { errors: fdErrors, touched: fdTouched } = useFormikSection<
+    FormValues,
+    "flatmatesDetails"
+  >(errors, touched, "flatmatesDetails");
+
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {
@@ -202,7 +212,7 @@ const RentalDetailsPage: React.FC = () => {
         // Clear any previous errors
         setErrors({});
         // Set form data in the store
-        if (formKey === "rentForm") {
+        if (formKey === "rentForm" && values.rentalDetails) {
           dispatch(
             setRentalDetails({
               type: formKey,
@@ -210,7 +220,7 @@ const RentalDetailsPage: React.FC = () => {
             }),
           );
         }
-        if (formKey === "flatmatesForm") {
+        if (formKey === "flatmatesForm" && values.flatmatesDetails) {
           dispatch(
             setFlatmatesDetails({
               type: formKey,
@@ -262,7 +272,7 @@ const RentalDetailsPage: React.FC = () => {
       <div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
-            <FormINRCurrencyField
+            <FormCurrencyField
               name={
                 formKey === "rentForm"
                   ? "rentalDetails.rent"
@@ -293,7 +303,7 @@ const RentalDetailsPage: React.FC = () => {
               />
             )}
             {formKey === "flatmatesForm" && (
-              <FormDropdown
+              <FormSelectDropdown
                 label="Parking"
                 name="flatmatesForm.parking"
                 id="flatmatesForm.parking"
@@ -307,8 +317,7 @@ const RentalDetailsPage: React.FC = () => {
                 required={true}
                 placeholder="Select Parking"
                 aria-describedby={
-                  errors?.flatmatesDetails?.parking &&
-                  touched?.flatmatesDetails?.parking
+                  fdErrors?.parking && fdTouched?.parking
                     ? "flatmatesDetails.parking-error"
                     : undefined
                 }
@@ -318,7 +327,7 @@ const RentalDetailsPage: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
-            <FormINRCurrencyField
+            <FormCurrencyField
               name={
                 formKey === "rentForm"
                   ? "rentalDetails.maintenanceCharges"
@@ -335,7 +344,7 @@ const RentalDetailsPage: React.FC = () => {
             />
           </div>
           <div className="col-span-1">
-            <FormINRCurrencyField
+            <FormCurrencyField
               name={
                 formKey === "rentForm"
                   ? "rentalDetails.deposit"
@@ -367,7 +376,7 @@ const RentalDetailsPage: React.FC = () => {
             />
           </div>
           <div className="col-span-1">
-            <FormDropdown
+            <FormSelectDropdown
               label="Furnishing"
               name={
                 formKey === "rentForm"
@@ -394,12 +403,10 @@ const RentalDetailsPage: React.FC = () => {
               placeholder="Select furnishing"
               aria-describedby={
                 formKey === "rentForm"
-                  ? errors?.rentalDetails?.furnishing &&
-                    touched?.rentalDetails?.furnishing
+                  ? rdErrors?.furnishing && rdTouched?.furnishing
                     ? "rentalDetails.furnishing-error"
                     : undefined
-                  : errors?.flatmatesDetails?.furnishing &&
-                      touched?.flatmatesDetails?.furnishing
+                  : fdErrors?.furnishing && fdTouched?.furnishing
                     ? "flatmatesDetails.furnishing-error"
                     : undefined
               }
@@ -484,7 +491,7 @@ const RentalDetailsPage: React.FC = () => {
         )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
-            <FormDropdown
+            <FormSelectDropdown
               label="Water Supply"
               name={
                 formKey === "rentForm"
@@ -511,19 +518,17 @@ const RentalDetailsPage: React.FC = () => {
               placeholder="Select Water supply"
               aria-describedby={
                 formKey === "rentForm"
-                  ? errors?.rentalDetails?.waterSupply &&
-                    touched?.rentalDetails?.waterSupply
+                  ? rdErrors?.waterSupply && rdTouched?.waterSupply
                     ? "rentalDetails.waterSupply-error"
                     : undefined
-                  : errors?.flatmatesDetails?.waterSupply &&
-                      touched?.flatmatesDetails?.waterSupply
+                  : fdErrors?.waterSupply && fdTouched?.waterSupply
                     ? "flatmatesDetails.waterSupply-error"
                     : undefined
               }
             />
           </div>
           <div className="col-span-1">
-            <FormDropdown
+            <FormSelectDropdown
               label="Power Backup"
               name={
                 formKey === "rentForm"
@@ -550,12 +555,10 @@ const RentalDetailsPage: React.FC = () => {
               placeholder="Select Power backup"
               aria-describedby={
                 formKey === "rentForm"
-                  ? errors?.rentalDetails?.powerBackup &&
-                    touched?.rentalDetails?.powerBackup
+                  ? rdErrors?.powerBackup && rdTouched?.powerBackup
                     ? "rentalDetails.powerBackup-error"
                     : undefined
-                  : errors?.flatmatesDetails?.powerBackup &&
-                      touched?.flatmatesDetails?.powerBackup
+                  : fdErrors?.powerBackup && fdTouched?.powerBackup
                     ? "flatmatesDetails.powerBackup-error"
                     : undefined
               }
@@ -565,7 +568,7 @@ const RentalDetailsPage: React.FC = () => {
         {formKey === "rentForm" && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="col-span-1">
-              <FormDropdown
+              <FormSelectDropdown
                 label="Parking"
                 name="rentalDetails.parking"
                 id="rentalDetails.parking"
@@ -579,8 +582,7 @@ const RentalDetailsPage: React.FC = () => {
                 required={true}
                 placeholder="Select Parking"
                 aria-describedby={
-                  errors?.rentalDetails?.parking &&
-                  touched?.rentalDetails?.parking
+                  rdErrors?.parking && rdTouched?.parking
                     ? "rentalDetails.parking-error"
                     : undefined
                 }
@@ -622,8 +624,8 @@ const RentalDetailsPage: React.FC = () => {
                 label="Attached Balcony"
                 columns={2}
                 options={[
-                  { value: "true", label: "Yes" },
-                  { value: "false", label: "No" },
+                  { value: true, label: "Yes" },
+                  { value: false, label: "No" },
                 ]}
                 required
                 horizontal

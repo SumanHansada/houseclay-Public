@@ -1,78 +1,25 @@
-import { PropertyPhoto } from "./PropertyPhoto";
-import { User } from "./User";
-
-export enum PropertyStatusEnum {
-  PENDING = "PENDING_VERIFICATION",
-  VERIFIED = "VERIFIED",
-  REPORT = "REPORT",
-}
-
-export type PropertyCategory = "Rent" | "Flatmate" | "Resale";
+import { PropertyCategoryEnum, PropertyStatusEnum } from "@/common/enum";
 
 export interface PropertyInfo {
   propertyID: string;
-  title: string;
-  type: string;
-  config: string;
+  propertyCategory: PropertyCategoryEnum;
+  price: string | null;
   location: string;
-  price: string;
-  createdAt: string;
+  bhkType: string;
+  propertyState: PropertyStatusEnum;
+  createdOn: string;
+  updatedOn: string | null;
   availableFrom: string;
-  lastModified: string | null;
-  status: string;
 }
 
-export interface GetAllPropertiesResponse {
-  content: PropertyInfo[];
-  pageable: {
-    pageNumber: number;
-    pageSize: number;
-  };
-  totalPages: number;
-  totalElements: number;
-  last: boolean;
-  first: boolean;
-  numberOfElements: number;
-  size: number;
-  number: number;
+export interface PropertyUpdate {
+  updateType: string;
+  updateTime: string;
+  updateBy: string;
+  userType: string;
 }
 
-// interface PropertyBase {
-//   propertyID: string;
-//   title: string | null;
-//   propertyType: "Apartment" | "Villa" | "House" | "Plot" | "Commercial";
-//   builtUpArea: number;
-//   facing: "East" | "West" | "North" | "South" | "North-East" | "North-West" | "South-East" | "South-West" | null;
-//   bhkType: "1BHK" | "2BHK" | "3BHK" | "4BHK" | "5+BHK";
-//   floor: number;
-//   totalFloors: number;
-//   floorType: "Mosaic" | "Marble" | "Granite" | "Vitrified" | "Wooden" | null;
-//   description: string;
-//   city: string;
-//   locationOrSocietyName: string;
-//   landmark: string;
-//   latitude: number;
-//   longitude: number;
-//   furnishing: "Unfurnished" | "Semi-funnished" | "Fully-furnished";
-//   propertyAge: "Under Construction" | "Less than 1 year" | "1-5 years" | "5-10 years" | "More than 10 year" | null;
-//   waterSupply: "borewell" | "tanker" | "municipal";
-//   powerBackup: "none" | "partial" | "full";
-//   parking: boolean;
-//   availableFrom: string; // ISO date string
-//   propertyState: "PENDING_VERIFICATION" | "ACTIVE" | "REJECTED" | "INACTIVE";
-//   images: string[];
-//   amenities: string[];
-//   propertyUpdates: Array<{
-//     updateType: string;
-//     updateTime: string;
-//     updateBy: string;
-//     userType: string;
-//   }>;
-//   premium: boolean;
-//   managed: boolean;
-// }
-
-interface PropertyBase {
+export interface PropertyBase {
   propertyID: string;
   title: string | null;
   propertyType: string;
@@ -88,7 +35,7 @@ interface PropertyBase {
   landmark: string;
   latitude: number;
   longitude: number;
-  furnishing: string;
+  furnishing: string | null;
   propertyAge: string | null;
   waterSupply: string;
   powerBackup: string;
@@ -97,45 +44,42 @@ interface PropertyBase {
   propertyState: string;
   images: string[];
   amenities: string[];
-  propertyUpdates: Array<{
-    updateType: string;
-    updateTime: string;
-    updateBy: string;
-    userType: string;
-  }>;
+  preferredTenants: string[];
+  propertyCategory: PropertyCategoryEnum;
+  propertyUpdates: PropertyUpdate[];
   premium: boolean;
   managed: boolean;
 }
 
 export interface RentProperty extends PropertyBase {
-  propertyCategory: "Rent";
+  propertyCategory: PropertyCategoryEnum.RENT;
   rent: number;
   deposit: number;
   maintenanceCharges: number;
   rentNegotiable: boolean;
-  preferredTenants: string[];
   petsAllowed: boolean | null;
-  nonVegAllowed: boolean;
+  nonVegAllowed: boolean | null;
 }
 
 export interface FlatmateProperty extends PropertyBase {
-  propertyCategory: "Flatmate";
+  propertyCategory: PropertyCategoryEnum.FLATMATE;
   rent: number;
-  maintenanceCharges: number;
   depositCharges: number;
-  tenantType: string;
+  maintenanceCharges: number;
+  tenantType: "Male" | "Female" | "Any";
   attachedBathroom: boolean;
   attachedBalcony: boolean;
   smokingPreference: string;
+  nonVegAllowed: boolean | null;
   drinkingPreference: string;
 }
 
 export interface ResaleProperty extends PropertyBase {
-  propertyCategory: "Resale";
-  ownershipType: string;
-  priceNegotiable: boolean;
-  underLoan: boolean;
+  propertyCategory: PropertyCategoryEnum.RESALE;
   price: number;
+  priceNegotiable: boolean;
+  ownershipType: string;
+  underLoan: boolean;
   bathrooms: number;
   balcony: number;
   khataCertificate: string;
@@ -145,68 +89,60 @@ export interface ResaleProperty extends PropertyBase {
 
 export type AnyProperty = RentProperty | FlatmateProperty | ResaleProperty;
 
-export interface GetPropertyByIDResponse {
-  propertyDetails: AnyProperty;
-  userDetails: User;
-  contactedUsers: User[];
-  viewedUsers: User[];
-  shortlistedUsers: User[];
-}
-
-export interface PropertyDetailsFormValues {
-  propertyDetails: {
-    propertyType: string;
-    bhkType: string;
-    builtUpArea: number | "";
-    floor: number | "";
-    totalFloors: number | "";
-    propertyAge: string;
-    facing: string;
-    floorType: string;
-    description: string;
-    bathrooms: number | "";
-    balcony: number | "";
-  };
-  localityDetails: {
-    city: string;
-    locationOrSocietyName: string;
-    landmark: string;
-    latitude: number;
-    longitude: number;
-  };
-  rentalDetails?: {
-    // Only for Rent/Flatmate
-    rent: number | "";
-    deposit: number | "";
-    maintenanceCharges: number | "";
-    rentNegotiable: boolean;
-    preferredTenants: string[];
-    petsAllowed: boolean;
-    nonVegAllowed: boolean;
-    // Flatmate specific
-    tenantType: string;
-    attachedBathroom: boolean;
-    attachedBalcony: boolean;
-    smokingPreference: string;
-    drinkingPreference: string;
-  };
-  resaleDetails?: {
-    // Only for Resale
-    price: number | "";
-    priceNegotiable: boolean;
-    ownershipType: string;
-    underLoan: boolean;
-  };
-  additionalInfo: {
-    furnishing: string;
-    parking: boolean;
-    waterSupply: string;
-    powerBackup: string;
-    availableFrom: Date | null;
-    // Resale specific
-    khataCertificate: string;
-    saleDeed: boolean;
-    propertyTax: boolean;
-  };
-  images: PropertyPhoto[];
-}
+// export interface PropertyDetailsFormValues {
+//   propertyDetails: {
+//     propertyType: string;
+//     bhkType: string;
+//     builtUpArea: number | "";
+//     floor: number | "";
+//     totalFloors: number | "";
+//     propertyAge: string;
+//     facing: string;
+//     floorType: string;
+//     description: string;
+//     bathrooms: number | "";
+//     balcony: number | "";
+//   };
+//   localityDetails: {
+//     city: string;
+//     locationOrSocietyName: string;
+//     landmark: string;
+//     latitude: number;
+//     longitude: number;
+//   };
+//   rentalDetails?: {
+//     // Only for Rent/Flatmate
+//     rent: number | "";
+//     deposit: number | "";
+//     maintenanceCharges: number | "";
+//     rentNegotiable: boolean;
+//     preferredTenants: string[];
+//     petsAllowed: boolean;
+//     nonVegAllowed: boolean;
+//     // Flatmate specific
+//     tenantType: string;
+//     attachedBathroom: boolean;
+//     attachedBalcony: boolean;
+//     smokingPreference: string;
+//     drinkingPreference: string;
+//   };
+//   resaleDetails?: {
+//     // Only for Resale
+//     price: number | "";
+//     priceNegotiable: boolean;
+//     ownershipType: string;
+//     underLoan: boolean;
+//   };
+//   additionalInfo: {
+//     furnishing: string;
+//     parking: boolean;
+//     waterSupply: string;
+//     powerBackup: string;
+//     availableFrom: Date | null;
+//     // Resale specific
+//     khataCertificate: string;
+//     saleDeed: boolean;
+//     propertyTax: boolean;
+//   };
+//   images: PropertyPhoto[];
+// }

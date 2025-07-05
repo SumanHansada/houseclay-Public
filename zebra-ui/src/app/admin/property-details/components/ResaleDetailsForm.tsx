@@ -21,10 +21,10 @@ import WifiIconSvg from "public/icons/amenities/wifi.svg";
 
 import FormCalendarField from "@/components/common/FormCalendarField";
 import FormCheckbox from "@/components/common/FormCheckbox";
-import FormDropdown from "@/components/common/FormDropdown";
-import FormINRCurrencyField from "@/components/common/FormINRCurrencyField";
+import FormCurrencyField from "@/components/common/FormCurrencyField";
 import FormFormNumberField from "@/components/common/FormNumberField";
-import FormRadioGroup from "@/components/common/FormRadioGroup";
+import FormRadioGroup from "@/form-components/FormRadioGroup";
+import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 import { FormType } from "@/store/listPropertySlice";
 
 interface ResaleDetailsFormProps {
@@ -88,13 +88,13 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({
       <div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
-            <FormINRCurrencyField
+            <FormCurrencyField
               name="resaleDetails.price"
               id="resaleDetails.price"
               label="Expected Price"
               prefix={<IndianRupee size={20} />}
               required
-              //   disabled={disabled}
+              // disabled={disabled}
             />
           </div>
           <div className="col-span-1">
@@ -104,7 +104,7 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({
               dateFormat="yyyy-MM-dd"
               className="w-full"
               required
-              //   disabled={disabled}
+              disabled={disabled}
             />
           </div>
         </div>
@@ -115,7 +115,7 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({
               id="resaleDetails.bathrooms"
               label="Bathroom(s)"
               required
-              //   disabled={disabled}
+              disabled={disabled}
             />
           </div>
           <div className="col-span-1">
@@ -123,7 +123,7 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({
               name="resaleDetails.balcony"
               id="resaleDetails.balcony"
               label="Balcony"
-              //   disabled={disabled}
+              disabled={disabled}
             />
           </div>
         </div>
@@ -138,7 +138,7 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({
                 { value: false, label: "No" },
               ]}
               horizontal
-              //   disabled={disabled}
+              // disabled={disabled}
             />
           </div>
           <div className="col-span-1">
@@ -152,13 +152,13 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({
               ]}
               required
               horizontal
-              //   disabled={disabled}
+              // disabled={disabled}
             />
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
-            <FormDropdown
+            <FormSelectDropdown
               label="Water Supply"
               name="resaleDetails.waterSupply"
               id="resaleDetails.waterSupply"
@@ -175,16 +175,16 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({
               ]}
               placeholder="Select Water supply"
               disabled={disabled}
-              //   aria-describedby={
-              //     errors?.resaleDetails?.waterSupply &&
-              //     touched.resaleDetails?.waterSupply
-              //       ? "resaleDetails.waterSupply-error"
-              //       : undefined
-              //   }
+              // aria-describedby={
+              //   errors?.resaleDetails?.waterSupply &&
+              //   touched.resaleDetails?.waterSupply
+              //     ? "resaleDetails.waterSupply-error"
+              //     : undefined
+              // }
             />
           </div>
           <div className="col-span-1">
-            <FormDropdown
+            <FormSelectDropdown
               label="Power Backup"
               name="resaleDetails.powerBackup"
               id="resaleDetails.powerBackup"
@@ -201,18 +201,18 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({
               ]}
               placeholder="Select Power backup"
               disabled={disabled}
-              //   aria-describedby={
-              //     errors?.resaleDetails?.powerBackup &&
-              //     touched?.resaleDetails?.powerBackup
-              //       ? "resaleDetails.powerBackup-error"
-              //       : undefined
-              //   }
+              // aria-describedby={
+              //   errors?.resaleDetails?.powerBackup &&
+              //   touched?.resaleDetails?.powerBackup
+              //     ? "resaleDetails.powerBackup-error"
+              //     : undefined
+              // }
             />
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
-            <FormDropdown
+            <FormSelectDropdown
               label="Furnishing"
               name="resaleDetails.furnishing"
               id="resaleDetails.furnishing"
@@ -230,16 +230,16 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({
               required={true}
               placeholder="Select furnishing"
               disabled={disabled}
-              //   aria-describedby={
-              //     errors?.resaleDetails?.furnishing &&
-              //     touched?.resaleDetails?.furnishing
-              //       ? "resaleDetails.furnishing-error"
-              //       : undefined
-              //   }
+              // aria-describedby={
+              //   errors?.resaleDetails?.furnishing &&
+              //   touched?.resaleDetails?.furnishing
+              //     ? "resaleDetails.furnishing-error"
+              //     : undefined
+              // }
             />
           </div>
           <div className="col-span-1">
-            <FormDropdown
+            <FormSelectDropdown
               label="Parking"
               name="resaleDetails.parking"
               id="resaleDetails.parking"
@@ -253,12 +253,12 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({
               required={true}
               placeholder="Select Parking"
               disabled={disabled}
-              //   aria-describedby={
-              //     errors?.resaleDetails?.parking &&
-              //     touched?.resaleDetails?.parking
-              //       ? "resaleDetails.parking-error"
-              //       : undefined
-              //   }
+              // aria-describedby={
+              //   errors?.resaleDetails?.parking &&
+              //   touched?.resaleDetails?.parking
+              //     ? "resaleDetails.parking-error"
+              //     : undefined
+              // }
             />
           </div>
         </div>

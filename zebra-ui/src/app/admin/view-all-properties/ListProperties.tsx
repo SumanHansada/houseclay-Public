@@ -3,12 +3,13 @@
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-import { Column, DataTable } from "@/components/DataTable";
+import AsyncFallback from "@/components/AsyncFallback";
+import { DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/PaginationFooter";
 import { SearchAndFilterBar } from "@/components/SearchAndFilterBar";
-import { GetAllPropertiesResponse, PropertyInfo } from "@/interfaces/Property";
-import { dummyGetAllProperties } from "@/mock/propertyDetailsDummy";
-import { createCommonColumns } from "@/utils/commonPropertyColumns";
+import { PropertyInfo } from "@/interfaces/Property";
+import { useGetPropertiesQuery } from "@/store/apiSlice";
+import { buildPropertyColumns } from "@/utils/table/buildPropertyColumns";
 
 interface PropertyRow extends PropertyInfo {
   _serial: number;
@@ -18,35 +19,41 @@ export const ListProperties = () => {
   const router = useRouter();
   // const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  // const rowsPerPage = 10;
+  const rowsPerPage = 10;
 
-  // const { data: paginatedPropertyData, isLoading, isError } = useGetAllProperties({
-  //   page: currentPage - 1,
-  //   size: rowsPerPage,
-  // });
-  const paginatedPropertyData: GetAllPropertiesResponse = dummyGetAllProperties;
+  const {
+    data: paginatedPropertyData,
+    isLoading,
+    isError,
+    error,
+  } = useGetPropertiesQuery(
+    {
+      page: currentPage - 1,
+      size: rowsPerPage,
+    },
+    {
+      refetchOnMountOrArgChange: true,
+    },
+  );
 
-  // if (isLoading || !data) {
-  //   return (
-  //     <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-  //       <span className="text-gray-500">Loading user details…</span>
-  //     </div>
-  //   );
-  // }
-  // if (isError) {
-  //   return (
-  //     <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-  //       <span className="text-red-500">Failed to fetch user details.</span>
-  //     </div>
-  //   );
-  // }
+  if (isLoading || isError || !paginatedPropertyData) {
+    return (
+      <AsyncFallback
+        isLoading={isLoading}
+        isError={isError || !paginatedPropertyData}
+        error={error}
+        loadingMessage="Loading all properties…"
+        errorMessage="Failed to fetch Properties."
+      />
+    );
+  }
 
-  // const propertyList: PropertyInfo[] = data.content;
-  const propertyList: PropertyInfo[] = paginatedPropertyData.content;
-
-  const totalPages = paginatedPropertyData.totalPages;
-  const isFirst = paginatedPropertyData.first;
-  const isLast = paginatedPropertyData.last;
+  const {
+    content: propertyList,
+    totalPages,
+    first: isFirst,
+    last: isLast,
+  } = paginatedPropertyData;
 
   const viewPropertyDetails = (type: string, propertyID: string) => {
     router.push(`/admin/property-details/${type}/${propertyID}`);
@@ -65,8 +72,7 @@ export const ListProperties = () => {
   const nextPage = () => !isLast && setCurrentPage((p) => p + 1);
   const prevPage = () => !isFirst && setCurrentPage((p) => p - 1);
 
-  const columns: Column<PropertyRow>[] =
-    createCommonColumns(viewPropertyDetails);
+  const columns = buildPropertyColumns(viewPropertyDetails);
 
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">

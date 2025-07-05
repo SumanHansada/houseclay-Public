@@ -2,11 +2,9 @@
 
 import { useParams, useRouter } from "next/navigation";
 
-import { Column } from "@/components/DataTable";
 import { PropertyInfo } from "@/interfaces/Property";
-import { dummyProperties } from "@/mock/userDetailsDummy";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
-import { createCommonColumns } from "@/utils/commonPropertyColumns";
+import { buildPropertyColumns } from "@/utils/table/buildPropertyColumns";
 
 import { PropertiesTableView } from "../../components/PropertiesTableView";
 
@@ -18,10 +16,8 @@ const ViewedPropertiesPage: React.FC = () => {
   const router = useRouter();
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
   const { data } = useGetUserByPhoneNoQuery({ phoneNo: userPhoneNo });
-  console.log(data!.user.viewedProperties);
 
-  // const { viewedProperties } = data!.user;
-  const viewedProperties = dummyProperties;
+  const { viewedProperties } = data!.user;
 
   const viewPropertyDetails = (type: string, propertyID: string) => {
     router.push(`/admin/property-details/${type}/${propertyID}`);
@@ -32,8 +28,7 @@ const ViewedPropertiesPage: React.FC = () => {
     _serial: index + 1,
   }));
 
-  const columns: Column<PropertyRow>[] =
-    createCommonColumns(viewPropertyDetails);
+  const columns = buildPropertyColumns(viewPropertyDetails);
 
   return (
     <div className="h-full">

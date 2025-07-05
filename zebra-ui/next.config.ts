@@ -3,7 +3,14 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   images: {
-    remotePatterns: [{ hostname: "randomuser.me" }],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "houseclay.s3.ap-southeast-2.amazonaws.com",
+        pathname: "/**", // allow every key under the bucket
+      },
+      { hostname: "randomuser.me" },
+    ],
   },
   turbopack: {
     rules: {

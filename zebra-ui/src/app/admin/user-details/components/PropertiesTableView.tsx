@@ -1,8 +1,9 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/PaginationFooter";
+import { useLocalPagination } from "@/hooks/useLocalPagination";
 
 interface PropertiesTableViewProps<
   RowType extends { propertyID: string; _serial: number },
@@ -17,23 +18,17 @@ export function PropertiesTableView<
   RowType extends { propertyID: string; _serial: number },
 >(props: PropertiesTableViewProps<RowType>) {
   const { tableTitle, columns, rows, rowsPerPage = 10 } = props;
-  const [currentPage, setCurrentPage] = useState(1);
 
-  const totalRows = rows.length;
-  const totalPages = Math.ceil(totalRows / rowsPerPage);
-  const isFirst = currentPage === 1;
-  const isLast = currentPage === totalPages;
-
-  const paginatedRows = useMemo(() => {
-    const start = (currentPage - 1) * rowsPerPage;
-    return rows.slice(start, start + rowsPerPage);
-  }, [rows, currentPage, rowsPerPage]);
-
-  const goToPage = (page: number) => {
-    if (page >= 1 && page <= totalPages) setCurrentPage(page);
-  };
-  const nextPage = () => !isLast && setCurrentPage((p) => p + 1);
-  const prevPage = () => !isFirst && setCurrentPage((p) => p - 1);
+  const {
+    currentPage,
+    paginatedRows,
+    totalPages,
+    isFirst,
+    isLast,
+    goToPage,
+    nextPage,
+    prevPage,
+  } = useLocalPagination(rows, rowsPerPage);
 
   return (
     <div className="flex flex-col h-full">

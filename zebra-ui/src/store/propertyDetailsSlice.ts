@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { GetPropertyByIDResponse } from "@/interfaces/Property";
+import { GetPropertyByIdResponse } from "@/interfaces/api";
 
-import { RootState } from "./store";
+type Status = "idle" | "loading" | "succeeded" | "failed";
 
 interface PropertyDetailsState {
-  data: GetPropertyByIDResponse | null;
-  status: "idle" | "loading" | "succeeded" | "failed";
+  data: GetPropertyByIdResponse | null;
+  status: Status;
   error: string | null;
 }
 
@@ -20,32 +20,28 @@ const propertyDetailsSlice = createSlice({
   name: "propertyDetails",
   initialState,
   reducers: {
-    setPropertyData: (
-      state,
-      action: PayloadAction<GetPropertyByIDResponse>,
-    ) => {
+    setPending(state) {
+      state.status = "loading";
+      state.error = null;
+    },
+    setFulfilled(state, action: PayloadAction<GetPropertyByIdResponse>) {
       state.data = action.payload;
       state.status = "succeeded";
       state.error = null;
     },
-    setPropertyLoading: (state) => {
-      state.status = "loading";
-    },
-    setPropertyError: (state, action: PayloadAction<string>) => {
+    setRejected(state, action: PayloadAction<string>) {
       state.status = "failed";
       state.error = action.payload;
     },
+    /** optional field‑level patches while editing */
+    patch(state, action: PayloadAction<Partial<GetPropertyByIdResponse>>) {
+      if (state.data) Object.assign(state.data, action.payload);
+    },
+    reset: () => initialState,
   },
 });
 
-export const { setPropertyData, setPropertyLoading, setPropertyError } =
+export const { setPending, setFulfilled, setRejected, patch, reset } =
   propertyDetailsSlice.actions;
-
-export const selectPropertyDetails = (state: RootState) =>
-  state.propertyDetails.data?.propertyDetails;
-export const selectUserDetails = (state: RootState) =>
-  state.propertyDetails.data?.userDetails;
-export const selectPropertyStatus = (state: RootState) =>
-  state.propertyDetails.status;
 
 export default propertyDetailsSlice.reducer;

@@ -1,15 +1,14 @@
 "use client";
 import { ArrowDownToLine } from "lucide-react";
 import { useParams } from "next/navigation";
-import React, { useMemo, useState } from "react";
+import React from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/PaginationFooter";
+import { RenderPaymentStatus } from "@/components/status/RenderPaymentStatus";
+import { useLocalPagination } from "@/hooks/useLocalPagination";
 import { UserExternalPayment } from "@/interfaces/User";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
-
-import { RenderPaymentStatus } from "../../components/RenderPaymentStatus";
-// import { dummyExternalPayments } from "@/mock/userDetailsDummy";
 
 interface RowType extends UserExternalPayment {
   _serial: number;
@@ -17,34 +16,26 @@ interface RowType extends UserExternalPayment {
 
 const PaymentHistory: React.FC = () => {
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
-  const [currentPage, setCurrentPage] = useState(1);
 
   const { data } = useGetUserByPhoneNoQuery({ phoneNo: userPhoneNo });
 
   const { externalPayments } = data!.user;
-  // const externalPayments = dummyExternalPayments;
 
   const rows: RowType[] = externalPayments.map((paymentInfo, index) => ({
     ...paymentInfo,
     _serial: index + 1,
   }));
 
-  const rowsPerPage = 10;
-  const totalRows = rows.length;
-  const totalPages = Math.ceil(totalRows / rowsPerPage);
-  const isFirst = currentPage === 1;
-  const isLast = currentPage === totalPages;
-
-  const paginatedRows = useMemo(() => {
-    const start = (currentPage - 1) * rowsPerPage;
-    return rows.slice(start, start + rowsPerPage);
-  }, [rows, currentPage, rowsPerPage]);
-
-  const goToPage = (page: number) => {
-    if (page >= 1 && page <= totalPages) setCurrentPage(page);
-  };
-  const nextPage = () => !isLast && setCurrentPage((p) => p + 1);
-  const prevPage = () => !isFirst && setCurrentPage((p) => p - 1);
+  const {
+    currentPage,
+    paginatedRows,
+    totalPages,
+    isFirst,
+    isLast,
+    goToPage,
+    nextPage,
+    prevPage,
+  } = useLocalPagination(rows, 10);
 
   const columns: Column<RowType>[] = [
     {
@@ -62,7 +53,7 @@ const PaymentHistory: React.FC = () => {
       key: "createdAt",
       label: "Created At",
       accessor: "createdAt",
-      render: (payment) => new Date(payment.createdAt).toLocaleString(),
+      render: (payment) => new Date(payment.createdAt).toLocaleString("en-IN"),
     },
     {
       key: "completedAt",
@@ -70,7 +61,7 @@ const PaymentHistory: React.FC = () => {
       accessor: "completedAt",
       render: (payment) =>
         payment.completedAt ? (
-          new Date(payment.completedAt).toLocaleString()
+          new Date(payment.completedAt).toLocaleString("en-IN")
         ) : (
           <div>N/A</div>
         ),
