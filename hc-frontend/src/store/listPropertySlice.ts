@@ -2,25 +2,19 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { PropertyCategory, PropertyListingType } from "@/common/enums";
 import { AdditionalInfo } from "@/interfaces/AdditionalInfo";
-import { FlatmatesDetails } from "@/interfaces/FlatmatesDetails";
+import { FlatmateForm } from "@/interfaces/FlatmateForm";
+import { FlatmateDetails } from "@/interfaces/FlatmatesDetails";
 import { ListPropertyState } from "@/interfaces/ListPropertyState";
 import { LocalityDetails } from "@/interfaces/LocalityDetails";
 import { PropertyDetails } from "@/interfaces/PropertyDetails";
-import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
+import { PropertyImage } from "@/interfaces/PropertyImage";
 import { RentalDetails } from "@/interfaces/RentalDetails";
+import { RentForm } from "@/interfaces/RentForm";
 import { ResaleDetails } from "@/interfaces/ResaleDetails";
+import { ResaleForm } from "@/interfaces/ResaleForm";
 
-const initialData: {
-  propertyDetails: PropertyDetails;
-  localityDetails: LocalityDetails;
-  rentalDetails: RentalDetails;
-  images: PropertyPhoto[];
-  additionalInfo: AdditionalInfo;
-  resaleDetails: ResaleDetails;
-  flatmatesDetails: FlatmatesDetails;
-} = {
+const initialData: Partial<RentForm | ResaleForm | FlatmateForm> = {
   propertyDetails: {
-    propertyCategory: "",
     propertyType: "Apartment",
     builtUpArea: 2500,
     facing: "East",
@@ -75,7 +69,7 @@ const initialData: {
     parking: false,
     amenities: [],
   },
-  flatmatesDetails: {
+  flatmateDetails: {
     rent: 0,
     maintenanceCharges: 0,
     depositCharges: 0,
@@ -96,42 +90,15 @@ const initialData: {
 
 const initialState: ListPropertyState = {
   propertyID: "",
-  imagesS3Url: {},
-  propertyCategory: PropertyCategory.RENT,
-  listingType: PropertyListingType.DIY,
-  rentForm: {
+  propertyImagesS3Url: {},
+  propertyImages: [],
+  propertyCategory: PropertyCategory.NONE,
+  listingType: PropertyListingType.NONE,
+  form: {
     isValid: false,
-    data: {
-      ...initialData,
-      propertyDetails: {
-        ...initialData.propertyDetails,
-        propertyCategory: PropertyCategory.RENT,
-      },
-    },
-  },
-  resaleForm: {
-    isValid: false,
-    data: {
-      ...initialData,
-      propertyDetails: {
-        ...initialData.propertyDetails,
-        propertyCategory: PropertyCategory.RESALE,
-      },
-    },
-  },
-  flatmatesForm: {
-    isValid: false,
-    data: {
-      ...initialData,
-      propertyDetails: {
-        ...initialData.propertyDetails,
-        propertyCategory: PropertyCategory.FLATMATE,
-      },
-    },
+    data: initialData,
   },
 };
-
-export type FormType = "rentForm" | "resaleForm" | "flatmatesForm";
 
 const listPropertySlice = createSlice({
   name: "listProperty",
@@ -143,42 +110,37 @@ const listPropertySlice = createSlice({
     setListingType: (state, action: PayloadAction<PropertyListingType>) => {
       state.listingType = action.payload;
     },
-    setFormValidity: (
-      state,
-      action: PayloadAction<{ type: FormType; isValid: boolean }>,
-    ) => {
-      const { type, isValid } = action.payload;
-      state[type].isValid = isValid;
+    setFormValidity: (state, action: PayloadAction<{ isValid: boolean }>) => {
+      const { isValid } = action.payload;
+      state.form.isValid = isValid;
     },
     setFormData: (
       state,
       action: PayloadAction<{
-        type: FormType;
         data: Partial<{
           propertyDetails: PropertyDetails;
           localityDetails: LocalityDetails;
           rentalDetails: RentalDetails;
           resaleDetails: ResaleDetails;
-          images: PropertyPhoto[];
+          images: string[];
           additionalInfo: AdditionalInfo;
         }>;
       }>,
     ) => {
-      const { type, data } = action.payload;
-      state[type].data = {
-        ...(state[type].data || initialData),
+      const { data } = action.payload;
+      state.form.data = {
+        ...(state.form.data || initialData),
         ...data,
       };
     },
     setFileURLMap: (
       state,
       action: PayloadAction<{
-        type: FormType;
         data: Record<string, string>;
       }>,
     ) => {
       const { data } = action.payload;
-      state.imagesS3Url = data;
+      state.propertyImagesS3Url = data;
     },
     setPropertyID: (state, action: PayloadAction<string>) => {
       state.propertyID = action.payload;
@@ -186,126 +148,86 @@ const listPropertySlice = createSlice({
     setPropertyDetails: (
       state,
       action: PayloadAction<{
-        type: FormType;
         propertyDetails: PropertyDetails;
       }>,
     ) => {
-      const { type, propertyDetails } = action.payload;
-      if (state[type].data) {
-        state[type].data.propertyDetails = propertyDetails;
+      const { propertyDetails } = action.payload;
+      if (state.form.data) {
+        state.form.data.propertyDetails = propertyDetails;
       }
     },
     setLocalityDetails: (
       state,
       action: PayloadAction<{
-        type: FormType;
         localityDetails: LocalityDetails;
       }>,
     ) => {
-      const { type, localityDetails } = action.payload;
-      if (state[type].data) {
-        state[type].data.localityDetails = localityDetails;
+      const { localityDetails } = action.payload;
+      if (state.form.data) {
+        state.form.data.localityDetails = localityDetails;
       }
     },
     setRentalDetails: (
       state,
-      action: PayloadAction<{ type: FormType; rentalDetails: RentalDetails }>,
+      action: PayloadAction<{ rentalDetails: RentalDetails }>,
     ) => {
-      const { type, rentalDetails } = action.payload;
-      if (state[type].data) {
-        state[type].data.rentalDetails = rentalDetails;
+      const { rentalDetails } = action.payload;
+      if (state.form.data) {
+        (state.form.data as RentForm).rentalDetails = rentalDetails;
       }
     },
     setResaleDetails: (
       state,
-      action: PayloadAction<{ type: FormType; resaleDetails: ResaleDetails }>,
+      action: PayloadAction<{ resaleDetails: ResaleDetails }>,
     ) => {
-      const { type, resaleDetails } = action.payload;
-      if (state[type].data) {
-        state[type].data.resaleDetails = resaleDetails;
+      const { resaleDetails } = action.payload;
+      if (state.form.data) {
+        (state.form.data as ResaleForm).resaleDetails = resaleDetails;
       }
     },
-    setFlatmatesDetails: (
+    setFlatmateDetails: (
       state,
-      action: PayloadAction<{
-        type: FormType;
-        flatmatesDetails: FlatmatesDetails;
-      }>,
+      action: PayloadAction<{ flatmateDetails: FlatmateDetails }>,
     ) => {
-      const { type, flatmatesDetails } = action.payload;
-      if (state[type].data) {
-        state[type].data.flatmatesDetails = flatmatesDetails;
+      const { flatmateDetails } = action.payload;
+      if (state.form.data) {
+        (state.form.data as FlatmateForm).flatmateDetails = flatmateDetails;
       }
     },
-    setImages: (
-      state,
-      action: PayloadAction<{ type: FormType; images: PropertyPhoto[] }>,
-    ) => {
-      const { type, images } = action.payload;
-      if (state[type].data) {
-        state[type].data.images = images;
+    setImages: (state, action: PayloadAction<{ images: string[] }>) => {
+      const { images } = action.payload;
+      if (state.form.data) {
+        state.form.data.images = images;
       }
+    },
+    setPropertyImages: (
+      state,
+      action: PayloadAction<{ propertyImages: PropertyImage[] }>,
+    ) => {
+      const { propertyImages } = action.payload;
+      state.propertyImages = propertyImages;
     },
     setAdditionalInfo: (
       state,
-      action: PayloadAction<{ type: FormType; additionalInfo: AdditionalInfo }>,
+      action: PayloadAction<{ additionalInfo: AdditionalInfo }>,
     ) => {
-      const { type, additionalInfo } = action.payload;
-      if (state[type].data) {
-        state[type].data.additionalInfo = additionalInfo;
+      const { additionalInfo } = action.payload;
+      if (state.form.data) {
+        state.form.data.additionalInfo = additionalInfo;
       }
     },
-    clearFormData: (state, action: PayloadAction<FormType>) => {
-      const type = action.payload;
-      state[type] = {
+    clearFormData: (state) => {
+      state.form = {
         isValid: false,
         data: {
           ...initialData,
-          propertyDetails: {
-            ...initialData.propertyDetails,
-            propertyCategory:
-              type === "rentForm"
-                ? PropertyCategory.RENT
-                : type === "resaleForm"
-                  ? PropertyCategory.RESALE
-                  : PropertyCategory.FLATMATE,
-          },
         },
       };
-    },
-    clearAllFormData: (state) => {
-      state.rentForm = {
-        isValid: false,
-        data: {
-          ...initialData,
-          propertyDetails: {
-            ...initialData.propertyDetails,
-            propertyCategory: PropertyCategory.RENT,
-          },
-        },
-      };
-      state.resaleForm = {
-        isValid: false,
-        data: {
-          ...initialData,
-          propertyDetails: {
-            ...initialData.propertyDetails,
-            propertyCategory: PropertyCategory.RESALE,
-          },
-        },
-      };
-      state.flatmatesForm = {
-        isValid: false,
-        data: {
-          ...initialData,
-          propertyDetails: {
-            ...initialData.propertyDetails,
-            propertyCategory: PropertyCategory.FLATMATE,
-          },
-        },
-      };
+      state.listingType = PropertyListingType.NONE;
+      state.propertyCategory = PropertyCategory.NONE;
       state.propertyID = "";
-      state.imagesS3Url = {};
+      state.propertyImagesS3Url = {};
+      state.propertyImages = [];
     },
   },
 });
@@ -321,10 +243,10 @@ export const {
   setLocalityDetails,
   setRentalDetails,
   setResaleDetails,
-  setFlatmatesDetails,
+  setFlatmateDetails,
   setImages,
+  setPropertyImages,
   setAdditionalInfo,
   clearFormData,
-  clearAllFormData,
 } = listPropertySlice.actions;
 export default listPropertySlice.reducer;

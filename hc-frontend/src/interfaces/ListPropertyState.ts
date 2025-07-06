@@ -1,52 +1,18 @@
 import { PropertyCategory, PropertyListingType } from "@/common/enums";
 
-import { AdditionalInfo } from "./AdditionalInfo";
-import { FlatmatesDetails } from "./FlatmatesDetails";
-import { LocalityDetails } from "./LocalityDetails";
-import { PropertyDetails } from "./PropertyDetails";
-import { PropertyPhoto } from "./PropertyPhoto";
-import { RentalDetails } from "./RentalDetails";
-import { ResaleDetails } from "./ResaleDetails";
+import { FlatmateForm } from "./FlatmateForm";
+import { PropertyImage } from "./PropertyImage";
+import { RentForm } from "./RentForm";
+import { ResaleForm } from "./ResaleForm";
 
 export interface ListPropertyState {
   propertyID: string;
-  imagesS3Url: Record<string, string>;
+  propertyImagesS3Url: Record<string, string>;
   propertyCategory: PropertyCategory;
   listingType: PropertyListingType;
-  rentForm: {
+  propertyImages: PropertyImage[];
+  form: {
     isValid: boolean;
-    data?: {
-      propertyDetails: PropertyDetails;
-      localityDetails: LocalityDetails;
-      rentalDetails: RentalDetails;
-      images: PropertyPhoto[];
-      additionalInfo: AdditionalInfo;
-      resaleDetails?: ResaleDetails;
-      flatmatesDetails?: FlatmatesDetails;
-    };
-  };
-  resaleForm: {
-    isValid: boolean;
-    data?: {
-      propertyDetails: PropertyDetails;
-      localityDetails: LocalityDetails;
-      resaleDetails: ResaleDetails;
-      images: PropertyPhoto[];
-      additionalInfo: AdditionalInfo;
-      rentalDetails?: RentalDetails;
-      flatmatesDetails?: FlatmatesDetails;
-    };
-  };
-  flatmatesForm: {
-    isValid: boolean;
-    data?: {
-      propertyDetails: PropertyDetails;
-      localityDetails: LocalityDetails;
-      flatmatesDetails: FlatmatesDetails;
-      images: PropertyPhoto[];
-      additionalInfo: AdditionalInfo;
-      rentalDetails?: RentalDetails;
-      resaleDetails?: ResaleDetails;
-    };
+    data?: Partial<RentForm | ResaleForm | FlatmateForm>;
   };
 }

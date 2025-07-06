@@ -86,8 +86,8 @@ import PostedAndRentDetails from "./components/PostedAndRentDetails";
 import UpgradePropertyBanner from "./components/UpgradePropertyBanner";
 
 interface PropertyDetailsClientProps {
-  type: string;
-  id: string;
+  propertyCategory: string;
+  propertyID: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialData: any; // Replace 'any' with your property type
 }
@@ -162,14 +162,14 @@ const AmenitiesMap = {
 };
 
 export function PropertyDetailsClient({
-  type,
-  id,
+  propertyCategory,
+  propertyID,
   initialData,
 }: PropertyDetailsClientProps): React.ReactElement {
   const dispatch = useDispatch();
   const { isMobile } = useDeviceContext();
   const { data: property = initialData, isLoading: _isPropertyLoading } =
-    useGetPropertyByIdQuery(id, {
+    useGetPropertyByIdQuery(propertyID, {
       skip: !!initialData, // Skip the query if we have initial data
     });
   const router = useRouter();
@@ -181,7 +181,7 @@ export function PropertyDetailsClient({
   const { isDialogOpen, openDialog, closeDialog } = useDialog();
 
   const handleEdit = async () => {
-    router.push(`/list-property/${type}/`);
+    router.push(`/list-property/${propertyCategory}/`);
   };
 
   useEffect(() => {

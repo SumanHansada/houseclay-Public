@@ -40,7 +40,7 @@ import {
   setHideStickyNavBar,
 } from "@/store/appSlice";
 import { setAuthStep, setPhoneNo } from "@/store/authSlice";
-import { clearAllFormData } from "@/store/listPropertySlice";
+import { clearFormData } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 import { setCheckUser } from "@/store/userSlice";
 
@@ -82,6 +82,7 @@ const ListPropertyPage = dynamic(
 
       useEffect(() => {
         dispatch(setAuthStep(AuthStep.PHONE));
+        dispatch(clearFormData());
         if (isMobile) {
           dispatch(setHideHeader(true));
           dispatch(setHideFooter(true));
@@ -135,7 +136,6 @@ const ListPropertyPage = dynamic(
         const url = `/list-property/${propertyCategory.toLowerCase()}`;
         console.log("Navigating to URL:", url);
         router.push(url);
-        dispatch(clearAllFormData());
       };
 
       const handlePrefetch = () => {

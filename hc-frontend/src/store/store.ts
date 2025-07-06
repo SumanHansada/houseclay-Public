@@ -15,11 +15,11 @@ const listPropertyPersistConfig = {
   key: "listProperty",
   storage,
   whitelist: [
-    "rentForm",
-    "resaleForm",
-    "flatmatesForm",
+    "form",
+    "propertyCategory",
     "propertyID",
-    "imagesS3Url",
+    "propertyImagesS3Url",
+    "propertyImages",
   ], // Only persist these fields
 };
 

@@ -2,7 +2,6 @@
 
 import { useFormikContext } from "formik";
 import { IndianRupee } from "lucide-react";
-import { useParams } from "next/navigation";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
 import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
 import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
@@ -32,6 +31,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
+import { PropertyCategory } from "@/common/enums";
 import FormCalendarField from "@/components/common/FormCalendarField";
 import FormCheckbox from "@/components/common/FormCheckbox";
 import FormCurrencyField from "@/components/common/FormCurrencyField";
@@ -39,14 +39,11 @@ import FormRadioGroup from "@/form-components/FormRadioGroup";
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 import { FormValues } from "@/interfaces/FormValues";
 import {
-  FormType,
-  setFlatmatesDetails,
+  setFlatmateDetails,
   setFormValidity,
   setRentalDetails,
 } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
-
-export const dynamicParams = true;
 
 const FamilyIcon = FamilyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const CompanyIcon = CompanyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -171,56 +168,53 @@ const flatmatesSchema = Yup.object().shape({
   }),
 });
 
-const RentalDetailsPage: React.FC = () => {
+export const RentalDetailsClient: React.FC = () => {
   const { values, errors, touched, setFieldError, setErrors } =
     useFormikContext<FormValues>();
-  const params = useParams();
-  const formKey = `${params?.type}Form` as FormType;
-  const formState = useSelector(
-    (state: RootState) => state.listProperty[formKey],
+  const propertyCategory = useSelector(
+    (state: RootState) => state.listProperty.propertyCategory,
   );
+  const formState = useSelector((state: RootState) => state.listProperty.form);
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
 
   const rentalDetailsString = JSON.stringify(values.rentalDetails);
-  const flatmatesDetailsString = JSON.stringify(values.flatmatesDetails);
+  const flatmateDetailsString = JSON.stringify(values.flatmateDetails);
 
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {
-        if (formKey === "rentForm") {
+        if (propertyCategory === PropertyCategory.RENT) {
           await rentalSchema.validate(values, {
             abortEarly: false,
-            context: { formKey },
+            context: { propertyCategory },
           });
-        } else if (formKey === "flatmatesForm") {
+        } else if (propertyCategory === PropertyCategory.FLATMATE) {
           await flatmatesSchema.validate(values, {
             abortEarly: false,
-            context: { formKey },
+            context: { propertyCategory },
           });
         }
         // Clear any previous errors
         setErrors({});
         // Set form data in the store
-        if (formKey === "rentForm") {
+        if (propertyCategory === PropertyCategory.RENT) {
           dispatch(
             setRentalDetails({
-              type: formKey,
               rentalDetails: values.rentalDetails,
             }),
           );
         }
-        if (formKey === "flatmatesForm") {
+        if (propertyCategory === PropertyCategory.FLATMATE) {
           dispatch(
-            setFlatmatesDetails({
-              type: formKey,
-              flatmatesDetails: values.flatmatesDetails,
+            setFlatmateDetails({
+              flatmateDetails: values.flatmateDetails,
             }),
           );
         }
         // Form is valid
         if (!isFormValid) {
-          dispatch(setFormValidity({ type: formKey, isValid: true }));
+          dispatch(setFormValidity({ isValid: true }));
         }
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -234,7 +228,7 @@ const RentalDetailsPage: React.FC = () => {
           });
           // Form is invalid
           if (isFormValid) {
-            dispatch(setFormValidity({ type: formKey, isValid: false }));
+            dispatch(setFormValidity({ isValid: false }));
           }
         }
       }
@@ -243,9 +237,9 @@ const RentalDetailsPage: React.FC = () => {
     validateAndDispatch();
   }, [
     rentalDetailsString,
-    flatmatesDetailsString,
+    flatmateDetailsString,
     dispatch,
-    formKey,
+    propertyCategory,
     setErrors,
     setFieldError,
     isFormValid,
@@ -264,14 +258,14 @@ const RentalDetailsPage: React.FC = () => {
           <div className="col-span-1">
             <FormCurrencyField
               name={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategory.RENT
                   ? "rentalDetails.rent"
-                  : "flatmatesDetails.rent"
+                  : "flatmateDetails.rent"
               }
               id={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategory.RENT
                   ? "rentalDetails.rent"
-                  : "flatmatesDetails.rent"
+                  : "flatmateDetails.rent"
               }
               label="Rent"
               prefix={<IndianRupee size={20} />}
@@ -280,7 +274,7 @@ const RentalDetailsPage: React.FC = () => {
             />
           </div>
           <div className="col-span-1">
-            {formKey === "rentForm" && (
+            {propertyCategory === PropertyCategory.RENT && (
               <FormRadioGroup
                 name="rentalDetails.rentNegotiable"
                 label="Rent Negotiable"
@@ -292,7 +286,7 @@ const RentalDetailsPage: React.FC = () => {
                 horizontal
               />
             )}
-            {formKey === "flatmatesForm" && (
+            {propertyCategory === PropertyCategory.FLATMATE && (
               <FormSelectDropdown
                 label="Parking"
                 name="flatmatesForm.parking"
@@ -307,9 +301,9 @@ const RentalDetailsPage: React.FC = () => {
                 required={true}
                 placeholder="Select Parking"
                 aria-describedby={
-                  errors?.flatmatesDetails?.parking &&
-                  touched?.flatmatesDetails?.parking
-                    ? "flatmatesDetails.parking-error"
+                  errors?.flatmateDetails?.parking &&
+                  touched?.flatmateDetails?.parking
+                    ? "flatmateDetails.parking-error"
                     : undefined
                 }
               />
@@ -320,14 +314,14 @@ const RentalDetailsPage: React.FC = () => {
           <div className="col-span-1">
             <FormCurrencyField
               name={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategory.RENT
                   ? "rentalDetails.maintenanceCharges"
-                  : "flatmatesDetails.maintenanceCharges"
+                  : "flatmateDetails.maintenanceCharges"
               }
               id={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategory.RENT
                   ? "rentalDetails.maintenanceCharges"
-                  : "flatmatesDetails.maintenanceCharges"
+                  : "flatmateDetails.maintenanceCharges"
               }
               label="Maintenance Charges"
               prefix={<IndianRupee size={20} />}
@@ -337,14 +331,14 @@ const RentalDetailsPage: React.FC = () => {
           <div className="col-span-1">
             <FormCurrencyField
               name={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategory.RENT
                   ? "rentalDetails.deposit"
-                  : "flatmatesDetails.depositCharges"
+                  : "flatmateDetails.depositCharges"
               }
               id={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategory.RENT
                   ? "rentalDetails.deposit"
-                  : "flatmatesDetails.depositCharges"
+                  : "flatmateDetails.depositCharges"
               }
               label="Deposit"
               prefix={<IndianRupee size={20} />}
@@ -356,9 +350,9 @@ const RentalDetailsPage: React.FC = () => {
           <div className="col-span-1">
             <FormCalendarField
               name={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategory.RENT
                   ? "rentalDetails.availableFrom"
-                  : "flatmatesDetails.availableFrom"
+                  : "flatmateDetails.availableFrom"
               }
               label="Available From"
               dateFormat="yyyy-MM-dd"
@@ -370,14 +364,14 @@ const RentalDetailsPage: React.FC = () => {
             <FormSelectDropdown
               label="Furnishing"
               name={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategory.RENT
                   ? "rentalDetails.furnishing"
-                  : "flatmatesDetails.furnishing"
+                  : "flatmateDetails.furnishing"
               }
               id={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategory.RENT
                   ? "rentalDetails.furnishing"
-                  : "flatmatesDetails.furnishing"
+                  : "flatmateDetails.furnishing"
               }
               options={[
                 {
@@ -393,20 +387,20 @@ const RentalDetailsPage: React.FC = () => {
               required={true}
               placeholder="Select furnishing"
               aria-describedby={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategory.RENT
                   ? errors?.rentalDetails?.furnishing &&
                     touched?.rentalDetails?.furnishing
                     ? "rentalDetails.furnishing-error"
                     : undefined
-                  : errors?.flatmatesDetails?.furnishing &&
-                      touched?.flatmatesDetails?.furnishing
-                    ? "flatmatesDetails.furnishing-error"
+                  : errors?.flatmateDetails?.furnishing &&
+                      touched?.flatmateDetails?.furnishing
+                    ? "flatmateDetails.furnishing-error"
                     : undefined
               }
             />
           </div>
         </div>
-        {formKey === "rentForm" && (
+        {propertyCategory === PropertyCategory.RENT && (
           <div className="mb-6">
             <FormCheckbox
               name="rentalDetails.preferredTenants"
@@ -439,7 +433,7 @@ const RentalDetailsPage: React.FC = () => {
             />
           </div>
         )}
-        {formKey === "flatmatesForm" && (
+        {propertyCategory === PropertyCategory.FLATMATE && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <FormRadioGroup
               name="flatmatesDetails.tenantType"
@@ -487,14 +481,14 @@ const RentalDetailsPage: React.FC = () => {
             <FormSelectDropdown
               label="Water Supply"
               name={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategory.RENT
                   ? "rentalDetails.waterSupply"
-                  : "flatmatesDetails.waterSupply"
+                  : "flatmateDetails.waterSupply"
               }
               id={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategory.RENT
                   ? "rentalDetails.waterSupply"
-                  : "flatmatesDetails.waterSupply"
+                  : "flatmateDetails.waterSupply"
               }
               options={[
                 { value: "borewell", label: "Borewell" },
@@ -510,14 +504,14 @@ const RentalDetailsPage: React.FC = () => {
               required={true}
               placeholder="Select Water supply"
               aria-describedby={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategory.RENT
                   ? errors?.rentalDetails?.waterSupply &&
                     touched?.rentalDetails?.waterSupply
                     ? "rentalDetails.waterSupply-error"
                     : undefined
-                  : errors?.flatmatesDetails?.waterSupply &&
-                      touched?.flatmatesDetails?.waterSupply
-                    ? "flatmatesDetails.waterSupply-error"
+                  : errors?.flatmateDetails?.waterSupply &&
+                      touched?.flatmateDetails?.waterSupply
+                    ? "flatmateDetails.waterSupply-error"
                     : undefined
               }
             />
@@ -526,14 +520,14 @@ const RentalDetailsPage: React.FC = () => {
             <FormSelectDropdown
               label="Power Backup"
               name={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategory.RENT
                   ? "rentalDetails.powerBackup"
-                  : "flatmatesDetails.powerBackup"
+                  : "flatmateDetails.powerBackup"
               }
               id={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategory.RENT
                   ? "rentalDetails.powerBackup"
-                  : "flatmatesDetails.powerBackup"
+                  : "flatmateDetails.powerBackup"
               }
               options={[
                 { value: "full", label: "Full" },
@@ -549,20 +543,20 @@ const RentalDetailsPage: React.FC = () => {
               required={true}
               placeholder="Select Power backup"
               aria-describedby={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategory.RENT
                   ? errors?.rentalDetails?.powerBackup &&
                     touched?.rentalDetails?.powerBackup
                     ? "rentalDetails.powerBackup-error"
                     : undefined
-                  : errors?.flatmatesDetails?.powerBackup &&
-                      touched?.flatmatesDetails?.powerBackup
-                    ? "flatmatesDetails.powerBackup-error"
+                  : errors?.flatmateDetails?.powerBackup &&
+                      touched?.flatmateDetails?.powerBackup
+                    ? "flatmateDetails.powerBackup-error"
                     : undefined
               }
             />
           </div>
         </div>
-        {formKey === "rentForm" && (
+        {propertyCategory === PropertyCategory.RENT && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="col-span-1">
               <FormSelectDropdown
@@ -601,7 +595,7 @@ const RentalDetailsPage: React.FC = () => {
             </div>
           </div>
         )}
-        {formKey === "flatmatesForm" && (
+        {propertyCategory === PropertyCategory.FLATMATE && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="col-span-1">
               <FormRadioGroup
@@ -631,7 +625,7 @@ const RentalDetailsPage: React.FC = () => {
             </div>
           </div>
         )}
-        {formKey === "flatmatesForm" && (
+        {propertyCategory === PropertyCategory.FLATMATE && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="col-span-1">
               <FormRadioGroup
@@ -668,9 +662,9 @@ const RentalDetailsPage: React.FC = () => {
         </h1>
         <FormCheckbox
           name={
-            formKey === "rentForm"
+            propertyCategory === PropertyCategory.RENT
               ? "rentalDetails.amenities"
-              : "flatmatesDetails.amenities"
+              : "flatmateDetails.amenities"
           }
           columns={4}
           options={[
@@ -753,4 +747,4 @@ const RentalDetailsPage: React.FC = () => {
   );
 };
 
-export default RentalDetailsPage;
+export default RentalDetailsClient;

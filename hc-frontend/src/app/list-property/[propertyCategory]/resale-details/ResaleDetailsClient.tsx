@@ -2,7 +2,6 @@
 
 import { useFormikContext } from "formik";
 import { IndianRupee } from "lucide-react";
-import { useParams } from "next/navigation";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
 import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
 import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
@@ -31,11 +30,7 @@ import FormFormNumberField from "@/components/common/FormNumberField";
 import FormRadioGroup from "@/form-components/FormRadioGroup";
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 import { FormValues } from "@/interfaces/FormValues";
-import {
-  FormType,
-  setFormValidity,
-  setResaleDetails,
-} from "@/store/listPropertySlice";
+import { setFormValidity, setResaleDetails } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -78,8 +73,6 @@ const FirstAidKitIcon = FirstAidKitIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
 
-export const dynamicParams = true;
-
 const resaleSchema = Yup.object().shape({
   resaleDetails: Yup.object().shape({
     price: Yup.string()
@@ -96,14 +89,10 @@ const resaleSchema = Yup.object().shape({
   }),
 });
 
-const ResaleDetailsPage: React.FC = () => {
+const ResaleDetailsClient: React.FC = () => {
   const { values, errors, touched, setFieldError, setErrors } =
     useFormikContext<FormValues>();
-  const params = useParams();
-  const formKey = `${params?.type}Form` as FormType; // Optional: add type assertion
-  const formState = useSelector(
-    (state: RootState) => state.listProperty[formKey],
-  );
+  const formState = useSelector((state: RootState) => state.listProperty.form);
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
 
@@ -118,13 +107,12 @@ const ResaleDetailsPage: React.FC = () => {
         // Set form data in the store
         dispatch(
           setResaleDetails({
-            type: formKey,
             resaleDetails: values.resaleDetails,
           }),
         );
         // Form is valid
         if (!isFormValid) {
-          dispatch(setFormValidity({ type: formKey, isValid: true }));
+          dispatch(setFormValidity({ isValid: true }));
         }
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -138,7 +126,7 @@ const ResaleDetailsPage: React.FC = () => {
           });
           // Form is invalid
           if (isFormValid) {
-            dispatch(setFormValidity({ type: formKey, isValid: false }));
+            dispatch(setFormValidity({ isValid: false }));
           }
         }
       }
@@ -148,7 +136,6 @@ const ResaleDetailsPage: React.FC = () => {
   }, [
     resaleDetailsString,
     dispatch,
-    formKey,
     setErrors,
     setFieldError,
     isFormValid,
@@ -417,4 +404,4 @@ const ResaleDetailsPage: React.FC = () => {
   );
 };
 
-export default ResaleDetailsPage;
+export default ResaleDetailsClient;

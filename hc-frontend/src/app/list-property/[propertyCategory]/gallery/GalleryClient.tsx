@@ -1,29 +1,18 @@
 "use client";
 
 import { useFormikContext } from "formik";
-import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import FormPhotoUpload from "@/components/common/FormPhotoUpload";
 import { FormValues } from "@/interfaces/FormValues";
-import {
-  FormType,
-  setFormValidity,
-  setImages,
-} from "@/store/listPropertySlice";
+import { setFormValidity, setPropertyImages } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
-export const dynamicParams = true;
-
-const GalleryPage: React.FC = () => {
+const GalleryClient: React.FC = () => {
   const { values, setFieldError, setErrors } = useFormikContext<FormValues>();
-  const params = useParams();
-  const formKey = `${params?.type}Form` as FormType; // Optional: add type assertion
-  const formState = useSelector(
-    (state: RootState) => state.listProperty[formKey],
-  );
+  const formState = useSelector((state: RootState) => state.listProperty.form);
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
 
@@ -44,10 +33,10 @@ const GalleryPage: React.FC = () => {
         // Clear any previous errors
         setErrors({});
         // Set form data in the store
-        dispatch(setImages({ type: formKey, images: values.images }));
+        dispatch(setPropertyImages({ propertyImages: values.images }));
         // Form is valid
         if (!isFormValid) {
-          dispatch(setFormValidity({ type: formKey, isValid: true }));
+          dispatch(setFormValidity({ isValid: true }));
         }
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -61,7 +50,7 @@ const GalleryPage: React.FC = () => {
           });
           // Form is invalid
           if (isFormValid) {
-            dispatch(setFormValidity({ type: formKey, isValid: false }));
+            dispatch(setFormValidity({ isValid: false }));
           }
         }
       }
@@ -71,7 +60,6 @@ const GalleryPage: React.FC = () => {
   }, [
     imagesString,
     dispatch,
-    formKey,
     setErrors,
     setFieldError,
     isFormValid,
@@ -107,4 +95,4 @@ const GalleryPage: React.FC = () => {
   );
 };
 
-export default GalleryPage;
+export default GalleryClient;

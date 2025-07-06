@@ -6,14 +6,16 @@ export enum AuthStep {
 }
 
 export enum PropertyListingType {
+  NONE = "",
   DIY = "DIY",
   CALL = "CALL",
 }
 
 export enum PropertyCategory {
-  RENT = "Rent",
-  RESALE = "Resale",
-  FLATMATE = "Flatmate",
+  NONE = "",
+  RENT = "RENT",
+  RESALE = "RESALE",
+  FLATMATE = "FLATMATE",
 }
 
 export enum ListPropertyRouteStep {

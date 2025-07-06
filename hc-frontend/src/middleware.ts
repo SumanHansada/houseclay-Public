@@ -27,7 +27,7 @@ export const config = {
     // Protected routes that require authentication
     "/list-property/rent/:path*",
     "/list-property/resale/:path*",
-    "/list-property/flatmates/new/:path*",
+    "/list-property/flatmate/:path*",
     "/profile/:path*",
     // Add other protected routes here
   ],

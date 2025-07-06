@@ -1,4 +1,4 @@
-export interface FlatmatesDetails {
+export interface FlatmateDetails {
   rent: number;
   maintenanceCharges: number;
   depositCharges: number;

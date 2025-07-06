@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import ListPropertySuccessSvg from "public/icons/list-property-success.svg";
 import { useDispatch } from "react-redux";
 
+import { PropertyCategory } from "@/common/enums";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -16,13 +17,13 @@ const ListPropertySuccess = ListPropertySuccessSvg as React.FC<
 
 interface ListPropertySuccessDialogProps {
   id: string;
-  propertyId: string;
-  propertyType: string;
+  propertyID: string;
+  propertyCategory: PropertyCategory;
 }
 
 export const ListPropertySuccessDialog: React.FC<
   ListPropertySuccessDialogProps
-> = ({ id, propertyId, propertyType }) => {
+> = ({ id, propertyID, propertyCategory }) => {
   const { closeDialog } = useDialog();
   const { isMobile } = useDeviceContext();
   const router = useRouter();
@@ -35,7 +36,7 @@ export const ListPropertySuccessDialog: React.FC<
 
   const handlePreviewListing = async () => {
     closeDialog(id);
-    router.push(`/property-details/${propertyType}/${propertyId}`);
+    router.push(`/property-details/${propertyCategory}/${propertyID}`);
   };
 
   return (

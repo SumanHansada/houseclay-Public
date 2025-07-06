@@ -41,8 +41,8 @@ export class ServerAPIService {
   }
 
   // Property specific methods
-  static async getPropertyById(id: string) {
-    return this.fetchWithAuth(`/property/user/${id}`);
+  static async getPropertyByID(propertyID: string) {
+    return this.fetchWithAuth(`/property/user/${propertyID}`);
   }
 
   // Add more API methods as needed

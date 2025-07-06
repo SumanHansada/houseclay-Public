@@ -1,5 +1,4 @@
 export interface PropertyDetails {
-  propertyCategory: string;
   propertyType: string;
   builtUpArea: number;
   facing: string;

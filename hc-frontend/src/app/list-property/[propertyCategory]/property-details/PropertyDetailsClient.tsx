@@ -1,23 +1,17 @@
 "use client";
 
 import { useFormikContext } from "formik";
-import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
+import { PropertyCategory } from "@/common/enums";
 import FormInputField from "@/components/common/FormInputField";
 import FormTextArea from "@/components/common/FormTextArea";
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 import { FormValues } from "@/interfaces/FormValues";
-import {
-  FormType,
-  setFormValidity,
-  setPropertyDetails,
-} from "@/store/listPropertySlice";
+import { setFormValidity, setPropertyDetails } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
-
-export const dynamicParams = true;
 
 const propertySchema = Yup.object({
   propertyDetails: Yup.object({
@@ -25,40 +19,39 @@ const propertySchema = Yup.object({
     builtUpArea: Yup.number()
       .required("Built up area is required")
       .positive("Area must be positive"),
-    facing: Yup.string().when("$formKey", {
-      is: "flatmatesForm",
+    facing: Yup.string().when("$propertyCategory", {
+      is: PropertyCategory.FLATMATE,
       then: (schema) => schema.optional(),
       otherwise: (schema) => schema.required("Facing is required"),
     }),
     bhkType: Yup.string().required("BHK type is required"),
-    ownershipType: Yup.string().when("$formKey", {
-      is: "flatmatesForm",
+    ownershipType: Yup.string().when("$propertyCategory", {
+      is: PropertyCategory.FLATMATE,
       then: (schema) => schema.optional(),
       otherwise: (schema) => schema.required("Ownership type is required"),
     }),
-    propertyAge: Yup.string().when("$formKey", {
-      is: "flatmatesForm",
+    propertyAge: Yup.string().when("$propertyCategory", {
+      is: PropertyCategory.FLATMATE,
       then: (schema) => schema.optional(),
       otherwise: (schema) => schema.required("Property age is required"),
     }),
     floor: Yup.number().required("Floor is required"),
     totalFloors: Yup.number().required("Total floors is required"),
-    floorType: Yup.string().when("$formKey", {
-      is: "flatmatesForm",
+    floorType: Yup.string().when("$propertyCategory", {
+      is: PropertyCategory.FLATMATE,
       then: (schema) => schema.optional(),
       otherwise: (schema) => schema.required("Floor type is required"),
     }),
   }),
 });
 
-const PropertyDetailsPage: React.FC = () => {
+const PropertyDetailsClient: React.FC = () => {
   const { values, errors, touched, setFieldError, setErrors } =
     useFormikContext<FormValues>();
-  const params = useParams();
-  const formKey = `${params?.type}Form` as FormType; // Optional: add type assertion
-  const formState = useSelector(
-    (state: RootState) => state.listProperty[formKey],
+  const propertyCategory = useSelector(
+    (state: RootState) => state.listProperty.propertyCategory,
   );
+  const formState = useSelector((state: RootState) => state.listProperty.form);
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
 
@@ -69,20 +62,19 @@ const PropertyDetailsPage: React.FC = () => {
       try {
         await propertySchema.validate(values, {
           abortEarly: false,
-          context: { formKey },
+          context: { propertyCategory },
         });
         // Clear any previous errors
         setErrors({});
         // Set form data in the store
         dispatch(
           setPropertyDetails({
-            type: formKey,
             propertyDetails: values.propertyDetails,
           }),
         );
         // Form is valid
         if (!isFormValid) {
-          dispatch(setFormValidity({ type: formKey, isValid: true }));
+          dispatch(setFormValidity({ isValid: true }));
         }
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -96,7 +88,7 @@ const PropertyDetailsPage: React.FC = () => {
           });
           // Form is invalid
           if (isFormValid) {
-            dispatch(setFormValidity({ type: formKey, isValid: false }));
+            dispatch(setFormValidity({ isValid: false }));
           }
         }
       }
@@ -106,7 +98,7 @@ const PropertyDetailsPage: React.FC = () => {
   }, [
     propertyDetailsString,
     dispatch,
-    formKey,
+    propertyCategory,
     setErrors,
     setFieldError,
     isFormValid,
@@ -148,7 +140,8 @@ const PropertyDetailsPage: React.FC = () => {
         />
 
         {/* BUILT UP AREA + FACING */}
-        {(formKey === "rentForm" || formKey === "resaleForm") && (
+        {(propertyCategory === PropertyCategory.RENT ||
+          propertyCategory === PropertyCategory.RESALE) && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormInputField
               name="propertyDetails.builtUpArea"
@@ -187,7 +180,8 @@ const PropertyDetailsPage: React.FC = () => {
         )}
 
         {/* BHK TYPE, OWNERSHIP, AGE */}
-        {(formKey === "rentForm" || formKey === "resaleForm") && (
+        {(propertyCategory === PropertyCategory.RENT ||
+          propertyCategory === PropertyCategory.RESALE) && (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             <FormSelectDropdown
               label="BHK Type"
@@ -256,7 +250,7 @@ const PropertyDetailsPage: React.FC = () => {
           </div>
         )}
 
-        {formKey === "flatmatesForm" && (
+        {propertyCategory === PropertyCategory.FLATMATE && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormInputField
               name="propertyDetails.builtUpArea"
@@ -293,7 +287,7 @@ const PropertyDetailsPage: React.FC = () => {
 
         {/* FLOOR, TOTAL FLOOR, FLOOR TYPE */}
         <div
-          className={`grid grid-cols-1 md:grid-cols-2 ${formKey === "rentForm" || formKey === "resaleForm" ? "xl:grid-cols-3" : ""} gap-6`}
+          className={`grid grid-cols-1 md:grid-cols-2 ${propertyCategory === PropertyCategory.RENT || propertyCategory === PropertyCategory.RESALE ? "xl:grid-cols-3" : ""} gap-6`}
         >
           <FormSelectDropdown
             label="Total Floor"
@@ -335,7 +329,8 @@ const PropertyDetailsPage: React.FC = () => {
             }
           />
 
-          {(formKey === "rentForm" || formKey === "resaleForm") && (
+          {(propertyCategory === PropertyCategory.RENT ||
+            propertyCategory === PropertyCategory.RESALE) && (
             <FormSelectDropdown
               label="Floor Type"
               name="propertyDetails.floorType"
@@ -372,4 +367,4 @@ const PropertyDetailsPage: React.FC = () => {
   );
 };
 
-export default PropertyDetailsPage;
+export default PropertyDetailsClient;

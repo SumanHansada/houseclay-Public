@@ -2,7 +2,7 @@
 
 import { Form, Formik, FormikProvider } from "formik";
 import Image from "next/image";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -15,14 +15,15 @@ import { extractS3KeyFromUrl } from "@/common/utils";
 import { ListPropertySuccessDialog } from "@/dialogs/list-property-success-dialog";
 import { UploadDialog } from "@/dialogs/upload-dialog";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
-import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
+import { FlatmateForm } from "@/interfaces/FlatmateForm";
+import { PropertyImage } from "@/interfaces/PropertyImage";
+import { RentForm } from "@/interfaces/RentForm";
+import { ResaleForm } from "@/interfaces/ResaleForm";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   usePresignedUrlsMutation,
-  usePropertyAddFlatmatesMutation,
-  usePropertyAddRentMutation,
-  usePropertyAddResaleMutation,
+  usePropertyAddMutation,
 } from "@/store/apiSlice";
 import {
   setHideFooter,
@@ -30,7 +31,7 @@ import {
   setHideStickyNavBar,
 } from "@/store/appSlice";
 import {
-  clearAllFormData,
+  clearFormData,
   setFileURLMap,
   setPropertyID,
 } from "@/store/listPropertySlice";
@@ -38,19 +39,18 @@ import { RootState } from "@/store/store";
 
 import ListPropertyStepper from "../components/ListPropertyStepper";
 
-export const dynamicParams = true;
-
 export default function ListPropertyTypeLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const [getPresignedUrls] = usePresignedUrlsMutation();
-  const params = useParams();
   const pathname = usePathname();
   const dispatch = useDispatch();
   const uploadFiles = useS3Uploader();
-  const type = params?.type as string;
+  const propertyCategory = useSelector(
+    (state: RootState) => state.listProperty.propertyCategory,
+  );
   const router = useRouter();
   const { openDialog, isDialogOpen, closeDialog } = useDialog();
   const { isMobile } = useDeviceContext();
@@ -89,7 +89,7 @@ export default function ListPropertyTypeLayout({
     const allSteps = [
       ListPropertyFormStep.PROPERTY_DETAILS,
       ListPropertyFormStep.LOCALITY_DETAILS,
-      type === "resale"
+      propertyCategory === PropertyCategory.RESALE
         ? ListPropertyFormStep.RESALE_DETAILS
         : ListPropertyFormStep.RENTAL_DETAILS,
       ListPropertyFormStep.GALLERY,
@@ -109,20 +109,18 @@ export default function ListPropertyTypeLayout({
   const currentStep = getCurrentStepFromPath();
   const completedSteps = getCompletedSteps();
 
-  const formKey = `${type}Form` as "rentForm" | "resaleForm" | "flatmatesForm";
-  const [addRentProperty] = usePropertyAddRentMutation();
-  const [addResaleProperty] = usePropertyAddResaleMutation();
-  const [addFlatmatesProperty] = usePropertyAddFlatmatesMutation();
+  const [addProperty] = usePropertyAddMutation();
 
-  const propertyId = useSelector(
+  const propertyID = useSelector(
     (state: RootState) => state.listProperty.propertyID,
   );
-  const imagesS3Url = useSelector(
-    (state: RootState) => state.listProperty.imagesS3Url,
+  const propertyImagesS3Url = useSelector(
+    (state: RootState) => state.listProperty.propertyImagesS3Url,
   );
-  const formState = useSelector(
-    (state: RootState) => state.listProperty[formKey],
+  const propertyImages = useSelector(
+    (state: RootState) => state.listProperty.propertyImages,
   );
+  const formState = useSelector((state: RootState) => state.listProperty.form);
 
   const isFormValid = formState?.isValid;
   const initialValues = formState?.data || {};
@@ -157,20 +155,20 @@ export default function ListPropertyTypeLayout({
   }, [uploadState.status, isDialogOpen, closeDialog, openDialog]);
 
   const setRoute = (stepSlug: string) => {
-    const route = `/list-property/${type}/${stepSlug}`;
+    const route = `/list-property/${propertyCategory.toLowerCase()}/${stepSlug}`;
     router.push(route);
   };
 
   const uploadFilesToS3 = async () => {
-    const photos = formState?.data?.images || [];
+    const photos = propertyImages || [];
     if (photos.length > 0) {
       // create a map of file names to their corresponding Blob URLs
-      const photosToUpload = photos.map((photo: PropertyPhoto) => {
+      const photosToUpload = photos.map((photo: PropertyImage) => {
         return {
           name: photo.file.name,
           url: photo.url,
           type: photo.file.type,
-          S3Url: imagesS3Url[photo.file.name],
+          S3Url: propertyImagesS3Url[photo.file.name],
         };
       });
 
@@ -183,12 +181,11 @@ export default function ListPropertyTypeLayout({
   };
 
   const getPresignedPhotoUrls = async () => {
-    // photos not required for presigned urls
-    const photos = formState?.data?.images || [];
     // Step 1: Request pre-signed URLs
     const fileMap: Record<string, string> = {};
-    photos.forEach((f: PropertyPhoto) => {
-      fileMap[encodeURIComponent(f.file.name)] = f.file.type;
+    propertyImages.forEach((propertyImage: PropertyImage) => {
+      fileMap[encodeURIComponent(propertyImage.file.name)] =
+        propertyImage.file.type;
     });
     console.log(fileMap);
     const presignedUrlsResponse = await getPresignedUrls({
@@ -205,7 +202,6 @@ export default function ListPropertyTypeLayout({
     dispatch(setPropertyID(presignedUrlsResponse.propertyID));
     dispatch(
       setFileURLMap({
-        type: formKey,
         data: presignedUrlsResponse.fileURLMap,
       }),
     );
@@ -233,11 +229,11 @@ export default function ListPropertyTypeLayout({
       },
       [ListPropertyFormStep.GALLERY]: {
         prevStep:
-          type === "resale"
+          propertyCategory === PropertyCategory.RESALE
             ? ListPropertyFormStep.RESALE_DETAILS
             : ListPropertyFormStep.RENTAL_DETAILS,
         route:
-          type === "resale"
+          propertyCategory === PropertyCategory.RESALE
             ? ListPropertyRouteStep.RESALE_DETAILS
             : ListPropertyRouteStep.RENTAL_DETAILS,
       },
@@ -262,7 +258,7 @@ export default function ListPropertyTypeLayout({
     if (currentStep === ListPropertyFormStep.PROPERTY_DETAILS) {
       setRoute(ListPropertyRouteStep.LOCALITY_DETAILS);
     } else if (currentStep === ListPropertyFormStep.LOCALITY_DETAILS) {
-      if (type === "resale") {
+      if (propertyCategory === PropertyCategory.RESALE) {
         setRoute(ListPropertyRouteStep.RESALE_DETAILS);
       } else {
         setRoute(ListPropertyRouteStep.RENTAL_DETAILS);
@@ -289,74 +285,28 @@ export default function ListPropertyTypeLayout({
       const propertyDetails = formState.data!.propertyDetails;
       const localityDetails = formState.data!.localityDetails;
       const additionalInfo = formState.data!.additionalInfo;
+      const rentalDetails = (formState.data as RentForm).rentalDetails;
+      const resaleDetails = (formState.data as ResaleForm).resaleDetails;
+      const flatmateDetails = (formState.data as FlatmateForm).flatmateDetails;
       const imagesS3Keys =
-        Object.values(imagesS3Url).length > 0
-          ? Object.values(imagesS3Url).map(
+        Object.values(propertyImagesS3Url).length > 0
+          ? Object.values(propertyImagesS3Url).map(
               (url) => extractS3KeyFromUrl(url) || "",
             )
           : [];
 
-      const basePropertyData = {
-        propertyID: propertyId,
+      await addProperty({
+        propertyID: propertyID,
+        propertyCategory: propertyCategory,
         ...localityDetails,
         images: imagesS3Keys,
-      };
+        ...propertyDetails,
+        ...additionalInfo,
+        ...rentalDetails,
+        ...resaleDetails,
+        ...flatmateDetails,
+      });
 
-      switch (type) {
-        case "rent": {
-          const rentalDetails = formState.data!.rentalDetails!;
-          const {
-            khataCertificate: _khataCertificate,
-            saleDeed: _saleDeed,
-            propertyTax: _propertyTax,
-            ...rentalAdditionalInfo
-          } = additionalInfo || {};
-          await addRentProperty({
-            ...basePropertyData,
-            ...propertyDetails,
-            ...rentalDetails,
-            ...rentalAdditionalInfo,
-          }).unwrap();
-          break;
-        }
-        case "resale": {
-          const resaleDetails = formState.data!.resaleDetails!;
-          const {
-            whoWillShowProperty: _whoWillShowProperty,
-            ...resaleAdditionalInfo
-          } = additionalInfo || {};
-          await addResaleProperty({
-            ...basePropertyData,
-            ...propertyDetails,
-            ...resaleDetails,
-            ...resaleAdditionalInfo,
-          }).unwrap();
-          break;
-        }
-        case "flatmates": {
-          const flatmatesDetails = formState.data!.flatmatesDetails!;
-          const {
-            ownershipType: _ownershipType,
-            propertyAge: _propertyAge,
-            floorType: _floorType,
-            facing: _facing,
-            ...flatmatesPropertyDetails
-          } = propertyDetails || {};
-          const {
-            khataCertificate: _khataCertificate,
-            saleDeed: _saleDeed,
-            propertyTax: _propertyTax,
-            ...flatmatesAdditionalInfo
-          } = additionalInfo || {};
-          await addFlatmatesProperty({
-            ...basePropertyData,
-            ...flatmatesPropertyDetails,
-            ...flatmatesDetails,
-            ...flatmatesAdditionalInfo,
-          }).unwrap();
-          break;
-        }
-      }
       // Don't open success dialog here anymore - it will be opened automatically after upload completes
     } catch (error) {
       // openDialog("list-property-success-dialog");
@@ -370,7 +320,7 @@ export default function ListPropertyTypeLayout({
       <ListPropertyStepper
         currentStep={currentStep}
         completedSteps={completedSteps}
-        propertyCategory={type.toUpperCase() as PropertyCategory}
+        propertyCategory={propertyCategory}
         isMobile={isMobile}
         onGoToHome={goToHomePage}
       />
@@ -379,7 +329,7 @@ export default function ListPropertyTypeLayout({
 
   const goToHomePage = () => {
     // Clear form data when user navigates away
-    dispatch(clearAllFormData());
+    dispatch(clearFormData());
     router.push("/");
   };
 
@@ -451,8 +401,8 @@ export default function ListPropertyTypeLayout({
         {isDialogOpen("list-property-success-dialog") && (
           <ListPropertySuccessDialog
             id="list-property-success-dialog"
-            propertyId={propertyId}
-            propertyType={type}
+            propertyID={propertyID}
+            propertyCategory={propertyCategory}
           />
         )}
       </div>

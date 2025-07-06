@@ -1,6 +1,6 @@
 import { FileData } from "./FileData";
 
-export interface PropertyPhoto {
+export interface PropertyImage {
   id: string;
   file: FileData;
   url: string;

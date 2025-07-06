@@ -1,6 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
 
+import { FlatmateForm } from "@/interfaces/FlatmateForm";
+import { RentForm } from "@/interfaces/RentForm";
+import { ResaleForm } from "@/interfaces/ResaleForm";
+
 import { RootState } from "./store";
 
 const baseUrl = process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL;
@@ -77,6 +81,25 @@ export const apiSlice = createApi({
     >({
       query: (data) => ({
         url: "photo/user/presigned-urls",
+        method: "POST",
+        body: data,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+    propertyAdd: builder.mutation<
+      {
+        message: string;
+        propertyID: number;
+      },
+      Partial<RentForm | ResaleForm | FlatmateForm> & {
+        propertyID: string;
+        propertyCategory: string;
+      }
+    >({
+      query: (data) => ({
+        url: "property/user/add",
         method: "POST",
         body: data,
         headers: {
@@ -264,6 +287,7 @@ export const {
   useLazyCheckUserQuery,
   useLogoutMutation,
   usePresignedUrlsMutation,
+  usePropertyAddMutation,
   usePropertyAddRentMutation,
   usePropertyAddResaleMutation,
   usePropertyAddFlatmatesMutation,

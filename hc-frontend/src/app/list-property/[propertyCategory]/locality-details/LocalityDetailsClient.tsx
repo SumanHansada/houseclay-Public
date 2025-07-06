@@ -2,7 +2,6 @@
 
 import { useFormikContext } from "formik";
 import { MapPin } from "lucide-react";
-import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
@@ -12,14 +11,8 @@ import GoogleMaps from "@/components/common/GoogleMaps";
 import FormPlacesAutocomplete from "@/form-components/FormPlacesAutocomplete";
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 import { FormValues } from "@/interfaces/FormValues";
-import {
-  FormType,
-  setFormValidity,
-  setLocalityDetails,
-} from "@/store/listPropertySlice";
+import { setFormValidity, setLocalityDetails } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
-
-export const dynamicParams = true;
 
 const localitySchema = Yup.object().shape({
   localityDetails: Yup.object().shape({
@@ -36,14 +29,10 @@ const localitySchema = Yup.object().shape({
   }),
 });
 
-const LocalityDetailsPage: React.FC = () => {
+const LocalityDetailsClient: React.FC = () => {
   const { values, errors, touched, setFieldError, setErrors, setFieldValue } =
     useFormikContext<FormValues>();
-  const params = useParams();
-  const formKey = `${params?.type}Form` as FormType;
-  const formState = useSelector(
-    (state: RootState) => state.listProperty[formKey],
-  );
+  const formState = useSelector((state: RootState) => state.listProperty.form);
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
 
@@ -82,13 +71,12 @@ const LocalityDetailsPage: React.FC = () => {
         // Set form data in the store
         dispatch(
           setLocalityDetails({
-            type: formKey,
             localityDetails: values.localityDetails,
           }),
         );
         // Form is valid
         if (!isFormValid) {
-          dispatch(setFormValidity({ type: formKey, isValid: true }));
+          dispatch(setFormValidity({ isValid: true }));
         }
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -102,7 +90,7 @@ const LocalityDetailsPage: React.FC = () => {
           });
           // Form is invalid
           if (isFormValid) {
-            dispatch(setFormValidity({ type: formKey, isValid: false }));
+            dispatch(setFormValidity({ isValid: false }));
           }
         }
       }
@@ -112,7 +100,6 @@ const LocalityDetailsPage: React.FC = () => {
   }, [
     localityDetailsString,
     dispatch,
-    formKey,
     setErrors,
     setFieldError,
     isFormValid,
@@ -224,4 +211,4 @@ const LocalityDetailsPage: React.FC = () => {
   );
 };
 
-export default LocalityDetailsPage;
+export default LocalityDetailsClient;
