@@ -6,10 +6,7 @@ import serverAxiosInstance from "./serverAxiosInstance";
 
 export class ServerAPIService {
   private static getBaseUrl() {
-    return (
-      process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL ||
-      "http://ec2-3-107-183-183.ap-southeast-2.compute.amazonaws.com:8080/api"
-    );
+    return process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL;
   }
 
   private static async getAuthHeaders() {

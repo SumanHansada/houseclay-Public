@@ -7,6 +7,7 @@ import { apiSlice } from "./apiSlice";
 import appReducer from "./appSlice";
 import authReducer from "./authSlice";
 import listPropertyReducer from "./listPropertySlice";
+import propertySearchReducer from "./propertySearchSlice";
 import uploadToS3SliceReducer from "./uploadToS3Slice";
 import userReducer from "./userSlice";
 
@@ -34,6 +35,7 @@ export function makeStore() {
       app: appReducer,
       auth: authReducer,
       listProperty: persistedListPropertyReducer,
+      propertySearch: propertySearchReducer,
       user: userReducer,
       uploadToS3: uploadToS3SliceReducer,
       [apiSlice.reducerPath]: apiSlice.reducer,

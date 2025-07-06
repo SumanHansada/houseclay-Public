@@ -282,11 +282,11 @@ export default function ListPropertyTypeLayout({
 
   const handlePostProperty = async () => {
     try {
-      const propertyDetails = formState.data!.propertyDetails;
-      const localityDetails = formState.data!.localityDetails;
-      const additionalInfo = formState.data!.additionalInfo;
-      const rentalDetails = (formState.data as RentForm).rentalDetails;
-      const resaleDetails = (formState.data as ResaleForm).resaleDetails;
+      const propertyDetails = formState.data?.propertyDetails;
+      const localityDetails = formState.data?.localityDetails;
+      const additionalInfo = formState.data?.additionalInfo;
+      const rentalDetails = (formState.data as RentForm)?.rentalDetails;
+      const resaleDetails = (formState.data as ResaleForm)?.resaleDetails;
       const flatmateDetails = (formState.data as FlatmateForm).flatmateDetails;
       const imagesS3Keys =
         Object.values(propertyImagesS3Url).length > 0
@@ -294,17 +294,25 @@ export default function ListPropertyTypeLayout({
               (url) => extractS3KeyFromUrl(url) || "",
             )
           : [];
-
-      await addProperty({
-        propertyID: propertyID,
-        propertyCategory: propertyCategory,
-        ...localityDetails,
+      let propertyData = {
+        propertyID,
+        propertyCategory,
         images: imagesS3Keys,
         ...propertyDetails,
+        ...localityDetails,
         ...additionalInfo,
-        ...rentalDetails,
-        ...resaleDetails,
-        ...flatmateDetails,
+      };
+
+      if (propertyCategory === PropertyCategory.RESALE) {
+        propertyData = { ...propertyData, ...resaleDetails };
+      } else if (propertyCategory === PropertyCategory.RENT) {
+        propertyData = { ...propertyData, ...rentalDetails };
+      } else if (propertyCategory === PropertyCategory.FLATMATE) {
+        propertyData = { ...propertyData, ...flatmateDetails };
+      }
+
+      await addProperty({
+        ...propertyData,
       });
 
       // Don't open success dialog here anymore - it will be opened automatically after upload completes

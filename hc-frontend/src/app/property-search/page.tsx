@@ -2,8 +2,8 @@
 
 import { ChevronLeft, SearchIcon, SlidersHorizontal } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useReducer } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import { BadgeType, PropertyCategory } from "@/common/enums";
 import { pascalCase } from "@/common/utils";
@@ -22,12 +22,19 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
+import {
+  setPropertyBhk,
+  setPropertyCategory,
+  setPropertyType,
+  setTenantType,
+} from "@/store/propertySearchSlice";
+import { RootState } from "@/store/store";
 
 export default function PropertySearchPage() {
   const searchParams = useSearchParams();
   const lat = searchParams.get("lat");
   const lon = searchParams.get("lon");
-  const propertyCategory = searchParams.get("propertyCategory");
+  const searchState = useSelector((state: RootState) => state.propertySearch);
   const router = useRouter();
 
   // Only fetch if lat/lon are present and valid
@@ -37,9 +44,10 @@ export default function PropertySearchPage() {
       ? {
           latitude: Number(lat),
           longitude: Number(lon),
-          propertyCategory: propertyCategory || "",
+          propertyCategory:
+            searchState.propertyCategory || PropertyCategory.RENT,
         }
-      : { latitude: 0, longitude: 0, propertyCategory: "" },
+      : { latitude: 0, longitude: 0, propertyCategory: PropertyCategory.RENT },
     { skip: !shouldFetch },
   );
 
@@ -54,55 +62,6 @@ export default function PropertySearchPage() {
       images: property.image ? [property.image] : [],
     })) as PropertySearch[];
   }, [data, error]);
-
-  type PropertySearchState = {
-    propertyType: string | number | boolean;
-    propertyCategory: string;
-    propertyBhk: string | number | boolean;
-    tenantType: string | number | boolean;
-  };
-
-  type PropertySearchAction = {
-    type:
-      | "SET_PROPERTY_TYPE"
-      | "SET_PROPERTY_CATEGORY"
-      | "SET_PROPERTY_BHK"
-      | "SET_TENANT_TYPE";
-    payload: string | number | boolean;
-  };
-
-  const initialState: PropertySearchState = {
-    propertyType: "",
-    propertyCategory: "",
-    propertyBhk: "",
-    tenantType: "",
-  };
-
-  const propertyReducer = (
-    state: PropertySearchState,
-    action: PropertySearchAction,
-  ): PropertySearchState => {
-    switch (action.type) {
-      case "SET_PROPERTY_TYPE":
-        return { ...state, propertyType: action.payload };
-      case "SET_PROPERTY_CATEGORY":
-        return {
-          ...state,
-          propertyCategory: action.payload as PropertyCategory,
-        };
-      case "SET_PROPERTY_BHK":
-        return { ...state, propertyBhk: action.payload };
-      case "SET_TENANT_TYPE":
-        return { ...state, tenantType: action.payload };
-      default:
-        return state;
-    }
-  };
-
-  const [searchState, searchDispatch] = useReducer(
-    propertyReducer,
-    initialState,
-  );
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
 
@@ -183,10 +142,7 @@ export default function PropertySearchPage() {
               id="property-category"
               value={searchState.propertyCategory}
               onChange={(value: string | number | boolean) =>
-                searchDispatch({
-                  type: "SET_PROPERTY_CATEGORY",
-                  payload: value as PropertyCategory,
-                })
+                dispatch(setPropertyCategory(value as PropertyCategory))
               }
               size="sm"
               dropdownWidth="auto"
@@ -207,7 +163,7 @@ export default function PropertySearchPage() {
               value={searchState.propertyType}
               placeholder="Property type"
               onChange={(value: string | number | boolean) =>
-                searchDispatch({ type: "SET_PROPERTY_TYPE", payload: value })
+                dispatch(setPropertyType(value))
               }
               size="sm"
               dropdownWidth="full"
@@ -226,7 +182,7 @@ export default function PropertySearchPage() {
               value={searchState.propertyBhk}
               placeholder="Beds"
               onChange={(value: string | number | boolean) =>
-                searchDispatch({ type: "SET_PROPERTY_BHK", payload: value })
+                dispatch(setPropertyBhk(value))
               }
               size="sm"
               dropdownWidth="full"
@@ -244,7 +200,7 @@ export default function PropertySearchPage() {
               value={searchState.tenantType}
               placeholder="Tenant type"
               onChange={(value: string | number | boolean) =>
-                searchDispatch({ type: "SET_TENANT_TYPE", payload: value })
+                dispatch(setTenantType(value))
               }
               size="sm"
               dropdownWidth="full"
@@ -282,7 +238,7 @@ export default function PropertySearchPage() {
               <div>
                 <p className="text-gray-500 text-sm">
                   {properties.length} Rooms for{" "}
-                  {pascalCase(propertyCategory || "")}
+                  {pascalCase(searchState.propertyCategory || "")}
                 </p>
               </div>
             </div>

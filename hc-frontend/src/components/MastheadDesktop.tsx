@@ -3,14 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { PropertyCategory } from "@/common/enums";
 import HomeSearchBar from "@/components/HomeSearchBar";
-import { setActiveSearchTab } from "@/store/appSlice";
+import { setPropertyCategory } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
 
 import ImageWithLoader from "./common/ImageWithLoader";
 
 const MastHeadDesktop = () => {
-  const activeTab = useSelector(
-    (state: RootState) => state.app.activeSearchTab,
+  const propertyCategory = useSelector(
+    (state: RootState) => state.propertySearch.propertyCategory,
   );
   const dispatch = useDispatch();
 
@@ -41,15 +41,15 @@ const MastHeadDesktop = () => {
         {/* Tabs */}
         <div className="max-w-5xl flex justify-start pl-8 mb-4">
           <button
-            className={`px-6 py-2 text-lg border-b-2 border-gray-300 ${activeTab === PropertyCategory.RENT ? "text-red-500 border-b-2 border-red-500" : "text-gray-700"}`}
-            onClick={() => dispatch(setActiveSearchTab(PropertyCategory.RENT))}
+            className={`px-6 py-2 text-lg border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.RENT ? "text-red-500 border-b-2 border-red-500" : "text-gray-700"}`}
+            onClick={() => dispatch(setPropertyCategory(PropertyCategory.RENT))}
           >
             Rent
           </button>
           <button
-            className={`px-6 py-2 text-lg border-b-2 border-gray-300 ${activeTab === PropertyCategory.RESALE ? "text-red-500 border-b-2 border-red-500" : "text-gray-700"}`}
+            className={`px-6 py-2 text-lg border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.RESALE ? "text-red-500 border-b-2 border-red-500" : "text-gray-700"}`}
             onClick={() =>
-              dispatch(setActiveSearchTab(PropertyCategory.RESALE))
+              dispatch(setPropertyCategory(PropertyCategory.RESALE))
             }
           >
             Buy

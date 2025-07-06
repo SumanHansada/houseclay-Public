@@ -53,10 +53,15 @@ import {
 const VegIcon = VegIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const NonVegIcon = NonVegIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
+import { useDispatch, useSelector } from "react-redux";
+
+import { PropertyCategory } from "@/common/enums";
 import Button from "@/components/common/Button";
 import RadioGroup from "@/components/common/RadioGroup";
 import RangeSlider from "@/components/common/RangeSlider";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
+import { setPropertyCategory } from "@/store/propertySearchSlice";
+import { RootState } from "@/store/store";
 
 interface SearchFilterDialogProps {
   id: string;
@@ -144,6 +149,9 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
 }) => {
   // Stub state for each filter
   const [lookingFor, setLookingFor] = useState("Full House");
+  const propertyCategory = useSelector(
+    (state: RootState) => state.propertySearch.propertyCategory,
+  );
   const [selectedPropertyType, setSelectedPropertyType] = useState(
     "Independent House/Villa",
   );
@@ -157,10 +165,32 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
     useState("Within 15 Days");
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [selectedParking, setSelectedParking] = useState("2 Wheeler");
-  const [priceRange, setPriceRange] = useState<[number, number]>([
-    10000, 80000,
+  const [priceRangeForRent, setPriceRangeForRent] = useState<[number, number]>([
+    200000, 700000,
   ]);
+  const [priceRangeForBuy, setPriceRangeForBuy] = useState<[number, number]>([
+    5000000, 70000000,
+  ]);
+  const marksForRent = [
+    { value: 0, label: "0" },
+    { value: 50000, label: "50K" },
+    { value: 200000, label: "200K" },
+    { value: 400000, label: "400K" },
+    { value: 800000, label: "800K" },
+    { value: 1000000, label: "1M" },
+  ];
+
+  const marksForBuy = [
+    { value: 0, label: "0" },
+    { value: 5000000, label: "5M" },
+    { value: 10000000, label: "10M" },
+    { value: 20000000, label: "20M" },
+    { value: 40000000, label: "40M" },
+    { value: 80000000, label: "80M" },
+    { value: 100000000, label: "100M" },
+  ];
   const { isMobile } = useDeviceContext();
+  const dispatch = useDispatch();
 
   return (
     <Dialog
@@ -171,9 +201,30 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
       exitAnimation="animate-fade-out"
     >
       <DialogHeader>
-        <div className="flex md:border-b border-gray-200 items-center w-full justify-between py-4 px-6 max-md:py-2 max-md:px-4">
-          <span className="text-xl max-md:py-1.5">More Filters</span>
-          <button onClick={onClose} className="rounded-full hover:bg-gray-100">
+        <div className="flex border-b border-gray-200 items-center w-full justify-between py-4 px-6 max-md:py-2 max-md:px-4">
+          <span className="text-xl max-md:hidden">More Filters</span>
+          <div className="flex justify-center text-xl ml-auto md:hidden">
+            <button
+              onClick={() =>
+                dispatch(setPropertyCategory(PropertyCategory.RENT))
+              }
+              className={`px-8 py-1 border-b-2 text-base border-gray-300 ${propertyCategory === PropertyCategory.RENT ? "text-red-500 border-red-500" : "text-gray-700 "}`}
+            >
+              Rent
+            </button>
+            <button
+              onClick={() =>
+                dispatch(setPropertyCategory(PropertyCategory.RESALE))
+              }
+              className={`px-8 py-1 border-b-2 text-base border-gray-300 ${propertyCategory === PropertyCategory.RESALE ? "text-red-500 border-red-500" : "text-gray-700 "}`}
+            >
+              Buy
+            </button>
+          </div>
+          <button
+            onClick={onClose}
+            className="rounded-full hover:bg-gray-100 ml-auto max-md:border max-md:border-gray-200"
+          >
             <X size={24} />
           </button>
         </div>
@@ -342,17 +393,27 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
             </div>
             <RangeSlider
               min={0}
-              max={100000}
-              step={10000}
-              value={priceRange}
-              onChange={(value) => setPriceRange(value as [number, number])}
-              marks={[
-                { value: 0, label: "0" },
-                { value: 25000, label: "25K" },
-                { value: 50000, label: "50K" },
-                { value: 75000, label: "75K" },
-                { value: 100000, label: "100K" },
-              ]}
+              max={
+                propertyCategory === PropertyCategory.RENT ? 1000000 : 100000000
+              }
+              step={
+                propertyCategory === PropertyCategory.RENT ? 50000 : 5000000
+              }
+              value={
+                propertyCategory === PropertyCategory.RENT
+                  ? priceRangeForRent
+                  : priceRangeForBuy
+              }
+              onChange={(value) =>
+                propertyCategory === PropertyCategory.RENT
+                  ? setPriceRangeForRent(value as [number, number])
+                  : setPriceRangeForBuy(value as [number, number])
+              }
+              marks={
+                propertyCategory === PropertyCategory.RENT
+                  ? marksForRent
+                  : marksForBuy
+              }
               rangeClassName="absolute h-2 bg-red-500 rounded-full top-1/2 transform -translate-y-1/2"
               thumbClassName="absolute w-6 h-6 flex justify-center items-center bg-white border-2 border-white-500 rounded-full shadow-md cursor-pointer transform -translate-x-1/2 -translate-y-1/2 hover:shadow-lg transition-shadow focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
               showInputs={isMobile ? false : true}
@@ -433,7 +494,7 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
         </div>
       </DialogContent>
       <DialogFooter>
-        <div className="flex w-full px-6 py-3 justify-between max-md:px-4">
+        <div className="flex border-t border-gray-200 w-full px-6 py-2 md:py-3 justify-between max-md:px-4">
           <Button
             variant="outline"
             leftIcon={<RefreshCcw size={20} />}

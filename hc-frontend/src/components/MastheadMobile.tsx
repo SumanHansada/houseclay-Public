@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { PropertyCategory } from "@/common/enums";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { setActiveSearchTab } from "@/store/appSlice";
+import { setPropertyCategory } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
 
 import ImageWithLoader from "./common/ImageWithLoader";
@@ -34,8 +34,8 @@ const ZeroPercent = dynamic(
 const MastHeadMobile: React.FC = () => {
   const dispatch = useDispatch();
   const { openDialog } = useDialog();
-  const activeTab = useSelector(
-    (state: RootState) => state.app.activeSearchTab,
+  const propertyCategory = useSelector(
+    (state: RootState) => state.propertySearch.propertyCategory,
   );
   return (
     <div className="relative flex flex-col px-6 pt-8 pb-14 gap-6">
@@ -54,16 +54,16 @@ const MastHeadMobile: React.FC = () => {
         {/* Tabs */}
         <div className="flex justify-center">
           <button
-            onClick={() => dispatch(setActiveSearchTab(PropertyCategory.RENT))}
-            className={`px-8 py-2 border-b-2 border-gray-300 ${activeTab === PropertyCategory.RENT ? "text-red-500 border-red-500" : "text-gray-700 "}`}
+            onClick={() => dispatch(setPropertyCategory(PropertyCategory.RENT))}
+            className={`px-8 py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.RENT ? "text-red-500 border-red-500" : "text-gray-700 "}`}
           >
             Rent
           </button>
           <button
             onClick={() =>
-              dispatch(setActiveSearchTab(PropertyCategory.RESALE))
+              dispatch(setPropertyCategory(PropertyCategory.RESALE))
             }
-            className={`px-8 py-2 border-b-2 border-gray-300 ${activeTab === PropertyCategory.RESALE ? "text-red-500 border-red-500" : "text-gray-700 "}`}
+            className={`px-8 py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.RESALE ? "text-red-500 border-red-500" : "text-gray-700 "}`}
           >
             Buy
           </button>
