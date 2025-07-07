@@ -24,9 +24,37 @@ const listPropertyPersistConfig = {
   ], // Only persist these fields
 };
 
+// Configure persistence for propertySearch slice
+const propertySearchPersistConfig = {
+  key: "propertySearch",
+  storage,
+  whitelist: [
+    "propertyType",
+    "propertyCategory",
+    "propertyBhk",
+    "tenantType",
+    "lookingFor",
+    "propertyTypeFilter",
+    "tenant",
+    "foodPref",
+    "bathroomType",
+    "furnishing",
+    "availability",
+    "amenities",
+    "parking",
+    "priceRangeForRent",
+    "priceRangeForBuy",
+  ], // Persist all fields
+};
+
 const persistedListPropertyReducer = persistReducer(
   listPropertyPersistConfig,
   listPropertyReducer,
+);
+
+const persistedPropertySearchReducer = persistReducer(
+  propertySearchPersistConfig,
+  propertySearchReducer,
 );
 
 export function makeStore() {
@@ -35,7 +63,7 @@ export function makeStore() {
       app: appReducer,
       auth: authReducer,
       listProperty: persistedListPropertyReducer,
-      propertySearch: propertySearchReducer,
+      propertySearch: persistedPropertySearchReducer,
       user: userReducer,
       uploadToS3: uploadToS3SliceReducer,
       [apiSlice.reducerPath]: apiSlice.reducer,

@@ -4,8 +4,9 @@ import { useRouter } from "next/navigation";
 import SearchSvg from "public/icons/search.svg";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
+import { resetPropertySearch } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
 
 import PlacesAutocomplete from "./common/PlacesAutocomplete";
@@ -34,6 +35,7 @@ const CITY_OPTIONS = Object.keys(cityLatLngMapping).map((city) => ({
 const HomeSearchBar: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const dispatch = useDispatch();
   const [location, setLocation] = useState<{
     latitude?: number;
     longitude?: number;
@@ -47,8 +49,11 @@ const HomeSearchBar: React.FC = () => {
 
   const handleSearch = () => {
     if (location && location.latitude && location.longitude) {
+      // Reset all filters before making a new search
+      dispatch(resetPropertySearch());
+
       router.push(
-        `/property-search?propertyCategory=${propertyCategory.toLowerCase()}&lat=${location.latitude}&lon=${location.longitude}`,
+        `/property-search?lat=${location.latitude}&lon=${location.longitude}&propertyCategory=${propertyCategory.toLowerCase()}`,
       );
     }
   };
@@ -56,7 +61,7 @@ const HomeSearchBar: React.FC = () => {
   const handlePrefetch = () => {
     if (location && location.latitude && location.longitude) {
       router.prefetch(
-        `/property-search?&propertyCategory=${propertyCategory.toLowerCase()}&lat=${location.latitude}&lon=${location.longitude}`,
+        `/property-search?lat=${location.latitude}&lon=${location.longitude}&propertyCategory=${propertyCategory.toLowerCase()}`,
       );
     }
   };

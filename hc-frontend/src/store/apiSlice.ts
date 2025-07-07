@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
 
+import { PropertyCategory } from "@/common/enums";
 import { FlatmateForm } from "@/interfaces/FlatmateForm";
 import { RentForm } from "@/interfaces/RentForm";
 import { ResaleForm } from "@/interfaces/ResaleForm";
@@ -107,153 +108,7 @@ export const apiSlice = createApi({
         },
       }),
     }),
-    propertyAddRent: builder.mutation<
-      {
-        message: string;
-        propertyID: number;
-      },
-      {
-        propertyID: string;
-        propertyCategory: string;
-        propertyType: string;
-        builtUpArea: number;
-        facing: string;
-        bhkType: string;
-        propertyAge: string;
-        ownershipType: string;
-        floor: number;
-        totalFloors: number;
-        floorType: string;
-        description: string;
-        city: string;
-        locationOrSocietyName: string;
-        landmark: string;
-        latitude: number;
-        longitude: number;
-        rent: number;
-        deposit: number;
-        maintenanceCharges: number;
-        rentNegotiable: boolean;
-        availableFrom: string;
-        preferredTenants: string[];
-        waterSupply: string;
-        powerBackup: string;
-        furnishing: string;
-        parking: boolean;
-        nonVegAllowed: boolean;
-        amenities: string[];
-        images: string[];
-        whoWillShowProperty?: string;
-        secondaryPhoneNumber?: string;
-      }
-    >({
-      query: (data) => ({
-        url: "property/user/add",
-        method: "POST",
-        body: data,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }),
-    }),
-    propertyAddResale: builder.mutation<
-      {
-        message: string;
-        propertyID: number;
-      },
-      {
-        propertyID: string;
-        propertyCategory: string;
-        builtUpArea: number;
-        facing: string;
-        bhkType: string;
-        ownershipType: string;
-        propertyAge: string;
-        floor: number;
-        totalFloors: number;
-        floorType: string;
-        description: string;
-        city: string;
-        locationOrSocietyName: string;
-        landmark: string;
-        latitude: number;
-        longitude: number;
-        price: number;
-        availableFrom: string;
-        bathrooms: number;
-        balcony: number;
-        priceNegotiable: boolean;
-        underLoan: boolean;
-        waterSupply: string;
-        powerBackup: string;
-        furnishing: string;
-        parking: boolean;
-        amenities: string[];
-        images: string[];
-        khataCertificate?: string;
-        saleDeed?: boolean;
-        propertyTax?: boolean;
-        secondaryPhoneNumber?: string;
-      }
-    >({
-      query: (data) => ({
-        url: "property/user/add",
-        method: "POST",
-        body: data,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }),
-    }),
-    propertyAddFlatmates: builder.mutation<
-      {
-        message: string;
-        propertyID: number;
-      },
-      {
-        propertyID: string;
-        propertyCategory: string;
-        builtUpArea: number;
-        bhkType: string;
-        floor: number;
-        totalFloors: number;
-        description: string;
-        city: string;
-        locationOrSocietyName: string;
-        landmark: string;
-        latitude: number;
-        longitude: number;
-        rent: number;
-        maintenanceCharges: number;
-        depositCharges: number;
-        availableFrom: string;
-        furnishing: string;
-        waterSupply: string;
-        powerBackup: string;
-        parking: boolean;
-        nonVegAllowed: boolean;
-        amenities: string[];
-        tenantType: string;
-        attachedBathroom: boolean;
-        attachedBalcony: boolean;
-        smokingPreference: string;
-        drinkingPreference: string;
-        images: string[];
-        whoWillShowProperty?: string;
-        secondaryPhoneNumber?: string;
-      }
-    >({
-      query: (data) => ({
-        url: "property/user/add",
-        method: "POST",
-        body: data,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }),
-    }),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    getPropertyById: builder.query<any, string>({
+    getPropertyById: builder.query<unknown, string>({
       query: (id) => `/property/user/${id}`,
     }),
     getPropertyByIdNoAuth: builder.query<unknown, string>({
@@ -262,10 +117,40 @@ export const apiSlice = createApi({
 
     getPropertiesByLocation: builder.query<
       unknown,
-      { latitude: number; longitude: number; propertyCategory: string }
+      Record<string, string | number | boolean | string[] | PropertyCategory>
     >({
-      query: ({ latitude, longitude, propertyCategory }) =>
-        `/property/search?lat=${latitude}&lon=${longitude}&propertyCategory=${propertyCategory}`,
+      query: (params) => {
+        const { latitude, longitude, propertyCategory, ...filters } = params;
+        const searchParams = new URLSearchParams({
+          lat: latitude.toString(),
+          lon: longitude.toString(),
+          propertyCategory: propertyCategory.toString(),
+        });
+
+        // Add optional filters
+        if (filters.propertyType)
+          searchParams.append("propertyType", filters.propertyType.toString());
+        if (filters.bhkType)
+          searchParams.append("bhkType", filters.bhkType.toString());
+        if (filters.preferredTenant)
+          searchParams.append(
+            "preferredTenant",
+            filters.preferredTenant.toString(),
+          );
+        if (filters.furnishing)
+          searchParams.append("furnishing", filters.furnishing.toString());
+        if (filters.parking !== undefined)
+          searchParams.append("parking", filters.parking.toString());
+        if (
+          filters.amenities &&
+          Array.isArray(filters.amenities) &&
+          filters.amenities.length > 0
+        ) {
+          searchParams.append("amenities", filters.amenities.join(","));
+        }
+
+        return `/property/search?${searchParams.toString()}`;
+      },
     }),
     generateLead: builder.mutation<
       { message: string },
@@ -288,9 +173,6 @@ export const {
   useLogoutMutation,
   usePresignedUrlsMutation,
   usePropertyAddMutation,
-  usePropertyAddRentMutation,
-  usePropertyAddResaleMutation,
-  usePropertyAddFlatmatesMutation,
   useGetPropertyByIdQuery,
   useLazyGetPropertyByIdQuery,
   useGetPropertiesByLocationQuery,

@@ -42,13 +42,39 @@ export default function PropertySearchPage() {
 
   // Only fetch if lat/lon are present and valid
   const shouldFetch = lat && lon && !isNaN(Number(lat)) && !isNaN(Number(lon));
+
+  // Build query object from all URL params
+  const buildQueryParams = () => {
+    const query: Record<
+      string,
+      string | number | boolean | string[] | PropertyCategory
+    > = {
+      latitude: Number(lat),
+      longitude: Number(lon),
+      propertyCategory: propertyCategory || PropertyCategory.RENT,
+    };
+
+    // Add optional filters from URL params
+    const propertyType = searchParams.get("propertyType");
+    const bhkType = searchParams.get("bhkType");
+    const preferredTenant = searchParams.get("preferredTenant");
+    const furnishing = searchParams.get("furnishing");
+    const parking = searchParams.get("parking");
+    const amenities = searchParams.get("amenities");
+
+    if (propertyType) query.propertyType = propertyType;
+    if (bhkType) query.bhkType = bhkType;
+    if (preferredTenant) query.preferredTenant = preferredTenant;
+    if (furnishing) query.furnishing = furnishing;
+    if (parking) query.parking = parking === "true";
+    if (amenities) query.amenities = amenities.split(",");
+
+    return query;
+  };
+
   const { data, isLoading, error } = useGetPropertiesByLocationQuery(
     shouldFetch
-      ? {
-          latitude: Number(lat),
-          longitude: Number(lon),
-          propertyCategory: propertyCategory || PropertyCategory.RENT,
-        }
+      ? buildQueryParams()
       : { latitude: 0, longitude: 0, propertyCategory: PropertyCategory.RENT },
     { skip: !shouldFetch },
   );
@@ -78,6 +104,45 @@ export default function PropertySearchPage() {
   }, [dispatch, isMobile]);
 
   const { openDialog, closeDialog, isDialogOpen } = useDialog();
+
+  const handleSearch = () => {
+    // Build URL params from searchState (only supported filters)
+    const params = new URLSearchParams();
+
+    // Required params (lat, lon, propertyCategory)
+    if (lat) params.set("lat", lat);
+    if (lon) params.set("lon", lon);
+    if (searchState.propertyCategory) {
+      params.set(
+        "propertyCategory",
+        searchState.propertyCategory.toLowerCase(),
+      );
+    }
+
+    // Optional filters (only add if not empty)
+    if (searchState.propertyType && searchState.propertyType !== "") {
+      params.set("propertyType", String(searchState.propertyType));
+    }
+    if (searchState.propertyBhk && searchState.propertyBhk !== "") {
+      params.set("bhkType", String(searchState.propertyBhk));
+    }
+    if (searchState.tenantType && searchState.tenantType !== "") {
+      params.set("preferredTenant", String(searchState.tenantType));
+    }
+    if (searchState.furnishing && searchState.furnishing !== "") {
+      params.set("furnishing", searchState.furnishing);
+    }
+    if (searchState.parking !== undefined && searchState.parking !== false) {
+      params.set("parking", String(searchState.parking));
+    }
+    if (searchState.amenities && searchState.amenities.length > 0) {
+      // Join array with comma for API
+      params.set("amenities", searchState.amenities.join(","));
+    }
+
+    // Navigate to new URL with all params
+    router.push(`/property-search?${params.toString()}`);
+  };
 
   return (
     <>
@@ -224,6 +289,7 @@ export default function PropertySearchPage() {
               size="md"
               className="min-h-[46px] rounded-xl text-sm"
               buttonTextClassName="lg:block md:hidden"
+              onClick={handleSearch}
             >
               Search
             </Button>
@@ -256,7 +322,7 @@ export default function PropertySearchPage() {
               </div>
             ) : properties.length === 0 ? (
               <div className="text-center text-gray-500 py-12">
-                No properties found for this location.
+                No properties found.
               </div>
             ) : (
               <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
@@ -287,6 +353,7 @@ export default function PropertySearchPage() {
           onApply={() => {
             closeDialog("property-filters");
             dispatch(setHideStickyNavBar(false));
+            handleSearch();
           }}
         />
       )}
