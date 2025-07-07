@@ -29,7 +29,7 @@ public class PropertyService {
                             .collect(Collectors.toList())
             );
             property.setCoverImage(photoService.getObjectPresignedUrl(property.getCoverImage()));
-            return propertyOpt.get();
+            return property;
         }
         throw new APIException("Invalid property ID", HttpStatus.BAD_REQUEST);
     }

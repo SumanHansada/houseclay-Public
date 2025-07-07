@@ -229,7 +229,7 @@ public class DataInitializer {
         property.setPropertyAge("0-1 year");
         property.setWaterSupply("Borewell");
         property.setPowerBackup("Partial");
-        property.setParking(true);
+        property.setParking("2 wheeler");
         property.setAvailableFrom(new Timestamp(System.currentTimeMillis()));
         property.setPropertyState(PropertyState.ACTIVE);
         property.setImages(List.of("image1.jpg", "image2.jpg"));

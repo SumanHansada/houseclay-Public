@@ -47,7 +47,7 @@ public class PropertyController {
             @RequestParam(required = false) String bhkType,
             @RequestParam(required = false) String furnishing,
             @RequestParam(required = false) String propertyType,
-            @RequestParam(required = false) Boolean parking,
+            @RequestParam(required = false) String parking,
             @RequestParam(required = false) String preferredTenant,
             @RequestParam(required = false) List<String> amenities) {
 

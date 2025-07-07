@@ -55,7 +55,7 @@ public class Property {
     private String propertyAge;
     private String waterSupply;
     private String powerBackup;
-    private Boolean parking;
+    private String parking;
     private Timestamp availableFrom;
     private PropertyState propertyState;
     private String coverImage;

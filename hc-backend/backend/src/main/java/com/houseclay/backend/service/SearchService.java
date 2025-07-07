@@ -39,7 +39,7 @@ public class SearchService {
             PropertyCategory propertyCategory,
             String furnishing,
             String propertyType,
-            Boolean parking,
+            String parking,
             String preferredTenant,
             List<String> amenities
     ) {
@@ -93,12 +93,9 @@ public class SearchService {
             ));
         }
 
-        if (parking != null) {
+        if (parking != null && !parking.isEmpty()) {
             filters.add(Query.of(q -> q
-                    .term(t -> t
-                            .field("parking")
-                            .value(parking)
-                    )
+                    .term(t -> t.field("parking.keyword").value(parking))
             ));
         }
 

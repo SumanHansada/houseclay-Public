@@ -23,7 +23,7 @@ public class PropertyDocument {
     private String locationOrSocietyName;
     private String landmark;
     private Long availableFrom;
-    private Boolean parking;
+    private String parking;
 
     @Field(type = FieldType.Keyword)
     private List<String> images;

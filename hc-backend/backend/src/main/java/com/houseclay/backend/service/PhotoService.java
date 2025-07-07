@@ -65,6 +65,9 @@ public class PhotoService {
     }
 
     public String getObjectPresignedUrl(String objectKey) {
+        if(objectKey == null || objectKey.isEmpty()) {
+            return "";
+        }
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(bucketName)
                 .key(objectKey)
