@@ -41,7 +41,7 @@ import ApartmentIcon from "public/icons/property-types/apartment.webp";
 import CommunityVillaIcon from "public/icons/property-types/community-villa.webp";
 import IndependentHouseIcon from "public/icons/property-types/independent-house.webp";
 import StandaloneBuildingIcon from "public/icons/property-types/standalone-building.webp";
-import React, { useState } from "react";
+import React from "react";
 
 import {
   Dialog,
@@ -60,7 +60,21 @@ import Button from "@/components/common/Button";
 import RadioGroup from "@/components/common/RadioGroup";
 import RangeSlider from "@/components/common/RangeSlider";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { setPropertyCategory } from "@/store/propertySearchSlice";
+import {
+  resetPropertySearch,
+  setAmenities,
+  setAvailability,
+  setBathroomType,
+  setFoodPref,
+  setFurnishing,
+  setLookingFor,
+  setParking,
+  setPriceRangeForBuy,
+  setPriceRangeForRent,
+  setPropertyCategory,
+  setPropertyTypeFilter,
+  setTenant,
+} from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
 
 interface SearchFilterDialogProps {
@@ -147,30 +161,22 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
   onReset,
   onApply,
 }) => {
-  // Stub state for each filter
-  const [lookingFor, setLookingFor] = useState("Full House");
-  const propertyCategory = useSelector(
-    (state: RootState) => state.propertySearch.propertyCategory,
-  );
-  const [selectedPropertyType, setSelectedPropertyType] = useState(
-    "Independent House/Villa",
-  );
-  const [selectedTenant, setSelectedTenant] = useState("Female");
-  const [selectedFoodPref, setSelectedFoodPref] = useState("Veg");
-  const [selectedBathroomType, setSelectedBathroomType] =
-    useState("Non-Attached");
-  const [selectedFurnishing, setSelectedFurnishing] =
-    useState("Fully Furnished");
-  const [selectedAvailability, setSelectedAvailability] =
-    useState("Within 15 Days");
-  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
-  const [selectedParking, setSelectedParking] = useState("2 Wheeler");
-  const [priceRangeForRent, setPriceRangeForRent] = useState<[number, number]>([
-    200000, 700000,
-  ]);
-  const [priceRangeForBuy, setPriceRangeForBuy] = useState<[number, number]>([
-    5000000, 70000000,
-  ]);
+  // Redux state selectors
+  const {
+    propertyCategory,
+    lookingFor,
+    propertyTypeFilter,
+    tenant,
+    foodPref,
+    bathroomType,
+    furnishing,
+    availability,
+    amenities: stateAmenities,
+    parking,
+    priceRangeForRent,
+    priceRangeForBuy,
+  } = useSelector((state: RootState) => state.propertySearch);
+
   const marksForRent = [
     { value: 0, label: "0" },
     { value: 50000, label: "50K" },
@@ -189,8 +195,14 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
     { value: 80000000, label: "80M" },
     { value: 100000000, label: "100M" },
   ];
+
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
+
+  const handleReset = () => {
+    dispatch(resetPropertySearch());
+    onReset();
+  };
 
   return (
     <Dialog
@@ -246,7 +258,7 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
                 ]}
                 value={lookingFor}
                 containerClassName="w-full"
-                onChange={(value) => setLookingFor(value as string)}
+                onChange={(value) => dispatch(setLookingFor(value as string))}
               />
             </div>
           </div>
@@ -309,8 +321,10 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
                 },
               ]}
               withIcons={true}
-              value={selectedPropertyType}
-              onChange={(value) => setSelectedPropertyType(value as string)}
+              value={propertyTypeFilter}
+              onChange={(value) =>
+                dispatch(setPropertyTypeFilter(value as string))
+              }
             />
           </div>
           {/* Preferred Tenants & Preferences */}
@@ -323,6 +337,7 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
                 </span>{" "}
                 Preferred Tenants
               </div>
+
               <RadioGroup
                 name="preferredTenants"
                 columns={2}
@@ -339,8 +354,8 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
                   },
                 ]}
                 withIcons={true}
-                value={selectedTenant}
-                onChange={(value) => setSelectedTenant(value as string)}
+                value={tenant}
+                onChange={(value) => dispatch(setTenant(value as string))}
               />
             </div>
             <div>
@@ -364,8 +379,8 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
                 ]}
                 withIcons={true}
                 horizontal
-                value={selectedFoodPref}
-                onChange={(value) => setSelectedFoodPref(value as string)}
+                value={foodPref}
+                onChange={(value) => dispatch(setFoodPref(value as string))}
               />
             </div>
           </div>
@@ -382,8 +397,8 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
                 { value: false, label: "Non-Attached" },
               ]}
               containerClassName="w-1/2 max-md:w-full"
-              value={selectedBathroomType}
-              onChange={(value) => setSelectedBathroomType(value as string)}
+              value={bathroomType}
+              onChange={(value) => dispatch(setBathroomType(value as string))}
             />
           </div>
           {/* Price Range */}
@@ -406,8 +421,8 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
               }
               onChange={(value) =>
                 propertyCategory === PropertyCategory.RENT
-                  ? setPriceRangeForRent(value as [number, number])
-                  : setPriceRangeForBuy(value as [number, number])
+                  ? dispatch(setPriceRangeForRent(value as [number, number]))
+                  : dispatch(setPriceRangeForBuy(value as [number, number]))
               }
               marks={
                 propertyCategory === PropertyCategory.RENT
@@ -433,8 +448,8 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
                 { value: "Semi-furnished", label: "Semi Furnished" },
                 { value: "Unfurnished", label: "Unfurnished" },
               ]}
-              value={selectedFurnishing}
-              onChange={(value) => setSelectedFurnishing(value as string)}
+              value={furnishing}
+              onChange={(value) => dispatch(setFurnishing(value as string))}
             />
           </div>
           {/* Availability */}
@@ -446,8 +461,8 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
               name="availability"
               columns={4}
               options={availabilityTypes}
-              value={selectedAvailability}
-              onChange={(value) => setSelectedAvailability(value as string)}
+              value={availability}
+              onChange={(value) => dispatch(setAvailability(value as string))}
             />
           </div>
           {/* Amenities */}
@@ -459,12 +474,14 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
               {amenities.map((amenity) => (
                 <button
                   key={amenity.label}
-                  className={`flex flex-col items-start justify-center border rounded-xl p-3 gap-2 ${selectedAmenities.includes(amenity.label) ? "border-red-500 text-red-500" : "border-gray-200 text-gray-700"}`}
+                  className={`flex flex-col items-start justify-center border rounded-xl p-3 gap-2 ${stateAmenities.includes(amenity.label) ? "border-red-500" : "border-gray-200 text-gray-700"}`}
                   onClick={() =>
-                    setSelectedAmenities(
-                      selectedAmenities.includes(amenity.label)
-                        ? selectedAmenities.filter((a) => a !== amenity.label)
-                        : [...selectedAmenities, amenity.label],
+                    dispatch(
+                      setAmenities(
+                        stateAmenities.includes(amenity.label)
+                          ? stateAmenities.filter((a) => a !== amenity.label)
+                          : [...stateAmenities, amenity.label],
+                      ),
                     )
                   }
                 >
@@ -487,8 +504,8 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
                 { label: "Not Available", value: false },
               ]}
               containerClassName="w-1/2 max-md:w-full"
-              value={selectedParking}
-              onChange={(value) => setSelectedParking(value as string)}
+              value={parking}
+              onChange={(value) => dispatch(setParking(value as boolean))}
             />
           </div>
         </div>
@@ -500,7 +517,7 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
             leftIcon={<RefreshCcw size={20} />}
             size="md"
             className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-500 bg-white hover:bg-gray-100"
-            onClick={onReset}
+            onClick={handleReset}
           >
             Reset All
           </Button>

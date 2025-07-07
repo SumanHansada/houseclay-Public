@@ -34,6 +34,9 @@ export default function PropertySearchPage() {
   const searchParams = useSearchParams();
   const lat = searchParams.get("lat");
   const lon = searchParams.get("lon");
+  const propertyCategory = searchParams
+    .get("propertyCategory")
+    ?.toUpperCase() as PropertyCategory;
   const searchState = useSelector((state: RootState) => state.propertySearch);
   const router = useRouter();
 
@@ -44,8 +47,7 @@ export default function PropertySearchPage() {
       ? {
           latitude: Number(lat),
           longitude: Number(lon),
-          propertyCategory:
-            searchState.propertyCategory || PropertyCategory.RENT,
+          propertyCategory: propertyCategory || PropertyCategory.RENT,
         }
       : { latitude: 0, longitude: 0, propertyCategory: PropertyCategory.RENT },
     { skip: !shouldFetch },
@@ -190,10 +192,10 @@ export default function PropertySearchPage() {
             />
             <SelectDropdown
               options={[
-                { value: "couple", label: "Couple" },
-                { value: "family", label: "Family" },
-                { value: "bachelor", label: "Bachelor" },
-                { value: "company", label: "Company" },
+                { value: "Couple", label: "Couple" },
+                { value: "Family", label: "Family" },
+                { value: "Bachelor", label: "Bachelor" },
+                { value: "Company", label: "Company" },
               ]}
               name="tenant-type"
               id="tenant-type"
@@ -238,7 +240,7 @@ export default function PropertySearchPage() {
               <div>
                 <p className="text-gray-500 text-sm">
                   {properties.length} Rooms for{" "}
-                  {pascalCase(searchState.propertyCategory || "")}
+                  {pascalCase(propertyCategory || "")}
                 </p>
               </div>
             </div>

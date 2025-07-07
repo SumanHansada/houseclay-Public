@@ -33,8 +33,8 @@ import * as Yup from "yup";
 
 import { PropertyCategory } from "@/common/enums";
 import FormCalendarField from "@/components/common/FormCalendarField";
-import FormCheckbox from "@/components/common/FormCheckbox";
 import FormCurrencyField from "@/components/common/FormCurrencyField";
+import FormCheckbox from "@/form-components/FormCheckbox";
 import FormRadioGroup from "@/form-components/FormRadioGroup";
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 import { FormValues } from "@/interfaces/FormValues";
