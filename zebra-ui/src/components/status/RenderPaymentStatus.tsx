@@ -1,6 +1,6 @@
 import { JSX } from "react";
 
-import { PaymentStatusEnum } from "@/common/enum";
+import { PaymentStatusEnum } from "@/common/enums";
 import { Pill } from "@/components/Pill";
 import { isEnumValue } from "@/utils/enum";
 

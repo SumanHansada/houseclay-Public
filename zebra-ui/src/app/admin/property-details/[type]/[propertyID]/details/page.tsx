@@ -34,6 +34,7 @@ export default function DetailsPage() {
   if (status !== "succeeded" || !initialValues) {
     return null;
   }
+  console.log("initialValues: ", initialValues);
 
   const handleSaveChanges = async (values: FormValues) => {
     console.log("Submitting all changes:", values);

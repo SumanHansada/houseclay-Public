@@ -198,13 +198,18 @@ export default function VerifyPropertyDetailsPage() {
                     isCommentValid={isOwnerCommentValid}
                   />
                 </div>
-                <button
-                  onClick={handleFinalVerification}
-                  disabled={!isFormFullyVerified}
-                  className="w-full bg-green-500 hover:bg-green-600 text-white rounded-xl py-3 px-4 text-xl font-bold transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-                >
-                  Verify Property
-                </button>
+                <div className="flex justify-between">
+                  <button className="w-full bg-green-500 hover:bg-green-600 text-white rounded-xl py-3 px-4 text-xl font-bold transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed">
+                    Report Property
+                  </button>
+                  <button
+                    onClick={handleFinalVerification}
+                    disabled={!isFormFullyVerified}
+                    className="w-full bg-green-500 hover:bg-green-600 text-white rounded-xl py-3 px-4 text-xl font-bold transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  >
+                    Verify Property
+                  </button>
+                </div>
               </div>
             </Form>
           )}

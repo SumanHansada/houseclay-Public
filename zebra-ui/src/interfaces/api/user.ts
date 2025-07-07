@@ -1,8 +1,8 @@
-import { User, UserDetails } from "@/interfaces/User";
+import { UserInfo, UserDetails } from "@/interfaces/User";
 
 // useGetUsersQuery()
 export interface GetAllUsersResponse {
-  content: User[];
+  content: UserInfo[];
   pageable: {
     pageNumber: number;
     pageSize: number;

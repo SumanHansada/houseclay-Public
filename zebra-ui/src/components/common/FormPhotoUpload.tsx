@@ -13,7 +13,7 @@ import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 
 import { FileData } from "@/interfaces/FileData";
-import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
+import { PropertyImage } from "@/interfaces/PropertyImage";
 
 interface FormPhotoUploadProps {
   name: string;
@@ -39,7 +39,7 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
   tipText = "Properties with picture get more visibility",
 }) => {
   // Field hooks
-  const [field, meta, helpers] = useField<PropertyPhoto[]>(name);
+  const [field, meta, helpers] = useField<PropertyImage[]>(name);
 
   // Local state for noPhotos instead of using formik
   const [noPhotos, setNoPhotos] = useState(false);

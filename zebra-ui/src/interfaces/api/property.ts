@@ -1,6 +1,6 @@
 import { AnyProperty, PropertyInfo } from "@/interfaces/Property";
 
-import { User } from "../User";
+import { UserInfo } from "../User";
 
 // usePropertyAddRentMutation()
 export interface PostRentPropertyRequest {
@@ -125,11 +125,11 @@ export interface GetAllPropertiesResponse {
 }
 
 export interface PropertyUserRelations {
-  owner: User;
-  viewUsers: User[];
-  shortlistUsers: User[];
-  contactUsers: User[];
-  reportUsers: User[];
+  owner: UserInfo;
+  viewUsers: UserInfo[];
+  shortlistUsers: UserInfo[];
+  contactUsers: UserInfo[];
+  reportUsers: UserInfo[];
 }
 
 export type GetPropertyByIdResponse = AnyProperty & PropertyUserRelations;

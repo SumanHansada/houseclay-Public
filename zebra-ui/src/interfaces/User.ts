@@ -1,15 +1,15 @@
-import { PaymentStatusEnum } from "@/common/enum";
+import { PaymentStatusEnum } from "@/common/enums";
 
 import { PropertyInfo } from "./Property";
 
-export interface User {
+export interface UserInfo {
   name: string;
   email: string;
   phoneNo: string;
   blacklisted: boolean;
 }
 
-export interface UserUpdatedInfo {
+export interface UserUpdate {
   updateType: string;
   updateTime: string;
   updateBy: string;
@@ -39,13 +39,10 @@ export interface UserReportProperty {
   userProperty: PropertyInfo;
 }
 
-export interface UserDetails extends User {
-  // phoneNo: string;
-  // email: string;
-  // name: string;
+export interface UserDetails extends UserInfo {
   createdAt: string;
   blacklistedAt: string;
-  userUpdates: UserUpdatedInfo[];
+  userUpdates: UserUpdate[];
   ownedProperties: PropertyInfo[];
   shortlistedProperties: PropertyInfo[];
   viewedProperties: PropertyInfo[];
@@ -53,5 +50,4 @@ export interface UserDetails extends User {
   externalPayments: UserExternalPayment[];
   connectTransactions: UserConnectTransaction[];
   reportProperties: UserReportProperty[];
-  // blacklisted: boolean;
 }

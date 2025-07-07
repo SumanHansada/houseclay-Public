@@ -1,7 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 
-// import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { LeadQueryParamEnum } from "@/common/enum";
+import { LeadQueryParamEnum } from "@/common/enums";
 import {
   GetAllLeadsResponse,
   GetAllPropertiesResponse,
@@ -16,28 +15,14 @@ import {
   PostResalePropertyRequest,
 } from "@/interfaces/api";
 
-// import { RootState } from "./store";
 import { baseQueryWithAuth } from "./baseQueryWithAuth";
-
-// const baseUrl = process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL;
+import { RentForm } from "@/interfaces/RentForm";
+import { ResaleForm } from "@/interfaces/ResaleForm";
+import { FlatmateForm } from "@/interfaces/FlatmateForm";
 
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithAuth,
-  // baseQuery: fetchBaseQuery({
-  //   baseUrl:
-  //     baseUrl ||
-  //     "http://ec2-13-210-204-208.ap-southeast-2.compute.amazonaws.com:8080/api" ||
-  //     "https://jsonplaceholder.typicode.com",
-  //   prepareHeaders: (headers, { getState }) => {
-  //     const token = (getState() as RootState).admin.token;
-  //     if (token) {
-  //       headers.set("Authorization", `Bearer ${token}`);
-  //     }
-  //     return headers;
-  //   },
-  // }),
-
   tagTypes: [
     "UserDetail",
     "Leads",
@@ -189,6 +174,29 @@ export const apiSlice = createApi({
     }),
 
     // ──────────────── PROPERTY ────────────────
+    propertyAdd: builder.mutation<
+      {
+        message: string;
+        propertyID: number;
+      },
+      {
+        data: Partial<RentForm | ResaleForm | FlatmateForm> & {
+          propertyID: string;
+          propertyCategory: string;
+        };
+        userPhoneNo: string;
+      }
+    >({
+      query: ({ userPhoneNo, data }) => ({
+        url: `property/admin/add?phoneNo=${userPhoneNo}`,
+        method: "POST",
+        body: { ...data },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+
     propertyAddRent: builder.mutation<
       {
         message: string;
@@ -318,6 +326,7 @@ export const {
   useLeadStatusUpdateMutation,
   useLeadAddCommentMutation,
   usePresignedUrlsMutation,
+  usePropertyAddMutation,
   usePropertyAddRentMutation,
   usePropertyAddResaleMutation,
   usePropertyAddFlatmatesMutation,

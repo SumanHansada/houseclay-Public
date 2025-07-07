@@ -3,7 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { LeadQueryParamEnum } from "@/common/enum";
+import { LeadQueryParamEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
 import { Column, DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/PaginationFooter";

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { use } from "react";
 
-import { VerifyPropertyTabEnum } from "@/common/enum";
+import { VerifyPropertyTabEnum } from "@/common/enums";
 
 export const dynamicParams = true;
 

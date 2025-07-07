@@ -7,7 +7,7 @@ import {
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-import { VerifyPropertyTabEnum } from "@/common/enum";
+import { VerifyPropertyTabEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
 import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
 import { useGetPropertyByIdQuery } from "@/store/apiSlice";

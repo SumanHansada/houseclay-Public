@@ -1,4 +1,4 @@
-import { PropertyCategoryEnum } from "@/common/enum";
+import { PropertyCategoryEnum } from "@/common/enums";
 import {
   AnyProperty,
   FlatmateProperty,

@@ -1,53 +1,46 @@
 "use client";
 
 import { useFormikContext } from "formik";
-import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
+import { PropertyCategoryEnum } from "@/common/enums";
 import FormPhoneInput from "@/components/common/FormPhoneInput";
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 import { FormValues } from "@/interfaces/FormValues";
-import {
-  FormType,
-  setAdditionalInfo,
-  setFormValidity,
-} from "@/store/listPropertySlice";
+import { setAdditionalInfo, setFormValidity } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
-
-export const dynamicParams = true;
 
 const additionalInfoSchema = Yup.object().shape({
   additionalInfo: Yup.object().shape({
     whoWillShowProperty: Yup.string(),
     secondaryPhoneNumber: Yup.string(),
-    khataCertificate: Yup.string().when("$formKey", {
-      is: "resaleForm",
+    khataCertificate: Yup.string().when("$propertyCategory", {
+      is: PropertyCategoryEnum.RESALE,
       then: (schema) => schema.required("Khata Certificate is required"),
       otherwise: (schema) => schema.optional(),
     }),
-    saleDeed: Yup.boolean().when("$formKey", {
-      is: "resaleForm",
+    saleDeed: Yup.boolean().when("$propertyCategory", {
+      is: PropertyCategoryEnum.RESALE,
       then: (schema) => schema.required("Sale Deed is required"),
       otherwise: (schema) => schema.optional(),
     }),
-    propertyTax: Yup.boolean().when("$formKey", {
-      is: "resaleForm",
+    propertyTax: Yup.boolean().when("$propertyCategory", {
+      is: PropertyCategoryEnum.RESALE,
       then: (schema) => schema.required("Property Tax is required"),
       otherwise: (schema) => schema.optional(),
     }),
   }),
 });
 
-const AdditionalInfoPage = () => {
+const AdditionalInfoClient = () => {
   const { values, errors, touched, setFieldError, setErrors } =
     useFormikContext<FormValues>();
-  const params = useParams();
-  const formKey = `${params?.type}Form` as FormType; // Optional: add type assertion
-  const formState = useSelector(
-    (state: RootState) => state.listProperty[formKey],
+  const propertyCategory = useSelector(
+    (state: RootState) => state.listProperty.propertyCategory,
   );
+  const formState = useSelector((state: RootState) => state.listProperty.form);
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
 
@@ -58,20 +51,19 @@ const AdditionalInfoPage = () => {
       try {
         await additionalInfoSchema.validate(values, {
           abortEarly: false,
-          context: { formKey },
+          context: { propertyCategory },
         });
         // Clear any previous errors
         setErrors({});
         // Set form data in the store
         dispatch(
           setAdditionalInfo({
-            type: formKey,
             additionalInfo: values.additionalInfo,
           }),
         );
         // Form is valid
         if (!isFormValid) {
-          dispatch(setFormValidity({ type: formKey, isValid: true }));
+          dispatch(setFormValidity({ isValid: true }));
         }
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -85,7 +77,7 @@ const AdditionalInfoPage = () => {
           });
           // Form is invalid
           if (isFormValid) {
-            dispatch(setFormValidity({ type: formKey, isValid: false }));
+            dispatch(setFormValidity({ isValid: false }));
           }
         }
       }
@@ -95,7 +87,7 @@ const AdditionalInfoPage = () => {
   }, [
     additionalInfoString,
     dispatch,
-    formKey,
+    propertyCategory,
     setErrors,
     setFieldError,
     isFormValid,
@@ -110,7 +102,8 @@ const AdditionalInfoPage = () => {
         </h1>
       </div>
       <div>
-        {(formKey === "rentForm" || formKey === "flatmatesForm") && (
+        {(propertyCategory === PropertyCategoryEnum.RENT ||
+          propertyCategory === PropertyCategoryEnum.FLATMATE) && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <div className="col-span-1">
               <FormSelectDropdown
@@ -145,7 +138,7 @@ const AdditionalInfoPage = () => {
             </div>
           </div>
         )}
-        {formKey === "resaleForm" && (
+        {propertyCategory === PropertyCategoryEnum.RESALE && (
           <>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
               <div className="col-span-1">
@@ -243,4 +236,5 @@ const AdditionalInfoPage = () => {
     </>
   );
 };
-export default AdditionalInfoPage;
+
+export default AdditionalInfoClient;

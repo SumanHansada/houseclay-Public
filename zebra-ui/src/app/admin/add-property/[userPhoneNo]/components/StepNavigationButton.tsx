@@ -27,16 +27,14 @@ const StepNavigationButton: React.FC<StepNavProps> = ({
         className={`
           w-10 h-10 rounded-full border-2 flex items-center justify-center mx-auto
           ${isCompleted ? "border-green-500" : isActive ? "border-red-500" : "border-gray-300"}
-          bg-white dark:bg-gray-900 z-20
+          bg-white z-20
         `}
       >
         {isCompleted ? (
           <Check className="w-5 h-5 text-green-500" />
         ) : (
           <Icon
-            className={`w-5 h-5 ${
-              isActive ? "text-red-500" : "text-gray-500 dark:text-gray-300"
-            }`}
+            className={`w-5 h-5 ${isActive ? "text-red-500" : "text-gray-500"}`}
           />
         )}
       </div>
@@ -54,7 +52,7 @@ const StepNavigationButton: React.FC<StepNavProps> = ({
       {/* Label */}
       <span
         className={`mt-2 text-sm ${
-          isActive ? "text-red-500" : "text-gray-600 dark:text-gray-300"
+          isActive ? "text-red-500" : "text-gray-600"
         }`}
       >
         {step}

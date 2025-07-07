@@ -8,7 +8,7 @@ import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
 import { PaginationFooter } from "@/components/PaginationFooter";
 import { RenderUserStatus } from "@/components/status/RenderUserStatus";
 import { useLocalPagination } from "@/hooks/useLocalPagination";
-import { User } from "@/interfaces/User";
+import { UserInfo } from "@/interfaces/User";
 import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 
 export default function ContactedUsersPage() {
@@ -35,7 +35,7 @@ export default function ContactedUsersPage() {
   const viewProfile = (phoneNo: string) =>
     router.push(`/admin/user-details/${phoneNo}`);
 
-  const columns: Column<User>[] = [
+  const columns: Column<UserInfo>[] = [
     { key: "name", label: "Name", accessor: "name" },
     { key: "email", label: "Email", accessor: "email" },
     { key: "phoneNo", label: "Phone No.", accessor: "phoneNo" },
@@ -63,7 +63,7 @@ export default function ContactedUsersPage() {
       <div className="flex-1 flex flex-col bg-gray-100 py-8 px-16">
         <div className="bg-white shadow-sm rounded-xl p-5 flex flex-col gap-4 h-full">
           <h2 className="text-3xl">Contact Users</h2>
-          <DataTable<User>
+          <DataTable<UserInfo>
             columns={columns}
             data={paginatedRows}
             getRowId={(u) => u.phoneNo}

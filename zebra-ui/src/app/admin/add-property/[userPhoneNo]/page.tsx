@@ -8,7 +8,7 @@ import { RootState } from "@/store/store";
 
 const AddPropertyPage = () => {
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
-  const { propertyType } = useSelector(
+  const { propertyCategory } = useSelector(
     (state: RootState) => state.listProperty,
   );
   const router = useRouter();
@@ -17,7 +17,7 @@ const AddPropertyPage = () => {
   };
 
   const handlePostListingClick = () => {
-    const url = `/admin/add-property/${userPhoneNo}/${propertyType.toLowerCase()}`;
+    const url = `/admin/add-property/${userPhoneNo}/${propertyCategory.toLowerCase()}`;
     router.push(url);
   };
 

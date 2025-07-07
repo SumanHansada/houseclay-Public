@@ -1,4 +1,4 @@
-import { VerifyPropertyStatusEnum } from "@/common/enum";
+import { VerifyPropertyStatusEnum } from "@/common/enums";
 import {
   useGetPropertiesToReverifyQuery,
   useGetPropertiesToVerifyQuery,

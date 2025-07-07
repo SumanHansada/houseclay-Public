@@ -3,7 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 
-import { LeadActionsEnum, LeadStatusEnum } from "@/common/enum";
+import { LeadActionsEnum, LeadStatusEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
 import { RenderLeadStatus } from "@/components/status/RenderLeadStatus";
 import { LeadType } from "@/interfaces/Lead";

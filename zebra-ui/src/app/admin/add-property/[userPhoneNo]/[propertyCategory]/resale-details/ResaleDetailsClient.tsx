@@ -2,7 +2,6 @@
 
 import { useFormikContext } from "formik";
 import { IndianRupee } from "lucide-react";
-import { useParams } from "next/navigation";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
 import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
 import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
@@ -25,18 +24,13 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import FormCalendarField from "@/components/common/FormCalendarField";
-import FormCheckbox from "@/components/common/FormCheckbox";
 import FormCurrencyField from "@/components/common/FormCurrencyField";
 import FormFormNumberField from "@/components/common/FormNumberField";
+import FormCheckbox from "@/form-components/FormCheckbox";
 import FormRadioGroup from "@/form-components/FormRadioGroup";
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
-import { useFormikSection } from "@/hooks/useFormikSection";
 import { FormValues } from "@/interfaces/FormValues";
-import {
-  FormType,
-  setFormValidity,
-  setResaleDetails,
-} from "@/store/listPropertySlice";
+import { setFormValidity, setResaleDetails } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -79,8 +73,6 @@ const FirstAidKitIcon = FirstAidKitIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
 
-export const dynamicParams = true;
-
 const resaleSchema = Yup.object().shape({
   resaleDetails: Yup.object().shape({
     price: Yup.string()
@@ -97,23 +89,14 @@ const resaleSchema = Yup.object().shape({
   }),
 });
 
-const ResaleDetailsPage: React.FC = () => {
+const ResaleDetailsClient: React.FC = () => {
   const { values, errors, touched, setFieldError, setErrors } =
     useFormikContext<FormValues>();
-  const params = useParams();
-  const formKey = `${params?.type}Form` as FormType; // Optional: add type assertion
-  const formState = useSelector(
-    (state: RootState) => state.listProperty[formKey],
-  );
+  const formState = useSelector((state: RootState) => state.listProperty.form);
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
 
   const resaleDetailsString = JSON.stringify(values.resaleDetails);
-
-  const { errors: rdErrors, touched: rdTouched } = useFormikSection<
-    FormValues,
-    "resaleDetails"
-  >(errors, touched, "resaleDetails");
 
   useEffect(() => {
     const validateAndDispatch = async () => {
@@ -122,17 +105,14 @@ const ResaleDetailsPage: React.FC = () => {
         // Clear any previous errors
         setErrors({});
         // Set form data in the store
-        if (values.resaleDetails) {
-          dispatch(
-            setResaleDetails({
-              type: formKey,
-              resaleDetails: values.resaleDetails,
-            }),
-          );
-        }
+        dispatch(
+          setResaleDetails({
+            resaleDetails: values.resaleDetails,
+          }),
+        );
         // Form is valid
         if (!isFormValid) {
-          dispatch(setFormValidity({ type: formKey, isValid: true }));
+          dispatch(setFormValidity({ isValid: true }));
         }
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -146,7 +126,7 @@ const ResaleDetailsPage: React.FC = () => {
           });
           // Form is invalid
           if (isFormValid) {
-            dispatch(setFormValidity({ type: formKey, isValid: false }));
+            dispatch(setFormValidity({ isValid: false }));
           }
         }
       }
@@ -156,7 +136,6 @@ const ResaleDetailsPage: React.FC = () => {
   }, [
     resaleDetailsString,
     dispatch,
-    formKey,
     setErrors,
     setFieldError,
     isFormValid,
@@ -254,7 +233,8 @@ const ResaleDetailsPage: React.FC = () => {
               ]}
               placeholder="Select Water supply"
               aria-describedby={
-                rdErrors?.waterSupply && rdTouched?.waterSupply
+                errors?.resaleDetails?.waterSupply &&
+                touched.resaleDetails?.waterSupply
                   ? "resaleDetails.waterSupply-error"
                   : undefined
               }
@@ -278,7 +258,8 @@ const ResaleDetailsPage: React.FC = () => {
               ]}
               placeholder="Select Power backup"
               aria-describedby={
-                rdErrors?.powerBackup && rdTouched?.powerBackup
+                errors?.resaleDetails?.powerBackup &&
+                touched?.resaleDetails?.powerBackup
                   ? "resaleDetails.powerBackup-error"
                   : undefined
               }
@@ -305,7 +286,8 @@ const ResaleDetailsPage: React.FC = () => {
               required={true}
               placeholder="Select furnishing"
               aria-describedby={
-                rdErrors?.furnishing && rdTouched?.furnishing
+                errors?.resaleDetails?.furnishing &&
+                touched?.resaleDetails?.furnishing
                   ? "resaleDetails.furnishing-error"
                   : undefined
               }
@@ -326,7 +308,8 @@ const ResaleDetailsPage: React.FC = () => {
               required={true}
               placeholder="Select Parking"
               aria-describedby={
-                rdErrors?.parking && rdTouched?.parking
+                errors?.resaleDetails?.parking &&
+                touched?.resaleDetails?.parking
                   ? "resaleDetails.parking-error"
                   : undefined
               }
@@ -421,4 +404,4 @@ const ResaleDetailsPage: React.FC = () => {
   );
 };
 
-export default ResaleDetailsPage;
+export default ResaleDetailsClient;

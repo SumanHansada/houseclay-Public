@@ -1,4 +1,4 @@
-import { LeadStatusEnum } from "@/common/enum";
+import { LeadStatusEnum } from "@/common/enums";
 import { Lead, LeadComment } from "@/interfaces/Lead";
 
 // useGetLeadsQuery()

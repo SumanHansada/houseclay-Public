@@ -23,10 +23,10 @@ export const baseQueryWithAuth: BaseQueryFn<
 > = async (args, api, extra) => {
   const res = await rawBaseQuery(args, api, extra);
 
-  if (res.error && (res.error.status === 401 || res.error.status === 403)) {
-    api.dispatch(logout());
-    if (typeof window !== "undefined") window.location.assign("/login");
-  }
+  // if (res.error && (res.error.status === 401 || res.error.status === 403)) {
+  //   api.dispatch(logout());
+  //   if (typeof window !== "undefined") window.location.assign("/login");
+  // }
 
   return res;
 };

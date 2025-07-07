@@ -1,4 +1,3 @@
-import { useField } from "formik";
 import React from "react";
 
 interface CheckboxOption {
@@ -7,7 +6,7 @@ interface CheckboxOption {
   icon?: React.ReactNode;
 }
 
-interface FormCheckboxProps {
+interface CheckboxProps {
   name: string;
   label?: string;
   options: CheckboxOption[];
@@ -17,32 +16,39 @@ interface FormCheckboxProps {
   selectedColor?: string;
   className?: string;
   alignment?: "start" | "center" | "end";
+  // Formik props
+  value: string[];
+  onChange: (value: string[]) => void;
+  onBlur?: () => void;
+  error?: string;
 }
 
-const FormCheckbox: React.FC<FormCheckboxProps> = ({
+const Checkbox: React.FC<CheckboxProps> = ({
   name,
   label,
   options,
   required = false,
   columns = 3,
   withIcons = false,
-  selectedColor = "border-red-500 bg-red-50",
+  selectedColor = "border-red-500",
   className = "",
   alignment = "center",
+  value,
+  onChange,
+  onBlur,
+  error,
 }) => {
-  const [field, meta, helpers] = useField<string[]>(name);
+  const handleToggle = (optionValue: string) => {
+    const currentValues = value || [];
+    const newValues = currentValues.includes(optionValue)
+      ? currentValues.filter((v) => v !== optionValue)
+      : [...currentValues, optionValue];
 
-  const handleToggle = (value: string) => {
-    const currentValues = field.value || [];
-    const newValues = currentValues.includes(value)
-      ? currentValues.filter((v) => v !== value)
-      : [...currentValues, value];
-
-    helpers.setValue(newValues);
+    onChange(newValues);
   };
 
-  const isChecked = (value: string) => {
-    return (field.value || []).includes(value);
+  const isChecked = (optionValue: string) => {
+    return (value || []).includes(optionValue);
   };
 
   // Define grid columns based on the columns prop
@@ -108,6 +114,7 @@ const FormCheckbox: React.FC<FormCheckboxProps> = ({
               value={option.value}
               checked={isChecked(option.value)}
               onChange={() => handleToggle(option.value)}
+              onBlur={onBlur}
               className="sr-only"
               tabIndex={-1}
               aria-label={option.label}
@@ -117,11 +124,9 @@ const FormCheckbox: React.FC<FormCheckboxProps> = ({
         ))}
       </div>
 
-      {meta.touched && meta.error ? (
-        <div className="text-red-500 text-xs mt-1">{meta.error}</div>
-      ) : null}
+      {error ? <div className="text-red-500 text-xs mt-1">{error}</div> : null}
     </div>
   );
 };
 
-export default FormCheckbox;
+export default Checkbox;

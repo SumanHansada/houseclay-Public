@@ -1,6 +1,6 @@
 import React, { JSX } from "react";
 
-import { PropertyStatusEnum } from "@/common/enum";
+import { PropertyStatusEnum } from "@/common/enums";
 import { Pill } from "@/components/Pill";
 import { isEnumValue } from "@/utils/enum";
 

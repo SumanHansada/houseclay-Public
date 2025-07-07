@@ -1,6 +1,6 @@
 import { AdditionalInfo } from "@/interfaces/AdditionalInfo";
 import { GetPropertyByIdResponse } from "@/interfaces/api";
-import { FlatmatesDetails } from "@/interfaces/FlatmatesDetails";
+import { FlatmatesDetails } from "@/interfaces/FlatmateDetails";
 import { FormValues } from "@/interfaces/FormValues";
 import { LocalityDetails } from "@/interfaces/LocalityDetails";
 import { PropertyDetails } from "@/interfaces/PropertyDetails";

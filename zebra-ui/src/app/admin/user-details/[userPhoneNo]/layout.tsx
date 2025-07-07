@@ -5,7 +5,7 @@ import {
   useSelectedLayoutSegment,
 } from "next/navigation";
 
-import { UserDetailsTabEnum } from "@/common/enum";
+import { UserDetailsTabEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
 import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
