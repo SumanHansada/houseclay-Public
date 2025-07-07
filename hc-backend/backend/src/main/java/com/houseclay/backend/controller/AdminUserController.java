@@ -46,6 +46,29 @@ public class AdminUserController {
         }
     }
 
+    @PostMapping("/tag-broker")
+    public ResponseEntity<?> markBroker(
+            @RequestParam String phoneNo,
+            @RequestParam String comment,
+            @RequestAttribute("authenticatedAdmin") Admin admin) {
+        try {
+            User updatedUser = adminService.tagBroker(phoneNo, comment, admin);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "User blacklisted successfully");
+            response.put("userId", updatedUser.getPhoneNo());
+            response.put("blacklisted", updatedUser.isBlacklisted());
+
+            return ResponseEntity.ok(response);
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+
+
     @PostMapping("/activate-user")
     public ResponseEntity<?> activateUser(
             @RequestParam String phoneNo,

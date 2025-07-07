@@ -92,6 +92,19 @@ public class AdminService {
         return user;
     }
 
+    public User tagBroker(String phoneNo, String comment, Admin admin) throws Exception {
+        Optional<Admin> adminOptional = adminRepository.findByUsername(admin.getUsername());
+        if (adminOptional.isEmpty()) {
+            throw new APIException("Invalid token", HttpStatus.BAD_REQUEST);
+        }
+        admin = adminOptional.get();
+        User user = searchUser(phoneNo);
+        user.setBroker(true);
+        admin.getUserUpdateLogs().add(new UserUpdateLog(user, admin, new Timestamp(System.currentTimeMillis()), UserUpdateType.BLACKLISTED, comment));
+        adminRepository.save(admin);
+        return user;
+    }
+
     public User activateUser(String phoneNo, String comment, Admin admin) throws Exception {
         Optional<Admin> adminOptional = adminRepository.findByUsername(admin.getUsername());
         if (adminOptional.isEmpty()) {

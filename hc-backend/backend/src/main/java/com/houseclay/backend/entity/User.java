@@ -18,6 +18,7 @@ public class User {
     private String emailID;
     private int connectBal;
     private boolean isBlacklisted;
+    private boolean isBroker;
     private Timestamp createdAt;
 
     public User(String phoneNo, String name, String emailID) {
