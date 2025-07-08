@@ -27,6 +27,7 @@ public class UserMapper {
         dto.setEmail(user.getEmailID());
         dto.setCreatedAt(user.getCreatedAt());
         dto.setBlacklisted(user.isBlacklisted());
+        dto.setBroker(user.isBroker());
 
         dto.setUserUpdates(user.getUserUpdateLogs().stream()
                 .map(UserMapper::toUserUpdateDTO)

@@ -55,7 +55,7 @@ public class AdminUserController {
             User updatedUser = adminService.tagBroker(phoneNo, comment, admin);
 
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "User blacklisted successfully");
+            response.put("message", "User tagged as broker");
             response.put("userId", updatedUser.getPhoneNo());
             response.put("blacklisted", updatedUser.isBlacklisted());
 
