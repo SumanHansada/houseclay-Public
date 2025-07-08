@@ -48,11 +48,13 @@ public class PropertyController {
             @RequestParam(required = false) String furnishing,
             @RequestParam(required = false) String propertyType,
             @RequestParam(required = false) String parking,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
             @RequestParam(required = false) String preferredTenant,
             @RequestParam(required = false) List<String> amenities) {
 
         List<PropertyCardDTO> results = searchService.searchNearbyWithFilters(
-                lat, lon, distance, city, bhkType, propertyCategory, furnishing, propertyType, parking, preferredTenant, amenities
+                lat, lon, distance, city, bhkType, minPrice, maxPrice, propertyCategory, furnishing, propertyType, parking, preferredTenant, amenities
         );
 
         return ResponseEntity.ok(results);

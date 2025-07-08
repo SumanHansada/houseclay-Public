@@ -1,10 +1,10 @@
 package com.houseclay.backend.service;
 
 import co.elastic.clients.elasticsearch._types.GeoLocation;
+import co.elastic.clients.json.JsonData;
 import com.houseclay.backend.dto.PropertyCardDTO;
 import com.houseclay.backend.entity.PropertyCategory;
 import com.houseclay.backend.entity.elastic.FlatmateDocument;
-import com.houseclay.backend.entity.elastic.PropertyDocument;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import com.houseclay.backend.entity.elastic.RentDocument;
 import com.houseclay.backend.entity.elastic.SaleDocument;
@@ -12,14 +12,13 @@ import com.houseclay.backend.mapper.PropertyCardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 public class SearchService {
@@ -36,6 +35,8 @@ public class SearchService {
             String distance,
             String city,
             String bhkType,
+            Double minPrice,
+            Double maxPrice,
             PropertyCategory propertyCategory,
             String furnishing,
             String propertyType,
@@ -116,6 +117,8 @@ public class SearchService {
             ));
         }
 
+        addRangeFilter(minPrice, maxPrice, filters, propertyCategory);
+
         // Wrap filters inside a bool query
         Query boolQuery = Query.of(q -> q
                 .bool(b -> b.filter(filters))
@@ -159,6 +162,28 @@ public class SearchService {
                         .toList();
             }
         };
+    }
+
+    private void addRangeFilter(Double minPrice, Double maxPrice, List<Query> filters, PropertyCategory propertyCategory) {
+        if (minPrice != null || maxPrice != null) {
+            String fieldName = "price";
+            switch (propertyCategory) {
+                case RESALE -> {
+                    fieldName = "price";
+                }
+                case RENT, FLATMATE -> {
+                    fieldName = "rent";
+                }
+            }
+            String finalFieldName = fieldName;
+            filters.add(Query.of(q -> q
+                    .range(r -> r
+                            .field(finalFieldName)
+                            .gte(JsonData.of(minPrice))
+                            .lte(JsonData.of(maxPrice))
+                    )
+            ));
+        }
     }
 
 }
