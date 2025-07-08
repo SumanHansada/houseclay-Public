@@ -146,6 +146,7 @@ export default function AddPropertyTypeLayout({
 
   // Effect to handle upload completion and dialog transitions
   useEffect(() => {
+    console.log("uploadState.status: ", uploadState.status);
     if (
       uploadState.status === "success" &&
       isDialogOpen("upload-photos-dialog")
@@ -194,7 +195,7 @@ export default function AddPropertyTypeLayout({
       fileMap[encodeURIComponent(propertyImage.file.name)] =
         propertyImage.file.type;
     });
-    console.log(fileMap);
+    // console.log(fileMap);
     const presignedUrlsResponse = await getPresignedUrls({
       fileMap,
     })
@@ -319,7 +320,7 @@ export default function AddPropertyTypeLayout({
       }
 
       await addProperty({
-        data: propertyData,
+        payload: propertyData,
         userPhoneNo: userPhoneNo,
       });
 

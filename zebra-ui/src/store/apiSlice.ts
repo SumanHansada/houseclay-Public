@@ -2,6 +2,7 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 
 import { LeadQueryParamEnum } from "@/common/enums";
 import {
+  AddPropertyRequest,
   GetAllLeadsResponse,
   GetAllPropertiesResponse,
   GetAllUsersResponse,
@@ -10,15 +11,9 @@ import {
   GetPropertiesToVerifyResponse,
   GetPropertyByIdResponse,
   GetUserByPhoneNoResponse,
-  PostFlatmatesPropertyRequest,
-  PostRentPropertyRequest,
-  PostResalePropertyRequest,
 } from "@/interfaces/api";
 
 import { baseQueryWithAuth } from "./baseQueryWithAuth";
-import { RentForm } from "@/interfaces/RentForm";
-import { ResaleForm } from "@/interfaces/ResaleForm";
-import { FlatmateForm } from "@/interfaces/FlatmateForm";
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -34,10 +29,10 @@ export const apiSlice = createApi({
   endpoints: (builder) => ({
     // ──────────────── AUTH ────────────────
     login: builder.mutation<string, { username: string; password: string }>({
-      query: (data) => ({
+      query: (payload) => ({
         url: "/admin/login",
         method: "POST",
-        body: data,
+        body: payload,
         responseHandler: (response) => response.text(),
       }),
     }),
@@ -45,10 +40,10 @@ export const apiSlice = createApi({
       string, // Response Type
       { username: string; password: string; name: string } // Request Body Type
     >({
-      query: (data) => ({
+      query: (payload) => ({
         url: "/admin/register",
         method: "POST",
-        body: data,
+        body: payload,
         responseHandler: (response) => response.text(),
       }),
     }),
@@ -163,10 +158,10 @@ export const apiSlice = createApi({
       },
       { fileMap: Record<string, string> }
     >({
-      query: (data) => ({
+      query: (payload) => ({
         url: "/photo/admin/presigned-urls",
         method: "POST",
-        body: data,
+        body: payload,
         headers: {
           "Content-Type": "application/json",
         },
@@ -180,89 +175,21 @@ export const apiSlice = createApi({
         propertyID: number;
       },
       {
-        data: Partial<RentForm | ResaleForm | FlatmateForm> & {
-          propertyID: string;
-          propertyCategory: string;
-        };
+        payload: AddPropertyRequest;
         userPhoneNo: string;
       }
     >({
-      query: ({ userPhoneNo, data }) => ({
+      query: ({ userPhoneNo, payload }) => ({
         url: `property/admin/add?phoneNo=${userPhoneNo}`,
         method: "POST",
-        body: { ...data },
+        body: payload,
         headers: {
           "Content-Type": "application/json",
         },
       }),
-    }),
-
-    propertyAddRent: builder.mutation<
-      {
-        message: string;
-        propertyID: number;
-      },
-      { data: PostRentPropertyRequest; phoneNo: string }
-    >({
-      query: ({ data, phoneNo }) => ({
-        url: `/property/admin/add?phoneNo=${phoneNo}`,
-        method: "POST",
-        body: { ...data },
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }),
-      invalidatesTags: (_, __, { phoneNo }) => [
+      invalidatesTags: (_, __, { userPhoneNo }) => [
         { type: "Properties", id: "LIST" },
-        { type: "UserDetail", id: phoneNo },
-      ],
-    }),
-
-    propertyAddResale: builder.mutation<
-      {
-        message: string;
-        propertyID: number;
-      },
-      {
-        data: PostResalePropertyRequest;
-        phoneNo: string;
-      }
-    >({
-      query: ({ data, phoneNo }) => ({
-        url: `/property/admin/add?phoneNo=${phoneNo}`,
-        method: "POST",
-        body: { ...data },
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }),
-      invalidatesTags: (_, __, { phoneNo }) => [
-        { type: "Properties", id: "LIST" },
-        { type: "UserDetail", id: phoneNo },
-      ],
-    }),
-
-    propertyAddFlatmates: builder.mutation<
-      {
-        message: string;
-        propertyID: number;
-      },
-      {
-        data: PostFlatmatesPropertyRequest;
-        phoneNo: string;
-      }
-    >({
-      query: ({ data, phoneNo }) => ({
-        url: `/property/admin/add?phoneNo=${phoneNo}`,
-        method: "POST",
-        body: { ...data },
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }),
-      invalidatesTags: (_, __, { phoneNo }) => [
-        { type: "Properties", id: "LIST" },
-        { type: "UserDetail", id: phoneNo },
+        { type: "UserDetail", id: userPhoneNo },
       ],
     }),
 
@@ -312,6 +239,56 @@ export const apiSlice = createApi({
         method: "GET",
       }),
     }),
+
+    verifyProperty: builder.mutation<
+      {
+        message: string;
+        verifiedBy: string;
+        propertyId: string;
+      },
+      {
+        propertyID: string;
+        comment: string;
+      }
+    >({
+      query: ({ propertyID, comment }) => ({
+        url: `/property/admin/verify-property?propertyId=${propertyID}&comment=${comment}`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+
+    reverifyProperty: builder.mutation<
+      {
+        message: string;
+        verifiedBy: string;
+        propertyId: string;
+      },
+      {
+        propertyID: string;
+        comment: string;
+      }
+    >({
+      query: ({ propertyID, comment }) => ({
+        url: `/property/admin/re-verify-property?propertyId=${propertyID}&comment=${comment}`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+
+    deactivateProperty: builder.mutation<{}, {}>({
+      query: ({}) => ({
+        url: `/property/admin/deactivate`,
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
   }),
 });
 
@@ -327,9 +304,6 @@ export const {
   useLeadAddCommentMutation,
   usePresignedUrlsMutation,
   usePropertyAddMutation,
-  usePropertyAddRentMutation,
-  usePropertyAddResaleMutation,
-  usePropertyAddFlatmatesMutation,
   useGetPropertiesQuery,
   useGetPropertyByIdQuery,
   useGetPropertiesToVerifyQuery,

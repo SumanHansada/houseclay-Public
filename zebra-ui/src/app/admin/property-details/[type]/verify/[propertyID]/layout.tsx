@@ -65,6 +65,7 @@ export default function VerifyPropertyLayout({
       />
     );
   }
+  console.log(currentProperty);
 
   const activeTab = ensureEnumValue({
     enumObj: VerifyPropertyTabEnum,

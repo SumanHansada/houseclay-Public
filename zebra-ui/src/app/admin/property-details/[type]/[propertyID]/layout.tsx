@@ -70,6 +70,7 @@ export default function PropertyDetailsLayout({
       />
     );
   }
+  console.log(currentProperty);
 
   const activeTab = ensureEnumValue({
     enumObj: PropertyDetailsTabEnum,

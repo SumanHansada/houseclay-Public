@@ -36,8 +36,14 @@ export const ListPropertySuccessDialog: React.FC<
 
   const handlePreviewListing = async () => {
     closeDialog(id);
+    // hc-frontend
+    // router.push(
+    //   `/property-details/${propertyCategory.toLowerCase()}/${propertyID}`,
+    // );
+
+    // zebra-ui
     router.push(
-      `/property-details/${propertyCategory.toLowerCase()}/${propertyID}`,
+      `/admin/property-details/${propertyCategory.toLowerCase()}/${propertyID}`,
     );
   };
 
@@ -81,7 +87,8 @@ export const ListPropertySuccessDialog: React.FC<
           </p>
 
           {/* Action buttons */}
-          <div className="flex gap-4 w-full">
+          <div className="flex gap-4 w-full py-2">
+            {/* <div className="flex gap-4 w-full"> */}
             <button
               onClick={handleClose}
               className="w-full py-3 text-black border font-medium rounded-lg hover:bg-red-600 hover:text-white transition duration-200"

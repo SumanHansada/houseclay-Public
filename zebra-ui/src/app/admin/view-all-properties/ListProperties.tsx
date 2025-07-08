@@ -19,7 +19,7 @@ export const ListProperties = () => {
   const router = useRouter();
   // const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 10;
+  const rowsPerPage = 12;
 
   const {
     data: paginatedPropertyData,
@@ -61,7 +61,7 @@ export const ListProperties = () => {
 
   const rows: PropertyRow[] = propertyList.map((propertyInfo, index) => ({
     ...propertyInfo,
-    _serial: index + 1,
+    _serial: (currentPage - 1) * rowsPerPage + index + 1,
   }));
 
   const goToPage = (page: number) => {
