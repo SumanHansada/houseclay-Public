@@ -27,8 +27,8 @@ export default function ReverifyPropertyLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { type, propertyID } = useParams() as {
-    type: string;
+  const { propertyCategory, propertyID } = useParams() as {
+    propertyCategory: string;
     propertyID: string;
   };
   const router = useRouter();
@@ -74,7 +74,7 @@ export default function ReverifyPropertyLayout({
 
   const handleTabChange = (tab: string) => {
     router.push(
-      `/admin/property-details/${type}/reverify/${propertyID}/${tab}`,
+      `/admin/property-details/${propertyCategory}/reverify/${propertyID}/${tab}`,
     );
   };
 

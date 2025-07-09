@@ -5,7 +5,7 @@ import {
   useSelectedLayoutSegment,
 } from "next/navigation";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { PropertyDetailsTabEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
@@ -14,9 +14,11 @@ import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 import {
   setFulfilled,
   setPending,
+  setPropertyCategory,
   setRejected,
 } from "@/store/propertyDetailsSlice";
 import { ensureEnumValue } from "@/utils/enum";
+import { RootState } from "@/store/store";
 
 const tabs: { label: string; value: PropertyDetailsTabEnum }[] = [
   { label: "Details", value: PropertyDetailsTabEnum.DETAILS },
@@ -32,8 +34,7 @@ export default function PropertyDetailsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { type, propertyID } = useParams() as {
-    type: string;
+  const { propertyID } = useParams() as {
     propertyID: string;
   };
   const router = useRouter();
@@ -56,8 +57,13 @@ export default function PropertyDetailsLayout({
       dispatch(setRejected(errMsg));
     } else if (currentProperty) {
       dispatch(setFulfilled(currentProperty));
+      dispatch(setPropertyCategory(currentProperty.propertyCategory));
     }
   }, [isLoading, isError, currentProperty, error, dispatch]);
+
+  const { propertyCategory } = useSelector(
+    (state: RootState) => state.propertyDetails,
+  );
 
   if (isLoading || isError || !currentProperty) {
     return (
@@ -70,7 +76,6 @@ export default function PropertyDetailsLayout({
       />
     );
   }
-  console.log(currentProperty);
 
   const activeTab = ensureEnumValue({
     enumObj: PropertyDetailsTabEnum,
@@ -79,7 +84,9 @@ export default function PropertyDetailsLayout({
   });
 
   const handleTabChange = (tab: string) => {
-    router.push(`/admin/property-details/${type}/${propertyID}/${tab}`);
+    router.push(
+      `/admin/property-details/${propertyCategory.toLowerCase()}/${propertyID}/${tab}`,
+    );
   };
 
   return (

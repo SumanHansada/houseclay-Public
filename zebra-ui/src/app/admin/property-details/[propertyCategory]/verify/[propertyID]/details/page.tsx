@@ -141,18 +141,18 @@ export default function VerifyPropertyDetailsPage() {
 
                   {/* --- Form Sections from DetailsPage --- */}
                   <div className="bg-white rounded-xl p-6 shadow-sm flex flex-col gap-6">
-                    <PropertyDetailsForm disabled={!editMode} type={type} />
-                    <LocalityDetailsForm disabled={!editMode} type={type} />
+                    <PropertyDetailsForm disabled={!editMode} />
+                    <LocalityDetailsForm disabled={!editMode} />
                     {type === "resale" ? (
-                      <ResaleDetailsForm disabled={!editMode} type={type} />
+                      <ResaleDetailsForm disabled={!editMode} />
                     ) : (
-                      <RentalDetailsForm disabled={!editMode} type={type} />
+                      <RentalDetailsForm disabled={!editMode} />
                     )}
-                    <AdditionalInfoForm disabled={!editMode} type={type} />
+                    <AdditionalInfoForm disabled={!editMode} />
                   </div>
                   {/* Gallery Section */}
                   <div className="bg-white rounded-xl p-6 shadow-sm">
-                    <GalleryForm disabled={!editMode} type={type} />
+                    <GalleryForm disabled={!editMode} />
                   </div>
                   {/* Owner Details Section */}
                   <div className="p-6 rounded-xl bg-white shadow-sm">

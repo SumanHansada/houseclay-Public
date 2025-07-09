@@ -4,17 +4,14 @@ import { useFormikContext } from "formik";
 
 import FormPhotoUpload from "@/components/common/FormPhotoUpload";
 import { FormValues } from "@/interfaces/FormValues";
-import { FormType } from "@/store/listPropertySlice";
 
 interface GalleryFormProps {
   disabled: boolean;
-  type: "rent" | "resale" | "flatmate";
 }
 
-const GalleryForm: React.FC<GalleryFormProps> = ({ disabled, type }) => {
-  const formKey = `${type}Form` as FormType;
+const GalleryForm: React.FC<GalleryFormProps> = ({ disabled }) => {
   const { values } = useFormikContext<FormValues>();
-  console.log(disabled + formKey);
+  console.log("property-details: GalleryForm, disabled - ", disabled);
   return (
     <div className="space-y-6">
       <div className="mb-8">

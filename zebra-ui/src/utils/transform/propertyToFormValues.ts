@@ -4,7 +4,7 @@ import { FlatmatesDetails } from "@/interfaces/FlatmateDetails";
 import { FormValues } from "@/interfaces/FormValues";
 import { LocalityDetails } from "@/interfaces/LocalityDetails";
 import { PropertyDetails } from "@/interfaces/PropertyDetails";
-import { PropertyPhoto } from "@/interfaces/PropertyPhoto";
+import { PropertyImage } from "@/interfaces/PropertyImage";
 import { RentalDetails } from "@/interfaces/RentalDetails";
 import { ResaleDetails } from "@/interfaces/ResaleDetails";
 import { isFlatmate, isRent, isResale } from "@/utils/typeGuard";
@@ -98,7 +98,7 @@ export function apiToForm(api: GetPropertyByIdResponse): FormValues {
   }
 
   /* ---------- images ---------- */
-  const images: PropertyPhoto[] = api.images.map((url, i) => ({
+  const images: PropertyImage[] = api.images.map((url, i) => ({
     id: `photo-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
     file: fileDataFromUrl(url),
     url,

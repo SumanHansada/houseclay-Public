@@ -27,8 +27,8 @@ export default function VerifyPropertyLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { type, propertyID } = useParams() as {
-    type: string;
+  const { propertyCategory, propertyID } = useParams() as {
+    propertyCategory: string;
     propertyID: string;
   };
   const router = useRouter();
@@ -74,7 +74,9 @@ export default function VerifyPropertyLayout({
   });
 
   const handleTabChange = (tab: string) => {
-    router.push(`/admin/property-details/${type}/verify/${propertyID}/${tab}`);
+    router.push(
+      `/admin/property-details/${propertyCategory}/verify/${propertyID}/${tab}`,
+    );
   };
 
   return (

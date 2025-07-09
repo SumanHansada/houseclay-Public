@@ -1,11 +1,12 @@
-import { PropertyCategoryEnum } from "@/common/enums";
 import { redirect } from "next/navigation";
 import { use } from "react";
+
+import { PropertyCategoryEnum, ReverifyPropertyTabEnum } from "@/common/enums";
 
 export const dynamicParams = true;
 
 interface TParams {
-  params: Promise<{ userPhoneNo: string; propertyCategory: string }>;
+  params: Promise<{ propertyID: string; propertyCategory: string }>;
 }
 
 export async function generateStaticParams() {
@@ -16,9 +17,9 @@ export async function generateStaticParams() {
   ];
 }
 
-export default function AddPropertyTypeRootPage({ params }: TParams) {
-  const { propertyCategory, userPhoneNo } = use(params);
+export default function VerifyPropertyRedirectPage({ params }: TParams) {
+  const { propertyID, propertyCategory } = use(params);
   redirect(
-    `/admin/add-property/${userPhoneNo}/${propertyCategory}/property-details`,
+    `/admin/property-details/${propertyCategory}/reverify/${propertyID}/${ReverifyPropertyTabEnum.DETAILS}`,
   );
 }

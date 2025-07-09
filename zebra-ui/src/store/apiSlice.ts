@@ -85,6 +85,57 @@ export const apiSlice = createApi({
       ],
     }),
 
+    blacklistUser: builder.mutation<
+      {
+        blacklisted: boolean;
+        message: string;
+        userId: string;
+      },
+      { userPhoneNo: string; comment: string }
+    >({
+      query: ({ userPhoneNo, comment }) => ({
+        url: `/admin/blacklist-user?phoneNo=${userPhoneNo}&comment=${comment}}`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+
+    activateUser: builder.mutation<
+      {
+        blacklisted: boolean;
+        message: string;
+        userId: string;
+      },
+      { userPhoneNo: string; comment: string }
+    >({
+      query: ({ userPhoneNo, comment }) => ({
+        url: `/admin/activate-user?phoneNo=${userPhoneNo}&comment=${comment}`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+
+    tagBroker: builder.mutation<
+      {
+        blacklisted: boolean;
+        message: string;
+        userId: string;
+      },
+      { userPhoneNo: string; comment: string }
+    >({
+      query: ({ userPhoneNo, comment }) => ({
+        url: `/admin/tag-broker?phoneNo=${userPhoneNo}&comment=${comment}`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+
     // ──────────────── LEADS ────────────────
     getLeads: builder.query<
       GetAllLeadsResponse,

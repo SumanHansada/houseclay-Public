@@ -28,7 +28,6 @@ import FormCheckbox from "@/form-components/FormCheckbox";
 
 interface ResaleDetailsFormProps {
   disabled: boolean;
-  type: "rent" | "resale" | "flatmate";
 }
 
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -71,10 +70,7 @@ const FirstAidKitIcon = FirstAidKitIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
 
-const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({
-  disabled,
-  type,
-}) => {
+const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({ disabled }) => {
   return (
     <div className="space-y-6">
       <div className="mb-8">
