@@ -94,7 +94,7 @@ export const apiSlice = createApi({
       { userPhoneNo: string; comment: string }
     >({
       query: ({ userPhoneNo, comment }) => ({
-        url: `/admin/blacklist-user?phoneNo=${userPhoneNo}&comment=${comment}}`,
+        url: `/admin/blacklist-user?phoneNo=${userPhoneNo}&comment=${comment}`,
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -349,6 +349,8 @@ export const {
   useLogoutMutation,
   useGetUsersQuery,
   useGetUserByPhoneNoQuery,
+  useBlacklistUserMutation,
+  useActivateUserMutation,
   useGetLeadsQuery,
   useGetLeadByIdQuery,
   useLeadStatusUpdateMutation,

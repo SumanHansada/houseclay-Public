@@ -2,27 +2,39 @@
 import { useParams } from "next/navigation";
 import React, { useState } from "react";
 
-import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
+import {
+  useGetUserByPhoneNoQuery,
+  useBlacklistUserMutation,
+  useActivateUserMutation,
+} from "@/store/apiSlice";
+import { UserStatusChangeDialog } from "@/dialogs/user-status-change-dialog";
+import { useDialog } from "@/providers/DialogContextProvider";
 
 const ProfilePage: React.FC = () => {
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
   const { data } = useGetUserByPhoneNoQuery({ phoneNo: userPhoneNo });
-
-  // const [updateBlacklist, { isLoading: isUpdating }] = useUpdateUserBlacklistMutation();
+  const [blacklistUser] = useBlacklistUserMutation();
+  const [activateUser] = useActivateUserMutation();
+  const { openDialog, isDialogOpen } = useDialog();
 
   const currentUser = data!.user;
   const [isBlacklisted, setIsBlacklisted] = useState<boolean>(
     currentUser.blacklisted,
   );
+  const handleBlacklistConfirm = async (comment: string) => {
+    await blacklistUser({ userPhoneNo, comment });
+  };
+
+  const handleActivateConfirm = async (comment: string) => {
+    await activateUser({ userPhoneNo, comment });
+  };
 
   const handleBlacklistUser = () => {
-    // updateUserBlacklist({ phoneNo: user.phoneNo, blacklisted: true });
-    setIsBlacklisted(true);
+    isBlacklisted ? null : openDialog("blacklist-user-dialog");
   };
 
   const handleActivateUser = () => {
-    // updateUserBlacklist({ phoneNo: user.phoneNo, blacklisted: false });
-    setIsBlacklisted(false);
+    isBlacklisted ? openDialog("activate-user-dialog") : null;
   };
 
   const { name, email, phoneNo, createdAt } = currentUser;
@@ -84,6 +96,23 @@ const ProfilePage: React.FC = () => {
           </form>
         </div>
       </div>
+      {isDialogOpen("blacklist-user-dialog") && (
+        <UserStatusChangeDialog
+          id="blacklist-user-dialog"
+          actionType="blacklist"
+          onConfirm={handleBlacklistConfirm}
+          onSuccess={() => setIsBlacklisted(true)}
+        />
+      )}
+
+      {isDialogOpen("activate-user-dialog") && (
+        <UserStatusChangeDialog
+          id="activate-user-dialog"
+          actionType="activate"
+          onConfirm={handleActivateConfirm}
+          onSuccess={() => setIsBlacklisted(false)}
+        />
+      )}
     </div>
   );
 };
