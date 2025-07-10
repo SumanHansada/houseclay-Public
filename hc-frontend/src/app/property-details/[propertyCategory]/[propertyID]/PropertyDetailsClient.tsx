@@ -648,7 +648,7 @@ export function PropertyDetailsClient({
                             Parking
                           </div>
                           <div className="text-gray-900">
-                            {property?.parking ? "Yes" : "No"}
+                            {property?.parking}
                           </div>
                         </div>
                       </div>

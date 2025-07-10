@@ -10,11 +10,11 @@ export async function generateStaticParams() {
   ];
 }
 
-export default function PropertyCategoryRootPage({
+export default async function PropertyCategoryRootPage({
   params,
 }: {
   params: { propertyCategory: string };
 }) {
-  const { propertyCategory } = params;
+  const { propertyCategory } = await params;
   redirect(`/list-property/${propertyCategory}/property-details`);
 }

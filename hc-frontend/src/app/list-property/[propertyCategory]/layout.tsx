@@ -294,10 +294,17 @@ export default function ListPropertyTypeLayout({
               (url) => extractS3KeyFromUrl(url) || "",
             )
           : [];
+      const coverImage = propertyImages.filter((image) => image.isCover);
+      const coverImageName =
+        coverImage.length > 0 ? coverImage[0].file.name : "";
+      const coverImageS3Key = imagesS3Keys.find((key) =>
+        key.endsWith(coverImageName),
+      );
       let propertyData = {
         propertyID,
         propertyCategory,
         images: imagesS3Keys,
+        coverImage: coverImageS3Key,
         ...propertyDetails,
         ...localityDetails,
         ...additionalInfo,

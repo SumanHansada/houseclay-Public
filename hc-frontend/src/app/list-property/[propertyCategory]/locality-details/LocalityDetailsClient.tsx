@@ -3,6 +3,7 @@
 import { useFormikContext } from "formik";
 import { MapPin } from "lucide-react";
 import { useEffect } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
@@ -43,6 +44,24 @@ const LocalityDetailsClient: React.FC = () => {
     address?: string;
     city?: string;
   }) => {
+    if (location.city) {
+      const selectedCity = location.city;
+      const isCityAllowed = values.localityDetails.city === selectedCity;
+      if (!isCityAllowed) {
+        toast.error(
+          `Please select a location within ${values.localityDetails.city}`,
+          {
+            duration: 5000,
+          },
+        );
+        setFieldValue("localityDetails.city", "");
+        setFieldValue("localityDetails.latitude", 0);
+        setFieldValue("localityDetails.longitude", 0);
+        setFieldValue("localityDetails.locationOrSocietyName", "");
+        setFieldValue("localityDetails.landmark", "");
+        return;
+      }
+    }
     setFieldValue("localityDetails.latitude", location.latitude);
     setFieldValue("localityDetails.longitude", location.longitude);
     if (location.name) {
