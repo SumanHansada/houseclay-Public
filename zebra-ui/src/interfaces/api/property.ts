@@ -34,6 +34,7 @@ interface ResponseMeta extends PropertyCore {
   premium: boolean;
   managed: boolean;
   coverImage: string;
+  propertyState: string;
 }
 
 interface PropertyUserRelations {

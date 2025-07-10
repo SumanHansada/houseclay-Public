@@ -16,7 +16,7 @@ export default function ShortlistUsersPage() {
   const { propertyID } = useParams() as { propertyID: string };
   const rowsPerPage = 10;
   const { data: currentProperty } = useGetPropertyByIdQuery({
-    id: propertyID,
+    propertyID: propertyID,
   });
   const rows = currentProperty!.shortlistUsers;
 

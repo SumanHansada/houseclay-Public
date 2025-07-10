@@ -16,7 +16,7 @@ import {
   setPending,
   setRejected,
 } from "@/store/propertyDetailsSlice";
-import { ensureEnumValue } from "@/utils/enum";
+import { ensureEnumValue } from "@/utils/core";
 
 const tabs: { label: string; value: ReverifyPropertyTabEnum }[] = [
   { label: "Details", value: ReverifyPropertyTabEnum.DETAILS },
@@ -40,7 +40,7 @@ export default function ReverifyPropertyLayout({
     isLoading,
     isError,
     error,
-  } = useGetPropertyByIdQuery({ id: propertyID });
+  } = useGetPropertyByIdQuery({ propertyID: propertyID });
 
   useEffect(() => {
     if (isLoading) {

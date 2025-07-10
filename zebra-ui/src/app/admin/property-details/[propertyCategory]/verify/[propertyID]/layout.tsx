@@ -5,7 +5,7 @@ import {
   useSelectedLayoutSegment,
 } from "next/navigation";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { VerifyPropertyTabEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
@@ -14,9 +14,11 @@ import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 import {
   setFulfilled,
   setPending,
+  setPropertyCategory,
   setRejected,
 } from "@/store/propertyDetailsSlice";
-import { ensureEnumValue } from "@/utils/enum";
+import { ensureEnumValue } from "@/utils/core";
+import { RootState } from "@/store/store";
 
 const tabs: { label: string; value: VerifyPropertyTabEnum }[] = [
   { label: "Details", value: VerifyPropertyTabEnum.DETAILS },
@@ -27,8 +29,7 @@ export default function VerifyPropertyLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { propertyCategory, propertyID } = useParams() as {
-    propertyCategory: string;
+  const { propertyID } = useParams() as {
     propertyID: string;
   };
   const router = useRouter();
@@ -40,7 +41,7 @@ export default function VerifyPropertyLayout({
     isLoading,
     isError,
     error,
-  } = useGetPropertyByIdQuery({ id: propertyID });
+  } = useGetPropertyByIdQuery({ propertyID: propertyID });
 
   useEffect(() => {
     if (isLoading) {
@@ -51,8 +52,13 @@ export default function VerifyPropertyLayout({
       dispatch(setRejected(errMsg));
     } else if (currentProperty) {
       dispatch(setFulfilled(currentProperty));
+      dispatch(setPropertyCategory(currentProperty.propertyCategory));
     }
   }, [isLoading, isError, currentProperty, error, dispatch]);
+
+  const { propertyCategory } = useSelector(
+    (state: RootState) => state.propertyDetails,
+  );
 
   if (isLoading || isError || !currentProperty) {
     return (
@@ -65,7 +71,6 @@ export default function VerifyPropertyLayout({
       />
     );
   }
-  console.log(currentProperty);
 
   const activeTab = ensureEnumValue({
     enumObj: VerifyPropertyTabEnum,
@@ -75,7 +80,7 @@ export default function VerifyPropertyLayout({
 
   const handleTabChange = (tab: string) => {
     router.push(
-      `/admin/property-details/${propertyCategory}/verify/${propertyID}/${tab}`,
+      `/admin/property-details/${propertyCategory.toLowerCase()}/verify/${propertyID}/${tab}`,
     );
   };
 

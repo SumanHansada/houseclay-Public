@@ -12,7 +12,6 @@ import { OwnerDetails } from "@/app/admin/property-details/components/OwnerDetai
 import PropertyDetailsForm from "@/app/admin/property-details/components/PropertyDetailsForm";
 import RentalDetailsForm from "@/app/admin/property-details/components/RentalDetailsForm";
 import ResaleDetailsForm from "@/app/admin/property-details/components/ResaleDetailsForm";
-import { VerificationSection } from "@/app/admin/property-details/components/VerificationSection";
 import { FormValues } from "@/interfaces/FormValues";
 import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 import { RootState } from "@/store/store";
@@ -36,7 +35,9 @@ export default function ReverifyPropertyDetailsPage() {
   const [isGalleryVerified, setIsGalleryVerified] = useState(false);
   const [isOwnerVerified, setIsOwnerVerified] = useState(false);
 
-  const { data: currentProperty } = useGetPropertyByIdQuery({ id: propertyID });
+  const { data: currentProperty } = useGetPropertyByIdQuery({
+    propertyID: propertyID,
+  });
   const currentUser = currentProperty!.owner;
 
   // --- From VerifyPage: Derived state for verification logic ---
@@ -141,17 +142,17 @@ export default function ReverifyPropertyDetailsPage() {
 
                   {/* --- Form Sections from DetailsPage --- */}
                   <div className="bg-white rounded-xl p-6 shadow-sm flex flex-col gap-6">
-                    <PropertyDetailsForm disabled={!editMode} type={type} />
-                    <LocalityDetailsForm disabled={!editMode} type={type} />
+                    <PropertyDetailsForm disabled={!editMode} />
+                    <LocalityDetailsForm disabled={!editMode} />
                     {type === "resale" ? (
-                      <ResaleDetailsForm disabled={!editMode} type={type} />
+                      <ResaleDetailsForm disabled={!editMode} />
                     ) : (
-                      <RentalDetailsForm disabled={!editMode} type={type} />
+                      <RentalDetailsForm disabled={!editMode} />
                     )}
-                    <AdditionalInfoForm disabled={!editMode} type={type} />
+                    <AdditionalInfoForm disabled={!editMode} />
                   </div>
                   <div className="bg-white rounded-xl p-6 shadow-sm">
-                    <GalleryForm disabled={!editMode} type={type} />
+                    <GalleryForm disabled={!editMode} />
                   </div>
                   <div className="p-6 rounded-xl bg-white shadow-sm">
                     <OwnerDetails
@@ -164,7 +165,7 @@ export default function ReverifyPropertyDetailsPage() {
 
               {/* Right Fixed Column (Verification Panel) */}
               <div className="w-1/3 bg-white rounded-xl p-6 flex flex-col justify-between shadow-sm">
-                <div className="flex flex-col gap-6">
+                {/* <div className="flex flex-col gap-6">
                   <h1 className="text-3xl font-bold border-b pb-4">
                     Reverification Panel
                   </h1>
@@ -195,7 +196,7 @@ export default function ReverifyPropertyDetailsPage() {
                     isVerified={isOwnerVerified}
                     isCommentValid={isOwnerCommentValid}
                   />
-                </div>
+                </div> */}
                 <button
                   onClick={handleFinalVerification}
                   disabled={!isFormFullyVerified}

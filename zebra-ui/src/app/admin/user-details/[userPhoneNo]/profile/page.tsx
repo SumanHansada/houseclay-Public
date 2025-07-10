@@ -22,11 +22,11 @@ const ProfilePage: React.FC = () => {
     currentUser.blacklisted,
   );
   const handleBlacklistConfirm = async (comment: string) => {
-    await blacklistUser({ userPhoneNo, comment });
+    await blacklistUser({ phoneNo: userPhoneNo, comment });
   };
 
   const handleActivateConfirm = async (comment: string) => {
-    await activateUser({ userPhoneNo, comment });
+    await activateUser({ phoneNo: userPhoneNo, comment });
   };
 
   const handleBlacklistUser = () => {

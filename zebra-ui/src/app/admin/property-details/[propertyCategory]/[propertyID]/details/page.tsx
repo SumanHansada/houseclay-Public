@@ -1,7 +1,6 @@
 "use client";
 
 import { Form, Formik, FormikProvider } from "formik";
-import { useParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -15,16 +14,16 @@ import LocalityDetailsForm from "../../../components/LocalityDetailsForm";
 import PropertyDetailsForm from "../../../components/PropertyDetailsForm";
 import RentalDetailsForm from "../../../components/RentalDetailsForm";
 import ResaleDetailsForm from "../../../components/ResaleDetailsForm";
+import { PropertyCategoryEnum } from "@/common/enums";
 
 export default function DetailsPage() {
-  const { type } = useParams() as {
-    type: "rent" | "resale" | "flatmate";
-  };
   const [editMode, setEditMode] = useState(false);
 
-  const { data: propertyData, status } = useSelector(
-    (state: RootState) => state.propertyDetails,
-  );
+  const {
+    data: propertyData,
+    status,
+    propertyCategory,
+  } = useSelector((state: RootState) => state.propertyDetails);
 
   const initialValues = useMemo(
     () => (propertyData ? apiToForm(propertyData) : undefined),
@@ -89,24 +88,24 @@ export default function DetailsPage() {
               <FormikProvider value={formik}>
                 <div className="flex flex-col gap-8">
                   <div className="bg-white rounded-xl p-6 shadow-sm">
-                    <PropertyDetailsForm disabled={!editMode} type={type} />
+                    <PropertyDetailsForm disabled={!editMode} />
                   </div>
 
                   <div className="bg-white rounded-xl p-6 shadow-sm">
-                    <LocalityDetailsForm disabled={!editMode} type={type} />
+                    <LocalityDetailsForm disabled={!editMode} />
                   </div>
                   <div className="bg-white rounded-xl p-6 shadow-sm">
-                    {type === "resale" ? (
-                      <ResaleDetailsForm disabled={!editMode} type={type} />
+                    {propertyCategory === PropertyCategoryEnum.RESALE ? (
+                      <ResaleDetailsForm disabled={!editMode} />
                     ) : (
-                      <RentalDetailsForm disabled={!editMode} type={type} />
+                      <RentalDetailsForm disabled={!editMode} />
                     )}
                   </div>
                   <div className="bg-white rounded-xl p-6 shadow-sm">
-                    <GalleryForm disabled={!editMode} type={type} />
+                    <GalleryForm disabled={!editMode} />
                   </div>
                   <div className="bg-white rounded-xl p-6 shadow-sm">
-                    <AdditionalInfoForm disabled={!editMode} type={type} />
+                    <AdditionalInfoForm disabled={!editMode} />
                   </div>
                 </div>
               </FormikProvider>

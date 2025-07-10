@@ -9,15 +9,17 @@ import { PaginationFooter } from "@/components/PaginationFooter";
 import { SearchAndFilterBar } from "@/components/SearchAndFilterBar";
 import { PropertyInfo } from "@/interfaces/Property";
 import { useGetPropertiesQuery } from "@/store/apiSlice";
-import { buildPropertyColumns } from "@/utils/table/buildPropertyColumns";
+import {
+  buildPropertyColumns,
+  createDefaultPropertyActions,
+} from "@/utils/table/buildPropertyColumns";
 
-interface PropertyRow extends PropertyInfo {
+interface SerializedPropertyRow extends PropertyInfo {
   _serial: number;
 }
 
 export const ListProperties = () => {
   const router = useRouter();
-  // const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 12;
 
@@ -55,14 +57,12 @@ export const ListProperties = () => {
     last: isLast,
   } = paginatedPropertyData;
 
-  const viewPropertyDetails = (type: string, propertyID: string) => {
-    router.push(`/admin/property-details/${type}/${propertyID}`);
-  };
-
-  const rows: PropertyRow[] = propertyList.map((propertyInfo, index) => ({
-    ...propertyInfo,
-    _serial: (currentPage - 1) * rowsPerPage + index + 1,
-  }));
+  const rows: SerializedPropertyRow[] = propertyList.map(
+    (propertyInfo, index) => ({
+      ...propertyInfo,
+      _serial: (currentPage - 1) * rowsPerPage + index + 1,
+    }),
+  );
 
   const goToPage = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -71,8 +71,21 @@ export const ListProperties = () => {
   };
   const nextPage = () => !isLast && setCurrentPage((p) => p + 1);
   const prevPage = () => !isFirst && setCurrentPage((p) => p - 1);
+  const viewPropertyDetails = (
+    propertyCategory: string,
+    propertyID: string,
+  ) => {
+    router.push(
+      `/admin/property-details/${propertyCategory.toLowerCase()}/${propertyID}`,
+    );
+  };
 
-  const columns = buildPropertyColumns(viewPropertyDetails);
+  const columns = buildPropertyColumns(
+    createDefaultPropertyActions({
+      onView: (row) =>
+        viewPropertyDetails(row.propertyCategory, row.propertyID),
+    }),
+  );
 
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">

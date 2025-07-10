@@ -11,7 +11,9 @@ export default function PropertyDetailsOverviewPage() {
   const router = useRouter();
   const { propertyID } = useParams() as { propertyID: string };
 
-  const { data: currentProperty } = useGetPropertyByIdQuery({ id: propertyID });
+  const { data: currentProperty } = useGetPropertyByIdQuery({
+    propertyID: propertyID,
+  });
   const ownerDetails = currentProperty!.owner;
   const verificationStatus = currentProperty!.propertyState;
   const propertyUpdates = currentProperty!.propertyUpdates;

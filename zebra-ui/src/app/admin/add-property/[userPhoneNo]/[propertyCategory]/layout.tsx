@@ -321,7 +321,7 @@ export default function AddPropertyTypeLayout({
 
       await addProperty({
         payload: propertyData,
-        userPhoneNo: userPhoneNo,
+        phoneNo: userPhoneNo,
       });
 
       // Don't open success dialog here anymore - it will be opened automatically after upload completes

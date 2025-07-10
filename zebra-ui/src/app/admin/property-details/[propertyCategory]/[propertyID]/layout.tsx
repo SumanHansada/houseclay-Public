@@ -17,7 +17,7 @@ import {
   setPropertyCategory,
   setRejected,
 } from "@/store/propertyDetailsSlice";
-import { ensureEnumValue } from "@/utils/enum";
+import { ensureEnumValue } from "@/utils/core";
 import { RootState } from "@/store/store";
 
 const tabs: { label: string; value: PropertyDetailsTabEnum }[] = [
@@ -46,7 +46,7 @@ export default function PropertyDetailsLayout({
     isLoading,
     isError,
     error,
-  } = useGetPropertyByIdQuery({ id: propertyID });
+  } = useGetPropertyByIdQuery({ propertyID: propertyID });
 
   useEffect(() => {
     if (isLoading) {

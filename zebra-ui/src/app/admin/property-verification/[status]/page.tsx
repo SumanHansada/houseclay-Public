@@ -9,9 +9,12 @@ import { Column, DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/PaginationFooter";
 import { useStatusBasedPropertyFetch } from "@/hooks/useStatusBasedPropertyFetch";
 import { PropertyInfo } from "@/interfaces/Property";
-import { buildPropertyColumns } from "@/utils/table/buildPropertyColumns";
+import {
+  buildPropertyColumns,
+  createDefaultPropertyActions,
+} from "@/utils/table/buildPropertyColumns";
 
-interface PropertyRow extends PropertyInfo {
+interface SerializedPropertyRow extends PropertyInfo {
   _serial: number;
 }
 
@@ -51,18 +54,12 @@ const PropertyVerificationTablePage: React.FC = () => {
     last: isLast,
   } = paginatedPropertyData;
 
-  const viewPropertyDetails = (type: string, propertyID: string) => {
-    const verifyPath = `/admin/property-details/${type}/verify/${propertyID}`;
-    const reverifyPath = `/admin/property-details/${type}/reverify/${propertyID}`;
-    const currentPath =
-      status === VerifyPropertyStatusEnum.VERIFY ? verifyPath : reverifyPath;
-    router.push(currentPath);
-  };
-
-  const handleStatusChange = (newStatus: VerifyPropertyStatusEnum) => {
-    setCurrentPage(1);
-    router.push(`/admin/property-verification/${newStatus}`);
-  };
+  const rows: SerializedPropertyRow[] = allProperties.map(
+    (propertyInfo, index) => ({
+      ...propertyInfo,
+      _serial: (currentPage - 1) * rowsPerPage + index + 1,
+    }),
+  );
 
   const goToPage = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -71,14 +68,28 @@ const PropertyVerificationTablePage: React.FC = () => {
   };
   const nextPage = () => !isLast && setCurrentPage((p) => p + 1);
   const prevPage = () => !isFirst && setCurrentPage((p) => p - 1);
+  const viewPropertyDetails = (
+    propertyCategory: string,
+    propertyID: string,
+  ) => {
+    const verifyPath = `/admin/property-details/${propertyCategory.toLowerCase()}/verify/${propertyID}`;
+    const reverifyPath = `/admin/property-details/${propertyCategory.toLowerCase()}/reverify/${propertyID}`;
+    const currentPath =
+      status === VerifyPropertyStatusEnum.VERIFY ? verifyPath : reverifyPath;
+    router.push(currentPath);
+  };
 
-  const rows: PropertyRow[] = allProperties.map((propertyInfo, index) => ({
-    ...propertyInfo,
-    _serial: (currentPage - 1) * rowsPerPage + index + 1,
-  }));
+  const columns = buildPropertyColumns(
+    createDefaultPropertyActions({
+      onView: (row) =>
+        viewPropertyDetails(row.propertyCategory, row.propertyID),
+    }),
+  );
 
-  const columns: Column<PropertyRow>[] =
-    buildPropertyColumns(viewPropertyDetails);
+  const handleStatusChange = (newStatus: VerifyPropertyStatusEnum) => {
+    setCurrentPage(1);
+    router.push(`/admin/property-verification/${newStatus}`);
+  };
 
   return (
     <div className="flex flex-col h-full bg-white shadow-sm rounded-xl">

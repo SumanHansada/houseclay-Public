@@ -9,7 +9,7 @@ import { RentalDetails } from "@/interfaces/RentalDetails";
 import { ResaleDetails } from "@/interfaces/ResaleDetails";
 import { isFlatmate, isRent, isResale } from "@/utils/typeGuard";
 
-import { fileDataFromUrl } from "../extract";
+import { fileDataFromUrl } from "../core";
 
 export function apiToForm(api: GetPropertyByIdResponse): FormValues {
   /* ---------- common blocks ---------- */

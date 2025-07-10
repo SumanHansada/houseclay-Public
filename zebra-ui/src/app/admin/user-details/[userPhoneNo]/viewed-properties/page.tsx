@@ -4,11 +4,14 @@ import { useParams, useRouter } from "next/navigation";
 
 import { PropertyInfo } from "@/interfaces/Property";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
-import { buildPropertyColumns } from "@/utils/table/buildPropertyColumns";
+import {
+  buildPropertyColumns,
+  createDefaultPropertyActions,
+} from "@/utils/table/buildPropertyColumns";
 
 import { PropertiesTableView } from "../../components/PropertiesTableView";
 
-interface PropertyRow extends PropertyInfo {
+interface SerializedPropertyRow extends PropertyInfo {
   _serial: number;
 }
 
@@ -19,16 +22,28 @@ const ViewedPropertiesPage: React.FC = () => {
 
   const { viewedProperties } = data!.user;
 
-  const viewPropertyDetails = (type: string, propertyID: string) => {
-    router.push(`/admin/property-details/${type}/${propertyID}`);
+  const rows: SerializedPropertyRow[] = viewedProperties.map(
+    (propertyInfo, index) => ({
+      ...propertyInfo,
+      _serial: index + 1,
+    }),
+  );
+
+  const viewPropertyDetails = (
+    propertyCategory: string,
+    propertyID: string,
+  ) => {
+    router.push(
+      `/admin/property-details/${propertyCategory.toLowerCase()}/${propertyID}`,
+    );
   };
 
-  const rows: PropertyRow[] = viewedProperties.map((propertyInfo, index) => ({
-    ...propertyInfo,
-    _serial: index + 1,
-  }));
-
-  const columns = buildPropertyColumns(viewPropertyDetails);
+  const columns = buildPropertyColumns(
+    createDefaultPropertyActions({
+      onView: (row) =>
+        viewPropertyDetails(row.propertyCategory, row.propertyID),
+    }),
+  );
 
   return (
     <div className="h-full">
