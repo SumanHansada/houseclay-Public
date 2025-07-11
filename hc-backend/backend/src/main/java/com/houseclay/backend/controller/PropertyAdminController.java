@@ -60,7 +60,7 @@ public class PropertyAdminController {
     }
 
     @PutMapping("/deactivate")
-    public ResponseEntity<?> deactivateProperty(@RequestBody String propertyID, String comment, @RequestAttribute("authenticatedAdmin") Admin admin) {
+    public ResponseEntity<?> deactivateProperty(@RequestParam String propertyID, @RequestParam String comment, @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
             propertyAdminService.deactivateProperty(admin, propertyID, comment);
             Map<String, Object> response = new HashMap<>();
