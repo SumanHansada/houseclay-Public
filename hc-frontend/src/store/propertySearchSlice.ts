@@ -1,27 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { PropertyCategory } from "@/common/enums";
+import { PropertySearchFilter } from "@/interfaces/PropertySearchFilter";
 
-export interface PropertySearchState {
-  propertyType: string | number | boolean;
-  propertyCategory: PropertyCategory;
-  propertyBhk: string | number | boolean;
-  tenantType: string | number | boolean;
-  // New filter states
-  lookingFor: string;
-  propertyTypeFilter: string;
-  tenant: string;
-  foodPref: string;
-  bathroomType: string;
-  furnishing: string;
-  availability: string;
-  amenities: string[];
-  parking: boolean;
-  priceRangeForRent: [number, number];
-  priceRangeForBuy: [number, number];
-}
-
-const initialState: PropertySearchState = {
+const initialState: PropertySearchFilter = {
   propertyType: "",
   propertyCategory: PropertyCategory.RENT,
   propertyBhk: "",
@@ -35,7 +17,7 @@ const initialState: PropertySearchState = {
   furnishing: "",
   availability: "",
   amenities: [],
-  parking: false,
+  parking: "",
   priceRangeForRent: [200000, 700000],
   priceRangeForBuy: [5000000, 70000000],
 };
@@ -90,7 +72,7 @@ const propertySearchSlice = createSlice({
     setAmenities: (state, action: PayloadAction<string[]>) => {
       state.amenities = action.payload;
     },
-    setParking: (state, action: PayloadAction<boolean>) => {
+    setParking: (state, action: PayloadAction<string>) => {
       state.parking = action.payload;
     },
     setPriceRangeForRent: (state, action: PayloadAction<[number, number]>) => {
@@ -113,7 +95,7 @@ const propertySearchSlice = createSlice({
       state.furnishing = "";
       state.availability = "";
       state.amenities = [];
-      state.parking = false;
+      state.parking = "";
       state.priceRangeForRent = [200000, 700000];
       state.priceRangeForBuy = [5000000, 70000000];
     },

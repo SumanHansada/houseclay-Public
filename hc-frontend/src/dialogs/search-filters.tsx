@@ -505,7 +505,7 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
               ]}
               containerClassName="w-1/2 max-md:w-full"
               value={parking}
-              onChange={(value) => dispatch(setParking(value as boolean))}
+              onChange={(value) => dispatch(setParking(value as string))}
             />
           </div>
         </div>

@@ -66,6 +66,45 @@ const HomeSearchBar: React.FC = () => {
     }
   };
 
+  const handleLocationSelect = (value: {
+    latitude: number;
+    longitude: number;
+    name?: string;
+    address?: string;
+    city?: string;
+  }) => {
+    if (value.city) {
+      const selectedCity = value.city.toLowerCase();
+      const isCityAllowed =
+        CITY_OPTIONS[0].label.toLowerCase() === selectedCity;
+      if (!isCityAllowed) {
+        toast.error(
+          `Please select a location within ${CITY_OPTIONS[0].label}`,
+          {
+            duration: 5000,
+          },
+        );
+        setLocation(null);
+        return;
+      }
+    }
+    setLocation((prev) => {
+      return {
+        ...prev,
+        latitude: value.latitude,
+        longitude: value.longitude,
+        name: value.name,
+        address: value.address,
+        city: value.city,
+      };
+    });
+    dispatch(resetPropertySearch());
+
+    router.push(
+      `/property-search?lat=${value.latitude}&lon=${value.longitude}&propertyCategory=${propertyCategory.toLowerCase()}`,
+    );
+  };
+
   return (
     <div
       ref={containerRef}
@@ -103,34 +142,7 @@ const HomeSearchBar: React.FC = () => {
             });
             handlePrefetch();
           }}
-          onLocationSelect={(value) => {
-            console.log(value);
-            if (value.city) {
-              const selectedCity = value.city.toLowerCase();
-              const isCityAllowed =
-                CITY_OPTIONS[0].label.toLowerCase() === selectedCity;
-              if (!isCityAllowed) {
-                toast.error(
-                  `Please select a location within ${CITY_OPTIONS[0].label}`,
-                  {
-                    duration: 5000,
-                  },
-                );
-                setLocation(null);
-                return;
-              }
-            }
-            setLocation((prev) => {
-              return {
-                ...prev,
-                latitude: value.latitude,
-                longitude: value.longitude,
-                name: value.name,
-                address: value.address,
-                city: value.city,
-              };
-            });
-          }}
+          onLocationSelect={handleLocationSelect}
           containerClassName="w-full relative"
           labelClassName="text-sm font-medium text-gray-900 mb-1"
           inputClassName="w-full p-3"

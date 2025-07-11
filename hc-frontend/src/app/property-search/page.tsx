@@ -132,7 +132,7 @@ export default function PropertySearchPage() {
     if (searchState.furnishing && searchState.furnishing !== "") {
       params.set("furnishing", searchState.furnishing);
     }
-    if (searchState.parking !== undefined && searchState.parking !== false) {
+    if (searchState.parking !== undefined && searchState.parking !== "") {
       params.set("parking", String(searchState.parking));
     }
     if (searchState.amenities && searchState.amenities.length > 0) {
