@@ -140,7 +140,11 @@ export default function VerifyPropertyDetailsPage() {
         </Formik>
 
         {/* Right Fixed Column (Verification Panel) */}
-        <VerificationPanel propertyID={propertyID} formScrollRef={formRef} />
+        <VerificationPanel
+          propertyID={propertyID}
+          formScrollRef={formRef}
+          userPhoneNo={currentUser.phoneNo}
+        />
       </div>
     </div>
   );

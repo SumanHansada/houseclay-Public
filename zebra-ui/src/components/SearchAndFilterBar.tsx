@@ -1,68 +1,102 @@
 "use client";
 
 import { SearchIcon, SlidersHorizontal } from "lucide-react";
-// import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useReducer } from "react";
-import { useDispatch } from "react-redux";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
+import { PropertyCategoryEnum } from "@/common/enums";
+import Autocomplete from "@/components/common/Autocomplete";
+import Button from "@/components/common/Button";
+import SelectDropdown from "@/components/common/SelectDropdown";
 import SearchFilterDialog from "@/dialogs/search-filters";
+// import { PropertySearch } from "@/interfaces/PropertySearch";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { setHideFooter, setHideHeader } from "@/store/appSlice";
-
-import Autocomplete from "./common/Autocomplete";
-import Button from "./common/Button";
-import SelectDropdown from "./common/SelectDropdown";
-
-type PropertySearchState = {
-  propertyType: string | number | boolean;
-  propertyCategory: string | number | boolean;
-  propertyBhk: string | number | boolean;
-  tenantType: string | number | boolean;
-};
-
-type PropertySearchAction = {
-  type:
-    | "SET_PROPERTY_TYPE"
-    | "SET_PROPERTY_CATEGORY"
-    | "SET_PROPERTY_BHK"
-    | "SET_TENANT_TYPE";
-  payload: string | number | boolean;
-};
-
-const initialState: PropertySearchState = {
-  propertyType: "",
-  propertyCategory: "buy",
-  propertyBhk: "",
-  tenantType: "",
-};
-
-const propertyReducer = (
-  state: PropertySearchState,
-  action: PropertySearchAction,
-): PropertySearchState => {
-  switch (action.type) {
-    case "SET_PROPERTY_TYPE":
-      return { ...state, propertyType: action.payload };
-    case "SET_PROPERTY_CATEGORY":
-      return { ...state, propertyCategory: action.payload };
-    case "SET_PROPERTY_BHK":
-      return { ...state, propertyBhk: action.payload };
-    case "SET_TENANT_TYPE":
-      return { ...state, tenantType: action.payload };
-    default:
-      return state;
-  }
-};
+// import { useGetPropertiesByLocationQuery } from "@/store/apiSlice";
+import {
+  setHideFooter,
+  setHideHeader,
+  setHideStickyNavBar,
+} from "@/store/appSlice";
+import {
+  setPropertyBhk,
+  setPropertyCategory,
+  setPropertyType,
+  setTenantType,
+} from "@/store/propertySearchSlice";
+import { RootState } from "@/store/store";
 
 export const SearchAndFilterBar: React.FC = () => {
-  // const searchParams = useSearchParams();
-  // const router = useRouter();
+  const searchParams = useSearchParams();
+  const lat = searchParams.get("lat");
+  const lon = searchParams.get("lon");
+  // const propertyCategory = searchParams
+  //   .get("propertyCategory")
+  //   ?.toUpperCase() as PropertyCategoryEnum;
+  const searchState = useSelector((state: RootState) => state.propertySearch);
+  const router = useRouter();
+
+  // Only fetch if lat/lon are present and valid
+  // const shouldFetch = lat && lon && !isNaN(Number(lat)) && !isNaN(Number(lon));
+
+  // Build query object from all URL params
+  // const buildQueryParams = () => {
+  //   const query: Record<
+  //     string,
+  //     string | number | boolean | string[] | PropertyCategoryEnum
+  //   > = {
+  //     latitude: Number(lat),
+  //     longitude: Number(lon),
+  //     propertyCategory: propertyCategory || PropertyCategoryEnum.RENT,
+  //   };
+
+  //   // Add optional filters from URL params
+  //   const propertyType = searchParams.get("propertyType");
+  //   const bhkType = searchParams.get("bhkType");
+  //   const preferredTenant = searchParams.get("preferredTenant");
+  //   const furnishing = searchParams.get("furnishing");
+  //   const parking = searchParams.get("parking");
+  //   const amenities = searchParams.get("amenities");
+
+  //   if (propertyType) query.propertyType = propertyType;
+  //   if (bhkType) query.bhkType = bhkType;
+  //   if (preferredTenant) query.preferredTenant = preferredTenant;
+  //   if (furnishing) query.furnishing = furnishing;
+  //   if (parking) query.parking = parking === "true";
+  //   if (amenities) query.amenities = amenities.split(",");
+
+  //   return query;
+  // };
+
+  // const { data, isLoading, error } = useGetPropertiesByLocationQuery(
+  //   shouldFetch
+  //     ? buildQueryParams()
+  //     : {
+  //         latitude: 0,
+  //         longitude: 0,
+  //         propertyCategory: PropertyCategoryEnum.RENT,
+  //       },
+  //   { skip: !shouldFetch },
+  // );
+
+  // Memoize property list
+  // const properties: PropertySearch[] = useMemo(() => {
+  //   if (error) {
+  //     return error as PropertySearch[];
+  //   }
+  //   if (!data || !Array.isArray(data)) return [];
+  //   return data.map((property) => ({
+  //     ...property,
+  //     images: property.image ? [property.image] : [],
+  //   })) as PropertySearch[];
+  // }, [data, error]);
+
+  const properties = [];
+
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
-  const { openDialog, closeDialog, isDialogOpen } = useDialog();
 
-  // hide header/footer on mobile
   useEffect(() => {
     if (isMobile) {
       dispatch(setHideHeader(true));
@@ -73,19 +107,55 @@ export const SearchAndFilterBar: React.FC = () => {
     }
   }, [dispatch, isMobile]);
 
-  const [searchState, searchDispatch] = useReducer(
-    propertyReducer,
-    initialState,
-  );
+  const { openDialog, closeDialog, isDialogOpen } = useDialog();
+
+  const handleSearch = () => {
+    // Build URL params from searchState (only supported filters)
+    const params = new URLSearchParams();
+
+    // Required params (lat, lon, propertyCategory)
+    if (lat) params.set("lat", lat);
+    if (lon) params.set("lon", lon);
+    if (searchState.propertyCategory) {
+      params.set(
+        "propertyCategory",
+        searchState.propertyCategory.toLowerCase(),
+      );
+    }
+
+    // Optional filters (only add if not empty)
+    if (searchState.propertyType && searchState.propertyType !== "") {
+      params.set("propertyType", String(searchState.propertyType));
+    }
+    if (searchState.propertyBhk && searchState.propertyBhk !== "") {
+      params.set("bhkType", String(searchState.propertyBhk));
+    }
+    if (searchState.tenantType && searchState.tenantType !== "") {
+      params.set("preferredTenant", String(searchState.tenantType));
+    }
+    if (searchState.furnishing && searchState.furnishing !== "") {
+      params.set("furnishing", searchState.furnishing);
+    }
+    if (searchState.parking !== undefined && searchState.parking !== "") {
+      params.set("parking", String(searchState.parking));
+    }
+    if (searchState.amenities && searchState.amenities.length > 0) {
+      // Join array with comma for API
+      params.set("amenities", searchState.amenities.join(","));
+    }
+
+    // Navigate to new URL with all params
+    // router.push(`/property-search?${params.toString()}`);
+  };
+
   return (
     <>
       {/* Mobile bar */}
-      {/* <section className="w-full h-[55px] border-b border-gray-200 bg-white flex gap-2 justify-center items-center md:hidden">
-        <button
-          className="rounded-full items-center justify-center"
-          onClick={() => router.back()}
-        >
-          <ChevronLeft size={25} />
+      {/* <section
+        className={`py-2 px-4 fixed top-0 left-0 right-0 z-50 h-[55px] border-b border-gray-200 bg-white flex gap-2 justify-center items-center w-full md:hidden`}
+      >
+        <button className="rounded-full md:border-none items-center justify-center">
+          <ChevronLeft onClick={() => router.back()} size={25} />
         </button>
         <Autocomplete
           items={[
@@ -129,19 +199,30 @@ export const SearchAndFilterBar: React.FC = () => {
           <div className="flex items-center gap-2 flex-row">
             <SelectDropdown
               options={[
-                { value: "flatmates", label: "Flatmates" },
-                { value: "rent", label: "Rent" },
-                { value: "buy", label: "Buy" },
+                {
+                  value: PropertyCategoryEnum.FLATMATE,
+                  label: "Flatmate",
+                },
+                {
+                  value: PropertyCategoryEnum.RENT,
+                  label: "Rent",
+                },
+                {
+                  value: PropertyCategoryEnum.RESALE,
+                  label: "Buy",
+                },
               ]}
               name="property-category"
               id="property-category"
               value={searchState.propertyCategory}
-              onChange={(v) =>
-                searchDispatch({ type: "SET_PROPERTY_CATEGORY", payload: v })
+              onChange={(value: string | number | boolean) =>
+                dispatch(setPropertyCategory(value as PropertyCategoryEnum))
               }
               size="sm"
+              dropdownWidth="auto"
               containerClassName="relative w-20"
               buttonClassName="flex justify-between items-center w-full p-3 border rounded-xl text-left border-red-500 text-red-500 hover:border-red-500 hover:text-red-500"
+              displayTextClassName="text-red-500"
             />
             <SelectDropdown
               options={[
@@ -155,11 +236,12 @@ export const SearchAndFilterBar: React.FC = () => {
               id="property-type"
               value={searchState.propertyType}
               placeholder="Property type"
-              onChange={(v) =>
-                searchDispatch({ type: "SET_PROPERTY_TYPE", payload: v })
+              onChange={(value: string | number | boolean) =>
+                dispatch(setPropertyType(value))
               }
               size="sm"
-              containerClassName="relative w-36 lg:block md:hidden"
+              dropdownWidth="full"
+              containerClassName="relative w-36 md:w-36 xl:w-40 md:hidden lg:block"
             />
             <SelectDropdown
               options={[
@@ -173,27 +255,29 @@ export const SearchAndFilterBar: React.FC = () => {
               id="property-bhk"
               value={searchState.propertyBhk}
               placeholder="Beds"
-              onChange={(v) =>
-                searchDispatch({ type: "SET_PROPERTY_BHK", payload: v })
+              onChange={(value: string | number | boolean) =>
+                dispatch(setPropertyBhk(value))
               }
               size="sm"
-              containerClassName="relative w-28 lg:w-28 md:w-24"
+              dropdownWidth="full"
+              containerClassName="relative w-28 md:w-24 lg:w-28"
             />
             <SelectDropdown
               options={[
-                { value: "couple", label: "Couple" },
-                { value: "family", label: "Family" },
-                { value: "bachelor", label: "Bachelor" },
-                { value: "company", label: "Company" },
+                { value: "Couple", label: "Couple" },
+                { value: "Family", label: "Family" },
+                { value: "Bachelor", label: "Bachelor" },
+                { value: "Company", label: "Company" },
               ]}
               name="tenant-type"
               id="tenant-type"
               value={searchState.tenantType}
               placeholder="Tenant type"
-              onChange={(v) =>
-                searchDispatch({ type: "SET_TENANT_TYPE", payload: v })
+              onChange={(value: string | number | boolean) =>
+                dispatch(setTenantType(value))
               }
               size="sm"
+              dropdownWidth="full"
               containerClassName="relative w-32"
             />
             <Button
@@ -202,6 +286,7 @@ export const SearchAndFilterBar: React.FC = () => {
               size="md"
               className="min-h-[46px] text-black rounded-xl border text-sm"
               onClick={() => openDialog("property-filters")}
+              buttonTextClassName="lg:block md:hidden"
             >
               Filters
             </Button>
@@ -210,18 +295,28 @@ export const SearchAndFilterBar: React.FC = () => {
               variant="primary"
               size="md"
               className="min-h-[46px] rounded-xl text-sm"
+              buttonTextClassName="lg:block md:hidden"
+              onClick={handleSearch}
             >
               Search
             </Button>
           </div>
         </div>
       </section>
+
       {isDialogOpen("property-filters") && (
         <SearchFilterDialog
           id="property-filters"
-          onClose={() => closeDialog("property-filters")}
-          onReset={() => console.log("reset filter states")}
-          onApply={() => closeDialog("property-filters")}
+          onClose={() => {
+            closeDialog("property-filters");
+            dispatch(setHideStickyNavBar(false));
+          }}
+          onReset={() => {}}
+          onApply={() => {
+            closeDialog("property-filters");
+            dispatch(setHideStickyNavBar(false));
+            handleSearch();
+          }}
         />
       )}
     </>

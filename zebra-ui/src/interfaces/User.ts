@@ -42,6 +42,7 @@ export interface UserReportProperty {
 export interface UserDetails extends UserInfo {
   createdAt: string;
   blacklistedAt: string;
+  broker: boolean;
   userUpdates: UserUpdate[];
   ownedProperties: PropertyInfo[];
   shortlistedProperties: PropertyInfo[];

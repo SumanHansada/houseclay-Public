@@ -93,10 +93,7 @@ export const apiSlice = createApi({
         },
       }),
       invalidatesTags: (_r, _e, { phoneNo }) =>
-        [
-          { type: "UserDetail", id: phoneNo },
-          { type: "Users", id: "LIST" },
-        ] as const,
+        [{ type: "UserDetail", id: phoneNo }, ...listTag("Users")] as const,
     }),
 
     activateUser: builder.mutation<
@@ -115,10 +112,7 @@ export const apiSlice = createApi({
         },
       }),
       invalidatesTags: (_r, _e, { phoneNo }) =>
-        [
-          { type: "UserDetail", id: phoneNo },
-          { type: "Users", id: "LIST" },
-        ] as const,
+        [{ type: "UserDetail", id: phoneNo }, ...listTag("Users")] as const,
     }),
 
     tagBroker: builder.mutation<
@@ -150,13 +144,13 @@ export const apiSlice = createApi({
       providesTags: (result) =>
         result
           ? [
-              { type: "Leads" as const, id: "LIST" },
+              ...listTag("Leads"),
               ...result.content.map((lead) => ({
                 type: "LeadDetail" as const,
                 id: lead.leadId,
               })),
             ]
-          : ([{ type: "Leads" as const, id: "LIST" }] as const),
+          : listTag("Leads"),
     }),
 
     getLeadById: builder.query<GetLeadByIdResponse, { id: number }>({
@@ -180,10 +174,7 @@ export const apiSlice = createApi({
         body: newStatus,
       }),
       invalidatesTags: (_r, _e, { id }) =>
-        [
-          { type: "LeadDetail", id },
-          { type: "Leads", id: "LIST" },
-        ] as const,
+        [{ type: "LeadDetail", id }, ...listTag("Leads")] as const,
     }),
 
     leadAddComment: builder.mutation<
@@ -199,10 +190,7 @@ export const apiSlice = createApi({
         body: newComment,
       }),
       invalidatesTags: (_r, _e, { id }) =>
-        [
-          { type: "LeadDetail", id },
-          { type: "Leads", id: "LIST" },
-        ] as const,
+        [{ type: "LeadDetail", id }, ...listTag("Leads")] as const,
     }),
 
     // ──────────────── PHOTO ────────────────
@@ -243,10 +231,7 @@ export const apiSlice = createApi({
         },
       }),
       invalidatesTags: (_r, _e, { phoneNo }) =>
-        [
-          { type: "Properties", id: "LIST" },
-          { type: "UserDetail", id: phoneNo },
-        ] as const,
+        [{ type: "UserDetail", id: phoneNo }, ...listTag("Users")] as const,
     }),
 
     getProperties: builder.query<
@@ -260,13 +245,13 @@ export const apiSlice = createApi({
       providesTags: (result) =>
         result
           ? [
-              { type: "Properties" as const, id: "LIST" },
+              ...listTag("Properties"),
               ...result.content.map((property) => ({
                 type: "PropertyDetail" as const,
                 id: property.propertyID,
               })),
             ]
-          : ([{ type: "Properties", id: "LIST" }] as const),
+          : listTag("Properties"),
     }),
 
     getPropertyById: builder.query<
@@ -289,8 +274,7 @@ export const apiSlice = createApi({
         url: `/property/admin/properties-to-verify?page=${page}&size=${size}`,
         method: "GET",
       }),
-      providesTags: (_r, _e) =>
-        [{ type: "PropertiesToVerify", id: "LIST" }] as const,
+      providesTags: listTag("PropertiesToVerify"),
     }),
 
     getPropertiesToReverify: builder.query<
@@ -301,8 +285,7 @@ export const apiSlice = createApi({
         url: `/property/admin/properties-to-re-verify?page=${page}&size=${size}`,
         method: "GET",
       }),
-      providesTags: (_r, _e) =>
-        [{ type: "PropertiesToReverify", id: "LIST" }] as const,
+      providesTags: listTag("PropertiesToReverify"),
     }),
 
     verifyProperty: builder.mutation<
@@ -323,8 +306,7 @@ export const apiSlice = createApi({
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: (_r, _e) =>
-        [{ type: "PropertiesToVerify", id: "LIST" }] as const,
+      invalidatesTags: listTag("PropertiesToVerify"),
     }),
 
     reverifyProperty: builder.mutation<
@@ -345,23 +327,25 @@ export const apiSlice = createApi({
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: (_r, _e) =>
-        [{ type: "PropertiesToReverify", id: "LIST" }] as const,
+      invalidatesTags: listTag("PropertiesToReverify"),
     }),
 
-    deactivateProperty: builder.mutation<{}, {}>({
-      query: ({}) => ({
-        url: `/property/admin/deactivate`,
+    deactivateProperty: builder.mutation<
+      {},
+      { propertyID: string; comment: string }
+    >({
+      query: ({ propertyID, comment }) => ({
+        url: `/property/admin/deactivate?propertyID=${propertyID}&comment=${comment}`,
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: (_r, _e) =>
+      invalidatesTags: () =>
         [
-          { type: "Properties", id: "LIST" },
-          { type: "PropertiesToVerify", id: "LIST" },
-          { type: "PropertiesToReverify", id: "LIST" },
+          ...listTag("Properties"),
+          ...listTag("PropertiesToVerify"),
+          ...listTag("PropertiesToReverify"),
         ] as const,
     }),
   }),
@@ -375,6 +359,7 @@ export const {
   useGetUserByPhoneNoQuery,
   useBlacklistUserMutation,
   useActivateUserMutation,
+  useTagBrokerMutation,
   useGetLeadsQuery,
   useGetLeadByIdQuery,
   useLeadStatusUpdateMutation,
@@ -386,4 +371,5 @@ export const {
   useGetPropertiesToVerifyQuery,
   useGetPropertiesToReverifyQuery,
   useVerifyPropertyMutation,
+  useDeactivatePropertyMutation,
 } = apiSlice;

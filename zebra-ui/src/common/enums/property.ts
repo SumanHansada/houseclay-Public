@@ -31,10 +31,16 @@ export enum PropertyCategoryEnum {
   FLATMATE = "FLATMATE",
 }
 
+export enum BadgeTypeEnum {
+  Featured = "Featured",
+  Exclusive = "Exclusive",
+}
+
 export enum PropertyStatusEnum {
   PENDING = "PENDING_VERIFICATION",
   VERIFIED = "ACTIVE",
   REPORT = "REPORT",
+  INACTIVE = "INACTIVE",
 }
 
 export enum VerifyPropertyStatusEnum {
@@ -54,6 +60,7 @@ export enum PropertyDetailsTabEnum {
 export enum VerifyPropertyTabEnum {
   DETAILS = "details",
 }
+
 export enum ReverifyPropertyTabEnum {
   DETAILS = "details",
 }

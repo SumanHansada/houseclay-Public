@@ -12,6 +12,7 @@ import { FlatmateDetails } from "../FlatmateDetails";
 interface PropertyCore {
   propertyID: string;
   images: string[];
+  coverImage: string;
   propertyCategory: PropertyCategoryEnum;
 }
 
@@ -33,7 +34,6 @@ interface ResponseMeta extends PropertyCore {
   propertyUpdates: PropertyUpdate[];
   premium: boolean;
   managed: boolean;
-  coverImage: string;
   propertyState: string;
 }
 

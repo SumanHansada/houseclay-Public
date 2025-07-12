@@ -52,6 +52,7 @@ export default function UserDetailsLayout({
       />
     );
   }
+  console.log("user-details/profile: ", currentUser);
 
   const activeTab = ensureEnumValue({
     enumObj: UserDetailsTabEnum,

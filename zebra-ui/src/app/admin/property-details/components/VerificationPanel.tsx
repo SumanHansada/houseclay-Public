@@ -2,21 +2,28 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import { useVerifyPropertyMutation } from "@/store/apiSlice";
+import {
+  useDeactivatePropertyMutation,
+  useTagBrokerMutation,
+  useVerifyPropertyMutation,
+} from "@/store/apiSlice";
 import { PanelSection } from "./PanelSection";
 import { useRouter } from "next/navigation";
 import { VerifyPropertyStatusEnum } from "@/common/enums";
+import { useDialog } from "@/providers/DialogContextProvider";
+import { ActionDialog } from "@/dialogs/action-dialog";
+import { dialogLabels } from "@/common/constants";
 
 interface VerificationPanelProps {
-  /** Property ID from the page param */
   propertyID: string;
-  /** Ref of the left‑hand scroll container (the Form wrapper) */
   formScrollRef: React.RefObject<HTMLFormElement | null>;
+  userPhoneNo: string;
 }
 
 export const VerificationPanel: React.FC<VerificationPanelProps> = ({
   propertyID,
   formScrollRef,
+  userPhoneNo,
 }) => {
   /* --------------------------- checkbox state --------------------------- */
   const [details, setDetails] = useState({
@@ -35,6 +42,10 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
     notBroker: false,
     contactVerified: false,
   });
+  const { openDialog, isDialogOpen } = useDialog();
+  const VERIFY_DIALOG_ID = "verify-property-dialog";
+  const DEACTIVATE_DIALOG_ID = "report-property-dialog";
+  const TAG_BROKER_DIALOG_ID = "tag-broker-dialog";
 
   const allDetailsChecked = useMemo(
     () => Object.values(details).every(Boolean),
@@ -71,14 +82,41 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
     allDetailsChecked && allGalleryChecked && allOwnerChecked && commentValid;
 
   /* --------------------------- RTK mutation ----------------------------- */
-  const [verifyProperty, { isLoading }] = useVerifyPropertyMutation();
+  const [verifyProperty] = useVerifyPropertyMutation();
+  const [deactivateProperty] = useDeactivatePropertyMutation();
+  const [tagBroker] = useTagBrokerMutation();
+
+  const redirectToPropertyList = () => {
+    router.push(
+      `/admin/property-verification/${VerifyPropertyStatusEnum.VERIFY}`,
+    );
+  };
 
   const handleVerify = async () => {
     if (!readyForVerification) return;
     await verifyProperty({ propertyID, comment });
-    router.push(
-      `/admin/property-verification/${VerifyPropertyStatusEnum.VERIFY}`,
-    );
+  };
+
+  const handleDeactivate = async () => {
+    if (!commentValid) return;
+    await deactivateProperty({ propertyID, comment });
+  };
+
+  const handleTagBroker = async (comment: string) => {
+    await tagBroker({ phoneNo: userPhoneNo, comment });
+    await deactivateProperty({ propertyID, comment });
+  };
+
+  const handleVerifyClicked = () => {
+    openDialog(VERIFY_DIALOG_ID);
+  };
+
+  const handleDeactivateClicked = () => {
+    openDialog(DEACTIVATE_DIALOG_ID);
+  };
+
+  const handleTagBrokerClicked = () => {
+    openDialog(TAG_BROKER_DIALOG_ID);
   };
 
   /* ---------------------------- render ---------------------------------- */
@@ -131,10 +169,10 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
       {/* TAG OWNER AS BROKER – placeholder */}
       <button
         type="button"
-        onClick={() => console.log("TODO: tag owner as broker")}
+        onClick={handleTagBrokerClicked}
         className="mt-4 w-full border border-yellow-500 text-yellow-600 py-2 rounded-xl hover:bg-yellow-50"
       >
-        Tag Owner as Broker
+        Tag Owner as Broker
       </button>
 
       {/* COMMENT */}
@@ -156,20 +194,48 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
         <button
           type="button"
           disabled={!commentValid}
-          onClick={() => console.log("TODO: report / deactivate")}
+          onClick={handleDeactivateClicked}
           className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
-          Report / Deactivate
+          Deactivate Property
         </button>
         <button
           type="button"
-          disabled={!readyForVerification || isLoading}
-          onClick={handleVerify}
+          disabled={!readyForVerification}
+          onClick={handleVerifyClicked}
           className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-xl disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
-          {isLoading ? "Verifying…" : "Verify Property"}
+          Verify Property
         </button>
       </div>
+
+      {isDialogOpen(VERIFY_DIALOG_ID) && (
+        <ActionDialog
+          id={VERIFY_DIALOG_ID}
+          {...dialogLabels.verify}
+          onConfirm={handleVerify}
+          onSuccess={redirectToPropertyList}
+        />
+      )}
+
+      {isDialogOpen(DEACTIVATE_DIALOG_ID) && (
+        <ActionDialog
+          id={DEACTIVATE_DIALOG_ID}
+          {...dialogLabels.deactivate}
+          onConfirm={handleDeactivate}
+          onSuccess={redirectToPropertyList}
+        />
+      )}
+
+      {isDialogOpen(TAG_BROKER_DIALOG_ID) && (
+        <ActionDialog
+          id={TAG_BROKER_DIALOG_ID}
+          {...dialogLabels.tagBroker}
+          onConfirm={handleTagBroker}
+          onSuccess={redirectToPropertyList}
+          requireComment
+        />
+      )}
     </div>
   );
 };

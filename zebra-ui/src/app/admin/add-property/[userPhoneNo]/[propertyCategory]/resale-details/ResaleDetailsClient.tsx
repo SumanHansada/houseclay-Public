@@ -85,7 +85,7 @@ const resaleSchema = Yup.object().shape({
     availableFrom: Yup.string().required("Available from is required"),
     bathrooms: Yup.number().required("Bathrooms is required"),
     furnishing: Yup.string().required("Furnishing is required"),
-    parking: Yup.boolean().required("Parking is required"),
+    parking: Yup.string().required("Parking is required"),
   }),
 });
 
@@ -299,11 +299,10 @@ const ResaleDetailsClient: React.FC = () => {
               name="resaleDetails.parking"
               id="resaleDetails.parking"
               options={[
-                { value: true, label: "Yes" },
-                {
-                  value: false,
-                  label: "No",
-                },
+                { value: "Both", label: "Both" },
+                { value: "2 Wheeler", label: "2 Wheeler" },
+                { value: "4 Wheeler", label: "4 Wheeler" },
+                { value: "None", label: "None" },
               ]}
               required={true}
               placeholder="Select Parking"

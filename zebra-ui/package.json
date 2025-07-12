@@ -35,9 +35,11 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-dropzone": "^14.3.8",
+    "react-hot-toast": "^2.5.2",
     "react-international-phone": "^4.5.0",
     "react-loading-skeleton": "^3.5.0",
     "react-redux": "^9.2.0",
+    "redux-persist": "^6.0.0",
     "uuid": "^11.1.0",
     "yup": "^1.6.1"
   },

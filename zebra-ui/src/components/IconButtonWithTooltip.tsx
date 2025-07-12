@@ -42,7 +42,7 @@ const IconButtonWithTooltip: React.FC<IconButtonWithTooltipProps> = ({
     "text-sm",
     "text-white",
     "whitespace-nowrap",
-  ];
+  ].join(" ");
 
   const wrapperClasses = [
     "relative",
@@ -60,7 +60,7 @@ const IconButtonWithTooltip: React.FC<IconButtonWithTooltipProps> = ({
       <Icon className={`${classNameIconCustomize} text-gray-600`} />
 
       {tooltipActive && (
-        <div className={`${tooltipClasses.join(" ")} hidden group-hover:block`}>
+        <div className={`${tooltipClasses} hidden group-hover:block`}>
           {tooltip}
         </div>
       )}

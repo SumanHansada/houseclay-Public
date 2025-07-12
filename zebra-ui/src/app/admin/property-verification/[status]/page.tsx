@@ -5,14 +5,12 @@ import React, { useState } from "react";
 
 import { VerifyPropertyStatusEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
-import { Column, DataTable } from "@/components/DataTable";
+import { DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/PaginationFooter";
 import { useStatusBasedPropertyFetch } from "@/hooks/useStatusBasedPropertyFetch";
 import { PropertyInfo } from "@/interfaces/Property";
-import {
-  buildPropertyColumns,
-  createDefaultPropertyActions,
-} from "@/utils/table/buildPropertyColumns";
+import { buildPropertyColumns } from "@/utils/table/buildPropertyColumns";
+import { ClipboardCheck } from "lucide-react";
 
 interface SerializedPropertyRow extends PropertyInfo {
   _serial: number;
@@ -79,12 +77,15 @@ const PropertyVerificationTablePage: React.FC = () => {
     router.push(currentPath);
   };
 
-  const columns = buildPropertyColumns(
-    createDefaultPropertyActions({
-      onView: (row) =>
+  const columns = buildPropertyColumns({
+    verify: {
+      icon: ClipboardCheck,
+      tooltip: "Verify Listing",
+      onClick: (row) =>
         viewPropertyDetails(row.propertyCategory, row.propertyID),
-    }),
-  );
+      classNameIcon: "size-5 text-primary",
+    },
+  });
 
   const handleStatusChange = (newStatus: VerifyPropertyStatusEnum) => {
     setCurrentPage(1);

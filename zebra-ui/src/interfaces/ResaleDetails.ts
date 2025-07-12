@@ -8,6 +8,6 @@ export interface ResaleDetails {
   waterSupply: string;
   powerBackup: string;
   furnishing: string;
-  parking: boolean;
+  parking: string;
   amenities: string[];
 }

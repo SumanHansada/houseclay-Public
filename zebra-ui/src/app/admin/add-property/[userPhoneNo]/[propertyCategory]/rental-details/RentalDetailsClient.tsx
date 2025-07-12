@@ -113,8 +113,8 @@ const rentalSchema = Yup.object().shape({
     furnishing: Yup.string().required("Furnishing is required"),
     preferredTenants: Yup.array()
       .of(Yup.string())
-      .when("$formKey", {
-        is: "rentForm",
+      .when("$propertyCategory", {
+        is: PropertyCategoryEnum.RENT,
         then: (schema) =>
           schema
             .required("Preferred tenant is required")
@@ -123,13 +123,13 @@ const rentalSchema = Yup.object().shape({
       }),
     waterSupply: Yup.string().required("Water supply is required"),
     powerBackup: Yup.string().required("Power backup is required"),
-    parking: Yup.boolean().required("Parking is required"),
+    parking: Yup.string().required("Parking is required"),
     nonVegAllowed: Yup.boolean().required("Non veg allowed is required"),
   }),
 });
 
-const flatmatesSchema = Yup.object().shape({
-  flatmatesDetails: Yup.object().shape({
+const flatmateSchema = Yup.object().shape({
+  flatmateDetails: Yup.object().shape({
     rent: Yup.string()
       .required("Rent is required")
       .test(
@@ -155,7 +155,7 @@ const flatmatesSchema = Yup.object().shape({
     furnishing: Yup.string().required("Furnishing is required"),
     waterSupply: Yup.string().required("Water supply is required"),
     powerBackup: Yup.string().required("Power backup is required"),
-    parking: Yup.boolean().required("Parking is required"),
+    parking: Yup.string().required("Parking is required"),
     nonVegAllowed: Yup.boolean().required("Non veg allowed is required"),
     tenantType: Yup.string().required("Preferred tenant is required"),
     attachedBathroom: Yup.boolean().required("Attached bathroom is required"),
@@ -190,7 +190,7 @@ export const RentalDetailsClient: React.FC = () => {
             context: { propertyCategory },
           });
         } else if (propertyCategory === PropertyCategoryEnum.FLATMATE) {
-          await flatmatesSchema.validate(values, {
+          await flatmateSchema.validate(values, {
             abortEarly: false,
             context: { propertyCategory },
           });
@@ -289,14 +289,13 @@ export const RentalDetailsClient: React.FC = () => {
             {propertyCategory === PropertyCategoryEnum.FLATMATE && (
               <FormSelectDropdown
                 label="Parking"
-                name="flatmatesForm.parking"
-                id="flatmatesForm.parking"
+                name="flatmateDetails.parking"
+                id="flatmateDetails.parking"
                 options={[
-                  { value: true, label: "Yes" },
-                  {
-                    value: false,
-                    label: "No",
-                  },
+                  { value: "Both", label: "Both" },
+                  { value: "2 Wheeler", label: "2 Wheeler" },
+                  { value: "4 Wheeler", label: "4 Wheeler" },
+                  { value: "None", label: "None" },
                 ]}
                 required={true}
                 placeholder="Select Parking"
@@ -436,7 +435,7 @@ export const RentalDetailsClient: React.FC = () => {
         {propertyCategory === PropertyCategoryEnum.FLATMATE && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <FormRadioGroup
-              name="flatmatesDetails.tenantType"
+              name="flatmateDetails.tenantType"
               label="Preferred Tenant"
               columns={2}
               options={[
@@ -456,7 +455,7 @@ export const RentalDetailsClient: React.FC = () => {
               horizontal
             />
             <FormRadioGroup
-              name="flatmatesDetails.nonVegAllowed"
+              name="flatmateDetails.nonVegAllowed"
               label="Food Preferences"
               columns={2}
               options={[
@@ -564,11 +563,10 @@ export const RentalDetailsClient: React.FC = () => {
                 name="rentalDetails.parking"
                 id="rentalDetails.parking"
                 options={[
-                  { value: true, label: "Yes" },
-                  {
-                    value: false,
-                    label: "No",
-                  },
+                  { value: "Both", label: "Both" },
+                  { value: "2 Wheeler", label: "2 Wheeler" },
+                  { value: "4 Wheeler", label: "4 Wheeler" },
+                  { value: "None", label: "None" },
                 ]}
                 required={true}
                 placeholder="Select Parking"
@@ -599,7 +597,7 @@ export const RentalDetailsClient: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="col-span-1">
               <FormRadioGroup
-                name="flatmatesDetails.attachedBathroom"
+                name="flatmateDetails.attachedBathroom"
                 label="Attached Bathroom"
                 columns={2}
                 options={[
@@ -612,7 +610,7 @@ export const RentalDetailsClient: React.FC = () => {
             </div>
             <div className="col-span-1">
               <FormRadioGroup
-                name="flatmatesDetails.attachedBalcony"
+                name="flatmateDetails.attachedBalcony"
                 label="Attached Balcony"
                 columns={2}
                 options={[
@@ -629,7 +627,7 @@ export const RentalDetailsClient: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="col-span-1">
               <FormRadioGroup
-                name="flatmatesDetails.smokingPreference"
+                name="flatmateDetails.smokingPreference"
                 label="Smoking Allowed"
                 columns={2}
                 options={[
@@ -642,7 +640,7 @@ export const RentalDetailsClient: React.FC = () => {
             </div>
             <div className="col-span-1">
               <FormRadioGroup
-                name="flatmatesDetails.drinkingPreference"
+                name="flatmateDetails.drinkingPreference"
                 label="Drinking Allowed"
                 columns={2}
                 options={[

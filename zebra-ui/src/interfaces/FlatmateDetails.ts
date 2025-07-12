@@ -6,7 +6,7 @@ export interface FlatmateDetails {
   furnishing: string;
   waterSupply: string;
   powerBackup: string;
-  parking: boolean;
+  parking: string;
   nonVegAllowed: boolean;
   amenities: string[];
   tenantType: string;
