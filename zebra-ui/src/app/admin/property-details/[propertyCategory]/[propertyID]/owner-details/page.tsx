@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { RenderPropertyStatus } from "@/components/status/RenderPropertyStatus";
 import { useGetPropertyByIdQuery } from "@/store/apiSlice";
+import { InitialsAvatar } from "@/components/InitialsAvatar";
 
 export default function PropertyDetailsOverviewPage() {
   const router = useRouter();
@@ -45,7 +46,7 @@ export default function PropertyDetailsOverviewPage() {
           </div>
 
           <div className="flex gap-16 h-full">
-            <div className="w-52 h-52 bg-gray-900 rounded-full flex-shrink-0" />
+            <InitialsAvatar name={name} size="xl" />
             <form className="flex flex-col justify-between flex-1 gap-3">
               {[
                 { label: "Name", value: name },

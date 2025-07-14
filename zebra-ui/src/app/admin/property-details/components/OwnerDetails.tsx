@@ -1,6 +1,7 @@
 import { SquareArrowOutUpRight } from "lucide-react";
 
 import { UserInfo } from "@/interfaces/User";
+import { InitialsAvatar } from "@/components/InitialsAvatar";
 
 interface OwnerDetailsProps {
   currentUser: UserInfo;
@@ -16,7 +17,7 @@ export const OwnerDetails = ({
     ? "The user is blacklisted"
     : "The user is active";
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       <div className="flex justify-between items-center">
         <h2 className="text-3xl">Owner Details</h2>
         <button
@@ -28,7 +29,7 @@ export const OwnerDetails = ({
         </button>
       </div>
       <div className="flex gap-16 h-full">
-        <div className="w-52 h-52 bg-gray-200 rounded-full flex-shrink-0" />
+        <InitialsAvatar name={name} size="xl" />
         <div className="flex flex-col justify-between flex-1 gap-3">
           {[
             { label: "Name", value: name },

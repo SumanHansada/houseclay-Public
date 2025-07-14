@@ -2,7 +2,7 @@
 
 import { Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import AsyncFallback from "@/components/AsyncFallback";
 import { Column, DataTable } from "@/components/DataTable";
@@ -11,13 +11,16 @@ import { PaginationFooter } from "@/components/PaginationFooter";
 import { RenderUserStatus } from "@/components/status/RenderUserStatus";
 import { TitleAndSearchBar } from "@/components/TitleAndSearchBar";
 import { UserInfo } from "@/interfaces/User";
-import { useGetUsersQuery } from "@/store/apiSlice";
+import { useGetUserByPhoneNoQuery, useGetUsersQuery } from "@/store/apiSlice";
+
+const ROWS_PER_PAGE = 10;
 
 export const UsersManagement = () => {
   const router = useRouter();
+  const [searchText, setSearchText] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 10;
+  const [searchResult, setSearchResult] = useState<UserInfo | null>(null);
 
   const {
     data: paginatedUserData,
@@ -27,18 +30,40 @@ export const UsersManagement = () => {
   } = useGetUsersQuery(
     {
       page: currentPage - 1,
-      size: rowsPerPage,
+      size: ROWS_PER_PAGE,
     },
     {
       refetchOnMountOrArgChange: true,
     },
   );
 
-  if (isLoading || isError || !paginatedUserData) {
+  const {
+    data: currentUser,
+    isFetching: isSearching,
+    isError: isSearchError,
+  } = useGetUserByPhoneNoQuery(
+    {
+      phoneNo: searchValue,
+    },
+    {
+      skip: !searchValue,
+    },
+  );
+
+  useEffect(() => {
+    if (currentUser) {
+      const { name, email, phoneNo, blacklisted } = currentUser.user;
+      setSearchResult({ name, email, phoneNo, blacklisted });
+    } else if (!isSearching && searchValue) {
+      setSearchResult(null);
+    }
+  }, [currentUser, isSearching, searchValue]);
+
+  if (isSearching || isLoading || isError || !paginatedUserData) {
     return (
       <AsyncFallback
         isLoading={isLoading}
-        isError={isError || !paginatedUserData}
+        isError={isError || isSearchError || !paginatedUserData}
         error={error}
         loadingMessage="Loading all users…"
         errorMessage="Failed to fetch Users."
@@ -53,9 +78,11 @@ export const UsersManagement = () => {
     last: isLast,
   } = paginatedUserData;
 
-  const filteredUsers = allUsers.filter((u) =>
-    u.phoneNo.includes(searchValue.toLowerCase()),
-  );
+  const filteredUsers = searchValue
+    ? searchResult
+      ? [searchResult]
+      : []
+    : allUsers;
 
   const goToPage = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -68,6 +95,21 @@ export const UsersManagement = () => {
 
   const viewProfile = (phoneNo: string) => {
     router.push(`/admin/user-details/${phoneNo}`);
+  };
+
+  const handleSearchClick = () => {
+    setCurrentPage(1);
+    if (searchText) {
+      setSearchValue(searchText.trim());
+    } else {
+      setSearchValue("");
+    }
+  };
+
+  const handleClearSearch = () => {
+    setSearchText("");
+    setSearchValue("");
+    setSearchResult(null);
   };
 
   const columns: Column<UserInfo>[] = [
@@ -99,10 +141,11 @@ export const UsersManagement = () => {
         {/* Sticky top filter bar */}
         <div className="sticky top-0 z-10 border border-b-gray-200 shadow-sm">
           <TitleAndSearchBar
-            searchValue={searchValue}
-            onSearchChange={(v) => {
-              setSearchValue(v);
-            }}
+            searchText={searchText}
+            onSearchTextChange={setSearchText}
+            onSearch={handleSearchClick}
+            onClear={handleClearSearch}
+            isSearching={isSearching}
             title={"HouseClay Users - DataTable"}
           />
         </div>
@@ -114,7 +157,11 @@ export const UsersManagement = () => {
               columns={columns}
               data={filteredUsers}
               getRowId={(user) => user.phoneNo}
-              noDataMessage="No User Data Found!"
+              noDataMessage={
+                searchValue && !searchResult && !isSearching
+                  ? "No such user exists."
+                  : "No User Data Found!"
+              }
             />
           </div>
         </div>

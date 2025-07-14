@@ -11,6 +11,8 @@ import {
   useBlacklistUserMutation,
   useGetUserByPhoneNoQuery,
 } from "@/store/apiSlice";
+import { InitialsAvatar } from "@/components/InitialsAvatar";
+// import { getInitials } from "@/utils/core";
 
 const ProfilePage: React.FC = () => {
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
@@ -42,6 +44,8 @@ const ProfilePage: React.FC = () => {
   };
 
   const { name, email, phoneNo, createdAt } = currentUser;
+  // const userInitials = getInitials(name);
+
   const currentStatus = isBlacklisted
     ? "The user is blacklisted"
     : "The user is active";
@@ -67,7 +71,7 @@ const ProfilePage: React.FC = () => {
           </span>
         </h2>
         <div className="flex gap-16 h-full">
-          <div className="w-52 h-52 bg-gray-900 rounded-full flex-shrink-0" />
+          <InitialsAvatar name={name} size="xl" />
           <form className="flex flex-col justify-between flex-1 gap-3">
             {profileFields.map(({ label, value }) => (
               <div key={label} className="flex flex-col gap-2 text-lg">
