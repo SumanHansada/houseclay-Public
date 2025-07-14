@@ -2,8 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { PropertyCategoryEnum, PropertyListingType } from "@/common/enums";
 import { AdditionalInfo } from "@/interfaces/AdditionalInfo";
-import { FlatmateForm } from "@/interfaces/FlatmateForm";
 import { FlatmateDetails } from "@/interfaces/FlatmateDetails";
+import { FlatmateForm } from "@/interfaces/FlatmateForm";
 import { ListPropertyState } from "@/interfaces/ListPropertyState";
 import { LocalityDetails } from "@/interfaces/LocalityDetails";
 import { PropertyDetails } from "@/interfaces/PropertyDetails";

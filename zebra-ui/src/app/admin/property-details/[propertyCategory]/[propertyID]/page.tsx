@@ -1,7 +1,7 @@
-import { PropertyCategoryEnum } from "@/common/enums";
 import { redirect } from "next/navigation";
 import { use } from "react";
 
+import { PropertyCategoryEnum } from "@/common/enums";
 import { PropertyDetailsTabEnum } from "@/common/enums";
 
 export const dynamicParams = true;

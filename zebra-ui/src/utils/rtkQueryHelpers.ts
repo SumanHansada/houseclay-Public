@@ -1,10 +1,11 @@
-import { logout } from "@/store/adminSlice";
-import { RootState } from "@/store/store";
 import {
   BaseQueryFn,
   FetchArgs,
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
+
+import { logout } from "@/store/adminSlice";
+import { RootState } from "@/store/store";
 
 /**
  * A thin wrapper around RTK Query’s `fetchBaseQuery`.

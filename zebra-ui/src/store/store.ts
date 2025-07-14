@@ -2,14 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
-import { apiSlice } from "./apiSlice";
 import { default as adminReducer } from "./adminSlice";
+import { apiSlice } from "./apiSlice";
 import { default as appReducer } from "./appSlice";
 import { default as listPropertyReducer } from "./listPropertySlice";
 import { default as propertyDetailsReducer } from "./propertyDetailsSlice";
+import { default as propertySearchReducer } from "./propertySearchSlice";
 import { default as uploadToS3SliceReducer } from "./uploadToS3Slice";
 import { default as userReducer } from "./userSlice";
-import { default as propertySearchReducer } from "./propertySearchSlice";
 
 // Configure persistence for listProperty slice
 const listPropertyPersistConfig = {

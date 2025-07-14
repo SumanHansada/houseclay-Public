@@ -2,7 +2,7 @@
 
 import { Form, Formik, FormikProvider } from "formik";
 import { useParams, useRouter } from "next/navigation";
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 import AdditionalInfoForm from "@/app/admin/property-details/components/AdditionalInfoForm";
@@ -12,12 +12,11 @@ import { OwnerDetails } from "@/app/admin/property-details/components/OwnerDetai
 import PropertyDetailsForm from "@/app/admin/property-details/components/PropertyDetailsForm";
 import RentalDetailsForm from "@/app/admin/property-details/components/RentalDetailsForm";
 import ResaleDetailsForm from "@/app/admin/property-details/components/ResaleDetailsForm";
-import { FormValues } from "@/interfaces/FormValues";
-import { useGetPropertyByIdQuery } from "@/store/apiSlice";
-import { RootState } from "@/store/store";
-import { apiToForm } from "@/utils/transform/propertyToFormValues";
-import { PropertyCategoryEnum } from "@/common/enums";
 import { VerificationPanel } from "@/app/admin/property-details/components/VerificationPanel";
+import { PropertyCategoryEnum } from "@/common/enums";
+import { PropertyResponseFormValues } from "@/interfaces/Property";
+import { useGetPropertyByIdQuery } from "@/store/apiSlice";
+import { selectFormData } from "@/store/propertyDetailsSlice";
 
 export default function VerifyPropertyDetailsPage() {
   const { propertyID } = useParams() as {
@@ -34,25 +33,13 @@ export default function VerifyPropertyDetailsPage() {
   const currentUser = currentProperty!.owner;
   const formRef = useRef<HTMLFormElement>(null);
 
-  const {
-    data: propertyData,
-    status,
-    propertyCategory,
-  } = useSelector((state: RootState) => state.propertyDetails);
+  const propertyData = useSelector(selectFormData);
 
-  const initialValues = useMemo(
-    () => (propertyData ? apiToForm(propertyData) : undefined),
-    [propertyData],
-  );
-
-  if (status !== "succeeded" || !initialValues) {
-    return null;
-  }
-  console.log("initialValues:", initialValues);
-  console.log("propertyCategory: ", propertyCategory);
+  if (!propertyData) return null;
+  const { propertyCategory } = propertyData;
 
   // --- Event Handlers ---
-  const handleSaveChanges = async (values: FormValues) => {
+  const handleSaveChanges = async (values: PropertyResponseFormValues) => {
     console.log("Submitting all changes:", values);
     setEditMode(false);
   };
@@ -65,7 +52,7 @@ export default function VerifyPropertyDetailsPage() {
     <div className="h-full bg-gray-100 flex flex-col px-4 py-8">
       <div className="flex-1 flex min-h-0 gap-5">
         <Formik
-          initialValues={initialValues}
+          initialValues={propertyData}
           onSubmit={handleSaveChanges}
           enableReinitialize
         >

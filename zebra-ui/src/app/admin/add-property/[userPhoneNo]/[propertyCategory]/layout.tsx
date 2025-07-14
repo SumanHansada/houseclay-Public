@@ -2,7 +2,6 @@
 
 import { Form, Formik, FormikProvider } from "formik";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import ListPropertySuccessSvg from "public/icons/list-property-success.svg";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -12,8 +11,13 @@ import {
   PropertyCategoryEnum,
 } from "@/common/enums";
 import { extractS3KeyFromUrl } from "@/common/utils";
+import { ListPropertySuccessDialog } from "@/dialogs/list-property-success-dialog";
+import { UploadDialog } from "@/dialogs/upload-dialog";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
+import { FlatmateForm } from "@/interfaces/FlatmateForm";
 import { PropertyImage } from "@/interfaces/PropertyImage";
+import { RentForm } from "@/interfaces/RentForm";
+import { ResaleForm } from "@/interfaces/ResaleForm";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -33,15 +37,6 @@ import {
 import { RootState } from "@/store/store";
 
 import DesktopStepper from "../components/DesktopStepper";
-import { RentForm } from "@/interfaces/RentForm";
-import { ResaleForm } from "@/interfaces/ResaleForm";
-import { FlatmateForm } from "@/interfaces/FlatmateForm";
-import { ListPropertySuccessDialog } from "@/dialogs/list-property-success-dialog";
-import { UploadDialog } from "@/dialogs/upload-dialog";
-
-const ListPropertySuccess = ListPropertySuccessSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
 
 export const dynamicParams = true;
 

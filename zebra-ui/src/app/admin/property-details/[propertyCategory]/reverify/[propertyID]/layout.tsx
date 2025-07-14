@@ -5,18 +5,20 @@ import {
   useSelectedLayoutSegment,
 } from "next/navigation";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { ReverifyPropertyTabEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
 import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
 import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 import {
+  selectFormData,
   setFulfilled,
   setPending,
   setRejected,
 } from "@/store/propertyDetailsSlice";
 import { ensureEnumValue } from "@/utils/core";
+import { apiToForm } from "@/utils/transform/propertyToFormValues";
 
 const tabs: { label: string; value: ReverifyPropertyTabEnum }[] = [
   { label: "Details", value: ReverifyPropertyTabEnum.DETAILS },
@@ -27,8 +29,7 @@ export default function ReverifyPropertyLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { propertyCategory, propertyID } = useParams() as {
-    propertyCategory: string;
+  const { propertyID } = useParams() as {
     propertyID: string;
   };
   const router = useRouter();
@@ -36,7 +37,7 @@ export default function ReverifyPropertyLayout({
   const dispatch = useDispatch();
 
   const {
-    data: currentProperty,
+    data: apiPropertyData,
     isLoading,
     isError,
     error,
@@ -49,10 +50,13 @@ export default function ReverifyPropertyLayout({
       const errMsg =
         typeof error === "string" ? error : "Unknown error fetching property";
       dispatch(setRejected(errMsg));
-    } else if (currentProperty) {
+    } else if (apiPropertyData) {
+      const currentProperty = apiToForm(apiPropertyData);
       dispatch(setFulfilled(currentProperty));
     }
-  }, [isLoading, isError, currentProperty, error, dispatch]);
+  }, [isLoading, isError, apiPropertyData, error, dispatch]);
+
+  const currentProperty = useSelector(selectFormData);
 
   if (isLoading || isError || !currentProperty) {
     return (
@@ -65,6 +69,7 @@ export default function ReverifyPropertyLayout({
       />
     );
   }
+  const { propertyCategory } = currentProperty;
 
   const activeTab = ensureEnumValue({
     enumObj: ReverifyPropertyTabEnum,

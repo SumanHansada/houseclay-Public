@@ -34,6 +34,7 @@ import { Column } from "@/components/DataTable";
 import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
 import { RenderPropertyStatus } from "@/components/status/RenderPropertyStatus";
 import { PropertyInfo } from "@/interfaces/Property";
+
 import { formatDateVerbose } from "../core";
 
 export interface SerializedPropertyRow extends PropertyInfo {

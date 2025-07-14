@@ -6,9 +6,9 @@ import { Toaster } from "react-hot-toast";
 
 import { DeviceContextProvider } from "./DeviceContextProvider";
 import { DialogContextProvider } from "./DialogContextProvider";
+import { InitializeAuthToken } from "./InitializeAuthToken";
 import QueryProvider from "./QueryProvider";
 import ReduxProvider from "./ReduxProvider";
-import { InitializeAuthToken } from "./InitializeAuthToken";
 
 interface ProvidersProps {
   children: React.ReactNode;

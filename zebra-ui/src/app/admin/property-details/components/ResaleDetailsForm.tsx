@@ -22,9 +22,9 @@ import WifiIconSvg from "public/icons/amenities/wifi.svg";
 import FormCalendarField from "@/components/common/FormCalendarField";
 import FormCurrencyField from "@/components/common/FormCurrencyField";
 import FormFormNumberField from "@/components/common/FormNumberField";
+import FormCheckbox from "@/form-components/FormCheckbox";
 import FormRadioGroup from "@/form-components/FormRadioGroup";
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
-import FormCheckbox from "@/form-components/FormCheckbox";
 
 interface ResaleDetailsFormProps {
   disabled: boolean;

@@ -1,34 +1,34 @@
+import { PropertyCategoryEnum } from "@/common/enums";
 import { PropertyInfo, PropertyUpdate } from "@/interfaces/Property";
 
-import { UserInfo } from "../User";
-import { PropertyCategoryEnum } from "@/common/enums";
-import { PropertyDetails } from "../PropertyDetails";
-import { LocalityDetails } from "../LocalityDetails";
 import { AdditionalInfo } from "../AdditionalInfo";
+import { FlatmateDetails } from "../FlatmateDetails";
+import { LocalityDetails } from "../LocalityDetails";
+import { PropertyDetails } from "../PropertyDetails";
 import { RentalDetails } from "../RentalDetails";
 import { ResaleDetails } from "../ResaleDetails";
-import { FlatmateDetails } from "../FlatmateDetails";
+import { UserInfo } from "../User";
 
 interface PropertyCore {
   propertyID: string;
   images: string[];
-  coverImage: string;
+  coverImage?: string;
   propertyCategory: PropertyCategoryEnum;
 }
 
-type RentForm = Partial<
+export type FlattenedRentForm = Partial<
   PropertyDetails & LocalityDetails & AdditionalInfo & RentalDetails
 >;
-type ResaleForm = Partial<
+export type FlattenedResaleForm = Partial<
   PropertyDetails & LocalityDetails & AdditionalInfo & ResaleDetails
 >;
-type FlatmateForm = Partial<
+export type FlattenedFlatmateForm = Partial<
   PropertyDetails & LocalityDetails & AdditionalInfo & FlatmateDetails
 >;
 
 // usePropertyAddMutation()
 export type AddPropertyRequest = PropertyCore &
-  (RentForm | ResaleForm | FlatmateForm);
+  (FlattenedRentForm | FlattenedResaleForm | FlattenedFlatmateForm);
 
 interface ResponseMeta extends PropertyCore {
   propertyUpdates: PropertyUpdate[];
@@ -45,7 +45,8 @@ interface PropertyUserRelations {
   reportUsers: UserInfo[];
 }
 
-type PropertyResponse = ResponseMeta & (RentForm | ResaleForm | FlatmateForm);
+export type PropertyResponse = ResponseMeta &
+  (FlattenedRentForm | FlattenedResaleForm | FlattenedFlatmateForm);
 
 // useGetPropertyByIdQuery()
 export type GetPropertyByIdResponse = PropertyResponse & PropertyUserRelations;

@@ -2,15 +2,16 @@
 
 import { X } from "lucide-react";
 import { useState } from "react";
+
 import {
   Dialog,
-  DialogHeader,
   DialogContent,
   DialogFooter,
+  DialogHeader,
 } from "@/components/Dialog";
+import { DialogLabelConfig } from "@/interfaces/Dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { DialogLabelConfig } from "@/interfaces/Dialog";
 
 interface ActionDialogCommon extends DialogLabelConfig {
   id: string;

@@ -331,7 +331,7 @@ export const apiSlice = createApi({
     }),
 
     deactivateProperty: builder.mutation<
-      {},
+      { message: string },
       { propertyID: string; comment: string }
     >({
       query: ({ propertyID, comment }) => ({

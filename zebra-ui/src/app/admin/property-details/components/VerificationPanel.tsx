@@ -1,18 +1,19 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
+import { dialogLabels } from "@/common/constants";
+import { VerifyPropertyStatusEnum } from "@/common/enums";
+import { ActionDialog } from "@/dialogs/action-dialog";
+import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useDeactivatePropertyMutation,
   useTagBrokerMutation,
   useVerifyPropertyMutation,
 } from "@/store/apiSlice";
+
 import { PanelSection } from "./PanelSection";
-import { useRouter } from "next/navigation";
-import { VerifyPropertyStatusEnum } from "@/common/enums";
-import { useDialog } from "@/providers/DialogContextProvider";
-import { ActionDialog } from "@/dialogs/action-dialog";
-import { dialogLabels } from "@/common/constants";
 
 interface VerificationPanelProps {
   propertyID: string;
@@ -77,7 +78,7 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
     return () => el.removeEventListener("scroll", handler);
   }, [formScrollRef]);
 
-  const commentValid = comment.trim().length >= 3 && hasScrolledToEnd;
+  const commentValid = comment.trim().length >= 12 && hasScrolledToEnd;
   const readyForVerification =
     allDetailsChecked && allGalleryChecked && allOwnerChecked && commentValid;
 
@@ -121,10 +122,8 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
 
   /* ---------------------------- render ---------------------------------- */
   return (
-    <div className="w-1/3 bg-white rounded-xl p-6 flex flex-col shadow-sm overflow-y-auto flex-shrink-0">
-      <h1 className="text-3xl font-bold border-b pb-4 mb-6">
-        Verification Panel
-      </h1>
+    <div className="w-1/3 bg-white rounded-xl p-3 flex flex-col shadow-sm overflow-y-auto flex-shrink-0">
+      <h1 className="text-3xl font-bold border-b py-1">Verification Panel</h1>
 
       {/* SECTION – PROPERTY DETAILS */}
       <PanelSection
@@ -170,17 +169,17 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
       <button
         type="button"
         onClick={handleTagBrokerClicked}
-        className="mt-4 w-full border border-yellow-500 text-yellow-600 py-2 rounded-xl hover:bg-yellow-50"
+        className="w-full border border-red-500 text-red-600 py-2 rounded-xl hover:bg-red-200"
       >
         Tag Owner as Broker
       </button>
 
       {/* COMMENT */}
       <textarea
-        className="mt-6 w-full border rounded-lg p-2 flex-shrink-0 h-24 resize-none "
+        className="my-2 w-full border rounded-lg p-2 flex-shrink-0 h-24 resize-none "
         placeholder={
           hasScrolledToEnd
-            ? "Add a comment (min 3 chars)…"
+            ? "Add a comment (min 12 chars)…"
             : "Scroll through the form before commenting…"
         }
         rows={3}
@@ -190,7 +189,7 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
       />
 
       {/* ACTION BUTTONS */}
-      <div className="flex gap-4 mt-6">
+      <div className="flex gap-4 my-1">
         <button
           type="button"
           disabled={!commentValid}

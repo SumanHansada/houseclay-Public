@@ -12,13 +12,13 @@ import AsyncFallback from "@/components/AsyncFallback";
 import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
 import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 import {
+  selectFormData,
   setFulfilled,
   setPending,
-  setPropertyCategory,
   setRejected,
 } from "@/store/propertyDetailsSlice";
 import { ensureEnumValue } from "@/utils/core";
-import { RootState } from "@/store/store";
+import { apiToForm } from "@/utils/transform/propertyToFormValues";
 
 const tabs: { label: string; value: VerifyPropertyTabEnum }[] = [
   { label: "Details", value: VerifyPropertyTabEnum.DETAILS },
@@ -37,7 +37,7 @@ export default function VerifyPropertyLayout({
   const dispatch = useDispatch();
 
   const {
-    data: currentProperty,
+    data: apiPropertyData,
     isLoading,
     isError,
     error,
@@ -50,15 +50,13 @@ export default function VerifyPropertyLayout({
       const errMsg =
         typeof error === "string" ? error : "Unknown error fetching property";
       dispatch(setRejected(errMsg));
-    } else if (currentProperty) {
+    } else if (apiPropertyData) {
+      const currentProperty = apiToForm(apiPropertyData);
       dispatch(setFulfilled(currentProperty));
-      dispatch(setPropertyCategory(currentProperty.propertyCategory));
     }
-  }, [isLoading, isError, currentProperty, error, dispatch]);
+  }, [isLoading, isError, apiPropertyData, error, dispatch]);
 
-  const { propertyCategory } = useSelector(
-    (state: RootState) => state.propertyDetails,
-  );
+  const currentProperty = useSelector(selectFormData);
 
   if (isLoading || isError || !currentProperty) {
     return (
@@ -71,7 +69,7 @@ export default function VerifyPropertyLayout({
       />
     );
   }
-  console.log("property-details/verify: currentProperty", currentProperty);
+  const { propertyCategory } = currentProperty;
 
   const activeTab = ensureEnumValue({
     enumObj: VerifyPropertyTabEnum,

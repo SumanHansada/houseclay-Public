@@ -1,5 +1,6 @@
 "use client";
 
+import { ClipboardCheck } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -10,7 +11,6 @@ import { PaginationFooter } from "@/components/PaginationFooter";
 import { useStatusBasedPropertyFetch } from "@/hooks/useStatusBasedPropertyFetch";
 import { PropertyInfo } from "@/interfaces/Property";
 import { buildPropertyColumns } from "@/utils/table/buildPropertyColumns";
-import { ClipboardCheck } from "lucide-react";
 
 interface SerializedPropertyRow extends PropertyInfo {
   _serial: number;

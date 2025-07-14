@@ -1,8 +1,8 @@
 "use client";
 
 import { SearchIcon, SlidersHorizontal } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo } from "react";
+// import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { PropertyCategoryEnum } from "@/common/enums";
@@ -28,14 +28,13 @@ import {
 import { RootState } from "@/store/store";
 
 export const SearchAndFilterBar: React.FC = () => {
-  const searchParams = useSearchParams();
-  const lat = searchParams.get("lat");
-  const lon = searchParams.get("lon");
+  // const searchParams = useSearchParams();
+  // const lat = searchParams.get("lat");
+  // const lon = searchParams.get("lon");
   // const propertyCategory = searchParams
   //   .get("propertyCategory")
   //   ?.toUpperCase() as PropertyCategoryEnum;
   const searchState = useSelector((state: RootState) => state.propertySearch);
-  const router = useRouter();
 
   // Only fetch if lat/lon are present and valid
   // const shouldFetch = lat && lon && !isNaN(Number(lat)) && !isNaN(Number(lon));
@@ -92,8 +91,6 @@ export const SearchAndFilterBar: React.FC = () => {
   //   })) as PropertySearch[];
   // }, [data, error]);
 
-  const properties = [];
-
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
 
@@ -110,43 +107,46 @@ export const SearchAndFilterBar: React.FC = () => {
   const { openDialog, closeDialog, isDialogOpen } = useDialog();
 
   const handleSearch = () => {
-    // Build URL params from searchState (only supported filters)
-    const params = new URLSearchParams();
-
-    // Required params (lat, lon, propertyCategory)
-    if (lat) params.set("lat", lat);
-    if (lon) params.set("lon", lon);
-    if (searchState.propertyCategory) {
-      params.set(
-        "propertyCategory",
-        searchState.propertyCategory.toLowerCase(),
-      );
-    }
-
-    // Optional filters (only add if not empty)
-    if (searchState.propertyType && searchState.propertyType !== "") {
-      params.set("propertyType", String(searchState.propertyType));
-    }
-    if (searchState.propertyBhk && searchState.propertyBhk !== "") {
-      params.set("bhkType", String(searchState.propertyBhk));
-    }
-    if (searchState.tenantType && searchState.tenantType !== "") {
-      params.set("preferredTenant", String(searchState.tenantType));
-    }
-    if (searchState.furnishing && searchState.furnishing !== "") {
-      params.set("furnishing", searchState.furnishing);
-    }
-    if (searchState.parking !== undefined && searchState.parking !== "") {
-      params.set("parking", String(searchState.parking));
-    }
-    if (searchState.amenities && searchState.amenities.length > 0) {
-      // Join array with comma for API
-      params.set("amenities", searchState.amenities.join(","));
-    }
-
-    // Navigate to new URL with all params
-    // router.push(`/property-search?${params.toString()}`);
+    console.log("SearchAndFilterBar.tsx - handleSearch(): Searching...");
   };
+  // const handleSearch = () => {
+  //   // Build URL params from searchState (only supported filters)
+  //   const params = new URLSearchParams();
+
+  //   // Required params (lat, lon, propertyCategory)
+  //   // if (lat) params.set("lat", lat);
+  //   // if (lon) params.set("lon", lon);
+  //   if (searchState.propertyCategory) {
+  //     params.set(
+  //       "propertyCategory",
+  //       searchState.propertyCategory.toLowerCase(),
+  //     );
+  //   }
+
+  //   // Optional filters (only add if not empty)
+  //   if (searchState.propertyType && searchState.propertyType !== "") {
+  //     params.set("propertyType", String(searchState.propertyType));
+  //   }
+  //   if (searchState.propertyBhk && searchState.propertyBhk !== "") {
+  //     params.set("bhkType", String(searchState.propertyBhk));
+  //   }
+  //   if (searchState.tenantType && searchState.tenantType !== "") {
+  //     params.set("preferredTenant", String(searchState.tenantType));
+  //   }
+  //   if (searchState.furnishing && searchState.furnishing !== "") {
+  //     params.set("furnishing", searchState.furnishing);
+  //   }
+  //   if (searchState.parking !== undefined && searchState.parking !== "") {
+  //     params.set("parking", String(searchState.parking));
+  //   }
+  //   if (searchState.amenities && searchState.amenities.length > 0) {
+  //     // Join array with comma for API
+  //     params.set("amenities", searchState.amenities.join(","));
+  //   }
+
+  //   // Navigate to new URL with all params
+  //   // router.push(`/property-search?${params.toString()}`);
+  // };
 
   return (
     <>

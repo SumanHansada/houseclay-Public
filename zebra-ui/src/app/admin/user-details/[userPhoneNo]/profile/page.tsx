@@ -2,15 +2,15 @@
 import { useParams } from "next/navigation";
 import React, { useState } from "react";
 
-import {
-  useGetUserByPhoneNoQuery,
-  useBlacklistUserMutation,
-  useActivateUserMutation,
-} from "@/store/apiSlice";
-import { useDialog } from "@/providers/DialogContextProvider";
-import { ActionDialog } from "@/dialogs/action-dialog";
 import { dialogLabels } from "@/common/constants";
 import { Pill } from "@/components/Pill";
+import { ActionDialog } from "@/dialogs/action-dialog";
+import { useDialog } from "@/providers/DialogContextProvider";
+import {
+  useActivateUserMutation,
+  useBlacklistUserMutation,
+  useGetUserByPhoneNoQuery,
+} from "@/store/apiSlice";
 
 const ProfilePage: React.FC = () => {
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
@@ -41,7 +41,7 @@ const ProfilePage: React.FC = () => {
     if (isBlacklisted) openDialog(ACTIVATE_DIALOG_ID);
   };
 
-  const { name, email, phoneNo, createdAt, broker } = currentUser;
+  const { name, email, phoneNo, createdAt } = currentUser;
   const currentStatus = isBlacklisted
     ? "The user is blacklisted"
     : "The user is active";

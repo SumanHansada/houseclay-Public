@@ -1,11 +1,12 @@
 "use client";
 
+import { useSelector } from "react-redux";
+
 import { PropertyCategoryEnum } from "@/common/enums";
 import FormInputField from "@/components/common/FormInputField";
 import FormTextArea from "@/components/common/FormTextArea";
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import { selectPropertyCategory } from "@/store/propertyDetailsSlice";
 
 interface PropertyDetailsFormProps {
   disabled: boolean;
@@ -14,9 +15,10 @@ interface PropertyDetailsFormProps {
 const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
   disabled,
 }) => {
-  const { propertyCategory } = useSelector(
-    (state: RootState) => state.propertyDetails,
-  );
+  const propertyCategory = useSelector(selectPropertyCategory);
+  if (!propertyCategory) {
+    return null;
+  }
   return (
     <div className="space-y-6">
       <div className="mb-8">

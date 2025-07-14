@@ -1,4 +1,4 @@
-import { UserInfo, UserDetails } from "@/interfaces/User";
+import { UserDetails, UserInfo } from "@/interfaces/User";
 
 // useGetUsersQuery()
 export interface GetAllUsersResponse {

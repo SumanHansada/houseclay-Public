@@ -26,15 +26,15 @@ import CoupleIconSvg from "public/icons/preferred-tenants/couple.svg";
 import FamilyIconSvg from "public/icons/preferred-tenants/family.svg";
 import FemaleIconSvg from "public/icons/preferred-tenants/female.svg";
 import MaleIconSvg from "public/icons/preferred-tenants/male.svg";
+import { useSelector } from "react-redux";
 
+import { PropertyCategoryEnum } from "@/common/enums";
 import FormCalendarField from "@/components/common/FormCalendarField";
 import FormCurrencyField from "@/components/common/FormCurrencyField";
+import FormCheckbox from "@/form-components/FormCheckbox";
 import FormRadioGroup from "@/form-components/FormRadioGroup";
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
-import FormCheckbox from "@/form-components/FormCheckbox";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { PropertyCategoryEnum } from "@/common/enums";
+import { selectPropertyCategory } from "@/store/propertyDetailsSlice";
 
 interface RentalDetailsFormProps {
   disabled: boolean;
@@ -89,9 +89,10 @@ const FirstAidKitIcon = FirstAidKitIconSvg as React.FC<
 >;
 
 const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
-  const { propertyCategory } = useSelector(
-    (state: RootState) => state.propertyDetails,
-  );
+  const propertyCategory = useSelector(selectPropertyCategory);
+  if (!propertyCategory) {
+    return null;
+  }
   return (
     <div className="space-y-6">
       <div className="mb-8">

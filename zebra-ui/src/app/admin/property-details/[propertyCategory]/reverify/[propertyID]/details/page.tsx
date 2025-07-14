@@ -2,7 +2,7 @@
 
 import { Form, Formik, FormikProvider } from "formik";
 import { useParams, useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 import AdditionalInfoForm from "@/app/admin/property-details/components/AdditionalInfoForm";
@@ -12,14 +12,14 @@ import { OwnerDetails } from "@/app/admin/property-details/components/OwnerDetai
 import PropertyDetailsForm from "@/app/admin/property-details/components/PropertyDetailsForm";
 import RentalDetailsForm from "@/app/admin/property-details/components/RentalDetailsForm";
 import ResaleDetailsForm from "@/app/admin/property-details/components/ResaleDetailsForm";
-import { FormValues } from "@/interfaces/FormValues";
+import { VerificationPanel } from "@/app/admin/property-details/components/VerificationPanel";
+import { PropertyCategoryEnum } from "@/common/enums";
+import { PropertyResponseFormValues } from "@/interfaces/Property";
 import { useGetPropertyByIdQuery } from "@/store/apiSlice";
-import { RootState } from "@/store/store";
-import { apiToForm } from "@/utils/transform/propertyToFormValues";
+import { selectFormData } from "@/store/propertyDetailsSlice";
 
 export default function ReverifyPropertyDetailsPage() {
-  const { type, propertyID } = useParams() as {
-    type: "rent" | "resale" | "flatmate";
+  const { propertyID } = useParams() as {
     propertyID: string;
   };
   const router = useRouter();
@@ -27,63 +27,21 @@ export default function ReverifyPropertyDetailsPage() {
   // --- From DetailsPage: Formik & Edit Mode State ---
   const [editMode, setEditMode] = useState(false);
 
-  // --- From VerifyPage: Verification State ---
-  const [propertyComment, setPropertyComment] = useState("");
-  const [galleryComment, setGalleryComment] = useState("");
-  const [ownerComment, setOwnerComment] = useState("");
-  const [isPropertyVerified, setIsPropertyVerified] = useState(false);
-  const [isGalleryVerified, setIsGalleryVerified] = useState(false);
-  const [isOwnerVerified, setIsOwnerVerified] = useState(false);
-
   const { data: currentProperty } = useGetPropertyByIdQuery({
     propertyID: propertyID,
   });
   const currentUser = currentProperty!.owner;
+  const formRef = useRef<HTMLFormElement>(null);
 
-  // --- From VerifyPage: Derived state for verification logic ---
-  const isPropertyCommentValid = useMemo(
-    () => propertyComment.trim().length >= 3,
-    [propertyComment],
-  );
-  const isGalleryCommentValid = useMemo(
-    () => galleryComment.trim().length >= 3,
-    [galleryComment],
-  );
-  const isOwnerCommentValid = useMemo(
-    () => ownerComment.trim().length >= 3,
-    [ownerComment],
-  );
-  const isFormFullyVerified = useMemo(
-    () => isPropertyVerified && isGalleryVerified && isOwnerVerified,
-    [isPropertyVerified, isGalleryVerified, isOwnerVerified],
-  );
+  const propertyData = useSelector(selectFormData);
 
-  const { data: propertyData, status } = useSelector(
-    (state: RootState) => state.propertyDetails,
-  );
-
-  const initialValues = useMemo(
-    () => (propertyData ? apiToForm(propertyData) : undefined),
-    [propertyData],
-  );
-
-  if (status !== "succeeded" || !initialValues) {
-    return null;
-  }
+  if (!propertyData) return null;
+  const { propertyCategory } = propertyData;
 
   // --- Event Handlers ---
-  const handleSaveChanges = async (values: FormValues) => {
+  const handleSaveChanges = async (values: PropertyResponseFormValues) => {
     console.log("Submitting all changes:", values);
     setEditMode(false);
-  };
-
-  const handleFinalVerification = () => {
-    if (!isFormFullyVerified) return;
-    console.log("Property Verified!", {
-      propertyComment,
-      galleryComment,
-      ownerComment,
-    });
   };
 
   const viewUserDetails = (userPhoneNo: string) => {
@@ -94,120 +52,83 @@ export default function ReverifyPropertyDetailsPage() {
     <div className="h-full bg-gray-100 flex flex-col px-4 py-8">
       <div className="flex-1 flex min-h-0 gap-5">
         <Formik
-          initialValues={initialValues}
+          initialValues={propertyData}
           onSubmit={handleSaveChanges}
           enableReinitialize
         >
           {(formik) => (
-            <Form className="flex-1 flex min-h-0 gap-5">
-              {/* Left Scrollable Column now contains the full form */}
-              <div className="flex flex-col gap-5 w-2/3 overflow-y-auto pr-2 relative">
-                <div></div>
-                <FormikProvider value={formik}>
-                  {/* --- Sticky Header from DetailsPage --- */}
-                  <div className="flex justify-between bg-white py-3 px-6 sticky top-0 rounded-xl z-10 border-b shadow-sm items-center">
-                    <h1 className="text-2xl font-bold">
-                      {editMode ? "Editing Property" : "Viewing Property"}
-                    </h1>
-                    {editMode ? (
-                      <div className="flex gap-3">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            formik.resetForm();
-                            setEditMode(false);
-                          }}
-                          className="border border-red-500 text-red-500 py-1 px-4 text-lg font-medium rounded-xl hover:bg-red-500 hover:text-white"
-                        >
-                          Discard
-                        </button>
-                        <button
-                          type="submit"
-                          className="border border-red-500 text-red-500 py-1 px-4 text-lg font-medium rounded-xl hover:bg-red-500 hover:text-white"
-                          disabled={!formik.dirty || !formik.isValid}
-                        >
-                          Save Changes
-                        </button>
-                      </div>
-                    ) : (
+            // Left Scrollable Column now contains the full form
+            <Form className="flex flex-col gap-5 w-2/3 overflow-y-auto pr-2 relative">
+              <FormikProvider value={formik}>
+                {/* --- Sticky Header from DetailsPage --- */}
+                <div className="flex justify-between bg-white py-3 px-6 sticky top-0 rounded-xl z-10 border-b shadow-sm items-center">
+                  <h1 className="text-2xl font-bold">
+                    {editMode ? "Editing Property" : "Viewing Property"}
+                  </h1>
+                  {editMode ? (
+                    <div className="flex gap-3">
                       <button
                         type="button"
-                        onClick={() => setEditMode(true)}
+                        onClick={() => {
+                          formik.resetForm();
+                          setEditMode(false);
+                        }}
                         className="border border-red-500 text-red-500 py-1 px-4 text-lg font-medium rounded-xl hover:bg-red-500 hover:text-white"
                       >
-                        Edit
+                        Discard
                       </button>
-                    )}
-                  </div>
+                      <button
+                        type="submit"
+                        className="border border-red-500 text-red-500 py-1 px-4 text-lg font-medium rounded-xl hover:bg-red-500 hover:text-white"
+                        disabled={!formik.dirty || !formik.isValid}
+                      >
+                        Save Changes
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setEditMode(true)}
+                      className="border border-red-500 text-red-500 py-1 px-4 text-lg font-medium rounded-xl hover:bg-red-500 hover:text-white"
+                    >
+                      Edit
+                    </button>
+                  )}
+                </div>
 
-                  {/* --- Form Sections from DetailsPage --- */}
-                  <div className="bg-white rounded-xl p-6 shadow-sm flex flex-col gap-6">
-                    <PropertyDetailsForm disabled={!editMode} />
-                    <LocalityDetailsForm disabled={!editMode} />
-                    {type === "resale" ? (
-                      <ResaleDetailsForm disabled={!editMode} />
-                    ) : (
-                      <RentalDetailsForm disabled={!editMode} />
-                    )}
-                    <AdditionalInfoForm disabled={!editMode} />
-                  </div>
-                  <div className="bg-white rounded-xl p-6 shadow-sm">
-                    <GalleryForm disabled={!editMode} />
-                  </div>
-                  <div className="p-6 rounded-xl bg-white shadow-sm">
-                    <OwnerDetails
-                      currentUser={currentUser}
-                      viewUserDetails={viewUserDetails}
-                    />
-                  </div>
-                </FormikProvider>
-              </div>
-
-              {/* Right Fixed Column (Verification Panel) */}
-              <div className="w-1/3 bg-white rounded-xl p-6 flex flex-col justify-between shadow-sm">
-                {/* <div className="flex flex-col gap-6">
-                  <h1 className="text-3xl font-bold border-b pb-4">
-                    Reverification Panel
-                  </h1>
-                  <VerificationSection
-                    title="Property Details"
-                    comment={propertyComment}
-                    setComment={setPropertyComment}
-                    onVerify={() => setIsPropertyVerified(true)}
-                    onEdit={() => setIsPropertyVerified(false)}
-                    isVerified={isPropertyVerified}
-                    isCommentValid={isPropertyCommentValid}
+                {/* --- Form Sections from DetailsPage --- */}
+                <div className="bg-white rounded-xl p-6 shadow-sm flex flex-col gap-6">
+                  <PropertyDetailsForm disabled={!editMode} />
+                  <LocalityDetailsForm disabled={!editMode} />
+                  {propertyCategory === PropertyCategoryEnum.RESALE ? (
+                    <ResaleDetailsForm disabled={!editMode} />
+                  ) : (
+                    <RentalDetailsForm disabled={!editMode} />
+                  )}
+                  <AdditionalInfoForm disabled={!editMode} />
+                </div>
+                {/* Gallery Section */}
+                <div className="bg-white rounded-xl p-6 shadow-sm">
+                  <GalleryForm disabled={!editMode} />
+                </div>
+                {/* Owner Details Section */}
+                <div className="p-6 rounded-xl bg-white shadow-sm">
+                  <OwnerDetails
+                    currentUser={currentUser}
+                    viewUserDetails={viewUserDetails}
                   />
-                  <VerificationSection
-                    title="Property Gallery"
-                    comment={galleryComment}
-                    setComment={setGalleryComment}
-                    onVerify={() => setIsGalleryVerified(true)}
-                    onEdit={() => setIsGalleryVerified(false)}
-                    isVerified={isGalleryVerified}
-                    isCommentValid={isGalleryCommentValid}
-                  />
-                  <VerificationSection
-                    title="Owner Details"
-                    comment={ownerComment}
-                    setComment={setOwnerComment}
-                    onVerify={() => setIsOwnerVerified(true)}
-                    onEdit={() => setIsOwnerVerified(false)}
-                    isVerified={isOwnerVerified}
-                    isCommentValid={isOwnerCommentValid}
-                  />
-                </div> */}
-                <button
-                  onClick={handleFinalVerification}
-                  disabled={!isFormFullyVerified}
-                  className="w-full bg-green-500 hover:bg-green-600 text-white rounded-xl py-3 px-4 text-xl font-bold transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-                >
-                  Re-Verify Property
-                </button>
-              </div>
+                </div>
+              </FormikProvider>
             </Form>
           )}
         </Formik>
+
+        {/* Right Fixed Column (Verification Panel) */}
+        <VerificationPanel
+          propertyID={propertyID}
+          formScrollRef={formRef}
+          userPhoneNo={currentUser.phoneNo}
+        />
       </div>
     </div>
   );

@@ -16,8 +16,15 @@ export function PanelSection<T extends Record<string, boolean>>({
   complete,
 }: SectionProps<T>) {
   return (
-    <div className="mb-6">
-      <h2 className="text-xl font-semibold mb-3">{title}</h2>
+    <div className="my-1">
+      <div className="flex w-full justify-between items-center py-1">
+        <h2 className="text-xl font-semibold">{title}</h2>
+        {complete && (
+          <p className="flex items-center gap-2 text-green-600">
+            <ShieldCheck size={18} /> <span>Marked as verified</span>
+          </p>
+        )}
+      </div>
       <ul className="space-y-2">
         {items.map(({ key, label }) => (
           <li key={String(key)} className="flex items-center gap-3">
@@ -36,12 +43,7 @@ export function PanelSection<T extends Record<string, boolean>>({
           </li>
         ))}
       </ul>
-      {complete && (
-        <p className="mt-3 flex items-center gap-2 text-green-600">
-          <ShieldCheck size={18} /> <span>Marked as verified</span>
-        </p>
-      )}
-      <hr className="mt-4" />
+      <hr className="my-2" />
     </div>
   );
 }
