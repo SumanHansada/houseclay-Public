@@ -20,16 +20,14 @@ import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 import WifiIconSvg from "public/icons/amenities/wifi.svg";
 
 import FormCalendarField from "@/components/common/FormCalendarField";
-import FormCheckbox from "@/components/common/FormCheckbox";
 import FormCurrencyField from "@/components/common/FormCurrencyField";
 import FormFormNumberField from "@/components/common/FormNumberField";
+import FormCheckbox from "@/form-components/FormCheckbox";
 import FormRadioGroup from "@/form-components/FormRadioGroup";
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
-import { FormType } from "@/store/listPropertySlice";
 
 interface ResaleDetailsFormProps {
   disabled: boolean;
-  type: "rent" | "resale" | "flatmate";
 }
 
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -72,12 +70,7 @@ const FirstAidKitIcon = FirstAidKitIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
 
-const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({
-  disabled,
-  type,
-}) => {
-  const formKey = `${type}Form` as FormType;
-  console.log(formKey);
+const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({ disabled }) => {
   return (
     <div className="space-y-6">
       <div className="mb-8">

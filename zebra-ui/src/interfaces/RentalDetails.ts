@@ -8,7 +8,7 @@ export interface RentalDetails {
   preferredTenants: string[];
   waterSupply: string;
   powerBackup: string;
-  parking: boolean;
+  parking: string;
   nonVegAllowed: boolean;
   amenities: string[];
 }

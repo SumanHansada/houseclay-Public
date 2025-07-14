@@ -4,17 +4,23 @@ import { useParams, useRouter } from "next/navigation";
 import { Column } from "@/components/DataTable";
 import { PropertyInfo } from "@/interfaces/Property";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
-import { buildPropertyColumns } from "@/utils/table/buildPropertyColumns";
+import {
+  buildPropertyColumns,
+  createDefaultPropertyActions,
+} from "@/utils/table/buildPropertyColumns";
 
 import { PropertiesTableView } from "../../components/PropertiesTableView";
 
-export interface PropertyRow extends PropertyInfo {
+export interface SerializedPropertyRow extends PropertyInfo {
   _serial: number;
+}
+
+export interface CustomizedPropertyRow extends SerializedPropertyRow {
   reportType: string;
   reportTime: string;
 }
 
-const extraCols: Column<PropertyRow>[] = [
+const extraCols: Column<CustomizedPropertyRow>[] = [
   {
     key: "reportType",
     label: "Report Type",
@@ -35,11 +41,7 @@ const ReportedPropertiesPage: React.FC = () => {
 
   const { reportProperties } = data!.user;
 
-  const viewPropertyDetails = (type: string, propertyID: string) => {
-    router.push(`/admin/property-details/${type}/${propertyID}`);
-  };
-
-  const rows: PropertyRow[] = reportProperties.map(
+  const rows: CustomizedPropertyRow[] = reportProperties.map(
     (reportPropertyInfo, index) => ({
       _serial: index + 1,
       ...reportPropertyInfo.userProperty,
@@ -48,7 +50,21 @@ const ReportedPropertiesPage: React.FC = () => {
     }),
   );
 
-  const commonColumns = buildPropertyColumns(viewPropertyDetails);
+  const viewPropertyDetails = (
+    propertyCategory: string,
+    propertyID: string,
+  ) => {
+    router.push(
+      `/admin/property-details/${propertyCategory.toLowerCase()}/${propertyID}`,
+    );
+  };
+
+  const commonColumns = buildPropertyColumns(
+    createDefaultPropertyActions({
+      onView: (row) =>
+        viewPropertyDetails(row.propertyCategory, row.propertyID),
+    }),
+  );
 
   const actionIdx = commonColumns.findIndex((col) => col.key === "status");
 

@@ -1,20 +1,24 @@
 "use client";
 
+import { useSelector } from "react-redux";
+
+import { PropertyCategoryEnum } from "@/common/enums";
 import FormInputField from "@/components/common/FormInputField";
 import FormTextArea from "@/components/common/FormTextArea";
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
-import { FormType } from "@/store/listPropertySlice";
+import { selectPropertyCategory } from "@/store/propertyDetailsSlice";
 
 interface PropertyDetailsFormProps {
   disabled: boolean;
-  type: "rent" | "resale" | "flatmate";
 }
 
 const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
   disabled,
-  type,
 }) => {
-  const formKey = `${type}Form` as FormType;
+  const propertyCategory = useSelector(selectPropertyCategory);
+  if (!propertyCategory) {
+    return null;
+  }
   return (
     <div className="space-y-6">
       <div className="mb-8">
@@ -49,7 +53,8 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
       />
 
       {/* BUILT UP AREA + FACING */}
-      {(formKey === "rentForm" || formKey === "resaleForm") && (
+      {(propertyCategory === PropertyCategoryEnum.RENT ||
+        propertyCategory === PropertyCategoryEnum.RESALE) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormInputField
             name="propertyDetails.builtUpArea"
@@ -89,7 +94,8 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
       )}
 
       {/* BHK TYPE, OWNERSHIP, AGE */}
-      {(formKey === "rentForm" || formKey === "resaleForm") && (
+      {(propertyCategory === PropertyCategoryEnum.RENT ||
+        propertyCategory === PropertyCategoryEnum.RESALE) && (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           <FormSelectDropdown
             label="BHK Type"
@@ -161,7 +167,7 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
         </div>
       )}
 
-      {formKey === "flatmatesForm" && (
+      {propertyCategory === PropertyCategoryEnum.FLATMATE && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormInputField
             name="propertyDetails.builtUpArea"
@@ -199,7 +205,7 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
 
       {/* FLOOR, TOTAL FLOOR, FLOOR TYPE */}
       <div
-        className={`grid grid-cols-1 md:grid-cols-2 ${formKey === "rentForm" || formKey === "resaleForm" ? "xl:grid-cols-3" : ""} gap-6`}
+        className={`grid grid-cols-1 md:grid-cols-2 ${propertyCategory === PropertyCategoryEnum.RENT || propertyCategory === PropertyCategoryEnum.RESALE ? "xl:grid-cols-3" : ""} gap-6`}
       >
         <FormSelectDropdown
           label="Total Floor"
@@ -241,7 +247,8 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
           // }
         />
 
-        {(formKey === "rentForm" || formKey === "resaleForm") && (
+        {(propertyCategory === PropertyCategoryEnum.RENT ||
+          propertyCategory === PropertyCategoryEnum.RESALE) && (
           <FormSelectDropdown
             label="Floor Type"
             name="propertyDetails.floorType"

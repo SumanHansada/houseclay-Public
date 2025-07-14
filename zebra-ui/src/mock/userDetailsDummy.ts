@@ -1,4 +1,4 @@
-import { PaymentStatusEnum } from "@/common/enum";
+import { PaymentStatusEnum } from "@/common/enums";
 import {} from "@/interfaces/Property";
 
 // export const dummyProperties: UserPropertyInfo[] = [];

@@ -1,112 +1,55 @@
-import { AnyProperty, PropertyInfo } from "@/interfaces/Property";
+import { PropertyCategoryEnum } from "@/common/enums";
+import { PropertyInfo, PropertyUpdate } from "@/interfaces/Property";
 
-import { User } from "../User";
+import { AdditionalInfo } from "../AdditionalInfo";
+import { FlatmateDetails } from "../FlatmateDetails";
+import { LocalityDetails } from "../LocalityDetails";
+import { PropertyDetails } from "../PropertyDetails";
+import { RentalDetails } from "../RentalDetails";
+import { ResaleDetails } from "../ResaleDetails";
+import { UserInfo } from "../User";
 
-// usePropertyAddRentMutation()
-export interface PostRentPropertyRequest {
+interface PropertyCore {
   propertyID: string;
-  propertyCategory: string;
-  propertyType: string;
-  builtUpArea: number;
-  facing: string;
-  bhkType: string;
-  propertyAge: string;
-  ownershipType: string;
-  floor: number;
-  totalFloors: number;
-  floorType: string;
-  description: string;
-  city: string;
-  locationOrSocietyName: string;
-  landmark: string;
-  latitude: number;
-  longitude: number;
-  rent: number;
-  deposit: number;
-  maintenanceCharges: number;
-  rentNegotiable: boolean;
-  availableFrom: string;
-  preferredTenants: string[];
-  waterSupply: string;
-  powerBackup: string;
-  furnishing: string;
-  parking: boolean;
-  nonVegAllowed: boolean;
-  amenities: string[];
   images: string[];
-  whoWillShowProperty?: string;
-  secondaryPhoneNumber?: string;
+  coverImage?: string;
+  propertyCategory: PropertyCategoryEnum;
 }
 
-// usePropertyAddResaleMutation()
-export interface PostResalePropertyRequest {
-  propertyID: string;
-  propertyCategory: string;
-  builtUpArea: number;
-  facing: string;
-  bhkType: string;
-  ownershipType: string;
-  propertyAge: string;
-  floor: number;
-  totalFloors: number;
-  floorType: string;
-  description: string;
-  city: string;
-  locationOrSocietyName: string;
-  landmark: string;
-  latitude: number;
-  longitude: number;
-  price: number;
-  availableFrom: string;
-  bathrooms: number;
-  balcony: number;
-  priceNegotiable: boolean;
-  underLoan: boolean;
-  waterSupply: string;
-  powerBackup: string;
-  furnishing: string;
-  parking: boolean;
-  amenities: string[];
-  images: string[];
-  khataCertificate?: string;
-  saleDeed?: boolean;
-  propertyTax?: boolean;
-  secondaryPhoneNumber?: string;
+export type FlattenedRentForm = Partial<
+  PropertyDetails & LocalityDetails & AdditionalInfo & RentalDetails
+>;
+export type FlattenedResaleForm = Partial<
+  PropertyDetails & LocalityDetails & AdditionalInfo & ResaleDetails
+>;
+export type FlattenedFlatmateForm = Partial<
+  PropertyDetails & LocalityDetails & AdditionalInfo & FlatmateDetails
+>;
+
+// usePropertyAddMutation()
+export type AddPropertyRequest = PropertyCore &
+  (FlattenedRentForm | FlattenedResaleForm | FlattenedFlatmateForm);
+
+interface ResponseMeta extends PropertyCore {
+  propertyUpdates: PropertyUpdate[];
+  premium: boolean;
+  managed: boolean;
+  propertyState: string;
 }
 
-// usePropertyAddFlatmatesMutation()
-export interface PostFlatmatesPropertyRequest {
-  propertyID: string;
-  propertyCategory: string;
-  builtUpArea: number;
-  bhkType: string;
-  floor: number;
-  totalFloors: number;
-  description: string;
-  city: string;
-  locationOrSocietyName: string;
-  landmark: string;
-  latitude: number;
-  longitude: number;
-  rent: number;
-  maintenanceCharges: number;
-  depositCharges: number;
-  availableFrom: string;
-  furnishing: string;
-  waterSupply: string;
-  powerBackup: string;
-  parking: boolean;
-  nonVegAllowed: boolean;
-  amenities: string[];
-  tenantType: string;
-  attachedBathroom: boolean;
-  attachedBalcony: boolean;
-  smokingPreference: string;
-  drinkingPreference: string;
-  images: string[];
-  whoWillShowProperty?: string;
-  secondaryPhoneNumber?: string;
+interface PropertyUserRelations {
+  owner: UserInfo;
+  viewUsers: UserInfo[];
+  shortlistUsers: UserInfo[];
+  contactUsers: UserInfo[];
+  reportUsers: UserInfo[];
 }
+
+export type PropertyResponse = ResponseMeta &
+  (FlattenedRentForm | FlattenedResaleForm | FlattenedFlatmateForm);
+
+// useGetPropertyByIdQuery()
+export type GetPropertyByIdResponse = PropertyResponse & PropertyUserRelations;
 
 // useGetPropertiesQuery()
 export interface GetAllPropertiesResponse {
@@ -124,16 +67,7 @@ export interface GetAllPropertiesResponse {
   number: number;
 }
 
-export interface PropertyUserRelations {
-  owner: User;
-  viewUsers: User[];
-  shortlistUsers: User[];
-  contactUsers: User[];
-  reportUsers: User[];
-}
-
-export type GetPropertyByIdResponse = AnyProperty & PropertyUserRelations;
-
+// useGetPropertiesToVerifyQuery()
 export interface GetPropertiesToVerifyResponse {
   content: PropertyInfo[];
   pageable: {
@@ -149,6 +83,7 @@ export interface GetPropertiesToVerifyResponse {
   number: number;
 }
 
+// useGetPropertiesToReverifyQuery()
 export interface GetPropertiesToReverifyResponse {
   content: PropertyInfo[];
   pageable: {

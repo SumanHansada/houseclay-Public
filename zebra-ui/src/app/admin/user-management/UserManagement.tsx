@@ -10,7 +10,7 @@ import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
 import { PaginationFooter } from "@/components/PaginationFooter";
 import { RenderUserStatus } from "@/components/status/RenderUserStatus";
 import { TitleAndSearchBar } from "@/components/TitleAndSearchBar";
-import { User } from "@/interfaces/User";
+import { UserInfo } from "@/interfaces/User";
 import { useGetUsersQuery } from "@/store/apiSlice";
 
 export const UsersManagement = () => {
@@ -70,7 +70,7 @@ export const UsersManagement = () => {
     router.push(`/admin/user-details/${phoneNo}`);
   };
 
-  const columns: Column<User>[] = [
+  const columns: Column<UserInfo>[] = [
     { key: "name", label: "Name", accessor: "name" },
     { key: "email", label: "Email", accessor: "email" },
     { key: "phoneNo", label: "Phone No.", accessor: "phoneNo" },

@@ -1,19 +1,23 @@
 "use client";
 
+import { useSelector } from "react-redux";
+
+import { PropertyCategoryEnum } from "@/common/enums";
 import FormPhoneInput from "@/components/common/FormPhoneInput";
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
-import { FormType } from "@/store/listPropertySlice";
+import { selectPropertyCategory } from "@/store/propertyDetailsSlice";
 
 interface AdditionalInfoFormProps {
   disabled: boolean;
-  type: "rent" | "resale" | "flatmate";
 }
 
 const AdditionalInfoForm: React.FC<AdditionalInfoFormProps> = ({
   disabled,
-  type,
 }) => {
-  const formKey = `${type}Form` as FormType;
+  const propertyCategory = useSelector(selectPropertyCategory);
+  if (!propertyCategory) {
+    return null;
+  }
   return (
     <div className="space-y-6">
       <div className="mb-8">
@@ -22,7 +26,8 @@ const AdditionalInfoForm: React.FC<AdditionalInfoFormProps> = ({
         </h1>
       </div>
       <div>
-        {(formKey === "rentForm" || formKey === "flatmatesForm") && (
+        {(propertyCategory === PropertyCategoryEnum.RENT ||
+          propertyCategory === PropertyCategoryEnum.FLATMATE) && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <div className="col-span-1">
               <FormSelectDropdown
@@ -59,7 +64,7 @@ const AdditionalInfoForm: React.FC<AdditionalInfoFormProps> = ({
             </div>
           </div>
         )}
-        {formKey === "resaleForm" && (
+        {propertyCategory === PropertyCategoryEnum.RESALE && (
           <>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
               <div className="col-span-1">

@@ -1,20 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface FileUploadProgress {
-  name: string;
-  progress: number;
-  status: "pending" | "uploading" | "completed" | "error";
-  error?: string;
-}
-
-interface UploadState {
-  progress: number;
-  status: "idle" | "uploading" | "success" | "error";
-  error?: string;
-  currentFileIndex: number;
-  totalFiles: number;
-  fileProgress: FileUploadProgress[];
-}
+import { UploadState } from "../interfaces/UploadState";
 
 const initialState: UploadState = {
   progress: 0,

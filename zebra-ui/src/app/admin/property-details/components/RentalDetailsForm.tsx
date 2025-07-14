@@ -26,17 +26,18 @@ import CoupleIconSvg from "public/icons/preferred-tenants/couple.svg";
 import FamilyIconSvg from "public/icons/preferred-tenants/family.svg";
 import FemaleIconSvg from "public/icons/preferred-tenants/female.svg";
 import MaleIconSvg from "public/icons/preferred-tenants/male.svg";
+import { useSelector } from "react-redux";
 
+import { PropertyCategoryEnum } from "@/common/enums";
 import FormCalendarField from "@/components/common/FormCalendarField";
-import FormCheckbox from "@/components/common/FormCheckbox";
 import FormCurrencyField from "@/components/common/FormCurrencyField";
+import FormCheckbox from "@/form-components/FormCheckbox";
 import FormRadioGroup from "@/form-components/FormRadioGroup";
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
-import { FormType } from "@/store/listPropertySlice";
+import { selectPropertyCategory } from "@/store/propertyDetailsSlice";
 
 interface RentalDetailsFormProps {
   disabled: boolean;
-  type: "rent" | "resale" | "flatmate";
 }
 
 const FamilyIcon = FamilyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -87,11 +88,11 @@ const FirstAidKitIcon = FirstAidKitIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
 
-const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
-  disabled,
-  type,
-}) => {
-  const formKey = `${type}Form` as FormType;
+const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
+  const propertyCategory = useSelector(selectPropertyCategory);
+  if (!propertyCategory) {
+    return null;
+  }
   return (
     <div className="space-y-6">
       <div className="mb-8">
@@ -104,12 +105,12 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
           <div className="col-span-1">
             <FormCurrencyField
               name={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategoryEnum.RENT
                   ? "rentalDetails.rent"
                   : "flatmatesDetails.rent"
               }
               id={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategoryEnum.RENT
                   ? "rentalDetails.rent"
                   : "flatmatesDetails.rent"
               }
@@ -121,7 +122,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
             />
           </div>
           <div className="col-span-1">
-            {formKey === "rentForm" && (
+            {propertyCategory === PropertyCategoryEnum.RENT && (
               <FormRadioGroup
                 name="rentalDetails.rentNegotiable"
                 label="Rent Negotiable"
@@ -134,7 +135,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
                 // disabled={disabled}
               />
             )}
-            {formKey === "flatmatesForm" && (
+            {propertyCategory === PropertyCategoryEnum.FLATMATE && (
               <FormSelectDropdown
                 label="Parking"
                 name="flatmatesForm.parking"
@@ -163,12 +164,12 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
           <div className="col-span-1">
             <FormCurrencyField
               name={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategoryEnum.RENT
                   ? "rentalDetails.maintenanceCharges"
                   : "flatmatesDetails.maintenanceCharges"
               }
               id={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategoryEnum.RENT
                   ? "rentalDetails.maintenanceCharges"
                   : "flatmatesDetails.maintenanceCharges"
               }
@@ -181,12 +182,12 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
           <div className="col-span-1">
             <FormCurrencyField
               name={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategoryEnum.RENT
                   ? "rentalDetails.deposit"
                   : "flatmatesDetails.depositCharges"
               }
               id={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategoryEnum.RENT
                   ? "rentalDetails.deposit"
                   : "flatmatesDetails.depositCharges"
               }
@@ -201,7 +202,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
           <div className="col-span-1">
             <FormCalendarField
               name={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategoryEnum.RENT
                   ? "rentalDetails.availableFrom"
                   : "flatmatesDetails.availableFrom"
               }
@@ -216,12 +217,12 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
             <FormSelectDropdown
               label="Furnishing"
               name={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategoryEnum.RENT
                   ? "rentalDetails.furnishing"
                   : "flatmatesDetails.furnishing"
               }
               id={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategoryEnum.RENT
                   ? "rentalDetails.furnishing"
                   : "flatmatesDetails.furnishing"
               }
@@ -240,7 +241,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
               placeholder="Select furnishing"
               disabled={disabled}
               // aria-describedby={
-              //   formKey === "rentForm"
+              //   propertyCategory === PropertyCategoryEnum.RENT
               //     ? errors?.rentalDetails?.furnishing &&
               //       touched?.rentalDetails?.furnishing
               //       ? "rentalDetails.furnishing-error"
@@ -253,7 +254,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
             />
           </div>
         </div>
-        {formKey === "rentForm" && (
+        {propertyCategory === PropertyCategoryEnum.RENT && (
           <div className="mb-6">
             <FormCheckbox
               name="rentalDetails.preferredTenants"
@@ -287,7 +288,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
             />
           </div>
         )}
-        {formKey === "flatmatesForm" && (
+        {propertyCategory === PropertyCategoryEnum.FLATMATE && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <FormRadioGroup
               name="flatmatesDetails.tenantType"
@@ -337,12 +338,12 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
             <FormSelectDropdown
               label="Water Supply"
               name={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategoryEnum.RENT
                   ? "rentalDetails.waterSupply"
                   : "flatmatesDetails.waterSupply"
               }
               id={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategoryEnum.RENT
                   ? "rentalDetails.waterSupply"
                   : "flatmatesDetails.waterSupply"
               }
@@ -361,7 +362,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
               placeholder="Select Water supply"
               disabled={disabled}
               // aria-describedby={
-              //   formKey === "rentForm"
+              //   propertyCategory === PropertyCategoryEnum.RENT
               //     ? errors?.rentalDetails?.waterSupply &&
               //       touched?.rentalDetails?.waterSupply
               //       ? "rentalDetails.waterSupply-error"
@@ -377,12 +378,12 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
             <FormSelectDropdown
               label="Power Backup"
               name={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategoryEnum.RENT
                   ? "rentalDetails.powerBackup"
                   : "flatmatesDetails.powerBackup"
               }
               id={
-                formKey === "rentForm"
+                propertyCategory === PropertyCategoryEnum.RENT
                   ? "rentalDetails.powerBackup"
                   : "flatmatesDetails.powerBackup"
               }
@@ -401,7 +402,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
               placeholder="Select Power backup"
               disabled={disabled}
               // aria-describedby={
-              //   formKey === "rentForm"
+              //   propertyCategory === PropertyCategoryEnum.RENT
               //     ? errors?.rentalDetails?.powerBackup &&
               //       touched?.rentalDetails?.powerBackup
               //       ? "rentalDetails.powerBackup-error"
@@ -414,7 +415,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
             />
           </div>
         </div>
-        {formKey === "rentForm" && (
+        {propertyCategory === PropertyCategoryEnum.RENT && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="col-span-1">
               <FormSelectDropdown
@@ -455,7 +456,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
             </div>
           </div>
         )}
-        {formKey === "flatmatesForm" && (
+        {propertyCategory === PropertyCategoryEnum.FLATMATE && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="col-span-1">
               <FormRadioGroup
@@ -487,7 +488,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
             </div>
           </div>
         )}
-        {formKey === "flatmatesForm" && (
+        {propertyCategory === PropertyCategoryEnum.FLATMATE && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="col-span-1">
               <FormRadioGroup
@@ -526,7 +527,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({
         </h1>
         <FormCheckbox
           name={
-            formKey === "rentForm"
+            propertyCategory === PropertyCategoryEnum.RENT
               ? "rentalDetails.amenities"
               : "flatmatesDetails.amenities"
           }

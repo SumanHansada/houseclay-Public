@@ -1,9 +1,9 @@
 import { SquareArrowOutUpRight } from "lucide-react";
 
-import { User } from "@/interfaces/User";
+import { UserInfo } from "@/interfaces/User";
 
 interface OwnerDetailsProps {
-  currentUser: User;
+  currentUser: UserInfo;
   viewUserDetails: (phoneNo: string) => void;
 }
 

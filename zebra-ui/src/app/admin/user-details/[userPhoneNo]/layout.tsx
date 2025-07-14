@@ -5,11 +5,11 @@ import {
   useSelectedLayoutSegment,
 } from "next/navigation";
 
-import { UserDetailsTabEnum } from "@/common/enum";
+import { UserDetailsTabEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
 import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
-import { ensureEnumValue } from "@/utils/enum";
+import { ensureEnumValue } from "@/utils/core";
 
 const tabs: { label: string; value: UserDetailsTabEnum }[] = [
   { label: "Profile", value: UserDetailsTabEnum.PROFILE },
@@ -52,6 +52,7 @@ export default function UserDetailsLayout({
       />
     );
   }
+  console.log("user-details/profile: ", currentUser);
 
   const activeTab = ensureEnumValue({
     enumObj: UserDetailsTabEnum,

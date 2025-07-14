@@ -12,14 +12,12 @@ import { FormValues } from "@/interfaces/FormValues";
 
 interface LocalityDetailsFormProps {
   disabled: boolean;
-  type: "rent" | "resale" | "flatmate";
 }
 
 const LocalityDetailsForm: React.FC<LocalityDetailsFormProps> = ({
   disabled,
-  type,
 }) => {
-  console.log(disabled + type);
+  console.log("property-details: LocalityDetailsForm, disabled - ", disabled);
   const { values, setFieldValue } = useFormikContext<FormValues>();
 
   const onLocationSelect = (location: {

@@ -4,6 +4,8 @@ const COLOUR_MAP = {
   red: ["bg-red-200", "border-red-400", "text-red-900"],
   green: ["bg-green-200", "border-green-400", "text-green-900"],
   blue: ["bg-blue-200", "border-blue-400", "text-blue-900"],
+  orange: ["bg-orange-200", "border-orange-400", "text-orange-900"],
+  yellow: ["bg-yellow-200", "border-yellow-400", "text-yellow-900"],
   gray: ["bg-gray-200", "border-gray-400", "text-gray-900"],
 } as const;
 
