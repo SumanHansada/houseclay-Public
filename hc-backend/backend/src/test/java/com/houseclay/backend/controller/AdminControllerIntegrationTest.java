@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Transactional
+@ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AdminControllerIntegrationTest {
 
@@ -45,17 +47,17 @@ public class AdminControllerIntegrationTest {
     @Autowired
     private AdminUtil adminUtil;
 
-    private Admin admin;
+    private static String authToken;
 
 
     @BeforeAll
-    public void init() {
-        admin = adminUtil.createAdminLogin();
+    public void init() throws Exception {
+       authToken = adminUtil.createAdminLogin();
     }
 
     @AfterAll
-    public void cleanup() {
-        adminUtil.deleteAdmin(admin);
+    public void cleanup() throws Exception {
+        adminUtil.deleteAdmin(AdminUtil.TEST_ADMIN_USERNAME);
     }
 
     public record AdminRegisterTestCase(
@@ -138,7 +140,7 @@ public class AdminControllerIntegrationTest {
     private static Stream<Arguments> provideLogoutTestCases() {
         return Stream.of(
                 Arguments.of(new LogoutTestCase(
-                        "Bearer "+AdminUtil.TEST_ADMIN_AUTH_TOKEN,
+                        "Bearer "+authToken,
                         200,
                         "Logout successful"
                 )),
