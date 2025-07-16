@@ -8,6 +8,7 @@ import com.houseclay.backend.payload.UserPayload;
 
 import com.houseclay.backend.service.LeadService;
 import com.houseclay.backend.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,7 +30,7 @@ public class UserController {
 
 
     @RequestMapping (method = RequestMethod.POST, value = "/register",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createUser(@RequestBody UserPayload payload) {
+    public ResponseEntity<?> createUser(@Valid @RequestBody UserPayload payload) {
         try {
             String token = userService.createUser(payload);
             return ResponseEntity.ok().body(token);
@@ -41,7 +42,7 @@ public class UserController {
     }
 
     @RequestMapping (method = RequestMethod.POST, value = "/login",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> login(@RequestBody LoginPayload payload) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginPayload payload) {
         try {
             String token = userService.loginUser(payload);
             return ResponseEntity.ok().body(token);
@@ -69,8 +70,7 @@ public class UserController {
     }
 
     @RequestMapping (method = RequestMethod.POST, value = "/logout",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> logout(@RequestHeader("Authorization") String authToken,
-                                 @RequestAttribute("authenticatedUser") User user) {
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String authToken) {
         try {
             userService.logoutUser(authToken.replace("Bearer ", "")); // Remove "Bearer " prefix
             return ResponseEntity.ok(Map.of("message", "Logout successful"));
