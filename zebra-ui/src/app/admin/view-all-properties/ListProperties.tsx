@@ -18,10 +18,11 @@ interface SerializedPropertyRow extends PropertyInfo {
   _serial: number;
 }
 
+const ROWS_PER_PAGE = 12;
+
 export const ListProperties = () => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 12;
 
   const {
     data: paginatedPropertyData,
@@ -31,7 +32,7 @@ export const ListProperties = () => {
   } = useGetPropertiesQuery(
     {
       page: currentPage - 1,
-      size: rowsPerPage,
+      size: ROWS_PER_PAGE,
     },
     {
       refetchOnMountOrArgChange: true,
@@ -60,7 +61,7 @@ export const ListProperties = () => {
   const rows: SerializedPropertyRow[] = propertyList.map(
     (propertyInfo, index) => ({
       ...propertyInfo,
-      _serial: (currentPage - 1) * rowsPerPage + index + 1,
+      _serial: (currentPage - 1) * ROWS_PER_PAGE + index + 1,
     }),
   );
 

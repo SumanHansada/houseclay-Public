@@ -8,7 +8,7 @@ import { getInitials } from "@/utils/core";
 export interface InitialsAvatarProps {
   name: string;
   size?: "xs" | "sm" | "md" | "lg" | "xl";
-  colour?: "gray-900" | "red-600" | "blue-600" | "green-600";
+  colour?: "gray" | "red" | "blue" | "green" | "neutral";
 }
 
 const SIZE_MAP = {
@@ -19,10 +19,18 @@ const SIZE_MAP = {
   xl: { box: "w-40 h-40", font: "text-[90px]" },
 } as const;
 
+const COLOUR_MAP = {
+  gray: "bg-gray-900",
+  red: "bg-red-900",
+  blue: "bg-blue-900",
+  green: "bg-green-900",
+  neutral: "bg-neutral-900",
+} as const;
+
 export const InitialsAvatar: React.FC<InitialsAvatarProps> = ({
   name,
   size = "md",
-  colour = "gray-900",
+  colour = "neutral",
 }) => {
   const { box, font } = SIZE_MAP[size];
   const initials = getInitials(name);
@@ -31,7 +39,7 @@ export const InitialsAvatar: React.FC<InitialsAvatarProps> = ({
     <div
       className={clsx(
         box,
-        `bg-${colour}`,
+        COLOUR_MAP[colour],
         "rounded-full flex items-center justify-center select-none",
       )}
       aria-label={`Avatar for ${name}`}
