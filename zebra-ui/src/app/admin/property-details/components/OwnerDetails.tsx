@@ -1,17 +1,14 @@
 import { SquareArrowOutUpRight } from "lucide-react";
+import Link from "next/link";
 
-import { UserInfo } from "@/interfaces/User";
 import { InitialsAvatar } from "@/components/InitialsAvatar";
+import { UserInfo } from "@/interfaces/User";
 
 interface OwnerDetailsProps {
   currentUser: UserInfo;
-  viewUserDetails: (phoneNo: string) => void;
 }
 
-export const OwnerDetails = ({
-  currentUser,
-  viewUserDetails,
-}: OwnerDetailsProps) => {
+export const OwnerDetails = ({ currentUser }: OwnerDetailsProps) => {
   const { name, email, phoneNo, blacklisted } = currentUser;
   const currentStatus = blacklisted
     ? "The user is blacklisted"
@@ -20,13 +17,16 @@ export const OwnerDetails = ({
     <div className="flex flex-col gap-4">
       <div className="flex justify-between items-center">
         <h2 className="text-3xl">Owner Details</h2>
-        <button
-          className="flex gap-2 text-lg items-center text-red-500 hover:underline hover:cursor-pointer"
-          onClick={() => viewUserDetails(phoneNo)}
+        <Link
+          href={`/admin/user-details/${phoneNo}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          prefetch={false}
+          className="flex gap-2 text-lg items-center hover:underline"
         >
           <span>View User</span>
           <SquareArrowOutUpRight className="size-5" />
-        </button>
+        </Link>
       </div>
       <div className="flex gap-16 h-full">
         <InitialsAvatar name={name} size="xl" />

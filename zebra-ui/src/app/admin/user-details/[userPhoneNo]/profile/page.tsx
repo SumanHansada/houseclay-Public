@@ -3,6 +3,7 @@ import { useParams } from "next/navigation";
 import React, { useState } from "react";
 
 import { dialogLabels } from "@/common/constants";
+import { InitialsAvatar } from "@/components/InitialsAvatar";
 import { Pill } from "@/components/Pill";
 import { ActionDialog } from "@/dialogs/action-dialog";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -11,8 +12,6 @@ import {
   useBlacklistUserMutation,
   useGetUserByPhoneNoQuery,
 } from "@/store/apiSlice";
-import { InitialsAvatar } from "@/components/InitialsAvatar";
-// import { getInitials } from "@/utils/core";
 
 const ProfilePage: React.FC = () => {
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
@@ -44,7 +43,6 @@ const ProfilePage: React.FC = () => {
   };
 
   const { name, email, phoneNo, createdAt } = currentUser;
-  // const userInitials = getInitials(name);
 
   const currentStatus = isBlacklisted
     ? "The user is blacklisted"

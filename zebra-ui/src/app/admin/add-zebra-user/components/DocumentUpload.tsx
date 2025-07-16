@@ -1,7 +1,8 @@
 import { useField, useFormikContext } from "formik";
-import { AddAdminFormValues } from "../page";
 import { CircleX, Plus } from "lucide-react";
 import { useRef } from "react";
+
+import { AddAdminFormValues } from "../page";
 
 export const DocumentUpload: React.FC<{
   label: string;
@@ -45,7 +46,9 @@ export const DocumentUpload: React.FC<{
               type="button"
               onClick={() => {
                 setFieldValue(field.name, null, true);
-                fileInputRef.current && (fileInputRef.current.value = "");
+                if (fileInputRef.current) {
+                  fileInputRef.current.value = "";
+                }
               }}
             >
               <CircleX size={18} />

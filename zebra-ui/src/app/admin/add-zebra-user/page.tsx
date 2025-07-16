@@ -1,15 +1,14 @@
 "use client";
 
-import React from "react";
 import { ErrorMessage, Form, Formik, FormikHelpers } from "formik";
-import { useRouter } from "next/navigation";
+import React from "react";
 import * as Yup from "yup";
 
-import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 import FormCalendarField from "@/components/common/FormCalendarField";
-import FormRadioGroup from "@/form-components/FormRadioGroup";
-import FormPhoneInput from "@/components/common/FormPhoneInput";
 import FormInputField from "@/components/common/FormInputField";
+import FormRadioGroup from "@/form-components/FormRadioGroup";
+import FormSelectDropdown from "@/form-components/FormSelectDropdown";
+
 import { DocumentUpload } from "./components/DocumentUpload";
 
 export interface AddAdminFormValues {
@@ -67,8 +66,6 @@ const schema: Yup.Schema<AddAdminFormValues> = Yup.object({
 });
 
 const AddAdminPage: React.FC = () => {
-  const router = useRouter();
-
   const initialValues: AddAdminFormValues = {
     name: "",
     // phone: "",

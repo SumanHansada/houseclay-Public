@@ -1,12 +1,12 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import PropertyTypeOptions from "@/components/PropertyTypeOptions";
-import { RootState } from "@/store/store";
 import { clearFormData } from "@/store/listPropertySlice";
-import { useEffect } from "react";
+import { RootState } from "@/store/store";
 
 const AddPropertyPage = () => {
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
