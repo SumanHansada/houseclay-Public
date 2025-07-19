@@ -1,7 +1,7 @@
 "use client";
 
 import { Form, Formik, FormikProvider } from "formik";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -22,7 +22,6 @@ export default function VerifyPropertyDetailsPage() {
   const { propertyID } = useParams() as {
     propertyID: string;
   };
-  const router = useRouter();
 
   // --- From DetailsPage: Formik & Edit Mode State ---
   const [editMode, setEditMode] = useState(false);
@@ -42,10 +41,6 @@ export default function VerifyPropertyDetailsPage() {
   const handleSaveChanges = async (values: PropertyResponseFormValues) => {
     console.log("Submitting all changes:", values);
     setEditMode(false);
-  };
-
-  const viewUserDetails = (userPhoneNo: string) => {
-    router.push(`/admin/user-details/${userPhoneNo}`);
   };
 
   return (
@@ -116,10 +111,7 @@ export default function VerifyPropertyDetailsPage() {
                 </div>
                 {/* Owner Details Section */}
                 <div className="p-6 rounded-xl bg-white shadow-sm">
-                  <OwnerDetails
-                    currentUser={currentUser}
-                    viewUserDetails={viewUserDetails}
-                  />
+                  <OwnerDetails currentUser={currentUser} />
                 </div>
               </FormikProvider>
             </Form>

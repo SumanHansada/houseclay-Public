@@ -1,14 +1,15 @@
 "use client";
 
 import { SquareArrowOutUpRight } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 
+import { InitialsAvatar } from "@/components/InitialsAvatar";
 import { RenderPropertyStatus } from "@/components/status/RenderPropertyStatus";
 import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 
 export default function PropertyDetailsOverviewPage() {
-  const router = useRouter();
   const { propertyID } = useParams() as { propertyID: string };
 
   const { data: currentProperty } = useGetPropertyByIdQuery({
@@ -25,27 +26,26 @@ export default function PropertyDetailsOverviewPage() {
     ? "The user is blacklisted"
     : "The user is active";
 
-  const viewUserDetails = (userPhoneNo: string) => {
-    router.push(`/admin/user-details/${userPhoneNo}`);
-  };
-
   return (
     <div className="h-full bg-gray-100 flex flex-col overflow-auto px-16 py-8">
       <div className="flex-1 flex flex-col gap-5">
         <div className="p-5 rounded-xl bg-white shadow-sm flex flex-col gap-4">
           <div className="flex justify-between items-center">
             <h2 className="text-3xl">Owner Details</h2>
-            <button
-              className="flex gap-2 text-lg items-center hover:underline hover:cursor-pointer"
-              onClick={() => viewUserDetails(phoneNo)}
+            <Link
+              href={`/admin/user-details/${phoneNo}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              prefetch={false}
+              className="flex gap-2 text-lg items-center hover:underline"
             >
               <span>View User</span>
               <SquareArrowOutUpRight className="size-5" />
-            </button>
+            </Link>
           </div>
 
           <div className="flex gap-16 h-full">
-            <div className="w-52 h-52 bg-gray-900 rounded-full flex-shrink-0" />
+            <InitialsAvatar name={name} size="xl" />
             <form className="flex flex-col justify-between flex-1 gap-3">
               {[
                 { label: "Name", value: name },

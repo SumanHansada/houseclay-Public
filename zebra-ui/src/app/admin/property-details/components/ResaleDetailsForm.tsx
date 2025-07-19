@@ -237,11 +237,10 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({ disabled }) => {
               name="resaleDetails.parking"
               id="resaleDetails.parking"
               options={[
-                { value: true, label: "Yes" },
-                {
-                  value: false,
-                  label: "No",
-                },
+                { value: "Both", label: "Both" },
+                { value: "2 Wheeler", label: "2 Wheeler" },
+                { value: "4 Wheeler", label: "4 Wheeler" },
+                { value: "None", label: "None" },
               ]}
               required={true}
               placeholder="Select Parking"

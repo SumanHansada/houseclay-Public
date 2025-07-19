@@ -16,11 +16,12 @@ interface SerializedPropertyRow extends PropertyInfo {
   _serial: number;
 }
 
+const ROWS_PER_PAGE = 10;
+
 const PropertyVerificationTablePage: React.FC = () => {
   const router = useRouter();
   const { status } = useParams() as { status: VerifyPropertyStatusEnum };
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 10;
 
   const {
     data: paginatedPropertyData,
@@ -30,7 +31,7 @@ const PropertyVerificationTablePage: React.FC = () => {
   } = useStatusBasedPropertyFetch({
     status,
     page: currentPage - 1,
-    size: rowsPerPage,
+    size: ROWS_PER_PAGE,
   });
 
   if (isLoading || isError || !paginatedPropertyData) {
@@ -55,7 +56,7 @@ const PropertyVerificationTablePage: React.FC = () => {
   const rows: SerializedPropertyRow[] = allProperties.map(
     (propertyInfo, index) => ({
       ...propertyInfo,
-      _serial: (currentPage - 1) * rowsPerPage + index + 1,
+      _serial: (currentPage - 1) * ROWS_PER_PAGE + index + 1,
     }),
   );
 

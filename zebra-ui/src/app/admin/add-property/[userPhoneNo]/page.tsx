@@ -1,13 +1,16 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import PropertyTypeOptions from "@/components/PropertyTypeOptions";
+import { clearFormData } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
 const AddPropertyPage = () => {
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
+  const dispatch = useDispatch();
   const { propertyCategory } = useSelector(
     (state: RootState) => state.listProperty,
   );
@@ -15,6 +18,10 @@ const AddPropertyPage = () => {
   const handleBack = () => {
     router.back();
   };
+
+  useEffect(() => {
+    dispatch(clearFormData());
+  }, [dispatch]);
 
   const handlePostListingClick = () => {
     const url = `/admin/add-property/${userPhoneNo}/${propertyCategory.toLowerCase()}`;

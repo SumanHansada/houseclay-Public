@@ -39,6 +39,28 @@ export function formatEnumValue<V extends string>(
   return formatCase(value, style);
 }
 
+/**
+ * getInitials
+ * -----------
+ * Returns 1 – 2 capital letters that represent a person’s name.
+ *
+ *   getInitials("Amit Kumar")   // "AK"
+ *   getInitials("Amit")         // "A"
+ *   getInitials("")             // ""
+ *
+ * • If the name has **one word**, the first letter is returned.
+ * • If the name has **two or more words**, the first letters of the
+ *   first two words are returned.
+ * • Whitespace is trimmed; `undefined` or empty input yields “”.
+ */
+export const getInitials = (fullName: string | undefined) => {
+  if (!fullName) return "";
+  const parts = fullName.trim().split(/\s+/);
+  return parts.length === 1
+    ? parts[0][0].toUpperCase()
+    : (parts[0][0] + parts[1][0]).toUpperCase();
+};
+
 /* --------------------------------------------------------------------
    Enum helpers
    ------------------------------------------------------------------ */

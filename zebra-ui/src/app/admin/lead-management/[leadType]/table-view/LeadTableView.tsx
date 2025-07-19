@@ -8,18 +8,17 @@ import AsyncFallback from "@/components/AsyncFallback";
 import { Column, DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/PaginationFooter";
 import { RenderLeadStatus } from "@/components/status/RenderLeadStatus";
-import { TitleAndSearchBar } from "@/components/TitleAndSearchBar";
 import { Lead, LeadType } from "@/interfaces/Lead";
 import { useGetLeadsQuery } from "@/store/apiSlice";
 
 import { TableActionButtons } from "../../components/TableActionButtons";
 
+const ROWS_PER_PAGE = 10;
+
 export const LeadTableView = () => {
   const router = useRouter();
   const { leadType } = useParams() as { leadType: LeadType };
-  const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 10;
   const statusBarTitle =
     leadType === "property" ? "Property Listing Leads" : "Search Support Leads";
 
@@ -32,7 +31,7 @@ export const LeadTableView = () => {
     {
       type: LeadQueryParamEnum[leadType],
       page: currentPage - 1,
-      size: rowsPerPage,
+      size: ROWS_PER_PAGE,
     },
     {
       refetchOnMountOrArgChange: true,
@@ -105,14 +104,8 @@ export const LeadTableView = () => {
     <div className="flex flex-col h-[calc(100vh-4rem)]">
       <div className="flex flex-col flex-1 h-full">
         {/* Sticky top filter bar */}
-        <div className="sticky top-0 z-10 border border-b-gray-200 shadow-sm">
-          <TitleAndSearchBar
-            searchValue={searchValue}
-            onSearchChange={(v) => {
-              setSearchValue(v);
-            }}
-            title={statusBarTitle}
-          />
+        <div className="sticky top-0 z-10 border border-b-gray-200 shadow-sm py-4 px-16">
+          <h1 className="text-2xl font-medium">{statusBarTitle}</h1>
         </div>
 
         {/* Table area */}

@@ -24,8 +24,8 @@ export const dialogLabels: Record<DialogKey, DialogLabelConfig> = {
   },
   tagBroker: {
     title: "Tag Owner as Broker",
-    prompt: "Add a remark for the owner’s broker tag.",
-    confirmLabel: "Tag Owner",
+    prompt: "Add a remark for the user's broker tag.",
+    confirmLabel: "Tag User as Broker",
     colour: "red",
     requireComment: true,
   },

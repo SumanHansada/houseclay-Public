@@ -51,7 +51,9 @@ export default function VerifyPropertyLayout({
         typeof error === "string" ? error : "Unknown error fetching property";
       dispatch(setRejected(errMsg));
     } else if (apiPropertyData) {
+      console.log("verify - apiPropertyData:", apiPropertyData);
       const currentProperty = apiToForm(apiPropertyData);
+      console.log("currentProperty: ", currentProperty);
       dispatch(setFulfilled(currentProperty));
     }
   }, [isLoading, isError, apiPropertyData, error, dispatch]);
