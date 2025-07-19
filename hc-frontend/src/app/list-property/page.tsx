@@ -61,10 +61,8 @@ const ListPropertyPage = dynamic(
       const propertyCategory = useSelector(
         (state: RootState) => state.listProperty.propertyCategory,
       );
-      const handlePhoneChange = (data: string) => {
-        // Remove '+' sign and update the phone number
-        const sanitizedPhone = data.replace(/^\+/, "");
-        dispatch(setPhoneNo(sanitizedPhone));
+      const handlePhoneChange = (phoneNumber: string) => {
+        dispatch(setPhoneNo(phoneNumber));
       };
       const dispatch = useDispatch();
       const [acceptTerms, setAcceptTerms] = useState(false);

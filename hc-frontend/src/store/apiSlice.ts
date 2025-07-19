@@ -42,27 +42,45 @@ export const apiSlice = createApi({
       string, // Response type
       { phoneNo: string; name: string; emailID: string; otpCode: string } // Request body type
     >({
-      query: (data) => ({
-        url: "/user/register",
-        method: "POST",
-        body: data,
-        responseHandler: (response) => response.text(),
-      }),
+      query: (data) => {
+        const phoneNoWithoutCountryCode = data.phoneNo
+          .replace(/^\+91/, "")
+          .replace(/\D/g, "");
+        return {
+          url: "/user/register",
+          method: "POST",
+          body: { ...data, phoneNo: phoneNoWithoutCountryCode },
+          responseHandler: (response) => response.text(),
+        };
+      },
     }),
     generateOtp: builder.mutation<
       { otpSent: boolean }, // Response type
       { phoneNo: string } // Request body type
     >({
-      query: ({ phoneNo }) => ({
-        url: `/auth/generate-otp?phoneNo=${phoneNo}`,
-        method: "POST",
-      }),
+      query: ({ phoneNo }) => {
+        const phoneNoWithoutCountryCode = phoneNo
+          .replace(/^\+91/, "")
+          .replace(/\D/g, "");
+        return {
+          url: `/auth/generate-otp?phoneNo=${phoneNoWithoutCountryCode}`,
+          method: "POST",
+        };
+      },
     }),
     checkUser: builder.query<
       { exists: boolean; message: string }, // Response type
       { phoneNo: string } // Query parameter type
     >({
-      query: ({ phoneNo }) => `/user/check-user?phoneNo=${phoneNo}`,
+      query: ({ phoneNo }) => {
+        const phoneNoWithoutCountryCode = phoneNo
+          .replace(/^\+91/, "")
+          .replace(/\D/g, "");
+        return {
+          url: `/user/check-user?phoneNo=${phoneNoWithoutCountryCode}`,
+          method: "GET",
+        };
+      },
     }),
     logout: builder.mutation<
       { message: string }, // Response type
@@ -108,6 +126,23 @@ export const apiSlice = createApi({
         },
       }),
     }),
+    propertyUpdate: builder.mutation<
+      { message: string; propertyID: number },
+      Partial<RentForm | ResaleForm | FlatmateForm> & {
+        propertyID: string;
+        propertyCategory: string;
+      }
+    >({
+      query: (data) => ({
+        url: `property/user/update`,
+        method: "PUT",
+        body: data,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+
     getPropertyById: builder.query<unknown, string>({
       query: (id) => `/property/user/${id}`,
     }),
@@ -173,6 +208,7 @@ export const {
   useLogoutMutation,
   usePresignedUrlsMutation,
   usePropertyAddMutation,
+  usePropertyUpdateMutation,
   useGetPropertyByIdQuery,
   useLazyGetPropertyByIdQuery,
   useGetPropertiesByLocationQuery,

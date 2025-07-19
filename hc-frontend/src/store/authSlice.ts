@@ -28,7 +28,7 @@ const authSlice = createSlice({
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
       state.name = "Suman";
-      state.phoneNo = "919999988888";
+      state.phoneNo = "";
       // Set cookie with 7 days expiry
       Cookies.set("token", action.payload, { expires: 7 });
     },
@@ -41,7 +41,7 @@ const authSlice = createSlice({
       if (token) {
         state.token = token;
         state.name = "Suman";
-        state.phoneNo = "919999988888";
+        state.phoneNo = "";
       }
     },
     setAuthStep: (state, action: PayloadAction<AuthStep>) => {

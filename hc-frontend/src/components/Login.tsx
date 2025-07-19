@@ -126,10 +126,8 @@ const Login = () => {
     }
   };
 
-  const handlePhoneChange = (data: string) => {
-    // Remove '+' sign and update the phone number
-    const sanitizedPhone = data.replace(/^\+/, "");
-    dispatch(setPhoneNo(sanitizedPhone));
+  const handlePhoneChange = (phoneNo: string) => {
+    dispatch(setPhoneNo(phoneNo));
   };
 
   useEffect(() => {
@@ -272,9 +270,9 @@ const Login = () => {
               {/* Continue button */}
               <button
                 type="submit"
-                className={`w-full text-white py-3 px-4 rounded-lg ${!phoneNo.substring(2) ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
+                className={`w-full text-white py-3 px-4 rounded-lg ${!phoneNo || phoneNo.length < 10 ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
                 onClick={handleCheckUser}
-                disabled={!phoneNo.substring(2)}
+                disabled={!phoneNo || phoneNo.length < 10}
               >
                 Continue
               </button>
@@ -345,10 +343,13 @@ const Login = () => {
               {/* Continue button */}
               <button
                 type="submit"
-                className={`w-full text-white py-3 px-4 rounded-lg ${!phoneNo.substring(2) || !emailIDRegex.test(emailID) || !name ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
+                className={`w-full text-white py-3 px-4 rounded-lg ${!phoneNo || phoneNo.length < 10 || !emailIDRegex.test(emailID) || !name ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
                 onClick={handleCreateUser}
                 disabled={
-                  !phoneNo.substring(2) || !emailIDRegex.test(emailID) || !name
+                  !phoneNo ||
+                  phoneNo.length < 10 ||
+                  !emailIDRegex.test(emailID) ||
+                  !name
                 }
               >
                 Continue
