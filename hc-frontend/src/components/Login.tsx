@@ -270,9 +270,9 @@ const Login = () => {
               {/* Continue button */}
               <button
                 type="submit"
-                className={`w-full text-white py-3 px-4 rounded-lg ${!phoneNo || phoneNo.length < 10 ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
+                className={`w-full text-white py-3 px-4 rounded-lg ${!phoneNo.substring(2) ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
                 onClick={handleCheckUser}
-                disabled={!phoneNo || phoneNo.length < 10}
+                disabled={!phoneNo.substring(2)}
               >
                 Continue
               </button>
@@ -343,13 +343,10 @@ const Login = () => {
               {/* Continue button */}
               <button
                 type="submit"
-                className={`w-full text-white py-3 px-4 rounded-lg ${!phoneNo || phoneNo.length < 10 || !emailIDRegex.test(emailID) || !name ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
+                className={`w-full text-white py-3 px-4 rounded-lg ${!phoneNo.substring(2) || !emailIDRegex.test(emailID) || !name ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
                 onClick={handleCreateUser}
                 disabled={
-                  !phoneNo ||
-                  phoneNo.length < 10 ||
-                  !emailIDRegex.test(emailID) ||
-                  !name
+                  !phoneNo.substring(2) || !emailIDRegex.test(emailID) || !name
                 }
               >
                 Continue

@@ -31,12 +31,17 @@ export const apiSlice = createApi({
       string, // Response type
       { phoneNo: string; otpCode: string } // Request body type
     >({
-      query: (data) => ({
-        url: "/user/login",
-        method: "POST",
-        body: data,
-        responseHandler: (response) => response.text(), // Convert response to text
-      }),
+      query: (data) => {
+        const phoneNoWithoutCountryCode = data.phoneNo
+          .replace(/^\+91/, "")
+          .replace(/\D/g, "");
+        return {
+          url: "/user/login",
+          method: "POST",
+          body: { ...data, phoneNo: phoneNoWithoutCountryCode },
+          responseHandler: (response) => response.text(), // Convert response to text
+        };
+      },
     }),
     register: builder.mutation<
       string, // Response type
