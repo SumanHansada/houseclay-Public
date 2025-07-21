@@ -8,26 +8,22 @@ export default function WhatAreConnectsPage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative xl:h-[600px] lg:h-[500px] h-[500px] w-full max-md:hidden">
+      <section className="relative min-h-[200px] md:h-[500px] xl:h-[600px] w-full overflow-hidden">
         <HeroSection />
       </section>
-      {/* Mobile Hero Section */}
-      <section
-        className={"min-h-[500px] w-full overflow-hidden md:hidden"}
-      ></section>
 
       {/* What are connects? Section */}
-      <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
+      <section className="min-h-[200px] w-full overflow-hidden">
         <WhatAreConnects />
       </section>
 
       {/* How can you use connects? Section */}
-      <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
+      <section className="min-h-[400px] w-full overflow-hidden">
         <HowToUseConnectsClient />
       </section>
 
       {/* Why choose connects? Section */}
-      <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
+      <section className="min-h-[400px] w-full overflow-hidden">
         <WhyChooseConnectsClient />
       </section>
       <Footer />

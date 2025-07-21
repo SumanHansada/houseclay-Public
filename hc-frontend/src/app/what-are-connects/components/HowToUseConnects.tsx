@@ -1,71 +1,78 @@
+import React from "react";
 import Image from "next/image";
+import { CONNECT_CARDS } from "@/common/constants";
+import Carousel2D from "@/components/Carousel2D";
+
+interface ConnectCardProps {
+  iconSrc: string;
+  iconAlt: string;
+  title: string;
+  description: string;
+  iconWidth?: number;
+  iconHeight?: number;
+}
+
+export const ConnectCard: React.FC<ConnectCardProps> = ({
+  iconSrc,
+  iconAlt,
+  title,
+  description,
+  iconWidth = 150,
+  iconHeight = 150,
+}) => (
+  <div className="flex flex-1 flex-col bg-white rounded-3xl border border-gray-200 shadow-lg xl:px-10 lg:px-6 px-3 py-6 justify-evenly items-center min-h-[380px] md:min-h-[460px]">
+    <Image src={iconSrc} alt={iconAlt} width={iconWidth} height={iconHeight} />
+    <div className="flex flex-col gap-2 text-center items-center">
+      <h1 className="font-semibold lg:text-2xl sm:text-xl lg:w-4/5 w-11/12">
+        {title}
+      </h1>
+      <p className="text-gray-800 text-balance text-lg">{description}</p>
+    </div>
+  </div>
+);
 
 const HowToUseConnects = () => {
   return (
-    <div className="flex flex-col items-center justify-between gap-10 xl:px-28 lg:px-14 md:px-14 px-8 py-20 bg-gray-100">
-      <div className="flex flex-col items-center justify-center gap-4">
-        <h1 className="text-4xl font-bold text-center">
+    <div className="flex flex-col items-center justify-between md:gap-10 gap-4 xl:px-28 lg:px-14 md:px-14 md:py-20 p-8 bg-gray-100">
+      <div className="flex flex-col items-center justify-center md:gap-4 gap-2">
+        <h1 className="lg:text-4xl sm:text-3xl text-2xl md:font-bold font-medium text-center">
           How Can You Use Connects?
         </h1>
-        <p className="text-center text-gray-800 text-xl font-light w-3/4">
+        <p className="text-center md:text-gray-800 text-gray-600 md:font-light sm:text-xl text-lg lg:w-3/4 md:w-11/12">
           Listing your property has never been easier or more effective. Here's
           why thousands of property owners trust us:
         </p>
       </div>
-      <div className="flex flex-wrap xl:gap-28 lg:gap-6 gap-6 justify-between px-16">
-        <div className="flex flex-1 flex-col bg-white rounded-3xl border border-gray-200 shadow-lg xl:px-10 lg:px-6 px-3 py-6 justify-between items-center">
-          <Image
-            src="/icons/static-pages/connect-with-owners.svg"
-            alt="Find & Connect with Owners"
-            width={150}
-            height={150}
+      <div className="md:flex flex-wrap xl:gap-28 lg:gap-6 gap-6 justify-between xl:px-16 lg:px-8 hidden">
+        {CONNECT_CARDS.map((card) => (
+          <ConnectCard
+            key={card.id}
+            iconSrc={card.iconSrc}
+            iconAlt={card.iconAlt}
+            title={card.title}
+            description={card.description}
           />
-          <div className="flex flex-col gap-2 mt-6 text-center items-center">
-            <h1 className="font-semibold text-2xl w-2/3">
-              Find & Connect with Owners
-            </h1>
-            <p className="text-gray-800 text-balance text-lg">
-              Unlock verified owner details and contact them directly—no
-              middlemen, no extra charges.
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-1 flex-col bg-white rounded-3xl border border-gray-200 shadow-lg xl:px-10 lg:px-6 px-3 py-6 justify-between items-center">
-          <Image
-            src="/icons/static-pages/simplify-rental-processes.svg"
-            alt="Simplify Rental Processes"
-            width={160}
-            height={150}
-          />
-          <div className="flex flex-col gap-2 mt-6 text-center items-center">
-            <h1 className="font-semibold text-2xl w-2/3">
-              Simplify Rental Processes
-            </h1>
-            <p className="text-gray-800 text-balance text-lg">
-              Use Connects for rent agreements, tenant verification, and
-              seamless property transactions.
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-1 flex-col bg-white rounded-3xl border border-gray-200 shadow-lg xl:px-10 lg:px-6 px-3 py-6 justify-between items-center">
-          <Image
-            src="/icons/static-pages/access-property-services.svg"
-            alt="Exclusive Listings"
-            width={150}
-            height={150}
-          />
-          <div className="flex flex-col gap-2 mt-6 text-center items-center">
-            <h1 className="font-semibold text-2xl w-2/3">
-              Access Property Services
-            </h1>
-            <p className="text-gray-800 text-balance text-lg">
-              Redeem Connects for maintenance, cleaning, painting, and expert
-              property management.
-            </p>
-          </div>
-        </div>
+        ))}
       </div>
-      <button className="bg-red-500 text-white text-xl xl:px-6  lg:px-5 lg:py-3 md:px-3 px-3 py-2 rounded-xl size-fit">
+      <Carousel2D
+        slideWidth={300}
+        gap={4}
+        showDots={true}
+        containerClassName="md:hidden"
+        className="md:hidden"
+        showArrows={true}
+      >
+        {CONNECT_CARDS.map((card) => (
+          <ConnectCard
+            key={card.id}
+            iconSrc={card.iconSrc}
+            iconAlt={card.iconAlt}
+            title={card.title}
+            description={card.description}
+          />
+        ))}
+      </Carousel2D>
+      <button className="bg-red-500 text-white text-xl xl:px-6  lg:px-5 lg:py-3 md:px-3 px-3 py-2 rounded-xl size-fit hidden md:block">
         Buy Connects Now
       </button>
     </div>
