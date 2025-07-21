@@ -1,5 +1,6 @@
-import React from "react";
 import Image from "next/image";
+import React from "react";
+
 import { CONNECT_CARDS } from "@/common/constants";
 import Carousel2D from "@/components/Carousel2D";
 
@@ -39,8 +40,8 @@ const HowToUseConnects = () => {
           How Can You Use Connects?
         </h1>
         <p className="text-center md:text-gray-800 text-gray-600 md:font-light sm:text-xl text-lg lg:w-3/4 md:w-11/12">
-          Listing your property has never been easier or more effective. Here's
-          why thousands of property owners trust us:
+          Listing your property has never been easier or more effective.
+          Here&apos;s why thousands of property owners trust us:
         </p>
       </div>
       <div className="md:flex flex-wrap xl:gap-28 lg:gap-6 gap-6 justify-between xl:px-16 lg:px-8 hidden">

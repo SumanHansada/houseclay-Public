@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { default as RealOwnersSvg } from "public/icons/static-pages/real-owners.svg";
 import { default as InstantAccessSvg } from "public/icons/static-pages/instant-access.svg";
 import { default as NoForcedPlansSvg } from "public/icons/static-pages/no-forced-plans.svg";
+import { default as RealOwnersSvg } from "public/icons/static-pages/real-owners.svg";
 
 const RealOwners = RealOwnersSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const InstantAccess = InstantAccessSvg as React.FC<

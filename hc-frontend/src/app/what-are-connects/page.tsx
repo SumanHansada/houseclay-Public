@@ -1,8 +1,9 @@
 import Footer from "@/components/Footer";
-import WhyChooseConnectsClient from "./components/WhyChooseConnectsClient";
+
+import HeroSection from "./components/HeroSection";
 import HowToUseConnectsClient from "./components/HowToUseConnectsClient";
 import WhatAreConnects from "./components/WhatAreConnects";
-import HeroSection from "./components/HeroSection";
+import WhyChooseConnectsClient from "./components/WhyChooseConnectsClient";
 
 export default function WhatAreConnectsPage() {
   return (

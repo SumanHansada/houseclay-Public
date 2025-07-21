@@ -21,9 +21,10 @@ const WhatAreConnects = () => {
           <div className="md:text-gray-800 text-gray-600 md:font-light sm:text-xl text-lg lg:space-y-6 sm:space-y-2 md:leading-relaxed leading-7 md:p-2">
             <p>
               Connects are a smarter way to access property services without the
-              commitment of a subscription. Whether you're looking to contact a
-              verified owner, create a rent agreement, or avail additional
-              property-related services, Connects give you complete flexibility.
+              commitment of a subscription. Whether you&apos;re looking to
+              contact a verified owner, create a rent agreement, or avail
+              additional property-related services, Connects give you complete
+              flexibility.
             </p>
             <p>
               Use them only when needed, ensuring a cost-effective and
