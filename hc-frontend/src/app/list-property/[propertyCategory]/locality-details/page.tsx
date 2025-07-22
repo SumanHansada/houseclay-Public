@@ -1,14 +1,7 @@
-import { PropertyCategory } from "@/common/enums";
-
 import LocalityDetailsClient from "./LocalityDetailsClient";
 
-export async function generateStaticParams() {
-  return [
-    { propertyCategory: PropertyCategory.RENT.toLowerCase() },
-    { propertyCategory: PropertyCategory.RESALE.toLowerCase() },
-    { propertyCategory: PropertyCategory.FLATMATE.toLowerCase() },
-  ];
-}
+// Force dynamic rendering to avoid server component issues
+export const dynamic = "force-dynamic";
 
 export default function LocalityDetailsPage() {
   return <LocalityDetailsClient />;

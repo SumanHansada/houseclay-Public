@@ -14,6 +14,10 @@ import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 import { FormValues } from "@/interfaces/FormValues";
 import { setFormValidity, setLocalityDetails } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
+import {
+  getLocalityDetailsErrors,
+  getLocalityDetailsTouched,
+} from "@/utils/formHelpers";
 
 const localitySchema = Yup.object().shape({
   localityDetails: Yup.object().shape({
@@ -37,6 +41,10 @@ const LocalityDetailsClient: React.FC = () => {
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
 
+  // Get locality details errors and touched states
+  const localityDetailsErrors = getLocalityDetailsErrors(errors);
+  const localityDetailsTouched = getLocalityDetailsTouched(touched);
+
   const onLocationSelect = (location: {
     latitude: number;
     longitude: number;
@@ -44,7 +52,7 @@ const LocalityDetailsClient: React.FC = () => {
     address?: string;
     city?: string;
   }) => {
-    if (location.city) {
+    if (location.city && values.localityDetails?.city) {
       const selectedCity = location.city;
       const isCityAllowed = values.localityDetails.city === selectedCity;
       if (!isCityAllowed) {
@@ -76,26 +84,29 @@ const LocalityDetailsClient: React.FC = () => {
 
   // Set default city to Bengaluru when component mounts
   useEffect(() => {
-    if (!values.localityDetails.city) {
+    if (!values.localityDetails?.city) {
       setFieldValue("localityDetails.city", "Bengaluru");
     }
-  }, [setFieldValue, values.localityDetails.city]);
+  }, [setFieldValue, values.localityDetails?.city]);
 
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {
-        await localitySchema.validate(values, { abortEarly: false });
-        // Clear any previous errors
-        setErrors({});
-        // Set form data in the store
-        dispatch(
-          setLocalityDetails({
-            localityDetails: values.localityDetails,
-          }),
-        );
-        // Form is valid
-        if (!isFormValid) {
-          dispatch(setFormValidity({ isValid: true }));
+        // Only validate if localityDetails exists
+        if (values.localityDetails) {
+          await localitySchema.validate(values, { abortEarly: false });
+          // Clear any previous errors
+          setErrors({});
+          // Set form data in the store
+          dispatch(
+            setLocalityDetails({
+              localityDetails: values.localityDetails,
+            }),
+          );
+          // Form is valid
+          if (!isFormValid) {
+            dispatch(setFormValidity({ isValid: true }));
+          }
         }
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -125,6 +136,9 @@ const LocalityDetailsClient: React.FC = () => {
     values,
   ]);
 
+  // Extract city value for dependency array
+  const selectedCity = values.localityDetails?.city || "";
+
   useEffect(() => {
     const cityLatLngMapping: Record<string, { lat: number; lng: number }> = {
       Mumbai: { lat: 19.076, lng: 72.8777 },
@@ -140,11 +154,15 @@ const LocalityDetailsClient: React.FC = () => {
     };
 
     // Set default latitude and longitude based on selected city
-    const selectedCity = values.localityDetails.city;
-    const defaultLatLng = cityLatLngMapping[selectedCity] || { lat: 0, lng: 0 };
-    setFieldValue("localityDetails.latitude", defaultLatLng.lat);
-    setFieldValue("localityDetails.longitude", defaultLatLng.lng);
-  }, [values.localityDetails.city, setFieldValue]);
+    if (selectedCity) {
+      const defaultLatLng = cityLatLngMapping[selectedCity] || {
+        lat: 0,
+        lng: 0,
+      };
+      setFieldValue("localityDetails.latitude", defaultLatLng.lat);
+      setFieldValue("localityDetails.longitude", defaultLatLng.lng);
+    }
+  }, [selectedCity, setFieldValue]);
 
   return (
     <>
@@ -173,7 +191,7 @@ const LocalityDetailsClient: React.FC = () => {
               disabled={true}
               placeholder="Select city"
               aria-describedby={
-                errors?.localityDetails?.city && touched?.localityDetails?.city
+                localityDetailsErrors?.city && localityDetailsTouched?.city
                   ? "localityDetails.city-error"
                   : undefined
               }
@@ -218,12 +236,12 @@ const LocalityDetailsClient: React.FC = () => {
         <GoogleMaps
           mapId="houseclay-googlemaps"
           center={{
-            lat: values.localityDetails.latitude || 12.9716,
-            lng: values.localityDetails.longitude || 77.5946,
+            lat: values.localityDetails?.latitude || 12.9716,
+            lng: values.localityDetails?.longitude || 77.5946,
           }}
           zoom={12}
           className="h-full w-full border rounded-xl shadow-lg"
-          key={`${values.localityDetails.latitude}-${values.localityDetails.longitude}`}
+          key={`${values.localityDetails?.latitude || 0}-${values.localityDetails?.longitude || 0}`}
         />
       </div>
     </>

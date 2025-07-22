@@ -66,3 +66,13 @@ export function toBase64(str: string) {
 export const formatBhkType = (bhkType: string) => {
   return bhkType.replace(/BHK/g, "");
 };
+
+/**
+ * Sanitizes a phone number by removing country code (+91) and non-digit characters
+ * @param phoneNumber - The phone number to sanitize
+ * @returns The sanitized phone number (digits only)
+ */
+export const sanitizePhoneNumber = (phoneNumber: string): string => {
+  if (!phoneNumber) return phoneNumber;
+  return phoneNumber.replace(/^\+91/, "").replace(/\D/g, "");
+};

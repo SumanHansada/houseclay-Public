@@ -15,10 +15,9 @@ import { extractS3KeyFromUrl } from "@/common/utils";
 import { ListPropertySuccessDialog } from "@/dialogs/list-property-success-dialog";
 import { UploadDialog } from "@/dialogs/upload-dialog";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
-import { FlatmateForm } from "@/interfaces/FlatmateForm";
+import { transformFormValuesToPropertyForm } from "@/interfaces/FormTransformers";
+import { FormValues } from "@/interfaces/FormValues";
 import { PropertyImage } from "@/interfaces/PropertyImage";
-import { RentForm } from "@/interfaces/RentForm";
-import { ResaleForm } from "@/interfaces/ResaleForm";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -123,7 +122,24 @@ export default function ListPropertyTypeLayout({
   const formState = useSelector((state: RootState) => state.listProperty.form);
 
   const isFormValid = formState?.isValid;
-  const initialValues = formState?.data || {};
+
+  // Ensure proper form initialization with all required fields
+  const getInitialValues = (): FormValues => {
+    const data = formState?.data || {};
+
+    // Ensure all required fields are present
+    return {
+      localityDetails: data.localityDetails,
+      images: data.images || [],
+      propertyDetails: data.propertyDetails,
+      rentalDetails: data.rentalDetails,
+      resaleDetails: data.resaleDetails,
+      flatmateDetails: data.flatmateDetails,
+      additionalInfo: data.additionalInfo,
+    };
+  };
+
+  const initialValues = getInitialValues();
 
   useEffect(() => {
     if (isMobile) {
@@ -282,45 +298,44 @@ export default function ListPropertyTypeLayout({
 
   const handlePostProperty = async () => {
     try {
-      const propertyDetails = formState.data?.propertyDetails;
-      const localityDetails = formState.data?.localityDetails;
-      const additionalInfo = formState.data?.additionalInfo;
-      const rentalDetails = (formState.data as RentForm)?.rentalDetails;
-      const resaleDetails = (formState.data as ResaleForm)?.resaleDetails;
-      const flatmateDetails = (formState.data as FlatmateForm).flatmateDetails;
+      // Transform FormValues to PropertyForm using the type-safe transformer
+      const formValues = formState.data as FormValues;
+
+      if (!formValues) {
+        throw new Error("Form data is not available");
+      }
+
+      // Transform to the appropriate PropertyForm type
+      const propertyForm = transformFormValuesToPropertyForm(
+        formValues,
+        propertyID,
+        propertyCategory,
+      );
+
+      // Extract S3 image keys
       const imagesS3Keys =
         Object.values(propertyImagesS3Url).length > 0
           ? Object.values(propertyImagesS3Url).map(
               (url) => extractS3KeyFromUrl(url) || "",
             )
           : [];
+
+      // Add cover image information if needed
       const coverImage = propertyImages.filter((image) => image.isCover);
       const coverImageName =
         coverImage.length > 0 ? coverImage[0].file.name : "";
       const coverImageS3Key = imagesS3Keys.find((key) =>
         key.endsWith(coverImageName),
       );
-      let propertyData = {
-        propertyID,
-        propertyCategory,
-        images: imagesS3Keys,
+
+      // Create the final API payload
+      const apiPayload = {
+        ...propertyForm,
         coverImage: coverImageS3Key,
-        ...propertyDetails,
-        ...localityDetails,
-        ...additionalInfo,
+        images: imagesS3Keys,
       };
 
-      if (propertyCategory === PropertyCategory.RESALE) {
-        propertyData = { ...propertyData, ...resaleDetails };
-      } else if (propertyCategory === PropertyCategory.RENT) {
-        propertyData = { ...propertyData, ...rentalDetails };
-      } else if (propertyCategory === PropertyCategory.FLATMATE) {
-        propertyData = { ...propertyData, ...flatmateDetails };
-      }
-
-      await addProperty({
-        ...propertyData,
-      });
+      await addProperty(apiPayload);
 
       // Don't open success dialog here anymore - it will be opened automatically after upload completes
     } catch (error) {

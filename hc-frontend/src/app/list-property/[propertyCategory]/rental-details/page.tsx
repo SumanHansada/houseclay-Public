@@ -1,15 +1,8 @@
-import { PropertyCategory } from "@/common/enums";
+import RentalDetailsWrapper from "./RentalDetailsWrapper";
 
-import RentalDetailsClient from "./RentalDetailsClient";
-
-export async function generateStaticParams() {
-  return [
-    { propertyCategory: PropertyCategory.RENT.toLowerCase() },
-    { propertyCategory: PropertyCategory.RESALE.toLowerCase() },
-    { propertyCategory: PropertyCategory.FLATMATE.toLowerCase() },
-  ];
-}
+// Force dynamic rendering to avoid server component issues
+export const dynamic = "force-dynamic";
 
 export default function RentalDetailsPage() {
-  return <RentalDetailsClient />;
+  return <RentalDetailsWrapper />;
 }

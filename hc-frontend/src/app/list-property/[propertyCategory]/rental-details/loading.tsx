@@ -1,15 +1,44 @@
+"use client";
+
+import { useParams } from "next/navigation";
 import React from "react";
 import Skeleton from "react-loading-skeleton";
+import { useSelector } from "react-redux";
+
+import { PropertyCategory } from "@/common/enums";
+import { RootState } from "@/store/store";
 
 interface RentalDetailsLoadingProps {
-  formType?: "rentForm" | "flatmatesForm";
   className?: string;
 }
 
 export default function RentalDetailsLoading({
-  formType = "rentForm",
   className = "",
 }: RentalDetailsLoadingProps) {
+  const params = useParams();
+  const propertyCategory = useSelector(
+    (state: RootState) => state.listProperty.propertyCategory,
+  );
+
+  // Determine which property category to show based on URL or Redux state
+  const getCurrentPropertyCategory = (): PropertyCategory => {
+    // First try to get from URL params
+    if (params.propertyCategory) {
+      const categoryFromUrl = params.propertyCategory as string;
+      if (
+        Object.values(PropertyCategory).includes(
+          categoryFromUrl as PropertyCategory,
+        )
+      ) {
+        return categoryFromUrl as PropertyCategory;
+      }
+    }
+
+    // Fallback to Redux state
+    return propertyCategory;
+  };
+
+  const currentPropertyCategory = getCurrentPropertyCategory();
   // Skeleton for currency input field with label and icon
   const CurrencyFieldSkeleton = () => (
     <div className="flex flex-col gap-2 mb-2">
@@ -91,7 +120,7 @@ export default function RentalDetailsLoading({
             <CurrencyFieldSkeleton />
           </div>
           <div className="col-span-1">
-            {formType === "rentForm" ? (
+            {currentPropertyCategory === PropertyCategory.RENT ? (
               <RadioGroupSkeleton />
             ) : (
               <FormFieldSkeleton />
@@ -120,14 +149,14 @@ export default function RentalDetailsLoading({
         </div>
 
         {/* Preferred tenant section - Rent Form */}
-        {formType === "rentForm" && (
+        {currentPropertyCategory === PropertyCategory.RENT && (
           <div className="mb-6">
             <IconRadioGroupSkeleton options={4} />
           </div>
         )}
 
         {/* Tenant type and food preferences - Flatmates Form */}
-        {formType === "flatmatesForm" && (
+        {currentPropertyCategory === PropertyCategory.FLATMATE && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <IconRadioGroupSkeleton options={2} />
             <IconRadioGroupSkeleton options={2} />
@@ -145,7 +174,7 @@ export default function RentalDetailsLoading({
         </div>
 
         {/* Parking and Non-veg section - Rent Form */}
-        {formType === "rentForm" && (
+        {currentPropertyCategory === PropertyCategory.RENT && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="col-span-1">
               <FormFieldSkeleton />
@@ -157,7 +186,7 @@ export default function RentalDetailsLoading({
         )}
 
         {/* Bathroom and preferences section - Flatmates Form */}
-        {formType === "flatmatesForm" && (
+        {currentPropertyCategory === PropertyCategory.FLATMATE && (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div className="col-span-1">

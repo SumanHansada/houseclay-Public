@@ -233,7 +233,7 @@ export function PropertyDetailsClient({
         </button>
         <h1 className="text-base text-gray-900 flex-1 items-center gap-2 truncate w-[calc(100%-2rem)]">
           {property?.bhkType} in {property?.locationOrSocietyName} for{" "}
-          {property?.propertyCategory} in {property?.city}
+          {pascalCase(property?.propertyCategory)} in {property?.city}
         </h1>
       </section>
       {/* Desktop Section */}
@@ -244,7 +244,7 @@ export function PropertyDetailsClient({
               <div>
                 <h1 className="text-3xl text-gray-900 flex items-center gap-2">
                   {property?.bhkType} in {property?.locationOrSocietyName} for{" "}
-                  {property?.propertyCategory} in {property?.city}
+                  {pascalCase(property?.propertyCategory)} in {property?.city}
                   <span className="bg-green-500 rounded-lg text-white px-2 py-1 text-sm">
                     Active
                   </span>

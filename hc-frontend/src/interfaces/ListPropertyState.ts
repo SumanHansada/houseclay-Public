@@ -1,9 +1,7 @@
 import { PropertyCategory, PropertyListingType } from "@/common/enums";
 
-import { FlatmateForm } from "./FlatmateForm";
+import { FormValues } from "./FormValues";
 import { PropertyImage } from "./PropertyImage";
-import { RentForm } from "./RentForm";
-import { ResaleForm } from "./ResaleForm";
 
 export interface ListPropertyState {
   propertyID: string;
@@ -13,6 +11,6 @@ export interface ListPropertyState {
   propertyImages: PropertyImage[];
   form: {
     isValid: boolean;
-    data?: Partial<RentForm | ResaleForm | FlatmateForm>;
+    data?: Partial<FormValues>;
   };
 }

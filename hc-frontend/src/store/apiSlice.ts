@@ -2,9 +2,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
 
 import { PropertyCategory } from "@/common/enums";
-import { FlatmateForm } from "@/interfaces/FlatmateForm";
-import { RentForm } from "@/interfaces/RentForm";
-import { ResaleForm } from "@/interfaces/ResaleForm";
+import { sanitizePhoneNumber } from "@/common/utils";
+import { PropertyForm } from "@/interfaces/PropertyForm";
 
 import { RootState } from "./store";
 
@@ -32,9 +31,7 @@ export const apiSlice = createApi({
       { phoneNo: string; otpCode: string } // Request body type
     >({
       query: (data) => {
-        const phoneNoWithoutCountryCode = data.phoneNo
-          .replace(/^\+91/, "")
-          .replace(/\D/g, "");
+        const phoneNoWithoutCountryCode = sanitizePhoneNumber(data.phoneNo);
         return {
           url: "/user/login",
           method: "POST",
@@ -48,9 +45,7 @@ export const apiSlice = createApi({
       { phoneNo: string; name: string; emailID: string; otpCode: string } // Request body type
     >({
       query: (data) => {
-        const phoneNoWithoutCountryCode = data.phoneNo
-          .replace(/^\+91/, "")
-          .replace(/\D/g, "");
+        const phoneNoWithoutCountryCode = sanitizePhoneNumber(data.phoneNo);
         return {
           url: "/user/register",
           method: "POST",
@@ -64,9 +59,7 @@ export const apiSlice = createApi({
       { phoneNo: string } // Request body type
     >({
       query: ({ phoneNo }) => {
-        const phoneNoWithoutCountryCode = phoneNo
-          .replace(/^\+91/, "")
-          .replace(/\D/g, "");
+        const phoneNoWithoutCountryCode = sanitizePhoneNumber(phoneNo);
         return {
           url: `/auth/generate-otp?phoneNo=${phoneNoWithoutCountryCode}`,
           method: "POST",
@@ -78,9 +71,7 @@ export const apiSlice = createApi({
       { phoneNo: string } // Query parameter type
     >({
       query: ({ phoneNo }) => {
-        const phoneNoWithoutCountryCode = phoneNo
-          .replace(/^\+91/, "")
-          .replace(/\D/g, "");
+        const phoneNoWithoutCountryCode = sanitizePhoneNumber(phoneNo);
         return {
           url: `/user/check-user?phoneNo=${phoneNoWithoutCountryCode}`,
           method: "GET",
@@ -117,10 +108,7 @@ export const apiSlice = createApi({
         message: string;
         propertyID: number;
       },
-      Partial<RentForm | ResaleForm | FlatmateForm> & {
-        propertyID: string;
-        propertyCategory: string;
-      }
+      PropertyForm
     >({
       query: (data) => ({
         url: "property/user/add",
@@ -133,10 +121,7 @@ export const apiSlice = createApi({
     }),
     propertyUpdate: builder.mutation<
       { message: string; propertyID: number },
-      Partial<RentForm | ResaleForm | FlatmateForm> & {
-        propertyID: string;
-        propertyCategory: string;
-      }
+      Partial<PropertyForm> & { propertyID: string }
     >({
       query: (data) => ({
         url: `property/user/update`,
