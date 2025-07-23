@@ -334,6 +334,9 @@ export default function PropertySearchPage() {
                       // eslint-disable-next-line @typescript-eslint/no-explicit-any
                       (property as any).badgeType as BadgeType | undefined
                     }
+                    onClick={() => {
+                      router.push(`/property-details/${property.propertyID}`);
+                    }}
                   />
                 ))}
               </div>

@@ -133,11 +133,17 @@ export const apiSlice = createApi({
       }),
     }),
 
-    getPropertyById: builder.query<unknown, string>({
+    getMyPropertyById: builder.query<unknown, string>({
       query: (id) => `/property/user/${id}`,
     }),
-    getPropertyByIdNoAuth: builder.query<unknown, string>({
-      query: (id) => `/property/${id}`,
+
+    getPublicPropertyById: builder.query<unknown, string>({
+      query: (id) => ({
+        url: `/property/${id}`,
+        headers: {
+          // Explicitly exclude Authorization header for public endpoint
+        },
+      }),
     }),
 
     getPropertiesByLocation: builder.query<
@@ -199,11 +205,11 @@ export const {
   usePresignedUrlsMutation,
   usePropertyAddMutation,
   usePropertyUpdateMutation,
-  useGetPropertyByIdQuery,
-  useLazyGetPropertyByIdQuery,
+  useGetMyPropertyByIdQuery,
+  useLazyGetMyPropertyByIdQuery,
   useGetPropertiesByLocationQuery,
   useLazyGetPropertiesByLocationQuery,
   useGenerateLeadMutation,
-  useGetPropertyByIdNoAuthQuery,
-  useLazyGetPropertyByIdNoAuthQuery,
+  useGetPublicPropertyByIdQuery,
+  useLazyGetPublicPropertyByIdQuery,
 } = apiSlice;

@@ -1,7 +1,7 @@
 import { PropertyCategory } from "@/common/enums";
 import { ServerAPIService } from "@/services/serverAPIService";
 
-import { PropertyDetailsClient } from "./PropertyDetailsClient";
+import { MyPropertyDetailsClient } from "./MyPropertyDetailsClient";
 
 export async function generateStaticParams() {
   return [
@@ -12,7 +12,7 @@ export async function generateStaticParams() {
 }
 
 // Server Component
-async function PropertyDetails({
+async function MyPropertyDetails({
   params,
 }: {
   params: Promise<{ propertyCategory: string; propertyID: string }>;
@@ -23,7 +23,7 @@ async function PropertyDetails({
   try {
     const propertyData = await ServerAPIService.getPropertyByID(propertyID);
     return (
-      <PropertyDetailsClient
+      <MyPropertyDetailsClient
         propertyCategory={propertyCategory}
         propertyID={propertyID}
         initialData={propertyData}
@@ -34,4 +34,4 @@ async function PropertyDetails({
   }
 }
 
-export default PropertyDetails;
+export default MyPropertyDetails;

@@ -76,7 +76,7 @@ import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useGenerateLeadMutation,
-  useGetPropertyByIdQuery,
+  useGetMyPropertyByIdQuery,
 } from "@/store/apiSlice";
 import { setHideHeader } from "@/store/appSlice";
 import { setHideFooter } from "@/store/appSlice";
@@ -85,7 +85,7 @@ import { setHideStickyNavBar } from "@/store/appSlice";
 import PostedAndRentDetails from "./components/PostedAndRentDetails";
 import UpgradePropertyBanner from "./components/UpgradePropertyBanner";
 
-interface PropertyDetailsClientProps {
+interface MyPropertyDetailsClientProps {
   propertyCategory: string;
   propertyID: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -161,15 +161,15 @@ const AmenitiesMap = {
   "First Aid Kit": { label: "First Aid Kit", icon: <FirstAidKitIcon /> },
 };
 
-export function PropertyDetailsClient({
+export function MyPropertyDetailsClient({
   propertyCategory,
   propertyID,
   initialData,
-}: PropertyDetailsClientProps): React.ReactElement {
+}: MyPropertyDetailsClientProps): React.ReactElement {
   const dispatch = useDispatch();
   const { isMobile } = useDeviceContext();
   const { data: property = initialData, isLoading: _isPropertyLoading } =
-    useGetPropertyByIdQuery(propertyID, {
+    useGetMyPropertyByIdQuery(propertyID, {
       skip: !!initialData, // Skip the query if we have initial data
     });
   const router = useRouter();

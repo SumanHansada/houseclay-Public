@@ -13,6 +13,7 @@ interface PropertiesProps {
   badgeType?: string | null;
   autoplay?: boolean;
   autoplayInterval?: number;
+  onClick?: () => void;
 }
 
 // Properties Component
@@ -21,6 +22,7 @@ const Properties: React.FC<PropertiesProps> = ({
   badgeType,
   autoplay = false,
   autoplayInterval = 3000,
+  onClick,
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -43,7 +45,10 @@ const Properties: React.FC<PropertiesProps> = ({
   }, [autoplay, autoplayInterval, nextImage]);
 
   return (
-    <div className="flex-col gap-8 bg-white border border-gray-100 rounded-lg drop-shadow relative p-3">
+    <div
+      onClick={onClick}
+      className="flex-col gap-8 bg-white border border-gray-100 rounded-lg drop-shadow relative p-3 cursor-pointer"
+    >
       {/* Image Carousel */}
       <div className="relative h-72 max-md:h-60">
         <ImageWithLoader

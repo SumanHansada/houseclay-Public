@@ -37,7 +37,7 @@ export const ListPropertySuccessDialog: React.FC<
   const handlePreviewListing = async () => {
     closeDialog(id);
     router.push(
-      `/property-details/${propertyCategory.toLowerCase()}/${propertyID}`,
+      `/my-property-details/${propertyCategory.toLowerCase()}/${propertyID}`,
     );
   };
 
