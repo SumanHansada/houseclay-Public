@@ -13,26 +13,32 @@ import {
   useGetUserByPhoneNoQuery,
 } from "@/store/apiSlice";
 
+const BLACKLIST_DIALOG_ID = "blacklist-user-dialog";
+const ACTIVATE_DIALOG_ID = "activate-user-dialog";
+
 const ProfilePage: React.FC = () => {
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
   const { data } = useGetUserByPhoneNoQuery({ phoneNo: userPhoneNo });
-  const [blacklistUser] = useBlacklistUserMutation();
-  const [activateUser] = useActivateUserMutation();
-  const { openDialog, isDialogOpen } = useDialog();
-
   const currentUser = data!.user;
+
   const [isBlacklisted, setIsBlacklisted] = useState<boolean>(
     currentUser.blacklisted,
   );
+
+  const [blacklistUser] = useBlacklistUserMutation();
+  const [activateUser] = useActivateUserMutation();
+
+  const { openDialog, isDialogOpen } = useDialog();
+
   const handleBlacklistConfirm = async (comment: string) => {
     await blacklistUser({ phoneNo: userPhoneNo, comment });
+    setIsBlacklisted(true);
   };
 
   const handleActivateConfirm = async (comment: string) => {
     await activateUser({ phoneNo: userPhoneNo, comment });
+    setIsBlacklisted(false);
   };
-  const BLACKLIST_DIALOG_ID = "blacklist-user-dialog";
-  const ACTIVATE_DIALOG_ID = "activate-user-dialog";
 
   const handleBlacklistClicked = () => {
     if (!isBlacklisted) openDialog(BLACKLIST_DIALOG_ID);
@@ -44,10 +50,6 @@ const ProfilePage: React.FC = () => {
 
   const { name, email, phoneNo, createdAt } = currentUser;
 
-  const currentStatus = isBlacklisted
-    ? "The user is blacklisted"
-    : "The user is active";
-
   const profileFields = [
     { label: "Name", value: name },
     { label: "Phone", value: phoneNo },
@@ -56,7 +58,10 @@ const ProfilePage: React.FC = () => {
       label: "Joined On",
       value: new Date(createdAt).toLocaleString(),
     },
-    { label: "Blacklisted Status", value: currentStatus },
+    {
+      label: "Blacklisted Status",
+      value: isBlacklisted ? "The user is blacklisted" : "The user is active",
+    },
   ];
 
   return (
@@ -85,7 +90,10 @@ const ProfilePage: React.FC = () => {
             <div className="flex justify-end mt-2">
               <button
                 type="button"
+                data-testid="activate-user-btn"
+                aria-label="Activate user"
                 onClick={handleActivateClicked}
+                disabled={!isBlacklisted}
                 className={`text-lg px-3 py-2 rounded-xl font-medium ${
                   isBlacklisted
                     ? "bg-green-500 hover:bg-green-600 text-white"
@@ -96,7 +104,10 @@ const ProfilePage: React.FC = () => {
               </button>
               <button
                 type="button"
+                data-testid="blacklist-user-btn"
+                aria-label="Blacklist user"
                 onClick={handleBlacklistClicked}
+                disabled={isBlacklisted}
                 className={`ml-3 text-lg px-3 py-2 rounded-xl font-medium ${
                   isBlacklisted
                     ? "bg-gray-400 text-gray-200 cursor-not-allowed"

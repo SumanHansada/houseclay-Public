@@ -17,7 +17,7 @@
     "dev:zebra": "next dev --turbo",
     "e2e": "playwright test",
     "e2e:headed": "playwright test --headed --debug",
-    "e2e:watch": "pnpm e2e:headed -g \"@auth\""
+    "e2e:watch": "npm e2e:headed -g \"@auth\""
   },
   "dependencies": {
     "@heroui/table": "^2.2.18",
@@ -54,7 +54,6 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.18",
-    "cross-env": "^7.0.3",
     "dotenv": "^17.2.0",
     "eslint": "^9.0.0",
     "eslint-config-next": "15.3.2",
@@ -70,8 +69,7 @@
     "prettier": "^3.5.3",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3",
-    "wait-on": "^8.0.3"
+    "typescript": "^5.8.3"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

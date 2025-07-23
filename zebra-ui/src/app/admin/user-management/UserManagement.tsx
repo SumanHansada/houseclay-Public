@@ -130,6 +130,7 @@ export const UsersManagement = () => {
           Icon={Eye}
           tooltipActive={true}
           tooltip="View Profile"
+          testId={`view-profile-${user.phoneNo}`}
         />
       ),
     },

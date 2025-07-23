@@ -7,6 +7,7 @@ export default defineConfig({
   timeout: 90_000,
   expect: { timeout: 5_000 },
   reporter: [["html", { open: "never" }]],
+  workers: process.env.CI ? 2 : 1,
 
   use: {
     baseURL: process.env.E2E_BASE_URL,

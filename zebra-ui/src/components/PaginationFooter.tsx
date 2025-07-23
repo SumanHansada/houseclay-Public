@@ -64,6 +64,8 @@ export const PaginationFooter: React.FC<PaginationFooterProps> = ({
         {/* Prev */}
         <button
           type="button"
+          aria-label="Previous page"
+          data-testid="pagination-prev"
           disabled={isFirst}
           onClick={prevPage}
           className={`px-4 py-2 border rounded-xl font-medium transition duration-200 ${
@@ -120,6 +122,8 @@ export const PaginationFooter: React.FC<PaginationFooterProps> = ({
         {/* Next */}
         <button
           type="button"
+          aria-label="Next page"
+          data-testid="pagination-next"
           disabled={isLast}
           onClick={nextPage}
           className={`px-4 py-2 border rounded-xl font-medium transition duration-200 ${
