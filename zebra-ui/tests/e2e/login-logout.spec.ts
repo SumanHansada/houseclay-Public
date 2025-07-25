@@ -20,9 +20,8 @@ test("@auth login + logout (cookie flow)", async ({ page, context }) => {
   /* 3 ▸ click “Sign in” while WAITING for the POST /admin/login */
   const [loginApiResponse] = await Promise.all([
     page.waitForResponse(
-      (response) =>
-        response.url().includes("/admin/login") &&
-        response.request().method() === "POST",
+      (res) =>
+        res.url().includes("/admin/login") && res.request().method() === "POST",
       { timeout: 60_000 },
     ),
     page.getByLabel(/sign[- ]in/i).click({ force: true }),

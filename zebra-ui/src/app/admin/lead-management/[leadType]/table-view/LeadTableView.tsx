@@ -49,6 +49,7 @@ export const LeadTableView = () => {
       />
     );
   }
+  console.log(paginatedLeadData);
 
   const {
     content: allLeads,
@@ -93,6 +94,7 @@ export const LeadTableView = () => {
       className: "w-80",
       render: (lead) => (
         <TableActionButtons
+          leadId={lead.leadId}
           viewLeadDetails={() => viewLeadDetails(lead.leadId)}
           viewUserProfile={() => viewUserProfile(lead.phoneNo)}
         />

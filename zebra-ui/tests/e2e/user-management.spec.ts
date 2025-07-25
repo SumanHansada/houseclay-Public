@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 /** Uses the JWT produced by global‑setup.ts (already signed‑in). */
 test.use({ storageState: "tests/fixtures/admin-storage.json" });
 
-test.describe.parallel("User Management – list view", () => {
+test.describe.parallel("User Management - list view", () => {
   test("renders paginated list & seed user", async ({ page }) => {
     /* 1 ▸ open the management page */
     await page.goto("/admin/user-management", {
@@ -12,10 +12,10 @@ test.describe.parallel("User Management – list view", () => {
 
     /* 2 ▸ wait for GET /admin/users?… */
     const userListApiResponse = await page.waitForResponse(
-      (response) =>
-        response.request().method() === "GET" &&
-        response.url().includes("/admin/users") &&
-        response.ok(),
+      (res) =>
+        res.request().method() === "GET" &&
+        res.url().includes("/admin/users") &&
+        res.ok(),
     );
     const { content } = await userListApiResponse.json();
     expect(content.length).toBeGreaterThan(0);

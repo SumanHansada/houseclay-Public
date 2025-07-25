@@ -13,19 +13,19 @@ test.describe.parallel("User details flow", () => {
       waitUntil: "domcontentloaded",
     });
     await page.waitForResponse(
-      (response) =>
-        response.request().method() === "GET" &&
-        response.url().includes("/admin/users") &&
-        response.ok(),
+      (res) =>
+        res.request().method() === "GET" &&
+        res.url().includes("/admin/users") &&
+        res.ok(),
     );
 
     /* ▸ click “View profile” & wait for GET /admin/search-user */
     const [userDetailsApi] = await Promise.all([
       page.waitForResponse(
-        (response) =>
-          response.url().includes("/admin/search-user") &&
-          response.url().includes(`phoneNo=${SEED_PHONE_NUMBER}`) &&
-          response.ok(),
+        (res) =>
+          res.url().includes("/admin/search-user") &&
+          res.url().includes(`phoneNo=${SEED_PHONE_NUMBER}`) &&
+          res.ok(),
       ),
       page
         .getByTestId(`view-profile-${SEED_PHONE_NUMBER}`)
@@ -35,6 +35,9 @@ test.describe.parallel("User details flow", () => {
 
     /* ▸ correct URL */
     await page.waitForURL(`**/admin/user-details/${SEED_PHONE_NUMBER}*`);
+
+    /* wait until the profile tab really rendered */
+    await page.getByTestId("user-profile-page").waitFor({ state: "visible" });
 
     /* profile inputs pre‑filled */
     await expect(page.locator('input[value="Test User"]')).toBeVisible();
