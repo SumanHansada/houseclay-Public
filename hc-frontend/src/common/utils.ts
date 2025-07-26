@@ -1,3 +1,5 @@
+import { format, parseISO } from "date-fns";
+
 const formatter = new Intl.NumberFormat("en-IN", {
   style: "currency",
   currency: "INR",
@@ -75,4 +77,21 @@ export const formatBhkType = (bhkType: string) => {
 export const sanitizePhoneNumber = (phoneNumber: string): string => {
   if (!phoneNumber) return phoneNumber;
   return phoneNumber.replace(/^\+91/, "").replace(/\D/g, "");
+};
+
+/**
+ * Converts ISO date string to readable format (e.g., "July 31, 2025")
+ * @param isoDateString - The ISO date string (e.g., "2025-07-31T18:30:00.000+00:00")
+ * @returns The formatted date string (e.g., "July 31, 2025")
+ */
+export const formatDateToReadable = (isoDateString: string): string => {
+  if (!isoDateString) return "-";
+
+  try {
+    const date = parseISO(isoDateString);
+    return format(date, "MMMM d, yyyy");
+  } catch (error) {
+    console.error("Invalid date format:", error);
+    return "-";
+  }
 };

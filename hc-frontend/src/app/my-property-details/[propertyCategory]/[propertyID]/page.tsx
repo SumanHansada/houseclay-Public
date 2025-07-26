@@ -22,6 +22,7 @@ async function MyPropertyDetails({
 
   try {
     const propertyData = await ServerAPIService.getPropertyByID(propertyID);
+    console.log("propertyData", propertyData);
     return (
       <MyPropertyDetailsClient
         propertyCategory={propertyCategory}

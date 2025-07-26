@@ -1,6 +1,5 @@
 "use client";
 
-import { format } from "date-fns";
 import {
   BanknoteArrowUp,
   Bath,
@@ -55,6 +54,7 @@ import { useDispatch } from "react-redux";
 
 import { LeadCategory, PropertyCategory } from "@/common/enums";
 import {
+  formatDateToReadable,
   formatINRCurrency,
   pascalCase,
   shimmer,
@@ -511,12 +511,7 @@ export function MyPropertyDetailsClient({
                             Available From
                           </div>
                           <div className="text-gray-900">
-                            {property?.availableFrom
-                              ? format(
-                                  new Date(property?.availableFrom),
-                                  "MMM d, yyyy",
-                                )
-                              : "-"}
+                            {formatDateToReadable(property?.availableFrom)}
                           </div>
                         </div>
                       </div>

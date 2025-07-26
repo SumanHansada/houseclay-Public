@@ -40,7 +40,7 @@ export default function PhotoGallery({
   if (!displayImages.length) {
     return (
       <div
-        className={`w-full min-h-96 bg-gray-100 rounded-xl flex items-center justify-center ${className}`}
+        className={`w-full h-full bg-gray-100 rounded-xl flex items-center justify-center ${className}`}
       >
         <div className="text-center text-gray-500">
           <Camera size={48} className="mx-auto mb-2 opacity-50" />
@@ -53,9 +53,7 @@ export default function PhotoGallery({
   return (
     <div className={`w-full ${className}`}>
       {/* Photo Gallery Layout */}
-      <div
-        className={`relative w-full min-h-96 rounded-xl overflow-hidden ${className}`}
-      >
+      <div className="relative w-full h-full rounded-xl overflow-hidden">
         {displayImages.length === 1 ? (
           // Single image layout
           <div

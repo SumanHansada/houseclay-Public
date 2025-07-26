@@ -14,7 +14,7 @@ async function PropertyDetails({
   try {
     const propertyData =
       await ServerAPIService.getPublicPropertyByID(propertyID);
-    console.log(propertyData);
+    console.log("Property Data", propertyData);
     return (
       <PropertyDetailsClient
         propertyID={propertyID}
