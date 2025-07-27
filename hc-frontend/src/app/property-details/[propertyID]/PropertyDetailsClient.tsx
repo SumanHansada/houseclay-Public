@@ -17,6 +17,7 @@ import {
   KeyRound,
   MapPin,
   Phone,
+  Share,
   Sofa,
 } from "lucide-react";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
@@ -39,6 +40,7 @@ import WifiIconSvg from "public/icons/amenities/wifi.svg";
 import BalconyIconSvg from "public/icons/common/balcony.svg";
 import BuildUpAreaIconSvg from "public/icons/common/build-up-area.svg";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 import { PropertyCategory } from "@/common/enums";
 import {
@@ -142,8 +144,20 @@ export function PropertyDetailsClient({
     });
 
   const [showFullDescription, setShowFullDescription] = useState(false);
-  const [destination, setDestination] = useState<string>("");
+  const [origin, setOrigin] = useState<string>("");
   const [showDirections, setShowDirections] = useState(false);
+  const [isShortlisted, setIsShortlisted] = useState(false);
+
+  const handleShare = async () => {
+    try {
+      const propertyUrl = window.location.href;
+      await navigator.clipboard.writeText(propertyUrl);
+      toast.success("Property Link copied to clipboard!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to copy link");
+    }
+  };
 
   // Split description into sentences array
   const descriptionSentences = property?.description
@@ -156,7 +170,48 @@ export function PropertyDetailsClient({
     <>
       <section className="flex-col w-full xl:gap-16 lg:gap-8 md:gap-0 gap-0 xl:px-28 lg:px-14 md:px-8 px-8 max-md:pt-4 max-md:pb-12">
         {/* Header Section */}
-        <div className="py-12 mx-auto">
+        <div className="py-6 mx-auto">
+          {/* Breadcrumb and Actions Section */}
+          <div className="flex justify-between items-center py-2">
+            {/* Breadcrumb */}
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <House size={16} className="text-gray-500" />
+              <span>
+                Properties for {pascalCase(property?.propertyCategory)}
+              </span>
+              <span className="text-gray-400">›</span>
+              <span>{property?.city}</span>
+              <span className="text-gray-400">›</span>
+              <span className="text-gray-900 font-medium">
+                {property?.bhkType} {property?.propertyType}
+              </span>
+            </div>
+
+            {/* Actions */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleShare}
+                className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors underline hover:bg-gray-100 rounded-md px-2 py-1"
+              >
+                <Share size={16} />
+                <span>Share</span>
+              </button>
+              <button
+                onClick={() => setIsShortlisted(!isShortlisted)}
+                className={`flex items-center gap-2 transition-colors underline hover:bg-gray-100 rounded-md px-2 py-1 ${
+                  isShortlisted
+                    ? "text-pink-600 hover:text-pink-700"
+                    : "text-gray-600 hover:text-gray-800"
+                }`}
+              >
+                <Heart
+                  size={16}
+                  className={isShortlisted ? "fill-current" : ""}
+                />
+                <span>{isShortlisted ? "Sortlisted" : "Sortlist"}</span>
+              </button>
+            </div>
+          </div>
           <div>
             <h1 className="text-3xl text-gray-900 flex items-center gap-2">
               {property?.bhkType} in {property?.locationOrSocietyName} for{" "}
@@ -327,12 +382,14 @@ export function PropertyDetailsClient({
             <hr />
             {/* Map Section */}
             <section className="py-6 mb-6">
-              <h2 className="text-xl mb-4">Where you&apos;ll be</h2>
-              <div className="flex items-center gap-2 text-gray-700 mb-4">
-                <MapPin size={16} />
-                <span>
-                  {property?.locationOrSocietyName}, {property?.city}
-                </span>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl mb-4">Where you&apos;ll be</h2>
+                <div className="flex items-center gap-2 text-gray-700 mb-4">
+                  <MapPin size={16} />
+                  <span>
+                    {property?.locationOrSocietyName}, {property?.city}
+                  </span>
+                </div>
               </div>
               <div className="flex gap-2 mb-4">
                 <div className="flex-1">
@@ -340,10 +397,10 @@ export function PropertyDetailsClient({
                     id="destination"
                     name="destination"
                     placeholder="Type in place to get direction"
-                    value={destination}
-                    onChange={(value) => setDestination(value)}
+                    value={origin}
+                    onChange={(value) => setOrigin(value)}
                     onLocationSelect={(location) =>
-                      setDestination(location.name || "")
+                      setOrigin(location.name || "")
                     }
                     containerClassName="w-full relative"
                     inputClassName="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -352,9 +409,9 @@ export function PropertyDetailsClient({
                   />
                 </div>
                 <button
-                  onClick={() => setShowDirections(!!destination)}
-                  disabled={!destination}
-                  className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  onClick={() => setShowDirections(!!origin)}
+                  disabled={!origin}
+                  className="bg-red-500 w-48 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
                   Get Directions
                 </button>
@@ -368,11 +425,11 @@ export function PropertyDetailsClient({
                   }}
                   zoom={15}
                   className="h-full w-full border rounded-xl shadow-lg"
-                  origin={{
+                  origin={origin}
+                  destination={{
                     lat: property?.latitude || 12.9716,
                     lng: property?.longitude || 77.5946,
                   }}
-                  destination={destination}
                   showDirections={showDirections}
                 />
               </div>

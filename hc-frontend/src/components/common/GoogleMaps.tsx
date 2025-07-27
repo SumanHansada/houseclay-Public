@@ -8,7 +8,7 @@ import {
   useMap,
 } from "@vis.gl/react-google-maps";
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Location {
   id: string | number;
@@ -49,8 +49,11 @@ const MapContent: React.FC<{
   const [centerLatLng, setCenterLatLng] = useState<google.maps.LatLng | null>(
     null,
   );
+  const [isMapInitialized, setIsMapInitialized] = useState(false);
+  const hasSetInitialCenter = useRef(false);
   const map = useMap();
 
+  // Only set center once on initial load or when coordinates actually change significantly
   useEffect(() => {
     if (
       isApiLoaded &&
@@ -60,24 +63,51 @@ const MapContent: React.FC<{
       !isNaN(center.lat) &&
       !isNaN(center.lng)
     ) {
-      setCenterLatLng(new google.maps.LatLng(center.lat, center.lng));
+      const newLatLng = new google.maps.LatLng(center.lat, center.lng);
+
+      // Only update if this is the first time or coordinates changed significantly
+      if (
+        !hasSetInitialCenter.current ||
+        !centerLatLng ||
+        Math.abs(centerLatLng.lat() - center.lat) > 0.001 ||
+        Math.abs(centerLatLng.lng() - center.lng) > 0.001
+      ) {
+        setCenterLatLng(newLatLng);
+        hasSetInitialCenter.current = true;
+      }
     }
-  }, [center, isApiLoaded]);
+  }, [center, isApiLoaded, centerLatLng]);
 
   useEffect(() => {
-    if (map) {
-      // Ensure controls are properly initialized
+    if (map && !isMapInitialized) {
+      // Set map options without overriding zoom repeatedly
       map.setOptions({
         zoomControl: true,
+        zoomControlOptions: {
+          position: google.maps.ControlPosition.RIGHT_CENTER,
+        },
         mapTypeControl: true,
+        mapTypeControlOptions: {
+          position: google.maps.ControlPosition.TOP_RIGHT,
+        },
         streetViewControl: true,
+        streetViewControlOptions: {
+          position: google.maps.ControlPosition.RIGHT_CENTER,
+        },
         fullscreenControl: true,
+        fullscreenControlOptions: {
+          position: google.maps.ControlPosition.RIGHT_TOP,
+        },
         gestureHandling: "greedy",
         disableDefaultUI: false,
+        scrollwheel: true,
+        draggable: true,
         ...mapOptions,
       });
+
+      setIsMapInitialized(true);
     }
-  }, [map, mapOptions]);
+  }, [map, mapOptions, isMapInitialized]); // Removed zoom from dependencies
 
   if (!centerLatLng) {
     return <div className={className}>Loading map...</div>;
@@ -86,8 +116,8 @@ const MapContent: React.FC<{
   return (
     <Map
       mapId={mapId}
-      center={centerLatLng}
-      zoom={zoom}
+      defaultCenter={{ lat: centerLatLng.lat(), lng: centerLatLng.lng() }} // Convert LatLng to LatLngLiteral
+      defaultZoom={zoom} // Use defaultZoom instead of zoom
       className={`${className} overflow-hidden`}
     >
       <AdvancedMarker position={centerLatLng}>

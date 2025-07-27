@@ -2,20 +2,21 @@ import {
   AdvancedMarker,
   APIProvider,
   Map,
-  Pin,
   useApiIsLoaded,
   useMap,
 } from "@vis.gl/react-google-maps";
+import { House } from "lucide-react";
+import { Navigation } from "lucide-react";
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface DirectionsMapProps {
   mapId?: string;
   center?: { lat: number; lng: number };
   zoom?: number;
   className?: string;
-  origin: { lat: number; lng: number };
-  destination: string;
+  origin: string; // User's current location (address string)
+  destination: { lat: number; lng: number }; // Property location (coordinates)
   showDirections: boolean;
 }
 
@@ -24,8 +25,8 @@ const DirectionsMapContent: React.FC<{
   zoom: number;
   className: string;
   mapId?: string;
-  origin: { lat: number; lng: number };
-  destination: string;
+  origin: string; // User's current location (address string)
+  destination: { lat: number; lng: number }; // Property location (coordinates)
   showDirections: boolean;
 }> = ({
   center,
@@ -44,8 +45,16 @@ const DirectionsMapContent: React.FC<{
     useState<google.maps.DirectionsRenderer | null>(null);
   const [directionsService, setDirectionsService] =
     useState<google.maps.DirectionsService | null>(null);
+  const [originLatLng, setOriginLatLng] = useState<google.maps.LatLng | null>(
+    null,
+  );
+  const [isMapInitialized, setIsMapInitialized] = useState(false);
+  const hasSetInitialCenter = useRef(false);
+  const originalCenter = useRef<{ lat: number; lng: number } | null>(null);
+  const originalZoom = useRef<number>(zoom);
   const map = useMap();
 
+  // Only set center once on initial load or when coordinates change significantly
   useEffect(() => {
     if (
       isApiLoaded &&
@@ -55,12 +64,29 @@ const DirectionsMapContent: React.FC<{
       !isNaN(center.lat) &&
       !isNaN(center.lng)
     ) {
-      setCenterLatLng(new google.maps.LatLng(center.lat, center.lng));
-    }
-  }, [center, isApiLoaded]);
+      const newLatLng = new google.maps.LatLng(center.lat, center.lng);
 
+      // Store original center for reset
+      if (!originalCenter.current) {
+        originalCenter.current = center;
+      }
+
+      // Only update if this is the first time or coordinates changed significantly
+      if (
+        !hasSetInitialCenter.current ||
+        !centerLatLng ||
+        Math.abs(centerLatLng.lat() - center.lat) > 0.001 ||
+        Math.abs(centerLatLng.lng() - center.lng) > 0.001
+      ) {
+        setCenterLatLng(newLatLng);
+        hasSetInitialCenter.current = true;
+      }
+    }
+  }, [center, isApiLoaded, centerLatLng]);
+
+  // Initialize map and directions services
   useEffect(() => {
-    if (map && isApiLoaded) {
+    if (map && isApiLoaded && !isMapInitialized) {
       // Initialize directions service and renderer
       const service = new google.maps.DirectionsService();
       const renderer = new google.maps.DirectionsRenderer({
@@ -73,9 +99,8 @@ const DirectionsMapContent: React.FC<{
 
       setDirectionsService(service);
       setDirectionsRenderer(renderer);
-      renderer.setMap(map);
 
-      // Set map options with explicit zoom control positioning
+      // Set map options
       map.setOptions({
         zoomControl: true,
         zoomControlOptions: {
@@ -98,26 +123,37 @@ const DirectionsMapContent: React.FC<{
         scrollwheel: true,
         draggable: true,
       });
-    }
-  }, [map, isApiLoaded]);
 
-  // Separate effect for directions logic
+      setIsMapInitialized(true);
+    }
+  }, [map, isApiLoaded, isMapInitialized]);
+
+  // Handle directions logic
   useEffect(() => {
     if (
       showDirections &&
       directionsService &&
       directionsRenderer &&
-      destination
+      origin &&
+      map
     ) {
       const request: google.maps.DirectionsRequest = {
-        origin: new google.maps.LatLng(origin.lat, origin.lng),
-        destination: destination,
+        origin: origin, // User's current location (string)
+        destination: new google.maps.LatLng(destination.lat, destination.lng), // Property location
         travelMode: google.maps.TravelMode.DRIVING,
       };
 
       directionsService.route(request, (result, status) => {
         if (status === google.maps.DirectionsStatus.OK && result) {
+          directionsRenderer.setMap(map);
           directionsRenderer.setDirections(result);
+
+          // Store origin coordinates for marker (user's location)
+          const route = result.routes[0];
+          if (route && route.legs && route.legs.length > 0) {
+            const firstLeg = route.legs[0];
+            setOriginLatLng(firstLeg.start_location);
+          }
 
           // Fit bounds to show the entire route with padding
           const bounds = new google.maps.LatLngBounds();
@@ -125,30 +161,38 @@ const DirectionsMapContent: React.FC<{
             bounds.extend(leg.start_location);
             bounds.extend(leg.end_location);
           });
-          map?.fitBounds(bounds, 50);
+          map.fitBounds(bounds, 50);
         }
       });
     }
   }, [
     showDirections,
-    destination,
     origin,
+    destination,
     directionsService,
     directionsRenderer,
     map,
   ]);
 
-  // Separate effect for clearing directions and resetting map
+  // Handle clearing directions and resetting map
   useEffect(() => {
     if (!showDirections && directionsRenderer && map) {
       // Clear directions by removing the renderer from map
       directionsRenderer.setMap(null);
+      setOriginLatLng(null);
 
-      // Reset to original center and zoom
-      map.setCenter(new google.maps.LatLng(center.lat, center.lng));
-      map.setZoom(zoom);
+      // Reset to original center and zoom if we have them
+      if (originalCenter.current) {
+        map.panTo(
+          new google.maps.LatLng(
+            originalCenter.current.lat,
+            originalCenter.current.lng,
+          ),
+        );
+        map.setZoom(originalZoom.current);
+      }
     }
-  }, [showDirections, directionsRenderer, map, center, zoom]);
+  }, [showDirections, directionsRenderer, map]);
 
   if (!centerLatLng) {
     return <div className={className}>Loading map...</div>;
@@ -157,29 +201,25 @@ const DirectionsMapContent: React.FC<{
   return (
     <Map
       mapId={mapId}
-      center={centerLatLng}
-      zoom={zoom}
+      defaultCenter={{ lat: centerLatLng.lat(), lng: centerLatLng.lng() }} // Convert LatLng to LatLngLiteral
+      defaultZoom={zoom}
       className={`${className} overflow-hidden`}
     >
-      {/* Origin marker */}
-      <AdvancedMarker position={new google.maps.LatLng(origin.lat, origin.lng)}>
-        <Pin
-          background={"#FF5252"}
-          borderColor={"#B71C1C"}
-          glyphColor={"#FFFFFF"}
-        />
+      {/* Property/Destination marker - Always visible (the house icon) */}
+      <AdvancedMarker
+        position={new google.maps.LatLng(destination.lat, destination.lng)}
+      >
+        <div className="bg-red-500 p-2 rounded-full shadow-lg border-2 border-white">
+          <House className="w-5 h-5 text-white" />
+        </div>
       </AdvancedMarker>
 
-      {/* Destination marker (only show when directions are active) */}
-      {showDirections && directionsRenderer && (
-        <AdvancedMarker
-          position={new google.maps.LatLng(origin.lat, origin.lng)}
-        >
-          <Pin
-            background={"#4CAF50"}
-            borderColor={"#2E7D32"}
-            glyphColor={"#FFFFFF"}
-          />
+      {/* User's current location marker (only show when directions are active) */}
+      {showDirections && originLatLng && (
+        <AdvancedMarker position={originLatLng}>
+          <div className="bg-blue-500 p-2 rounded-full shadow-lg border-2 border-white">
+            <Navigation className="w-5 h-5 text-white" />
+          </div>
         </AdvancedMarker>
       )}
     </Map>
@@ -191,8 +231,8 @@ const DirectionsMap: React.FC<DirectionsMapProps> = ({
   center = { lat: 20.5937, lng: 78.9629 },
   zoom = 10,
   className = "h-96 w-full",
-  origin,
-  destination,
+  origin, // User's current location (string)
+  destination, // Property location (coordinates)
   showDirections,
 }) => {
   return (
