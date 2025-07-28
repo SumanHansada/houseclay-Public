@@ -1,10 +1,12 @@
 "use client";
 
 import { floorPlan } from "@lucide/lab";
+import { motion } from "framer-motion";
 import {
   Bath,
   BedDouble,
   Building2,
+  ChevronLeft,
   Compass,
   Crown,
   Eye,
@@ -20,6 +22,7 @@ import {
   Share,
   Sofa,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
 import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
 import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
@@ -166,13 +169,59 @@ export function PropertyDetailsClient({
         .filter((sentence: string) => sentence.trim().length > 0)
     : [];
 
+  const router = useRouter();
+
   return (
     <>
+      <section
+        className={`py-2 px-4 fixed top-0 left-0 right-0 z-50 h-[55px] border-b border-gray-200 bg-white flex gap-2 justify-between items-center w-full md:hidden`}
+      >
+        <button className="rounded-full md:border-none items-center justify-center">
+          <ChevronLeft onClick={() => router.back()} size={25} />
+        </button>
+        <div className="flex gap-2 items-center">
+          <button className="rounded-full border md:border-none items-center justify-center p-2 bg-gradient-to-br from-yellow-400 via-yellow-500 to-orange-500 fill-current">
+            <Crown onClick={() => console.log("Crown Clicked")} size={18} />
+          </button>
+          <button className="rounded-full border md:border-none items-center justify-center p-2">
+            <Share onClick={handleShare} size={18} />
+          </button>
+          <motion.button
+            onClick={() => setIsShortlisted(!isShortlisted)}
+            className={`rounded-full border md:border-none items-center justify-center p-2 relative overflow-hidden ${
+              isShortlisted ? "text-pink-500" : "text-gray-600"
+            }`}
+            whileTap={{ scale: 0.95 }}
+          >
+            {/* Heart icon with scale animation */}
+            <motion.div
+              animate={{
+                scale: isShortlisted ? [1, 1.3, 1] : 1,
+              }}
+              transition={{ duration: 0.3 }}
+            >
+              <Heart
+                size={18}
+                className={isShortlisted ? "fill-current" : ""}
+              />
+            </motion.div>
+          </motion.button>
+        </div>
+      </section>
+      {/* Photo Gallery Section Mobile */}
+      <section className="h-96 w-full md:hidden">
+        <PhotoGallery
+          images={property?.images}
+          maxDisplayImages={5}
+          className="md:h-[60vh] h-96 rounded-none"
+        />
+      </section>
+
       <section className="flex-col w-full xl:gap-16 lg:gap-8 md:gap-0 gap-0 xl:px-28 lg:px-14 md:px-8 px-8 max-md:pt-4 max-md:pb-12">
         {/* Header Section */}
-        <div className="py-6 mx-auto">
+        <section className="py-6 max-md:py-2 mx-auto">
           {/* Breadcrumb and Actions Section */}
-          <div className="flex justify-between items-center py-2">
+          <div className="flex justify-between items-center py-2 max-md:hidden">
             {/* Breadcrumb */}
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <House size={16} className="text-gray-500" />
@@ -188,7 +237,7 @@ export function PropertyDetailsClient({
             </div>
 
             {/* Actions */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 max-md:hidden">
               <button
                 onClick={handleShare}
                 className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors underline hover:bg-gray-100 rounded-md px-2 py-1"
@@ -212,6 +261,17 @@ export function PropertyDetailsClient({
               </button>
             </div>
           </div>
+
+          <div className="md:hidden">
+            <div className="flex justify-between items-center mb-2">
+              <p className="text-black text-sm border border-gray-200 py-1 px-1.5 rounded-full bg-gray-100">
+                {property.propertyType}
+              </p>
+              <p className="text-gray-500 text-sm md:hidden">
+                {property.locationOrSocietyName}, {property.city}
+              </p>
+            </div>
+          </div>
           <div>
             <h1 className="text-3xl text-gray-900 flex items-center gap-2">
               {property?.bhkType} in {property?.locationOrSocietyName} for{" "}
@@ -220,23 +280,26 @@ export function PropertyDetailsClient({
           </div>
           <div className="flex items-center gap-2 text-gray-500 text-base mt-2">
             <MapPin size={16} />
-            <span>
+            <span className="max-md:hidden">
               {property?.locationOrSocietyName}, {property?.city}
             </span>
+            <span className="md:hidden truncate flex-1">
+              {property.landmark}
+            </span>
           </div>
-        </div>
+        </section>
 
-        {/* Photo Gallery Section */}
-        <section className="mb-8">
+        {/* Photo Gallery Section Desktop */}
+        <section className="mb-8 max-md:hidden">
           <PhotoGallery
             images={property?.images}
             maxDisplayImages={5}
-            className="h-[60vh]"
+            className="md:h-[60vh] h-96 rounded-xl"
           />
         </section>
 
         {/* Main Content Section */}
-        <section className="flex w-full xl:gap-16 lg:gap-8 md:gap-0 gap-0 max-md:pt-4">
+        <section className="flex max-md:flex-col-reverse w-full xl:gap-16 lg:gap-8 md:gap-0 gap-0 max-md:pt-4">
           {/* Left Section - 3/4 width */}
           <section className="w-3/4 max-md:w-full">
             {/* Property Details Grid */}

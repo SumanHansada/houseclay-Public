@@ -40,7 +40,7 @@ export default function PhotoGallery({
   if (!displayImages.length) {
     return (
       <div
-        className={`w-full h-full bg-gray-100 rounded-xl flex items-center justify-center ${className}`}
+        className={`w-full h-full bg-gray-100 flex items-center justify-center ${className}`}
       >
         <div className="text-center text-gray-500">
           <Camera size={48} className="mx-auto mb-2 opacity-50" />
@@ -53,7 +53,7 @@ export default function PhotoGallery({
   return (
     <div className={`w-full ${className}`}>
       {/* Photo Gallery Layout */}
-      <div className="relative w-full h-full rounded-xl overflow-hidden">
+      <div className={`relative w-full h-full overflow-hidden ${className}`}>
         {displayImages.length === 1 ? (
           // Single image layout
           <div
@@ -71,11 +71,62 @@ export default function PhotoGallery({
             <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-15 transition-opacity duration-300"></div>
           </div>
         ) : (
-          // Multi-image layout (Airbnb style)
-          <div className="grid grid-cols-4 grid-rows-2 gap-1 h-full">
-            {/* Main large image (left side) */}
+          <>
+            {/* Desktop Layout - Multi-image grid (Airbnb style) */}
+            <div className="hidden md:grid grid-cols-4 grid-rows-2 gap-1 h-full">
+              {/* Main large image (left side) */}
+              <div
+                className="col-span-2 row-span-2 cursor-pointer relative group"
+                onClick={() => handleImageClick(0)}
+              >
+                <ImageWithLoader
+                  src={displayImages[0]}
+                  alt="Main property image"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+                {/* Hover overlay */}
+                <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-15 transition-opacity duration-300"></div>
+                {/* Overlay with photo count */}
+                <div className="absolute bottom-3 right-3 bg-white text-sm px-2 py-1 rounded-lg opacity-100 flex items-center">
+                  <Camera size={20} className="mr-1" />
+                  {images.length}
+                </div>
+              </div>
+
+              {/* Smaller images (right side - 2x2 grid) */}
+              {displayImages.slice(1, 5).map((image, index) => (
+                <div
+                  key={index + 1}
+                  className="cursor-pointer relative group overflow-hidden"
+                  onClick={() => handleImageClick(index + 1)}
+                >
+                  <ImageWithLoader
+                    src={image}
+                    alt={`Property image ${index + 2}`}
+                    fill
+                    className="object-cover"
+                  />
+
+                  {/* Hover overlay */}
+                  <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-15 transition-opacity duration-300"></div>
+
+                  {/* Show "Show all photos" button on the last visible image */}
+                  {index === 3 && hasMoreImages && (
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="bg-white text-gray-900 text-sm px-3 py-2 rounded-lg font-medium">
+                        Show all photos
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Mobile Layout - Single image with photo count */}
             <div
-              className="col-span-2 row-span-2 cursor-pointer relative group"
+              className="md:hidden w-full h-full cursor-pointer relative group"
               onClick={() => handleImageClick(0)}
             >
               <ImageWithLoader
@@ -87,41 +138,19 @@ export default function PhotoGallery({
               />
               {/* Hover overlay */}
               <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-15 transition-opacity duration-300"></div>
-              {/* Overlay with photo count */}
+              {/* Photo count overlay for mobile */}
               <div className="absolute bottom-3 right-3 bg-white text-sm px-2 py-1 rounded-lg opacity-100 flex items-center">
                 <Camera size={20} className="mr-1" />
                 {images.length}
               </div>
+              {/* Click to view all photos overlay for mobile */}
+              {hasMoreImages && (
+                <div className="absolute top-3 right-3 bg-black/70 text-white text-xs px-2 py-1 rounded-lg">
+                  View all photos
+                </div>
+              )}
             </div>
-
-            {/* Smaller images (right side - 2x2 grid) */}
-            {displayImages.slice(1, 5).map((image, index) => (
-              <div
-                key={index + 1}
-                className="cursor-pointer relative group overflow-hidden"
-                onClick={() => handleImageClick(index + 1)}
-              >
-                <ImageWithLoader
-                  src={image}
-                  alt={`Property image ${index + 2}`}
-                  fill
-                  className="object-cover"
-                />
-
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-15 transition-opacity duration-300"></div>
-
-                {/* Show "Show all photos" button on the last visible image */}
-                {index === 3 && hasMoreImages && (
-                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="bg-white text-gray-900 text-sm px-3 py-2 rounded-lg font-medium">
-                      Show all photos
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+          </>
         )}
       </div>
 
