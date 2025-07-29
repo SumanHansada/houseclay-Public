@@ -42,8 +42,9 @@ import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 import WifiIconSvg from "public/icons/amenities/wifi.svg";
 import BalconyIconSvg from "public/icons/common/balcony.svg";
 import BuildUpAreaIconSvg from "public/icons/common/build-up-area.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 
 import { PropertyCategory } from "@/common/enums";
 import {
@@ -54,7 +55,13 @@ import {
 import DirectionsMap from "@/components/common/DirectionsMap";
 import PhotoGallery from "@/components/common/PhotoGallery";
 import PlacesAutocomplete from "@/components/common/PlacesAutocomplete";
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useGetPublicPropertyByIdQuery } from "@/store/apiSlice";
+import {
+  setHideFooter,
+  setHideHeader,
+  setHideStickyNavBar,
+} from "@/store/appSlice";
 
 const BalconyIcon = BalconyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const BuildUpAreaIcon = BuildUpAreaIconSvg as React.FC<
@@ -170,6 +177,20 @@ export function PropertyDetailsClient({
     : [];
 
   const router = useRouter();
+  const { isMobile } = useDeviceContext();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isMobile) {
+      dispatch(setHideHeader(true));
+      dispatch(setHideFooter(true));
+      dispatch(setHideStickyNavBar(true));
+    } else {
+      dispatch(setHideHeader(false));
+      dispatch(setHideFooter(false));
+      dispatch(setHideStickyNavBar(false));
+    }
+  }, [dispatch, isMobile]);
 
   return (
     <>
@@ -217,7 +238,7 @@ export function PropertyDetailsClient({
         />
       </section>
 
-      <section className="flex-col w-full xl:gap-16 lg:gap-8 md:gap-0 gap-0 xl:px-28 lg:px-14 md:px-8 px-8 max-md:pt-4 max-md:pb-12">
+      <section className="flex-col w-full xl:gap-16 lg:gap-8 md:gap-0 gap-0 xl:px-28 lg:px-14 md:px-8 px-6 max-md:pt-4 max-md:pb-20">
         {/* Header Section */}
         <section className="py-6 max-md:py-2 mx-auto">
           {/* Breadcrumb and Actions Section */}
@@ -273,7 +294,7 @@ export function PropertyDetailsClient({
             </div>
           </div>
           <div>
-            <h1 className="text-3xl text-gray-900 flex items-center gap-2">
+            <h1 className="text-2xl text-gray-900 flex items-center gap-2">
               {property?.bhkType} in {property?.locationOrSocietyName} for{" "}
               {pascalCase(property?.propertyCategory)} in {property?.city}
             </h1>
@@ -298,8 +319,8 @@ export function PropertyDetailsClient({
           />
         </section>
 
-        {/* Main Content Section */}
-        <section className="flex max-md:flex-col-reverse w-full xl:gap-16 lg:gap-8 md:gap-0 gap-0 max-md:pt-4">
+        {/* Main Content Section Desktop*/}
+        <section className="flex w-full xl:gap-16 lg:gap-8 md:gap-0 gap-0 max-md:pt-4 max-md:hidden">
           {/* Left Section - 3/4 width */}
           <section className="w-3/4 max-md:w-full">
             {/* Property Details Grid */}
@@ -402,7 +423,6 @@ export function PropertyDetailsClient({
                 </div>
               </div>
             </section>
-
             {/* Description Section */}
             <section className="py-6">
               <h2 className="text-xl mb-4">Description</h2>
@@ -501,6 +521,7 @@ export function PropertyDetailsClient({
 
           {/* Right Section - 1/4 width */}
           <section className="w-1/4 max-md:w-full">
+            {/* Property Details Section */}
             <section className="border rounded-xl shadow-md px-4 py-6 mb-6">
               <div className="grid grid-cols-2 gap-4 text-base justify-items-center items-center">
                 <div className="flex w-full justify-start items-start gap-2 text-gray-600">
@@ -664,6 +685,362 @@ export function PropertyDetailsClient({
                 <span className="underline">Report this listing</span>
               </button>
             </section>
+          </section>
+        </section>
+
+        {/* Main Content Section Mobile*/}
+        <section className="flex-col w-full xl:gap-16 lg:gap-8 md:gap-0 gap-0 max-md:pt-4 md:hidden">
+          {/* Property Details Section */}
+          <section className="border rounded-xl shadow-md px-4 py-6">
+            <div className="grid grid-cols-2 gap-4 text-base justify-items-center items-center">
+              <div className="flex w-full justify-start items-start gap-2 text-gray-600">
+                <div className="flex-col">
+                  <div className="p-0.5">
+                    <BedDouble size={25} />
+                  </div>
+                </div>
+                <div className="flex-col">
+                  <div className="flex gap-2 items-center font-nunito">
+                    No. of Bedroom
+                  </div>
+                  <div className="text-gray-900 font-semibold font-nunito">
+                    {property?.bhkType?.split("BHK")[0]} Bedroom
+                  </div>
+                </div>
+              </div>
+              <div className="flex w-full justify-start items-start gap-2 text-gray-600">
+                <div className="flex-col">
+                  <div className="p-0.5">
+                    <Bath size={25} />
+                  </div>
+                </div>
+                <div className="flex-col">
+                  <div className="flex gap-2 items-center font-nunito">
+                    No. of Bathroom
+                  </div>
+                  <div className="text-gray-900 font-semibold font-nunito">
+                    {property?.bathrooms} Bathroom
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex w-full justify-start items-start gap-2 text-gray-600">
+                <div className="flex-col">
+                  <div className="p-0.5">
+                    <BalconyIcon />
+                  </div>
+                </div>
+                <div className="flex-col">
+                  <div className="flex gap-2 items-center font-nunito">
+                    No. of Balcony
+                  </div>
+                  <div className="text-gray-900 font-semibold font-nunito">
+                    {property?.balcony} Balcony
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex w-full justify-start items-start gap-2 text-gray-600">
+                <div className="flex-col">
+                  <div className="p-0.5">
+                    <BuildUpAreaIcon />
+                  </div>
+                </div>
+                <div className="flex-col">
+                  <div className="flex gap-2 items-center font-nunito">
+                    Buildup Area
+                  </div>
+                  <div className="text-gray-900 font-semibold font-nunito">
+                    {property?.builtUpArea}sqft
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex w-full justify-start items-start gap-2 text-gray-600">
+                <div className="flex-col">
+                  <div className="p-0.5">
+                    <ParkingSpaceIcon />
+                  </div>
+                </div>
+                <div className="flex-col">
+                  <div className="flex gap-2 items-center font-nunito">
+                    Parking
+                  </div>
+                  <div className="text-gray-900 font-semibold font-nunito">
+                    {property?.parking}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex w-full justify-start items-start gap-2 text-gray-600">
+                <div className="flex-col">
+                  <div className="p-0.5">
+                    <HousePlus size={20} />
+                  </div>
+                </div>
+                <div className="flex-col">
+                  <div className="flex gap-2 items-center font-nunito">
+                    Available From
+                  </div>
+                  <div className="text-gray-900 font-semibold font-nunito">
+                    {formatDateToReadable(property?.availableFrom)}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr className="my-6 max-md:hidden" />
+
+            {/* Price & Contact Section */}
+            <div className="max-md:hidden">
+              <div className="flex justify-between items-center">
+                <div className="text-gray-600">
+                  {property?.propertyCategory === PropertyCategory.RESALE
+                    ? "Price"
+                    : "Rent"}
+                </div>
+                <div>
+                  {property?.propertyCategory === PropertyCategory.RESALE
+                    ? property?.price
+                      ? formatINRCurrency(property.price)
+                      : "-"
+                    : property?.rent
+                      ? formatINRCurrency(property.rent)
+                      : "-"}
+                </div>
+              </div>
+              <button className="mt-4 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full text-base max-md:text-sm hover:bg-red-600 transition-colors">
+                Contact Owner
+              </button>
+            </div>
+          </section>
+
+          {/* Description Section */}
+          <section className="py-6">
+            <h2 className="text-xl mb-4">Description</h2>
+            <div className="text-gray-700 space-y-4">
+              <p>
+                {showFullDescription
+                  ? property?.description
+                  : descriptionSentences.slice(0, 3).join(". ") +
+                    (descriptionSentences.length > 3 ? "..." : "")}
+              </p>
+              {descriptionSentences.length > 3 && (
+                <button
+                  onClick={() => setShowFullDescription(!showFullDescription)}
+                  className="text-red-600 hover:text-red-600 font-medium"
+                >
+                  {showFullDescription ? "Show less" : "Show more >"}
+                </button>
+              )}
+            </div>
+          </section>
+
+          {/* Property Details Grid */}
+          <section className="bg-white px-4 py-6 border rounded-xl shadow-md">
+            <h2 className="text-xl mb-4">Other Details</h2>
+            <div className="grid grid-cols-2 gap-6">
+              {/* Left Column */}
+              <div className="space-y-4">
+                <div className="flex gap-3">
+                  <div className="w-8 h-8 flex items-center justify-center">
+                    <House size={24} className="text-gray-600" />
+                  </div>
+                  <div>
+                    <div className="text-sm text-gray-500">Property Type</div>
+                    <div className="font-medium text-gray-900">
+                      {property?.propertyType}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <div className="w-8 h-8 flex items-center justify-center">
+                    <Hourglass size={24} className="text-gray-600" />
+                  </div>
+                  <div>
+                    <div className="text-sm text-gray-500">Age of Building</div>
+                    <div className="font-medium text-gray-900">
+                      {property?.propertyAge}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <div className="w-8 h-8 flex items-center justify-center">
+                    <Compass size={24} className="text-gray-600" />
+                  </div>
+                  <div>
+                    <div className="text-sm text-gray-500">Facing</div>
+                    <div className="font-medium text-gray-900">
+                      {property?.facing}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <div className="w-8 h-8 flex items-center justify-center">
+                    <Building2 size={24} className="text-gray-600" />
+                  </div>
+                  <div>
+                    <div className="text-sm text-gray-500">Floor</div>
+                    <div className="font-medium text-gray-900">
+                      {property?.floor}/{property?.totalFloors}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column */}
+              <div className="space-y-4">
+                <div className="flex  gap-3">
+                  <div className="w-8 h-8 flex items-center justify-center">
+                    <KeyRound size={24} className="text-gray-600" />
+                  </div>
+                  <div>
+                    <div className="text-sm text-gray-500">Ownership Type</div>
+                    <div className="font-medium text-gray-900">
+                      {property?.ownershipType || "NA"}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex  gap-3">
+                  <div className="w-8 h-8 flex items-center justify-center">
+                    <Sofa size={24} className="text-gray-600" />
+                  </div>
+                  <div>
+                    <div className="text-sm text-gray-500">
+                      Furnishing Status
+                    </div>
+                    <div className="font-medium text-gray-900">
+                      {property?.furnishing}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex  gap-3">
+                  <div className="w-8 h-8 flex items-center justify-center">
+                    <Icon iconNode={floorPlan} size={24} />
+                  </div>
+                  <div>
+                    <div className="text-sm text-gray-500">Flooring</div>
+                    <div className="font-medium text-gray-900">
+                      {property?.floorType}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Amenities Section */}
+          <section className="py-6">
+            <h2 className="text-xl mb-4">What this place offers</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {property?.amenities?.map((amenity: string) => (
+                <div
+                  key={amenity}
+                  className="flex items-center gap-2 text-gray-700"
+                >
+                  {AmenitiesMap[amenity as keyof typeof AmenitiesMap]?.icon}
+                  <span>
+                    {AmenitiesMap[amenity as keyof typeof AmenitiesMap]
+                      ?.label || amenity}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Map Section */}
+          <section className="py-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl mb-4">Where you&apos;ll be</h2>
+              <div className="flex items-center gap-2 text-gray-700 mb-4">
+                <MapPin size={16} />
+                <span>
+                  {property?.locationOrSocietyName}, {property?.city}
+                </span>
+              </div>
+            </div>
+            <div className="flex gap-2 mb-4">
+              <div className="flex-1">
+                <PlacesAutocomplete
+                  id="destination"
+                  name="destination"
+                  placeholder="Type in place to get direction"
+                  value={origin}
+                  onChange={(value) => setOrigin(value)}
+                  onLocationSelect={(location) =>
+                    setOrigin(location.name || "")
+                  }
+                  containerClassName="w-full relative flex-1"
+                  inputClassName="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  dropdownClassName="absolute z-10 mt-1 py-1 w-full bg-white shadow-lg max-h-60 overflow-auto rounded-b-xl"
+                  dropdownItemClassName="py-1 px-3 hover:bg-gray-100 cursor-pointer flex items-center"
+                />
+              </div>
+              <button
+                onClick={() => setShowDirections(!!origin)}
+                disabled={!origin}
+                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+              >
+                Get Directions
+              </button>
+            </div>
+            <div className="w-full h-96 rounded-lg overflow-hidden">
+              <DirectionsMap
+                mapId="property-details-map"
+                center={{
+                  lat: property?.latitude || 12.9716,
+                  lng: property?.longitude || 77.5946,
+                }}
+                zoom={15}
+                className="h-full w-full border rounded-xl shadow-lg"
+                origin={origin}
+                destination={{
+                  lat: property?.latitude || 12.9716,
+                  lng: property?.longitude || 77.5946,
+                }}
+                showDirections={showDirections}
+              />
+            </div>
+          </section>
+
+          {/* Exclusive listing & Report this listing */}
+          <section className="flex flex-col justify-between items-center gap-4">
+            <button className="px-8 py-3 flex justify-around border rounded-xl w-full text-base max-md:text-sm max-md:hidden hover:bg-gray-50 transition-colors">
+              <div className="flex items-center gap-4">
+                <Crown size={24} className="text-yellow-500" />
+                <span>This is an Exclusive listing</span>
+              </div>
+            </button>
+            <button className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-2">
+              <Flag size={14} />
+              <span className="underline">Report this listing</span>
+            </button>
+          </section>
+          <section className="fixed bottom-0 left-0 ml-[33.33%] max-md:ml-auto right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
+            <div className="flex-col justify-between items-center w-1/2">
+              <div className="text-gray-600 text-xs">
+                {property?.propertyCategory === PropertyCategory.RESALE
+                  ? "Price"
+                  : "Rent"}
+              </div>
+              <div className="text-lg">
+                {property?.propertyCategory === PropertyCategory.RESALE
+                  ? property?.price
+                    ? formatINRCurrency(property.price)
+                    : "-"
+                  : property?.rent
+                    ? formatINRCurrency(property.rent)
+                    : "-"}
+              </div>
+            </div>
+            <button className="px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full text-base max-md:text-sm hover:bg-red-600 transition-colors">
+              Contact Owner
+            </button>
           </section>
         </section>
       </section>

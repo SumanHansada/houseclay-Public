@@ -160,7 +160,7 @@ export default function FullscreenPhotoViewer({
                 src={currentImage}
                 alt={`Fullscreen image ${currentIndex + 1}`}
                 fill
-                className="object-contain transition-transform duration-300 ease-in-out"
+                className="max-md:object-contain transition-transform duration-300 ease-in-out"
                 priority
                 style={{ transformOrigin: "center" }}
               />
