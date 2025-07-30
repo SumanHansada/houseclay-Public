@@ -49,7 +49,6 @@ export const LeadTableView = () => {
       />
     );
   }
-  console.log(paginatedLeadData);
 
   const {
     content: allLeads,

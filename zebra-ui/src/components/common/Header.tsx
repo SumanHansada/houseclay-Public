@@ -65,6 +65,7 @@ const Header: React.FC = () => {
             }}
           >
             <button
+              data-testid="profile-menu-button"
               aria-label="profile menu"
               className="flex flex-row xl:gap-2 md:gap-1 gap-1 xl:px-3 lg:px-2 md:px-1 px-px py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100 text-center"
             >

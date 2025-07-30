@@ -1,6 +1,5 @@
 import { test, expect } from "@playwright/test";
-
-test.use({ storageState: "tests/fixtures/admin-storage.json" });
+import { login, logout } from "./helpers/auth";
 
 const tables = [
   { path: "property", category: "PROPERTY_LISTING", seedName: "Test User" },
@@ -9,13 +8,21 @@ const tables = [
 
 for (const { path, category, seedName } of tables) {
   test.describe.parallel(`${path} leads - table view`, () => {
+    test.beforeEach(async ({ context }) => {
+      await login(context);
+    });
+
+    test.afterEach(async ({ page }) => {
+      await logout(page);
+    });
+
     test(`renders rows for ${category}`, async ({ page }) => {
-      /* 1. open table‑view explicitly */
+      /* open table‑view explicitly */
       await page.goto(`/admin/lead-management/${path}/table-view`, {
         waitUntil: "domcontentloaded",
       });
 
-      /* 2. wait for GET /leads?leadCategory=... */
+      /* wait for GET /leads?leadCategory=... */
       const leadListApiResponse = await page.waitForResponse(
         (res) =>
           res.url().includes("/leads") &&
@@ -25,14 +32,14 @@ for (const { path, category, seedName } of tables) {
       const { content } = await leadListApiResponse.json();
       expect(content.length).toBeGreaterThan(0);
 
-      /* 3. rows == API length */
+      /* rows == API length */
       const rows = page.locator("table tbody tr");
       await expect(rows).toHaveCount(content.length);
 
-      /* 4. seed user visible */
+      /* seed user visible */
       await expect(rows.filter({ hasText: seedName })).toBeVisible();
 
-      /* 5. pagination “Next” disabled (single page) */
+      /* pagination “Next” disabled (single page) */
       await expect(page.getByTestId("pagination-next")).toBeDisabled();
     });
   });

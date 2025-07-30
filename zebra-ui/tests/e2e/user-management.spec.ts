@@ -1,16 +1,20 @@
 import { test, expect } from "@playwright/test";
-
-/** Uses the JWT produced by global‑setup.ts (already signed‑in). */
-test.use({ storageState: "tests/fixtures/admin-storage.json" });
+import { login, logout } from "./helpers/auth";
 
 test.describe.parallel("User Management - list view", () => {
+  test.beforeEach(async ({ context }) => {
+    await login(context);
+  });
+
+  test.afterEach(async ({ page }) => {
+    await logout(page);
+  });
+
   test("renders paginated list & seed user", async ({ page }) => {
-    /* 1 ▸ open the management page */
     await page.goto("/admin/user-management", {
       waitUntil: "domcontentloaded",
     });
 
-    /* 2 ▸ wait for GET /admin/users?… */
     const userListApiResponse = await page.waitForResponse(
       (res) =>
         res.request().method() === "GET" &&
@@ -20,14 +24,9 @@ test.describe.parallel("User Management - list view", () => {
     const { content } = await userListApiResponse.json();
     expect(content.length).toBeGreaterThan(0);
 
-    /* 3 ▸ table rows == API rows */
     const tableRows = page.locator("table tbody tr");
     await expect(tableRows).toHaveCount(content.length);
-
-    /* 4 ▸ “Test User” row always present */
     await expect(tableRows.filter({ hasText: "Test User" })).toBeVisible();
-
-    /* 5 ▸ only one DB page → Next disabled */
     await expect(page.getByTestId("pagination-next")).toBeDisabled();
   });
 });

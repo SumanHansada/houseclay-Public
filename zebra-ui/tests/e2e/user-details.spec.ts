@@ -1,14 +1,21 @@
 import { test, expect } from "@playwright/test";
-
-test.use({ storageState: "tests/fixtures/admin-storage.json" });
+import { login, logout } from "./helpers/auth";
 
 const SEED_PHONE_NUMBER = "9999999999";
 
 test.describe.parallel("User details flow", () => {
+  test.beforeEach(async ({ context }) => {
+    await login(context);
+  });
+
+  test.afterEach(async ({ page }) => {
+    await logout(page);
+  });
+
   test("navigate via action button, render profile + tabs", async ({
     page,
   }) => {
-    /* ▸ open list & wait for GET /admin/users */
+    /* open list & wait for GET /admin/users */
     await page.goto("/admin/user-management", {
       waitUntil: "domcontentloaded",
     });
@@ -19,7 +26,7 @@ test.describe.parallel("User details flow", () => {
         res.ok(),
     );
 
-    /* ▸ click “View profile” & wait for GET /admin/search-user */
+    /* click “View profile” & wait for GET /admin/search-user */
     const [userDetailsApi] = await Promise.all([
       page.waitForResponse(
         (res) =>
@@ -33,7 +40,7 @@ test.describe.parallel("User details flow", () => {
     ]);
     expect(userDetailsApi.ok()).toBeTruthy();
 
-    /* ▸ correct URL */
+    /* correct URL */
     await page.waitForURL(`**/admin/user-details/${SEED_PHONE_NUMBER}*`);
 
     /* wait until the profile tab really rendered */
@@ -50,7 +57,7 @@ test.describe.parallel("User details flow", () => {
     await expect(page.getByTestId("activate-user-btn")).toBeDisabled();
     await expect(page.getByTestId("blacklist-user-btn")).toBeEnabled();
 
-    /* ▸ all tabs rendered (buttons) */
+    /* all tabs rendered (buttons) */
     const tabNames = [
       "Profile",
       "Owned Properties",
@@ -67,7 +74,7 @@ test.describe.parallel("User details flow", () => {
       ).toBeVisible();
     }
 
-    /* ▸ switch to “Owned Properties” and assert > 0 rows */
+    /* switch to “Owned Properties” and assert > 0 rows */
     await Promise.all([
       page.waitForURL(
         `**/admin/user-details/${SEED_PHONE_NUMBER}/owned-properties`,

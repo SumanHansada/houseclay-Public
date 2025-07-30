@@ -11,14 +11,13 @@ export default defineConfig({
 
   use: {
     baseURL: process.env.E2E_BASE_URL,
-    storageState: "tests/fixtures/admin-storage.json",
     trace: "retain-on-failure",
     video: "retain-on-failure",
   },
 
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
-    // { name: "firefox", use: { ...devices["Desktop Firefox"] } },
+    // { name: "firefox", use: { ...devices["Desktop Firefox"] } }
   ],
 
   webServer: {
