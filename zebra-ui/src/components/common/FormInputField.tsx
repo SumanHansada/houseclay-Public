@@ -1,16 +1,19 @@
 import { useField } from "formik";
-import React from "react";
+import { Eye, EyeOff } from "lucide-react";
+import React, { useState } from "react";
 
 interface FormInputFieldProps {
   name: string;
   id?: string;
   label?: string;
-  dataType?: "number" | "text" | "password"; // Determines how the value is handled
+  dataType?: "number" | "text" | "password"; // Zebra-UI: updated
   required?: boolean;
   placeholder?: string;
   className?: string;
   prefix?: React.ReactNode;
   suffix?: React.ReactNode;
+  testId?: string; // Zebra-UI: updated
+  autoComplete?: string; // Zebra-UI: updated
 }
 
 const FormInputField: React.FC<FormInputFieldProps> = ({
@@ -23,10 +26,12 @@ const FormInputField: React.FC<FormInputFieldProps> = ({
   className = "",
   prefix,
   suffix,
+  testId, // Zebra-UI: updated
+  autoComplete, // Zebra-UI: updated
 }) => {
   const [field, meta, helpers] = useField(name);
+  const [showPassword, setShowPassword] = useState(false); // Zebra-UI: updated
 
-  // Format numeric values for display
   const formatNumber = (value: string | number): string => {
     if (value === null || value === undefined || value === "") return "";
     const numericValue = String(value).replace(/[^0-9]/g, "");
@@ -35,7 +40,6 @@ const FormInputField: React.FC<FormInputFieldProps> = ({
       : "";
   };
 
-  // Parse formatted numeric values back to raw number
   const parseNumber = (formattedValue: string): number => {
     const numericValue = formattedValue.replace(/[^0-9]/g, "");
     return numericValue ? parseInt(numericValue, 10) : 0;
@@ -64,6 +68,9 @@ const FormInputField: React.FC<FormInputFieldProps> = ({
     }
   };
 
+  const inputType =
+    dataType === "password" ? (showPassword ? "text" : "password") : "text"; // Zebra-UI: updated
+
   return (
     <div className="w-full">
       {label && (
@@ -82,25 +89,43 @@ const FormInputField: React.FC<FormInputFieldProps> = ({
           </span>
         )}
         <input
-          type="text"
+          type={inputType} // Zebra-UI: updated
           id={id || name}
+          name={field.name} // Zebra-UI: updated
           placeholder={placeholder}
+          autoComplete={autoComplete} // Zebra-UI: updated
+          data-testid={testId ? `${testId}-input` : undefined} // Zebra-UI: updated
           className={`w-full p-3 border ${
             prefix ? "rounded-none" : "rounded-l-xl"
-          } ${suffix ? "rounded-none" : "rounded-r-xl"} ${className} ${
+          } ${
+            dataType === "password" || suffix ? "rounded-none" : "rounded-r-xl"
+          } ${className} ${
             meta.touched && meta.error ? "border-red-500" : "border-gray-300"
           }`}
           value={
             dataType === "number" ? formatNumber(field.value) : field.value
-          }
-          onChange={handleChange}
-          onBlur={handleBlur}
+          } // Zebra-UI: updated
+          onChange={handleChange} // Zebra-UI: updated
+          onBlur={handleBlur} // Zebra-UI: updated
         />
-        {suffix && (
-          <span className="inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-l-0 border-gray-300 rounded-r-xl">
-            {suffix}
-          </span>
+        {dataType === "password" && ( // Zebra-UI: updated
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-l-0 border-gray-300 rounded-r-xl"
+            tabIndex={-1}
+            data-testid={testId ? `${testId}-toggle` : undefined} // Zebra-UI: updated
+            aria-label="toggle password visibility" // Zebra-UI: updated
+          >
+            {showPassword ? <Eye /> : <EyeOff />}
+          </button>
         )}
+        {suffix &&
+          dataType !== "password" && ( // Zebra-UI: updated
+            <span className="inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-l-0 border-gray-300 rounded-r-xl">
+              {suffix}
+            </span>
+          )}
       </div>
       {meta.touched && meta.error ? (
         <div className="text-red-500 text-sm mt-1">{meta.error}</div>

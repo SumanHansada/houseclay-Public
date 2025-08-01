@@ -9,6 +9,8 @@ import {
 } from "@/utils/table/buildPropertyColumns";
 
 import { PropertiesTableView } from "../../components/PropertiesTableView";
+import { userDetailsTestIds } from "@/utils/testIds";
+import { UserDetailsTabEnum } from "@/common/enums";
 
 interface SerializedPropertyRow extends PropertyInfo {
   _serial: number;
@@ -45,7 +47,10 @@ const OwnedPropertiesPage: React.FC = () => {
   );
 
   return (
-    <div className="h-full">
+    <div
+      className="h-full"
+      data-testid={userDetailsTestIds.getTabPageId(UserDetailsTabEnum.OWNED)}
+    >
       <PropertiesTableView
         tableTitle="Owned Properties"
         columns={columns}

@@ -1,5 +1,6 @@
 "use client";
 
+import { toSlug } from "@/utils/core";
 import { FocusTrap } from "focus-trap-react";
 import React, { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -203,6 +204,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
                       }}
                       role="menuitem"
                       tabIndex={-1}
+                      data-testid={`menuitem-${toSlug(option.label)}`} // Zebra-UI: updated
                     >
                       {option.label}
                     </div>

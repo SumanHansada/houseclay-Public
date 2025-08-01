@@ -10,17 +10,8 @@ import AsyncFallback from "@/components/AsyncFallback";
 import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 import { ensureEnumValue } from "@/utils/core";
-
-const tabs: { label: string; value: UserDetailsTabEnum }[] = [
-  { label: "Profile", value: UserDetailsTabEnum.PROFILE },
-  { label: "Owned Properties", value: UserDetailsTabEnum.OWNED },
-  { label: "Shortlisted", value: UserDetailsTabEnum.SHORTLISTED },
-  { label: "Connect History", value: UserDetailsTabEnum.CONNECT },
-  { label: "Payment History", value: UserDetailsTabEnum.PAYMENT },
-  { label: "Contacted", value: UserDetailsTabEnum.CONTACTED },
-  { label: "Viewed", value: UserDetailsTabEnum.VIEWED },
-  { label: "Reported", value: UserDetailsTabEnum.REPORT },
-];
+import { userDetailsTabs } from "@/common/constants/user";
+import { userDetailsTestIds } from "@/utils/testIds";
 
 export default function UserDetailsLayout({
   children,
@@ -52,7 +43,6 @@ export default function UserDetailsLayout({
       />
     );
   }
-  console.log(currentUser);
 
   const activeTab = ensureEnumValue({
     enumObj: UserDetailsTabEnum,
@@ -68,8 +58,13 @@ export default function UserDetailsLayout({
     <div className="flex flex-col h-[calc(100vh-4rem)]">
       <Tabs onTabChange={handleTabChange} defaultActive={activeTab}>
         <TabHeader>
-          {tabs.map((tab) => (
-            <Tab key={tab.value} label={tab.label} value={tab.value} />
+          {userDetailsTabs.map((tab) => (
+            <Tab
+              key={tab.value}
+              label={tab.label}
+              value={tab.value}
+              testId={userDetailsTestIds.getTabButtonId(tab.value)}
+            />
           ))}
         </TabHeader>
       </Tabs>

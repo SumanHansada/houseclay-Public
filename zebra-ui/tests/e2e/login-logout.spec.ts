@@ -1,38 +1,42 @@
 import { test, expect } from "@playwright/test";
 import { logout } from "./helpers/auth";
 
-/** Start signed‑out: no storageState */
 test.use({ storageState: undefined });
-
 test.describe.configure({ mode: "serial" });
 
 test("@auth login + logout (cookie flow)", async ({ page, context }) => {
-  await page.goto("/login", { waitUntil: "domcontentloaded" });
+  test.info().annotations.push({
+    type: "sensitive",
+    description: "Credentials involved",
+  });
 
-  await page.getByLabel("Username").fill(process.env.E2E_USER!);
-  await page.getByLabel("Password").fill(process.env.E2E_PASS!);
+  await page.goto("/login", { waitUntil: "domcontentloaded" });
+  await expect(page.getByTestId("page-login")).toBeVisible();
+
+  await page
+    .getByTestId("login-username-input")
+    .pressSequentially(process.env.E2E_USER!);
+  await page
+    .getByTestId("login-password-input")
+    .pressSequentially(process.env.E2E_PASS!);
 
   const [loginRes] = await Promise.all([
     page.waitForResponse(
       (res) =>
         res.url().includes("/admin/login") && res.request().method() === "POST",
     ),
-    page.getByLabel(/sign[- ]in/i).click({ force: true }),
+    page.getByTestId("login-submit-button").click(),
   ]);
   expect(loginRes.ok()).toBeTruthy();
 
-  await page.waitForURL("**/admin/dashboard");
   await expect(page).toHaveURL(/\/admin\/dashboard$/);
-
-  const hasJwt = (await context.cookies()).some(
-    (cookie) => cookie.name === "adminToken",
-  );
-  expect(hasJwt).toBeTruthy();
+  expect(
+    (await context.cookies()).some((c) => c.name === "adminToken"),
+  ).toBeTruthy();
 
   await logout(page);
 
-  const jwtAfter = (await context.cookies()).some(
-    (cookie) => cookie.name === "adminToken",
-  );
-  expect(jwtAfter).toBeFalsy();
+  expect(
+    (await context.cookies()).some((c) => c.name === "adminToken"),
+  ).toBeFalsy();
 });

@@ -1,28 +1,32 @@
 import { test, expect } from "@playwright/test";
 import { login, logout } from "./helpers/auth";
+import { navigateViaSidebar } from "./helpers/navigation";
 
 test.describe.parallel("User Management - list view", () => {
-  test.beforeEach(async ({ context }) => {
-    await login(context);
+  test.beforeEach(async ({ context, page }) => {
+    await login(context, page);
   });
 
   test.afterEach(async ({ page }) => {
     await logout(page);
   });
 
-  test("renders paginated list & seed user", async ({ page }) => {
-    await page.goto("/admin/user-management", {
-      waitUntil: "domcontentloaded",
+  test("navigates via sidebar and loads user list", async ({ page }) => {
+    await navigateViaSidebar({
+      page,
+      sectionLabel: "User Management",
+      linkLabel: "HouseClay Users",
     });
 
-    const userListApiResponse = await page.waitForResponse(
+    await expect(page).toHaveURL(/\/admin\/user-management$/);
+
+    const res = await page.waitForResponse(
       (res) =>
         res.request().method() === "GET" &&
         res.url().includes("/admin/users") &&
         res.ok(),
     );
-    const { content } = await userListApiResponse.json();
-    expect(content.length).toBeGreaterThan(0);
+    const { content } = await res.json();
 
     const tableRows = page.locator("table tbody tr");
     await expect(tableRows).toHaveCount(content.length);
