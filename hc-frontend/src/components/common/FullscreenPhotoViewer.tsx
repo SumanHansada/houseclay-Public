@@ -12,6 +12,8 @@ interface FullscreenPhotoViewerProps {
   isOpen: boolean;
   onClose: () => void;
   onNavigate: (index: number) => void;
+  thumbnailPosition?: "bottom" | "left" | "right";
+  showThumbnails?: boolean;
 }
 
 export default function FullscreenPhotoViewer({
@@ -20,6 +22,8 @@ export default function FullscreenPhotoViewer({
   isOpen,
   onClose,
   onNavigate,
+  thumbnailPosition = "bottom",
+  showThumbnails = true,
 }: FullscreenPhotoViewerProps) {
   const currentImage = images[currentIndex];
   const hasPrevious = currentIndex > 0;
@@ -101,7 +105,13 @@ export default function FullscreenPhotoViewer({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ delay: 0.1 }}
-            className="absolute top-4 right-4 text-white p-2 rounded-full hover:bg-white/10 transition-colors duration-200 z-10"
+            className={`absolute text-white p-2 rounded-full hover:bg-white/10 transition-colors duration-200 z-10 ${
+              thumbnailPosition === "bottom"
+                ? "top-4 right-4"
+                : thumbnailPosition === "left"
+                  ? "top-4 right-4"
+                  : "top-4 left-4"
+            }`}
             onClick={onClose}
           >
             <X size={24} />
@@ -113,7 +123,13 @@ export default function FullscreenPhotoViewer({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ delay: 0.1 }}
-            className="absolute top-4 left-4 text-white text-sm bg-black/50 px-3 py-1 rounded-full z-10"
+            className={`absolute text-white text-sm bg-black/50 px-3 py-1 rounded-full z-10 ${
+              thumbnailPosition === "bottom"
+                ? "top-4 left-4"
+                : thumbnailPosition === "left"
+                  ? "bottom-4 right-4"
+                  : "bottom-4 left-4"
+            }`}
           >
             {currentIndex + 1} / {images.length}
           </motion.div>
@@ -166,6 +182,52 @@ export default function FullscreenPhotoViewer({
               />
             </div>
           </motion.div>
+
+          {/* Desktop Thumbnail Navigation */}
+          {showThumbnails && images.length > 1 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ delay: 0.2 }}
+              className={`absolute ${
+                thumbnailPosition === "bottom"
+                  ? "bottom-4 left-4 w-full"
+                  : thumbnailPosition === "left"
+                    ? "left-4 top-4 h-full"
+                    : "right-4 top-4 h-full"
+              } z-20`}
+            >
+              <div
+                className={`flex ${
+                  thumbnailPosition === "left" || thumbnailPosition === "right"
+                    ? "flex-col h-full justify-center overflow-y-auto scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent"
+                    : "flex-row w-full justify-center overflow-x-auto scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent"
+                } gap-2 bg-black/50 backdrop-blur-sm rounded-lg p-2`}
+              >
+                {images.map((image, index) => (
+                  <button
+                    key={index}
+                    onClick={() => onNavigate(index)}
+                    className={`relative w-24 h-24 rounded-md overflow-hidden border-2 transition-all flex-shrink-0 ${
+                      currentIndex === index
+                        ? "border-red-500 scale-110"
+                        : "border-transparent hover:border-white/50"
+                    }`}
+                  >
+                    <ImageWithLoader
+                      src={image}
+                      alt={`Thumbnail ${index + 1}`}
+                      fill
+                      className="w-full h-full object-cover"
+                      priority
+                      style={{ transformOrigin: "center" }}
+                    />
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
         </div>
       </motion.div>
     </AnimatePresence>

@@ -3,6 +3,10 @@
 import { Camera } from "lucide-react";
 import { useState } from "react";
 
+import PhotoGalleryDialog from "@/dialogs/photo-gallery-dialog";
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
+import { useDialog } from "@/providers/DialogContextProvider";
+
 import FullscreenPhotoViewer from "./FullscreenPhotoViewer";
 import ImageWithLoader from "./ImageWithLoader";
 
@@ -10,15 +14,21 @@ interface PhotoGalleryProps {
   images: string[];
   className?: string;
   maxDisplayImages?: number;
+  thumbnailPosition?: "bottom" | "left" | "right";
+  showThumbnails?: boolean;
 }
 
 export default function PhotoGallery({
   images,
   className = "",
   maxDisplayImages = 5,
+  thumbnailPosition = "bottom",
+  showThumbnails = true,
 }: PhotoGalleryProps) {
   const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { isMobile } = useDeviceContext();
+  const { openDialog, closeDialog, isDialogOpen } = useDialog();
 
   // Limit the number of images to display
   const displayImages = images.slice(0, maxDisplayImages);
@@ -35,6 +45,14 @@ export default function PhotoGallery({
 
   const handleNavigateImage = (index: number) => {
     setCurrentImageIndex(index);
+  };
+
+  const handleMobileGalleryClick = () => {
+    openDialog("photo-gallery-dialog");
+  };
+
+  const handleCloseMobileDialog = () => {
+    closeDialog("photo-gallery-dialog");
   };
 
   if (!displayImages.length) {
@@ -127,7 +145,7 @@ export default function PhotoGallery({
             {/* Mobile Layout - Single image with photo count */}
             <div
               className="md:hidden w-full h-full cursor-pointer relative group"
-              onClick={() => handleImageClick(0)}
+              onClick={handleMobileGalleryClick}
             >
               <ImageWithLoader
                 src={displayImages[0]}
@@ -155,13 +173,26 @@ export default function PhotoGallery({
       </div>
 
       {/* Fullscreen Photo Viewer */}
-      <FullscreenPhotoViewer
-        images={images}
-        currentIndex={currentImageIndex}
-        isOpen={isFullscreenOpen}
-        onClose={handleCloseFullscreen}
-        onNavigate={handleNavigateImage}
-      />
+      {!isMobile && (
+        <FullscreenPhotoViewer
+          images={images}
+          currentIndex={currentImageIndex}
+          isOpen={isFullscreenOpen}
+          onClose={handleCloseFullscreen}
+          onNavigate={handleNavigateImage}
+          thumbnailPosition={thumbnailPosition}
+          showThumbnails={showThumbnails}
+        />
+      )}
+
+      {/* Mobile Photo Gallery Dialog */}
+      {isDialogOpen("photo-gallery-dialog") && (
+        <PhotoGalleryDialog
+          id="photo-gallery-dialog"
+          images={images}
+          onClose={handleCloseMobileDialog}
+        />
+      )}
     </div>
   );
 }

@@ -201,9 +201,11 @@ export function PropertyDetailsClient({
           <ChevronLeft onClick={() => router.back()} size={25} />
         </button>
         <div className="flex gap-2 items-center">
-          <button className="rounded-full border md:border-none items-center justify-center p-2 bg-gradient-to-br from-yellow-400 via-yellow-500 to-orange-500 fill-current">
-            <Crown onClick={() => console.log("Crown Clicked")} size={18} />
-          </button>
+          {property.managed && (
+            <button className="rounded-full border md:border-none items-center justify-center p-2 bg-gradient-to-br from-yellow-400 via-yellow-500 to-orange-500 fill-current">
+              <Crown onClick={() => console.log("Crown Clicked")} size={18} />
+            </button>
+          )}
           <button className="rounded-full border md:border-none items-center justify-center p-2">
             <Share onClick={handleShare} size={18} />
           </button>
@@ -230,11 +232,11 @@ export function PropertyDetailsClient({
         </div>
       </section>
       {/* Photo Gallery Section Mobile */}
-      <section className="h-96 w-full md:hidden">
+      <section className="h-60 w-full md:hidden">
         <PhotoGallery
           images={property?.images}
           maxDisplayImages={5}
-          className="md:h-[60vh] h-96 rounded-none"
+          className="md:h-[60vh] h-60 rounded-none"
         />
       </section>
 
@@ -316,6 +318,7 @@ export function PropertyDetailsClient({
             images={property?.images}
             maxDisplayImages={5}
             className="md:h-[60vh] h-96 rounded-xl"
+            thumbnailPosition="bottom"
           />
         </section>
 
@@ -673,18 +676,20 @@ export function PropertyDetailsClient({
               </div>
             </section>
             {/* Exclusive listing & Report this listing */}
-            <section className="flex flex-col justify-between items-center gap-4">
-              <button className="px-8 py-3 flex justify-around border rounded-xl w-full text-base max-md:text-sm hover:bg-gray-50 transition-colors">
-                <div className="flex items-center gap-4">
-                  <Crown size={24} className="text-yellow-500" />
-                  <span>This is an Exclusive listing</span>
-                </div>
-              </button>
-              <button className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-2">
-                <Flag size={14} />
-                <span className="underline">Report this listing</span>
-              </button>
-            </section>
+            {property.managed && (
+              <section className="flex flex-col justify-between items-center gap-4">
+                <button className="px-8 py-3 flex justify-around border rounded-xl w-full text-base max-md:text-sm hover:bg-gray-50 transition-colors">
+                  <div className="flex items-center gap-4">
+                    <Crown size={24} className="text-yellow-500" />
+                    <span>This is an Exclusive listing</span>
+                  </div>
+                </button>
+                <button className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-2">
+                  <Flag size={14} />
+                  <span className="underline">Report this listing</span>
+                </button>
+              </section>
+            )}
           </section>
         </section>
 
@@ -700,10 +705,10 @@ export function PropertyDetailsClient({
                   </div>
                 </div>
                 <div className="flex-col">
-                  <div className="flex gap-2 items-center font-nunito">
+                  <div className="flex gap-2 items-center font-nunito text-sm">
                     No. of Bedroom
                   </div>
-                  <div className="text-gray-900 font-semibold font-nunito">
+                  <div className="text-gray-900 font-semibold font-nunito text-base">
                     {property?.bhkType?.split("BHK")[0]} Bedroom
                   </div>
                 </div>
@@ -715,10 +720,10 @@ export function PropertyDetailsClient({
                   </div>
                 </div>
                 <div className="flex-col">
-                  <div className="flex gap-2 items-center font-nunito">
+                  <div className="flex gap-2 items-center font-nunito text-sm">
                     No. of Bathroom
                   </div>
-                  <div className="text-gray-900 font-semibold font-nunito">
+                  <div className="text-gray-900 font-semibold font-nunito text-base">
                     {property?.bathrooms} Bathroom
                   </div>
                 </div>
@@ -731,10 +736,10 @@ export function PropertyDetailsClient({
                   </div>
                 </div>
                 <div className="flex-col">
-                  <div className="flex gap-2 items-center font-nunito">
+                  <div className="flex gap-2 items-center font-nunito text-sm">
                     No. of Balcony
                   </div>
-                  <div className="text-gray-900 font-semibold font-nunito">
+                  <div className="text-gray-900 font-semibold font-nunito text-base">
                     {property?.balcony} Balcony
                   </div>
                 </div>
@@ -747,10 +752,10 @@ export function PropertyDetailsClient({
                   </div>
                 </div>
                 <div className="flex-col">
-                  <div className="flex gap-2 items-center font-nunito">
+                  <div className="flex gap-2 items-center font-nunito text-sm">
                     Buildup Area
                   </div>
-                  <div className="text-gray-900 font-semibold font-nunito">
+                  <div className="text-gray-900 font-semibold font-nunito text-base">
                     {property?.builtUpArea}sqft
                   </div>
                 </div>
@@ -763,10 +768,10 @@ export function PropertyDetailsClient({
                   </div>
                 </div>
                 <div className="flex-col">
-                  <div className="flex gap-2 items-center font-nunito">
+                  <div className="flex gap-2 items-center font-nunito text-sm">
                     Parking
                   </div>
-                  <div className="text-gray-900 font-semibold font-nunito">
+                  <div className="text-gray-900 font-semibold font-nunito text-base">
                     {property?.parking}
                   </div>
                 </div>
@@ -779,17 +784,15 @@ export function PropertyDetailsClient({
                   </div>
                 </div>
                 <div className="flex-col">
-                  <div className="flex gap-2 items-center font-nunito">
+                  <div className="flex gap-2 items-center font-nunito text-sm">
                     Available From
                   </div>
-                  <div className="text-gray-900 font-semibold font-nunito">
+                  <div className="text-gray-900 font-semibold font-nunito text-base">
                     {formatDateToReadable(property?.availableFrom)}
                   </div>
                 </div>
               </div>
             </div>
-
-            <hr className="my-6 max-md:hidden" />
 
             {/* Price & Contact Section */}
             <div className="max-md:hidden">
@@ -839,95 +842,116 @@ export function PropertyDetailsClient({
           {/* Property Details Grid */}
           <section className="bg-white px-4 py-6 border rounded-xl shadow-md">
             <h2 className="text-xl mb-4">Other Details</h2>
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-2 gap-4">
               {/* Left Column */}
-              <div className="space-y-4">
-                <div className="flex gap-3">
-                  <div className="w-8 h-8 flex items-center justify-center">
+              <div className="flex w-full justify-start items-start gap-2 text-gray-600">
+                <div className="flex-col">
+                  <div className="p-0.5">
                     <House size={24} className="text-gray-600" />
                   </div>
-                  <div>
-                    <div className="text-sm text-gray-500">Property Type</div>
-                    <div className="font-medium text-gray-900">
-                      {property?.propertyType}
-                    </div>
-                  </div>
                 </div>
-
-                <div className="flex gap-3">
-                  <div className="w-8 h-8 flex items-center justify-center">
-                    <Hourglass size={24} className="text-gray-600" />
+                <div className="flex-col">
+                  <div className="flex gap-2 items-center font-nunito text-xs">
+                    Property Type
                   </div>
-                  <div>
-                    <div className="text-sm text-gray-500">Age of Building</div>
-                    <div className="font-medium text-gray-900">
-                      {property?.propertyAge}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex gap-3">
-                  <div className="w-8 h-8 flex items-center justify-center">
-                    <Compass size={24} className="text-gray-600" />
-                  </div>
-                  <div>
-                    <div className="text-sm text-gray-500">Facing</div>
-                    <div className="font-medium text-gray-900">
-                      {property?.facing}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex gap-3">
-                  <div className="w-8 h-8 flex items-center justify-center">
-                    <Building2 size={24} className="text-gray-600" />
-                  </div>
-                  <div>
-                    <div className="text-sm text-gray-500">Floor</div>
-                    <div className="font-medium text-gray-900">
-                      {property?.floor}/{property?.totalFloors}
-                    </div>
+                  <div className="text-gray-900 font-semibold font-nunito text-sm">
+                    {property?.propertyType}
                   </div>
                 </div>
               </div>
 
-              {/* Right Column */}
-              <div className="space-y-4">
-                <div className="flex  gap-3">
-                  <div className="w-8 h-8 flex items-center justify-center">
+              <div className="flex w-full justify-start items-start gap-2 text-gray-600">
+                <div className="flex-col">
+                  <div className="p-0.5">
+                    <Hourglass size={24} className="text-gray-600" />
+                  </div>
+                </div>
+                <div className="flex-col">
+                  <div className="flex gap-2 items-center font-nunito text-xs">
+                    Age of Building
+                  </div>
+                  <div className="text-gray-900 font-semibold font-nunito text-sm">
+                    {property?.propertyAge}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex w-full justify-start items-start gap-2 text-gray-600">
+                <div className="flex-col">
+                  <div className="p-0.5">
+                    <Compass size={24} className="text-gray-600" />
+                  </div>
+                </div>
+                <div className="flex-col">
+                  <div className="flex gap-2 items-center font-nunito text-xs">
+                    Facing
+                  </div>
+                  <div className="text-gray-900 font-semibold font-nunito text-sm">
+                    {property?.facing}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex w-full justify-start items-start gap-2 text-gray-600">
+                <div className="flex-col">
+                  <div className="p-0.5">
+                    <Building2 size={24} className="text-gray-600" />
+                  </div>
+                </div>
+                <div className="flex-col">
+                  <div className="flex gap-2 items-center font-nunito text-xs">
+                    Floor
+                  </div>
+                  <div className="text-gray-900 font-semibold font-nunito text-sm">
+                    {property?.floor}/{property?.totalFloors}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex w-full justify-start items-start gap-2 text-gray-600">
+                <div className="flex-col">
+                  <div className="p-0.5">
                     <KeyRound size={24} className="text-gray-600" />
                   </div>
-                  <div>
-                    <div className="text-sm text-gray-500">Ownership Type</div>
-                    <div className="font-medium text-gray-900">
-                      {property?.ownershipType || "NA"}
-                    </div>
+                </div>
+                <div className="flex-col">
+                  <div className="flex gap-2 items-center font-nunito text-xs">
+                    Ownership Type
+                  </div>
+                  <div className="text-gray-900 font-semibold font-nunito text-sm">
+                    {property?.ownershipType || "NA"}
                   </div>
                 </div>
+              </div>
 
-                <div className="flex  gap-3">
-                  <div className="w-8 h-8 flex items-center justify-center">
+              <div className="flex w-full justify-start items-start gap-2 text-gray-600">
+                <div className="flex-col">
+                  <div className="p-0.5">
                     <Sofa size={24} className="text-gray-600" />
                   </div>
-                  <div>
-                    <div className="text-sm text-gray-500">
-                      Furnishing Status
-                    </div>
-                    <div className="font-medium text-gray-900">
-                      {property?.furnishing}
-                    </div>
+                </div>
+                <div className="flex-col">
+                  <div className="flex gap-2 items-center font-nunito text-xs">
+                    Furnishing Status
+                  </div>
+                  <div className="text-gray-900 font-semibold font-nunito text-sm">
+                    {property?.furnishing}
                   </div>
                 </div>
+              </div>
 
-                <div className="flex  gap-3">
-                  <div className="w-8 h-8 flex items-center justify-center">
+              <div className="flex w-full justify-start items-start gap-2 text-gray-600">
+                <div className="flex-col">
+                  <div className="p-0.5">
                     <Icon iconNode={floorPlan} size={24} />
                   </div>
-                  <div>
-                    <div className="text-sm text-gray-500">Flooring</div>
-                    <div className="font-medium text-gray-900">
-                      {property?.floorType}
-                    </div>
+                </div>
+                <div className="flex-col">
+                  <div className="flex gap-2 items-center font-nunito text-xs">
+                    Flooring
+                  </div>
+                  <div className="text-gray-900 font-semibold font-nunito text-sm">
+                    {property?.floorType}
                   </div>
                 </div>
               </div>
@@ -1022,7 +1046,7 @@ export function PropertyDetailsClient({
             </button>
           </section>
           <section className="fixed bottom-0 left-0 ml-[33.33%] max-md:ml-auto right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
-            <div className="flex-col justify-between items-center w-1/2">
+            <div className="flex-col justify-between items-center w-full">
               <div className="text-gray-600 text-xs">
                 {property?.propertyCategory === PropertyCategory.RESALE
                   ? "Price"

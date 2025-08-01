@@ -12,7 +12,7 @@ import Button from "@/components/common/Button";
 import SelectDropdown from "@/components/common/SelectDropdown";
 import Footer from "@/components/Footer";
 import Properties from "@/components/Properties";
-import SearchFilterDialog from "@/dialogs/search-filters";
+import SearchFilterDialog from "@/dialogs/search-filters-dialog";
 import { PropertySearch } from "@/interfaces/PropertySearch";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -168,7 +168,7 @@ export default function PropertySearchPage() {
           variant="outline"
           size="sm"
           className="h-10 text-black text-sm bg-gray-100 rounded-full p-2 border-none"
-          onClick={() => openDialog("property-filters")}
+          onClick={() => openDialog("property-filters-dialog")}
           buttonTextClassName="hidden"
         >
           Filters
@@ -278,7 +278,7 @@ export default function PropertySearchPage() {
               variant="outline"
               size="md"
               className="min-h-[46px] text-black rounded-xl border text-sm"
-              onClick={() => openDialog("property-filters")}
+              onClick={() => openDialog("property-filters-dialog")}
               buttonTextClassName="lg:block md:hidden"
             >
               Filters
@@ -345,16 +345,16 @@ export default function PropertySearchPage() {
         </div>
       </section>
       <Footer />
-      {isDialogOpen("property-filters") && (
+      {isDialogOpen("property-filters-dialog") && (
         <SearchFilterDialog
-          id="property-filters"
+          id="property-filters-dialog"
           onClose={() => {
-            closeDialog("property-filters");
+            closeDialog("property-filters-dialog");
             dispatch(setHideStickyNavBar(false));
           }}
           onReset={() => {}}
           onApply={() => {
-            closeDialog("property-filters");
+            closeDialog("property-filters-dialog");
             dispatch(setHideStickyNavBar(false));
             handleSearch();
           }}
