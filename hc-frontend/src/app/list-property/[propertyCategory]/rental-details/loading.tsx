@@ -1,12 +1,7 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import React from "react";
 import Skeleton from "react-loading-skeleton";
-import { useSelector } from "react-redux";
-
-import { PropertyCategory } from "@/common/enums";
-import { RootState } from "@/store/store";
 
 interface RentalDetailsLoadingProps {
   className?: string;
@@ -15,30 +10,6 @@ interface RentalDetailsLoadingProps {
 export default function RentalDetailsLoading({
   className = "",
 }: RentalDetailsLoadingProps) {
-  const params = useParams();
-  const propertyCategory = useSelector(
-    (state: RootState) => state.listProperty.propertyCategory,
-  );
-
-  // Determine which property category to show based on URL or Redux state
-  const getCurrentPropertyCategory = (): PropertyCategory => {
-    // First try to get from URL params
-    if (params.propertyCategory) {
-      const categoryFromUrl = params.propertyCategory as string;
-      if (
-        Object.values(PropertyCategory).includes(
-          categoryFromUrl as PropertyCategory,
-        )
-      ) {
-        return categoryFromUrl as PropertyCategory;
-      }
-    }
-
-    // Fallback to Redux state
-    return propertyCategory;
-  };
-
-  const currentPropertyCategory = getCurrentPropertyCategory();
   // Skeleton for currency input field with label and icon
   const CurrencyFieldSkeleton = () => (
     <div className="flex flex-col gap-2 mb-2">
@@ -98,7 +69,7 @@ export default function RentalDetailsLoading({
             <Skeleton circle width={20} height={20} />
             <div className="flex flex-col items-center">
               <Skeleton circle width={40} height={40} />
-              <Skeleton width={80} height={16} />
+              <Skeleton width={60} height={16} />
             </div>
           </div>
         ))}
@@ -106,112 +77,43 @@ export default function RentalDetailsLoading({
   );
 
   return (
-    <div className={className}>
-      {/* Page header */}
+    <div className={`w-full ${className}`}>
+      {/* Header */}
       <div className="mb-8">
-        <Skeleton width={450} height={36} />
+        <Skeleton height={36} width="60%" className="mb-2" />
+        <Skeleton height={20} width="80%" />
       </div>
 
-      {/* Form content */}
-      <div>
-        {/* Rent and negotiable section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="col-span-1">
-            <CurrencyFieldSkeleton />
-          </div>
-          <div className="col-span-1">
-            {currentPropertyCategory === PropertyCategory.RENT ? (
-              <RadioGroupSkeleton />
-            ) : (
-              <FormFieldSkeleton />
-            )}
-          </div>
+      <div className="space-y-6">
+        {/* Expected Rent */}
+        <CurrencyFieldSkeleton />
+
+        {/* Available From */}
+        <FormFieldSkeleton />
+
+        {/* Security Deposit */}
+        <CurrencyFieldSkeleton />
+
+        {/* Maintenance Charges */}
+        <CurrencyFieldSkeleton />
+
+        {/* Preferred Tenants */}
+        <IconRadioGroupSkeleton options={4} />
+
+        {/* Food Preferences */}
+        <RadioGroupSkeleton width={400} />
+
+        {/* Amenities */}
+        <div className="mb-6">
+          <Skeleton height={24} width={120} className="mb-4" />
+          <AmenitiesSkeletonGrid />
         </div>
 
-        {/* Maintenance and deposit section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="col-span-1">
-            <CurrencyFieldSkeleton />
-          </div>
-          <div className="col-span-1">
-            <CurrencyFieldSkeleton />
-          </div>
-        </div>
+        {/* Parking */}
+        <RadioGroupSkeleton width={300} />
 
-        {/* Available from and furnishing section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="col-span-1">
-            <FormFieldSkeleton />
-          </div>
-          <div className="col-span-1">
-            <FormFieldSkeleton />
-          </div>
-        </div>
-
-        {/* Preferred tenant section - Rent Form */}
-        {currentPropertyCategory === PropertyCategory.RENT && (
-          <div className="mb-6">
-            <IconRadioGroupSkeleton options={4} />
-          </div>
-        )}
-
-        {/* Tenant type and food preferences - Flatmates Form */}
-        {currentPropertyCategory === PropertyCategory.FLATMATE && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <IconRadioGroupSkeleton options={2} />
-            <IconRadioGroupSkeleton options={2} />
-          </div>
-        )}
-
-        {/* Water and power backup section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="col-span-1">
-            <FormFieldSkeleton />
-          </div>
-          <div className="col-span-1">
-            <FormFieldSkeleton />
-          </div>
-        </div>
-
-        {/* Parking and Non-veg section - Rent Form */}
-        {currentPropertyCategory === PropertyCategory.RENT && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div className="col-span-1">
-              <FormFieldSkeleton />
-            </div>
-            <div className="col-span-1">
-              <RadioGroupSkeleton />
-            </div>
-          </div>
-        )}
-
-        {/* Bathroom and preferences section - Flatmates Form */}
-        {currentPropertyCategory === PropertyCategory.FLATMATE && (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div className="col-span-1">
-                <RadioGroupSkeleton />
-              </div>
-              <div className="col-span-1">
-                <RadioGroupSkeleton />
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div className="col-span-1">
-                <RadioGroupSkeleton />
-              </div>
-              <div className="col-span-1">
-                <RadioGroupSkeleton />
-              </div>
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* Amenities section */}
-      <div className="mb-8">
-        <Skeleton width={300} height={28} className="mb-6" />
-        <AmenitiesSkeletonGrid />
+        {/* Furnishing Status */}
+        <RadioGroupSkeleton width={400} />
       </div>
     </div>
   );

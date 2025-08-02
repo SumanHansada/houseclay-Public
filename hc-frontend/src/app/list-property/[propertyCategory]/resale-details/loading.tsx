@@ -1,7 +1,15 @@
+"use client";
+
 import React from "react";
 import Skeleton from "react-loading-skeleton";
 
-export default function ResaleDetailsLoading() {
+interface ResaleDetailsLoadingProps {
+  className?: string;
+}
+
+export default function ResaleDetailsLoading({
+  className = "",
+}: ResaleDetailsLoadingProps) {
   // Skeleton for currency input field with label and icon
   const CurrencyFieldSkeleton = () => (
     <div className="flex flex-col gap-2 mb-2">
@@ -34,87 +42,32 @@ export default function ResaleDetailsLoading() {
     </div>
   );
 
-  // Skeleton for amenities section
-  const AmenitiesSkeletonGrid = () => (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-      {Array(16)
-        .fill(0)
-        .map((_, i) => (
-          <div key={i} className="flex items-start gap-3">
-            <Skeleton circle width={20} height={20} />
-            <div className="flex flex-col items-center">
-              <Skeleton circle width={40} height={40} />
-              <Skeleton width={80} height={16} />
-            </div>
-          </div>
-        ))}
-    </div>
-  );
-
   return (
-    <div>
-      {/* Page header */}
+    <div className={`w-full ${className}`}>
+      {/* Header */}
       <div className="mb-8">
-        <Skeleton width={450} height={36} />
+        <Skeleton height={36} width="60%" className="mb-2" />
+        <Skeleton height={20} width="80%" />
       </div>
 
-      {/* Form content */}
-      <div>
-        {/* Price and Available From */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="col-span-1">
-            <CurrencyFieldSkeleton />
-          </div>
-          <div className="col-span-1">
-            <FormFieldSkeleton />
-          </div>
-        </div>
+      <div className="space-y-6">
+        {/* Expected Price */}
+        <CurrencyFieldSkeleton />
 
-        {/* Bathrooms and Balcony */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="col-span-1">
-            <FormFieldSkeleton />
-          </div>
-          <div className="col-span-1">
-            <FormFieldSkeleton />
-          </div>
-        </div>
+        {/* Price Per Sq Ft */}
+        <CurrencyFieldSkeleton />
 
-        {/* Price Negotiable and Under Loan */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="col-span-1">
-            <RadioGroupSkeleton />
-          </div>
-          <div className="col-span-1">
-            <RadioGroupSkeleton />
-          </div>
-        </div>
+        {/* Possession Status */}
+        <FormFieldSkeleton />
 
-        {/* Water Supply and Power Backup */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="col-span-1">
-            <FormFieldSkeleton />
-          </div>
-          <div className="col-span-1">
-            <FormFieldSkeleton />
-          </div>
-        </div>
+        {/* Age of Property */}
+        <FormFieldSkeleton />
 
-        {/* Furnishing and Parking */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="col-span-1">
-            <FormFieldSkeleton />
-          </div>
-          <div className="col-span-1">
-            <FormFieldSkeleton />
-          </div>
-        </div>
-      </div>
+        {/* Furnishing Status */}
+        <RadioGroupSkeleton width={400} />
 
-      {/* Amenities section */}
-      <div className="mb-8">
-        <Skeleton width={300} height={28} className="mb-6" />
-        <AmenitiesSkeletonGrid />
+        {/* Parking */}
+        <RadioGroupSkeleton width={300} />
       </div>
     </div>
   );

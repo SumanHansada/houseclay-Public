@@ -1,8 +1,17 @@
+"use client";
+
+import React from "react";
 import Skeleton from "react-loading-skeleton";
 
-export default function LocalityDetailsLoading() {
+interface LocalityDetailsLoadingProps {
+  className?: string;
+}
+
+export default function LocalityDetailsLoading({
+  className = "",
+}: LocalityDetailsLoadingProps) {
   return (
-    <div className="w-full">
+    <div className={`w-full ${className}`}>
       {/* Form Header */}
       <div className="mb-8">
         <Skeleton height={36} width="60%" />
