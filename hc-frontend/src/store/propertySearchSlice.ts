@@ -20,6 +20,7 @@ const initialState: PropertySearchFilter = {
   parking: "",
   priceRangeForRent: [200000, 700000],
   priceRangeForBuy: [5000000, 70000000],
+  bhkType: "",
 };
 
 const propertySearchSlice = createSlice({
@@ -81,6 +82,9 @@ const propertySearchSlice = createSlice({
     setPriceRangeForBuy: (state, action: PayloadAction<[number, number]>) => {
       state.priceRangeForBuy = action.payload;
     },
+    setBhkType: (state, action: PayloadAction<string>) => {
+      state.bhkType = action.payload;
+    },
     resetPropertySearch: (state) => {
       state.propertyType = "";
       state.propertyCategory = PropertyCategory.RENT;
@@ -98,6 +102,7 @@ const propertySearchSlice = createSlice({
       state.parking = "";
       state.priceRangeForRent = [200000, 700000];
       state.priceRangeForBuy = [5000000, 70000000];
+      state.bhkType = "";
     },
   },
 });
@@ -118,6 +123,7 @@ export const {
   setParking,
   setPriceRangeForRent,
   setPriceRangeForBuy,
+  setBhkType,
   resetPropertySearch,
 } = propertySearchSlice.actions;
 

@@ -17,6 +17,9 @@ const TabContext = createContext<TabContextType | undefined>(undefined);
 interface TabProps {
   label: string;
   value: string;
+  containerClassName?: string;
+  activeClassName?: string;
+  inactiveClassName?: string;
 }
 
 interface TabContentProps {
@@ -34,7 +37,8 @@ interface TabsProps {
 
 interface TabHeaderProps {
   children: ReactNode;
-  className?: string;
+  containerClassName?: string;
+  tabsClassName?: string;
 }
 
 interface NonTabProps {
@@ -42,19 +46,21 @@ interface NonTabProps {
   className?: string;
 }
 
-const Tab: React.FC<TabProps> = ({ label, value }) => {
+const Tab: React.FC<TabProps> = ({
+  label,
+  value,
+  containerClassName = "",
+  activeClassName = "",
+  inactiveClassName = "",
+}) => {
   const context = useContext(TabContext);
   if (!context) throw new Error("Tab must be used within Tabs");
   const isActive = context.active === value;
 
   return (
     <button
-      className={`px-4 py-2 max-md:py-1.5 text-base font-medium max-md:font-normal focus:outline-none transition-colors relative
-        ${
-          isActive
-            ? "text-red-600 md:border-b-2 border-red-500 max-md:border max-md:rounded-lg"
-            : "text-gray-700 hover:text-red-500"
-        }
+      className={`transition-colors relative ${containerClassName}
+        ${isActive ? activeClassName : inactiveClassName}
       `}
       onClick={() => context.onTabClick(value)}
       type="button"
@@ -69,7 +75,11 @@ const NonTab: React.FC<NonTabProps> = ({ children, className = "" }) => {
   return <div className={className}>{children}</div>;
 };
 
-const TabHeader: React.FC<TabHeaderProps> = ({ children, className = "" }) => {
+const TabHeader: React.FC<TabHeaderProps> = ({
+  children,
+  containerClassName = "",
+  tabsClassName = "",
+}) => {
   // Separate Tab and NonTab children
   const tabChildren: ReactElement[] = [];
   const nonTabChildren: ReactElement[] = [];
@@ -83,10 +93,10 @@ const TabHeader: React.FC<TabHeaderProps> = ({ children, className = "" }) => {
   });
 
   return (
-    <div className={`flex w-full items-center justify-between ${className}`}>
-      <div className="inline-flex gap-2 border-b border-gray-200 max-md:w-full max-md:justify-between max-md:border max-md:rounded-lg max-md:p-2">
-        {tabChildren}
-      </div>
+    <div
+      className={`flex w-full items-center justify-between ${containerClassName}`}
+    >
+      <div className={`${tabsClassName}`}>{tabChildren}</div>
       <div className="flex gap-2 ml-auto">{nonTabChildren}</div>
     </div>
   );

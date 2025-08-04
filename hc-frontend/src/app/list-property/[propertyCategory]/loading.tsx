@@ -45,7 +45,7 @@ export default function PropertyCategoryLoading({
     >
       <div className="text-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500 mx-auto mb-4"></div>
-        <p className="text-gray-600 mb-2">Loading Property Details...</p>
+        <p className="text-gray-600 mb-2">Loading...</p>
         <p className="text-sm text-gray-500">
           {currentPropertyCategory
             ? `Setting up ${pascalCase(currentPropertyCategory)} form`

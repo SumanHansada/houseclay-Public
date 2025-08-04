@@ -257,10 +257,28 @@ export function MyPropertyDetailsClient({
           <section className="max-md:min-h-[fit-content] w-full overflow-hidden">
             <div className="py-0 mx-auto flex">
               <Tabs defaultActive="details">
-                <TabHeader>
-                  <Tab label="Details" value="details" />
-                  <Tab label="Upgrades" value="upgrades" />
-                  <Tab label="Prospects" value="prospects" />
+                <TabHeader tabsClassName="inline-flex gap-2 border-b border-gray-200 max-md:w-full max-md:justify-between max-md:border max-md:rounded-lg max-md:p-2">
+                  <Tab
+                    label="Details"
+                    value="details"
+                    containerClassName="px-4 py-2 max-md:py-1.5 text-base font-medium max-md:font-normal focus:outline-none"
+                    activeClassName="text-red-600 md:border-b-2 border-red-500 max-md:border max-md:rounded-lg"
+                    inactiveClassName="text-gray-700 hover:text-red-500"
+                  />
+                  <Tab
+                    label="Upgrades"
+                    value="upgrades"
+                    containerClassName="px-4 py-2 max-md:py-1.5 text-base font-medium max-md:font-normal focus:outline-none"
+                    activeClassName="text-red-600 md:border-b-2 border-red-500 max-md:border max-md:rounded-lg"
+                    inactiveClassName="text-gray-700 hover:text-red-500"
+                  />
+                  <Tab
+                    label="Prospects"
+                    value="prospects"
+                    containerClassName="px-4 py-2 max-md:py-1.5 text-base font-medium max-md:font-normal focus:outline-none"
+                    activeClassName="text-red-600 md:border-b-2 border-red-500 max-md:border max-md:rounded-lg"
+                    inactiveClassName="text-gray-700 hover:text-red-500"
+                  />
                   <NonTab className="max-md:hidden">
                     <div className="flex items-center gap-2">
                       <button

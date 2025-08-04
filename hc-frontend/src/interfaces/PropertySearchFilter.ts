@@ -18,4 +18,5 @@ export interface PropertySearchFilter {
   parking: string;
   priceRangeForRent: [number, number];
   priceRangeForBuy: [number, number];
+  bhkType: string;
 }

@@ -114,7 +114,6 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
                 onBlur={onBlur}
                 className={radioInputClassName}
                 aria-label={option.label}
-                aria-hidden="true"
               />
               {withIcons && option.icon}
               <span

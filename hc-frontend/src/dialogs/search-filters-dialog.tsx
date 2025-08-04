@@ -2,6 +2,7 @@
 
 import {
   Bath,
+  BedSingle,
   Binoculars,
   CalendarDays,
   CarFront,
@@ -35,6 +36,10 @@ import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 import WifiIconSvg from "public/icons/amenities/wifi.svg";
 import NonVegIconSvg from "public/icons/food-preferences/non-veg.svg";
 import VegIconSvg from "public/icons/food-preferences/veg.svg";
+import BachelorIconSvg from "public/icons/preferred-tenants/bachelor.svg";
+import CompanyIconSvg from "public/icons/preferred-tenants/company.svg";
+import CoupleIconSvg from "public/icons/preferred-tenants/couple.svg";
+import FamilyIconSvg from "public/icons/preferred-tenants/family.svg";
 import FemaleIconSvg from "public/icons/preferred-tenants/female.svg";
 import MaleIconSvg from "public/icons/preferred-tenants/male.svg";
 import ApartmentIcon from "public/icons/property-types/apartment.webp";
@@ -52,6 +57,10 @@ import {
 
 const VegIcon = VegIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const NonVegIcon = NonVegIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const FamilyIcon = FamilyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const CompanyIcon = CompanyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const BachelorIcon = BachelorIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const CoupleIcon = CoupleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -59,12 +68,14 @@ import { PropertyCategory } from "@/common/enums";
 import Button from "@/components/common/Button";
 import RadioGroup from "@/components/common/RadioGroup";
 import RangeSlider from "@/components/common/RangeSlider";
+import Tabs, { Tab, TabContent, TabHeader } from "@/components/common/Tabs";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import {
   resetPropertySearch,
   setAmenities,
   setAvailability,
   setBathroomType,
+  setBhkType,
   setFoodPref,
   setFurnishing,
   setLookingFor,
@@ -90,6 +101,21 @@ const availabilityTypes = [
   { label: "Within 15 Days", value: "Within 15 Days" },
   { label: "Within 30 Days", value: "Within 30 Days" },
   { label: "After 45 Days", value: "After 45 Days" },
+];
+
+const bhkTypes = [
+  { label: "1 BHK", value: "1BHK" },
+  { label: "2 BHK", value: "2BHK" },
+  { label: "3 BHK", value: "3BHK" },
+  { label: "4 BHK", value: "4BHK" },
+  { label: "5+ BHK", value: "5+BHK" },
+];
+
+const parkingTypes = [
+  { label: "Both", value: "Both" },
+  { label: "2 Wheeler", value: "2 Wheeler" },
+  { label: "4 Wheeler", value: "4 Wheeler" },
+  { label: "None", value: "None" },
 ];
 
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -164,7 +190,6 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
   // Redux state selectors
   const {
     propertyCategory,
-    lookingFor,
     propertyTypeFilter,
     tenant,
     foodPref,
@@ -175,11 +200,13 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
     parking,
     priceRangeForRent,
     priceRangeForBuy,
+    bhkType,
   } = useSelector((state: RootState) => state.propertySearch);
+
+  console.log("propertyCategory", propertyCategory);
 
   const marksForRent = [
     { value: 0, label: "0" },
-    { value: 50000, label: "50K" },
     { value: 200000, label: "200K" },
     { value: 400000, label: "400K" },
     { value: 800000, label: "800K" },
@@ -188,7 +215,6 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
 
   const marksForBuy = [
     { value: 0, label: "0" },
-    { value: 5000000, label: "5M" },
     { value: 10000000, label: "10M" },
     { value: 20000000, label: "20M" },
     { value: 40000000, label: "40M" },
@@ -204,6 +230,10 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
     onReset();
   };
 
+  const handleTabChange = (value: string) => {
+    dispatch(setLookingFor(value as string));
+  };
+
   return (
     <Dialog
       id={id}
@@ -213,7 +243,7 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
       exitAnimation="animate-fade-out"
     >
       <DialogHeader>
-        <div className="flex border-b border-gray-200 items-center w-full justify-between py-4 px-6 max-md:py-2 max-md:px-4">
+        <div className="flex border-gray-200 items-center w-full justify-between py-4 px-6 max-md:py-2 max-md:px-4">
           <span className="text-xl max-md:hidden">More Filters</span>
           <div className="flex justify-center text-xl ml-auto md:hidden">
             <button
@@ -244,270 +274,724 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
       <DialogContent>
         <div className="flex flex-col gap-6 px-6 py-2">
           {/* Looking For */}
-          <div>
-            <div className="flex items-center gap-2 mb-2 text-lg">
-              <Binoculars size={20} /> Looking For
-            </div>
-            <div className="flex border border-gray-200 rounded-xl p-2">
-              <RadioGroup
-                name="lookingFor"
-                columns={2}
-                options={[
-                  { value: "Full House", label: "Full House" },
-                  { value: "Flatmates", label: "Flatmates" },
-                ]}
-                value={lookingFor}
-                containerClassName="w-full"
-                onChange={(value) => dispatch(setLookingFor(value as string))}
-              />
-            </div>
-          </div>
-          {/* Property Type */}
-          <div>
-            <div className="flex items-center gap-2 mb-2 text-lg">
-              <Home size={20} /> Property Type
-            </div>
-            <RadioGroup
-              name="propertyType"
-              columns={4}
-              options={[
-                {
-                  value: "Apartment",
-                  label: "Apartment",
-                  icon: (
-                    <Image
-                      src={ApartmentIcon}
-                      alt="Apartment"
-                      height={75}
-                      width={75}
-                    />
-                  ),
-                },
-                {
-                  value: "Independent House/Villa",
-                  label: "Independent House/Villa",
-                  icon: (
-                    <Image
-                      src={IndependentHouseIcon}
-                      alt="Independent House/Villa"
-                      height={75}
-                      width={75}
-                    />
-                  ),
-                },
-                {
-                  value: "Community Villa",
-                  label: "Community Villa",
-                  icon: (
-                    <Image
-                      src={CommunityVillaIcon}
-                      alt="Community Villa"
-                      height={75}
-                      width={75}
-                    />
-                  ),
-                },
-                {
-                  value: "Standalone Building",
-                  label: "Standalone Building",
-                  icon: (
-                    <Image
-                      src={StandaloneBuildingIcon}
-                      alt="Standalone Building"
-                      height={75}
-                      width={75}
-                    />
-                  ),
-                },
-              ]}
-              withIcons={true}
-              value={propertyTypeFilter}
-              onChange={(value) =>
-                dispatch(setPropertyTypeFilter(value as string))
-              }
-            />
-          </div>
-          {/* Preferred Tenants & Preferences */}
-          <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
+          {propertyCategory !== PropertyCategory.RESALE && (
             <div>
               <div className="flex items-center gap-2 mb-2 text-lg">
-                <span className="flex">
-                  <Mars size={20} />
-                  <Venus size={20} />
-                </span>{" "}
-                Preferred Tenants
+                <Binoculars size={20} /> Looking For
               </div>
+              <Tabs
+                defaultActive={propertyCategory}
+                onTabChange={handleTabChange}
+              >
+                <TabHeader tabsClassName="justify-between border rounded-lg p-2 w-full flex gap-2">
+                  <Tab
+                    label="Full House"
+                    value={PropertyCategory.RENT}
+                    containerClassName="w-1/2 p-3 text-base font-medium max-md:font-normal rounded-lg border rounded-lg"
+                    activeClassName="text-red-600 border-red-500"
+                    inactiveClassName="text-gray-700  border-gray-300 hover:border-gray-400"
+                  />
+                  <Tab
+                    label="Flatmates"
+                    value={PropertyCategory.FLATMATE}
+                    containerClassName="w-1/2 p-3 text-base font-medium max-md:font-normal rounded-lg border"
+                    activeClassName="text-red-600 border-red-500"
+                    inactiveClassName="text-gray-700  border-gray-300 hover:border-gray-400"
+                  />
+                </TabHeader>
+                <TabContent value={PropertyCategory.RENT} className="gap-4">
+                  {/* Property Type */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 text-lg">
+                      <Home size={20} /> Property Type
+                    </div>
+                    <RadioGroup
+                      name="propertyType"
+                      columns={4}
+                      options={[
+                        {
+                          value: "Apartment",
+                          label: "Apartment",
+                          icon: (
+                            <Image
+                              src={ApartmentIcon}
+                              alt="Apartment"
+                              height={75}
+                              width={75}
+                            />
+                          ),
+                        },
+                        {
+                          value: "Independent House/Villa",
+                          label: "Independent House/Villa",
+                          icon: (
+                            <Image
+                              src={IndependentHouseIcon}
+                              alt="Independent House/Villa"
+                              height={75}
+                              width={75}
+                            />
+                          ),
+                        },
+                        {
+                          value: "Community Villa",
+                          label: "Community Villa",
+                          icon: (
+                            <Image
+                              src={CommunityVillaIcon}
+                              alt="Community Villa"
+                              height={75}
+                              width={75}
+                            />
+                          ),
+                        },
+                        {
+                          value: "Standalone Building",
+                          label: "Standalone Building",
+                          icon: (
+                            <Image
+                              src={StandaloneBuildingIcon}
+                              alt="Standalone Building"
+                              height={75}
+                              width={75}
+                            />
+                          ),
+                        },
+                      ]}
+                      withIcons={true}
+                      value={propertyTypeFilter}
+                      onChange={(value) =>
+                        dispatch(setPropertyTypeFilter(value as string))
+                      }
+                    />
+                  </div>
+                  <hr className="my-4" />
+                  {/* BHK Type */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 text-lg">
+                      <BedSingle size={20} /> BHK Type
+                    </div>
+                    <div>
+                      <RadioGroup
+                        name="bhkType"
+                        columns={4}
+                        options={bhkTypes}
+                        value={bhkType}
+                        onChange={(value) => {
+                          dispatch(setBhkType(value as string));
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <hr className="my-4" />
+                  {/* Availability */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 text-lg">
+                      <CalendarDays size={20} /> Availability
+                    </div>
+                    <RadioGroup
+                      name="availability"
+                      columns={4}
+                      options={availabilityTypes}
+                      value={availability}
+                      onChange={(value) =>
+                        dispatch(setAvailability(value as string))
+                      }
+                    />
+                  </div>
+                  <hr className="my-4" />
+                  {/* Preferred Tenants */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 text-lg">
+                      <span className="flex">
+                        <Mars size={20} />
+                        <Venus size={20} />
+                      </span>{" "}
+                      Preferred Tenants
+                    </div>
 
-              <RadioGroup
-                name="preferredTenants"
-                columns={2}
-                options={[
-                  {
-                    value: "Female",
-                    label: "Female",
-                    icon: <FemaleIcon />,
-                  },
-                  {
-                    value: "Male",
-                    label: "Male",
-                    icon: <MaleIcon />,
-                  },
-                ]}
-                withIcons={true}
-                value={tenant}
-                onChange={(value) => dispatch(setTenant(value as string))}
-              />
+                    <RadioGroup
+                      name="preferredTenants"
+                      columns={4}
+                      options={[
+                        {
+                          value: "Family",
+                          label: "Family",
+                          icon: <FamilyIcon />,
+                        },
+                        {
+                          value: "Company",
+                          label: "Company",
+                          icon: <CompanyIcon />,
+                        },
+                        {
+                          value: "Bachelor",
+                          label: "Bachelor",
+                          icon: <BachelorIcon />,
+                        },
+                        {
+                          value: "Couple",
+                          label: "Couple",
+                          icon: <CoupleIcon />,
+                        },
+                      ]}
+                      withIcons={true}
+                      value={tenant}
+                      onChange={(value) => dispatch(setTenant(value as string))}
+                    />
+                  </div>
+                  <hr className="my-4" />
+                  {/* Price Range */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 text-lg">
+                      <IndianRupee size={20} /> Price Range
+                    </div>
+                    <RangeSlider
+                      label=""
+                      min={0}
+                      max={1000000}
+                      step={50000}
+                      value={priceRangeForRent}
+                      onChange={(value) =>
+                        dispatch(
+                          setPriceRangeForRent(value as [number, number]),
+                        )
+                      }
+                      marks={marksForRent}
+                      rangeClassName="absolute h-2 bg-red-500 rounded-full top-1/2 transform -translate-y-1/2"
+                      thumbClassName="absolute w-6 h-6 flex justify-center items-center bg-white border-2 border-white-500 rounded-full shadow-md cursor-pointer transform -translate-x-1/2 -translate-y-1/2 hover:shadow-lg transition-shadow focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+                      containerClassName="mb-8"
+                      showInputs={isMobile ? false : true}
+                    />
+                  </div>
+                  <hr className="my-4" />
+                  {/* Furnishing */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 text-lg">
+                      <Sofa size={20} /> Furnishing
+                    </div>
+                    <RadioGroup
+                      name="furnishing"
+                      columns={4}
+                      options={[
+                        { value: "Any", label: "Any" },
+                        { value: "Fully-furnished", label: "Fully Furnished" },
+                        { value: "Semi-furnished", label: "Semi Furnished" },
+                        { value: "Unfurnished", label: "Unfurnished" },
+                      ]}
+                      value={furnishing}
+                      onChange={(value) =>
+                        dispatch(setFurnishing(value as string))
+                      }
+                    />
+                  </div>
+                  <hr className="my-4" />
+                  {/* Amenities */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 text-lg">
+                      <Gem size={20} /> Amenities
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      {amenities.map((amenity) => (
+                        <button
+                          key={amenity.label}
+                          className={`flex flex-col items-start justify-center border rounded-xl p-3 gap-2 ${stateAmenities.includes(amenity.label) ? "border-red-500" : "border-gray-200 text-gray-700"}`}
+                          onClick={() =>
+                            dispatch(
+                              setAmenities(
+                                stateAmenities.includes(amenity.label)
+                                  ? stateAmenities.filter(
+                                      (a) => a !== amenity.label,
+                                    )
+                                  : [...stateAmenities, amenity.label],
+                              ),
+                            )
+                          }
+                        >
+                          {amenity.icon}
+                          <span className="text-sm text-left">
+                            {amenity.label}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <hr className="my-4" />
+                  {/* Parking */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 text-lg">
+                      <CarFront size={20} /> Parking
+                    </div>
+                    <RadioGroup
+                      name="parking"
+                      columns={2}
+                      options={parkingTypes}
+                      value={parking}
+                      onChange={(value) =>
+                        dispatch(setParking(value as string))
+                      }
+                    />
+                  </div>
+                </TabContent>
+                <TabContent value={PropertyCategory.FLATMATE}>
+                  {/* Property Type */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 text-lg">
+                      <Home size={20} /> Property Type
+                    </div>
+                    <RadioGroup
+                      name="propertyType"
+                      columns={4}
+                      options={[
+                        {
+                          value: "Apartment",
+                          label: "Apartment",
+                          icon: (
+                            <Image
+                              src={ApartmentIcon}
+                              alt="Apartment"
+                              height={75}
+                              width={75}
+                            />
+                          ),
+                        },
+                        {
+                          value: "Independent House/Villa",
+                          label: "Independent House/Villa",
+                          icon: (
+                            <Image
+                              src={IndependentHouseIcon}
+                              alt="Independent House/Villa"
+                              height={75}
+                              width={75}
+                            />
+                          ),
+                        },
+                        {
+                          value: "Community Villa",
+                          label: "Community Villa",
+                          icon: (
+                            <Image
+                              src={CommunityVillaIcon}
+                              alt="Community Villa"
+                              height={75}
+                              width={75}
+                            />
+                          ),
+                        },
+                        {
+                          value: "Standalone Building",
+                          label: "Standalone Building",
+                          icon: (
+                            <Image
+                              src={StandaloneBuildingIcon}
+                              alt="Standalone Building"
+                              height={75}
+                              width={75}
+                            />
+                          ),
+                        },
+                      ]}
+                      withIcons={true}
+                      value={propertyTypeFilter}
+                      onChange={(value) =>
+                        dispatch(setPropertyTypeFilter(value as string))
+                      }
+                    />
+                  </div>
+                  <hr className="my-4" />
+                  {/* Availability */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 text-lg">
+                      <CalendarDays size={20} /> Availability
+                    </div>
+                    <RadioGroup
+                      name="availability"
+                      columns={4}
+                      options={availabilityTypes}
+                      value={availability}
+                      onChange={(value) =>
+                        dispatch(setAvailability(value as string))
+                      }
+                    />
+                  </div>
+                  <hr className="my-4" />
+                  {/* Preferred Tenants & Preferences */}
+                  <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
+                    <div>
+                      <div className="flex items-center gap-2 mb-2 text-lg">
+                        <span className="flex">
+                          <Mars size={20} />
+                          <Venus size={20} />
+                        </span>{" "}
+                        Preferred Tenants
+                      </div>
+
+                      <RadioGroup
+                        name="preferredTenants"
+                        columns={2}
+                        options={[
+                          {
+                            value: "Female",
+                            label: "Female",
+                            icon: <FemaleIcon />,
+                          },
+                          {
+                            value: "Male",
+                            label: "Male",
+                            icon: <MaleIcon />,
+                          },
+                        ]}
+                        withIcons={true}
+                        value={tenant}
+                        onChange={(value) =>
+                          dispatch(setTenant(value as string))
+                        }
+                      />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 mb-2 text-lg">
+                        <Salad size={20} /> Food Preferences
+                      </div>
+                      <RadioGroup
+                        name="foodPreferences"
+                        columns={2}
+                        options={[
+                          {
+                            value: false,
+                            label: "Veg",
+                            icon: <VegIcon />,
+                          },
+                          {
+                            value: true,
+                            label: "Non-Veg",
+                            icon: <NonVegIcon />,
+                          },
+                        ]}
+                        withIcons={true}
+                        horizontal
+                        value={foodPref}
+                        onChange={(value) =>
+                          dispatch(setFoodPref(value as string))
+                        }
+                      />
+                    </div>
+                  </div>
+                  <hr className="my-4" />
+                  {/* Price Range */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 text-lg">
+                      <IndianRupee size={20} /> Price Range
+                    </div>
+                    <RangeSlider
+                      label=""
+                      min={0}
+                      max={1000000}
+                      step={50000}
+                      value={priceRangeForRent}
+                      onChange={(value) =>
+                        dispatch(
+                          setPriceRangeForRent(value as [number, number]),
+                        )
+                      }
+                      marks={marksForRent}
+                      rangeClassName="absolute h-2 bg-red-500 rounded-full top-1/2 transform -translate-y-1/2"
+                      thumbClassName="absolute w-6 h-6 flex justify-center items-center bg-white border-2 border-white-500 rounded-full shadow-md cursor-pointer transform -translate-x-1/2 -translate-y-1/2 hover:shadow-lg transition-shadow focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+                      containerClassName="mb-8"
+                      showInputs={isMobile ? false : true}
+                    />
+                  </div>
+                  <hr className="my-4" />
+                  {/* Furnishing */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 text-lg">
+                      <Sofa size={20} /> Furnishing
+                    </div>
+                    <RadioGroup
+                      name="furnishing"
+                      columns={4}
+                      options={[
+                        { value: "Any", label: "Any" },
+                        { value: "Fully-furnished", label: "Fully Furnished" },
+                        { value: "Semi-furnished", label: "Semi Furnished" },
+                        { value: "Unfurnished", label: "Unfurnished" },
+                      ]}
+                      value={furnishing}
+                      onChange={(value) =>
+                        dispatch(setFurnishing(value as string))
+                      }
+                    />
+                  </div>
+                  <hr className="my-4" />
+                  {/* Bathroom Type */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 text-lg">
+                      <Bath size={20} /> Bathroom Type
+                    </div>
+                    <RadioGroup
+                      name="bathroomType"
+                      columns={2}
+                      options={[
+                        { value: true, label: "Attached" },
+                        { value: false, label: "Non-Attached" },
+                      ]}
+                      containerClassName="w-1/2 max-md:w-full"
+                      value={bathroomType}
+                      onChange={(value) =>
+                        dispatch(setBathroomType(value as string))
+                      }
+                    />
+                  </div>
+                  <hr className="my-4" />
+                  {/* Parking */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 text-lg">
+                      <CarFront size={20} /> Parking
+                    </div>
+                    <RadioGroup
+                      name="parking"
+                      columns={2}
+                      options={parkingTypes}
+                      value={parking}
+                      onChange={(value) =>
+                        dispatch(setParking(value as string))
+                      }
+                    />
+                  </div>
+                </TabContent>
+              </Tabs>
             </div>
+          )}
+
+          {propertyCategory === PropertyCategory.RESALE && (
             <div>
-              <div className="flex items-center gap-2 mb-2 text-lg">
-                <Salad size={20} /> Food Preferences
-              </div>
-              <RadioGroup
-                name="foodPreferences"
-                columns={2}
-                options={[
-                  {
-                    value: false,
-                    label: "Veg",
-                    icon: <VegIcon />,
-                  },
-                  {
-                    value: true,
-                    label: "Non-Veg",
-                    icon: <NonVegIcon />,
-                  },
-                ]}
-                withIcons={true}
-                horizontal
-                value={foodPref}
-                onChange={(value) => dispatch(setFoodPref(value as string))}
-              />
-            </div>
-          </div>
-          {/* Bathroom Type */}
-          <div>
-            <div className="flex items-center gap-2 mb-2 text-lg">
-              <Bath size={20} /> Bathroom Type
-            </div>
-            <RadioGroup
-              name="bathroomType"
-              columns={2}
-              options={[
-                { value: true, label: "Attached" },
-                { value: false, label: "Non-Attached" },
-              ]}
-              containerClassName="w-1/2 max-md:w-full"
-              value={bathroomType}
-              onChange={(value) => dispatch(setBathroomType(value as string))}
-            />
-          </div>
-          {/* Price Range */}
-          <div>
-            <div className="flex items-center gap-2 mb-2 text-lg">
-              <IndianRupee size={20} /> Price Range
-            </div>
-            <RangeSlider
-              min={0}
-              max={
-                propertyCategory === PropertyCategory.RENT ? 1000000 : 100000000
-              }
-              step={
-                propertyCategory === PropertyCategory.RENT ? 50000 : 5000000
-              }
-              value={
-                propertyCategory === PropertyCategory.RENT
-                  ? priceRangeForRent
-                  : priceRangeForBuy
-              }
-              onChange={(value) =>
-                propertyCategory === PropertyCategory.RENT
-                  ? dispatch(setPriceRangeForRent(value as [number, number]))
-                  : dispatch(setPriceRangeForBuy(value as [number, number]))
-              }
-              marks={
-                propertyCategory === PropertyCategory.RENT
-                  ? marksForRent
-                  : marksForBuy
-              }
-              rangeClassName="absolute h-2 bg-red-500 rounded-full top-1/2 transform -translate-y-1/2"
-              thumbClassName="absolute w-6 h-6 flex justify-center items-center bg-white border-2 border-white-500 rounded-full shadow-md cursor-pointer transform -translate-x-1/2 -translate-y-1/2 hover:shadow-lg transition-shadow focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
-              showInputs={isMobile ? false : true}
-            />
-          </div>
-          {/* Furnishing */}
-          <div>
-            <div className="flex items-center gap-2 mb-2 text-lg">
-              <Sofa size={20} /> Furnishing
-            </div>
-            <RadioGroup
-              name="furnishing"
-              columns={4}
-              options={[
-                { value: "Any", label: "Any" },
-                { value: "Fully-furnished", label: "Fully Furnished" },
-                { value: "Semi-furnished", label: "Semi Furnished" },
-                { value: "Unfurnished", label: "Unfurnished" },
-              ]}
-              value={furnishing}
-              onChange={(value) => dispatch(setFurnishing(value as string))}
-            />
-          </div>
-          {/* Availability */}
-          <div>
-            <div className="flex items-center gap-2 mb-2 text-lg">
-              <CalendarDays size={20} /> Availability
-            </div>
-            <RadioGroup
-              name="availability"
-              columns={4}
-              options={availabilityTypes}
-              value={availability}
-              onChange={(value) => dispatch(setAvailability(value as string))}
-            />
-          </div>
-          {/* Amenities */}
-          <div>
-            <div className="flex items-center gap-2 mb-2 text-lg">
-              <Gem size={20} /> Amenities
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {amenities.map((amenity) => (
-                <button
-                  key={amenity.label}
-                  className={`flex flex-col items-start justify-center border rounded-xl p-3 gap-2 ${stateAmenities.includes(amenity.label) ? "border-red-500" : "border-gray-200 text-gray-700"}`}
-                  onClick={() =>
-                    dispatch(
-                      setAmenities(
-                        stateAmenities.includes(amenity.label)
-                          ? stateAmenities.filter((a) => a !== amenity.label)
-                          : [...stateAmenities, amenity.label],
+              {/* Property Type */}
+              <div>
+                <div className="flex items-center gap-2 mb-2 text-lg">
+                  <Home size={20} /> Property Type
+                </div>
+                <RadioGroup
+                  name="propertyType"
+                  columns={4}
+                  options={[
+                    {
+                      value: "Apartment",
+                      label: "Apartment",
+                      icon: (
+                        <Image
+                          src={ApartmentIcon}
+                          alt="Apartment"
+                          height={75}
+                          width={75}
+                        />
                       ),
-                    )
+                    },
+                    {
+                      value: "Independent House/Villa",
+                      label: "Independent House/Villa",
+                      icon: (
+                        <Image
+                          src={IndependentHouseIcon}
+                          alt="Independent House/Villa"
+                          height={75}
+                          width={75}
+                        />
+                      ),
+                    },
+                    {
+                      value: "Community Villa",
+                      label: "Community Villa",
+                      icon: (
+                        <Image
+                          src={CommunityVillaIcon}
+                          alt="Community Villa"
+                          height={75}
+                          width={75}
+                        />
+                      ),
+                    },
+                    {
+                      value: "Standalone Building",
+                      label: "Standalone Building",
+                      icon: (
+                        <Image
+                          src={StandaloneBuildingIcon}
+                          alt="Standalone Building"
+                          height={75}
+                          width={75}
+                        />
+                      ),
+                    },
+                  ]}
+                  withIcons={true}
+                  value={propertyTypeFilter}
+                  onChange={(value) =>
+                    dispatch(setPropertyTypeFilter(value as string))
                   }
-                >
-                  {amenity.icon}
-                  <span className="text-sm text-left">{amenity.label}</span>
-                </button>
-              ))}
+                />
+              </div>
+              <hr className="my-4" />
+              {/* BHK Type */}
+
+              <div>
+                <div className="flex items-center gap-2 mb-2 text-lg">
+                  <BedSingle size={20} /> BHK Type
+                </div>
+                <div>
+                  <RadioGroup
+                    name="bhkType"
+                    columns={4}
+                    options={bhkTypes}
+                    value={bhkType}
+                    onChange={(value) => {
+                      dispatch(setBhkType(value as string));
+                    }}
+                  />
+                </div>
+              </div>
+              <hr className="my-4" />
+              {/* Availability */}
+              <div>
+                <div className="flex items-center gap-2 mb-2 text-lg">
+                  <CalendarDays size={20} /> Availability
+                </div>
+                <RadioGroup
+                  name="availability"
+                  columns={4}
+                  options={availabilityTypes}
+                  value={availability}
+                  onChange={(value) =>
+                    dispatch(setAvailability(value as string))
+                  }
+                />
+              </div>
+              <hr className="my-4" />
+              {/* Preferred Tenants */}
+              <div>
+                <div className="flex items-center gap-2 mb-2 text-lg">
+                  <span className="flex">
+                    <Mars size={20} />
+                    <Venus size={20} />
+                  </span>{" "}
+                  Preferred Tenants
+                </div>
+
+                <RadioGroup
+                  name="preferredTenants"
+                  columns={4}
+                  options={[
+                    {
+                      value: "Family",
+                      label: "Family",
+                      icon: <FamilyIcon />,
+                    },
+                    {
+                      value: "Company",
+                      label: "Company",
+                      icon: <CompanyIcon />,
+                    },
+                    {
+                      value: "Bachelor",
+                      label: "Bachelor",
+                      icon: <BachelorIcon />,
+                    },
+                    {
+                      value: "Couple",
+                      label: "Couple",
+                      icon: <CoupleIcon />,
+                    },
+                  ]}
+                  withIcons={true}
+                  value={tenant}
+                  onChange={(value) => dispatch(setTenant(value as string))}
+                />
+              </div>
+              <hr className="my-4" />
+              {/* Furnishing */}
+              <div>
+                <div className="flex items-center gap-2 mb-2 text-lg">
+                  <Sofa size={20} /> Furnishing
+                </div>
+                <RadioGroup
+                  name="furnishing"
+                  columns={4}
+                  options={[
+                    { value: "Any", label: "Any" },
+                    { value: "Fully-furnished", label: "Fully Furnished" },
+                    { value: "Semi-furnished", label: "Semi Furnished" },
+                    { value: "Unfurnished", label: "Unfurnished" },
+                  ]}
+                  value={furnishing}
+                  onChange={(value) => dispatch(setFurnishing(value as string))}
+                />
+              </div>
+              <hr className="my-4" />
+              {/* Price Range */}
+              <div>
+                <div className="flex items-center gap-2 mb-2 text-lg">
+                  <IndianRupee size={20} /> Price Range
+                </div>
+                <RangeSlider
+                  label=""
+                  min={0}
+                  max={100000000}
+                  step={5000000}
+                  value={priceRangeForBuy}
+                  onChange={(value) =>
+                    dispatch(setPriceRangeForBuy(value as [number, number]))
+                  }
+                  marks={marksForBuy}
+                  rangeClassName="absolute h-2 bg-red-500 rounded-full top-1/2 transform -translate-y-1/2"
+                  thumbClassName="absolute w-6 h-6 flex justify-center items-center bg-white border-2 border-white-500 rounded-full shadow-md cursor-pointer transform -translate-x-1/2 -translate-y-1/2 hover:shadow-lg transition-shadow focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+                  containerClassName="mb-8"
+                  showInputs={isMobile ? false : true}
+                />
+              </div>
+              <hr className="my-4" />
+              {/* Amenities */}
+              <div>
+                <div className="flex items-center gap-2 mb-2 text-lg">
+                  <Gem size={20} /> Amenities
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {amenities.map((amenity) => (
+                    <button
+                      key={amenity.label}
+                      className={`flex flex-col items-start justify-center border rounded-xl p-3 gap-2 ${stateAmenities.includes(amenity.label) ? "border-red-500" : "border-gray-200 text-gray-700"}`}
+                      onClick={() =>
+                        dispatch(
+                          setAmenities(
+                            stateAmenities.includes(amenity.label)
+                              ? stateAmenities.filter(
+                                  (a) => a !== amenity.label,
+                                )
+                              : [...stateAmenities, amenity.label],
+                          ),
+                        )
+                      }
+                    >
+                      {amenity.icon}
+                      <span className="text-sm text-left">{amenity.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <hr className="my-4" />
+              {/* Parking */}
+              <div>
+                <div className="flex items-center gap-2 mb-2 text-lg">
+                  <CarFront size={20} /> Parking
+                </div>
+                <RadioGroup
+                  name="parking"
+                  columns={2}
+                  options={parkingTypes}
+                  value={parking}
+                  onChange={(value) => dispatch(setParking(value as string))}
+                />
+              </div>
             </div>
-          </div>
-          {/* Parking */}
-          <div>
-            <div className="flex items-center gap-2 mb-2 text-lg">
-              <CarFront size={20} /> Parking
-            </div>
-            <RadioGroup
-              name="parking"
-              columns={2}
-              options={[
-                { label: "Available", value: true },
-                { label: "Not Available", value: false },
-              ]}
-              containerClassName="w-1/2 max-md:w-full"
-              value={parking}
-              onChange={(value) => dispatch(setParking(value as string))}
-            />
-          </div>
+          )}
         </div>
       </DialogContent>
       <DialogFooter>

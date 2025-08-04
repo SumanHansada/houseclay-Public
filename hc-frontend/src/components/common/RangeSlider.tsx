@@ -257,6 +257,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
         {/* Min Input */}
         {showInputs && (
           <input
+            id={`${label}-min`}
             type="number"
             min={min}
             max={maxValue - step}
@@ -346,6 +347,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
         {/* Max Input */}
         {showInputs && (
           <input
+            id={`${label}-max`}
             type="number"
             min={minValue + step}
             max={max}
