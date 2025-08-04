@@ -20,7 +20,7 @@ public class UserDetailDTO {
     private List<UserPropertyDTO> viewedProperties;
     private List<UserPropertyDTO> contactedProperties;
     private List<ExternalPaymentDTO> externalPayments;
-    private List<ConnectTransactionDTO> connectTransactions;
+    private List<ConnectDTO> connectTransactions;
     private List<ReportPropertyDTO> reportProperties;
 }
 

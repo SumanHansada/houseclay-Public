@@ -103,4 +103,23 @@ public class UserControllerIntegrationTest {
 
     }
 
+    private static Stream<Arguments> provideUserLoginTestCases() {
+        return Stream.of();
+    }
+
+    @Order(1)
+    @ParameterizedTest
+    @MethodSource("provideUserLoginTestCases")
+    public void testUserLogin(UserRegisterTestCase testCase) throws Exception {
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/user/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(testCase.userPayload)))
+                .andReturn();
+        assertEquals(result.getResponse().getStatus(), testCase.expectedStatus);
+        if (testCase.expectedStatus != 200) {
+            assertEquals(testCase.expectedResponseMessage, result.getResponse().getContentAsString());
+        }
+
+    }
+
 }

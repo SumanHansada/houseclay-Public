@@ -1,10 +1,7 @@
 package com.houseclay.backend.service;
 
-import com.houseclay.backend.entity.ConnectTransaction;
-import com.houseclay.backend.entity.ExternalPaymentStatus;
+import com.houseclay.backend.entity.*;
 import com.razorpay.Utils;
-import com.houseclay.backend.entity.ExternalPayments;
-import com.houseclay.backend.entity.User;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.repository.ConnectTransactionRepository;
 import com.houseclay.backend.repository.ExternalPaymentsRepository;
@@ -18,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.Optional;
@@ -96,6 +94,7 @@ public class PaymentService {
 //        return generatedSignature.equals(signature);
     }
 
+    @Transactional
     public ResponseEntity<String> verifyPayment(
             String paymentId,
             String orderId,
@@ -110,36 +109,45 @@ public class PaymentService {
             return ResponseEntity.internalServerError().body("Signature verification error: " + e.getMessage());
         }
 
-        Optional<User> optionalUser = userRepository.findById(user.getPhoneNo());
-        if (optionalUser.isEmpty()) {
-            return ResponseEntity.badRequest().body("User not found");
-        }
-
-        user = optionalUser.get();
-
         Optional<ExternalPayments> optionalExternalPayments = externalPaymentsRepository.findById(orderId);
         if (optionalExternalPayments.isEmpty()) {
             return ResponseEntity.badRequest().body("Order not found");
         }
 
         ExternalPayments payment =  optionalExternalPayments.get();
+
+        if (user.getPhoneNo().equals(payment.getUser().getPhoneNo())) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+
+        user = payment.getUser();
+
         payment.setSignature(signature);
         payment.setRazorPaymentId(paymentId);
         payment.setStatus(ExternalPaymentStatus.COMPLETED);
         payment.setCompletedAt(new Timestamp(System.currentTimeMillis()));
 
-        ConnectTransaction connectTransaction = new ConnectTransaction();
-        connectTransaction.setExternalPayments(payment);
-        UUID uuid = UUID. randomUUID();
-        connectTransaction.setTransactionId(uuid.toString());
-        connectTransaction.setConnectQuantity((int)payment.getAmount()/CONNECT_RATE);
+        int connectQuantity = (int)payment.getAmount()/CONNECT_RATE;
 
-        user.setConnectBal(user.getConnectBal() + connectTransaction.getConnectQuantity());
-        payment.setConnectTransaction(connectTransaction);
-        connectTransaction.setUser(user);
-        user.getConnectTransactions().add(connectTransaction);
+        for (int i = 0; i < connectQuantity; i++) {
 
+            ConnectEvent connectEvent = new ConnectEvent();
+            connectEvent.setEventType(ConnectEventType.CREATED);
+            connectEvent.setActorType(ActorType.USER);
+            connectEvent.setActorId(user.getPhoneNo());
+
+            Connect connect = new Connect();
+            connect.setSourceType(ConnectSourceType.EXTERNAL_PAYMENT);
+            connect.setSourceId(payment.getPaymentId());
+            connect.setUser(user);
+            connect.setStatus(ConnectStatus.ACTIVE);
+            connect.getEvents().add(connectEvent);
+
+            user.getConnects().add(connect);
+        }
+        user.setConnectBal(user.getConnectBal() + connectQuantity);
         userRepository.save(user);
+
 
         return ResponseEntity.ok("Payment verified and balance updated");
     }

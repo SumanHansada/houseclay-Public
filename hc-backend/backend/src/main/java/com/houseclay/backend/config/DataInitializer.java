@@ -153,35 +153,60 @@ public class DataInitializer {
             paymentRepo.save(payment3);
 
             // ✅ Connect Transactions
-            ConnectTransaction ct1 = new ConnectTransaction();
+            Connect ct1 = new Connect();
             Optional<Property> optionalProperty = propertyRepo.findById(rent.getPropertyID());
             if (optionalProperty.isPresent()) {
                 rent = (RentProperty) optionalProperty.get();
             }
-            ct1.setTransactionId("TXN001");
-            ct1.setConnectQuantity(5);
-            ct1.setTransactionTime(now);
+            ct1.setSourceType(ConnectSourceType.ADMIN_GRANT);
             ct1.setUser(user);
             ct1.setProperty(rent);
-            ct1.setExternalPayments(payment2);
-            payment2.setConnectTransaction(ct1);
-            rent.setConnectTransaction(ct1);
-            propertyRepo.save(rent);
+            ct1.setStatus(ConnectStatus.USED);
+            ct1.setSourceId(admin.getUsername());
 
-            ConnectTransaction ct2 = new ConnectTransaction();
-            ct2.setTransactionId("TXN002");
-            ct2.setConnectQuantity(3);
-            ct2.setTransactionTime(new Timestamp(now.getTime() + 60000));
+            ConnectEvent ce1 = new ConnectEvent();
+            ce1.setEventType(ConnectEventType.CREATED);
+            ce1.setActorType(ActorType.ADMIN);
+            ce1.setActorId(admin.getUsername());
+            ce1.setConnect(ct1);
+            ConnectEvent ce2 = new ConnectEvent();
+            ce2.setEventType(ConnectEventType.USED);
+            ce2.setActorType(ActorType.USER);
+            ce2.setActorId(user.getPhoneNo());
+            ce2.setConnect(ct1);
+            connectRepo.save(ct1);
+
+            Connect ct2 = new Connect();
             ct2.setUser(user);
-            ct2.setExternalPayments(payment1);
-            payment1.setConnectTransaction(ct2);
+            ct2.setSourceType(ConnectSourceType.EXTERNAL_PAYMENT);
+            ct2.setStatus(ConnectStatus.EXPIRED);
+            ct2.setSourceId(payment1.getPaymentId());
+
+            ConnectEvent ce3 = new ConnectEvent();
+            ce3.setEventType(ConnectEventType.CREATED);
+            ce3.setActorType(ActorType.USER);
+            ce3.setActorId(user.getPhoneNo());
+            ce3.setConnect(ct2);
+
+            ConnectEvent ce4 = new ConnectEvent();
+            ce4.setEventType(ConnectEventType.EXPIRED);
+            ce4.setActorType(ActorType.SYSTEM);
+            ce4.setConnect(ct2);
+
             connectRepo.save(ct2);
 
-            ConnectTransaction ct3 = new ConnectTransaction();
-            ct3.setTransactionId("TXN003");
-            ct3.setConnectQuantity(10);
-            ct3.setTransactionTime(new Timestamp(now.getTime() + 120000));
+            Connect ct3 = new Connect();
             ct3.setUser(user);
+            ct3.setSourceType(ConnectSourceType.EXTERNAL_PAYMENT);
+            ct3.setStatus(ConnectStatus.EXPIRED);
+            ct3.setSourceId(payment1.getPaymentId());
+
+            ConnectEvent ce5 = new ConnectEvent();
+            ce5.setEventType(ConnectEventType.CREATED);
+            ce5.setActorType(ActorType.USER);
+            ce5.setActorId(user.getPhoneNo());
+            ce5.setConnect(ct3);
+
             connectRepo.save(ct3);
 
             // Save payments after transactions to retain linkage

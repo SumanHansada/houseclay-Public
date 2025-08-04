@@ -44,7 +44,7 @@ public class User {
     private List<ExternalPayments> externalPayments;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ConnectTransaction> connectTransactions;
+    private List<Connect> connects;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserLogin> userLogins;

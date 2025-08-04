@@ -23,8 +23,4 @@ public class ExternalPayments {
     @ManyToOne
     @JoinColumn(name = "phoneNo")
     private User user;
-
-    @OneToOne
-    @NotFound(action= NotFoundAction.IGNORE)
-    private ConnectTransaction connectTransaction;
 }

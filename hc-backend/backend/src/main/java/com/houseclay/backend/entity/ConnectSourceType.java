@@ -1,0 +1,6 @@
+package com.houseclay.backend.entity;
+
+public enum ConnectSourceType {
+    EXTERNAL_PAYMENT,
+    ADMIN_GRANT
+}

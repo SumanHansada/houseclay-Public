@@ -81,8 +81,4 @@ public class Property {
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PropertyUpdateLog> propertyUpdateLogs = new ArrayList<>();
-
-    @OneToOne
-    @NotFound(action= NotFoundAction.IGNORE)
-    private ConnectTransaction connectTransaction;
 }

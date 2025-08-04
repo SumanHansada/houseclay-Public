@@ -67,8 +67,8 @@ public class UserMapper {
         );
 
         dto.setConnectTransactions(
-                user.getConnectTransactions().stream()
-                        .map(UserMapper::toConnectTransactionDTO)
+                user.getConnects().stream()
+                        .map(UserMapper::toConnectDTO)
                         .collect(Collectors.toList())
         );
 
@@ -106,11 +106,19 @@ public class UserMapper {
         return dto;
     }
 
-    private static ConnectTransactionDTO toConnectTransactionDTO(ConnectTransaction transaction) {
-        ConnectTransactionDTO dto = new ConnectTransactionDTO();
-        dto.setTransactionId(transaction.getTransactionId());
-        dto.setConnectQuantity(transaction.getConnectQuantity());
-        dto.setTransactionTime(transaction.getTransactionTime());
+    private static ConnectDTO toConnectDTO(Connect connect) {
+        ConnectDTO dto = new ConnectDTO();
+        dto.setConnectId(dto.getConnectId());
+        dto.setStatus(connect.getStatus());
+        dto.setSourceType(connect.getSourceType());
+        if (connect.getProperty() != null) {
+            dto.setPropertyID(connect.getProperty().getPropertyID());
+        }
+        dto.setConnectEvents(
+                connect.getEvents().stream()
+                        .map(UserMapper::toConnectEventDTO)
+                        .collect(Collectors.toList())
+        );
         return dto;
     }
 
@@ -145,5 +153,15 @@ public class UserMapper {
         dto.setComment(userUpdateLog.getComment());
         return dto;
     }
+
+    public static ConnectEventDTO toConnectEventDTO(ConnectEvent connectEvent) {
+        ConnectEventDTO dto = new ConnectEventDTO();
+        dto.setActor(connectEvent.getActorType());
+        dto.setType(connectEvent.getEventType());
+        dto.setEventTime(connectEvent.getEventTime());
+        dto.setNotes(connectEvent.getNotes());
+        return dto;
+    }
 }
+
 
