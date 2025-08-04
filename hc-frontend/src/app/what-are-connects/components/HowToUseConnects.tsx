@@ -44,7 +44,7 @@ const HowToUseConnects = () => {
           Here&apos;s why thousands of property owners trust us:
         </p>
       </div>
-      <div className="md:flex flex-wrap xl:gap-28 lg:gap-6 gap-6 justify-between xl:px-16 lg:px-8 hidden">
+      <div className="md:flex flex-wrap xl:gap-16 lg:gap-6 gap-6 justify-between xl:px-16 lg:px-8 hidden">
         {CONNECT_CARDS.map((card) => (
           <ConnectCard
             key={card.id}
