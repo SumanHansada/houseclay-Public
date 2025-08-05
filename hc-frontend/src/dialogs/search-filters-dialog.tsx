@@ -232,6 +232,7 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
 
   const handleTabChange = (value: string) => {
     dispatch(setLookingFor(value as string));
+    dispatch(setPropertyCategory(value as PropertyCategory));
   };
 
   return (
@@ -721,6 +722,36 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
                         dispatch(setFurnishing(value as string))
                       }
                     />
+                  </div>
+                  {/* Amenities */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 text-lg">
+                      <Gem size={20} /> Amenities
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      {amenities.map((amenity) => (
+                        <button
+                          key={amenity.label}
+                          className={`flex flex-col items-start justify-center border rounded-xl p-3 gap-2 ${stateAmenities.includes(amenity.label) ? "border-red-500" : "border-gray-200 text-gray-700"}`}
+                          onClick={() =>
+                            dispatch(
+                              setAmenities(
+                                stateAmenities.includes(amenity.label)
+                                  ? stateAmenities.filter(
+                                      (a) => a !== amenity.label,
+                                    )
+                                  : [...stateAmenities, amenity.label],
+                              ),
+                            )
+                          }
+                        >
+                          {amenity.icon}
+                          <span className="text-sm text-left">
+                            {amenity.label}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
                   <hr className="my-4" />
                   {/* Bathroom Type */}

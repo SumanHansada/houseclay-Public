@@ -43,7 +43,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
   containerClassName = "mb-4",
   labelClassName = "block text-gray-700 text-sm font-medium mb-1",
   radioGroupClassName = "flex w-full justify-between",
-  radioOptionClassName = "flex-1 rounded-xl w-full relative",
+  radioOptionClassName = "border flex-1 rounded-xl w-full relative transition-all",
   radioLabelClassName = "block cursor-pointer p-3 w-full h-full",
   radioInputClassName = "sr-only",
   radioTextClassName = "",
@@ -91,7 +91,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
               ${
                 isSelected(option.value)
                   ? `${selectedColor} border`
-                  : "border border-gray-300 hover:border-gray-400"
+                  : "border-gray-300 hover:border-gray-400"
               }
               focus-within:shadow-[inset_0_0_0_2px_royalBlue] focus-within:border-transparent
             `}
