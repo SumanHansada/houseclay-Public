@@ -15,6 +15,7 @@ import { clearToken, initializeToken } from "@/store/authSlice";
 
 import ActionMenu from "../components/ActionMenu";
 import { RootState } from "../store/store";
+import { useRouter } from "next/navigation";
 
 type User = {
   name: string;
@@ -38,6 +39,8 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
 
   const bengaluruLocation = { lat: 12.9716, lng: 77.5946 };
 
+  const router = useRouter();
+
   const onLogin = () => {
     closeAllDialogs();
     openDialog("login-dialog");
@@ -60,6 +63,10 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const redirectToManageAccount = () => {
+    router.push("/manage-account");
   };
 
   if (hideHeader) {
@@ -145,7 +152,8 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
                   ]}
                   onSelect={(option) => {
                     if (option.id === 1) {
-                      console.log("Manage Account");
+                      // console.log("Manage Account");
+                      redirectToManageAccount();
                     } else {
                       onLogout();
                     }

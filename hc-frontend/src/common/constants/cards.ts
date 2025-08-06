@@ -1,3 +1,4 @@
+// what-are-connects
 export interface ConnectCardInfo {
   id: number;
   iconSrc: string;
@@ -8,7 +9,7 @@ export interface ConnectCardInfo {
   iconHeight?: number;
 }
 
-export const CONNECT_CARDS: ConnectCardInfo[] = [
+const CONNECT_CARDS: ConnectCardInfo[] = [
   {
     id: 1,
     iconSrc: "/icons/static-pages/connect-with-owners.svg",
@@ -40,3 +41,5 @@ export const CONNECT_CARDS: ConnectCardInfo[] = [
     iconHeight: 150,
   },
 ];
+
+export default CONNECT_CARDS;

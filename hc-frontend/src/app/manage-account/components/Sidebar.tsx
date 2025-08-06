@@ -1,196 +1,98 @@
-// app/manage-account/components/Sidebar.tsx
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import type { AccountNavItem } from "@/common/constants";
+import ChevronRightIcon from "public/icons/chevron-right.svg";
+import ChevronRightIconActive from "public/icons/chevron-right-red.svg";
+import { useAppLogout } from "@/hooks/useAppLogout";
 
-// ─── 1. Import each SVG once ───────────────────────────────────────────────
-import ProfileIcon from "public/icons/my-profile.svg";
-import RequirementsIcon from "public/icons/my-requirements.svg";
-import ShortlistsIcon from "public/icons/shortlists.svg";
-import ConnectsIcon from "public/icons/connects.svg";
-import PaymentsIcon from "public/icons/my-payments.svg";
-import PropertiesIcon from "public/icons/my-properties.svg";
-import OwnersIcon from "public/icons/owners-contacted.svg";
-import SupportIcon from "public/icons/support.svg";
-import LogoutIcon from "public/icons/logout.svg";
-
-import ChevronRightIcon from "public/icons/black-chevron-right.svg";
-
-interface NavItem {
-  label: string;
-  href: string;
-  Icon: React.FC<React.SVGProps<SVGSVGElement>>;
+export interface SidebarProps {
+  items: AccountNavItem[];
+  className?: string;
+  listClassName?: string;
+  itemClassName?: string;
 }
 
-const navItems: NavItem[] = [
-  {
-    label: "My Profile",
-    href: "/manage-account/my-profile",
-    Icon: ProfileIcon,
-  },
-  {
-    label: "My Requirements",
-    href: "/manage-account/my-requirements",
-    Icon: RequirementsIcon,
-  },
-  {
-    label: "Shortlists",
-    href: "/manage-account/shortlists",
-    Icon: ShortlistsIcon,
-  },
-  { label: "Connects", href: "/manage-account/connects", Icon: ConnectsIcon },
-  {
-    label: "My Payments",
-    href: "/manage-account/my-payments",
-    Icon: PaymentsIcon,
-  },
-  {
-    label: "My Properties",
-    href: "/manage-account/my-properties",
-    Icon: PropertiesIcon,
-  },
-  {
-    label: "Owners You Contacted",
-    href: "/manage-account/owners-you-contacted",
-    Icon: OwnersIcon,
-  },
-  { label: "Support", href: "/manage-account/support", Icon: SupportIcon },
-  { label: "Logout", href: "/manage-account/logout", Icon: LogoutIcon },
-];
-
-export default function Sidebar() {
+export default function Sidebar({
+  items,
+  className = "",
+  listClassName = "bg-gray-50 rounded-lg px-5 py-4",
+  itemClassName = "",
+}: SidebarProps) {
   const pathname = usePathname();
+  const logout = useAppLogout();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    logout();
+    router.replace("/");
+  };
 
   return (
-    <aside className="w-64 bg-white">
-      <nav className="space-y-1 bg-gray-50 rounded-lg p-4">
-        {navItems.map(({ label, href, Icon }) => {
+    <aside className={className} data-testid="account-sidebar">
+      <nav className={listClassName} aria-label="Manage account">
+        {items.map((item) => {
+          const isRoute = item.kind === "route";
           const isActive =
-            pathname === href ||
-            (href !== "/manage-account" && pathname.startsWith(href));
+            isRoute &&
+            (pathname === item.href ||
+              (item.href !== "/manage-account" &&
+                pathname.startsWith(item.href)));
 
-          // active items get red text; others stay gray
-          const textColor = isActive ? "text-red-500" : "text-gray-700";
+          const ItemIcon =
+            isActive && item.ActiveIcon ? item.ActiveIcon : item.Icon;
+          const ChevronIcon = isActive
+            ? ChevronRightIconActive
+            : ChevronRightIcon;
+
+          const row = (
+            <>
+              <ItemIcon />
+              <div
+                className={`flex justify-between items-center flex-1 border-b-2 py-2 transition-colors ${
+                  isActive ? "border-red-200" : "group-hover:border-red-200"
+                }`}
+              >
+                <span
+                  className={`transition-colors ${
+                    isActive ? "text-red-500" : "group-hover:text-red-500"
+                  }`}
+                >
+                  {item.label}
+                </span>
+                <ChevronIcon />
+              </div>
+            </>
+          );
+
+          const base = `group flex items-center gap-2 px-1 py-2 text-lg ${itemClassName}`;
+
+          if (isRoute) {
+            return (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={base}
+                aria-current={isActive ? "page" : undefined}
+              >
+                {row}
+              </Link>
+            );
+          }
 
           return (
-            <Link key={href} href={href}>
-              {/* wrapper for icon + text+chevron */}
-              <div className="flex items-center gap-3 px-5 py-3">
-                {/* icon inherits the same textColor */}
-                <Icon className={`w-5 h-5 ${textColor}`} />
-
-                {/* label + chevron share a flex container */}
-                <div
-                  className={
-                    `flex-1 flex items-center justify-between ` +
-                    (isActive
-                      ? "border-b-2 border-red-500 pb-2" // underline + padding
-                      : "")
-                  }
-                >
-                  <span className={`font-medium ${textColor}`}>{label}</span>
-                  <ChevronRightIcon className={`w-4 h-4 ${textColor}`} />
-                </div>
-              </div>
-            </Link>
+            <button
+              key={item.label}
+              type="button"
+              className={`${base} w-full text-left`}
+              onClick={handleLogout}
+            >
+              {row}
+            </button>
           );
         })}
       </nav>
     </aside>
   );
 }
-
-// "use client";
-
-// import Link from "next/link";
-// import { usePathname } from "next/navigation";
-
-// import ProfileIcon from "public/icons/my-profile.svg";
-// import RequirementsIcon from "public/icons/my-requirements.svg";
-// import ShortlistsIcon from "public/icons/shortlists.svg";
-// import ConnectsIcon from "public/icons/connects.svg";
-// import PaymentsIcon from "public/icons/my-payments.svg";
-// import PropertiesIcon from "public/icons/my-properties.svg";
-// import OwnersIcon from "public/icons/owners-contacted.svg";
-// import SupportIcon from "public/icons/support.svg";
-// import LogoutIcon from "public/icons/logout.svg";
-
-// import ChevronRightIcon from "public/icons/black-chevron-right.svg";
-
-// type NavItem = {
-//   label: string;
-//   href: string;
-//   Icon: React.FC<React.SVGProps<SVGSVGElement>>;
-// };
-
-// const navItems: NavItem[] = [
-//   {
-//     label: "My Profile",
-//     href: "/manage-account/my-profile",
-//     Icon: ProfileIcon,
-//   },
-//   {
-//     label: "My Requirements",
-//     href: "/manage-account/my-requirements",
-//     Icon: RequirementsIcon,
-//   },
-//   {
-//     label: "Shortlists",
-//     href: "/manage-account/shortlists",
-//     Icon: ShortlistsIcon,
-//   },
-//   { label: "Connects", href: "/manage-account/connects", Icon: ConnectsIcon },
-//   {
-//     label: "My Payments",
-//     href: "/manage-account/my-payments",
-//     Icon: PaymentsIcon,
-//   },
-//   {
-//     label: "My Properties",
-//     href: "/manage-account/my-properties",
-//     Icon: PropertiesIcon,
-//   },
-//   {
-//     label: "Owners You Contacted",
-//     href: "/manage-account/owners-you-contacted",
-//     Icon: OwnersIcon,
-//   },
-//   { label: "Support", href: "/manage-account/support", Icon: SupportIcon },
-//   { label: "Logout", href: "/manage-account/logout", Icon: LogoutIcon },
-// ];
-
-// export default function Sidebar() {
-//   const pathname = usePathname();
-
-//   return (
-//     <aside className="w-96 bg-white">
-//       <nav className="space-y-1 bg-gray-50 rounded-lg">
-//         {navItems.map(({ label, href, Icon }) => {
-//           const isActive =
-//             pathname === href ||
-//             (href !== "/manage-account" && pathname.startsWith(href));
-
-//           const textColor = isActive ? "text-red-500" : "text-gray-700";
-//           const bgColor = isActive ? "bg-red-50" : "hover:bg-gray-100";
-
-//           return (
-//             <Link
-//               key={href}
-//               href={href}
-//               className={`flex items-center px-5 py-2 gap-2 ${textColor}`}
-//             >
-//               <Icon className={textColor} />
-//               <div
-//                 className={`flex item-center justify-between flex-1 ${isActive ? "border-b border-red-500 border-spacing-y-4" : ""}`}
-//               >
-//                 <span className="font-medium">{label}</span>
-//                 <ChevronRightIcon />
-//               </div>
-//             </Link>
-//           );
-//         })}
-//       </nav>
-//     </aside>
-//   );
-// }

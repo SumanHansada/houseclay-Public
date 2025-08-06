@@ -11,24 +11,27 @@ const user = {
 export default function MyProfilePage() {
   return (
     <div className="space-y-6">
-      <div className="border-b">
+      <div className="border-b-2 pb-2">
         <h1 className="text-2xl font-medium">My Profile</h1>
       </div>
 
-      <div className="flex space-x-8">
+      <div className="flex space-x-20">
         {/* Avatar + Upload */}
         <div className="flex flex-col items-center">
-          <div className="w-24 h-24 bg-gray-300 rounded-full flex items-center justify-center text-4xl font-bold">
+          <div className="size-40 bg-black rounded-full flex items-center justify-center text-[60px] text-white">
             {getInitials(user.name)}
           </div>
-          <button className="mt-2 text-sm text-blue-600">Upload Photo</button>
+          <button className="mt-2 underline underline-offset-4">
+            Upload Profile Photo
+          </button>
         </div>
 
         {/* Profile Form */}
         <form className="flex-1 space-y-4">
           {/* Name */}
+
           <div>
-            <label className="block text-sm font-medium">Name</label>
+            <label className="block font-medium">Name</label>
             <input
               type="text"
               defaultValue={user.name}
