@@ -18,6 +18,7 @@ import {
   Icon,
   KeyRound,
   MapPin,
+  ParkingCircle,
   Phone,
   Share,
   Sofa,
@@ -331,9 +332,9 @@ export function PropertyDetailsClient({
         </section>
 
         {/* Main Content Section Desktop*/}
-        <section className="flex w-full xl:gap-16 lg:gap-8 md:gap-0 gap-0 max-md:pt-4 max-md:hidden">
+        <section className="flex w-full xl:gap-16 lg:gap-8 md:gap-8 gap-0 max-md:pt-4 max-md:hidden">
           {/* Left Section - 3/4 width */}
-          <section className="w-3/4 max-md:w-full">
+          <section className="md:w-1/2 lg:w-3/5 2xl:w-3/4 max-md:w-full">
             {/* Property Details Grid */}
             <section className="bg-white p-6">
               <div className="grid grid-cols-2 gap-6">
@@ -480,7 +481,7 @@ export function PropertyDetailsClient({
             <hr />
             {/* Map Section */}
             <section className="py-6 mb-6">
-              <div className="flex justify-between items-center mb-6">
+              <div className="flex flex-col lg:flex-row justify-between  items-start lg:items-center mb-6">
                 <h2 className="text-xl mb-4">Where you&apos;ll be</h2>
                 <div className="flex items-center gap-2 text-gray-700 mb-4">
                   <MapPin size={16} />
@@ -535,21 +536,21 @@ export function PropertyDetailsClient({
           </section>
 
           {/* Right Section - 1/4 width */}
-          <section className="w-1/4 max-md:w-full">
+          <section className="md:w-1/2 lg:w-2/5 2xl:w-1/3 max-md:w-full">
             {/* Property Details Section */}
             <section className="border rounded-xl shadow-md px-4 py-6 mb-6">
               <div className="grid grid-cols-2 gap-4 justify-items-center items-center mb-4 divide-x">
                 <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                   <div className="flex-col">
                     <div className="p-0.5">
-                      <BedDouble size={25} />
+                      <BedDouble size={20} />
                     </div>
                   </div>
                   <div className="flex-col">
-                    <div className="flex gap-2 items-center font-nunito">
+                    <div className="flex gap-2 items-center font-nunito text-sm">
                       No. of Bedroom
                     </div>
-                    <div className="text-gray-900 font-semibold font-nunito">
+                    <div className="text-gray-900 font-semibold font-nunito text-base">
                       {property?.bhkType?.split("BHK")[0]} Bedroom
                     </div>
                   </div>
@@ -557,14 +558,14 @@ export function PropertyDetailsClient({
                 <div className="flex w-full justify-start items-start gap-2 text-gray-600 pl-2">
                   <div className="flex-col">
                     <div className="p-0.5">
-                      <Bath size={25} />
+                      <Bath size={20} />
                     </div>
                   </div>
                   <div className="flex-col">
-                    <div className="flex gap-2 items-center font-nunito">
+                    <div className="flex gap-2 items-center font-nunito text-sm">
                       No. of Bathroom
                     </div>
-                    <div className="text-gray-900 font-semibold font-nunito">
+                    <div className="text-gray-900 font-semibold font-nunito text-base">
                       {property?.bathrooms} Bathroom
                     </div>
                   </div>
@@ -578,10 +579,10 @@ export function PropertyDetailsClient({
                     </div>
                   </div>
                   <div className="flex-col">
-                    <div className="flex gap-2 items-center font-nunito">
+                    <div className="flex gap-2 items-center font-nunito text-sm">
                       No. of Balcony
                     </div>
-                    <div className="text-gray-900 font-semibold font-nunito">
+                    <div className="text-gray-900 font-semibold font-nunito text-base">
                       {property?.balcony} Balcony
                     </div>
                   </div>
@@ -594,11 +595,11 @@ export function PropertyDetailsClient({
                     </div>
                   </div>
                   <div className="flex-col">
-                    <div className="flex gap-2 items-center font-nunito">
+                    <div className="flex gap-2 items-center font-nunito text-sm">
                       Buildup Area
                     </div>
-                    <div className="text-gray-900 font-semibold font-nunito">
-                      {property?.builtUpArea}sqft
+                    <div className="text-gray-900 font-semibold font-nunito text-base">
+                      {property?.builtUpArea} sqft
                     </div>
                   </div>
                 </div>
@@ -608,14 +609,14 @@ export function PropertyDetailsClient({
                 <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                   <div className="flex-col">
                     <div className="p-0.5">
-                      <ParkingSpaceIcon />
+                      <ParkingCircle size={20} />
                     </div>
                   </div>
                   <div className="flex-col">
-                    <div className="flex gap-2 items-center font-nunito">
+                    <div className="flex gap-2 items-center font-nunito text-sm">
                       Parking
                     </div>
-                    <div className="text-gray-900 font-semibold font-nunito">
+                    <div className="text-gray-900 font-semibold font-nunito text-base">
                       {property?.parking}
                     </div>
                   </div>
@@ -628,10 +629,10 @@ export function PropertyDetailsClient({
                     </div>
                   </div>
                   <div className="flex-col">
-                    <div className="flex gap-2 items-center font-nunito">
+                    <div className="flex gap-2 items-center font-nunito text-sm">
                       Available From
                     </div>
-                    <div className="text-gray-900 font-semibold font-nunito">
+                    <div className="text-gray-900 font-semibold font-nunito text-base">
                       {formatDateToReadable(property?.availableFrom)}
                     </div>
                   </div>
@@ -783,7 +784,7 @@ export function PropertyDetailsClient({
               <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                 <div className="flex-col">
                   <div className="p-0.5">
-                    <ParkingSpaceIcon />
+                    <ParkingCircle size={20} />
                   </div>
                 </div>
                 <div className="flex-col">

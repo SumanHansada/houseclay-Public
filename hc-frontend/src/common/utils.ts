@@ -89,7 +89,7 @@ export const formatDateToReadable = (isoDateString: string): string => {
 
   try {
     const date = parseISO(isoDateString);
-    return format(date, "MMMM d, yyyy");
+    return format(date, "MMM d, yyyy");
   } catch (error) {
     console.error("Invalid date format:", error);
     return "-";
