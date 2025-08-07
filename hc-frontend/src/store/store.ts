@@ -8,6 +8,7 @@ import appReducer from "./appSlice";
 import authReducer from "./authSlice";
 import listPropertyReducer from "./listPropertySlice";
 import propertySearchReducer from "./propertySearchSlice";
+import shortlistReducer from "./shortlistPropertySlice";
 import uploadToS3SliceReducer from "./uploadToS3Slice";
 import userReducer from "./userSlice";
 
@@ -47,6 +48,13 @@ const propertySearchPersistConfig = {
   ], // Persist all fields
 };
 
+// Configure persistence for shortlist slice
+const shortlistPersistConfig = {
+  key: "shortlist",
+  storage,
+  whitelist: ["shortlistedProperties"], // Persist shortlisted properties
+};
+
 const persistedListPropertyReducer = persistReducer(
   listPropertyPersistConfig,
   listPropertyReducer,
@@ -57,6 +65,11 @@ const persistedPropertySearchReducer = persistReducer(
   propertySearchReducer,
 );
 
+const persistedShortlistReducer = persistReducer(
+  shortlistPersistConfig,
+  shortlistReducer,
+);
+
 export function makeStore() {
   return configureStore({
     reducer: {
@@ -64,6 +77,7 @@ export function makeStore() {
       auth: authReducer,
       listProperty: persistedListPropertyReducer,
       propertySearch: persistedPropertySearchReducer,
+      shortlist: persistedShortlistReducer,
       user: userReducer,
       uploadToS3: uploadToS3SliceReducer,
       [apiSlice.reducerPath]: apiSlice.reducer,

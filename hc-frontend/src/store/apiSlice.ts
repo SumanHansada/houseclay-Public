@@ -192,6 +192,30 @@ export const apiSlice = createApi({
         method: "POST",
       }),
     }),
+    shortlistProperty: builder.mutation<
+      { message: string },
+      { propertyId: string }
+    >({
+      query: ({ propertyId }) => ({
+        url: `/property/user/shortlist-property/${propertyId}`,
+        method: "POST",
+      }),
+    }),
+    removeShortlistedProperty: builder.mutation<
+      { message: string },
+      { propertyId: string }
+    >({
+      query: ({ propertyId }) => ({
+        url: `/property/user/remove-shortlisted-property/${propertyId}`,
+        method: "DELETE",
+      }),
+    }),
+    getShortlistedProperties: builder.query<
+      { shortlistedProperties: Array<{ propertyId: string }> },
+      void
+    >({
+      query: () => `/property/user/shortlisted-properties`,
+    }),
   }),
 });
 
@@ -212,4 +236,8 @@ export const {
   useGenerateLeadMutation,
   useGetPublicPropertyByIdQuery,
   useLazyGetPublicPropertyByIdQuery,
+  useShortlistPropertyMutation,
+  useRemoveShortlistedPropertyMutation,
+  useGetShortlistedPropertiesQuery,
+  useLazyGetShortlistedPropertiesQuery,
 } = apiSlice;
