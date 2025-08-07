@@ -61,7 +61,8 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
-import { GoogleMapsDirection, PhotoGallery } from "@/utility-components";
+import { GoogleMapsDirection } from "@/utility-components";
+import PhotoGallery from "@/utility-components/PhotoGallery";
 
 const BalconyIcon = BalconyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const BuildUpAreaIcon = BuildUpAreaIconSvg as React.FC<

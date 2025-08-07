@@ -5,7 +5,8 @@ import { PropertyCategory } from "@/common/enums";
 import HomeSearchBar from "@/components/HomeSearchBar";
 import { setPropertyCategory } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
-import { ImageWithLoader } from "@/utility-components";
+
+import ImageWithLoader from "../utility-components/ImageWithLoader";
 
 const MastHeadDesktop = () => {
   const propertyCategory = useSelector(

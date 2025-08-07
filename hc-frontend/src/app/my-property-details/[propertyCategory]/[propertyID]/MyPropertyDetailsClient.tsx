@@ -72,15 +72,9 @@ import {
 import { setHideHeader } from "@/store/appSlice";
 import { setHideFooter } from "@/store/appSlice";
 import { setHideStickyNavBar } from "@/store/appSlice";
-import {
-  FullscreenPhotoViewer,
-  ImageWithLoader,
-  NonTab,
-  Tab,
-  TabContent,
-  TabHeader,
-  Tabs,
-} from "@/utility-components";
+import { NonTab, Tab, TabContent, TabHeader, Tabs } from "@/utility-components";
+import FullscreenPhotoViewer from "@/utility-components/FullscreenPhotoViewer";
+import ImageWithLoader from "@/utility-components/ImageWithLoader";
 
 import PostedAndRentDetails from "./components/PostedAndRentDetails";
 import UpgradePropertyBanner from "./components/UpgradePropertyBanner";

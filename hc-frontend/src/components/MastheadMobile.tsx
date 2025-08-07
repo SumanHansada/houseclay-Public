@@ -8,8 +8,8 @@ import { PropertyCategory } from "@/common/enums";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setPropertyCategory } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
-import { ImageWithLoader } from "@/utility-components";
 
+import ImageWithLoader from "../utility-components/ImageWithLoader";
 import HomeSearchBar from "./HomeSearchBar";
 
 const FindFlatmates = dynamic(
