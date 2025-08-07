@@ -20,8 +20,6 @@ type User = {
   name: string;
 };
 
-type NavigationItems = "Rent" | "Resale" | "Buy Connects" | "About Us";
-
 export interface HeaderProps {
   user?: User;
 }
@@ -48,15 +46,6 @@ const Header: React.FC<HeaderProps> = () => {
   const onMenuClick = () => {
     closeAllDialogs();
     openDialog("menu-dialog");
-  };
-
-  const isActiveNav = (navItem: NavigationItems) => {
-    const currentNavigation = searchParams.get("propertyCategory");
-    console.log("currentNavigation", currentNavigation);
-    if (pathname === "/property-search" && !currentNavigation) {
-      return navItem === "Rent";
-    }
-    return currentNavigation === navItem.toLowerCase();
   };
 
   useEffect(() => {
@@ -95,26 +84,34 @@ const Header: React.FC<HeaderProps> = () => {
           <nav className="hidden md:flex xl:gap-12 lg:gap-6 md:gap-3 gap-3 text-gray-800">
             <Link
               href={`/property-search?lat=${bengaluruLocation.lat}&lon=${bengaluruLocation.lng}&propertyCategory=rent`}
-              className={`relative hover:text-red-500 ${isActiveNav("Rent") ? "text-red-500" : ""}`}
+              data-category="rent"
+              data-active={
+                searchParams.get("propertyCategory") === "rent" ||
+                (pathname === "/property-search" &&
+                  !searchParams.get("propertyCategory"))
+                  ? "true"
+                  : "false"
+              }
+              className="relative hover:text-red-500 py-2 nav-link"
             >
               Rent
-              {isActiveNav("Rent") && (
-                <span className="absolute left-0 -bottom-1/2 w-full h-[2px] bg-red-500"></span>
-              )}
             </Link>
             <Link
               href={`/property-search?lat=${bengaluruLocation.lat}&lon=${bengaluruLocation.lng}&propertyCategory=resale`}
-              className={`relative hover:text-red-500 ${isActiveNav("Resale") ? "text-red-500" : ""}`}
+              data-category="resale"
+              data-active={
+                searchParams.get("propertyCategory") === "resale"
+                  ? "true"
+                  : "false"
+              }
+              className="relative hover:text-red-500 py-2 nav-link"
             >
               Buy
-              {isActiveNav("Resale") && (
-                <span className="absolute left-0 -bottom-1/2 w-full h-[2px] bg-red-500"></span>
-              )}
             </Link>
-            <Link href="#" className="hover:text-red-500">
+            <Link href="#" className="hover:text-red-500 py-2">
               Buy Connects
             </Link>
-            <Link href="#" className="hover:text-red-500">
+            <Link href="#" className="hover:text-red-500 py-2">
               About Us
             </Link>
           </nav>

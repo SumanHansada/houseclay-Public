@@ -71,3 +71,35 @@ body.dialog-open {
 .toaster-container {
   top: 4rem !important; /* equivalent to top-16 */
 }
+
+/* CSS-only active link detection */
+.nav-link {
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: #ef4444; /* red-500 */
+}
+
+/* Active state using data-active attribute */
+.nav-link[data-active="true"] {
+  color: #ef4444; /* red-500 */
+}
+
+.nav-link[data-active="true"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background-color: #ef4444; /* red-500 */
+}
+
+/* Alternative: Using focus states for keyboard navigation */
+.nav-link:focus-visible {
+  color: #ef4444; /* red-500 */
+  outline: 2px solid #ef4444;
+  outline-offset: 2px;
+}
