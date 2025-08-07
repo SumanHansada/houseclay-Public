@@ -3,6 +3,7 @@
 // import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { ChevronDown, Menu, User, UserRound } from "lucide-react";
 import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 import CoinSvg from "public/icons/coin.svg";
 import HouseClaySvg from "public/icons/houseclay.svg";
 import { useEffect } from "react";
@@ -19,6 +20,8 @@ type User = {
   name: string;
 };
 
+type NavigationItems = "Rent" | "Resale" | "Buy Connects" | "About Us";
+
 export interface HeaderProps {
   user?: User;
 }
@@ -32,6 +35,11 @@ const Header: React.FC<HeaderProps> = () => {
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
   const { openDialog, closeAllDialogs } = useDialog();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const bengaluruLocation = { lat: 12.9716, lng: 77.5946 };
+
   const onLogin = () => {
     closeAllDialogs();
     openDialog("login-dialog");
@@ -40,6 +48,15 @@ const Header: React.FC<HeaderProps> = () => {
   const onMenuClick = () => {
     closeAllDialogs();
     openDialog("menu-dialog");
+  };
+
+  const isActiveNav = (navItem: NavigationItems) => {
+    const currentNavigation = searchParams.get("propertyCategory");
+    console.log("currentNavigation", currentNavigation);
+    if (pathname === "/property-search" && !currentNavigation) {
+      return navItem === "Rent";
+    }
+    return currentNavigation === navItem.toLowerCase();
   };
 
   useEffect(() => {
@@ -76,12 +93,23 @@ const Header: React.FC<HeaderProps> = () => {
         {/* Center - Navigation */}
         <div className="flex justify-between items-center w-full text-sm">
           <nav className="hidden md:flex xl:gap-12 lg:gap-6 md:gap-3 gap-3 text-gray-800">
-            <Link href="#" className="hover:text-red-500">
+            <Link
+              href={`/property-search?lat=${bengaluruLocation.lat}&lon=${bengaluruLocation.lng}&propertyCategory=rent`}
+              className={`relative hover:text-red-500 ${isActiveNav("Rent") ? "text-red-500" : ""}`}
+            >
               Rent
+              {isActiveNav("Rent") && (
+                <span className="absolute left-0 -bottom-1/2 w-full h-[2px] bg-red-500"></span>
+              )}
             </Link>
-            <Link href="#" className="relative text-red-500">
+            <Link
+              href={`/property-search?lat=${bengaluruLocation.lat}&lon=${bengaluruLocation.lng}&propertyCategory=resale`}
+              className={`relative hover:text-red-500 ${isActiveNav("Resale") ? "text-red-500" : ""}`}
+            >
               Buy
-              <span className="absolute left-0 -bottom-1/2 w-full h-[2px] bg-red-500"></span>
+              {isActiveNav("Resale") && (
+                <span className="absolute left-0 -bottom-1/2 w-full h-[2px] bg-red-500"></span>
+              )}
             </Link>
             <Link href="#" className="hover:text-red-500">
               Buy Connects
