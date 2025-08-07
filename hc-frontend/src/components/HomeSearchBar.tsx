@@ -6,10 +6,10 @@ import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
+import { PlacesAutocomplete } from "@/base-components";
 import { resetPropertySearch } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
 
-import { PlacesAutocomplete } from "../base-components";
 import Dropdown from "./Dropdown";
 
 const Search = SearchSvg as React.FC<React.SVGProps<SVGSVGElement>>;

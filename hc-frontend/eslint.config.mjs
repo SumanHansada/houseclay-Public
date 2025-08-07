@@ -50,6 +50,9 @@ const eslintConfig = [
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
 
+      // Circular dependency check
+      "import/no-cycle": ["error", { maxDepth: Infinity }],
+
       "react/react-in-jsx-scope": "off", // Disable the error for missing React in scope
       "react/prop-types": "off", // Disable prop-types rule since TypeScript handles it
       "prettier/prettier": "error", // Enable prettier errors

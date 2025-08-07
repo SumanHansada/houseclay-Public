@@ -5,8 +5,6 @@ import { PropertyCategory } from "@/common/enums";
 import { sanitizePhoneNumber } from "@/common/utils";
 import { PropertyForm } from "@/interfaces/PropertyForm";
 
-import { RootState } from "./store";
-
 const baseUrl = process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL;
 
 export const apiSlice = createApi({
@@ -17,8 +15,8 @@ export const apiSlice = createApi({
       "http://ec2-3-107-183-183.ap-southeast-2.compute.amazonaws.com:8080/api" ||
       "https://jsonplaceholder.typicode.com",
     prepareHeaders: (headers, { getState }) => {
-      const token =
-        Cookies.get("token") || (getState() as RootState).auth.token;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const token = Cookies.get("token") || (getState() as any).auth?.token;
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }

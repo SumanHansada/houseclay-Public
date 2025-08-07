@@ -1,7 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { RootState } from "./store";
-
 interface ShortlistState {
   shortlistedProperties: string[];
 }
@@ -41,14 +39,5 @@ export const {
   setShortlistedProperties,
   clearShortlist,
 } = shortlistSlice.actions;
-
-// Selectors
-export const selectShortlistedProperties = (state: RootState) =>
-  state.shortlist.shortlistedProperties;
-
-export const selectIsPropertyShortlisted = (
-  state: RootState,
-  propertyId: string,
-) => state.shortlist.shortlistedProperties.includes(propertyId);
 
 export default shortlistSlice.reducer;

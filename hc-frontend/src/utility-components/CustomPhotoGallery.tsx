@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { ImageWithLoader } from "@/utility-components";
+import ImageWithLoader from "./ImageWithLoader";
 
 interface CustomPhotoGalleryProps {
   images: string[];
