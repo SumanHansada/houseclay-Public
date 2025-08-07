@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { resetPropertySearch } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
 
-import PlacesAutocomplete from "./common/PlacesAutocomplete";
+import { PlacesAutocomplete } from "../base-components";
 import Dropdown from "./Dropdown";
 
 const Search = SearchSvg as React.FC<React.SVGProps<SVGSVGElement>>;

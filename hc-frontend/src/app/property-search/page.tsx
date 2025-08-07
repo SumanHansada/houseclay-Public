@@ -5,11 +5,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { SelectDropdown } from "@/base-components";
 import { BadgeType, PropertyCategory } from "@/common/enums";
 import { pascalCase } from "@/common/utils";
 import Autocomplete from "@/components/common/Autocomplete";
 import Button from "@/components/common/Button";
-import SelectDropdown from "@/components/common/SelectDropdown";
 import Footer from "@/components/Footer";
 import Properties from "@/components/Properties";
 import SearchFilterDialog from "@/dialogs/search-filters-dialog";

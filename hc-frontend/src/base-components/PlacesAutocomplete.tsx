@@ -1,6 +1,6 @@
 "use client";
 
-import "../../app/google-places-autocomplete.css";
+import "../app/google-places-autocomplete.css";
 
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { MapPin } from "lucide-react";

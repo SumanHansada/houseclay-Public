@@ -47,6 +47,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 
+import { PlacesAutocomplete } from "@/base-components";
 import { PropertyCategory } from "@/common/enums";
 import {
   formatDateToReadable,
@@ -55,7 +56,6 @@ import {
 } from "@/common/utils";
 import DirectionsMap from "@/components/common/DirectionsMap";
 import PhotoGallery from "@/components/common/PhotoGallery";
-import PlacesAutocomplete from "@/components/common/PlacesAutocomplete";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useGetPublicPropertyByIdQuery } from "@/store/apiSlice";
 import {

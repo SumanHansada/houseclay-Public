@@ -1,4 +1,4 @@
-import SelectDropdown from "@/components/common/SelectDropdown";
+import { SelectDropdown } from "@/base-components";
 import withFormikField from "@/hoc/withFormikField";
 const FormSelectDropdown = withFormikField(SelectDropdown);
 
