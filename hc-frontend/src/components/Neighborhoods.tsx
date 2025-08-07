@@ -1,9 +1,9 @@
 import React from "react";
 
 import { Neighbourhood } from "@/interfaces/Neighbourhood";
+import { ImageWithLoader } from "@/utility-components";
 
 import Carousel2D from "./Carousel2D";
-import ImageWithLoader from "./common/ImageWithLoader";
 
 interface NeighbourhoodCardProps {
   image: string;

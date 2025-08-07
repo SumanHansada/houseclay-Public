@@ -10,7 +10,7 @@ import { Navigation } from "lucide-react";
 import React from "react";
 import { useEffect, useRef, useState } from "react";
 
-interface DirectionsMapProps {
+interface GoogleMapsDirectionProps {
   mapId?: string;
   center?: { lat: number; lng: number };
   zoom?: number;
@@ -20,7 +20,7 @@ interface DirectionsMapProps {
   showDirections: boolean;
 }
 
-const DirectionsMapContent: React.FC<{
+const GoogleMapsDirectionContent: React.FC<{
   center: { lat: number; lng: number };
   zoom: number;
   className: string;
@@ -226,7 +226,7 @@ const DirectionsMapContent: React.FC<{
   );
 };
 
-const DirectionsMap: React.FC<DirectionsMapProps> = ({
+const GoogleMapsDirection: React.FC<GoogleMapsDirectionProps> = ({
   mapId,
   center = { lat: 20.5937, lng: 78.9629 },
   zoom = 10,
@@ -240,7 +240,7 @@ const DirectionsMap: React.FC<DirectionsMapProps> = ({
       apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""}
       libraries={["places"]}
     >
-      <DirectionsMapContent
+      <GoogleMapsDirectionContent
         center={center}
         zoom={zoom}
         className={className}
@@ -253,4 +253,4 @@ const DirectionsMap: React.FC<DirectionsMapProps> = ({
   );
 };
 
-export default DirectionsMap;
+export default GoogleMapsDirection;

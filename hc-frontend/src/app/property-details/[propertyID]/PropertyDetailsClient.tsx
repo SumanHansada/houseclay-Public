@@ -54,8 +54,6 @@ import {
   formatINRCurrency,
   pascalCase,
 } from "@/common/utils";
-import DirectionsMap from "@/components/common/DirectionsMap";
-import PhotoGallery from "@/components/common/PhotoGallery";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useGetPublicPropertyByIdQuery } from "@/store/apiSlice";
 import {
@@ -63,6 +61,7 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
+import { GoogleMapsDirection, PhotoGallery } from "@/utility-components";
 
 const BalconyIcon = BalconyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const BuildUpAreaIcon = BuildUpAreaIconSvg as React.FC<
@@ -516,7 +515,7 @@ export function PropertyDetailsClient({
                 </button>
               </div>
               <div className="w-full h-96 rounded-lg overflow-hidden">
-                <DirectionsMap
+                <GoogleMapsDirection
                   mapId="property-details-map"
                   center={{
                     lat: property?.latitude || 12.9716,
@@ -1044,7 +1043,7 @@ export function PropertyDetailsClient({
               </button>
             </div>
             <div className="w-full h-96 rounded-lg overflow-hidden">
-              <DirectionsMap
+              <GoogleMapsDirection
                 mapId="property-details-map"
                 center={{
                   lat: property?.latitude || 12.9716,

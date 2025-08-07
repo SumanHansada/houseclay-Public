@@ -6,9 +6,7 @@ import { useState } from "react";
 import PhotoGalleryDialog from "@/dialogs/photo-gallery-dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
-
-import FullscreenPhotoViewer from "./FullscreenPhotoViewer";
-import ImageWithLoader from "./ImageWithLoader";
+import { FullscreenPhotoViewer, ImageWithLoader } from "@/utility-components";
 
 interface PhotoGalleryProps {
   images: string[];

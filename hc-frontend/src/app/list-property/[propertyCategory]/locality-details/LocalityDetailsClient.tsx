@@ -8,12 +8,12 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import FormInputField from "@/components/common/FormInputField";
-import GoogleMaps from "@/components/common/GoogleMaps";
 import FormPlacesAutocomplete from "@/form-components/FormPlacesAutocomplete";
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 import { FormValues } from "@/interfaces/FormValues";
 import { setFormValidity, setLocalityDetails } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
+import { GoogleMaps } from "@/utility-components";
 import {
   getLocalityDetailsErrors,
   getLocalityDetailsTouched,

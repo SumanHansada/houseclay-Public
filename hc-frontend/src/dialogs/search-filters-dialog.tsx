@@ -68,7 +68,6 @@ import { RadioGroup } from "@/base-components";
 import { PropertyCategory } from "@/common/enums";
 import Button from "@/components/common/Button";
 import RangeSlider from "@/components/common/RangeSlider";
-import Tabs, { Tab, TabContent, TabHeader } from "@/components/common/Tabs";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import {
   resetPropertySearch,
@@ -87,6 +86,7 @@ import {
   setTenant,
 } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
+import { Tab, TabContent, TabHeader, Tabs } from "@/utility-components";
 
 interface SearchFilterDialogProps {
   id: string;

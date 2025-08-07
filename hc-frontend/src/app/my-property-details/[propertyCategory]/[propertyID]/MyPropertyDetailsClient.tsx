@@ -61,15 +61,6 @@ import {
   toBase64,
 } from "@/common/utils";
 import Carousel2D from "@/components/Carousel2D";
-import FullscreenPhotoViewer from "@/components/common/FullscreenPhotoViewer";
-import ImageWithLoader from "@/components/common/ImageWithLoader";
-import {
-  NonTab,
-  Tab,
-  TabContent,
-  TabHeader,
-  Tabs,
-} from "@/components/common/Tabs";
 import Footer from "@/components/Footer";
 import UpgradePropertyDialog from "@/dialogs/upgrade-property";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
@@ -81,6 +72,15 @@ import {
 import { setHideHeader } from "@/store/appSlice";
 import { setHideFooter } from "@/store/appSlice";
 import { setHideStickyNavBar } from "@/store/appSlice";
+import {
+  FullscreenPhotoViewer,
+  ImageWithLoader,
+  NonTab,
+  Tab,
+  TabContent,
+  TabHeader,
+  Tabs,
+} from "@/utility-components";
 
 import PostedAndRentDetails from "./components/PostedAndRentDetails";
 import UpgradePropertyBanner from "./components/UpgradePropertyBanner";
