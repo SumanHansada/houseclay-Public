@@ -1,9 +1,8 @@
-import { useField } from "formik";
 import { Minus, Plus } from "lucide-react";
 import React, { useEffect } from "react";
 
-interface FormNumberFieldProps {
-  id?: string; // Added id to the props
+interface NumberFieldProps {
+  id?: string;
   name: string;
   label?: string;
   required?: boolean;
@@ -13,9 +12,14 @@ interface FormNumberFieldProps {
   symbol?: string;
   disabled?: boolean;
   className?: string;
+  // Formik props
+  value: number | string;
+  onChange: (value: number) => void;
+  onBlur?: () => void;
+  error?: string;
 }
 
-const FormFormNumberField: React.FC<FormNumberFieldProps> = ({
+const NumberField: React.FC<NumberFieldProps> = ({
   id,
   name,
   label,
@@ -26,76 +30,78 @@ const FormFormNumberField: React.FC<FormNumberFieldProps> = ({
   symbol,
   disabled = false,
   className = "",
+  value,
+  onChange,
+  onBlur,
+  error,
 }) => {
-  const [field, meta, helpers] = useField(name);
-
   // Ensure the value is within min/max bounds when the component mounts or when bounds change
   useEffect(() => {
-    if (field.value !== undefined) {
-      const numValue = Number(field.value);
+    if (value !== undefined) {
+      const numValue = Number(value);
       if (min !== undefined && numValue < min) {
-        helpers.setValue(min);
+        onChange(min);
       } else if (max !== undefined && numValue > max) {
-        helpers.setValue(max);
+        onChange(max);
       }
     }
-  }, [min, max, field.value, helpers]);
+  }, [min, max, value, onChange]);
 
   const handleIncrement = () => {
     if (disabled) return;
 
-    const currentValue = Number(field.value) || 0;
+    const currentValue = Number(value) || 0;
     const newValue = currentValue + step;
 
     if (max === undefined || newValue <= max) {
-      helpers.setValue(newValue);
+      onChange(newValue);
     } else {
-      helpers.setValue(max);
+      onChange(max);
     }
   };
 
   const handleDecrement = () => {
     if (disabled) return;
 
-    const currentValue = Number(field.value) || 0;
+    const currentValue = Number(value) || 0;
     const newValue = currentValue - step;
 
     if (min === undefined || newValue >= min) {
-      helpers.setValue(newValue);
+      onChange(newValue);
     } else {
-      helpers.setValue(min);
+      onChange(min);
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const inputValue = e.target.value;
 
-    if (value === "") {
-      helpers.setValue("");
+    if (inputValue === "") {
+      onChange(0);
       return;
     }
 
-    const numValue = Number(value);
+    const numValue = Number(inputValue);
 
     if (!isNaN(numValue)) {
-      helpers.setValue(numValue);
+      onChange(numValue);
     }
   };
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    field.onBlur(e);
+  const handleBlur = () => {
+    onBlur?.();
 
-    const numValue = Number(field.value);
+    const numValue = Number(value);
 
-    if (field.value === "" || isNaN(numValue)) {
-      helpers.setValue(min || 0);
+    if (value === "" || isNaN(numValue)) {
+      onChange(min || 0);
       return;
     }
 
     if (min !== undefined && numValue < min) {
-      helpers.setValue(min);
+      onChange(min);
     } else if (max !== undefined && numValue > max) {
-      helpers.setValue(max);
+      onChange(max);
     }
   };
 
@@ -103,7 +109,7 @@ const FormFormNumberField: React.FC<FormNumberFieldProps> = ({
     <div className={`mb-4 ${className}`}>
       {label && (
         <label
-          htmlFor={id || name} // Updated to use id or name
+          htmlFor={id || name}
           className="block text-gray-700 text-sm font-medium mb-1"
         >
           {label}
@@ -111,13 +117,15 @@ const FormFormNumberField: React.FC<FormNumberFieldProps> = ({
         </label>
       )}
 
-      <div className="flex items-center rounded-xl border border-gray-300 focus-within:ring-2 focus-within:ring-red-500 focus-within:border-red-500">
+      <div
+        className={`flex items-center rounded-xl border focus-within:ring-2 focus-within:ring-red-500 focus-within:border-red-500 ${
+          error ? "border-red-500" : "border-gray-300"
+        } ${disabled ? "cursor-not-allowed disabled:bg-gray-300" : ""}`}
+      >
         <button
           type="button"
           onClick={handleDecrement}
-          disabled={
-            disabled || (min !== undefined && Number(field.value) <= min)
-          }
+          disabled={disabled || (min !== undefined && Number(value) <= min)}
           className="w-10 h-10 m-2 flex rounded-lg items-center justify-center text-gray-500 bg-gray-200 disabled:text-gray-300 disabled:cursor-not-allowed"
           aria-label="Decrease value"
         >
@@ -127,25 +135,22 @@ const FormFormNumberField: React.FC<FormNumberFieldProps> = ({
         <div className="flex-1 flex items-center justify-center">
           {symbol && <span className="text-gray-500 mr-2">{symbol}</span>}
           <input
-            id={id || name} // Updated to use id or name
-            {...field}
+            id={id || name}
+            value={value}
             onChange={handleChange}
             onBlur={handleBlur}
-            value={field.value}
             type="text"
             inputMode="numeric"
             disabled={disabled}
             className="w-full text-center py-2 outline-none disabled:bg-gray-100 disabled:text-gray-500"
-            aria-invalid={meta.touched && meta.error ? "true" : "false"}
+            aria-invalid={error ? "true" : "false"}
           />
         </div>
 
         <button
           type="button"
           onClick={handleIncrement}
-          disabled={
-            disabled || (max !== undefined && Number(field.value) >= max)
-          }
+          disabled={disabled || (max !== undefined && Number(value) >= max)}
           className="w-10 h-10 m-2 flex rounded-lg items-center justify-center text-gray-500 bg-gray-200 disabled:text-gray-300 disabled:cursor-not-allowed"
           aria-label="Increase value"
         >
@@ -153,11 +158,9 @@ const FormFormNumberField: React.FC<FormNumberFieldProps> = ({
         </button>
       </div>
 
-      {meta.touched && meta.error ? (
-        <div className="text-red-500 text-sm mt-1">{meta.error}</div>
-      ) : null}
+      {error ? <div className="text-red-500 text-sm mt-1">{error}</div> : null}
     </div>
   );
 };
 
-export default FormFormNumberField;
+export default NumberField;

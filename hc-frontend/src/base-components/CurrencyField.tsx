@@ -1,7 +1,6 @@
-import { useField } from "formik";
 import React from "react";
 
-interface FormCurrencyFieldProps {
+interface CurrencyFieldProps {
   name: string;
   id?: string;
   label?: string;
@@ -10,10 +9,16 @@ interface FormCurrencyFieldProps {
   className?: string;
   prefix?: React.ReactNode;
   suffix?: React.ReactNode;
+  disabled?: boolean;
   currencyFormat?: "en-US" | "en-IN";
+  // Formik props
+  value: number | string;
+  onChange: (value: number) => void;
+  onBlur?: () => void;
+  error?: string;
 }
 
-const FormCurrencyField: React.FC<FormCurrencyFieldProps> = ({
+const CurrencyField: React.FC<CurrencyFieldProps> = ({
   name,
   id,
   label,
@@ -22,10 +27,13 @@ const FormCurrencyField: React.FC<FormCurrencyFieldProps> = ({
   className = "",
   prefix,
   suffix,
+  disabled = false,
   currencyFormat = "en-IN",
+  value,
+  onChange,
+  onBlur,
+  error,
 }) => {
-  const [field, meta, helpers] = useField(name);
-
   // Format for display (add commas according to specified locale)
   const formatCurrency = (value: number | string): string => {
     if (value === null || value === undefined || value === "") return "";
@@ -49,16 +57,16 @@ const FormCurrencyField: React.FC<FormCurrencyFieldProps> = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formattedValue = formatCurrency(e.target.value);
     e.target.value = formattedValue;
-    helpers.setValue(parseCurrency(formattedValue));
+    onChange(parseCurrency(formattedValue));
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    field.onBlur(e);
+    onBlur?.();
 
     // Ensure value is properly formatted when field loses focus
     const formattedValue = formatCurrency(e.target.value);
     e.target.value = formattedValue;
-    helpers.setValue(parseCurrency(formattedValue));
+    onChange(parseCurrency(formattedValue));
   };
 
   return (
@@ -85,11 +93,12 @@ const FormCurrencyField: React.FC<FormCurrencyFieldProps> = ({
           className={`w-full p-3 border border-gray-300 ${
             prefix ? "rounded-none" : "rounded-l-xl"
           } ${suffix ? "rounded-none" : "rounded-r-xl"} ${className} ${
-            meta.touched && meta.error ? "border-red-500" : "border-gray-300"
-          }`}
-          value={formatCurrency(field.value)}
+            error ? "border-red-500" : "border-gray-300"
+          } ${disabled ? "cursor-not-allowed disabled:bg-gray-300" : ""}`}
+          value={formatCurrency(value)}
           onChange={handleChange}
           onBlur={handleBlur}
+          disabled={disabled}
         />
         {suffix && (
           <span className="inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-l-0 border-gray-300 rounded-r-xl">
@@ -97,11 +106,9 @@ const FormCurrencyField: React.FC<FormCurrencyFieldProps> = ({
           </span>
         )}
       </div>
-      {meta.touched && meta.error ? (
-        <div className="text-red-500 text-sm mt-1">{meta.error}</div>
-      ) : null}
+      {error ? <div className="text-red-500 text-sm mt-1">{error}</div> : null}
     </div>
   );
 };
 
-export default FormCurrencyField;
+export default CurrencyField;

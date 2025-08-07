@@ -5,9 +5,11 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
-import FormInputField from "@/components/common/FormInputField";
-import FormTextArea from "@/components/common/FormTextArea";
-import FormSelectDropdown from "@/form-components/FormSelectDropdown";
+import {
+  FormSelectDropdown,
+  FormTextArea,
+  FormTextField,
+} from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
 import { setFormValidity, setPropertyDetails } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
@@ -134,7 +136,7 @@ const RentPropertyDetailsClient: React.FC = () => {
 
         {/* BUILT UP AREA + FACING */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormInputField
+          <FormTextField
             name="propertyDetails.builtUpArea"
             id="propertyDetails.builtUpArea"
             label="Built Up Area"

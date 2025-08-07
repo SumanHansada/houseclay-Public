@@ -24,11 +24,13 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import FormCalendarField from "@/components/common/FormCalendarField";
-import FormCurrencyField from "@/components/common/FormCurrencyField";
-import FormFormNumberField from "@/components/common/FormNumberField";
-import FormCheckbox from "@/form-components/FormCheckbox";
-import FormRadioGroup from "@/form-components/FormRadioGroup";
-import FormSelectDropdown from "@/form-components/FormSelectDropdown";
+import {
+  FormCheckbox,
+  FormCurrencyField,
+  FormNumberField,
+  FormRadioGroup,
+  FormSelectDropdown,
+} from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
 import { setFormValidity, setResaleDetails } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
@@ -182,7 +184,7 @@ const ResaleDetailsClient: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
-            <FormFormNumberField
+            <FormNumberField
               name="resaleDetails.bathrooms"
               id="resaleDetails.bathrooms"
               label="Bathroom(s)"
@@ -190,7 +192,7 @@ const ResaleDetailsClient: React.FC = () => {
             />
           </div>
           <div className="col-span-1">
-            <FormFormNumberField
+            <FormNumberField
               name="resaleDetails.balcony"
               id="resaleDetails.balcony"
               label="Balcony"

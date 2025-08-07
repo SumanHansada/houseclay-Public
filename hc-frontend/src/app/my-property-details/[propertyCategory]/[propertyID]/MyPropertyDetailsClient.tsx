@@ -944,6 +944,8 @@ export function MyPropertyDetailsClient({
         isOpen={!!selectedImage}
         onClose={handleCloseFullscreen}
         onNavigate={handleNavigateImage}
+        showThumbnails={true}
+        thumbnailPosition="bottom"
       />
     </>
   );

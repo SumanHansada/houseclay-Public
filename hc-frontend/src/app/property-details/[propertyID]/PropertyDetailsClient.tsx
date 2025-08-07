@@ -243,7 +243,6 @@ export function PropertyDetailsClient({
       <section className="h-60 w-full md:hidden">
         <PhotoGallery
           images={property?.images}
-          maxDisplayImages={5}
           className="md:h-[60vh] h-60 rounded-none"
         />
       </section>

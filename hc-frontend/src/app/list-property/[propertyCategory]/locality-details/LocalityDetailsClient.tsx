@@ -7,9 +7,11 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
-import FormInputField from "@/components/common/FormInputField";
-import FormPlacesAutocomplete from "@/form-components/FormPlacesAutocomplete";
-import FormSelectDropdown from "@/form-components/FormSelectDropdown";
+import {
+  FormPlacesAutocomplete,
+  FormSelectDropdown,
+  FormTextField,
+} from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
 import { setFormValidity, setLocalityDetails } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
@@ -215,7 +217,7 @@ const LocalityDetailsClient: React.FC = () => {
           </div>
         </div>
         <div className="mb-6">
-          <FormInputField
+          <FormTextField
             label="Landmark / Street"
             name="localityDetails.landmark"
             id="localityDetails.landmark"

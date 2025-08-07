@@ -28,10 +28,12 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import FormCalendarField from "@/components/common/FormCalendarField";
-import FormCurrencyField from "@/components/common/FormCurrencyField";
-import FormCheckbox from "@/form-components/FormCheckbox";
-import FormRadioGroup from "@/form-components/FormRadioGroup";
-import FormSelectDropdown from "@/form-components/FormSelectDropdown";
+import {
+  FormCheckbox,
+  FormCurrencyField,
+  FormRadioGroup,
+  FormSelectDropdown,
+} from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
 import { setFlatmateDetails, setFormValidity } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";

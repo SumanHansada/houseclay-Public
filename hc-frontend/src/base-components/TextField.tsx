@@ -1,7 +1,6 @@
-import { useField } from "formik";
 import React from "react";
 
-interface FormInputFieldProps {
+interface TextFieldProps {
   name: string;
   id?: string;
   label?: string;
@@ -11,9 +10,15 @@ interface FormInputFieldProps {
   className?: string;
   prefix?: React.ReactNode;
   suffix?: React.ReactNode;
+  disabled?: boolean;
+  // Formik props
+  value: string | number;
+  onChange: (value: string | number) => void;
+  onBlur?: () => void;
+  error?: string;
 }
 
-const FormInputField: React.FC<FormInputFieldProps> = ({
+const TextField: React.FC<TextFieldProps> = ({
   name,
   id,
   label,
@@ -23,9 +28,12 @@ const FormInputField: React.FC<FormInputFieldProps> = ({
   className = "",
   prefix,
   suffix,
+  disabled = false,
+  value,
+  onChange,
+  onBlur,
+  error,
 }) => {
-  const [field, meta, helpers] = useField(name);
-
   // Format numeric values for display
   const formatNumber = (value: string | number): string => {
     if (value === null || value === undefined || value === "") return "";
@@ -42,25 +50,25 @@ const FormInputField: React.FC<FormInputFieldProps> = ({
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value;
+    let inputValue = e.target.value;
 
     if (dataType === "number") {
-      value = formatNumber(value);
-      helpers.setValue(parseNumber(value));
+      inputValue = formatNumber(inputValue);
+      onChange(parseNumber(inputValue));
     } else {
-      helpers.setValue(value);
+      onChange(inputValue);
     }
 
-    e.target.value = value;
+    e.target.value = inputValue;
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    field.onBlur(e);
+    onBlur?.();
 
     if (dataType === "number") {
       const formattedValue = formatNumber(e.target.value);
       e.target.value = formattedValue;
-      helpers.setValue(parseNumber(formattedValue));
+      onChange(parseNumber(formattedValue));
     }
   };
 
@@ -88,13 +96,14 @@ const FormInputField: React.FC<FormInputFieldProps> = ({
           className={`w-full p-3 border ${
             prefix ? "rounded-none" : "rounded-l-xl"
           } ${suffix ? "rounded-none" : "rounded-r-xl"} ${className} ${
-            meta.touched && meta.error ? "border-red-500" : "border-gray-300"
-          }`}
+            error ? "border-red-500" : "border-gray-300"
+          } ${disabled ? "cursor-not-allowed disabled:bg-gray-300" : ""}`}
           value={
-            dataType === "number" ? formatNumber(field.value) : field.value
+            dataType === "number" ? formatNumber(value) : String(value || "")
           }
           onChange={handleChange}
           onBlur={handleBlur}
+          disabled={disabled}
         />
         {suffix && (
           <span className="inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-l-0 border-gray-300 rounded-r-xl">
@@ -102,11 +111,9 @@ const FormInputField: React.FC<FormInputFieldProps> = ({
           </span>
         )}
       </div>
-      {meta.touched && meta.error ? (
-        <div className="text-red-500 text-sm mt-1">{meta.error}</div>
-      ) : null}
+      {error ? <div className="text-red-500 text-sm mt-1">{error}</div> : null}
     </div>
   );
 };
 
-export default FormInputField;
+export default TextField;
