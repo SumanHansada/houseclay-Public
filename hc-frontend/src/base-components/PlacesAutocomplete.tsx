@@ -16,6 +16,7 @@ interface PlacesAutocompleteProps {
   error?: string;
   placeholder?: string;
   required?: boolean;
+  disabled?: boolean;
   onLocationSelect?: (location: {
     latitude: number;
     longitude: number;
@@ -52,6 +53,7 @@ const PlacesAutocompleteBase = ({
   placeholder = "Search places",
   required = false,
   onLocationSelect,
+  disabled = false,
   // Styling props with defaults
   containerClassName = "w-full relative",
   labelClassName = "block text-sm font-medium text-gray-700 mb-1",
@@ -87,6 +89,8 @@ const PlacesAutocompleteBase = ({
 
   // Handle manual input changes
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (disabled) return;
+
     const newValue = e.target.value;
     onChange(newValue);
 
@@ -155,63 +159,65 @@ const PlacesAutocompleteBase = ({
 
   // Handle selection from dropdown
   const selectPrediction = async (prediction: PlacePrediction) => {
-    if (isLoaded) {
-      try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const places = (await google.maps.importLibrary("places")) as any;
-        const place = new places.Place({ id: prediction.placeId });
+    if (disabled || !isLoaded) return;
 
-        const result = await place.fetchFields({
-          fields: [
-            "id",
-            "formattedAddress",
-            "location",
-            "displayName",
-            "addressComponents",
-          ],
-        });
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const places = (await google.maps.importLibrary("places")) as any;
+      const place = new places.Place({ id: prediction.placeId });
 
-        if (result.place) {
-          const placeData = result.place;
-          onChange(placeData.displayName || "");
-          let city = "";
-          if (placeData.addressComponents) {
-            for (const component of placeData.addressComponents) {
-              const componentType = component.types[0];
-              if (
-                componentType === "locality" ||
-                componentType === "administrative_area_level_1"
-              ) {
-                city = component.longText;
-                break;
-              }
+      const result = await place.fetchFields({
+        fields: [
+          "id",
+          "formattedAddress",
+          "location",
+          "displayName",
+          "addressComponents",
+        ],
+      });
+
+      if (result.place) {
+        const placeData = result.place;
+        onChange(placeData.displayName || "");
+        let city = "";
+        if (placeData.addressComponents) {
+          for (const component of placeData.addressComponents) {
+            const componentType = component.types[0];
+            if (
+              componentType === "locality" ||
+              componentType === "administrative_area_level_1"
+            ) {
+              city = component.longText;
+              break;
             }
           }
-
-          if (placeData.location && onLocationSelect) {
-            const lat = Number(placeData.location.lat());
-            const lng = Number(placeData.location.lng());
-
-            if (!isNaN(lat) && !isNaN(lng)) {
-              onLocationSelect({
-                latitude: lat,
-                longitude: lng,
-                name: placeData.displayName,
-                address: placeData.formattedAddress,
-                city: city,
-              });
-            }
-          }
-          setShowDropdown(false);
         }
-      } catch (error) {
-        console.error("Error fetching place details:", error);
+
+        if (placeData.location && onLocationSelect) {
+          const lat = Number(placeData.location.lat());
+          const lng = Number(placeData.location.lng());
+
+          if (!isNaN(lat) && !isNaN(lng)) {
+            onLocationSelect({
+              latitude: lat,
+              longitude: lng,
+              name: placeData.displayName,
+              address: placeData.formattedAddress,
+              city: city,
+            });
+          }
+        }
+        setShowDropdown(false);
       }
+    } catch (error) {
+      console.error("Error fetching place details:", error);
     }
   };
 
   // Handle keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (disabled) return;
+
     if (!showDropdown || predictions.length === 0) return;
 
     switch (e.key) {
@@ -266,7 +272,7 @@ const PlacesAutocompleteBase = ({
           }, 200);
         }}
         placeholder={placeholder}
-        className={`${inputClassName} ${error ? "border-red-500" : "border-gray-300"}`}
+        className={`${inputClassName} ${error ? "border-red-500" : "border-gray-300"} ${disabled ? "cursor-not-allowed disabled:bg-gray-300" : ""}`}
         type="text"
         autoComplete="off"
         role="combobox"
@@ -275,6 +281,7 @@ const PlacesAutocompleteBase = ({
         aria-activedescendant={
           focusedIndex >= 0 ? `${id}-option-${focusedIndex}` : undefined
         }
+        disabled={disabled}
       />
 
       {showDropdown && predictions.length > 0 && (

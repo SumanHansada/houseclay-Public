@@ -15,6 +15,7 @@ interface RadioGroupProps {
   horizontal?: boolean;
   withIcons?: boolean;
   selectedColor?: string;
+  disabled?: boolean;
   // Styling props
   containerClassName?: string;
   labelClassName?: string;
@@ -39,6 +40,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
   horizontal = true,
   withIcons = false,
   selectedColor = "border-red-500",
+  disabled = false,
   // Styling props with defaults
   containerClassName = "mb-4",
   labelClassName = "block text-gray-700 text-sm font-medium mb-1",
@@ -55,6 +57,11 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
 }) => {
   const isSelected = (optionValue: string | boolean) => {
     return value === optionValue;
+  };
+
+  const handleChange = (optionValue: string | boolean) => {
+    if (disabled) return;
+    onChange(optionValue);
   };
 
   // Define grid columns based on the columns prop
@@ -82,6 +89,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
         }`}
         role="radiogroup"
         aria-labelledby={`${name}-group-label`}
+        aria-disabled={disabled}
       >
         {options.map((option) => (
           <div
@@ -93,6 +101,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
                   ? `${selectedColor} border`
                   : "border-gray-300 hover:border-gray-400"
               }
+              ${disabled ? "cursor-not-allowed disabled:bg-gray-300" : ""}
               focus-within:shadow-[inset_0_0_0_2px_royalBlue] focus-within:border-transparent
             `}
           >
@@ -102,6 +111,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
                 ${radioLabelClassName}
                 ${withIcons ? "text-center flex flex-col " : "flex "}
                 items-center justify-center
+                ${disabled ? "cursor-not-allowed" : "cursor-pointer"}
               `}
             >
               <input
@@ -110,10 +120,11 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
                 name={name}
                 value={String(option.value)}
                 checked={isSelected(option.value)}
-                onChange={() => onChange(option.value)}
+                onChange={() => handleChange(option.value)}
                 onBlur={onBlur}
                 className={radioInputClassName}
                 aria-label={option.label}
+                disabled={disabled}
               />
               {withIcons && option.icon}
               <span

@@ -16,6 +16,7 @@ interface CheckboxProps {
   selectedColor?: string;
   className?: string;
   alignment?: "start" | "center" | "end";
+  disabled?: boolean;
   // Formik props
   value: string[];
   onChange: (value: string[]) => void;
@@ -33,12 +34,15 @@ const Checkbox: React.FC<CheckboxProps> = ({
   selectedColor = "border-red-500",
   className = "",
   alignment = "center",
+  disabled = false,
   value,
   onChange,
   onBlur,
   error,
 }) => {
   const handleToggle = (optionValue: string) => {
+    if (disabled) return;
+
     const currentValues = value || [];
     const newValues = currentValues.includes(optionValue)
       ? currentValues.filter((v) => v !== optionValue)
@@ -81,13 +85,16 @@ const Checkbox: React.FC<CheckboxProps> = ({
                 isChecked(option.value)
                   ? `${selectedColor} border`
                   : "border-gray-300 hover:border-gray-400"
-              }`}
-            tabIndex={0}
+              }
+              ${disabled ? "cursor-not-allowed disabled:bg-gray-300" : ""}
+            `}
+            tabIndex={disabled ? -1 : 0}
             onClick={(e) => {
               e.preventDefault();
               handleToggle(option.value);
             }}
             onKeyDown={(e) => {
+              if (disabled) return;
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
                 handleToggle(option.value);
@@ -96,13 +103,16 @@ const Checkbox: React.FC<CheckboxProps> = ({
             aria-checked={isChecked(option.value)}
             aria-labelledby={`${name}-label-${option.value}`}
             role="checkbox"
+            aria-disabled={disabled}
           >
             <label
               htmlFor={`${name}-${option.value}`}
               id={`${name}-label-${option.value}`}
-              className={`block  cursor-pointer p-4 w-full h-full 
+              className={`block p-4 w-full h-full 
                 ${withIcons ? "flex flex-col gap-2" : "flex"} 
-                  items-${alignment} justify-center`}
+                  items-${alignment} justify-center
+                  ${disabled ? "cursor-not-allowed" : "cursor-pointer"}
+              `}
             >
               {withIcons && option.icon}
               <span className={`text-${alignment}`}>{option.label}</span>
@@ -119,6 +129,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
               tabIndex={-1}
               aria-label={option.label}
               aria-hidden="true"
+              disabled={disabled}
             />
           </div>
         ))}

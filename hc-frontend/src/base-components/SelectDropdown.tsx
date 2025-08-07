@@ -86,12 +86,15 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
 
   // Function to handle option selection
   const handleSelect = (value: string | number | boolean) => {
+    if (disabled) return;
     onChange(value);
     setIsOpen(false);
   };
 
   // Add keyboard accessibility to the dropdown
   const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (disabled) return;
+
     const currentIndex = options.findIndex((opt) => opt.value === value);
     let newIndex = currentIndex;
 
