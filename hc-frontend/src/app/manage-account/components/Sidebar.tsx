@@ -17,7 +17,7 @@ export interface SidebarProps {
 export default function Sidebar({
   items,
   className = "",
-  listClassName = "bg-gray-50 rounded-lg px-5 py-4",
+  listClassName = "bg-gray-50 rounded-lg px-3 py-2",
   itemClassName = "",
 }: SidebarProps) {
   const pathname = usePathname();

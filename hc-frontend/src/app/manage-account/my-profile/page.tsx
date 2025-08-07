@@ -1,103 +1,273 @@
+"use client";
+
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+
+import FormInputField from "@/components/common/FormInputField";
+import FormPhoneInput from "@/components/common/FormPhoneInput";
 import { getInitials } from "@/common/utils";
+
+import WhatsAppIconSvg from "public/icons/whatsapp.svg";
+import GreenCheckIconSvg from "public/icons/green-circle-check.svg";
+import RedExclamationIconSvg from "public/icons/red-circle-exclamation.svg";
+import CoinEggIconSvg from "public/icons/coin-egg.svg";
+import { useState } from "react";
+import { useDialog } from "@/providers/DialogContextProvider";
+import EmailVerificationDialog from "@/dialogs/email-verification";
+import { useDispatch } from "react-redux";
+import { setHideStickyNavBar } from "@/store/appSlice";
+import EmailVerificationSuccessDialog from "@/dialogs/email-verification-success";
+
+const WhatsAppIcon = WhatsAppIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const GreenCheckIcon = GreenCheckIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const RedExclamationIcon = RedExclamationIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const CoinEggIcon = CoinEggIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 const user = {
   name: "Ankit Biswas",
   phone: "+91 999 999 9999",
-  whatsapp: true,
+  onWhatsapp: true,
+  phoneVerified: true,
   email: "ankitbiswas@gmail.com",
   emailVerified: false,
 };
 
-export default function MyProfilePage() {
-  return (
-    <div className="space-y-6">
-      <div className="border-b-2 pb-2">
-        <h1 className="text-2xl font-medium">My Profile</h1>
-      </div>
+/* ------------------------------------------------------------------ */
+/*  1. Formik setup                                                   */
+/* ------------------------------------------------------------------ */
+const initialValues = {
+  name: user.name,
+  phoneNumber: user.phone,
+  whatsapp: user.onWhatsapp,
+  email: user.email,
+};
 
-      <div className="flex space-x-20">
-        {/* Avatar + Upload */}
-        <div className="flex flex-col items-center">
-          <div className="size-40 bg-black rounded-full flex items-center justify-center text-[60px] text-white">
-            {getInitials(user.name)}
-          </div>
-          <button className="mt-2 underline underline-offset-4">
-            Upload Profile Photo
-          </button>
+const validationSchema = Yup.object({
+  name: Yup.string().required("Name is required"),
+  phoneNumber: Yup.string().required("Phone is required"),
+  email: Yup.string().email("Invalid email").required("Email is required"),
+});
+
+const EMAIL_VERIFICATION_DIALOG_ID = "email-verification-dialog";
+const EMAIL_VERIFICATION_SUCCESS_DIALOG_ID =
+  "email-verification-success-dialog";
+
+export default function MyProfilePage() {
+  const [editMode, setEditMode] = useState(false);
+  const { isDialogOpen, openDialog, closeDialog } = useDialog();
+  const dispatch = useDispatch();
+
+  const handleEmailVerification = () => {
+    openDialog(EMAIL_VERIFICATION_DIALOG_ID);
+  };
+
+  const closeVerificationDialog = () => {
+    closeDialog(EMAIL_VERIFICATION_DIALOG_ID);
+    dispatch(setHideStickyNavBar(true));
+  };
+
+  const onVerificationSuccess = () => {
+    closeVerificationDialog();
+    openDialog(EMAIL_VERIFICATION_SUCCESS_DIALOG_ID);
+  };
+
+  return (
+    <>
+      <div className="space-y-6">
+        {/* Page title */}
+        <div className="border-b-2 pb-2">
+          <h1 className="text-2xl font-medium">My Profile</h1>
         </div>
 
-        {/* Profile Form */}
-        <form className="flex-1 space-y-4">
-          {/* Name */}
-
-          <div>
-            <label className="block font-medium">Name</label>
-            <input
-              type="text"
-              defaultValue={user.name}
-              className="mt-1 block w-full border rounded px-3 py-2"
-            />
-          </div>
-
-          {/* Mobile */}
-          <div>
-            <label className="block text-sm font-medium">Mobile Phone</label>
-            <div className="mt-1 flex items-center space-x-2">
-              <input
-                type="text"
-                defaultValue={user.phone}
-                className="flex-1 border rounded px-3 py-2"
-              />
-              <label className="inline-flex items-center space-x-1">
-                <input
-                  type="checkbox"
-                  checked={user.whatsapp}
-                  readOnly
-                  className="form-checkbox"
-                />
-                <span className="text-sm">WhatsApp</span>
-              </label>
+        <div className="flex flex-col lg:flex-row lg:space-x-20 space-y-8 lg:space-y-0">
+          {/* ------------------------------------------------------------------ */
+          /*  Avatar                                                            */
+          /* ------------------------------------------------------------------ */}
+          <div className="flex flex-col items-center">
+            <div className="size-40 bg-black rounded-full flex items-center justify-center text-[60px] text-white">
+              {getInitials(user.name)}
             </div>
-            <p className="text-sm text-green-600">Verified</p>
+            <button className="mt-2 underline underline-offset-4 text-gray-700">
+              Upload Profile Photo
+            </button>
           </div>
 
-          {/* Email */}
-          <div>
-            <label className="block text-sm font-medium">Email Address</label>
-            <input
-              type="email"
-              defaultValue={user.email}
-              className="mt-1 block w-full border rounded px-3 py-2"
-            />
-            {!user.emailVerified && (
-              <div className="mt-2 p-3 bg-red-50 border border-red-200 rounded flex items-center justify-between">
-                <span className="text-red-700 text-sm">
-                  Verify your email and earn 1 Connect instantly!
-                </span>
-                <button
-                  type="button"
-                  className="text-sm font-medium text-red-600"
-                >
-                  Verify Email Address
-                </button>
-              </div>
+          {/* ------------------------------------------------------------------ */
+          /*  Profile form                                                      */
+          /* ------------------------------------------------------------------ */}
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={(values) => {
+              console.log("Submit all data:", values);
+              // TODO: call backend
+            }}
+            validateOnBlur={false}
+            validateOnChange={false}
+          >
+            {({ values, setFieldValue }) => (
+              <Form className="flex-1 space-y-6">
+                {/* Name */}
+                <FormInputField
+                  name="name"
+                  id="name"
+                  label="Name"
+                  placeholder="Full name"
+                  className="w-2/3"
+                  required
+                />
+
+                {/* Phone */}
+                <div className="flex flex-col">
+                  <div className="mt-1 flex items-end justify-between">
+                    <div className="w-2/3">
+                      <FormPhoneInput
+                        name="phoneNumber"
+                        id="phoneNumber"
+                        label="Phone Number"
+                        defaultCountry="in"
+                        placeholder="Enter phone number"
+                        className="border border-gray-300 rounded-lg px-3 py-1 focus:ring-red-500 focus:border-red-500"
+                        required
+                      />
+                    </div>
+
+                    {/* WhatsApp toggle */}
+                    <label className="flex items-center gap-5 cursor-pointer w-fit">
+                      <div className="flex gap-2 items-center">
+                        <WhatsAppIcon />
+                        <span className="text-nowrap">
+                          Available on WhatsApp
+                        </span>
+                      </div>
+                      {/* Toggle */}
+                      <div className="relative">
+                        {/* Hidden checkbox bound to Formik */}
+                        <input
+                          type="checkbox"
+                          name="whatsapp"
+                          checked={values.whatsapp}
+                          onChange={() =>
+                            setFieldValue("whatsapp", !values.whatsapp)
+                          }
+                          className="sr-only peer"
+                        />
+                        {/* Slider track + thumb */}
+                        <div className="w-10 h-6 rounded-full bg-gray-300 peer-checked:bg-black transition-colors" />
+                        <div className="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow peer-checked:translate-x-4 transition-transform" />
+                      </div>
+                    </label>
+                  </div>
+
+                  {user.phoneVerified ? (
+                    <p className="text-green-600 mt-1 flex items-center gap-1">
+                      <GreenCheckIcon />
+                      Verified
+                    </p>
+                  ) : (
+                    <p className="text-red-600 mt-1 flex items-center gap-1">
+                      <RedExclamationIcon />
+                      Phone Number is not verified
+                    </p>
+                  )}
+                </div>
+
+                {/* Email */}
+                <div>
+                  <FormInputField
+                    name="email"
+                    id="email"
+                    label="Email"
+                    placeholder="Enter your personal email"
+                    className="w-2/3"
+                    required
+                  />
+                  {user.emailVerified ? (
+                    <p className="text-green-600 mt-1 flex items-center gap-1">
+                      <GreenCheckIcon />
+                      Verified
+                    </p>
+                  ) : (
+                    <p className="text-red-600 mt-1 flex items-center gap-1">
+                      <RedExclamationIcon />
+                      Email is not verified
+                    </p>
+                  )}
+
+                  {!user.emailVerified && (
+                    <div className="mt-2 p-3 bg-red-50 rounded-lg flex items-center justify-between w-2/3">
+                      <CoinEggIcon />
+                      <span className="text-lg w-1/2 px-2">
+                        Verify your email address and earn<b> 1 Connect </b>
+                        instantly!
+                      </span>
+                      <button
+                        type="button"
+                        className="text-lg font-medium text-red-500 underline text-nowrap"
+                        onClick={handleEmailVerification}
+                      >
+                        Verify Email Address
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Actions */}
+                <div className="mt-4 text-lg">
+                  {editMode ? (
+                    <div className="flex gap-3">
+                      <button
+                        type="submit"
+                        className="px-5 py-2 bg-red-600 text-white rounded-lg shadow-sm"
+                        onClick={() => setEditMode(false)}
+                      >
+                        Save
+                      </button>
+                      <button
+                        type="reset"
+                        className="px-5 py-2 border rounded-lg shadow-sm"
+                        onClick={() => setEditMode(false)}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      className="px-5 py-2 bg-red-600 text-white rounded-lg shadow-sm"
+                      onClick={() => setEditMode(true)}
+                    >
+                      Edit
+                    </button>
+                  )}
+                </div>
+              </Form>
             )}
-          </div>
-
-          {/* Actions */}
-          <div className="flex space-x-3 pt-4">
-            <button
-              type="submit"
-              className="px-6 py-2 bg-red-600 text-white rounded"
-            >
-              Save
-            </button>
-            <button type="button" className="px-6 py-2 border rounded">
-              Cancel
-            </button>
-          </div>
-        </form>
+          </Formik>
+        </div>
       </div>
-    </div>
+      {isDialogOpen(EMAIL_VERIFICATION_DIALOG_ID) && (
+        <EmailVerificationDialog
+          id={EMAIL_VERIFICATION_DIALOG_ID}
+          emailToVerify={user.email}
+          onSuccess={onVerificationSuccess}
+          onClose={closeVerificationDialog}
+        />
+      )}
+
+      {isDialogOpen(EMAIL_VERIFICATION_SUCCESS_DIALOG_ID) && (
+        <EmailVerificationSuccessDialog
+          id={EMAIL_VERIFICATION_SUCCESS_DIALOG_ID}
+          onClose={() => {
+            closeDialog(EMAIL_VERIFICATION_SUCCESS_DIALOG_ID);
+            dispatch(setHideStickyNavBar(true));
+          }}
+        />
+      )}
+    </>
   );
 }
