@@ -3,14 +3,12 @@ import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { X } from "lucide-react";
 
 import EmailVerifiedIconSvg from "public/icons/email-verified.svg";
-import CoinIconSvg from "public/icons/coin.svg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 const EmailVerifiedIcon = EmailVerifiedIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
-const CoinIcon = CoinIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 interface EmailVerificationSuccessDialogProps {
   id: string;

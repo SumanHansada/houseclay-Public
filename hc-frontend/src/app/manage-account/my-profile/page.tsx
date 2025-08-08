@@ -3,7 +3,6 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
-import FormInputField from "@/components/common/FormInputField";
 import FormPhoneInput from "@/components/common/FormPhoneInput";
 import { getInitials } from "@/common/utils";
 
@@ -17,6 +16,10 @@ import EmailVerificationDialog from "@/dialogs/email-verification";
 import { useDispatch } from "react-redux";
 import { setHideStickyNavBar } from "@/store/appSlice";
 import EmailVerificationSuccessDialog from "@/dialogs/email-verification-success";
+import { FormTextField } from "@/form-components";
+
+// Test
+import { user } from "../dummy";
 
 const WhatsAppIcon = WhatsAppIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const GreenCheckIcon = GreenCheckIconSvg as React.FC<
@@ -26,15 +29,6 @@ const RedExclamationIcon = RedExclamationIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
 const CoinEggIcon = CoinEggIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-
-const user = {
-  name: "Ankit Biswas",
-  phone: "+91 999 999 9999",
-  onWhatsapp: true,
-  phoneVerified: true,
-  email: "ankitbiswas@gmail.com",
-  emailVerified: false,
-};
 
 /* ------------------------------------------------------------------ */
 /*  1. Formik setup                                                   */
@@ -112,7 +106,7 @@ export default function MyProfilePage() {
             {({ values, setFieldValue }) => (
               <Form className="flex-1 space-y-6">
                 {/* Name */}
-                <FormInputField
+                <FormTextField
                   name="name"
                   id="name"
                   label="Name"
@@ -178,7 +172,7 @@ export default function MyProfilePage() {
 
                 {/* Email */}
                 <div>
-                  <FormInputField
+                  <FormTextField
                     name="email"
                     id="email"
                     label="Email"
@@ -207,7 +201,7 @@ export default function MyProfilePage() {
                       </span>
                       <button
                         type="button"
-                        className="text-lg font-medium text-red-500 underline text-nowrap"
+                        className="text-lg font-medium text-red-500 hover:text-red-600 underline text-nowrap"
                         onClick={handleEmailVerification}
                       >
                         Verify Email Address
@@ -222,7 +216,7 @@ export default function MyProfilePage() {
                     <div className="flex gap-3">
                       <button
                         type="submit"
-                        className="px-5 py-2 bg-red-600 text-white rounded-lg shadow-sm"
+                        className="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-sm"
                         onClick={() => setEditMode(false)}
                       >
                         Save
@@ -238,7 +232,7 @@ export default function MyProfilePage() {
                   ) : (
                     <button
                       type="button"
-                      className="px-5 py-2 bg-red-600 text-white rounded-lg shadow-sm"
+                      className="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-sm"
                       onClick={() => setEditMode(true)}
                     >
                       Edit

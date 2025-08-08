@@ -66,7 +66,7 @@ export default function Sidebar({
             </>
           );
 
-          const base = `group flex items-center gap-2 px-1 py-2 text-lg ${itemClassName}`;
+          const base = `group flex items-center gap-2 px-1 py-2 ${itemClassName}`;
 
           if (isRoute) {
             return (
