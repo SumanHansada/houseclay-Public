@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useEffect } from "react";
 
-import ImageWithLoader from "./ImageWithLoader";
+import ImageWithLoader from "@/components/common/ImageWithLoader";
 
 interface FullscreenPhotoViewerProps {
   images: string[];

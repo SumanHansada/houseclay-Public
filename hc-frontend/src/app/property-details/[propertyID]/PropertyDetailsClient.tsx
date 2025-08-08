@@ -54,6 +54,7 @@ import {
   formatINRCurrency,
   pascalCase,
 } from "@/common/utils";
+import PhotoGallery from "@/components/common/PhotoGallery";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useGetPublicPropertyByIdQuery } from "@/store/apiSlice";
 import {
@@ -62,7 +63,6 @@ import {
   setHideStickyNavBar,
 } from "@/store/appSlice";
 import { GoogleMapsDirection } from "@/utility-components";
-import PhotoGallery from "@/utility-components/PhotoGallery";
 
 const BalconyIcon = BalconyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const BuildUpAreaIcon = BuildUpAreaIconSvg as React.FC<

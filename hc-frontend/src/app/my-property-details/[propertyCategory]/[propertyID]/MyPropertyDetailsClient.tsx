@@ -61,6 +61,8 @@ import {
   toBase64,
 } from "@/common/utils";
 import Carousel2D from "@/components/Carousel2D";
+import FullscreenPhotoViewer from "@/components/common/FullscreenPhotoViewer";
+import ImageWithLoader from "@/components/common/ImageWithLoader";
 import Footer from "@/components/Footer";
 import UpgradePropertyDialog from "@/dialogs/upgrade-property";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
@@ -73,8 +75,6 @@ import { setHideHeader } from "@/store/appSlice";
 import { setHideFooter } from "@/store/appSlice";
 import { setHideStickyNavBar } from "@/store/appSlice";
 import { NonTab, Tab, TabContent, TabHeader, Tabs } from "@/utility-components";
-import FullscreenPhotoViewer from "@/utility-components/FullscreenPhotoViewer";
-import ImageWithLoader from "@/utility-components/ImageWithLoader";
 
 import PostedAndRentDetails from "./components/PostedAndRentDetails";
 import UpgradePropertyBanner from "./components/UpgradePropertyBanner";
@@ -175,7 +175,9 @@ export function MyPropertyDetailsClient({
   const { isDialogOpen, openDialog, closeDialog } = useDialog();
 
   const handleEdit = async () => {
-    router.push(`/list-property/${propertyCategory}/`);
+    router.push(
+      `/edit-property/${propertyCategory.toLowerCase()}/${propertyID}`,
+    );
   };
 
   useEffect(() => {
