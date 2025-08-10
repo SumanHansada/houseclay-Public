@@ -122,7 +122,7 @@ export const apiSlice = createApi({
       Partial<PropertyForm> & { propertyID: string }
     >({
       query: (data) => ({
-        url: `property/user/update`,
+        url: "property/user/update",
         method: "PUT",
         body: data,
         headers: {

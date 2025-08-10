@@ -6,6 +6,7 @@ import storage from "redux-persist/lib/storage";
 import { apiSlice } from "./apiSlice";
 import appReducer from "./appSlice";
 import authReducer from "./authSlice";
+import editPropertyReducer from "./editPropertySlice";
 import listPropertyReducer from "./listPropertySlice";
 import propertySearchReducer from "./propertySearchSlice";
 import shortlistReducer from "./shortlistPropertySlice";
@@ -23,6 +24,19 @@ const listPropertyPersistConfig = {
     "propertyImagesS3Url",
     "propertyImages",
   ], // Only persist these fields
+};
+
+// Configure persistence for editProperty slice
+const editPropertyPersistConfig = {
+  key: "editProperty",
+  storage,
+  whitelist: [
+    "form",
+    "propertyCategory",
+    "propertyID",
+    "propertyImagesS3Url",
+    "propertyImages",
+  ],
 };
 
 // Configure persistence for propertySearch slice
@@ -60,6 +74,11 @@ const persistedListPropertyReducer = persistReducer(
   listPropertyReducer,
 );
 
+const persistedEditPropertyReducer = persistReducer(
+  editPropertyPersistConfig,
+  editPropertyReducer,
+);
+
 const persistedPropertySearchReducer = persistReducer(
   propertySearchPersistConfig,
   propertySearchReducer,
@@ -76,6 +95,7 @@ export function makeStore() {
       app: appReducer,
       auth: authReducer,
       listProperty: persistedListPropertyReducer,
+      editProperty: persistedEditPropertyReducer,
       propertySearch: persistedPropertySearchReducer,
       shortlist: persistedShortlistReducer,
       user: userReducer,
