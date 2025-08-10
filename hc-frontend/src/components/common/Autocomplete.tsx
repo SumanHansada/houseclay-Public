@@ -163,7 +163,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
 
         <div className="relative">
           <div
-            className={`${inputClassName} ${sizeStyles[size]} ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`${inputClassName} ${sizeStyles[size]} ${disabled ? "cursor-not-allowed disabled:bg-gray-300" : ""}`}
           >
             <Search className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
 
@@ -217,7 +217,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                   index === focusedIndex
                     ? "bg-blue-50 text-blue-600"
                     : "text-gray-900"
-                } ${maxItems && selectedItems.length >= maxItems ? "opacity-50 cursor-not-allowed" : ""}`}
+                } ${maxItems && selectedItems.length >= maxItems ? "cursor-not-allowed disabled:bg-gray-300" : ""}`}
               >
                 {item}
               </div>

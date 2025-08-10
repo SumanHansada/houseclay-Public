@@ -144,6 +144,11 @@ export default function PropertySearchPage() {
     router.push(`/property-search?${params.toString()}`);
   };
 
+  const handleCardClick = (e: React.MouseEvent, property: PropertySearch) => {
+    e.stopPropagation();
+    router.push(`/property-details/${property.propertyID}`);
+  };
+
   return (
     <>
       <section
@@ -154,12 +159,15 @@ export default function PropertySearchPage() {
         </button>
         <Autocomplete
           items={[
+            "Bengaluru",
             "The Godfather",
             "12 Angry Men",
             "The Shawshank Redemption",
             "Schindler's List",
             "Pulp Fiction",
           ]}
+          selectedItems={["Bengaluru"]}
+          disabled={true}
           inputClassName="flex items-center h-10 bg-gray-100 w-full p-2 border-none rounded-full"
           placeholder="Search for a property"
         />
@@ -178,13 +186,16 @@ export default function PropertySearchPage() {
         <div className="flex justify-between items-center border-gray-200 w-full gap-4">
           <div className="flex-1">
             <Autocomplete
+              selectedItems={["Bengaluru"]}
               items={[
                 "The Godfather",
                 "12 Angry Men",
                 "The Shawshank Redemption",
                 "Schindler's List",
                 "Pulp Fiction",
+                "Bengaluru",
               ]}
+              disabled={true}
               inputClassName="flex items-center min-h-[46px] w-full px-3 py-2 border border-gray-300 rounded-xl bg-white"
               placeholder="Search for a property"
             />
@@ -334,9 +345,10 @@ export default function PropertySearchPage() {
                       // eslint-disable-next-line @typescript-eslint/no-explicit-any
                       (property as any).badgeType as BadgeType | undefined
                     }
-                    onClick={() => {
-                      router.push(`/property-details/${property.propertyID}`);
-                    }}
+                    onClick={(e: React.MouseEvent) =>
+                      handleCardClick(e, property)
+                    }
+                    showCarouselDots={false}
                   />
                 ))}
               </div>

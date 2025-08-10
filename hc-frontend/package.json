@@ -6,6 +6,7 @@
     "dev": "NODE_OPTIONS='--inspect' next dev --turbopack",
     "build": "next build",
     "build:prod": "NODE_ENV=production next build",
+    "build:analyze": "ANALYZE=true npm run build",
     "start": "next start",
     "start:prod": "NODE_ENV=production next start",
     "lint": "next lint --fix",
@@ -48,6 +49,7 @@
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.4",
     "@eslint/eslintrc": "^3",
+    "@next/bundle-analyzer": "^15.4.6",
     "@storybook/addon-essentials": "^8.5.8",
     "@storybook/addon-interactions": "^8.5.8",
     "@storybook/addon-onboarding": "^8.5.8",

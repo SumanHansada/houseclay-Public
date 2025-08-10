@@ -12,7 +12,8 @@ interface PropertiesProps {
   badgeType?: string | null;
   autoplay?: boolean;
   autoplayInterval?: number;
-  onClick?: () => void;
+  showCarouselDots?: boolean;
+  onClick?: (e: React.MouseEvent) => void;
 }
 
 // Properties Component
@@ -21,6 +22,7 @@ const Properties: React.FC<PropertiesProps> = ({
   badgeType,
   autoplay = false,
   autoplayInterval = 3000,
+  showCarouselDots = true,
   onClick,
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -45,7 +47,7 @@ const Properties: React.FC<PropertiesProps> = ({
 
   return (
     <div
-      onClick={onClick}
+      onClick={(e) => onClick?.(e)}
       className="flex-col gap-8 bg-white border border-gray-100 rounded-lg drop-shadow relative p-3 cursor-pointer"
     >
       {/* Image Carousel */}
@@ -90,7 +92,10 @@ const Properties: React.FC<PropertiesProps> = ({
         {/* Favorite Button */}
         <button
           className="absolute top-3 right-3 bg-gray-50/30 rounded-full p-2 shadow-md"
-          onClick={() => setIsFavorite(!isFavorite)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsFavorite(!isFavorite);
+          }}
         >
           {isFavorite ? (
             <Heart size={16} className="text-red-500 fill-red-500" />
@@ -100,17 +105,19 @@ const Properties: React.FC<PropertiesProps> = ({
         </button>
 
         {/* Carousel Dots */}
-        <div className="absolute bottom-2 left-0 right-0 flex justify-center space-x-1">
-          {property.images.map((_, index) => (
-            <button
-              key={index}
-              className={`w-2 h-2 rounded-full ${
-                index === currentImageIndex ? "bg-white" : "bg-white/50"
-              }`}
-              onClick={() => setCurrentImageIndex(index)}
-            />
-          ))}
-        </div>
+        {showCarouselDots && (
+          <div className="absolute bottom-2 left-0 right-0 flex justify-center space-x-1">
+            {property.images.map((_, index) => (
+              <button
+                key={index}
+                className={`w-2 h-2 rounded-full ${
+                  index === currentImageIndex ? "bg-white" : "bg-white/50"
+                }`}
+                onClick={() => setCurrentImageIndex(index)}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Property Info */}
