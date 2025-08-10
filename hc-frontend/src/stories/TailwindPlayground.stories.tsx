@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 
-import { tailwindPresets } from "../../.storybook/tailwind-utils";
+import { tailwindPresets } from "@/utils";
 
 // Sample component for Tailwind playground
 interface TailwindPlaygroundComponentProps {

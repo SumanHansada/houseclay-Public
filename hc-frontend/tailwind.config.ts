@@ -7,6 +7,7 @@ export default {
     "./src/base-components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/form-components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/utility-components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/utils/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./.storybook/**/*.{js,ts,jsx,tsx,mdx}",
   ],
