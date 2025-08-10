@@ -54,7 +54,9 @@ import {
   formatINRCurrency,
   pascalCase,
 } from "@/common/utils";
+import { PhotoGalleryDialog } from "@/dialogs";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
+import { useDialog } from "@/providers/DialogContextProvider";
 import { useGetPublicPropertyByIdQuery } from "@/store/apiSlice";
 import {
   setHideFooter,
@@ -188,6 +190,7 @@ export function PropertyDetailsClient({
   const router = useRouter();
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
+  const { isDialogOpen, closeDialog } = useDialog();
 
   useEffect(() => {
     if (isMobile) {
@@ -1139,6 +1142,15 @@ export function PropertyDetailsClient({
           </section>
         </section>
       </section>
+
+      {/* Mobile Photo Gallery Dialog */}
+      {isDialogOpen("photo-gallery-dialog") && (
+        <PhotoGalleryDialog
+          id="photo-gallery-dialog"
+          images={property?.images || []}
+          onClose={() => closeDialog("photo-gallery-dialog")}
+        />
+      )}
     </>
   );
 }

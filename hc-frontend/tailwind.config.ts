@@ -4,6 +4,7 @@ export default {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/dialogs/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/base-components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/form-components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/utility-components/**/*.{js,ts,jsx,tsx,mdx}",

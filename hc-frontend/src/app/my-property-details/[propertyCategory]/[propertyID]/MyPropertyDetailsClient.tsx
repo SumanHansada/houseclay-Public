@@ -61,7 +61,7 @@ import {
   toBase64,
 } from "@/common/utils";
 import Carousel2D from "@/components/Carousel2D";
-import UpgradePropertyDialog from "@/dialogs/upgrade-property";
+import { UpgradePropertyDialog } from "@/dialogs";
 import { Footer } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";

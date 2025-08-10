@@ -12,8 +12,7 @@ import {
   PropertyCategory,
 } from "@/common/enums";
 import { extractS3KeyFromUrl } from "@/common/utils";
-import { ListPropertySuccessDialog } from "@/dialogs/list-property-success-dialog";
-import { UploadDialog } from "@/dialogs/upload-dialog";
+import { ListPropertySuccessDialog, UploadDialog } from "@/dialogs";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
 import { transformFormValuesToPropertyForm } from "@/interfaces/FormTransformers";
 import { FormValues } from "@/interfaces/FormValues";

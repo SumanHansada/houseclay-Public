@@ -1,7 +1,6 @@
 import { Camera } from "lucide-react";
 import { useState } from "react";
 
-import PhotoGalleryDialog from "@/dialogs/photo-gallery-dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 
@@ -26,7 +25,7 @@ export default function PhotoGallery({
   const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { isMobile } = useDeviceContext();
-  const { openDialog, closeDialog, isDialogOpen } = useDialog();
+  const { openDialog } = useDialog();
 
   // Limit the number of images to display
   const displayImages = images.slice(0, maxDisplayImages);
@@ -47,10 +46,6 @@ export default function PhotoGallery({
 
   const handleMobileGalleryClick = () => {
     openDialog("photo-gallery-dialog");
-  };
-
-  const handleCloseMobileDialog = () => {
-    closeDialog("photo-gallery-dialog");
   };
 
   if (!displayImages.length) {
@@ -180,15 +175,6 @@ export default function PhotoGallery({
           onNavigate={handleNavigateImage}
           thumbnailPosition={thumbnailPosition}
           showThumbnails={showThumbnails}
-        />
-      )}
-
-      {/* Mobile Photo Gallery Dialog */}
-      {isDialogOpen("photo-gallery-dialog") && (
-        <PhotoGalleryDialog
-          id="photo-gallery-dialog"
-          images={images}
-          onClose={handleCloseMobileDialog}
         />
       )}
     </div>

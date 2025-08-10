@@ -11,7 +11,7 @@ import { BadgeType, PropertyCategory } from "@/common/enums";
 import { pascalCase } from "@/common/utils";
 import Autocomplete from "@/components/common/Autocomplete";
 import Properties from "@/components/Properties";
-import SearchFilterDialog from "@/dialogs/search-filters-dialog";
+import { SearchFiltersDialog } from "@/dialogs";
 import { PropertySearch } from "@/interfaces/PropertySearch";
 import { Footer } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
@@ -358,7 +358,7 @@ export default function PropertySearchPage() {
       </section>
       <Footer />
       {isDialogOpen("property-filters-dialog") && (
-        <SearchFilterDialog
+        <SearchFiltersDialog
           id="property-filters-dialog"
           onClose={() => {
             closeDialog("property-filters-dialog");

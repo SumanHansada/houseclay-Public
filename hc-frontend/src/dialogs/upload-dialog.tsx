@@ -13,7 +13,7 @@ interface UploadDialogProps {
   id: string;
 }
 
-export const UploadDialog: React.FC<UploadDialogProps> = ({ id }) => {
+const UploadDialog: React.FC<UploadDialogProps> = ({ id }) => {
   const { closeDialog } = useDialog();
   const { isMobile } = useDeviceContext();
 
@@ -141,3 +141,5 @@ export const UploadDialog: React.FC<UploadDialogProps> = ({ id }) => {
     </Dialog>
   );
 };
+
+export default UploadDialog;

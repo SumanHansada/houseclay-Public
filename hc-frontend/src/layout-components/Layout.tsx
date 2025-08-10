@@ -1,7 +1,6 @@
 "use client";
 
-import LoginDialog from "@/dialogs/login-dialog";
-import MenuDialog from "@/dialogs/menu-dialog";
+import { LoginDialog, MenuDialog } from "@/dialogs";
 import { useDialog } from "@/providers/DialogContextProvider";
 
 import Header from "./Header";

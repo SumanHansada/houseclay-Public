@@ -21,9 +21,11 @@ interface ListPropertySuccessDialogProps {
   propertyCategory: PropertyCategory;
 }
 
-export const ListPropertySuccessDialog: React.FC<
-  ListPropertySuccessDialogProps
-> = ({ id, propertyID, propertyCategory }) => {
+const ListPropertySuccessDialog: React.FC<ListPropertySuccessDialogProps> = ({
+  id,
+  propertyID,
+  propertyCategory,
+}) => {
   const { closeDialog } = useDialog();
   const { isMobile } = useDeviceContext();
   const router = useRouter();
@@ -100,3 +102,5 @@ export const ListPropertySuccessDialog: React.FC<
     </Dialog>
   );
 };
+
+export default ListPropertySuccessDialog;

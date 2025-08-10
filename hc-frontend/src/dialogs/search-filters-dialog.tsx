@@ -88,7 +88,7 @@ import {
 import { RootState } from "@/store/store";
 import { Tab, TabContent, TabHeader, Tabs } from "@/utility-components";
 
-interface SearchFilterDialogProps {
+interface SearchFiltersDialogProps {
   id: string;
   onClose: () => void;
   onReset: () => void;
@@ -181,7 +181,7 @@ const amenities = [
   { label: "First Aid Kit", icon: <FirstAidKitIcon /> },
 ];
 
-const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
+const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
   id,
   onClose,
   onReset,
@@ -1050,4 +1050,4 @@ const SearchFilterDialog: React.FC<SearchFilterDialogProps> = ({
   );
 };
 
-export default SearchFilterDialog;
+export default SearchFiltersDialog;
