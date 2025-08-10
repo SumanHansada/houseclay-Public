@@ -1,11 +1,12 @@
 import { Camera } from "lucide-react";
 import { useState } from "react";
 
-import FullscreenPhotoViewer from "@/components/common/FullscreenPhotoViewer";
-import ImageWithLoader from "@/components/common/ImageWithLoader";
 import PhotoGalleryDialog from "@/dialogs/photo-gallery-dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
+
+import FullscreenPhotoViewer from "./FullscreenPhotoViewer";
+import ImageWithLoader from "./ImageWithLoader";
 
 interface PhotoGalleryProps {
   images: string[];

@@ -2,10 +2,10 @@ import bannerBackground from "public/images/banner-background.webp";
 import { useDispatch, useSelector } from "react-redux";
 
 import { PropertyCategory } from "@/common/enums";
-import ImageWithLoader from "@/components/common/ImageWithLoader";
 import HomeSearchBar from "@/components/HomeSearchBar";
 import { setPropertyCategory } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
+import { ImageWithLoader } from "@/utility-components";
 
 const MastHeadDesktop = () => {
   const propertyCategory = useSelector(

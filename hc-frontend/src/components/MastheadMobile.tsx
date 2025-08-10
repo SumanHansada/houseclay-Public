@@ -5,10 +5,10 @@ import bannerPeopleMobile from "public/images/banner-people-mobile.webp";
 import { useDispatch, useSelector } from "react-redux";
 
 import { PropertyCategory } from "@/common/enums";
-import ImageWithLoader from "@/components/common/ImageWithLoader";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setPropertyCategory } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
+import { ImageWithLoader } from "@/utility-components";
 
 import HomeSearchBar from "./HomeSearchBar";
 

@@ -4,8 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 
 import { BadgeType } from "@/common/enums";
 import { formatBhkType, formatINRCurrency } from "@/common/utils";
-import ImageWithLoader from "@/components/common/ImageWithLoader";
 import { PropertySearch } from "@/interfaces/PropertySearch";
+import { ImageWithLoader } from "@/utility-components";
 
 interface PropertiesProps {
   property: PropertySearch;

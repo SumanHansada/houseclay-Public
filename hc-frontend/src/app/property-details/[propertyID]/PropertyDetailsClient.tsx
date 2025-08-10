@@ -54,7 +54,6 @@ import {
   formatINRCurrency,
   pascalCase,
 } from "@/common/utils";
-import PhotoGallery from "@/components/common/PhotoGallery";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useGetPublicPropertyByIdQuery } from "@/store/apiSlice";
 import {
@@ -62,6 +61,7 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
+import { PhotoGallery } from "@/utility-components";
 import { GoogleMapsDirection } from "@/utility-components";
 
 const BalconyIcon = BalconyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
