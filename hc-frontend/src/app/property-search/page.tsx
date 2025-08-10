@@ -5,11 +5,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { SelectDropdown } from "@/base-components";
-import { Button } from "@/base-components";
+import { Autocomplete, Button, SelectDropdown } from "@/base-components";
 import { BadgeType, PropertyCategory } from "@/common/enums";
 import { pascalCase } from "@/common/utils";
-import Autocomplete from "@/components/common/Autocomplete";
 import Properties from "@/components/Properties";
 import { SearchFiltersDialog } from "@/dialogs";
 import { PropertySearch } from "@/interfaces/PropertySearch";
@@ -158,6 +156,7 @@ export default function PropertySearchPage() {
           <ChevronLeft onClick={() => router.back()} size={25} />
         </button>
         <Autocomplete
+          name="location"
           items={[
             "Bengaluru",
             "The Godfather",
@@ -186,6 +185,7 @@ export default function PropertySearchPage() {
         <div className="flex justify-between items-center border-gray-200 w-full gap-4">
           <div className="flex-1">
             <Autocomplete
+              name="location"
               selectedItems={["Bengaluru"]}
               items={[
                 "The Godfather",

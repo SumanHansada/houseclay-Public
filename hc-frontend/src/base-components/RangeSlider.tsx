@@ -6,6 +6,7 @@ interface RangeMark {
 }
 
 interface RangeSliderProps {
+  name: string;
   label?: string;
   min: number;
   max: number;
@@ -33,6 +34,7 @@ interface RangeSliderProps {
 }
 
 const RangeSlider: React.FC<RangeSliderProps> = ({
+  name,
   label,
   min,
   max,
@@ -43,7 +45,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
   inputClassName = "w-24 p-2 border border-gray-300 rounded-xl text-center",
   // Styling props with defaults
   containerClassName = "mb-4",
-  labelClassName = "block text-gray-700 text-sm font-medium mb-2",
+  labelClassName = "block text-gray-700 text-sm font-medium mb-1",
   sliderClassName = "relative w-full h-6",
   trackClassName = "absolute top-1/2 left-0 right-0 h-2 bg-gray-200 rounded-full transform -translate-y-1/2",
   rangeClassName = "absolute h-2 bg-blue-500 rounded-full top-1/2 transform -translate-y-1/2",
@@ -257,7 +259,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
         {/* Min Input */}
         {showInputs && (
           <input
-            id={`${label}-min`}
+            id={`${name}-min`}
             type="number"
             min={min}
             max={maxValue - step}
@@ -347,7 +349,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
         {/* Max Input */}
         {showInputs && (
           <input
-            id={`${label}-max`}
+            id={`${name}-max`}
             type="number"
             min={minValue + step}
             max={max}

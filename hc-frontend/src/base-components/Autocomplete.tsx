@@ -8,6 +8,7 @@ import React, {
 } from "react";
 
 interface AutocompleteProps {
+  name: string;
   // Data props
   items?: string[];
   selectedItems?: string[];
@@ -31,6 +32,7 @@ interface AutocompleteProps {
 }
 
 const Autocomplete: React.FC<AutocompleteProps> = ({
+  name,
   items = [],
   selectedItems: externalSelectedItems,
   onSelectionChange,
@@ -185,6 +187,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
 
               <input
                 ref={inputRef}
+                name={name}
                 type="text"
                 value={inputValue}
                 onChange={handleInputChange}

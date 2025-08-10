@@ -1,3 +1,4 @@
+export { default as Autocomplete } from "./Autocomplete";
 export { default as Button } from "./Button";
 export { default as CalendarField } from "./CalendarField";
 export { default as Checkbox } from "./Checkbox";
@@ -6,6 +7,7 @@ export { default as NumberField } from "./NumberField";
 export { default as PhoneField } from "./PhoneField";
 export { default as PlacesAutocomplete } from "./PlacesAutocomplete";
 export { default as RadioGroup } from "./RadioGroup";
+export { default as RangeSlider } from "./RangeSlider";
 export { default as SelectDropdown } from "./SelectDropdown";
 export { default as TextArea } from "./TextArea";
 export { default as TextField } from "./TextField";

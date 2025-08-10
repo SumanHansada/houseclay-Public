@@ -64,10 +64,8 @@ const CoupleIcon = CoupleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { RadioGroup } from "@/base-components";
-import { Button } from "@/base-components";
+import { Button, RadioGroup, RangeSlider } from "@/base-components";
 import { PropertyCategory } from "@/common/enums";
-import RangeSlider from "@/components/common/RangeSlider";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import {
   resetPropertySearch,
@@ -448,6 +446,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       <IndianRupee size={20} /> Price Range
                     </div>
                     <RangeSlider
+                      name="priceRangeForRent"
                       label=""
                       min={0}
                       max={1000000}
@@ -685,6 +684,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       <IndianRupee size={20} /> Price Range
                     </div>
                     <RangeSlider
+                      name="priceRangeForRent"
                       label=""
                       min={0}
                       max={1000000}
@@ -963,6 +963,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                   <IndianRupee size={20} /> Price Range
                 </div>
                 <RangeSlider
+                  name="priceRangeForBuy"
                   label=""
                   min={0}
                   max={100000000}
