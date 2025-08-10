@@ -66,12 +66,12 @@ const Checkbox: React.FC<CheckboxProps> = ({
   return (
     <div className={`mt-6 ${className}`}>
       {label && (
-        <div className="mb-4">
-          <label className="block text-gray-700 text-lg font-medium">
+        <fieldset>
+          <legend className="block text-gray-700 text-sm font-medium mb-1">
             {label}
             {required && <span className="text-red-500">*</span>}
-          </label>
-        </div>
+          </legend>
+        </fieldset>
       )}
 
       <div className={`grid ${gridCols[columns]} gap-3 xl:gap-6`} role="group">
