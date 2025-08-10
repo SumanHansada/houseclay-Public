@@ -376,6 +376,7 @@ export default function ListPropertyTypeLayout({
             width={500}
             height={500}
             className="w-full h-full object-cover max-xl:hidden"
+            priority
           />
           {/* Left side - Steps navigation */}
           <div className="absolute right-8 top-12 flex flex-col z-50">

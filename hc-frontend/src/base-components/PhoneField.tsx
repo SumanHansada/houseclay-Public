@@ -1,35 +1,42 @@
 import "react-international-phone/style.css";
 
-import { useField } from "formik";
+import React from "react";
 import { PhoneInput } from "react-international-phone";
 
-interface FormPhoneInputProps {
-  label: string;
+interface PhoneFieldProps {
   name: string;
   id?: string;
+  label?: string;
   required?: boolean;
   defaultCountry?: string;
   placeholder?: string;
   className?: string;
+  disabled?: boolean;
+  // Formik props
+  value: string;
+  onChange: (value: string) => void;
+  onBlur?: () => void;
+  error?: string;
 }
 
-const FormPhoneInput = ({
-  label,
+const PhoneField: React.FC<PhoneFieldProps> = ({
   name,
   id,
+  label,
   required = false,
   defaultCountry = "us",
   placeholder = "Enter phone number",
   className = "",
-}: FormPhoneInputProps) => {
-  const [field, meta, helpers] = useField(name);
-  const hasError = meta.touched && meta.error;
-
+  disabled = false,
+  value,
+  onChange,
+  onBlur,
+  error,
+}) => {
   // Function to handle phone number change with immediate validation
-  const handlePhoneChange = async (value: string) => {
-    const sanitizedPhone = value.replace(/^\+/, "");
-    await helpers.setValue(sanitizedPhone);
-    await helpers.setTouched(true);
+  const handlePhoneChange = (phoneValue: string) => {
+    const sanitizedPhone = phoneValue.replace(/^\+/, "");
+    onChange(sanitizedPhone);
   };
 
   return (
@@ -47,23 +54,24 @@ const FormPhoneInput = ({
         <PhoneInput
           name={id || name}
           defaultCountry={defaultCountry}
-          value={field.value}
+          value={value}
           placeholder={placeholder}
-          onChange={(value) => handlePhoneChange(value)}
-          onBlur={() => helpers.setTouched(true)}
+          onChange={(phoneValue) => handlePhoneChange(phoneValue)}
+          onBlur={onBlur}
+          disabled={disabled}
           className={`custom-phone-input w-full ${
-            hasError ? "phone-error" : ""
+            error ? "phone-error" : ""
           } ${className}`}
         />
       </div>
 
-      {hasError ? (
-        <div className="mt-1 text-sm text-red-600" id={`${id || name}-error`}>
-          {meta.error}
+      {error ? (
+        <div className="mt-1 text-sm text-red-600" id={`${name}-error`}>
+          {error}
         </div>
       ) : null}
     </div>
   );
 };
 
-export default FormPhoneInput;
+export default PhoneField;

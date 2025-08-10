@@ -1,6 +1,8 @@
+export { default as CalendarField } from "./CalendarField";
 export { default as Checkbox } from "./Checkbox";
 export { default as CurrencyField } from "./CurrencyField";
 export { default as NumberField } from "./NumberField";
+export { default as PhoneField } from "./PhoneField";
 export { default as PlacesAutocomplete } from "./PlacesAutocomplete";
 export { default as RadioGroup } from "./RadioGroup";
 export { default as SelectDropdown } from "./SelectDropdown";

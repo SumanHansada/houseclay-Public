@@ -9,7 +9,6 @@ import {
   startOfWeek,
 } from "date-fns";
 import { FocusTrap } from "focus-trap-react";
-import { useField } from "formik";
 import {
   CalendarDays,
   ChevronLeft,
@@ -19,7 +18,7 @@ import {
 } from "lucide-react";
 import React, { KeyboardEvent, useEffect, useRef, useState } from "react";
 
-interface FormCalendarFieldProps {
+interface CalendarFieldProps {
   name: string;
   label?: string;
   required?: boolean;
@@ -28,9 +27,14 @@ interface FormCalendarFieldProps {
   className?: string;
   disabled?: boolean;
   showPrevNextYear?: boolean;
+  // Formik props
+  value: string;
+  onChange: (value: string) => void;
+  onBlur?: () => void;
+  error?: string;
 }
 
-const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
+const CalendarField: React.FC<CalendarFieldProps> = ({
   name,
   label,
   required = false,
@@ -39,8 +43,11 @@ const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
   className = "",
   disabled = false,
   showPrevNextYear = false,
+  value,
+  onChange,
+  onBlur,
+  error,
 }) => {
-  const [field, meta, helpers] = useField(name);
   const [isOpen, setIsOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [focusedDate, setFocusedDate] = useState<Date | null>(null);
@@ -49,25 +56,23 @@ const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
   const calendarButtonRef = useRef<HTMLButtonElement>(null);
 
   // Format displayed value
-  const displayValue = field.value
-    ? format(new Date(field.value), dateFormat)
-    : "";
+  const displayValue = value ? format(new Date(value), dateFormat) : "";
 
   // Initialize focused date when opening calendar
   useEffect(() => {
     if (isOpen) {
-      if (field.value && isValid(new Date(field.value))) {
-        setFocusedDate(new Date(field.value));
+      if (value && isValid(new Date(value))) {
+        setFocusedDate(new Date(value));
       } else {
         setFocusedDate(new Date());
       }
     }
-  }, [isOpen, field.value]);
+  }, [isOpen, value]);
 
   // Handle manual input
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
-    helpers.setValue(inputValue);
+    onChange(inputValue);
 
     // Try to parse the date
     const parsedDate = parse(inputValue, dateFormat, new Date());
@@ -79,8 +84,8 @@ const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
 
   // Handle date selection
   const handleDateSelect = (date: Date) => {
-    helpers.setValue(new Date(date).toISOString());
-    helpers.setTouched(true);
+    onChange(new Date(date).toISOString());
+    onBlur?.();
     setIsOpen(false);
 
     // Return focus to the calendar button when closing
@@ -269,8 +274,7 @@ const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
     const today = new Date();
     const isToday = today.toDateString() === date.toDateString();
     const isSelected =
-      field.value &&
-      new Date(field.value).toDateString() === date.toDateString();
+      value && new Date(value).toDateString() === date.toDateString();
     const isFocused =
       focusedDate && focusedDate.toDateString() === date.toDateString();
     const isDisabled = date.getTime() < today.setHours(0, 0, 0, 0); // Disable dates before today
@@ -313,17 +317,16 @@ const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
         <input
           id={name}
           type="text"
-          {...field}
           value={displayValue}
           onChange={handleInputChange}
           placeholder={placeholder}
           disabled={disabled}
           aria-label={label || "Date input"}
-          aria-invalid={meta.touched && meta.error ? "true" : "false"}
-          aria-describedby={meta.error ? `${name}-error` : undefined}
+          aria-invalid={error ? "true" : "false"}
+          aria-describedby={error ? `${name}-error` : undefined}
           className={`
             w-full p-3 border rounded-l-xl rounded-none
-            ${meta.touched && meta.error ? "border-red-500" : "border-gray-300"}
+            ${error ? "border-red-500" : "border-gray-300"}
             ${disabled ? "bg-gray-100 cursor-not-allowed" : ""}
           `}
         />
@@ -342,13 +345,13 @@ const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
         </button>
       </div>
 
-      {meta.touched && meta.error ? (
+      {error ? (
         <div
           id={`${name}-error`}
           className="text-red-500 text-sm mt-1"
           aria-live="polite"
         >
-          {meta.error}
+          {error}
         </div>
       ) : null}
 
@@ -497,4 +500,4 @@ const FormCalendarField: React.FC<FormCalendarFieldProps> = ({
   );
 };
 
-export default FormCalendarField;
+export default CalendarField;

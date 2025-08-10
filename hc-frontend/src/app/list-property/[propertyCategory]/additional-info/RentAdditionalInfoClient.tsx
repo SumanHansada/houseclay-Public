@@ -5,8 +5,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
-import FormPhoneInput from "@/components/common/FormPhoneInput";
-import FormSelectDropdown from "@/form-components/FormSelectDropdown";
+import { FormPhoneField, FormSelectDropdown } from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
 import { setAdditionalInfo, setFormValidity } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
@@ -119,7 +118,7 @@ const RentAdditionalInfoClient = () => {
             />
           </div>
           <div className="col-span-1">
-            <FormPhoneInput
+            <FormPhoneField
               label="Secondary Phone Number"
               name="additionalInfo.secondaryPhoneNumber"
               id="additionalInfo.secondaryPhoneNumber"
