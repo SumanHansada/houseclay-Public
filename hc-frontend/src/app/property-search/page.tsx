@@ -6,14 +6,14 @@ import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { SelectDropdown } from "@/base-components";
+import { Button } from "@/base-components";
 import { BadgeType, PropertyCategory } from "@/common/enums";
 import { pascalCase } from "@/common/utils";
 import Autocomplete from "@/components/common/Autocomplete";
-import Button from "@/components/common/Button";
-import Footer from "@/components/Footer";
 import Properties from "@/components/Properties";
 import SearchFilterDialog from "@/dialogs/search-filters-dialog";
 import { PropertySearch } from "@/interfaces/PropertySearch";
+import { Footer } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useGetPropertiesByLocationQuery } from "@/store/apiSlice";

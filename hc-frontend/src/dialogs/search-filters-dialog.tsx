@@ -65,8 +65,8 @@ const CoupleIcon = CoupleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 import { useDispatch, useSelector } from "react-redux";
 
 import { RadioGroup } from "@/base-components";
+import { Button } from "@/base-components";
 import { PropertyCategory } from "@/common/enums";
-import Button from "@/components/common/Button";
 import RangeSlider from "@/components/common/RangeSlider";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import {

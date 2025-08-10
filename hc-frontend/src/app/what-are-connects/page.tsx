@@ -1,4 +1,4 @@
-import Footer from "@/components/Footer";
+import { Footer } from "@/layout-components";
 
 import HeroSection from "./components/HeroSection";
 import HowToUseConnectsClient from "./components/HowToUseConnectsClient";

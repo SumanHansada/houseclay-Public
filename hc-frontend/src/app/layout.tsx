@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Nunito } from "next/font/google";
 
-import Layout from "@/components/Layout";
+import { Layout } from "@/layout-components";
 import Providers from "@/providers/Providers";
 
 // const geistSans = Geist({

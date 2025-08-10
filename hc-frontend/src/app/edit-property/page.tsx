@@ -16,13 +16,13 @@ import {
 } from "@/common/enums";
 import Carousel2D from "@/components/Carousel2D";
 import CustomerSupportBanner from "@/components/CustomerSupportBanner";
-import Footer from "@/components/Footer";
 import GetStarted from "@/components/GetStarted";
 import ListingOptions from "@/components/ListingOptions";
 import ListPropertyAdvantages from "@/components/ListPropertyAdvantages";
 import ListWithUs from "@/components/ListWithUs";
 import PropertyTypeOptions from "@/components/PropertyTypeOptions";
 import { TestimonialCard } from "@/components/Testimonials";
+import { Footer } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import {
   setHideFooter,

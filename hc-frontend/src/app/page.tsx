@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 
 import Advantages from "@/components/Advantages";
-import Footer from "@/components/Footer";
 import MastheadDesktopClient from "@/components/MastheadDesktopClient";
 import MastHeadMobileClient from "@/components/MastheadMobileClient";
+import { Footer } from "@/layout-components";
 
 import dummyData from "../data/dummyData.json";
 import ClientPage from "./ClientPage";

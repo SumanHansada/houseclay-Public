@@ -13,21 +13,21 @@ import { useDialog } from "@/providers/DialogContextProvider";
 import { useLogoutMutation } from "@/store/apiSlice";
 import { clearToken, initializeToken } from "@/store/authSlice";
 
-import { RootState } from "../../store/store";
-import ActionMenu from "../ActionMenu";
+import ActionMenu from "../components/ActionMenu";
+import { RootState } from "../store/store";
 
 type User = {
   name: string;
 };
 
-export interface HeaderProps {
+export interface HeaderClientProps {
   user?: User;
 }
 
 const HouseClay = HouseClaySvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const Coin = CoinSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
-const Header: React.FC<HeaderProps> = () => {
+const HeaderClient: React.FC<HeaderClientProps> = () => {
   const hideHeader = useSelector((state: RootState) => state.app.hideHeader);
   const token = useSelector((state: RootState) => state.auth.token);
   const dispatch = useDispatch();
@@ -202,4 +202,4 @@ const Header: React.FC<HeaderProps> = () => {
   );
 };
 
-export default Header;
+export default HeaderClient;

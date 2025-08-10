@@ -4,6 +4,7 @@ interface TextFieldProps {
   name: string;
   id?: string;
   label?: string;
+  type?: "text" | "number" | "email" | "password";
   dataType?: "number" | "text"; // Determines how the value is handled
   required?: boolean;
   placeholder?: string;
@@ -22,6 +23,7 @@ const TextField: React.FC<TextFieldProps> = ({
   name,
   id,
   label,
+  type = "text",
   dataType = "text",
   required = false,
   placeholder = "",
@@ -90,7 +92,7 @@ const TextField: React.FC<TextFieldProps> = ({
           </span>
         )}
         <input
-          type="text"
+          type={type}
           id={id || name}
           placeholder={placeholder}
           className={`w-full p-3 border ${
