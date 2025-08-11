@@ -12,24 +12,13 @@ import OwnersIcon from "public/icons/owners-contacted.svg";
 import SupportIcon from "public/icons/support.svg";
 import LogoutIcon from "public/icons/logout.svg";
 
-import ProfileIconActive from "public/icons/my-profile-red.svg";
-// TODO: replace with red variant when available
-import RequirementsIconActive from "public/icons/my-requirements.svg";
-import ShortlistsIconActive from "public/icons/shortlists-red.svg";
-import ConnectsIconActive from "public/icons/connects-red.svg";
-import PaymentsIconActive from "public/icons/my-payments-red.svg";
-import PropertiesIconActive from "public/icons/my-properties-red.svg";
-import OwnersIconActive from "public/icons/owners-contacted-red.svg";
-import SupportIconActive from "public/icons/support-red.svg";
-
-export type NavIcon = FC<SVGProps<SVGSVGElement>>;
+export type NavIconType = FC<SVGProps<SVGSVGElement>>;
 export type NavKind = "route" | "action";
 
 type Base = {
   kind: NavKind;
   label: string;
-  Icon: NavIcon;
-  ActiveIcon?: NavIcon;
+  NavIcon: NavIconType;
 };
 
 type RouteItem = Base & {
@@ -49,59 +38,51 @@ export const ACCOUNT_NAV: AccountNavItem[] = [
     kind: "route",
     label: "My Profile",
     href: "/manage-account/my-profile",
-    Icon: ProfileIcon,
-    ActiveIcon: ProfileIconActive,
+    NavIcon: ProfileIcon,
   },
   {
     kind: "route",
     label: "My Requirements",
     href: "/manage-account/my-requirements",
-    Icon: RequirementsIcon,
-    ActiveIcon: RequirementsIconActive,
+    NavIcon: RequirementsIcon,
   },
   {
     kind: "route",
     label: "Shortlists",
     href: "/manage-account/shortlists",
-    Icon: ShortlistsIcon,
-    ActiveIcon: ShortlistsIconActive,
+    NavIcon: ShortlistsIcon,
   },
   {
     kind: "route",
     label: "Connects",
     href: "/manage-account/connects",
-    Icon: ConnectsIcon,
-    ActiveIcon: ConnectsIconActive,
+    NavIcon: ConnectsIcon,
   },
   {
     kind: "route",
     label: "My Payments",
     href: "/manage-account/my-payments",
-    Icon: PaymentsIcon,
-    ActiveIcon: PaymentsIconActive,
+    NavIcon: PaymentsIcon,
   },
   {
     kind: "route",
     label: "My Properties",
     href: "/manage-account/my-properties",
-    Icon: PropertiesIcon,
-    ActiveIcon: PropertiesIconActive,
+    NavIcon: PropertiesIcon,
   },
   {
     kind: "route",
     label: "Owners You Contacted",
     href: "/manage-account/owners-you-contacted",
-    Icon: OwnersIcon,
-    ActiveIcon: OwnersIconActive,
+    NavIcon: OwnersIcon,
   },
   {
     kind: "route",
     label: "Support",
     href: "/manage-account/support",
-    Icon: SupportIcon,
-    ActiveIcon: SupportIconActive,
+    NavIcon: SupportIcon,
   },
-  { kind: "action", label: "Logout", actionId: "logout", Icon: LogoutIcon },
+  { kind: "action", label: "Logout", actionId: "logout", NavIcon: LogoutIcon },
 ];
 
 export const ACCOUNT_NAV_OPTIONS = ACCOUNT_NAV.map((i) =>

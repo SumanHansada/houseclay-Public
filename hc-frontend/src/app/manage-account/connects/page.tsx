@@ -56,7 +56,12 @@ export default function ConnectsPage() {
           </div>
           <div className="space-y-4 lg:space-y-8 sm:space-y-6 lg:px-4 md:px-2 text-base sm:text-lg lg:text-xl mb-2 max-md:w-1/2">
             <div className="flex md:gap-4 gap-1 items-center">
-              <InstantAccess />
+              <InstantAccess
+                width={50}
+                height={50}
+                className="text-red-500"
+                aria-label="Instant Access"
+              />
               <div>
                 <h1 className="font-medium text-lg">Unlock Owner Details</h1>
                 <p className="text-base text-gray-700 font-light">
@@ -65,7 +70,13 @@ export default function ConnectsPage() {
               </div>
             </div>
             <div className="flex md:gap-4 gap-1 items-center">
-              <RealOwners />
+              <RealOwners
+                width={50}
+                height={50}
+                className="text-red-500"
+                aria-label="Real owners"
+              />
+
               <div>
                 <h1 className="font-medium text-lg">
                   Access Additional Services
@@ -76,7 +87,12 @@ export default function ConnectsPage() {
               </div>
             </div>
             <div className="flex md:gap-4 gap-1 items-center">
-              <NoForcedPlans />
+              <NoForcedPlans
+                width={50}
+                height={50}
+                className="text-red-500"
+                aria-label="No Forced Plans"
+              />
               <span>
                 <h1 className="font-medium text-lg">
                   Upgrade to Property Management

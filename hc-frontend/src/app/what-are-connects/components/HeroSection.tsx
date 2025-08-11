@@ -26,9 +26,9 @@ const HeroSection = () => (
         <h1 className="font-bold text-gray-900 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
           Say Goodbye to Subscriptions.
         </h1>
-        <h2 className="font-medium md:font-normal text-gray-800 text-2xl sm:text-3xl lg:text-4xl xl:text-5xl">
+        <h1 className="font-medium md:font-normal text-gray-800 text-2xl sm:text-4xl lg:text-5xl xl:text-6xl">
           Say Hello to Connects.
-        </h2>
+        </h1>
       </div>
 
       <Image

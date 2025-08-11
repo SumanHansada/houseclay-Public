@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import Footer from "@/components/Footer";
-import Sidebar from "./components/Sidebar";
+import { Sidebar } from "./components/Sidebar";
 import { ACCOUNT_NAV } from "@/common/constants";
 
 export const metadata = { title: "Manage Profile" };

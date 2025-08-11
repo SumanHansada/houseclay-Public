@@ -3,9 +3,12 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import type { AccountNavItem } from "@/common/constants";
-import ChevronRightIcon from "public/icons/chevron-right.svg";
-import ChevronRightIconActive from "public/icons/chevron-right-red.svg";
+import ChevronRightIconSvg from "public/icons/chevron-right.svg";
 import { useAppLogout } from "@/hooks/useAppLogout";
+
+const ChevronIcon = ChevronRightIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
 
 export interface SidebarProps {
   items: AccountNavItem[];
@@ -14,7 +17,7 @@ export interface SidebarProps {
   itemClassName?: string;
 }
 
-export default function Sidebar({
+export function Sidebar({
   items,
   className = "",
   listClassName = "bg-gray-50 rounded-lg px-3 py-2",
@@ -39,16 +42,12 @@ export default function Sidebar({
             (pathname === item.href ||
               (item.href !== "/manage-account" &&
                 pathname.startsWith(item.href)));
-
-          const ItemIcon =
-            isActive && item.ActiveIcon ? item.ActiveIcon : item.Icon;
-          const ChevronIcon = isActive
-            ? ChevronRightIconActive
-            : ChevronRightIcon;
+          const { label, NavIcon } = item;
+          const redirectTo = isRoute ? item.href : "/";
 
           const row = (
             <>
-              <ItemIcon />
+              <NavIcon width={40} className={isActive ? "text-red-500" : ""} />
               <div
                 className={`flex justify-between items-center flex-1 border-b-2 py-2 transition-colors ${
                   isActive ? "border-red-200" : "group-hover:border-red-200"
@@ -59,9 +58,13 @@ export default function Sidebar({
                     isActive ? "text-red-500" : "group-hover:text-red-500"
                   }`}
                 >
-                  {item.label}
+                  {label}
                 </span>
-                <ChevronIcon />
+                <ChevronIcon
+                  width={10}
+                  height={20}
+                  className={isActive ? "text-red-500" : ""}
+                />
               </div>
             </>
           );
@@ -71,8 +74,8 @@ export default function Sidebar({
           if (isRoute) {
             return (
               <Link
-                key={item.label}
-                href={item.href}
+                key={label}
+                href={redirectTo}
                 className={base}
                 aria-current={isActive ? "page" : undefined}
               >
@@ -83,7 +86,7 @@ export default function Sidebar({
 
           return (
             <button
-              key={item.label}
+              key={label}
               type="button"
               className={`${base} w-full text-left`}
               onClick={handleLogout}
