@@ -5,12 +5,12 @@ import {
   useSelectedLayoutSegment,
 } from "next/navigation";
 
+import { userDetailsTabs } from "@/common/constants/user";
 import { UserDetailsTabEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
 import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 import { ensureEnumValue } from "@/utils/core";
-import { userDetailsTabs } from "@/common/constants/user";
 import { userDetailsTestIds } from "@/utils/testIds";
 
 export default function UserDetailsLayout({

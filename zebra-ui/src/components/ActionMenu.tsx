@@ -1,9 +1,10 @@
 "use client";
 
-import { toSlug } from "@/utils/core";
 import { FocusTrap } from "focus-trap-react";
 import React, { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+
+import { toSlug } from "@/utils/core";
 
 interface Option {
   id: number | string;

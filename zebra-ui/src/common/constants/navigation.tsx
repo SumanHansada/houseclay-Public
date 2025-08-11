@@ -1,4 +1,4 @@
-import { Home, UserCheck, Users, Archive } from "lucide-react";
+import { Archive, Home, UserCheck, Users } from "lucide-react";
 import { ReactNode } from "react";
 
 export interface SidebarChild {

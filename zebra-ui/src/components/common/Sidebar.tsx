@@ -1,10 +1,11 @@
 "use client";
 
-import { sidebarItems } from "@/common/constants";
-import { toSlug } from "@/utils/core";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+
+import { sidebarItems } from "@/common/constants";
+import { toSlug } from "@/utils/core";
 
 const Sidebar = () => {
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>(

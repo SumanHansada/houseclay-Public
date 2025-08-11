@@ -1,4 +1,4 @@
-import { request, BrowserContext, Page, expect } from "@playwright/test";
+import { BrowserContext, expect, Page, request } from "@playwright/test";
 
 const apiBase = process.env.E2E_API_URL!;
 const baseURL = process.env.E2E_BASE_URL!;

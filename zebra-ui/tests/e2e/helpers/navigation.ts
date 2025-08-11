@@ -1,6 +1,7 @@
-import { toSlug } from "@/utils/core";
-import { Page, expect } from "@playwright/test";
+import { expect, Page } from "@playwright/test";
+
 import { sidebarItems } from "@/common/constants/navigation";
+import { toSlug } from "@/utils/core";
 
 interface NavigateSidebarArgs {
   page: Page;

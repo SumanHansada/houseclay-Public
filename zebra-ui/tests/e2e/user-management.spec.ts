@@ -1,4 +1,5 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+
 import { login, logout } from "./helpers/auth";
 import { navigateViaSidebar } from "./helpers/navigation";
 

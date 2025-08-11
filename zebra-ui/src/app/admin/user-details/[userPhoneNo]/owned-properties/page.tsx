@@ -1,16 +1,16 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
 
+import { UserDetailsTabEnum } from "@/common/enums";
 import { PropertyInfo } from "@/interfaces/Property";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 import {
   buildPropertyColumns,
   createDefaultPropertyActions,
 } from "@/utils/table/buildPropertyColumns";
+import { userDetailsTestIds } from "@/utils/testIds";
 
 import { PropertiesTableView } from "../../components/PropertiesTableView";
-import { userDetailsTestIds } from "@/utils/testIds";
-import { UserDetailsTabEnum } from "@/common/enums";
 
 interface SerializedPropertyRow extends PropertyInfo {
   _serial: number;

@@ -3,6 +3,7 @@ import { useParams } from "next/navigation";
 import React, { useState } from "react";
 
 import { dialogLabels } from "@/common/constants";
+import { UserDetailsTabEnum } from "@/common/enums";
 import { InitialsAvatar } from "@/components/InitialsAvatar";
 import { Pill } from "@/components/Pill";
 import { ActionDialog } from "@/dialogs/action-dialog";
@@ -12,9 +13,8 @@ import {
   useBlacklistUserMutation,
   useGetUserByPhoneNoQuery,
 } from "@/store/apiSlice";
-import { userDetailsTestIds } from "@/utils/testIds";
-import { UserDetailsTabEnum } from "@/common/enums";
 import { toSlug } from "@/utils/core";
+import { userDetailsTestIds } from "@/utils/testIds";
 
 const ProfilePage: React.FC = () => {
   const { userPhoneNo } = useParams() as { userPhoneNo: string };

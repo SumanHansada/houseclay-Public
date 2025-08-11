@@ -3,8 +3,9 @@ export { default as createTestIdFactory } from "./base";
 export { default as createTabbedTestIdFactory } from "./tabs";
 
 // Act as a util file, creating and exporting feature-specific helpers
-import { UserDetailsTabEnum } from "@/common/enums";
 import { userDetailsTabLabels } from "@/common/constants/user";
+import { UserDetailsTabEnum } from "@/common/enums";
+
 import createTabbedTestIdFactory from "./tabs";
 
 // Create and export the complete test ID helper object for the user details feature.
