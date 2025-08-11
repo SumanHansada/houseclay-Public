@@ -1,12 +1,13 @@
 "use client";
 import Image from "next/image";
 
-// Test
-import { user } from "../dummy";
 import { useRouter } from "next/navigation";
 import { default as InstantAccessSvg } from "public/icons/static-pages/instant-access.svg";
 import { default as NoForcedPlansSvg } from "public/icons/static-pages/no-forced-plans.svg";
 import { default as RealOwnersSvg } from "public/icons/static-pages/real-owners.svg";
+
+// Test
+import { user } from "../dummy";
 
 const RealOwners = RealOwnersSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const InstantAccess = InstantAccessSvg as React.FC<
