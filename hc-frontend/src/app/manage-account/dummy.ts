@@ -1,4 +1,4 @@
-import { PropertyCategory } from "@/common/enums";
+import { PaymentFilterStatus, PropertyCategory } from "@/common/enums";
 import { PropertySummary } from "./components/PropertyCard";
 
 export const user = {
@@ -226,5 +226,65 @@ export const DUMMY_PROPERTIES: PropertySummary[] = [
     availableFrom: "2025-08-20",
     preferredTenants: "Male",
     depositLabel: "₹ 15,000",
+  },
+];
+
+export const MY_DUMMY_PROPERTIES = [
+  {
+    propertyID: "p1",
+    propertyName: "3 BHK Premium Apartment For Sale In Bellandur",
+    category: PropertyCategory.RESALE,
+    listedOn: "10-Jan-2025",
+    builtupArea: "1,100 sqft",
+    price: "₹ 2.3 Cr",
+    status: "Active",
+  },
+  {
+    propertyID: "p2",
+    propertyName: "2 BHK Semi-Furnished For Rent In HSR Layout",
+    category: PropertyCategory.RENT,
+    listedOn: "10-Jan-2025",
+    builtupArea: "1,100 sqft",
+    price: "₹ 8 Cr",
+    status: "Active",
+  },
+  {
+    propertyID: "p3",
+    propertyName: "Shared Room In 2 BHK For Male In Electronic City",
+    category: PropertyCategory.FLATMATE,
+    listedOn: "10-Jan-2025",
+    builtupArea: "2,180 sqft",
+    price: "₹ 8 Cr",
+    status: "Inactive",
+  },
+];
+
+export const DUMMY_PAYMENTS = [
+  {
+    id: "1",
+    type: "Basic Blue Bundle",
+    dateTime: "2025-06-24T18:30:00.000+00:00",
+    connects: 10,
+    amount: "891",
+    status: PaymentFilterStatus.COMPLETED,
+    invoice: true,
+  },
+  {
+    id: "2",
+    type: "Custom Connects",
+    dateTime: "2025-06-24T18:30:00.000+00:00",
+    connects: 5,
+    amount: "495",
+    status: PaymentFilterStatus.CANCELLED,
+    invoice: true,
+  },
+  {
+    id: "3",
+    type: "Priority Listing",
+    dateTime: "2025-06-24T18:30:00.000+00:00",
+    connects: null,
+    amount: "999",
+    status: PaymentFilterStatus.CANCELLED,
+    invoice: false,
   },
 ];

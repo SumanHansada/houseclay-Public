@@ -6,8 +6,8 @@ import * as Yup from "yup";
 import { getInitials } from "@/common/utils";
 
 import WhatsAppIconSvg from "public/icons/whatsapp-border.svg";
-import GreenCheckIconSvg from "public/icons/green-circle-check.svg";
-import RedExclamationIconSvg from "public/icons/red-circle-exclamation.svg";
+import CircleCheckIconSvg from "public/icons/circle-check.svg";
+import CircleExclamationIconSvg from "public/icons/circle-exclamation.svg";
 import CoinEggIconSvg from "public/icons/coin-egg.svg";
 import { useState } from "react";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -21,10 +21,10 @@ import { FormPhoneField, FormTextField } from "@/form-components";
 import { user } from "../dummy";
 
 const WhatsAppIcon = WhatsAppIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const GreenCheckIcon = GreenCheckIconSvg as React.FC<
+const CircleCheckIcon = CircleCheckIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
-const RedExclamationIcon = RedExclamationIconSvg as React.FC<
+const CircleExclamationIcon = CircleExclamationIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
 const CoinEggIcon = CoinEggIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -162,12 +162,20 @@ export default function MyProfilePage() {
 
                   {user.phoneVerified ? (
                     <p className="text-green-600 mt-1 flex items-center gap-1">
-                      <GreenCheckIcon />
+                      <CircleCheckIcon
+                        width={20}
+                        height={20}
+                        className="text-green-600"
+                      />
                       Verified
                     </p>
                   ) : (
                     <p className="text-red-600 mt-1 flex items-center gap-1">
-                      <RedExclamationIcon />
+                      <CircleExclamationIcon
+                        width={20}
+                        height={20}
+                        className="text-red-600"
+                      />
                       Phone Number is not verified
                     </p>
                   )}
@@ -185,12 +193,20 @@ export default function MyProfilePage() {
                   />
                   {user.emailVerified ? (
                     <p className="text-green-600 mt-1 flex items-center gap-1">
-                      <GreenCheckIcon />
+                      <CircleCheckIcon
+                        width={20}
+                        height={20}
+                        className="text-green-600"
+                      />
                       Verified
                     </p>
                   ) : (
                     <p className="text-red-600 mt-1 flex items-center gap-1">
-                      <RedExclamationIcon />
+                      <CircleExclamationIcon
+                        width={20}
+                        height={20}
+                        className="text-red-600"
+                      />
                       Email is not verified
                     </p>
                   )}

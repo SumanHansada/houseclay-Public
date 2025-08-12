@@ -60,12 +60,12 @@ export function Accordion({
           >
             <span className="relative block h-8 w-8">
               <PlusIcon
-                className={`absolute inset-0 transition-opacity duration-150 ${open ? "opacity-0" : "opacity-100"}`}
+                className={`absolute inset-0 transition-opacity duration-150 ${open ? "opacity-0" : "opacity-100"} text-red-500`}
                 width={32}
                 height={32}
               />
               <MinusIcon
-                className={`absolute inset-0 transition-opacity duration-150 ${open ? "opacity-100" : "opacity-0"}`}
+                className={`absolute inset-0 transition-opacity duration-150 ${open ? "opacity-100" : "opacity-0"} text-red-500`}
                 width={32}
                 height={32}
               />
