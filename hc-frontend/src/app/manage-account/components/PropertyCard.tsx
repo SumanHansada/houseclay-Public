@@ -10,37 +10,55 @@ import {
   Bath,
   Compass,
   Car,
-  Bike,
+  Building,
+  KeySquare,
+  House,
 } from "lucide-react";
 import { PropertyCategory } from "@/common/enums";
 import StarCircleIconSvg from "public/icons/star-circle.svg";
+import CrownIconSvg from "public/icons/crown.svg";
+import PhoneFilledIconSvg from "public/icons/phone-filled.svg";
+import WhatsAppIconSvg from "public/icons/whatsapp.svg";
 
 const StarIcon = StarCircleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const CrownIcon = CrownIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const PhoneFilledIcon = PhoneFilledIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const WhatsAppIcon = WhatsAppIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 export type PropertySummary = {
   id: string;
-  category: PropertyCategory;
+  category: PropertyCategory; // use the enum, not string
   title: string;
   society?: string;
   addressLine?: string;
   featured?: boolean;
+  exclusive?: boolean; // ensure only one of featured/exclusive is true
+  contacted?: boolean;
+  shortlisted?: boolean;
   images: { src: string; alt?: string }[];
   priceLabel: string;
   priceSub?: string;
-  emiLabel?: string;
+  emiLabel?: string | null; // null for RENT/FLATMATE
   areaLabel?: string;
-  beds?: number;
-  baths?: number;
-  facing?: string;
-  parking?: string;
+  beds?: number | null;
+  baths?: number | null;
+  facing?: string | null;
+  parking?: string | null;
   available?: boolean;
+
+  propertyType?: string | null;
+  furnishing?: string | null;
+  availableFrom?: string | null;
+  preferredTenants?: string | null;
+  depositLabel?: string | null;
 };
 
 type PropertyCardProps = {
   property: PropertySummary;
   onContact?: (id: string) => void;
   onFavoriteToggle?: (id: string, next: boolean) => void;
-  initiallyFavorited?: boolean;
   testId?: string;
 };
 
@@ -48,15 +66,18 @@ export default function PropertyCard({
   property,
   onContact,
   onFavoriteToggle,
-  initiallyFavorited = false,
   testId,
 }: PropertyCardProps) {
   const {
     id,
+    category,
     title,
     society,
     addressLine,
     featured,
+    exclusive,
+    shortlisted,
+    contacted,
     images,
     priceLabel,
     priceSub,
@@ -66,10 +87,15 @@ export default function PropertyCard({
     baths,
     facing,
     parking,
+    depositLabel,
+    propertyType,
+    furnishing,
+    availableFrom,
+    preferredTenants,
   } = property;
 
   const [curr, setCurr] = useState(0);
-  const [fav, setFav] = useState(initiallyFavorited);
+  const [fav, setFav] = useState(shortlisted);
 
   const goTo = (i: number) => setCurr((i + images.length) % images.length);
   const handleFav = () => {
@@ -98,14 +124,21 @@ export default function PropertyCard({
             />
           </div>
 
-          {featured && (
-            <div className="absolute left-3 top-3">
+          <div className="absolute left-3 top-3">
+            {featured ? (
               <span className="inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-1.5 py-1 text-sm">
                 <StarIcon width={18} height={18} className="text-red-500" />
                 Featured
               </span>
-            </div>
-          )}
+            ) : exclusive ? (
+              <span className="inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-1.5 py-1 text-sm">
+                <CrownIcon />
+                Exclusive
+              </span>
+            ) : (
+              <></>
+            )}
+          </div>
 
           {images.length > 1 && (
             <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2">
@@ -164,7 +197,7 @@ export default function PropertyCard({
             </div>
           </div>
           <hr className="my-4 border-slate-200" />
-          {/* Price + Estimated Emi + Buildup Area */}
+          {/* Price + Estimated Emi/Deposit + Buildup Area */}
           <div className="grid grid-cols-1 sm:grid-cols-3 text-sm">
             <div className="py-2">
               <div className="text-slate-600">Price</div>
@@ -176,8 +209,19 @@ export default function PropertyCard({
               </div>
             </div>
             <div className="py-2 sm:border-l sm:border-r sm:border-slate-200 sm:px-4">
-              <div className="text-slate-600">Estimated EMI</div>
-              <div className="mt-1 font-semibold">{emiLabel || "-"}</div>
+              {category === PropertyCategory.RESALE ? (
+                <>
+                  <div className="text-slate-600">Estimated EMI</div>
+                  <div className="mt-1 font-semibold">{emiLabel || "-"}</div>
+                </>
+              ) : (
+                <>
+                  <div className="text-slate-600">Deposit</div>
+                  <div className="mt-1 font-semibold">
+                    {depositLabel || "-"}
+                  </div>
+                </>
+              )}
             </div>
             <div className="py-2 sm:px-4">
               <div className="text-slate-600">Buildup Area</div>
@@ -186,40 +230,102 @@ export default function PropertyCard({
           </div>
 
           {/* Bedrooms + Bathrooms + Facing + Parking */}
-          <div className="mt-4 flex items-center justify-between gap-3 rounded-xl bg-slate-50 px-3 py-3">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
-              <div className="flex items-center gap-2 text-slate-700">
-                <BedDouble className="h-4 w-4" />
-                <span className="text-slate-500">Bedrooms</span>
-                <span className="font-medium">{beds ?? "-"}</span>
-              </div>
-              <div className="flex items-center gap-2 text-slate-700">
-                <Bath className="h-4 w-4" />
-                <span className="text-slate-500">Bathrooms</span>
-                <span className="font-medium">{baths ?? "-"}</span>
-              </div>
-              <div className="flex items-center gap-2 text-slate-700">
-                <Compass className="h-4 w-4" />
-                <span className="text-slate-500">Facing</span>
-                <span className="font-medium">{facing ?? "-"}</span>
-              </div>
-              <div className="flex items-center gap-2 text-slate-700">
-                <div className="flex -space-x-1 items-center">
-                  <Car className="h-4 w-4" />
+          <div className="mt-4 flex items-center justify-between gap-5 rounded-xl bg-slate-50 px-3 py-3">
+            {category === PropertyCategory.RESALE ? (
+              <div className="grid w-2/3 grid-cols-[repeat(2,max-content)] md:grid-cols-[repeat(4,max-content)] justify-between items-center gap-y-2 text-sm whitespace-nowrap">
+                <div className="flex flex-col items-center text-slate-700 pl-2">
+                  <span className="text-slate-500">Bedrooms</span>
+                  <div className="flex items-center gap-2">
+                    <BedDouble className="h-4 w-4" />
+                    <span className="font-medium">{beds ?? "-"}&nbsp;Bed</span>
+                  </div>
                 </div>
-                <span className="text-slate-500">Parking</span>
-                <span className="font-medium text-nowrap">
-                  {parking ?? "-"}
-                </span>
+                <div className="flex flex-col items-center text-slate-700 border-l-2 pl-2">
+                  <span className="text-slate-500">Bathrooms</span>
+                  <div className="flex items-center gap-2">
+                    <Bath className="h-4 w-4" />
+                    <span className="font-medium">
+                      {baths ?? "-"}&nbsp;Bath
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-col items-center text-slate-700 border-l-2 pl-2">
+                  <span className="text-slate-500">Facing</span>
+                  <div className="flex items-center gap-2">
+                    <Compass className="h-4 w-4" />
+                    <span className="font-medium">{facing ?? "-"}</span>
+                  </div>
+                </div>
+                <div className="flex flex-col items-center text-slate-700 border-l-2 pl-2">
+                  <span className="text-slate-500">Parking</span>
+                  <div className="flex items-center gap-2">
+                    <Car className="h-4 w-4" />
+                    <span className="font-medium">{parking ?? "-"}</span>
+                  </div>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="grid w-full grid-cols-[repeat(2,max-content) md:grid-cols-[repeat(4,max-content)] justify-between items-center gap-y-2 text-sm whitespace-nowrap">
+                <div className="flex flex-col items-center text-slate-700">
+                  <span className="text-slate-500">Property Type</span>
+                  <div className="flex items-center gap-2">
+                    <Building className="h-4 w-4" />
+                    <span className="font-medium">{propertyType ?? "-"}</span>
+                  </div>
+                </div>
+                <div className="flex flex-col items-center text-slate-700 border-l-2 pl-2">
+                  <span className="text-slate-500">Furnishing</span>
+                  <div className="flex items-center gap-2">
+                    <BedDouble className="h-4 w-4" />
+                    <span className="font-medium">{furnishing ?? "-"}</span>
+                  </div>
+                </div>
+                <div className="flex flex-col items-center text-slate-700 border-l-2 pl-2">
+                  <span className="text-slate-500">Available From</span>
+                  <div className="flex items-center gap-2">
+                    <KeySquare className="h-4 w-4" />
+                    <span className="font-medium">{availableFrom ?? "-"}</span>
+                  </div>
+                </div>
+                <div className="flex flex-col items-center text-slate-700 border-l-2 pl-2">
+                  <span className="text-slate-500">Preferred Tenants</span>
+                  <div className="flex items-center gap-2">
+                    <House className="h-4 w-4" />
+                    <span className="font-medium">
+                      {preferredTenants ?? "-"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
 
-            <button
-              onClick={() => onContact?.(id)}
-              className="shrink-0 rounded-lg bg-red-500 px-4 py-2 text-white font-semibold hover:bg-red-600 active:bg-red-700"
-            >
-              Contact Owner
-            </button>
+            {contacted ? (
+              <button
+                onClick={() => onContact?.(id)}
+                className="shrink-0 rounded-lg bg-red-500 px-4 py-2 text-white font-semibold hover:bg-red-600 active:bg-red-700"
+              >
+                Contact Owner
+              </button>
+            ) : (
+              <div className="flex gap-2">
+                <button className="border border-red-500 px-2 py-1 rounded-lg flex gap-1 items-center">
+                  <PhoneFilledIcon
+                    width={20}
+                    height={20}
+                    className="text-red-500"
+                  />
+                  <span>Call</span>
+                </button>
+                <button className="border border-green-500 px-2 py-1 rounded-lg flex gap-1 items-center">
+                  <WhatsAppIcon
+                    width={30}
+                    height={30}
+                    className="text-green-500"
+                  />
+                  <span>Whatsapp</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

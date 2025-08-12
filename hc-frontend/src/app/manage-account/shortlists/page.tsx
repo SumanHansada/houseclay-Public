@@ -3,40 +3,14 @@
 import { useMemo, useState } from "react";
 import { PropertyCategory } from "@/common/enums";
 import { Check } from "lucide-react";
-import PropertyCard, { PropertySummary } from "../components/PropertyCard";
+import PropertyCard from "../components/PropertyCard";
+import { DUMMY_PROPERTIES } from "../dummy";
 
 const FILTERS = [
   { key: PropertyCategory.NONE, label: "All" },
   { key: PropertyCategory.RESALE, label: "Resale" },
   { key: PropertyCategory.RENT, label: "Rent" },
   { key: PropertyCategory.FLATMATE, label: "Flatmate" },
-];
-
-// demo data – replace with API later
-const PROPERTIES: PropertySummary[] = [
-  {
-    id: "L1",
-    category: PropertyCategory.RESALE,
-    title: "4 BHK Cityscape Penthouse For Sale In Bellandur",
-    society: "Sobha Eternia",
-    addressLine: "12th Main, Landmark - Near HSR Club",
-    featured: true,
-    images: [
-      { src: "/photos/House1.webp", alt: "Living room" },
-      { src: "/photos/House2.webp", alt: "Dining area" },
-      { src: "/photos/House3.webp", alt: "Bedroom" },
-      { src: "/photos/House4.webp", alt: "Bedroom" },
-    ],
-    priceLabel: "₹ 8 Cr",
-    priceSub: "88,000/sq. ft.",
-    emiLabel: "₹12,875/Month",
-    areaLabel: "2,180 sqft",
-    beds: 6,
-    baths: 2,
-    facing: "East",
-    parking: "Bike & Car",
-    available: true,
-  },
 ];
 
 export default function ShortlistsPage() {
@@ -46,7 +20,7 @@ export default function ShortlistsPage() {
   const [onlyAvailable, setOnlyAvailable] = useState(false);
 
   const filtered = useMemo(() => {
-    return PROPERTIES.filter((p) => {
+    return DUMMY_PROPERTIES.filter((p) => {
       if (selected !== PropertyCategory.NONE && p.category !== selected)
         return false;
       if (onlyAvailable && !p.available) return false;

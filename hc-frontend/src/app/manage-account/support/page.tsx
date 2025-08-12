@@ -10,11 +10,14 @@ import {
   SUPPORT_EMAIL,
 } from "@/common/constants";
 import { Accordion } from "../components/Accordion";
+import { useState } from "react";
 
 const PhoneIcon = PhoneIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const MailIcon = MailIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 export default function SupportPage() {
+  const [openKey, setOpenKey] = useState<string | null>(null);
+
   return (
     <>
       {/* Page title */}
@@ -35,19 +38,25 @@ export default function SupportPage() {
               In case you have any questions, Reach out to us through the
               following channels:
             </p>
-            <div className="flex gap-2 mb-4">
+            <a
+              href={`mailto:${SUPPORT_EMAIL}`}
+              className="flex items-center gap-2 mb-4"
+            >
               <MailIcon width={25} className="text-red-500" />
-              <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
-            </div>
-            <div className="flex gap-2 items-start">
-              <PhoneIcon width={25} className="text-red-500" />
+              <span>{SUPPORT_EMAIL}</span>
+            </a>
+            <a
+              href={`tel:${SUPPORT_CONTACT}`}
+              className="flex gap-2 items-start"
+            >
+              <PhoneIcon width={25} className="text-red-500 pt-2" />
               <div className="flex flex-col">
-                <a href={`tel:${SUPPORT_CONTACT}`}>{SUPPORT_CONTACT}</a>
+                <span>{SUPPORT_CONTACT}</span>
                 <span className="text-sm text-gray-700">
                   (9 AM &ndash; 7 PM, Mon &ndash; Sat)
                 </span>
               </div>
-            </div>
+            </a>
           </div>
         </div>
 
@@ -63,13 +72,19 @@ export default function SupportPage() {
           </div>
 
           <div className="flex flex-col gap-5">
-            {SUPPORT_ACCORDION.map((item) => (
-              <Accordion
-                key={item.question}
-                question={item.question}
-                answer={item.answer}
-              />
-            ))}
+            {SUPPORT_ACCORDION.map((item) => {
+              const key = item.question;
+              const isOpen = openKey === key;
+              return (
+                <Accordion
+                  key={key}
+                  question={item.question}
+                  answer={item.answer}
+                  isOpen={isOpen}
+                  onToggle={() => setOpenKey(isOpen ? null : key)}
+                />
+              );
+            })}
           </div>
         </div>
       </div>

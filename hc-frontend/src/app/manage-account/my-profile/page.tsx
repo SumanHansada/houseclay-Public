@@ -3,10 +3,9 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
-import FormPhoneInput from "@/components/common/FormPhoneInput";
 import { getInitials } from "@/common/utils";
 
-import WhatsAppIconSvg from "public/icons/whatsapp.svg";
+import WhatsAppIconSvg from "public/icons/whatsapp-border.svg";
 import GreenCheckIconSvg from "public/icons/green-circle-check.svg";
 import RedExclamationIconSvg from "public/icons/red-circle-exclamation.svg";
 import CoinEggIconSvg from "public/icons/coin-egg.svg";
@@ -16,7 +15,7 @@ import EmailVerificationDialog from "@/dialogs/email-verification";
 import { useDispatch } from "react-redux";
 import { setHideStickyNavBar } from "@/store/appSlice";
 import EmailVerificationSuccessDialog from "@/dialogs/email-verification-success";
-import { FormTextField } from "@/form-components";
+import { FormPhoneField, FormTextField } from "@/form-components";
 
 // Test
 import { user } from "../dummy";
@@ -85,9 +84,9 @@ export default function MyProfilePage() {
             <div className="size-40 bg-black rounded-full flex items-center justify-center text-[60px] text-white">
               {getInitials(user.name)}
             </div>
-            <button className="mt-2 underline underline-offset-4 text-gray-700">
+            {/* <button className="mt-2 underline underline-offset-4 text-gray-700">
               Upload Profile Photo
-            </button>
+            </button> */}
           </div>
 
           {/* ------------------------------------------------------------------ */
@@ -119,7 +118,7 @@ export default function MyProfilePage() {
                 <div className="flex flex-col">
                   <div className="mt-1 flex items-end justify-between">
                     <div className="w-2/3">
-                      <FormPhoneInput
+                      <FormPhoneField
                         name="phoneNumber"
                         id="phoneNumber"
                         label="Phone Number"
@@ -133,7 +132,11 @@ export default function MyProfilePage() {
                     {/* WhatsApp toggle */}
                     <label className="flex items-center gap-5 cursor-pointer w-fit">
                       <div className="flex gap-2 items-center">
-                        <WhatsAppIcon />
+                        <WhatsAppIcon
+                          width={40}
+                          height={40}
+                          className="text-black"
+                        />
                         <span className="text-nowrap">
                           Available on WhatsApp
                         </span>
