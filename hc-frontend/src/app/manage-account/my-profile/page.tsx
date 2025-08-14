@@ -121,8 +121,7 @@ export default function MyProfilePage() {
                         label="Phone Number"
                         defaultCountry="in"
                         placeholder="Enter phone number"
-                        className="border border-gray-300 rounded-lg px-3 py-1 focus:ring-red-500 focus:border-red-500 cursor-not-allowed bg-gray-300"
-                        // className={`border border-gray-300 rounded-lg px-3 py-1 focus:ring-red-500 focus:border-red-500 ${editMode ? "" : "cursor-not-allowed bg-gray-300"}`}
+                        className="border border-gray-300 rounded-lg px-3 py-1 focus:ring-red-500 focus:border-red-500 cursor-not-allowed bg-gray-100"
                         required
                         disabled
                       />

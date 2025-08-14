@@ -16,17 +16,89 @@ import ApartmentIcon from "public/icons/property-types/apartment.webp";
 import CommunityVillaIcon from "public/icons/property-types/community-villa.webp";
 import IndependentHouseIcon from "public/icons/property-types/independent-house.webp";
 import StandaloneBuildingIcon from "public/icons/property-types/standalone-building.webp";
+import FemaleIconSvg from "public/icons/preferred-tenants/female.svg";
+import MaleIconSvg from "public/icons/preferred-tenants/male.svg";
+
+const MaleIcon = MaleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+const FemaleIcon = FemaleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 type Option = { label: string; value: string };
 type IconOption = Option & { icon: ReactNode };
 type UserType = "tenant" | "buyer" | "";
 
-const bhkTypesOptions: Option[] = [
+const userTypeOptions: Option[] = [
+  { label: "Tenant", value: "tenant" },
+  { label: "Buyer", value: "buyer" },
+];
+
+const propertyTypeOptions: IconOption[] = [
+  {
+    label: "Apartment",
+    value: "Apartment",
+    icon: <Image src={ApartmentIcon} alt="Apartment" height={75} width={75} />,
+  },
+  {
+    label: "Independent House/Villa",
+    value: "Independent House/Villa",
+    icon: (
+      <Image
+        src={IndependentHouseIcon}
+        alt="Independent House/Villa"
+        height={75}
+        width={75}
+      />
+    ),
+  },
+  {
+    label: "Community Villa",
+    value: "Community Villa",
+    icon: (
+      <Image
+        src={CommunityVillaIcon}
+        alt="Community Villa"
+        height={75}
+        width={75}
+      />
+    ),
+  },
+  {
+    label: "Standalone Building",
+    value: "Standalone Building",
+    icon: (
+      <Image
+        src={StandaloneBuildingIcon}
+        alt="Standalone Building"
+        height={75}
+        width={75}
+      />
+    ),
+  },
+];
+
+const bhkTypeOptions: Option[] = [
   { label: "1 BHK", value: "1BHK" },
   { label: "2 BHK", value: "2BHK" },
   { label: "3 BHK", value: "3BHK" },
   { label: "4 BHK", value: "4BHK" },
   { label: "5+ BHK", value: "5+BHK" },
+];
+
+const lookingForARoomOptions: Option[] = [
+  { label: "Yes", value: "yes" },
+  { label: "No", value: "no" },
+];
+
+const preferredTenantOptions: IconOption[] = [
+  {
+    label: "Female",
+    value: "female",
+    icon: <FemaleIcon />,
+  },
+  {
+    label: "Male",
+    value: "male",
+    icon: <MaleIcon />,
+  },
 ];
 
 const rentBudgetOptions: Option[] = [
@@ -41,60 +113,6 @@ const resaleBudgetOptions: Option[] = [
   { label: "Under ₹2 Cr", value: "under2CR" },
   { label: "Under ₹4 Cr", value: "under4CR" },
   { label: "Flexible", value: "flexible" },
-];
-
-const userTypeOptions: Option[] = [
-  { label: "Tenant", value: "tenant" },
-  { label: "Buyer", value: "buyer" },
-];
-
-const propertyTypeOptions: IconOption[] = [
-  {
-    value: "Apartment",
-    label: "Apartment",
-    icon: <Image src={ApartmentIcon} alt="Apartment" height={75} width={75} />,
-  },
-  {
-    value: "Independent House/Villa",
-    label: "Independent House/Villa",
-    icon: (
-      <Image
-        src={IndependentHouseIcon}
-        alt="Independent House/Villa"
-        height={75}
-        width={75}
-      />
-    ),
-  },
-  {
-    value: "Community Villa",
-    label: "Community Villa",
-    icon: (
-      <Image
-        src={CommunityVillaIcon}
-        alt="Community Villa"
-        height={75}
-        width={75}
-      />
-    ),
-  },
-  {
-    value: "Standalone Building",
-    label: "Standalone Building",
-    icon: (
-      <Image
-        src={StandaloneBuildingIcon}
-        alt="Standalone Building"
-        height={75}
-        width={75}
-      />
-    ),
-  },
-];
-
-const lookingForARoomOptions: Option[] = [
-  { value: "yes", label: "Yes" },
-  { value: "no", label: "No" },
 ];
 
 const locationList = [
@@ -113,6 +131,7 @@ type FormValues = {
   propertyType: string[];
   bhkType: string;
   lookingForARoom: string;
+  preferredTenants: string;
   budget: string;
 };
 
@@ -122,16 +141,18 @@ const EMPTY_VALUES: FormValues = {
   propertyType: [],
   bhkType: "",
   lookingForARoom: "",
+  preferredTenants: "",
   budget: "",
 };
 
 const DEFAULT_VALUES: FormValues = {
-  userType: userTypeOptions[0].value as UserType,
-  location: [locationList[0]],
-  propertyType: [propertyTypeOptions[0].value],
-  bhkType: bhkTypesOptions[0].value,
-  lookingForARoom: lookingForARoomOptions[0].value,
-  budget: rentBudgetOptions[0].value,
+  userType: "tenant",
+  location: ["JP Nagar"],
+  propertyType: ["Apartment"],
+  bhkType: "1BHK",
+  lookingForARoom: "yes",
+  preferredTenants: "female",
+  budget: "under50K",
 };
 
 // keep validation minimal for now so Save works
@@ -144,8 +165,16 @@ export default function MyRequirementsPage() {
   return (
     <>
       {/* Page title */}
-      <div className="border-b-2 pb-2 mb-8">
+      <div className="border-b-2 pb-2 mb-8 flex justify-between items-center">
         <h1 className="text-2xl font-medium">My Requirements</h1>
+        <button
+          type="button"
+          className={`px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-sm disabled:bg-gray-300 disabled:cursor-not-allowed`}
+          onClick={() => setEditMode(true)}
+          disabled={editMode}
+        >
+          Edit
+        </button>
       </div>
 
       <Formik<FormValues>
@@ -163,6 +192,7 @@ export default function MyRequirementsPage() {
       >
         {({ values, setFieldValue, resetForm }) => {
           const isTenant = values.userType === "tenant";
+          const isFlatmate = isTenant && values.lookingForARoom === "yes";
 
           const budgetOptions = useMemo(
             () => (isTenant ? rentBudgetOptions : resaleBudgetOptions),
@@ -182,7 +212,11 @@ export default function MyRequirementsPage() {
             if (isTenant && !values.lookingForARoom) {
               setFieldValue("lookingForARoom", "yes");
             }
-          }, [isTenant]);
+
+            if (isFlatmate) {
+              setFieldValue("preferredTenants", "female");
+            }
+          }, [isTenant, isFlatmate]);
 
           return (
             <Form className="flex-1 space-y-6">
@@ -228,36 +262,45 @@ export default function MyRequirementsPage() {
               </div>
 
               {/* BHK */}
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 w-4/5">
                 <FormRadioGroup
                   name="bhkType"
                   label="BHK Type"
-                  columns={8}
-                  options={bhkTypesOptions}
+                  columns={5}
+                  options={bhkTypeOptions}
                   disabled={!editMode}
                 />
               </div>
 
               {/* Looking for a room (Tenant only) */}
               {isTenant && (
-                <div>
-                  <FormSelectDropdown
-                    label="Looking for a room"
+                <div className="w-2/5">
+                  <FormRadioGroup
                     name="lookingForARoom"
-                    id="lookingForARoom"
+                    label="Looking for a room"
+                    columns={2}
                     options={lookingForARoomOptions}
-                    placeholder="Looking for a room?"
                     disabled={!editMode}
                   />
+                  {isFlatmate && (
+                    <FormRadioGroup
+                      name="preferredTenants"
+                      label="Preferred Tenants"
+                      columns={2}
+                      options={preferredTenantOptions}
+                      withIcons={true}
+                      disabled={!editMode}
+                    />
+                  )}
                 </div>
               )}
 
               {/* Budget (depends on category) */}
-              <div>
+              <div className="w-fit">
                 <FormRadioGroup
                   name="budget"
                   label="Your Budget"
-                  columns={8}
+                  columns={4}
                   options={budgetOptions}
                   disabled={!editMode}
                 />
@@ -275,9 +318,8 @@ export default function MyRequirementsPage() {
                     </button>
                     <button
                       type="button"
-                      className="px-5 py-2 border rounded-lg shadow-sm"
+                      className="px-5 py-2 border rounded-lg shadow-sm hover:bg-gray-50"
                       onClick={() => {
-                        // revert to last saved and exit edit mode
                         resetForm({ values: savedValues });
                         setEditMode(false);
                       }}
@@ -286,24 +328,15 @@ export default function MyRequirementsPage() {
                     </button>
                     <button
                       type="button"
-                      className="px-5 py-2 border rounded-lg shadow-sm"
+                      className="px-5 py-2 border rounded-lg shadow-sm hover:bg-gray-50"
                       onClick={() => {
-                        // clear everything to empty/null, stay in edit mode
                         resetForm({ values: EMPTY_VALUES });
                       }}
                     >
                       Reset
                     </button>
                   </div>
-                ) : (
-                  <button
-                    type="button"
-                    className="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-sm"
-                    onClick={() => setEditMode(true)}
-                  >
-                    Edit
-                  </button>
-                )}
+                ) : null}
               </div>
             </Form>
           );

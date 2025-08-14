@@ -11,7 +11,7 @@ interface RadioGroupProps {
   label?: string;
   options: RadioOption[];
   required?: boolean;
-  columns?: 1 | 2 | 3 | 4 | 5 | 6 | 8;
+  columns?: 1 | 2 | 3 | 4 | 5 | 6;
   horizontal?: boolean;
   withIcons?: boolean;
   selectedColor?: string;
@@ -46,7 +46,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
   labelClassName = "block text-gray-700 text-sm font-medium mb-1",
   radioGroupClassName = "flex w-full justify-between",
   radioOptionClassName = "border flex-1 rounded-xl w-full relative transition-all",
-  radioLabelClassName = "block cursor-pointer p-3 w-full h-full",
+  radioLabelClassName = "block p-3 w-full h-full",
   radioInputClassName = "sr-only",
   radioTextClassName = "",
   errorClassName = "text-red-500 text-sm mt-1",
@@ -72,7 +72,6 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
     4: "grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
     5: "grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5",
     6: "grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6",
-    8: "grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8",
   };
 
   return (
@@ -104,7 +103,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
                   ? `${selectedColor} border`
                   : "border-gray-300 hover:border-gray-400"
               }
-              ${disabled ? "cursor-not-allowed disabled:bg-gray-300" : ""}
+              ${disabled ? "cursor-not-allowed bg-gray-100" : ""}
               focus-within:shadow-[inset_0_0_0_2px_royalBlue] focus-within:border-transparent
             `}
           >
@@ -114,7 +113,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
                 ${radioLabelClassName}
                 ${withIcons ? "text-center flex flex-col " : "flex "}
                 items-center justify-center
-                ${disabled ? "cursor-not-allowed" : "cursor-pointer"}
+                ${disabled ? "cursor-not-allowed pointer-events-none" : "cursor-pointer"}
               `}
             >
               <input
