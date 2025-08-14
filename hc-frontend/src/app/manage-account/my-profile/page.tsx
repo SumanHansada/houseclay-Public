@@ -77,9 +77,7 @@ export default function MyProfilePage() {
         </div>
 
         <div className="flex flex-col lg:flex-row lg:space-x-20 space-y-8 lg:space-y-0">
-          {/* ------------------------------------------------------------------ */
-          /*  Avatar                                                            */
-          /* ------------------------------------------------------------------ */}
+          {/* Avatar */}
           <div className="flex flex-col items-center">
             <div className="size-40 bg-black rounded-full flex items-center justify-center text-[60px] text-white">
               {getInitials(user.name)}
@@ -89,9 +87,7 @@ export default function MyProfilePage() {
             </button> */}
           </div>
 
-          {/* ------------------------------------------------------------------ */
-          /*  Profile form                                                      */
-          /* ------------------------------------------------------------------ */}
+          {/* Profile form */}
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
@@ -112,6 +108,7 @@ export default function MyProfilePage() {
                   placeholder="Full name"
                   className="w-2/3"
                   required
+                  disabled={!editMode}
                 />
 
                 {/* Phone */}
@@ -124,8 +121,10 @@ export default function MyProfilePage() {
                         label="Phone Number"
                         defaultCountry="in"
                         placeholder="Enter phone number"
-                        className="border border-gray-300 rounded-lg px-3 py-1 focus:ring-red-500 focus:border-red-500"
+                        className="border border-gray-300 rounded-lg px-3 py-1 focus:ring-red-500 focus:border-red-500 cursor-not-allowed bg-gray-300"
+                        // className={`border border-gray-300 rounded-lg px-3 py-1 focus:ring-red-500 focus:border-red-500 ${editMode ? "" : "cursor-not-allowed bg-gray-300"}`}
                         required
+                        disabled
                       />
                     </div>
 
@@ -190,6 +189,7 @@ export default function MyProfilePage() {
                     placeholder="Enter your personal email"
                     className="w-2/3"
                     required
+                    disabled={user.emailVerified ? true : !editMode}
                   />
                   {user.emailVerified ? (
                     <p className="text-green-600 mt-1 flex items-center gap-1">
