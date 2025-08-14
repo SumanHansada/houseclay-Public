@@ -6,6 +6,7 @@ interface BaseIconButtonProps {
   Icon: LucideIcon;
   classNameIconWrapper?: string;
   classNameIconCustomize?: string;
+  testId?: string;
 }
 
 interface IconWithTooltip extends BaseIconButtonProps {
@@ -24,6 +25,7 @@ const IconButtonWithTooltip: React.FC<IconButtonWithTooltipProps> = ({
   onClick,
   Icon,
   tooltip,
+  testId,
   tooltipActive = false,
   classNameIconWrapper = "",
   classNameIconCustomize = "",
@@ -56,7 +58,12 @@ const IconButtonWithTooltip: React.FC<IconButtonWithTooltipProps> = ({
     .join(" ");
 
   return (
-    <button onClick={onClick} className={wrapperClasses}>
+    <button
+      onClick={onClick}
+      aria-label={tooltip ?? "icon button"}
+      data-testid={testId}
+      className={wrapperClasses}
+    >
       <Icon className={`${classNameIconCustomize} text-gray-600`} />
 
       {tooltipActive && (

@@ -1,53 +1,11 @@
 "use client";
 
-import {
-  Archive,
-  ChevronDown,
-  ChevronUp,
-  Home,
-  UserCheck,
-  Users,
-} from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-const sidebarItems = [
-  {
-    label: "Properties",
-    icon: <Home size={20} />,
-    children: [
-      { label: "View All Properties", href: "/admin/view-all-properties" },
-      // { label: "Verify Property", href: "/admin/verify-property" },
-      // { label: "ReVerify Property", href: "/admin/reverify-property" },
-      { label: "Property Verification", href: "/admin/property-verification" },
-    ],
-    href: "#",
-  },
-  {
-    label: "Lead Management",
-    icon: <UserCheck size={20} />,
-    children: [
-      { label: "Property Lead", href: "/admin/lead-management/property" },
-      { label: "Support Lead", href: "/admin/lead-management/support" },
-    ],
-    href: "#",
-  },
-  {
-    label: "User Management",
-    icon: <Users size={20} />,
-    children: [
-      { label: "HouseClay Users", href: "/admin/user-management" },
-      { label: "Add new Zebra user", href: "/admin/add-zebra-user" },
-    ],
-    href: "#",
-  },
-  {
-    label: "UI - Testing",
-    icon: <Archive size={20} />,
-    children: [{ label: "current task", href: "#" }],
-    href: "#",
-  },
-];
+import { sidebarItems } from "@/common/constants";
+import { toSlug } from "@/utils/core";
 
 const Sidebar = () => {
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>(
@@ -64,8 +22,9 @@ const Sidebar = () => {
         {sidebarItems.map((item) => (
           <div key={item.label}>
             <div
-              className={`flex items-center justify-between px-4 py-3 rounded-lg hover:bg-[#1a2232] cursor-pointer transition-colors ${item.children.length ? "" : ""}`}
+              className={`flex items-center justify-between px-4 py-3 rounded-lg hover:bg-[#1a2232] cursor-pointer transition-colors`}
               onClick={() => item.children.length && toggleSection(item.label)}
+              data-testid={`sidebar-section-${toSlug(item.label)}`} // Zebra-UI: test id
             >
               <div className="flex items-center gap-3">
                 {item.icon}
@@ -86,24 +45,16 @@ const Sidebar = () => {
             </div>
             {item.children.length && openSections[item.label] && (
               <div className="ml-16 flex flex-col gap-1 font-nunito">
-                {item.children.map((child) =>
-                  typeof child === "string" ? (
-                    <div
-                      key={child}
-                      className="py-1 text-base text-gray-300 hover:text-white cursor-pointer"
-                    >
-                      {child}
-                    </div>
-                  ) : (
-                    <Link
-                      key={child.label}
-                      href={child.href}
-                      className="py-1 text-base text-gray-300 hover:text-white cursor-pointer block"
-                    >
-                      {child.label}
-                    </Link>
-                  ),
-                )}
+                {item.children.map((child) => (
+                  <Link
+                    key={child.label}
+                    href={child.href}
+                    data-testid={`sidebar-link-${toSlug(child.label)}`} // Zebra-UI: test id
+                    className="py-1 text-base text-gray-300 hover:text-white cursor-pointer block"
+                  >
+                    {child.label}
+                  </Link>
+                ))}
               </div>
             )}
           </div>

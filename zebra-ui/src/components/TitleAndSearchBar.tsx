@@ -24,6 +24,7 @@ export const TitleAndSearchBar: React.FC<TitleAndSearchBarProps> = ({
     <div className="w-1/4 flex items-center gap-2">
       <input
         type="text"
+        aria-label="Phone number search"
         placeholder="Search by phone…"
         value={searchText}
         onChange={(e) => onSearchTextChange(e.target.value)}
@@ -33,6 +34,7 @@ export const TitleAndSearchBar: React.FC<TitleAndSearchBarProps> = ({
       <button
         title="Search"
         // disabled={isSearching || !searchText.trim()}
+        aria-label="Search"
         disabled={isSearching}
         onClick={onSearch}
         className="p-2 rounded-xl border border-gray-300 hover:bg-gray-100 disabled:opacity-50"
@@ -44,6 +46,7 @@ export const TitleAndSearchBar: React.FC<TitleAndSearchBarProps> = ({
         <button
           title="Clear"
           onClick={onClear}
+          aria-label="Clear"
           className="p-2 rounded-xl border border-gray-300 hover:bg-gray-100"
         >
           <X className="size-5" />

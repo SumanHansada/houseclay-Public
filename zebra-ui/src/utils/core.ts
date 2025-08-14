@@ -6,12 +6,17 @@
 export type CaseStyle = "upper" | "lower" | "pascal";
 
 /**
- * formatCase
- * ----------
- * Transforms **any** string into the desired case.
+ * Transforms any string into the desired case.
  *
- *   formatCase("hello", "upper")   // "HELLO"
- *   formatCase("hello", "pascal")  // "Hello"
+ * @remarks
+ * - `"upper"` → All caps
+ * - `"lower"` → All lowercase
+ * - `"pascal"` (default) → Capitalises the first letter, lowercases the rest
+ *
+ * @example
+ * formatCase("hello", "upper");   // "HELLO"
+ * formatCase("hello", "lower");   // "hello"
+ * formatCase("hello", "pascal");  // "Hello"
  */
 export function formatCase(value: string, style: CaseStyle = "pascal"): string {
   switch (style) {
@@ -26,11 +31,13 @@ export function formatCase(value: string, style: CaseStyle = "pascal"): string {
 }
 
 /**
- * formatEnumValue
- * ---------------
- * Type‑safe wrapper for **string enums** or literal unions.
+ * Type-safe wrapper for `formatCase`, designed for string enums or literal unions.
  *
- *   formatEnumValue(PropertyCategory.RENT, "lower");   // "rent"
+ * @remarks
+ * Accepts a typed enum value and formats it using the specified case style.
+ *
+ * @example
+ * formatEnumValue(PropertyCategory.RENT, "lower");   // "rent"
  */
 export function formatEnumValue<V extends string>(
   value: V,
@@ -40,18 +47,40 @@ export function formatEnumValue<V extends string>(
 }
 
 /**
- * getInitials
- * -----------
- * Returns 1 – 2 capital letters that represent a person’s name.
+ * Converts a label to a kebab-case slug.
  *
- *   getInitials("Amit Kumar")   // "AK"
- *   getInitials("Amit")         // "A"
- *   getInitials("")             // ""
+ * @remarks
+ * Useful for:
+ * - `data-testid` attributes
+ * - anchor links and scroll targets
+ * - URL-safe keys
  *
- * • If the name has **one word**, the first letter is returned.
- * • If the name has **two or more words**, the first letters of the
- *   first two words are returned.
- * • Whitespace is trimmed; `undefined` or empty input yields “”.
+ * Strips special characters, trims whitespace, and lowercases the label.
+ *
+ * @example
+ * toSlug("HouseClay Users")      // "houseclay-users"
+ * toSlug("UI - Testing")         // "ui-testing"
+ */
+export function toSlug(label: string): string {
+  return label
+    .trim() // Remove leading/trailing whitespace
+    .toLowerCase() // Convert to lowercase
+    .replace(/[^\w\s-]/g, "") // Remove non-word characters (e.g. punctuation)
+    .replace(/\s+/g, "-"); // Replace spaces with hyphens
+}
+
+/**
+ * Returns 1–2 capital letters representing a person’s name.
+ *
+ * @remarks
+ * - If the name has one word, returns the first letter.
+ * - If it has two or more words, returns the initials of the first two.
+ * - Whitespace is trimmed; `undefined` or empty input yields `""`.
+ *
+ * @example
+ * getInitials("Amit Kumar");   // "AK"
+ * getInitials("Amit");         // "A"
+ * getInitials("");             // ""
  */
 export const getInitials = (fullName: string | undefined) => {
   if (!fullName) return "";
@@ -73,7 +102,16 @@ interface EnsureEnumValueParams<E extends StringEnum> {
   fallback: E[keyof E];
 }
 
-/** True iff `value` is a member of `enumObj`. */
+/**
+ * Returns true if the provided value is a valid member of the string enum.
+ *
+ * @remarks
+ * Used as a type guard for validating string enum values at runtime.
+ *
+ * @example
+ * isEnumValue(PropertyCategoryEnum, "RENT"); // true
+ * isEnumValue(PropertyCategoryEnum, "xyz");  // false
+ */
 export function isEnumValue<E extends StringEnum>(
   enumObj: E,
   value: unknown,
@@ -82,11 +120,17 @@ export function isEnumValue<E extends StringEnum>(
 }
 
 /**
- * ensureEnumValue
- * ---------------
- * Returns `value` when valid; otherwise returns `fallback`.
+ * Returns a valid enum value or the fallback if invalid.
  *
- *   const tab = ensureEnumValue(UserTabEnum, fromUrl, UserTabEnum.PROFILE);
+ * @remarks
+ * Useful when parsing untrusted input (e.g. query strings).
+ *
+ * @example
+ * const tab = ensureEnumValue({
+ *   enumObj: UserTabEnum,
+ *   value: fromUrl,
+ *   fallback: UserTabEnum.PROFILE,
+ * });
  */
 export function ensureEnumValue<E extends StringEnum>({
   enumObj,
@@ -103,11 +147,15 @@ export function ensureEnumValue<E extends StringEnum>({
 import { FileData } from "@/interfaces/FileData";
 
 /**
- * fileDataFromUrl
- * ---------------
- * Extracts a lightweight `FileData` object from an S3/HTTP URL.
- *   – Deduces file name & extension
- *   – Maps common image extensions to MIME types
+ * Extracts a `FileData` object from an image/file URL.
+ *
+ * @remarks
+ * - Deduces file name from the URL path.
+ * - Infers MIME type from common image extensions (`png`, `webp`, `jpeg`).
+ *
+ * @example
+ * fileDataFromUrl("https://.../img.jpg");
+ * // → { name: "img.jpg", type: "image/jpeg", webkitRelativePath: "" }
  */
 export function fileDataFromUrl(url: string): FileData {
   const pathname = new URL(url).pathname;
@@ -125,11 +173,14 @@ export function fileDataFromUrl(url: string): FileData {
    ------------------------------------------------------------------ */
 
 /**
- * formatDateVerbose
- * -----------------
- * Converts a JS `Date` (or ISO/epoch) to **“12 July, 2025”**.
+ * Formats a date into **“12 July, 2025”** style.
  *
- *   formatDateVerbose("2025-07-12")  // "12 July, 2025"
+ * @remarks
+ * Accepts a JS `Date`, ISO string, or epoch timestamp. Localised using `en-IN` by default.
+ *
+ * @example
+ * formatDateVerbose("2025-07-12");   // "12 July, 2025"
+ * formatDateVerbose(1726051200000); // "12 July, 2025"
  */
 export function formatDateVerbose(
   date: Date | string | number,

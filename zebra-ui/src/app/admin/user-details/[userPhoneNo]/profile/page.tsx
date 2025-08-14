@@ -3,6 +3,7 @@ import { useParams } from "next/navigation";
 import React, { useState } from "react";
 
 import { dialogLabels } from "@/common/constants";
+import { UserDetailsTabEnum } from "@/common/enums";
 import { InitialsAvatar } from "@/components/InitialsAvatar";
 import { Pill } from "@/components/Pill";
 import { ActionDialog } from "@/dialogs/action-dialog";
@@ -12,27 +13,38 @@ import {
   useBlacklistUserMutation,
   useGetUserByPhoneNoQuery,
 } from "@/store/apiSlice";
+import { toSlug } from "@/utils/core";
+import { userDetailsTestIds } from "@/utils/testIds";
 
 const ProfilePage: React.FC = () => {
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
   const { data } = useGetUserByPhoneNoQuery({ phoneNo: userPhoneNo });
-  const [blacklistUser] = useBlacklistUserMutation();
-  const [activateUser] = useActivateUserMutation();
-  const { openDialog, isDialogOpen } = useDialog();
-
   const currentUser = data!.user;
+
   const [isBlacklisted, setIsBlacklisted] = useState<boolean>(
     currentUser.blacklisted,
   );
+
+  const activateUserLabel = "Activate User";
+  const blacklistUserLabel = "Blacklist User";
+
+  const BLACKLIST_DIALOG_ID = `${toSlug(activateUserLabel)}-dialog`;
+  const ACTIVATE_DIALOG_ID = `${toSlug(blacklistUserLabel)}-dialog`;
+
+  const [blacklistUser] = useBlacklistUserMutation();
+  const [activateUser] = useActivateUserMutation();
+
+  const { openDialog, isDialogOpen } = useDialog();
+
   const handleBlacklistConfirm = async (comment: string) => {
     await blacklistUser({ phoneNo: userPhoneNo, comment });
+    setIsBlacklisted(true);
   };
 
   const handleActivateConfirm = async (comment: string) => {
     await activateUser({ phoneNo: userPhoneNo, comment });
+    setIsBlacklisted(false);
   };
-  const BLACKLIST_DIALOG_ID = "blacklist-user-dialog";
-  const ACTIVATE_DIALOG_ID = "activate-user-dialog";
 
   const handleBlacklistClicked = () => {
     if (!isBlacklisted) openDialog(BLACKLIST_DIALOG_ID);
@@ -44,10 +56,6 @@ const ProfilePage: React.FC = () => {
 
   const { name, email, phoneNo, createdAt } = currentUser;
 
-  const currentStatus = isBlacklisted
-    ? "The user is blacklisted"
-    : "The user is active";
-
   const profileFields = [
     { label: "Name", value: name },
     { label: "Phone", value: phoneNo },
@@ -56,11 +64,17 @@ const ProfilePage: React.FC = () => {
       label: "Joined On",
       value: new Date(createdAt).toLocaleString(),
     },
-    { label: "Blacklisted Status", value: currentStatus },
+    {
+      label: "Blacklisted Status",
+      value: isBlacklisted ? "The user is blacklisted" : "The user is active",
+    },
   ];
 
   return (
-    <div className="px-16 py-8 bg-gray-100 h-full">
+    <div
+      data-testid={userDetailsTestIds.getTabPageId(UserDetailsTabEnum.PROFILE)}
+      className="px-16 py-8 bg-gray-100 h-full"
+    >
       <div className="p-5 rounded-xl bg-white shadow-sm flex flex-col gap-4">
         <h2 className="text-3xl flex items-center w-full justify-between">
           User Details
@@ -85,25 +99,31 @@ const ProfilePage: React.FC = () => {
             <div className="flex justify-end mt-2">
               <button
                 type="button"
+                data-testid={userDetailsTestIds.buttonId(activateUserLabel)}
+                aria-label={activateUserLabel}
                 onClick={handleActivateClicked}
+                disabled={!isBlacklisted}
                 className={`text-lg px-3 py-2 rounded-xl font-medium ${
                   isBlacklisted
                     ? "bg-green-500 hover:bg-green-600 text-white"
                     : "bg-gray-400 text-gray-200 cursor-not-allowed"
                 }`}
               >
-                Activate User
+                {activateUserLabel}
               </button>
               <button
                 type="button"
+                data-testid={userDetailsTestIds.buttonId(blacklistUserLabel)}
+                aria-label={blacklistUserLabel}
                 onClick={handleBlacklistClicked}
+                disabled={isBlacklisted}
                 className={`ml-3 text-lg px-3 py-2 rounded-xl font-medium ${
                   isBlacklisted
                     ? "bg-gray-400 text-gray-200 cursor-not-allowed"
                     : "bg-red-500 hover:bg-red-600 text-white"
                 }`}
               >
-                Blacklist User
+                {blacklistUserLabel}
               </button>
             </div>
           </form>

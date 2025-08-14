@@ -12,8 +12,10 @@ import { RenderUserStatus } from "@/components/status/RenderUserStatus";
 import { TitleAndSearchBar } from "@/components/TitleAndSearchBar";
 import { UserInfo } from "@/interfaces/User";
 import { useGetUserByPhoneNoQuery, useGetUsersQuery } from "@/store/apiSlice";
+import { createTestIdFactory } from "@/utils/testIds";
 
 const ROWS_PER_PAGE = 10;
+const userManagementTestIds = createTestIdFactory("User Management");
 
 export const UsersManagement = () => {
   const router = useRouter();
@@ -130,6 +132,7 @@ export const UsersManagement = () => {
           Icon={Eye}
           tooltipActive={true}
           tooltip="View Profile"
+          testId={userManagementTestIds.genericId("view profile", user.phoneNo)}
         />
       ),
     },

@@ -17,6 +17,7 @@ const TabContext = createContext<TabContextType | undefined>(undefined);
 interface TabProps {
   label: string;
   value: string;
+  testId?: string;
 }
 
 interface TabContentProps {
@@ -42,13 +43,14 @@ interface NonTabProps {
   className?: string;
 }
 
-const Tab: React.FC<TabProps> = ({ label, value }) => {
+const Tab: React.FC<TabProps> = ({ label, value, testId }) => {
   const context = useContext(TabContext);
   if (!context) throw new Error("Tab must be used within Tabs");
   const isActive = context.active === value;
 
   return (
     <button
+      data-testid={testId ? testId : undefined} //Zebra-UI: update
       className={`px-4 py-2 max-md:py-1.5 text-base font-medium max-md:font-normal focus:outline-none transition-colors relative
         ${
           isActive

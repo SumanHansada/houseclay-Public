@@ -65,7 +65,10 @@ export default function AdminLogin() {
   };
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900 h-screen flex justify-center items-center">
+    <section
+      className="bg-gray-50 dark:bg-gray-900 h-screen flex justify-center items-center"
+      data-testid="page-login"
+    >
       <div className="flex flex-col items-center justify-center mx-auto w-4/5 md:w-3/4 lg:w-2/3 xl:w-1/3">
         <div className="flex items-center mb-4 text-3xl gap-2">
           <HouseClay />
@@ -97,6 +100,8 @@ export default function AdminLogin() {
                     placeholder="Enter your username"
                     dataType="text"
                     required
+                    testId="login-username"
+                    autoComplete="username"
                   />
 
                   <FormInputField
@@ -105,6 +110,8 @@ export default function AdminLogin() {
                     placeholder="••••••••"
                     dataType="password"
                     required
+                    testId="login-password"
+                    autoComplete="current-password"
                   />
 
                   <div className="flex items-center justify-between">
@@ -113,6 +120,7 @@ export default function AdminLogin() {
                         id="rememberMe"
                         name="rememberMe"
                         type="checkbox"
+                        data-testid="login-remember-input"
                         className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
                       />
                       <label
@@ -125,6 +133,7 @@ export default function AdminLogin() {
                     <a
                       href="#"
                       className="text-sm font-medium text-red-600 hover:underline dark:text-red-500"
+                      data-testid="login-forgot-password"
                     >
                       Forgot password?
                     </a>
@@ -135,8 +144,9 @@ export default function AdminLogin() {
                       {reduxError || "Invalid username or password"}
                     </div>
                   )}
-
                   <button
+                    data-testid="login-submit-button"
+                    aria-label="sign-in"
                     type="submit"
                     disabled={isSubmitting || loginLoading}
                     className="w-full text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 disabled:opacity-50 disabled:cursor-not-allowed"

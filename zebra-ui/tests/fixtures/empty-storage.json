@@ -1,0 +1,14 @@
+{
+  "cookies": [
+    {
+      "name": "adminToken",
+      "value": "79886e34-aaed-457f-a915-2af426959600",
+      "domain": "localhost",
+      "path": "/",
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": []
+}

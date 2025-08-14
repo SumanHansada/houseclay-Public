@@ -38,7 +38,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="flex fixed top-0 left-0 right-0 bg-white dark:bg-gray-800 z-50 justify-between w-full items-center py-2 shadow-sm px-8 h-16">
+    <header className="flex fixed top-0 left-0 right-0 bg-white z-50 justify-between w-full items-center py-2 shadow-sm px-8 h-16">
       {/* Logo and App Name */}
       <div className="flex items-center gap-2">
         <Link href="/" className="flex items-center gap-1">
@@ -64,7 +64,11 @@ const Header: React.FC = () => {
               }
             }}
           >
-            <button className="flex flex-row xl:gap-2 md:gap-1 gap-1 xl:px-3 lg:px-2 md:px-1 px-px py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100 dark:bg-gray-300 text-center">
+            <button
+              data-testid="profile-menu-button"
+              aria-label="profile menu"
+              className="flex flex-row xl:gap-2 md:gap-1 gap-1 xl:px-3 lg:px-2 md:px-1 px-px py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100 text-center"
+            >
               <UserRound width={20} height={20} />
               <ChevronDown width={20} height={20} />
             </button>

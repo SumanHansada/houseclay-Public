@@ -1,12 +1,14 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
 
+import { UserDetailsTabEnum } from "@/common/enums";
 import { PropertyInfo } from "@/interfaces/Property";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 import {
   buildPropertyColumns,
   createDefaultPropertyActions,
 } from "@/utils/table/buildPropertyColumns";
+import { userDetailsTestIds } from "@/utils/testIds";
 
 import { PropertiesTableView } from "../../components/PropertiesTableView";
 
@@ -45,7 +47,10 @@ const OwnedPropertiesPage: React.FC = () => {
   );
 
   return (
-    <div className="h-full">
+    <div
+      className="h-full"
+      data-testid={userDetailsTestIds.getTabPageId(UserDetailsTabEnum.OWNED)}
+    >
       <PropertiesTableView
         tableTitle="Owned Properties"
         columns={columns}

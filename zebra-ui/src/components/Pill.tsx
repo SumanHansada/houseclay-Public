@@ -15,10 +15,17 @@ interface PillProps {
   color: PillColour;
   children: React.ReactNode;
   className?: string;
+  testId?: string;
 }
 
-export const Pill: React.FC<PillProps> = ({ color, children, className }) => (
+export const Pill: React.FC<PillProps> = ({
+  color,
+  children,
+  className,
+  testId,
+}) => (
   <span
+    data-testid={testId}
     className={clsx(
       "px-2 py-1 rounded-full inline-block border",
       COLOUR_MAP[color],

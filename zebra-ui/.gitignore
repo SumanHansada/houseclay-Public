@@ -12,6 +12,9 @@
 
 # testing
 /coverage
+/playwright-report/
+/tests/fixtures/admin-storage.json
+/test-results
 
 # next.js
 /.next/

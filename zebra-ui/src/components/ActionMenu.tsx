@@ -4,6 +4,8 @@ import { FocusTrap } from "focus-trap-react";
 import React, { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { toSlug } from "@/utils/core";
+
 interface Option {
   id: number | string;
   label: string;
@@ -203,6 +205,7 @@ const ActionMenu: React.FC<ActionMenuProps> = ({
                       }}
                       role="menuitem"
                       tabIndex={-1}
+                      data-testid={`menuitem-${toSlug(option.label)}`} // Zebra-UI: updated
                     >
                       {option.label}
                     </div>

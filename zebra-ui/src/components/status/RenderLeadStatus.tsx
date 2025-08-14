@@ -9,9 +9,21 @@ interface RenderLeadStatusProps {
 }
 
 const statusMap: Record<LeadStatusEnum, JSX.Element> = {
-  [LeadStatusEnum.NEW]: <Pill color="blue">New Lead</Pill>,
-  [LeadStatusEnum.FOLLOW_UP]: <Pill color="red">Follow Up</Pill>,
-  [LeadStatusEnum.RESOLVED]: <Pill color="green">Resolved</Pill>,
+  [LeadStatusEnum.NEW]: (
+    <Pill color="blue" testId={`status-pill-${LeadStatusEnum.NEW}`}>
+      New Lead
+    </Pill>
+  ),
+  [LeadStatusEnum.FOLLOW_UP]: (
+    <Pill color="red" testId={`status-pill-${LeadStatusEnum.FOLLOW_UP}`}>
+      Follow Up
+    </Pill>
+  ),
+  [LeadStatusEnum.RESOLVED]: (
+    <Pill color="green" testId={`status-pill-${LeadStatusEnum.RESOLVED}`}>
+      Resolved
+    </Pill>
+  ),
 };
 
 export const RenderLeadStatus: React.FC<RenderLeadStatusProps> = ({
