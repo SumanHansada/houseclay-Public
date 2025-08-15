@@ -8,7 +8,6 @@ import {
   FormAutocomplete,
   FormCheckbox,
   FormRadioGroup,
-  FormSelectDropdown,
 } from "@/form-components";
 
 import Image from "next/image";
@@ -169,7 +168,7 @@ export default function MyRequirementsPage() {
         <h1 className="text-2xl font-medium">My Requirements</h1>
         <button
           type="button"
-          className={`px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-sm disabled:bg-gray-300 disabled:cursor-not-allowed`}
+          className="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-sm disabled:bg-gray-300 disabled:cursor-not-allowed"
           onClick={() => setEditMode(true)}
           disabled={editMode}
         >

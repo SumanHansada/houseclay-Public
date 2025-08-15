@@ -59,6 +59,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
     try {
       const logoutResponse = await logout();
       console.log(logoutResponse);
+      router.push("/");
       dispatch(clearToken());
     } catch (err) {
       console.error(err);

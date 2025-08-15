@@ -42,7 +42,8 @@ export function Accordion({
 
   return (
     <div
-      className={`rounded-xl border shadow-sm text-xl py-6 px-8 ${open ? "bg-gray-50" : ""}`}
+      className={`rounded-xl border shadow-sm text-xl py-6 px-8 cursor-pointer ${open ? "bg-gray-50" : ""}`}
+      onClick={toggle}
     >
       {/* Question */}
       <div className="flex justify-between items-center">
@@ -51,7 +52,7 @@ export function Accordion({
           type="button"
           aria-expanded={open}
           aria-controls={panelId}
-          onClick={toggle}
+          // onClick={toggle}
           className="relative h-8 w-8 grid place-items-center focus:outline-none rounded-full"
           data-testid={testId ? `${testId}-toggle` : undefined}
         >
