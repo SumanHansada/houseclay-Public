@@ -103,7 +103,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
                   ? `${selectedColor} border`
                   : "border-gray-300 hover:border-gray-400"
               }
-              ${disabled ? "cursor-not-allowed bg-gray-100" : ""}
+              ${disabled ? "cursor-not-allowed bg-gray-50" : ""}
               focus-within:shadow-[inset_0_0_0_2px_royalBlue] focus-within:border-transparent
             `}
           >

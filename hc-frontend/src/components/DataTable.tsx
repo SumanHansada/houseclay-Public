@@ -66,19 +66,6 @@ export const TABLE_VARIANTS = {
     emptyStateClassName: "text-center py-20 text-2xl text-red-400",
   } as TableVariant,
 
-  // website: {
-  //   containerClassName: "w-full bg-white rounded-lg overflow-hidden",
-  //   tableClassName: "w-full",
-  //   headerClassName: "",
-  //   headerRowClassName: "",
-  //   headerCellClassName:
-  //     "text-left text-gray-500 py-2 px-4 tracking-wide border-r last:border-r-0",
-  //   bodyClassName: "",
-  //   rowClassName: "bg-gray-50 my-4 rounded-lg p-2",
-  //   cellClassName: "px-6 py-4 text-gray-700 border-r last:border-r-0",
-  //   emptyStateClassName: "text-center py-16 text-lg text-gray-500",
-  // } as TableVariant,
-
   website: {
     containerClassName: "w-full bg-white",
     tableClassName: "w-full border-separate border-spacing-y-3",

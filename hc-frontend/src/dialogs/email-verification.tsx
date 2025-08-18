@@ -101,7 +101,7 @@ const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
   return (
     <Dialog
       id={id}
-      type={isMobile ? "bottom-sheet" : "card"}
+      type={isMobile ? "fullscreen" : "card"}
       onClose={onClose}
       width={isMobile ? 100 : 40}
       entryAnimation={isMobile ? "animate-slide-in-bottom" : "animate-fade-in"}
@@ -122,21 +122,27 @@ const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
         </div>
       </DialogHeader>
       <DialogContent>
-        <div className="w-full flex flex-col align-center justify-center gap-4 p-6">
+        <div
+          className={`w-full flex flex-col align-center justify-center gap-4 p-6 ${isMobile ? "h-full" : ""}`}
+        >
           {/* Form header */}
-          <div>
-            <h1 className="text-2xl mb-1 text-black ">
-              Verify Your email address
-            </h1>
-            <p className="text-gray-600 text-sm">
+          <div className={isMobile ? "text-center" : ""}>
+            {isMobile ? null : (
+              <h1 className="text-2xl mb-1 text-black ">
+                Verify Your email address
+              </h1>
+            )}
+            <p
+              className={`text-gray-600 ${isMobile ? "text-base" : "text-sm"}`}
+            >
               We&apos;ve sent a 4-digit OTP to your email address.
             </p>
             <b>{emailToVerify}</b>
           </div>
 
           {/* Form fields */}
-          <div className="flex flex-col gap-2">
-            <div className="flex gap-2">
+          <div className="flex flex-col gap-4">
+            <div className={`flex gap-2 ${isMobile ? "mx-auto" : ""}`}>
               <input
                 id="otp-1"
                 type="text"
@@ -186,7 +192,7 @@ const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
             </div>
 
             {/* Resend option */}
-            <div className="">
+            <div className={isMobile ? "text-center" : ""}>
               <span className="text-gray-500">Didn&apos;t receive code?</span>
               &nbsp;
               <button className="text-red-500 font-medium underline">
@@ -197,7 +203,9 @@ const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
         </div>
       </DialogContent>
       <DialogFooter>
-        <div className="pt-4 pb-6 px-4 flex gap-3 w-full justify-end">
+        <div
+          className={`pt-4 pb-6 px-4 flex gap-3 w-full ${isMobile ? "justify-between" : "justify-end"}`}
+        >
           <button
             type="button"
             className="border  rounded-lg py-3 px-4"

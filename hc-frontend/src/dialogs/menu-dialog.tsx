@@ -29,6 +29,8 @@ import { useLogoutMutation } from "@/store/apiSlice";
 import { setHideStickyNavBar } from "@/store/appSlice";
 import { clearToken, setLoginFromAddProperty } from "@/store/authSlice";
 import { RootState } from "@/store/store";
+import { AccountNavList } from "@/components/AccountNavList";
+import { ACCOUNT_NAV } from "@/common/constants";
 
 const Property = PropertySvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ZeroPercentRed = ZeroPercentRedSvg as React.FC<
@@ -164,73 +166,11 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
 
           {/* Profile Section */}
           {token && (
-            <div>
-              <ul>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
-                  <span className="flex items-center gap-2">
-                    <User size={22} />
-                    My Profile
-                  </span>
-                  <ChevronRight size={20} />
-                </li>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
-                  <span className="flex items-center gap-2">
-                    <FileText size={22} />
-                    My Requirements
-                  </span>
-                  <ChevronRight size={20} />
-                </li>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
-                  <span className="flex items-center gap-2">
-                    <Heart size={22} />
-                    Shortlists
-                  </span>
-                  <ChevronRight size={20} />
-                </li>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
-                  <span className="flex items-center gap-2">
-                    <Coin width={22} />
-                    Connects
-                  </span>
-                  <ChevronRight size={20} />
-                </li>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
-                  <span className="flex items-center gap-2">
-                    <CreditCard size={22} />
-                    My Payments
-                  </span>
-                  <ChevronRight size={20} />
-                </li>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
-                  <span className="flex items-center gap-2">
-                    <Home size={22} />
-                    My Properties
-                  </span>
-                  <ChevronRight size={20} />
-                </li>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
-                  <span className="flex items-center gap-2">
-                    <Contact size={22} />
-                    Owners you Contacted
-                  </span>
-                  <ChevronRight size={20} />
-                </li>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
-                  <span className="flex items-center gap-2">
-                    <MessageSquare size={22} />
-                    Support
-                  </span>
-                  <ChevronRight size={20} />
-                </li>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer">
-                  <span className="flex items-center gap-2">
-                    <LogOut size={22} />
-                    Logout
-                  </span>
-                  <ChevronRight size={20} />
-                </li>
-              </ul>
-            </div>
+            <AccountNavList
+              items={ACCOUNT_NAV}
+              onItemClick={handleClose}
+              listClassName=""
+            />
           )}
 
           {/* Quick Links Section */}

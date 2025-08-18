@@ -3,7 +3,7 @@ import { PropertySummary } from "./components/PropertyCard";
 
 export const user = {
   name: "Ankit Biswas",
-  phone: "+91 999 999 9999",
+  phone: "91999 999 9999",
   onWhatsapp: true,
   phoneVerified: true,
   email: "ankitbiswas@gmail.com",

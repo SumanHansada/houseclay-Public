@@ -1,4 +1,9 @@
-import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+} from "@/components/Dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { X } from "lucide-react";
 
@@ -35,9 +40,7 @@ const EmailVerificationSuccessDialog: React.FC<
           className={`${isMobile ? "py-2 px-8" : ""}  flex flex-col justify-between items-center w-full`}
         >
           {isMobile && (
-            <h1 className="text-xl py-1.5 text-black">
-              Verify your email address
-            </h1>
+            <h1 className="text-xl py-1.5 text-black">Email Verified!</h1>
           )}
           <button className="absolute top-4 right-4 rounded-full">
             <X onClick={onClose} size={24} />
@@ -47,8 +50,10 @@ const EmailVerificationSuccessDialog: React.FC<
       <DialogContent>
         <div className="p-6 flex flex-col gap-4 items-center">
           <EmailVerifiedIcon />
-          <div className="text-center w-3/4 mb-2">
-            <h1 className="text-3xl font-medium mb-1">Email Verified!</h1>
+          <div className="text-center w-11/12 mb-2">
+            {isMobile ? null : (
+              <h1 className="text-3xl font-medium mb-1">Email Verified!</h1>
+            )}
             <p className="text-gray-700 text-lg">
               Great job! Your email is now verified, and you've earned&nbsp;
               <span className="inline-flex items-center align-middle gap-1 mx-1">
@@ -63,7 +68,7 @@ const EmailVerificationSuccessDialog: React.FC<
               &nbsp;to help you list and manage your property.
             </p>
           </div>
-          <div className="flex flex-col gap-2 items-center">
+          <div className="flex flex-col gap-2 items-center max-md:hidden">
             <button
               className="w-fit text-white py-3 px-4 rounded-lg bg-red-500"
               onClick={() => {
@@ -77,6 +82,26 @@ const EmailVerificationSuccessDialog: React.FC<
           </div>
         </div>
       </DialogContent>
+      <DialogFooter>
+        <div className="pt-4 pb-6 px-4 flex gap-3 w-full justify-between md:hidden">
+          <button
+            type="button"
+            className="border  rounded-lg py-3 px-4"
+            onClick={onClose}
+          >
+            Back
+          </button>
+          <button
+            className="w-fit text-white py-3 px-4 rounded-lg bg-red-500 hover:bg-red-600"
+            onClick={() => {
+              router.push("/");
+              onClose();
+            }}
+          >
+            Explore Properties
+          </button>
+        </div>
+      </DialogFooter>
     </Dialog>
   );
 };

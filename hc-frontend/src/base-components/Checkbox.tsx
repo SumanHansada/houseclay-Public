@@ -86,7 +86,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
                   ? `${selectedColor} border`
                   : "border-gray-300 hover:border-gray-400"
               }
-              ${disabled ? "cursor-not-allowed bg-gray-100" : ""}
+              ${disabled ? "cursor-not-allowed bg-gray-50" : ""}
             `}
             tabIndex={disabled ? -1 : 0}
             onClick={(e) => {
