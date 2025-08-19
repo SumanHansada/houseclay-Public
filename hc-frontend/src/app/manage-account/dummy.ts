@@ -1,7 +1,7 @@
 import { PaymentFilterStatus, PropertyCategory } from "@/common/enums";
 import { PropertySummary } from "./components/PropertyCard";
 
-export const user = {
+export const userDummy = {
   name: "Ankit Biswas",
   phone: "91999 999 9999",
   onWhatsapp: true,

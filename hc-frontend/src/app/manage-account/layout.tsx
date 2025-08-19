@@ -2,7 +2,6 @@
 
 import { useEffect, type ReactNode } from "react";
 import { Sidebar } from "./components/Sidebar";
-import { ACCOUNT_NAV } from "@/common/constants";
 import { Footer } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDispatch } from "react-redux";
