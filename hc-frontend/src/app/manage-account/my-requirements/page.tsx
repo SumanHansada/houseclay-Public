@@ -17,15 +17,6 @@ import MaleIconSvg from "public/icons/preferred-tenants/male.svg";
 const FemaleIcon = FemaleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const MaleIcon = MaleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
-export const preferredTenantOptions: IconOption[] = [
-  {
-    label: "Female",
-    value: "female",
-    icon: <FemaleIcon />,
-  },
-  { label: "Male", value: "male", icon: <MaleIcon /> },
-];
-
 export type UserType = "tenant" | "buyer" | "";
 export type Option = { label: string; value: string };
 export type IconOption = Option & { icon: React.ReactNode };
@@ -57,6 +48,15 @@ export const bhkTypeOptions: Option[] = [
 export const lookingForARoomOptions: Option[] = [
   { label: "Yes", value: "yes" },
   { label: "No", value: "no" },
+];
+
+export const preferredTenantOptions: IconOption[] = [
+  {
+    label: "Female",
+    value: "female",
+    icon: <FemaleIcon />,
+  },
+  { label: "Male", value: "male", icon: <MaleIcon /> },
 ];
 
 export const rentBudgetOptions: Option[] = [
@@ -160,16 +160,14 @@ export function AutoNormalizeFields() {
   const isTenant = values.userType === "tenant";
   const userTypeUnset = values.userType === "";
 
-  // 1) Keep budget valid for current userType, but never force during reset
   useEffect(() => {
-    if (userTypeUnset) return; // do nothing when resetting to EMPTY_VALUES
+    if (userTypeUnset) return;
     const allowed = isTenant ? rentBudgetOptions : resaleBudgetOptions;
     if (!allowed.some((o) => o.value === values.budget)) {
       setFieldValue("budget", allowed[0]?.value ?? "");
     }
   }, [userTypeUnset, isTenant, values.budget, setFieldValue]);
 
-  // 2) lookingForARoom only for tenant
   useEffect(() => {
     if (userTypeUnset) return;
     if (!isTenant && values.lookingForARoom)
@@ -178,7 +176,6 @@ export function AutoNormalizeFields() {
       setFieldValue("lookingForARoom", "yes");
   }, [userTypeUnset, isTenant, values.lookingForARoom, setFieldValue]);
 
-  // 3) preferredTenants present only in flatmate flow; clear otherwise
   useEffect(() => {
     if (userTypeUnset) return;
     const isFlatmate = isTenant && values.lookingForARoom === "yes";

@@ -169,13 +169,7 @@ export function DesktopClient({
 
           {/* Actions (desktop) */}
           {editMode ? (
-            <div className="mt-4 text-lg flex gap-3">
-              <button
-                type="submit"
-                className="px-3 py-1 md:px-5 md:py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-sm"
-              >
-                Save
-              </button>
+            <footer className="mt-6 border-t-2 pt-4 flex justify-between shadow-sm">
               <button
                 type="reset"
                 className="px-3 py-1 md:px-5 md:py-2 border rounded-lg shadow-sm"
@@ -186,7 +180,13 @@ export function DesktopClient({
               >
                 Cancel
               </button>
-            </div>
+              <button
+                type="submit"
+                className="px-3 py-1 md:px-5 md:py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-sm"
+              >
+                Save
+              </button>
+            </footer>
           ) : null}
         </Form>
       </div>

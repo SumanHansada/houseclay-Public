@@ -1,11 +1,12 @@
 "use client";
 
 import { Form, useFormikContext } from "formik";
-import { ChevronLeft, SquarePen } from "lucide-react";
+import { ChevronLeft, SquarePen, X } from "lucide-react";
 import type { FormValues } from "./page";
 import {
   FormAutocomplete,
   FormCheckbox,
+  FormPlacesAutocomplete,
   FormRadioGroup,
 } from "@/form-components";
 import {
@@ -18,6 +19,7 @@ import {
   resaleBudgetOptions,
   preferredTenantOptions,
 } from "./page";
+import toast from "react-hot-toast";
 
 interface MobileProps {
   editMode: boolean;
@@ -26,6 +28,8 @@ interface MobileProps {
   savedValues: FormValues;
   EMPTY_VALUES: FormValues;
 }
+
+const MAX_LOCATIONS = 5;
 
 export function MobileClient({
   editMode,
@@ -38,6 +42,34 @@ export function MobileClient({
   const isTenant = values.userType === "tenant";
   const isFlatmate = isTenant && values.lookingForARoom === "yes";
   const budgetOptions = isTenant ? rentBudgetOptions : resaleBudgetOptions;
+
+  const cityAllowed = "Bengaluru";
+  const onLocationSelect = (location: {
+    latitude: number;
+    longitude: number;
+    name?: string;
+    address?: string;
+    city?: string;
+  }) => {
+    if (location.city && cityAllowed) {
+      const selectedCity = location.city;
+      const isCityAllowed = cityAllowed === selectedCity;
+      if (!isCityAllowed) {
+        toast.error(`Please select a location within ${cityAllowed}`, {
+          duration: 5000,
+        });
+        setFieldValue("locationSearch", "");
+        return;
+      }
+    }
+    const label = (location.name ?? values.locationSearch ?? "").trim();
+    if (!label) return;
+    if (values.locations.includes(label)) return;
+    if (values.locations.length >= MAX_LOCATIONS) return;
+
+    setFieldValue("locations", [...values.locations, label]);
+    setFieldValue("locationSearch", "");
+  };
 
   return (
     <section className="md:hidden overflow-y-auto">
@@ -66,34 +98,71 @@ export function MobileClient({
         </div>
       </header>
 
-      <Form className="flex-1 space-y-6 px-8 py-4 mb-16 mt-[55px]">
+      <Form className="flex-1 space-y-6 px-8 py-4 mb-20">
         {/* Who am I */}
-        <div className="flex flex-col items-start gap-2">
+        <div className="flex flex-col items-start gap-2 w-full">
           <label className="text-lg">I&apos;m a&nbsp;</label>
-          <div className="border border-gray-300 p-1 rounded-xl w-full">
-            <FormRadioGroup
-              name="userType"
-              columns={2}
-              options={userTypeOptions}
-              disabled={!editMode}
-              containerClassName="m-0"
-              radioOptionClassName="flex-1 rounded-xl w-full relative transition-all"
-            />
-          </div>
+          <FormRadioGroup
+            name="userType"
+            columns={2}
+            options={userTypeOptions}
+            disabled={!editMode}
+            containerClassName="m-0 w-full"
+            radioGroupClassName="border border-gray-300 p-2 rounded-xl"
+            radioOptionClassName="flex-1 rounded-xl w-full relative transition-all"
+          />
         </div>
 
         {/* Locations */}
-        <FormAutocomplete
-          name="location"
-          label="Locations"
-          items={locationList}
-          selectedItems={values.locations}
-          onSelectionChange={(items) => setFieldValue("location", items)}
-          maxItems={5}
-          inputClassName="flex flex-wrap items-center bg-gray-50 w-full p-3 border-none rounded-lg"
-          placeholder="Search for a property"
-          disabled={!editMode}
-        />
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Locations
+          </label>
+          <div className="space-y-2">
+            <div className="flex flex-wrap gap-1">
+              {values.locations.map((loc) => (
+                <span
+                  key={loc}
+                  className="inline-flex items-center gap-1 px-2 py-1 bg-red-500 text-white text-sm rounded-md"
+                >
+                  {loc}
+                  {editMode && (
+                    <button
+                      type="button"
+                      aria-label={`Remove ${loc}`}
+                      className="rounded hover:bg-white/10"
+                      onClick={() =>
+                        setFieldValue(
+                          "locations",
+                          values.locations.filter((l) => l !== loc),
+                        )
+                      }
+                    >
+                      <X size={14} className="" />
+                    </button>
+                  )}
+                </span>
+              ))}
+            </div>
+
+            <FormPlacesAutocomplete
+              name="locationSearch"
+              id="locationSearch"
+              placeholder={
+                values.locations.length >= MAX_LOCATIONS
+                  ? "Location limit reached"
+                  : `Search and add up to ${MAX_LOCATIONS} locations`
+              }
+              disabled={!editMode || values.locations.length >= MAX_LOCATIONS}
+              containerClassName="w-full relative"
+              inputClassName="w-full p-2 border rounded-xl"
+              dropdownClassName="absolute left-0 right-0 top-full z-50 mt-1 bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-auto"
+              // dropdownClassName="absolute z-10 mt-1 py-1 w-full bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-auto"
+              dropdownItemClassName="py-1 px-3 hover:bg-gray-100 cursor-pointer flex items-center"
+              onLocationSelect={onLocationSelect}
+            />
+          </div>
+        </div>
 
         {/* Property Type */}
         <FormCheckbox
@@ -121,16 +190,15 @@ export function MobileClient({
               <span className="block text-gray-700 text-sm font-medium mb-1">
                 Looking for a room
               </span>
-              <div className="border border-gray-300 p-1 rounded-xl w-full">
-                <FormRadioGroup
-                  name="lookingForARoom"
-                  columns={2}
-                  options={lookingForARoomOptions}
-                  disabled={!editMode}
-                  containerClassName="m-0"
-                  radioOptionClassName="flex-1 rounded-xl w-full relative transition-all"
-                />
-              </div>
+              <FormRadioGroup
+                name="lookingForARoom"
+                columns={2}
+                options={lookingForARoomOptions}
+                disabled={!editMode}
+                containerClassName="m-0 w-full"
+                radioGroupClassName="border border-gray-300 p-2 rounded-xl"
+                radioOptionClassName="flex-1 rounded-xl w-full relative transition-all"
+              />
             </div>
 
             {isFlatmate && (
@@ -158,33 +226,33 @@ export function MobileClient({
         {/* Actions */}
         {editMode ? (
           <footer className="fixed bottom-0 inset-x-0 z-50 border-t border-gray-200 bg-white py-4 px-5 flex items-center justify-between">
-            <div className="flex gap-2">
+            <button
+              type="button"
+              className="px-5 py-2 border rounded-lg shadow-sm hover:bg-gray-50"
+              onClick={() => {
+                resetForm({ values: savedValues });
+                setEditMode(false);
+              }}
+            >
+              Cancel
+            </button>
+            <div className="flex gap-4">
               <button
                 type="button"
-                className="px-5 py-2 border rounded-lg shadow-sm hover:bg-gray-50"
-                onClick={() => {
-                  resetForm({ values: savedValues });
-                  setEditMode(false);
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                className="px-5 py-2 border rounded-lg shadow-sm hover:bg-gray-50"
+                className=""
                 onClick={() => {
                   resetForm({ values: EMPTY_VALUES });
                 }}
               >
                 Reset
               </button>
+              <button
+                type="submit"
+                className="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-sm"
+              >
+                Save
+              </button>
             </div>
-            <button
-              type="submit"
-              className="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-sm"
-            >
-              Save
-            </button>
           </footer>
         ) : null}
       </Form>

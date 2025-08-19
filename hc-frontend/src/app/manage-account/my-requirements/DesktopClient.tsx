@@ -19,6 +19,13 @@ import {
 import { X } from "lucide-react";
 import toast from "react-hot-toast";
 
+interface DesktopProps {
+  editMode: boolean;
+  setEditMode: (v: boolean) => void;
+  savedValues: FormValues;
+  EMPTY_VALUES: FormValues;
+}
+
 const MAX_LOCATIONS = 5;
 
 export function DesktopClient({
@@ -26,12 +33,7 @@ export function DesktopClient({
   setEditMode,
   savedValues,
   EMPTY_VALUES,
-}: {
-  editMode: boolean;
-  setEditMode: (v: boolean) => void;
-  savedValues: FormValues;
-  EMPTY_VALUES: FormValues;
-}) {
+}: DesktopProps) {
   const { values, setFieldValue, resetForm } = useFormikContext<FormValues>();
   const isTenant = values.userType === "tenant";
   const isFlatmate = isTenant && values.lookingForARoom === "yes";
@@ -123,7 +125,7 @@ export function DesktopClient({
             {values.locations.map((loc) => (
               <span
                 key={loc}
-                className="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-900  border border-gray-500 text-sm rounded-xl"
+                className="inline-flex items-center gap-1 px-2 py-1 bg-red-500 text-white text-sm rounded-md"
               >
                 {loc}
                 {editMode && (
@@ -221,13 +223,7 @@ export function DesktopClient({
 
         {/* Actions */}
         {editMode ? (
-          <div className="mt-4 text-lg flex flex-wrap gap-3">
-            <button
-              type="submit"
-              className="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-sm"
-            >
-              Save
-            </button>
+          <footer className="mt-6 border-t-2 pt-4 shadow-sm text-lg flex items-center justify-between">
             <button
               type="button"
               className="px-5 py-2 border rounded-lg shadow-sm hover:bg-gray-50"
@@ -238,16 +234,24 @@ export function DesktopClient({
             >
               Cancel
             </button>
-            <button
-              type="button"
-              className="px-5 py-2 border rounded-lg shadow-sm hover:bg-gray-50"
-              onClick={() => {
-                resetForm({ values: EMPTY_VALUES });
-              }}
-            >
-              Reset
-            </button>
-          </div>
+            <div className="flex gap-6">
+              <button
+                type="button"
+                className=""
+                onClick={() => {
+                  resetForm({ values: EMPTY_VALUES });
+                }}
+              >
+                Reset
+              </button>
+              <button
+                type="submit"
+                className="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-sm"
+              >
+                Save
+              </button>
+            </div>
+          </footer>
         ) : null}
       </Form>
     </section>
