@@ -42,7 +42,7 @@ export function Accordion({
 
   return (
     <div
-      className={`rounded-xl border shadow-sm text-xl py-6 px-8 cursor-pointer ${open ? "bg-gray-50" : ""}`}
+      className={`rounded-xl border shadow-sm md:text-xl py-3 md:py-6 px-4 md:px-8 cursor-pointer ${open ? "bg-gray-50" : ""}`}
       onClick={toggle}
     >
       {/* Question */}
@@ -83,7 +83,7 @@ export function Accordion({
         className="overflow-hidden transition-[max-height] duration-300 ease-out"
         aria-hidden={!open}
       >
-        <p className="text-gray-700 tracking-wide leading-relaxed w-11/12 transition-opacity duration-200 mt-4">
+        <p className="text-gray-700 tracking-wide leading-relaxed w-11/12 transition-opacity duration-200 mt-2 md:mt-4">
           {answer}
         </p>
       </div>
