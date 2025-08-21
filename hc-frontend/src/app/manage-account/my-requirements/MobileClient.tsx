@@ -4,14 +4,12 @@ import { Form, useFormikContext } from "formik";
 import { ChevronLeft, SquarePen, X } from "lucide-react";
 import type { FormValues } from "./page";
 import {
-  FormAutocomplete,
   FormCheckbox,
   FormPlacesAutocomplete,
   FormRadioGroup,
 } from "@/form-components";
 import {
   userTypeOptions,
-  locationList,
   propertyTypeOptions,
   bhkTypeOptions,
   lookingForARoomOptions,
@@ -26,7 +24,7 @@ interface MobileProps {
   setEditMode: (v: boolean) => void;
   onBack: () => void;
   savedValues: FormValues;
-  EMPTY_VALUES: FormValues;
+  DEFAULT_VALUES: FormValues;
 }
 
 const MAX_LOCATIONS = 5;
@@ -36,7 +34,7 @@ export function MobileClient({
   setEditMode,
   onBack,
   savedValues,
-  EMPTY_VALUES,
+  DEFAULT_VALUES,
 }: MobileProps) {
   const { values, setFieldValue, resetForm } = useFormikContext<FormValues>();
   const isTenant = values.userType === "tenant";
@@ -157,7 +155,6 @@ export function MobileClient({
               containerClassName="w-full relative"
               inputClassName="w-full p-2 border rounded-xl"
               dropdownClassName="absolute left-0 right-0 top-full z-50 mt-1 bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-auto"
-              // dropdownClassName="absolute z-10 mt-1 py-1 w-full bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-auto"
               dropdownItemClassName="py-1 px-3 hover:bg-gray-100 cursor-pointer flex items-center"
               onLocationSelect={onLocationSelect}
             />
@@ -241,13 +238,14 @@ export function MobileClient({
                 type="button"
                 className=""
                 onClick={() => {
-                  resetForm({ values: EMPTY_VALUES });
+                  resetForm({ values: DEFAULT_VALUES });
                 }}
               >
                 Reset
               </button>
               <button
                 type="submit"
+                onClick={() => setFieldValue("locationSearch", "")}
                 className="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-sm"
               >
                 Save

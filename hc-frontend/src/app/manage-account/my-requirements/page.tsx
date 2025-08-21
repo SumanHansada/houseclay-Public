@@ -73,16 +73,6 @@ export const resaleBudgetOptions: Option[] = [
   { label: "Flexible", value: "flexible" },
 ];
 
-export const locationList = [
-  "JP Nagar",
-  "Indiranagar",
-  "Koramangala",
-  "Whitefield",
-  "Sadashivanagar",
-  "Jayanagar",
-  "HSR Layout",
-];
-
 import Image from "next/image";
 import ApartmentIcon from "public/icons/property-types/apartment.webp";
 import CommunityVillaIcon from "public/icons/property-types/community-villa.webp";
@@ -133,20 +123,9 @@ export const propertyTypeOptions: IconOption[] = [
   },
 ];
 
-const EMPTY_VALUES: FormValues = {
-  userType: "",
-  locations: [],
-  locationSearch: "",
-  propertyType: [],
-  bhkType: "",
-  lookingForARoom: "",
-  preferredTenants: "",
-  budget: "",
-};
-
 const DEFAULT_VALUES: FormValues = {
   userType: "tenant",
-  locations: ["JP Nagar"],
+  locations: [],
   locationSearch: "",
   propertyType: ["Apartment"],
   bhkType: "1BHK",
@@ -230,14 +209,14 @@ export default function MyRequirementsPage() {
               setEditMode={setEditMode}
               onBack={() => router.back()}
               savedValues={savedValues}
-              EMPTY_VALUES={EMPTY_VALUES}
+              DEFAULT_VALUES={DEFAULT_VALUES}
             />
           ) : (
             <DesktopClient
               editMode={editMode}
               setEditMode={setEditMode}
               savedValues={savedValues}
-              EMPTY_VALUES={EMPTY_VALUES}
+              DEFAULT_VALUES={DEFAULT_VALUES}
             />
           )}
         </>

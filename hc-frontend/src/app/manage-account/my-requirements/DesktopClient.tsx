@@ -23,7 +23,7 @@ interface DesktopProps {
   editMode: boolean;
   setEditMode: (v: boolean) => void;
   savedValues: FormValues;
-  EMPTY_VALUES: FormValues;
+  DEFAULT_VALUES: FormValues;
 }
 
 const MAX_LOCATIONS = 5;
@@ -32,7 +32,7 @@ export function DesktopClient({
   editMode,
   setEditMode,
   savedValues,
-  EMPTY_VALUES,
+  DEFAULT_VALUES,
 }: DesktopProps) {
   const { values, setFieldValue, resetForm } = useFormikContext<FormValues>();
   const isTenant = values.userType === "tenant";
@@ -239,13 +239,14 @@ export function DesktopClient({
                 type="button"
                 className=""
                 onClick={() => {
-                  resetForm({ values: EMPTY_VALUES });
+                  resetForm({ values: DEFAULT_VALUES });
                 }}
               >
                 Reset
               </button>
               <button
                 type="submit"
+                onClick={() => setFieldValue("locationSearch", "")}
                 className="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-sm"
               >
                 Save

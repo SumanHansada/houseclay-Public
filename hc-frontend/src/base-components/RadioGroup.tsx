@@ -42,7 +42,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
   disabled = false,
   containerClassName = "mb-4",
   labelClassName = "block text-gray-700 text-sm font-medium mb-1",
-  radioGroupClassName = "",
+  radioGroupClassName = `${horizontal ? "gap-3 xl:gap-6" : "gap-2"}`,
   radioOptionClassName = "border rounded-xl w-full relative transition-all",
   radioLabelClassName = "block p-3 w-full h-full",
   radioInputClassName = "sr-only",
@@ -69,9 +69,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
     6: "grid-cols-3 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6",
   };
 
-  const layout = horizontal
-    ? `grid ${gridCols[columns]} gap-3 xl:gap-6`
-    : "grid grid-cols-1 gap-2";
+  const layout = horizontal ? `grid ${gridCols[columns]}` : "grid grid-cols-1";
 
   return (
     <div className={containerClassName}>
