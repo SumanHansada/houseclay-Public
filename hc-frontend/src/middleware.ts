@@ -29,6 +29,8 @@ export const config = {
     "/list-property/resale/:path*",
     "/list-property/flatmate/:path*",
     "/profile/:path*",
+    "/edit-property/:path*",
+    "/my-property-details/:path*",
     // Add other protected routes here
   ],
 };

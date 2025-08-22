@@ -7,13 +7,31 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 const nextConfig: NextConfig = {
   /* config options here */
+  // Performance optimizations
+  experimental: {
+    optimizePackageImports: [
+      "lucide-react",
+      "react-loading-skeleton",
+      "dotlottie-react",
+    ],
+  },
+  // Enable compression
+  compress: true,
+  // Optimize bundle size
+  swcMinify: true,
+  // Enable static generation where possible
+  staticPageGenerationTimeout: 120,
+  // Optimize images
   images: {
     remotePatterns: [
       {
         hostname: "houseclay.s3.ap-southeast-2.amazonaws.com",
       },
     ],
+    formats: ["image/webp", "image/avif"],
+    minimumCacheTTL: 60,
   },
+  // Turbopack configuration for development
   turbopack: {
     rules: {
       "*.svg": {
@@ -22,14 +40,60 @@ const nextConfig: NextConfig = {
       },
     },
   },
-  productionBrowserSourceMaps: true,
-  webpack(config) {
+  productionBrowserSourceMaps: false, // Disable in production for better performance
+  webpack(config, { dev, isServer }) {
     // This webpack config will only apply when NOT using Turbopack
     config.module.rules.push({
       test: /\.svg$/,
       issuer: /\.[jt]sx?$/,
       use: ["@svgr/webpack"],
     });
+
+    // Optimize bundle splitting
+    if (!dev && !isServer) {
+      config.optimization.splitChunks = {
+        chunks: "all",
+        maxInitialRequests: 25,
+        minSize: 20000,
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: "vendors",
+            chunks: "all",
+            priority: 10,
+          },
+          // Separate dialog chunks
+          dialogs: {
+            test: /[\\/]dialogs[\\/]/,
+            name: "dialogs",
+            chunks: "all",
+            priority: 5,
+          },
+          // Separate icon chunks
+          icons: {
+            test: /[\\/]icons[\\/]/,
+            name: "icons",
+            chunks: "all",
+            priority: 5,
+          },
+          // Separate lucide-react icons
+          lucide: {
+            test: /[\\/]node_modules[\\/]lucide-react[\\/]/,
+            name: "lucide",
+            chunks: "all",
+            priority: 5,
+          },
+          // Separate Lottie library
+          lottie: {
+            test: /[\\/]node_modules[\\/]@lottiefiles[\\/]/,
+            name: "lottie",
+            chunks: "all",
+            priority: 5,
+          },
+        },
+      };
+    }
+
     return config;
   },
 };

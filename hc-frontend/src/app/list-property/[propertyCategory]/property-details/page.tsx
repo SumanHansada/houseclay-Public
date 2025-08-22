@@ -3,8 +3,8 @@ import { Suspense } from "react";
 import PropertyDetailsLoading from "./loading";
 import PropertyDetailsClient from "./PropertyDetailsClient";
 
-// Force dynamic rendering to avoid server component issues
-export const dynamic = "force-dynamic";
+// Enable static generation with revalidation
+export const revalidate = 3600; // Revalidate every hour
 
 // Error boundary component
 function PropertyDetailsErrorBoundary({

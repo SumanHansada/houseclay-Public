@@ -196,7 +196,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
                 onBlur={handleInputBlur}
                 placeholder={selectedItems.length === 0 ? placeholder : ""}
                 disabled={disabled}
-                className="flex-1 min-w-[120px] outline-none text-sm disabled:cursor-not-allowed bg-transparent"
+                className="flex-1 min-w-[120px] max-md:max-w-[40px] outline-none text-sm disabled:cursor-not-allowed bg-transparent"
               />
             </div>
 

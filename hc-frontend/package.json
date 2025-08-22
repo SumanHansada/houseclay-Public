@@ -14,7 +14,11 @@
     "build-storybook": "storybook build",
     "format": "prettier --check --ignore-path .gitignore .",
     "format:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix && prettier --write --ignore-path .gitignore .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "perf:analyze": "ANALYZE=true npm run build",
+    "perf:lighthouse": "npx lighthouse http://localhost:3000 --output=json --output-path=./lighthouse-report.json",
+    "perf:bundle": "node scripts/optimize-bundle.js",
+    "perf:full": "npm run build && npm run perf:bundle"
   },
   "dependencies": {
     "@lottiefiles/dotlottie-react": "^0.14.2",

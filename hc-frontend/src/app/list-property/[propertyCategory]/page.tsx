@@ -1,33 +1,25 @@
-"use client";
-
-import { useParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { redirect } from "next/navigation";
 
 import { PropertyCategory } from "@/common/enums";
 
-import PropertyCategoryLoading from "./loading";
+interface PropertyCategoryRootPageProps {
+  params: Promise<{ propertyCategory: string }>;
+}
 
-export default function PropertyCategoryRootPage() {
-  const params = useParams();
-  const router = useRouter();
+export default async function PropertyCategoryRootPage({
+  params,
+}: PropertyCategoryRootPageProps) {
+  const { propertyCategory } = await params;
+  const category = propertyCategory.toUpperCase();
 
-  useEffect(() => {
-    const propertyCategory = (params.propertyCategory as string).toUpperCase();
-    console.log("propertyCategory", propertyCategory);
-    // Validate property category
-    if (
-      propertyCategory &&
-      Object.values(PropertyCategory).includes(
-        propertyCategory as PropertyCategory,
-      )
-    ) {
-      router.replace(`/list-property/${propertyCategory}/property-details`);
-    } else {
-      // Redirect to home if invalid category
-      router.replace("/");
-    }
-  }, [params.propertyCategory, router]);
-
-  // Show loading while redirecting
-  return <PropertyCategoryLoading />;
+  // Validate property category
+  if (
+    category &&
+    Object.values(PropertyCategory).includes(category as PropertyCategory)
+  ) {
+    redirect(`/list-property/${category}/property-details`);
+  } else {
+    // Redirect to home if invalid category
+    redirect("/");
+  }
 }
