@@ -1,3 +1,6 @@
+import { X } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+
 import {
   Dialog,
   DialogContent,
@@ -5,8 +8,6 @@ import {
   DialogHeader,
 } from "@/components/Dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { X } from "lucide-react";
-import { useMemo, useRef, useState } from "react";
 
 interface EmailVerificationDialogProps {
   id: string;

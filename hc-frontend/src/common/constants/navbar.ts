@@ -1,16 +1,15 @@
 "use client";
 
-import type { FC, SVGProps } from "react";
-
-import ProfileIcon from "public/icons/my-profile.svg";
-import RequirementsIcon from "public/icons/my-requirements.svg";
-import ShortlistsIcon from "public/icons/shortlists.svg";
 import ConnectsIcon from "public/icons/connects.svg";
-import PaymentsIcon from "public/icons/my-payments.svg";
-import PropertiesIcon from "public/icons/my-properties.svg";
-import OwnersIcon from "public/icons/owners-contacted.svg";
-import SupportIcon from "public/icons/support.svg";
 import LogoutIcon from "public/icons/logout.svg";
+import PaymentsIcon from "public/icons/my-payments.svg";
+import ProfileIcon from "public/icons/my-profile.svg";
+import PropertiesIcon from "public/icons/my-properties.svg";
+import RequirementsIcon from "public/icons/my-requirements.svg";
+import OwnersIcon from "public/icons/owners-contacted.svg";
+import ShortlistsIcon from "public/icons/shortlists.svg";
+import SupportIcon from "public/icons/support.svg";
+import type { FC, SVGProps } from "react";
 
 export type NavIconType = FC<SVGProps<SVGSVGElement>>;
 export type NavActionId = "LOGOUT";

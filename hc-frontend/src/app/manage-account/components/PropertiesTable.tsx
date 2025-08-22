@@ -1,8 +1,8 @@
-import { PropertyCategory } from "@/common/enums";
-import { Column, WebsiteDataTable } from "@/components/DataTable";
-
 import CircleCheckIconSvg from "public/icons/circle-check.svg";
 import ThreeDotsIconSvg from "public/icons/three-dots-horizontal.svg";
+
+import { PropertyCategory } from "@/common/enums";
+import { Column, WebsiteDataTable } from "@/components/DataTable";
 
 const CircleCheckIcon = CircleCheckIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>

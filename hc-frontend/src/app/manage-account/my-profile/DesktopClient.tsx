@@ -1,12 +1,15 @@
 "use client";
-import { Form, useFormikContext } from "formik";
-import { EmailVerifyIncentive, MyProfileFormValues } from "./page";
-import { getInitials } from "@/common/utils";
-import { FormPhoneField, FormTextField } from "@/form-components";
 
-import WhatsAppIconSvg from "public/icons/whatsapp-border.svg";
+import { Form, useFormikContext } from "formik";
 import CircleCheckIconSvg from "public/icons/circle-check.svg";
 import CircleExclamationIconSvg from "public/icons/circle-exclamation.svg";
+import WhatsAppIconSvg from "public/icons/whatsapp-border.svg";
+
+import { getInitials } from "@/common/utils";
+import { FormPhoneField, FormTextField } from "@/form-components";
+import { MyProfileFormValues } from "@/interfaces/ManageAccount";
+
+import { EmailVerifyIncentive } from "../components/EmailVerifyIncentive";
 
 const WhatsAppIcon = WhatsAppIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const CircleCheckIcon = CircleCheckIconSvg as React.FC<
@@ -33,9 +36,9 @@ export function DesktopClient({
     useFormikContext<MyProfileFormValues>();
 
   return (
-    <section className="space-y-6 max-md:hidden">
+    <>
       {/* Page title */}
-      <div className="border-b-2 pb-2 flex items-center justify-between">
+      <div className="border-b-2 pb-2 flex items-center justify-between mb-8">
         <h1 className="text-2xl font-medium">My Profile</h1>
         <button
           type="button"
@@ -116,13 +119,13 @@ export function DesktopClient({
               <div className="relative">
                 <input
                   type="checkbox"
-                  name="whatsapp"
+                  name="onWhatsapp"
                   checked={values.onWhatsapp}
                   onChange={() =>
                     setFieldValue("onWhatsapp", !values.onWhatsapp)
                   }
                   className="sr-only peer disabled:cursor-not-allowed"
-                  disabled={editMode ? false : true}
+                  disabled={!editMode}
                 />
                 <div className="w-10 h-6 rounded-full bg-gray-300 peer-checked:bg-black transition-colors" />
                 <div className="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow peer-checked:translate-x-4 transition-transform" />
@@ -190,6 +193,6 @@ export function DesktopClient({
           ) : null}
         </Form>
       </div>
-    </section>
+    </>
   );
 }

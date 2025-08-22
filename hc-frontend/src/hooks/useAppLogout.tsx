@@ -1,8 +1,9 @@
 "use client";
 
 import { useDispatch } from "react-redux";
-import { clearToken } from "@/store/authSlice";
+
 import { useLogoutMutation } from "@/store/apiSlice";
+import { clearToken } from "@/store/authSlice";
 
 export function useAppLogout() {
   const dispatch = useDispatch();

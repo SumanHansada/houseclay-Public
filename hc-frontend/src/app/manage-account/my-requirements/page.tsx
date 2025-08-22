@@ -1,129 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Formik, useFormikContext } from "formik";
-import * as Yup from "yup";
-import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import * as Yup from "yup";
 
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
+import { MyRequirementsFormValues } from "@/interfaces/ManageAccount";
 import { setHideStickyNavBar } from "@/store/appSlice";
 
 import { DesktopClient } from "./DesktopClient";
 import { MobileClient } from "./MobileClient";
-import FemaleIconSvg from "public/icons/preferred-tenants/female.svg";
-import MaleIconSvg from "public/icons/preferred-tenants/male.svg";
+import { rentBudgetOptions, resaleBudgetOptions } from "./options";
 
-const FemaleIcon = FemaleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const MaleIcon = MaleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-
-export type UserType = "tenant" | "buyer" | "";
-export type Option = { label: string; value: string };
-export type IconOption = Option & { icon: React.ReactNode };
-
-export type FormValues = {
-  userType: UserType;
-  locations: string[];
-  locationSearch: string;
-  propertyType: string[];
-  bhkType: string;
-  lookingForARoom: string;
-  preferredTenants: string;
-  budget: string;
-};
-
-export const userTypeOptions: Option[] = [
-  { label: "Tenant", value: "tenant" },
-  { label: "Buyer", value: "buyer" },
-];
-
-export const bhkTypeOptions: Option[] = [
-  { label: "1 BHK", value: "1BHK" },
-  { label: "2 BHK", value: "2BHK" },
-  { label: "3 BHK", value: "3BHK" },
-  { label: "4 BHK", value: "4BHK" },
-  { label: "5+ BHK", value: "5+BHK" },
-];
-
-export const lookingForARoomOptions: Option[] = [
-  { label: "Yes", value: "yes" },
-  { label: "No", value: "no" },
-];
-
-export const preferredTenantOptions: IconOption[] = [
-  {
-    label: "Female",
-    value: "female",
-    icon: <FemaleIcon />,
-  },
-  { label: "Male", value: "male", icon: <MaleIcon /> },
-];
-
-export const rentBudgetOptions: Option[] = [
-  { label: "Under ₹30k", value: "under30K" },
-  { label: "Under ₹50K", value: "under50K" },
-  { label: "Under ₹80k", value: "under80K" },
-  { label: "Flexible", value: "flexible" },
-];
-
-export const resaleBudgetOptions: Option[] = [
-  { label: "Under ₹1 Cr", value: "under1CR" },
-  { label: "Under ₹2 Cr", value: "under2CR" },
-  { label: "Under ₹4 Cr", value: "under4CR" },
-  { label: "Flexible", value: "flexible" },
-];
-
-import Image from "next/image";
-import ApartmentIcon from "public/icons/property-types/apartment.webp";
-import CommunityVillaIcon from "public/icons/property-types/community-villa.webp";
-import IndependentHouseIcon from "public/icons/property-types/independent-house.webp";
-import StandaloneBuildingIcon from "public/icons/property-types/standalone-building.webp";
-
-export const propertyTypeOptions: IconOption[] = [
-  {
-    label: "Apartment",
-    value: "Apartment",
-    icon: <Image src={ApartmentIcon} alt="Apartment" height={75} width={75} />,
-  },
-  {
-    label: "Independent House/Villa",
-    value: "Independent House/Villa",
-    icon: (
-      <Image
-        src={IndependentHouseIcon}
-        alt="Independent House/Villa"
-        height={75}
-        width={75}
-      />
-    ),
-  },
-  {
-    label: "Community Villa",
-    value: "Community Villa",
-    icon: (
-      <Image
-        src={CommunityVillaIcon}
-        alt="Community Villa"
-        height={75}
-        width={75}
-      />
-    ),
-  },
-  {
-    label: "Standalone Building",
-    value: "Standalone Building",
-    icon: (
-      <Image
-        src={StandaloneBuildingIcon}
-        alt="Standalone Building"
-        height={75}
-        width={75}
-      />
-    ),
-  },
-];
-
-const DEFAULT_VALUES: FormValues = {
+const DEFAULT_VALUES: MyRequirementsFormValues = {
   userType: "tenant",
   locations: [],
   locationSearch: "",
@@ -135,7 +25,8 @@ const DEFAULT_VALUES: FormValues = {
 };
 
 export function AutoNormalizeFields() {
-  const { values, setFieldValue } = useFormikContext<FormValues>();
+  const { values, setFieldValue } =
+    useFormikContext<MyRequirementsFormValues>();
   const isTenant = values.userType === "tenant";
   const userTypeUnset = values.userType === "";
 
@@ -177,17 +68,19 @@ const validationSchema = Yup.object({});
 
 export default function MyRequirementsPage() {
   const [editMode, setEditMode] = useState(false);
-  const [savedValues, setSavedValues] = useState<FormValues>(DEFAULT_VALUES);
-  const { isMobile } = useDeviceContext();
+  const [savedValues, setSavedValues] =
+    useState<MyRequirementsFormValues>(DEFAULT_VALUES);
   const dispatch = useDispatch();
   const router = useRouter();
 
   useEffect(() => {
-    if (isMobile) dispatch(setHideStickyNavBar(editMode));
-  }, [dispatch, isMobile, editMode]);
+    return () => {
+      dispatch(setHideStickyNavBar(false));
+    };
+  }, [dispatch]);
 
   return (
-    <Formik<FormValues>
+    <Formik<MyRequirementsFormValues>
       initialValues={savedValues}
       enableReinitialize
       validationSchema={validationSchema}
@@ -203,7 +96,18 @@ export default function MyRequirementsPage() {
       {() => (
         <>
           <AutoNormalizeFields />
-          {isMobile ? (
+          {/* Desktop */}
+          <section className="max-md:hidden">
+            <DesktopClient
+              editMode={editMode}
+              setEditMode={setEditMode}
+              savedValues={savedValues}
+              DEFAULT_VALUES={DEFAULT_VALUES}
+            />
+          </section>
+
+          {/* Mobile */}
+          <section className="md:hidden">
             <MobileClient
               editMode={editMode}
               setEditMode={setEditMode}
@@ -211,14 +115,7 @@ export default function MyRequirementsPage() {
               savedValues={savedValues}
               DEFAULT_VALUES={DEFAULT_VALUES}
             />
-          ) : (
-            <DesktopClient
-              editMode={editMode}
-              setEditMode={setEditMode}
-              savedValues={savedValues}
-              DEFAULT_VALUES={DEFAULT_VALUES}
-            />
-          )}
+          </section>
         </>
       )}
     </Formik>

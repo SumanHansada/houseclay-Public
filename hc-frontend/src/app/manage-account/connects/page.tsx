@@ -1,6 +1,6 @@
 "use client";
+import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
-
 import { useRouter } from "next/navigation";
 import { default as InstantAccessSvg } from "public/icons/static-pages/instant-access.svg";
 import { default as NoForcedPlansSvg } from "public/icons/static-pages/no-forced-plans.svg";
@@ -8,7 +8,6 @@ import { default as RealOwnersSvg } from "public/icons/static-pages/real-owners.
 
 // Test
 import { userDummy } from "../dummy";
-import { ChevronLeft, SquarePen } from "lucide-react";
 
 const RealOwners = RealOwnersSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const InstantAccess = InstantAccessSvg as React.FC<

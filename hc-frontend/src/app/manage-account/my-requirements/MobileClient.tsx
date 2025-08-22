@@ -2,29 +2,31 @@
 
 import { Form, useFormikContext } from "formik";
 import { ChevronLeft, SquarePen, X } from "lucide-react";
-import type { FormValues } from "./page";
+import toast from "react-hot-toast";
+
 import {
   FormCheckbox,
   FormPlacesAutocomplete,
   FormRadioGroup,
 } from "@/form-components";
+import { MyRequirementsFormValues } from "@/interfaces/ManageAccount";
+
 import {
-  userTypeOptions,
-  propertyTypeOptions,
   bhkTypeOptions,
   lookingForARoomOptions,
+  preferredTenantOptions,
+  propertyTypeOptions,
   rentBudgetOptions,
   resaleBudgetOptions,
-  preferredTenantOptions,
-} from "./page";
-import toast from "react-hot-toast";
+  userTypeOptions,
+} from "./options";
 
 interface MobileProps {
   editMode: boolean;
   setEditMode: (v: boolean) => void;
   onBack: () => void;
-  savedValues: FormValues;
-  DEFAULT_VALUES: FormValues;
+  savedValues: MyRequirementsFormValues;
+  DEFAULT_VALUES: MyRequirementsFormValues;
 }
 
 const MAX_LOCATIONS = 5;
@@ -36,7 +38,8 @@ export function MobileClient({
   savedValues,
   DEFAULT_VALUES,
 }: MobileProps) {
-  const { values, setFieldValue, resetForm } = useFormikContext<FormValues>();
+  const { values, setFieldValue, resetForm } =
+    useFormikContext<MyRequirementsFormValues>();
   const isTenant = values.userType === "tenant";
   const isFlatmate = isTenant && values.lookingForARoom === "yes";
   const budgetOptions = isTenant ? rentBudgetOptions : resaleBudgetOptions;
@@ -70,7 +73,7 @@ export function MobileClient({
   };
 
   return (
-    <section className="md:hidden overflow-y-auto">
+    <>
       <header className="fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white">
         <div className="grid grid-cols-3 items-center h-full px-4">
           <button
@@ -254,6 +257,6 @@ export function MobileClient({
           </footer>
         ) : null}
       </Form>
-    </section>
+    </>
   );
 }

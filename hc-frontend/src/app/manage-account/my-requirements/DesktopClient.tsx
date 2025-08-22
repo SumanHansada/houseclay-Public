@@ -1,29 +1,31 @@
 "use client";
 
 import { Form, useFormikContext } from "formik";
-import type { FormValues } from "./page";
+import { X } from "lucide-react";
+import toast from "react-hot-toast";
+
 import {
   FormCheckbox,
   FormPlacesAutocomplete,
   FormRadioGroup,
 } from "@/form-components";
+import { MyRequirementsFormValues } from "@/interfaces/ManageAccount";
+
 import {
-  userTypeOptions,
-  propertyTypeOptions,
   bhkTypeOptions,
   lookingForARoomOptions,
+  preferredTenantOptions,
+  propertyTypeOptions,
   rentBudgetOptions,
   resaleBudgetOptions,
-  preferredTenantOptions,
-} from "./page";
-import { X } from "lucide-react";
-import toast from "react-hot-toast";
+  userTypeOptions,
+} from "./options";
 
 interface DesktopProps {
   editMode: boolean;
   setEditMode: (v: boolean) => void;
-  savedValues: FormValues;
-  DEFAULT_VALUES: FormValues;
+  savedValues: MyRequirementsFormValues;
+  DEFAULT_VALUES: MyRequirementsFormValues;
 }
 
 const MAX_LOCATIONS = 5;
@@ -34,7 +36,8 @@ export function DesktopClient({
   savedValues,
   DEFAULT_VALUES,
 }: DesktopProps) {
-  const { values, setFieldValue, resetForm } = useFormikContext<FormValues>();
+  const { values, setFieldValue, resetForm } =
+    useFormikContext<MyRequirementsFormValues>();
   const isTenant = values.userType === "tenant";
   const isFlatmate = isTenant && values.lookingForARoom === "yes";
   const budgetOptions = isTenant ? rentBudgetOptions : resaleBudgetOptions;
@@ -68,7 +71,7 @@ export function DesktopClient({
   };
 
   return (
-    <section className="space-y-6 max-md:hidden">
+    <>
       {/* Header */}
       <div className="border-b-2 pb-2 mb-8 flex justify-between items-center">
         <h1 className="text-2xl font-medium">My Requirements</h1>
@@ -255,6 +258,6 @@ export function DesktopClient({
           </footer>
         ) : null}
       </Form>
-    </section>
+    </>
   );
 }

@@ -1,11 +1,16 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { PropertyCategory } from "@/common/enums";
 import { Check, ChevronLeft } from "lucide-react";
-import PropertyCard from "../components/PropertyCard";
-import { DUMMY_PROPERTIES } from "../dummy";
 import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
+
+import { BadgeType, PropertyCategory } from "@/common/enums";
+import Properties from "@/components/Properties";
+
+import {
+  DUMMY_PROPERTIES_FOR_PROPERTY_CARD,
+  PropertyCardDummy,
+} from "../dummy";
 
 const filterOptions = [
   { label: "All", value: PropertyCategory.NONE },
@@ -21,14 +26,19 @@ export default function ShortlistsPage() {
   const [onlyAvailable, setOnlyAvailable] = useState(false);
   const router = useRouter();
 
-  const filtered = useMemo(() => {
-    return DUMMY_PROPERTIES.filter((p) => {
+  const filtered: PropertyCardDummy[] = useMemo(() => {
+    return DUMMY_PROPERTIES_FOR_PROPERTY_CARD.filter((p) => {
       if (selected !== PropertyCategory.NONE && p.category !== selected)
         return false;
-      if (onlyAvailable && !p.available) return false;
+      if (onlyAvailable) return false;
       return true;
     });
   }, [selected, onlyAvailable]);
+
+  const handleCardClick = (e: React.MouseEvent, propertyID: string) => {
+    e.stopPropagation();
+    router.push(`/property-details/${propertyID}`);
+  };
 
   return (
     <main>
@@ -97,7 +107,7 @@ export default function ShortlistsPage() {
         </header>
 
         {/* Filter buttons */}
-        <div className="flex justify-between text-lg m-3 border p-1.5 rounded-lg mx-8">
+        <div className="flex justify-between text-lg m-3 border p-1.5 sm:p-2 rounded-xl mx-8">
           {filterOptions.map((f) => {
             const active = selected === f.value;
             return (
@@ -105,7 +115,7 @@ export default function ShortlistsPage() {
                 key={f.value}
                 onClick={() => setSelected(f.value)}
                 aria-pressed={active}
-                className={`px-2 py-1 sm:px-4 sm:py-2 shadow-sm whitespace-nowrap ${
+                className={`px-2 py-1 sm:px-4 sm:py-2 flex-1 shadow-sm whitespace-nowrap ${
                   active ? "border border-red-500 text-red-500 rounded-lg" : ""
                 }`}
               >
@@ -117,15 +127,32 @@ export default function ShortlistsPage() {
       </section>
 
       {/* Cards */}
-      <div className="space-y-4 overflow-y-auto px-8">
-        {filtered.map((property) => (
-          <PropertyCard
-            key={property.id}
-            property={property}
-            onContact={(id) => console.log("contact", id)}
-            onFavoriteToggle={(id, next) => console.log("favorite", id, next)}
-          />
-        ))}
+      <div className="space-y-4 overflow-y-auto max-md:px-8 max-md:pb-16">
+        {/* Property List */}
+        <div className="mx-auto w-full py-4">
+          {filtered.length === 0 ? (
+            <div className="text-center text-gray-500 py-12">
+              No properties found.
+            </div>
+          ) : (
+            <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(330px,1fr))]">
+              {filtered.map((property, idx) => (
+                <Properties
+                  key={`${property.propertyID}-${idx}`}
+                  property={property}
+                  badgeType={
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (property as any).badgeType as BadgeType | undefined
+                  }
+                  onClick={(e: React.MouseEvent) =>
+                    handleCardClick(e, property.propertyID)
+                  }
+                  showCarouselDots={false}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </main>
   );

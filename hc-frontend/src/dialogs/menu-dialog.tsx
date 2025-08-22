@@ -4,14 +4,6 @@ import {
   ChevronDown,
   ChevronRight,
   ChevronUp,
-  Contact,
-  CreditCard,
-  FileText,
-  Heart,
-  Home,
-  LogOut,
-  MessageSquare,
-  User,
   UserRound,
   X,
 } from "lucide-react";
@@ -23,14 +15,14 @@ import ZeroPercentRedSvg from "public/icons/zero-percent-red.svg";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { ACCOUNT_NAV } from "@/common/constants";
+import { AccountNavList } from "@/components/AccountNavList";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useLogoutMutation } from "@/store/apiSlice";
 import { setHideStickyNavBar } from "@/store/appSlice";
 import { clearToken, setLoginFromAddProperty } from "@/store/authSlice";
 import { RootState } from "@/store/store";
-import { AccountNavList } from "@/components/AccountNavList";
-import { ACCOUNT_NAV } from "@/common/constants";
 
 const Property = PropertySvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ZeroPercentRed = ZeroPercentRedSvg as React.FC<

@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, type ReactNode } from "react";
+import { type ReactNode, useEffect } from "react";
+import { useDispatch } from "react-redux";
+
+import { ACCOUNT_NAV } from "@/common/constants";
+import { AccountNavList } from "@/components/AccountNavList";
 import { Footer } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { useDispatch } from "react-redux";
 import { setHideFooter, setHideHeader } from "@/store/appSlice";
-import { AccountNavList } from "@/components/AccountNavList";
-import { ACCOUNT_NAV } from "@/common/constants";
 
 export default function ManageProfileLayout({
   children,
@@ -30,7 +31,7 @@ export default function ManageProfileLayout({
     <>
       {/* Desktop */}
       <div className="max-md:hidden w-full h-full">
-        <div className="flex flex-col bg-white xl:px-28 lg:px-14 md:px-8 px-8 py-6">
+        <div className="flex flex-col bg-white xl:px-24 lg:px-14 md:px-10 px-6 py-6">
           <h1 className="pb-6 text-4xl font-medium">Manage Account</h1>
           <div className="flex md:gap-6 lg:gap-8 xl:gap-24">
             <aside className="md:w-[320px] lg:w-[380px] xl:w-[460px]">

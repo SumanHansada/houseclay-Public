@@ -1,8 +1,8 @@
 import Image from "next/image";
+import { default as CurlyArrowIconSvg } from "public/icons/static-pages/curly-arrow.svg";
 import { default as InstantAccessIconSvg } from "public/icons/static-pages/instant-access.svg";
 import { default as NoForcedPlanIconSvg } from "public/icons/static-pages/no-forced-plans.svg";
 import { default as RealOwnerIconSvg } from "public/icons/static-pages/real-owners.svg";
-import { default as CurlyArrowIconSvg } from "public/icons/static-pages/curly-arrow.svg";
 
 const RealOwnerIcon = RealOwnerIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>

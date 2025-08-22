@@ -1,9 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { DUMMY_PAYMENTS } from "../dummy";
-import { TransactionTable } from "../components/TransactionTable";
+
 import { PaymentFilterStatus } from "@/common/enums";
+
+import { TransactionTable } from "../components/TransactionTable";
+import { DUMMY_PAYMENTS } from "../dummy";
 
 const FILTERS = [
   { key: PaymentFilterStatus.ALL, label: "All" },

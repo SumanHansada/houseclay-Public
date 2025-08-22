@@ -4,6 +4,7 @@
 import { ChevronDown, Menu, User, UserRound } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import CoinSvg from "public/icons/coin.svg";
 import HouseClaySvg from "public/icons/houseclay.svg";
 import { useEffect } from "react";
@@ -15,7 +16,6 @@ import { clearToken, initializeToken } from "@/store/authSlice";
 
 import ActionMenu from "../components/ActionMenu";
 import { RootState } from "../store/store";
-import { useRouter } from "next/navigation";
 
 type User = {
   name: string;

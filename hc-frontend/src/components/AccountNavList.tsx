@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import type { AccountNavItem } from "@/common/constants";
 import ChevronRightIconSvg from "public/icons/chevron-right.svg";
+
+import type { AccountNavItem } from "@/common/constants";
 import { useAppLogout } from "@/hooks/useAppLogout";
 
 const ChevronRightIcon = ChevronRightIconSvg as React.FC<

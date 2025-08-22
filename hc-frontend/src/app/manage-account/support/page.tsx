@@ -1,18 +1,19 @@
 "use client";
 
+import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
-import PhoneIconSvg from "public/icons/phone.svg";
+import { useRouter } from "next/navigation";
 import MailIconSvg from "public/icons/mail.svg";
+import PhoneIconSvg from "public/icons/phone.svg";
+import { useState } from "react";
 
 import {
   SUPPORT_ACCORDION,
   SUPPORT_CONTACT,
   SUPPORT_EMAIL,
 } from "@/common/constants";
+
 import { Accordion } from "../components/Accordion";
-import { useState } from "react";
-import { ChevronLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 const PhoneIcon = PhoneIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const MailIcon = MailIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;

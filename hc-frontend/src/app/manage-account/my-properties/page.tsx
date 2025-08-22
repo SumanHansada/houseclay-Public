@@ -1,8 +1,10 @@
 "use client";
 
-import { PropertyCategory } from "@/common/enums";
 import { Check } from "lucide-react";
 import { useMemo, useState } from "react";
+
+import { PropertyCategory } from "@/common/enums";
+
 import { PropertyTable } from "../components/PropertiesTable";
 import { MY_DUMMY_PROPERTIES } from "../dummy";
 

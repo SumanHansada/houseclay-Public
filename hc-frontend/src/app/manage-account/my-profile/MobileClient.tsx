@@ -1,14 +1,19 @@
 "use client";
 
 import { Form, useFormikContext } from "formik";
-import { EmailVerifyIncentive, MyProfileFormValues } from "./page";
 import { ChevronLeft, SquarePen } from "lucide-react";
-import { getInitials } from "@/common/utils";
-import { FormPhoneField, FormTextField } from "@/form-components";
-
-import WhatsAppIconSvg from "public/icons/whatsapp-border.svg";
 import CircleCheckIconSvg from "public/icons/circle-check.svg";
 import CircleExclamationIconSvg from "public/icons/circle-exclamation.svg";
+import WhatsAppIconSvg from "public/icons/whatsapp-border.svg";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+
+import { getInitials } from "@/common/utils";
+import { FormPhoneField, FormTextField } from "@/form-components";
+import { MyProfileFormValues } from "@/interfaces/ManageAccount";
+import { setHideStickyNavBar } from "@/store/appSlice";
+
+import { EmailVerifyIncentive } from "../components/EmailVerifyIncentive";
 
 const WhatsAppIcon = WhatsAppIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const CircleCheckIcon = CircleCheckIconSvg as React.FC<
@@ -76,10 +81,23 @@ export function MobileClient({
 }: MobileClientProps) {
   const { values, setFieldValue, resetForm } =
     useFormikContext<MyProfileFormValues>();
+  const dispatch = useDispatch();
+
+  // Only hide sticky navbar on small screens and only while editing
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const apply = () => dispatch(setHideStickyNavBar(mq.matches && editMode));
+    apply();
+    mq.addEventListener("change", apply);
+    return () => {
+      mq.removeEventListener("change", apply);
+      dispatch(setHideStickyNavBar(false));
+    };
+  }, [dispatch, editMode]);
 
   return (
-    <section className="md:hidden overflow-y-auto">
-      <header className="fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white">
+    <>
+      <header className="fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white md:hidden">
         <div className="grid grid-cols-3 items-center h-full px-4">
           <button
             aria-label="Go back"
@@ -104,39 +122,93 @@ export function MobileClient({
         </div>
       </header>
 
-      <div className="flex flex-col items-center py-6 mt-[55px]">
-        <div className="size-36 bg-black rounded-full flex items-center justify-center text-5xl text-white">
-          {getInitials(values.name)}
+      <div className="md:hidden overflow-y-auto">
+        <div className="flex flex-col items-center py-6 mt-[55px]">
+          <div className="size-36 bg-black rounded-full flex items-center justify-center text-5xl text-white">
+            {getInitials(values.name)}
+          </div>
         </div>
-      </div>
 
-      {editMode ? (
-        <Form className="flex-1 space-y-5 px-8 py-4 mb-16">
-          {/* Name */}
-          <FormTextField
-            name="name"
-            id="name"
-            label="Name"
-            placeholder="Full name"
-            required
-          />
+        {editMode ? (
+          <Form className="flex-1 space-y-5 px-8 py-4 mb-16">
+            {/* Name */}
+            <FormTextField
+              name="name"
+              id="name"
+              label="Name"
+              placeholder="Full name"
+              required
+            />
 
-          {/* Phone (read-only) */}
-          <div className="mt-1 flex flex-col gap-4">
-            <div className="flex flex-col w-full">
-              <div className="w-full">
-                <FormPhoneField
-                  name="phoneNumber"
-                  id="phoneNumber"
-                  label="Phone Number"
-                  defaultCountry="in"
-                  placeholder="Enter phone number"
-                  className="border border-gray-300 rounded-lg px-3 py-1 focus:ring-red-500 focus:border-red-500 cursor-not-allowed bg-gray-50"
-                  required
-                  disabled
-                />
+            {/* Phone (read-only) */}
+            <div className="mt-1 flex flex-col gap-4">
+              <div className="flex flex-col w-full">
+                <div className="w-full">
+                  <FormPhoneField
+                    name="phoneNumber"
+                    id="phoneNumber"
+                    label="Phone Number"
+                    defaultCountry="in"
+                    placeholder="Enter phone number"
+                    className="border border-gray-300 rounded-lg px-3 py-1 focus:ring-red-500 focus:border-red-500 cursor-not-allowed bg-gray-50"
+                    required
+                    disabled
+                  />
+                </div>
+                {values.phoneVerified ? (
+                  <p className="text-green-600 mt-1 flex items-center gap-1">
+                    <CircleCheckIcon
+                      width={20}
+                      height={20}
+                      className="text-green-600"
+                    />
+                    Verified
+                  </p>
+                ) : (
+                  <p className="text-red-600 mt-1 flex items-center gap-1">
+                    <CircleExclamationIcon
+                      width={20}
+                      height={20}
+                      className="text-red-600"
+                    />
+                    Phone Number is not verified
+                  </p>
+                )}
               </div>
-              {values.phoneVerified ? (
+
+              {/* WhatsApp toggle */}
+              <label className="flex items-center gap-4 cursor-pointer w-full justify-between">
+                <div className="flex gap-1 items-center">
+                  <WhatsAppIcon className="w-10 h-10 text-black" />
+                  <span className="text-nowrap">Available on WhatsApp</span>
+                </div>
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    name="onWhatsapp"
+                    checked={values.onWhatsapp}
+                    onChange={() =>
+                      setFieldValue("onWhatsapp", !values.onWhatsapp)
+                    }
+                    className="sr-only peer"
+                  />
+                  <div className="w-10 h-6 rounded-full bg-gray-300 peer-checked:bg-black transition-colors" />
+                  <div className="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow peer-checked:translate-x-4 transition-transform" />
+                </div>
+              </label>
+            </div>
+
+            {/* Email */}
+            <div>
+              <FormTextField
+                name="email"
+                id="email"
+                label="Email"
+                placeholder="Enter your personal email"
+                required
+                disabled={values.emailVerified}
+              />
+              {values.emailVerified ? (
                 <p className="text-green-600 mt-1 flex items-center gap-1">
                   <CircleCheckIcon
                     width={20}
@@ -152,66 +224,12 @@ export function MobileClient({
                     height={20}
                     className="text-red-600"
                   />
-                  Phone Number is not verified
+                  Email is not verified
                 </p>
               )}
             </div>
 
-            {/* WhatsApp toggle */}
-            <label className="flex items-center gap-4 cursor-pointer w-full justify-between">
-              <div className="flex gap-1 items-center">
-                <WhatsAppIcon className="w-10 h-10 text-black" />
-                <span className="text-nowrap">Available on WhatsApp</span>
-              </div>
-              <div className="relative">
-                <input
-                  type="checkbox"
-                  name="whatsapp"
-                  checked={values.onWhatsapp}
-                  onChange={() =>
-                    setFieldValue("onWhatsapp", !values.onWhatsapp)
-                  }
-                  className="sr-only peer"
-                />
-                <div className="w-10 h-6 rounded-full bg-gray-300 peer-checked:bg-black transition-colors" />
-                <div className="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow peer-checked:translate-x-4 transition-transform" />
-              </div>
-            </label>
-          </div>
-
-          {/* Email */}
-          <div>
-            <FormTextField
-              name="email"
-              id="email"
-              label="Email"
-              placeholder="Enter your personal email"
-              required
-              disabled={values.emailVerified}
-            />
-            {values.emailVerified ? (
-              <p className="text-green-600 mt-1 flex items-center gap-1">
-                <CircleCheckIcon
-                  width={20}
-                  height={20}
-                  className="text-green-600"
-                />
-                Verified
-              </p>
-            ) : (
-              <p className="text-red-600 mt-1 flex items-center gap-1">
-                <CircleExclamationIcon
-                  width={20}
-                  height={20}
-                  className="text-red-600"
-                />
-                Email is not verified
-              </p>
-            )}
-          </div>
-
-          {/* Actions */}
-          {editMode ? (
+            {/* Actions */}
             <footer className="fixed bottom-0 inset-x-0 z-50 border-t border-gray-200 bg-white py-4 px-5 flex items-center justify-between">
               <button
                 type="button"
@@ -231,32 +249,32 @@ export function MobileClient({
                 Save
               </button>
             </footer>
-          ) : null}
-        </Form>
-      ) : (
-        <div className="px-8 py-4 mb-16 space-y-4">
-          <DisplayRow label="Name" value={values.name} />
-          <DisplayRow
-            label="Phone Number"
-            value={`+${values.phoneNumber}`}
-            verificationStatus={
-              <VerifiedBadge isVerified={values.phoneVerified} />
-            }
-          />
-          <DisplayRow
-            label="Available on WhatsApp"
-            value={values.onWhatsapp ? "Yes" : "No"}
-          />
-          <DisplayRow
-            label="Email"
-            value={values.email}
-            verificationStatus={
-              <VerifiedBadge isVerified={values.emailVerified} />
-            }
-          />
-          <EmailVerifyIncentive onVerify={onVerifyEmail} />
-        </div>
-      )}
-    </section>
+          </Form>
+        ) : (
+          <div className="px-8 py-4 mb-16 space-y-4">
+            <DisplayRow label="Name" value={values.name} />
+            <DisplayRow
+              label="Phone Number"
+              value={`+${values.phoneNumber}`}
+              verificationStatus={
+                <VerifiedBadge isVerified={values.phoneVerified} />
+              }
+            />
+            <DisplayRow
+              label="Available on WhatsApp"
+              value={values.onWhatsapp ? "Yes" : "No"}
+            />
+            <DisplayRow
+              label="Email"
+              value={values.email}
+              verificationStatus={
+                <VerifiedBadge isVerified={values.emailVerified} />
+              }
+            />
+            <EmailVerifyIncentive onVerify={onVerifyEmail} />
+          </div>
+        )}
+      </div>
+    </>
   );
 }
