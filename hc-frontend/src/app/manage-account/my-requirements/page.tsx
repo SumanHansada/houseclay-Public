@@ -3,11 +3,9 @@
 import { Formik, useFormikContext } from "formik";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 
 import { MyRequirementsFormValues } from "@/interfaces/ManageAccount";
-import { setHideStickyNavBar } from "@/store/appSlice";
 
 import { DesktopClient } from "./DesktopClient";
 import { MobileClient } from "./MobileClient";
@@ -70,14 +68,7 @@ export default function MyRequirementsPage() {
   const [editMode, setEditMode] = useState(false);
   const [savedValues, setSavedValues] =
     useState<MyRequirementsFormValues>(DEFAULT_VALUES);
-  const dispatch = useDispatch();
   const router = useRouter();
-
-  useEffect(() => {
-    return () => {
-      dispatch(setHideStickyNavBar(false));
-    };
-  }, [dispatch]);
 
   return (
     <Formik<MyRequirementsFormValues>

@@ -1,13 +1,19 @@
 "use client";
 
 import { type ReactNode, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { ACCOUNT_NAV } from "@/common/constants";
 import { AccountNavList } from "@/components/AccountNavList";
 import { Footer } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { setHideFooter, setHideHeader } from "@/store/appSlice";
+import {
+  resetUIState,
+  setHideFooter,
+  setHideHeader,
+  setHideStickyNavBar,
+} from "@/store/appSlice";
+import { RootState } from "@/store/store";
 
 export default function ManageProfileLayout({
   children,
@@ -16,16 +22,22 @@ export default function ManageProfileLayout({
 }) {
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
+  const stickyHidden = useSelector((s: RootState) => s.app.hideStickyNavBar);
 
   useEffect(() => {
-    if (isMobile) {
-      dispatch(setHideHeader(true));
-      dispatch(setHideFooter(true));
-    } else {
-      dispatch(setHideHeader(false));
-      dispatch(setHideFooter(false));
-    }
+    dispatch(setHideHeader(isMobile));
+    dispatch(setHideFooter(isMobile));
+    dispatch(setHideStickyNavBar(isMobile ? false : true));
+    return () => {
+      dispatch(resetUIState());
+    };
   }, [dispatch, isMobile]);
+
+  useEffect(() => {
+    if (!isMobile && !stickyHidden) {
+      dispatch(setHideStickyNavBar(true));
+    }
+  }, [dispatch, isMobile, stickyHidden]);
 
   return (
     <>

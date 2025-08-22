@@ -83,14 +83,9 @@ export function MobileClient({
     useFormikContext<MyProfileFormValues>();
   const dispatch = useDispatch();
 
-  // Only hide sticky navbar on small screens and only while editing
   useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)");
-    const apply = () => dispatch(setHideStickyNavBar(mq.matches && editMode));
-    apply();
-    mq.addEventListener("change", apply);
+    dispatch(setHideStickyNavBar(editMode));
     return () => {
-      mq.removeEventListener("change", apply);
       dispatch(setHideStickyNavBar(false));
     };
   }, [dispatch, editMode]);

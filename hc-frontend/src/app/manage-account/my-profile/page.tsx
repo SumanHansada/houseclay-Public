@@ -2,7 +2,7 @@
 
 import { Formik } from "formik";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 
@@ -66,12 +66,6 @@ export default function MyProfilePage() {
     closeVerificationDialog();
     openDialog(EMAIL_VERIFICATION_SUCCESS_DIALOG_ID);
   };
-
-  useEffect(() => {
-    return () => {
-      dispatch(setHideStickyNavBar(false));
-    };
-  }, [dispatch]);
 
   return (
     <>

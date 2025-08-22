@@ -32,10 +32,6 @@ export function AccountNavList({
     e: React.MouseEvent<HTMLAnchorElement>,
     item: AccountNavItem,
   ) => {
-    if (!item.actionId) {
-      if (onItemClick) onItemClick();
-      return;
-    }
     e.preventDefault();
 
     switch (item.actionId) {
@@ -43,10 +39,10 @@ export function AccountNavList({
         await logout();
         break;
     }
+    router.push(item.href);
     if (onItemClick) {
       onItemClick();
     }
-    router.push(item.href);
   };
 
   return (

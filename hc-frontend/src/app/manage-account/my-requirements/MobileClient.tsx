@@ -2,7 +2,9 @@
 
 import { Form, useFormikContext } from "formik";
 import { ChevronLeft, SquarePen, X } from "lucide-react";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 
 import {
   FormCheckbox,
@@ -10,6 +12,7 @@ import {
   FormRadioGroup,
 } from "@/form-components";
 import { MyRequirementsFormValues } from "@/interfaces/ManageAccount";
+import { setHideStickyNavBar } from "@/store/appSlice";
 
 import {
   bhkTypeOptions,
@@ -43,6 +46,7 @@ export function MobileClient({
   const isTenant = values.userType === "tenant";
   const isFlatmate = isTenant && values.lookingForARoom === "yes";
   const budgetOptions = isTenant ? rentBudgetOptions : resaleBudgetOptions;
+  const dispatch = useDispatch();
 
   const cityAllowed = "Bengaluru";
   const onLocationSelect = (location: {
@@ -55,6 +59,7 @@ export function MobileClient({
     if (location.city && cityAllowed) {
       const selectedCity = location.city;
       const isCityAllowed = cityAllowed === selectedCity;
+
       if (!isCityAllowed) {
         toast.error(`Please select a location within ${cityAllowed}`, {
           duration: 5000,
@@ -71,6 +76,13 @@ export function MobileClient({
     setFieldValue("locations", [...values.locations, label]);
     setFieldValue("locationSearch", "");
   };
+
+  useEffect(() => {
+    dispatch(setHideStickyNavBar(editMode));
+    return () => {
+      dispatch(setHideStickyNavBar(false));
+    };
+  }, [dispatch, editMode]);
 
   return (
     <>

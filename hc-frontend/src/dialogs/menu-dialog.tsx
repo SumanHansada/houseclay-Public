@@ -7,12 +7,12 @@ import {
   UserRound,
   X,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import CoinSvg from "public/icons/coin.svg";
 import PropertySvg from "public/icons/property.svg";
 import VerifiedTenantsSvg from "public/icons/verified-tenants.svg";
 import ZeroPercentRedSvg from "public/icons/zero-percent-red.svg";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { ACCOUNT_NAV } from "@/common/constants";
@@ -45,6 +45,8 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
   const { openDialog, closeDialog } = useDialog();
   const [logout] = useLogoutMutation();
   const dispatch = useDispatch();
+  const pathname = usePathname();
+  const initialPathRef = useRef(pathname);
 
   const [quickLinksExpanded, setQuickLinksExpanded] = useState(true);
   const toggleQuickLinks = () => setQuickLinksExpanded(!quickLinksExpanded);
@@ -78,6 +80,12 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
       router.push("/list-property");
     }
   };
+
+  useEffect(() => {
+    if (pathname !== initialPathRef.current) {
+      handleClose();
+    }
+  }, [pathname]);
 
   return (
     <Dialog
@@ -157,13 +165,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
           </div>
 
           {/* Profile Section */}
-          {token && (
-            <AccountNavList
-              items={ACCOUNT_NAV}
-              onItemClick={handleClose}
-              listClassName=""
-            />
-          )}
+          {token && <AccountNavList items={ACCOUNT_NAV} listClassName="" />}
 
           {/* Quick Links Section */}
           <div>
