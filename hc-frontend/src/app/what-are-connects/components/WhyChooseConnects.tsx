@@ -1,13 +1,19 @@
 import Image from "next/image";
-import { default as InstantAccessSvg } from "public/icons/static-pages/instant-access.svg";
-import { default as NoForcedPlansSvg } from "public/icons/static-pages/no-forced-plans.svg";
-import { default as RealOwnersSvg } from "public/icons/static-pages/real-owners.svg";
+import { default as CurlyArrowIconSvg } from "public/icons/static-pages/curly-arrow.svg";
+import { default as InstantAccessIconSvg } from "public/icons/static-pages/instant-access.svg";
+import { default as NoForcedPlanIconSvg } from "public/icons/static-pages/no-forced-plans.svg";
+import { default as RealOwnerIconSvg } from "public/icons/static-pages/real-owners.svg";
 
-const RealOwners = RealOwnersSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const InstantAccess = InstantAccessSvg as React.FC<
+const RealOwnerIcon = RealOwnerIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
-const NoForcedPlans = NoForcedPlansSvg as React.FC<
+const InstantAccessIcon = InstantAccessIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const NoForcedPlanIcon = NoForcedPlanIconSvg as React.FC<
+  React.SVGProps<SVGSVGElement>
+>;
+const CurlyArrowIcon = CurlyArrowIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
 
@@ -34,15 +40,15 @@ const WhyChoose = () => {
           </div>
           <div className="space-y-4 lg:space-y-10 sm:space-y-6 lg:px-8 md:px-4 text-lg sm:text-2xl lg:text-3xl mb-2 max-md:w-1/2">
             <div className="flex md:gap-4 gap-1 items-center">
-              <RealOwners />
+              <RealOwnerIcon width={70} className="text-red-500" />
               <span>Real Owners</span>
             </div>
             <div className="flex md:gap-4 gap-1 items-center">
-              <InstantAccess />
+              <InstantAccessIcon width={70} className="text-red-500" />
               <span>Instant Access</span>
             </div>
             <div className="flex md:gap-4 gap-1 items-center">
-              <NoForcedPlans />
+              <NoForcedPlanIcon width={70} className="text-red-500" />
               <span>No Forced Plans</span>
             </div>
           </div>
@@ -52,12 +58,7 @@ const WhyChoose = () => {
             Buy Connects Now
           </button>
           <div className="size-32 md:block hidden">
-            <Image
-              src="/icons/static-pages/red-curly-arrow.svg"
-              alt="Arrow Pointer"
-              width={500}
-              height={500}
-            />
+            <CurlyArrowIcon width={140} className="text-red-500" />
           </div>
         </div>
       </div>

@@ -4,25 +4,19 @@ import {
   ChevronDown,
   ChevronRight,
   ChevronUp,
-  Contact,
-  CreditCard,
-  FileText,
-  Heart,
-  Home,
-  LogOut,
-  MessageSquare,
-  User,
   UserRound,
   X,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import CoinSvg from "public/icons/coin.svg";
 import PropertySvg from "public/icons/property.svg";
 import VerifiedTenantsSvg from "public/icons/verified-tenants.svg";
 import ZeroPercentRedSvg from "public/icons/zero-percent-red.svg";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { ACCOUNT_NAV } from "@/common/constants";
+import { AccountNavList } from "@/components/AccountNavList";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useLogoutMutation } from "@/store/apiSlice";
@@ -51,6 +45,8 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
   const { openDialog, closeDialog } = useDialog();
   const [logout] = useLogoutMutation();
   const dispatch = useDispatch();
+  const pathname = usePathname();
+  const initialPathRef = useRef(pathname);
 
   const [quickLinksExpanded, setQuickLinksExpanded] = useState(true);
   const toggleQuickLinks = () => setQuickLinksExpanded(!quickLinksExpanded);
@@ -84,6 +80,12 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
       router.push("/list-property");
     }
   };
+
+  useEffect(() => {
+    if (pathname !== initialPathRef.current) {
+      handleClose();
+    }
+  }, [pathname]);
 
   return (
     <Dialog
@@ -163,75 +165,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
           </div>
 
           {/* Profile Section */}
-          {token && (
-            <div>
-              <ul>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
-                  <span className="flex items-center gap-2">
-                    <User size={22} />
-                    My Profile
-                  </span>
-                  <ChevronRight size={20} />
-                </li>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
-                  <span className="flex items-center gap-2">
-                    <FileText size={22} />
-                    My Requirements
-                  </span>
-                  <ChevronRight size={20} />
-                </li>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
-                  <span className="flex items-center gap-2">
-                    <Heart size={22} />
-                    Shortlists
-                  </span>
-                  <ChevronRight size={20} />
-                </li>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
-                  <span className="flex items-center gap-2">
-                    <Coin width={22} />
-                    Connects
-                  </span>
-                  <ChevronRight size={20} />
-                </li>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
-                  <span className="flex items-center gap-2">
-                    <CreditCard size={22} />
-                    My Payments
-                  </span>
-                  <ChevronRight size={20} />
-                </li>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
-                  <span className="flex items-center gap-2">
-                    <Home size={22} />
-                    My Properties
-                  </span>
-                  <ChevronRight size={20} />
-                </li>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
-                  <span className="flex items-center gap-2">
-                    <Contact size={22} />
-                    Owners you Contacted
-                  </span>
-                  <ChevronRight size={20} />
-                </li>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
-                  <span className="flex items-center gap-2">
-                    <MessageSquare size={22} />
-                    Support
-                  </span>
-                  <ChevronRight size={20} />
-                </li>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer">
-                  <span className="flex items-center gap-2">
-                    <LogOut size={22} />
-                    Logout
-                  </span>
-                  <ChevronRight size={20} />
-                </li>
-              </ul>
-            </div>
-          )}
+          {token && <AccountNavList items={ACCOUNT_NAV} listClassName="" />}
 
           {/* Quick Links Section */}
           <div>

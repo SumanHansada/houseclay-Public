@@ -272,7 +272,7 @@ const PlacesAutocompleteBase = ({
           }, 200);
         }}
         placeholder={placeholder}
-        className={`${inputClassName} ${error ? "border-red-500" : "border-gray-300"} ${disabled ? "cursor-not-allowed disabled:bg-gray-300" : ""}`}
+        className={`${inputClassName} ${error ? "border-red-500" : "border-gray-300"} ${disabled ? "cursor-not-allowed bg-gray-50" : ""}`}
         type="text"
         autoComplete="off"
         role="combobox"

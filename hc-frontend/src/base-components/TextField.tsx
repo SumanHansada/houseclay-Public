@@ -99,7 +99,7 @@ const TextField: React.FC<TextFieldProps> = ({
             prefix ? "rounded-none" : "rounded-l-xl"
           } ${suffix ? "rounded-none" : "rounded-r-xl"} ${className} ${
             error ? "border-red-500" : "border-gray-300"
-          } ${disabled ? "cursor-not-allowed disabled:bg-gray-300" : ""}`}
+          } ${disabled ? "cursor-not-allowed bg-gray-50" : ""}`}
           value={
             dataType === "number" ? formatNumber(value) : String(value || "")
           }

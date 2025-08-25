@@ -21,13 +21,15 @@ export const ConnectCard: React.FC<ConnectCardProps> = ({
   iconWidth = 150,
   iconHeight = 150,
 }) => (
-  <div className="flex flex-1 flex-col bg-white rounded-3xl border border-gray-200 shadow-lg xl:px-10 lg:px-6 px-3 py-6 justify-evenly items-center min-h-[380px] md:min-h-[460px]">
+  <div className="flex flex-1 flex-col bg-white rounded-3xl border border-gray-200 shadow-lg xl:px-10 lg:px-6 px-3 py-6 justify-evenly items-center min-h-[380px] md:min-h-[420px]">
     <Image src={iconSrc} alt={iconAlt} width={iconWidth} height={iconHeight} />
     <div className="flex flex-col gap-2 text-center items-center">
-      <h1 className="font-semibold lg:text-2xl sm:text-xl lg:w-4/5 w-11/12">
+      <h1 className="font-semibold lg:text-2xl max-md:text-xl lg:w-4/5 w-11/12">
         {title}
       </h1>
-      <p className="text-gray-800 text-balance text-lg">{description}</p>
+      <p className="text-gray-800 text-balance lg:text-lg max-md:text-lg">
+        {description}
+      </p>
     </div>
   </div>
 );
@@ -44,7 +46,7 @@ const HowToUseConnects = () => {
           Here&apos;s why thousands of property owners trust us:
         </p>
       </div>
-      <div className="md:flex flex-wrap xl:gap-28 lg:gap-6 gap-6 justify-between xl:px-16 lg:px-8 hidden">
+      <div className="md:flex xl:gap-10 lg:gap-6 md:gap-3 max-md:gap-6 justify-between xl:px-12 lg:px-2 hidden">
         {CONNECT_CARDS.map((card) => (
           <ConnectCard
             key={card.id}

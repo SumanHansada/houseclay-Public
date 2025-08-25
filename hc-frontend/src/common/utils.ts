@@ -95,3 +95,24 @@ export const formatDateToReadable = (isoDateString: string): string => {
     return "-";
   }
 };
+
+/**
+ * Returns 1–2 capital letters representing a person’s name.
+ *
+ * @remarks
+ * - If the name has one word, returns the first letter.
+ * - If it has two or more words, returns the initials of the first two.
+ * - Whitespace is trimmed; `undefined` or empty input yields `""`.
+ *
+ * @example
+ * getInitials("Amit Kumar");   // "AK"
+ * getInitials("Amit");         // "A"
+ * getInitials("");             // ""
+ */
+export const getInitials = (fullName: string | undefined) => {
+  if (!fullName) return "";
+  const parts = fullName.trim().split(/\s+/);
+  return parts.length === 1
+    ? parts[0][0].toUpperCase()
+    : (parts[0][0] + parts[1][0]).toUpperCase();
+};

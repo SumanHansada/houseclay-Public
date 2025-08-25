@@ -59,3 +59,8 @@ export enum LeadCategory {
   SEARCH_SUPPORT = "SEARCH_SUPPORT",
   UPGRADE_PROPERTY = "UPGRADE_PROPERTY",
 }
+export enum PaymentFilterStatus {
+  ALL = "ALL",
+  COMPLETED = "COMPLETED",
+  CANCELLED = "CANCELLED",
+}

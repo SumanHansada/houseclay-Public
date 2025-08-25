@@ -4,6 +4,7 @@
 import { ChevronDown, Menu, User, UserRound } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import CoinSvg from "public/icons/coin.svg";
 import HouseClaySvg from "public/icons/houseclay.svg";
 import { useEffect } from "react";
@@ -38,6 +39,8 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
 
   const bengaluruLocation = { lat: 12.9716, lng: 77.5946 };
 
+  const router = useRouter();
+
   const onLogin = () => {
     closeAllDialogs();
     openDialog("login-dialog");
@@ -56,10 +59,15 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
     try {
       const logoutResponse = await logout();
       console.log(logoutResponse);
+      router.push("/");
       dispatch(clearToken());
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const redirectToManageAccount = () => {
+    router.push("/manage-account");
   };
 
   if (hideHeader) {
@@ -145,7 +153,8 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
                   ]}
                   onSelect={(option) => {
                     if (option.id === 1) {
-                      console.log("Manage Account");
+                      // console.log("Manage Account");
+                      redirectToManageAccount();
                     } else {
                       onLogout();
                     }
