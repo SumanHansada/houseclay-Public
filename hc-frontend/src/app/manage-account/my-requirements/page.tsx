@@ -1,7 +1,6 @@
 "use client";
 
 import { Formik, useFormikContext } from "formik";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 
@@ -68,7 +67,6 @@ export default function MyRequirementsPage() {
   const [editMode, setEditMode] = useState(false);
   const [savedValues, setSavedValues] =
     useState<MyRequirementsFormValues>(DEFAULT_VALUES);
-  const router = useRouter();
 
   return (
     <Formik<MyRequirementsFormValues>
@@ -102,7 +100,6 @@ export default function MyRequirementsPage() {
             <MobileClient
               editMode={editMode}
               setEditMode={setEditMode}
-              onBack={() => router.back()}
               savedValues={savedValues}
               DEFAULT_VALUES={DEFAULT_VALUES}
             />

@@ -1,7 +1,6 @@
 "use client";
 
 import { Formik } from "formik";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
@@ -30,7 +29,6 @@ export default function MyProfilePage() {
   const [editMode, setEditMode] = useState(false);
   const { isDialogOpen, openDialog, closeDialog } = useDialog();
   const dispatch = useDispatch();
-  const router = useRouter();
 
   const {
     name,
@@ -98,7 +96,6 @@ export default function MyProfilePage() {
                 savedValues={savedValues}
                 editMode={editMode}
                 setEditMode={setEditMode}
-                onBack={() => router.back()}
                 onVerifyEmail={handleEmailVerification}
               />
             </section>

@@ -1,7 +1,7 @@
 "use client";
 
 import { Form, useFormikContext } from "formik";
-import { ChevronLeft, SquarePen } from "lucide-react";
+import { SquarePen } from "lucide-react";
 import CircleCheckIconSvg from "public/icons/circle-check.svg";
 import CircleExclamationIconSvg from "public/icons/circle-exclamation.svg";
 import WhatsAppIconSvg from "public/icons/whatsapp-border.svg";
@@ -14,6 +14,7 @@ import { MyProfileFormValues } from "@/interfaces/ManageAccount";
 import { setHideStickyNavBar } from "@/store/appSlice";
 
 import { EmailVerifyIncentive } from "../components/EmailVerifyIncentive";
+import { MobileHeader } from "@/layout-components";
 
 const WhatsAppIcon = WhatsAppIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const CircleCheckIcon = CircleCheckIconSvg as React.FC<
@@ -27,7 +28,7 @@ interface MobileClientProps {
   savedValues: MyProfileFormValues;
   editMode: boolean;
   setEditMode: (v: boolean) => void;
-  onBack: () => void;
+  onBack?: () => void;
   onVerifyEmail: () => void;
 }
 
@@ -76,7 +77,6 @@ export function MobileClient({
   savedValues,
   editMode,
   setEditMode,
-  onBack,
   onVerifyEmail,
 }: MobileClientProps) {
   const { values, setFieldValue, resetForm } =
@@ -92,20 +92,9 @@ export function MobileClient({
 
   return (
     <>
-      <header className="fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white md:hidden">
-        <div className="grid grid-cols-3 items-center h-full px-4">
-          <button
-            aria-label="Go back"
-            className="justify-self-start rounded-full size-10 border flex items-center justify-center"
-            onClick={onBack}
-          >
-            <ChevronLeft size={25} />
-          </button>
-
-          <h1 className="col-start-2 text-center font-medium truncate">
-            My Profile
-          </h1>
-
+      <MobileHeader
+        title="My Profile"
+        rightAction={
           <button
             type="button"
             onClick={() => setEditMode(true)}
@@ -114,18 +103,18 @@ export function MobileClient({
           >
             <SquarePen size={20} />
           </button>
-        </div>
-      </header>
+        }
+      />
 
-      <div className="md:hidden overflow-y-auto">
-        <div className="flex flex-col items-center py-6 mt-[55px]">
+      <div className="md:hidden">
+        <div className="flex flex-col items-center py-6">
           <div className="size-36 bg-black rounded-full flex items-center justify-center text-5xl text-white">
             {getInitials(values.name)}
           </div>
         </div>
 
         {editMode ? (
-          <Form className="flex-1 space-y-5 px-8 py-4 mb-16">
+          <Form className="flex-1 space-y-5 px-8 py-5 mb-16">
             {/* Name */}
             <FormTextField
               name="name"

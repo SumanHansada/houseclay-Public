@@ -1,8 +1,6 @@
 "use client";
 
-import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import MailIconSvg from "public/icons/mail.svg";
 import PhoneIconSvg from "public/icons/phone.svg";
 import { useState } from "react";
@@ -14,12 +12,12 @@ import {
 } from "@/common/constants";
 
 import { Accordion } from "../components/Accordion";
+import { MobileHeader } from "@/layout-components";
 
 const PhoneIcon = PhoneIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const MailIcon = MailIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 export default function SupportPage() {
-  const router = useRouter();
   const [openKey, setOpenKey] = useState<string | null>(null);
 
   return (
@@ -108,22 +106,8 @@ export default function SupportPage() {
       </section>
 
       {/* Mobile */}
-      <section className="md:hidden overflow-y-auto mb-20">
-        <header className="fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white">
-          <div className="grid grid-cols-3 items-center h-full px-4">
-            <button
-              aria-label="Go back"
-              className="justify-self-start rounded-full size-10 border flex items-center justify-center"
-              onClick={() => router.back()}
-            >
-              <ChevronLeft size={25} />
-            </button>
-
-            <h1 className="col-start-2 text-center font-medium truncate">
-              Connects
-            </h1>
-          </div>
-        </header>
+      <section className="md:hidden mb-16">
+        <MobileHeader title="Support" />
 
         <div className="px-8 space-y-6">
           {/* Support */}
@@ -176,7 +160,7 @@ export default function SupportPage() {
           </div>
 
           {/* FAQ */}
-          <div className="space-y-4">
+          <div className="">
             <div className="space-y-2">
               <h1 className="text-lg font-medium mb-4">
                 Frequently asked questions
@@ -187,7 +171,7 @@ export default function SupportPage() {
               </p>
             </div>
 
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 py-5">
               {SUPPORT_ACCORDION.map((item) => {
                 const key = item.question;
                 const isOpen = openKey === key;

@@ -34,7 +34,7 @@ export default function MyPaymentsPage() {
       </div>
 
       {/* Filter buttons */}
-      <div className="flex gap-3 text-lg font-medium text-gray-700 mb-8 overflow-x-auto">
+      <div className="flex gap-3 text-lg font-medium text-gray-700 mb-8">
         {FILTERS.map((f) => {
           const active = selected === f.key;
           return (

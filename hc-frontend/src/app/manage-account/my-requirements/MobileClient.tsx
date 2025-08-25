@@ -1,7 +1,7 @@
 "use client";
 
 import { Form, useFormikContext } from "formik";
-import { ChevronLeft, SquarePen, X } from "lucide-react";
+import { SquarePen, X } from "lucide-react";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
@@ -23,11 +23,12 @@ import {
   resaleBudgetOptions,
   userTypeOptions,
 } from "./options";
+import { MobileHeader } from "@/layout-components";
 
 interface MobileProps {
   editMode: boolean;
   setEditMode: (v: boolean) => void;
-  onBack: () => void;
+  onBack?: () => void;
   savedValues: MyRequirementsFormValues;
   DEFAULT_VALUES: MyRequirementsFormValues;
 }
@@ -37,7 +38,6 @@ const MAX_LOCATIONS = 5;
 export function MobileClient({
   editMode,
   setEditMode,
-  onBack,
   savedValues,
   DEFAULT_VALUES,
 }: MobileProps) {
@@ -86,20 +86,9 @@ export function MobileClient({
 
   return (
     <>
-      <header className="fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white">
-        <div className="grid grid-cols-3 items-center h-full px-4">
-          <button
-            aria-label="Go back"
-            className="justify-self-start rounded-full size-10 border flex items-center justify-center"
-            onClick={onBack}
-          >
-            <ChevronLeft size={25} />
-          </button>
-
-          <h1 className="col-start-2 text-center font-medium truncate">
-            My Requirements
-          </h1>
-
+      <MobileHeader
+        title="My Requirements"
+        rightAction={
           <button
             type="button"
             onClick={() => setEditMode(true)}
@@ -108,10 +97,10 @@ export function MobileClient({
           >
             <SquarePen size={20} />
           </button>
-        </div>
-      </header>
+        }
+      />
 
-      <Form className="flex-1 space-y-6 px-8 py-4 mb-20">
+      <Form className="flex-1 space-y-6 px-8 py-5 mb-16">
         {/* Who am I */}
         <div className="flex flex-col items-start gap-2 w-full">
           <label className="text-lg">I&apos;m a&nbsp;</label>

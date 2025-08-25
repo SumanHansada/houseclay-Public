@@ -58,7 +58,7 @@ const HowToUseConnects = () => {
         ))}
       </div>
       <Carousel2D
-        slideWidth={300}
+        slideWidth={320}
         gap={4}
         showDots={true}
         containerClassName="md:hidden"

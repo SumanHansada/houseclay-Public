@@ -19,7 +19,7 @@ const CurlyArrowIcon = CurlyArrowIconSvg as React.FC<
 
 const WhyChoose = () => {
   return (
-    <div className="flex items-center justify-between lg:gap-10 xl:px-28 lg:px-14 md:px-14 px-8 md:py-20 py-6">
+    <div className="flex items-center justify-between lg:gap-10 xl:px-28 lg:px-14 md:px-14 px-8 md:py-20 py-5 pb-16">
       <div className="w-full md:w-3/5 lg:px-12 md:px-4">
         <h1 className="mb-2 md:mb-4 xl:text-5xl lg:text-4xl sm:text-3xl text-2xl md:font-bold font-medium">
           Why Choose Connects?
@@ -54,7 +54,7 @@ const WhyChoose = () => {
           </div>
         </div>
         <div className="flex gap-2 items-center px-2">
-          <button className="bg-red-500 text-white text-xl xl:px-6  lg:px-5 lg:py-3 md:px-3 px-3 py-2 rounded-xl size-fit max-md:mx-auto">
+          <button className="bg-red-500 text-white text-xl xl:px-6  lg:px-5 lg:py-3 px-3 py-2 rounded-xl size-fit max-md:hidden">
             Buy Connects Now
           </button>
           <div className="size-32 md:block hidden">
