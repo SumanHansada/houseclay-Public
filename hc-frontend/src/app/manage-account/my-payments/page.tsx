@@ -52,7 +52,7 @@ export default function MyPaymentsPage() {
         })}
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4 max-xl:hidden">
         <TransactionTable transactions={filtered} />
       </div>
     </main>

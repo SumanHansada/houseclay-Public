@@ -87,7 +87,9 @@ export const TransactionTable = ({
           <button className="">
             <DownloadIcon width={20} height={20} className="text-red-500" />
           </button>
-        ) : null,
+        ) : (
+          "-"
+        ),
     },
   ];
 
