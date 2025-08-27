@@ -1,11 +1,15 @@
 "use client";
 
 import CircleCheckIconSvg from "public/icons/circle-check.svg";
-import { PropertyCategory } from "@/common/enums";
 import ThreeDotsIconSvg from "public/icons/three-dots-horizontal.svg";
 import { useRef, useState } from "react";
-import { Actions } from "./Actions";
+
+import { PropertyCategory } from "@/common/enums";
 import { formatINRCurrency } from "@/common/utils";
+import { MyProperty } from "@/interfaces/ManageAccount";
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
+
+import { Actions } from "./Actions";
 
 const CircleCheckIcon = CircleCheckIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
@@ -14,15 +18,7 @@ const ThreeDotsIcon = ThreeDotsIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
 
-export interface PropertyCardProps {
-  propertyID: string;
-  propertyName: string;
-  category: PropertyCategory;
-  listedOn: string;
-  builtupArea: number;
-  price: number | null;
-  rent: number | null;
-  status: string;
+export interface PropertyCardProps extends MyProperty {
   onDashboard: (propertyId: string) => void;
   onMarkSold: (propertyId: string) => void;
   onOpenDialog: (propertyId: string) => void;
@@ -32,7 +28,6 @@ export function PropertyCard({
   propertyID,
   propertyName,
   category,
-  listedOn,
   builtupArea,
   price,
   rent,
@@ -43,21 +38,16 @@ export function PropertyCard({
 }: PropertyCardProps) {
   const [menuFor, setMenuFor] = useState<string | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const { isMobile } = useDeviceContext();
 
   const isResale = category === PropertyCategory.RESALE;
   const amount = isResale ? price : rent;
 
   const handleActionClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-
-    // Check screen size and act accordingly
-    const isMobile = window.innerWidth < 768; // md breakpoint
-
     if (isMobile) {
-      // Open dialog for mobile
       onOpenDialog(propertyID);
     } else {
-      // Toggle menu for md and above
       setMenuFor((cur) => (cur === propertyID ? null : propertyID));
     }
   };

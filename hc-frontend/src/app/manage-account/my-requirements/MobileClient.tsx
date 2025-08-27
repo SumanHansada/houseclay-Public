@@ -12,6 +12,7 @@ import {
   FormRadioGroup,
 } from "@/form-components";
 import { MyRequirementsFormValues } from "@/interfaces/ManageAccount";
+import { MobileHeader } from "@/layout-components";
 import { setHideStickyNavBar } from "@/store/appSlice";
 
 import {
@@ -23,7 +24,6 @@ import {
   resaleBudgetOptions,
   userTypeOptions,
 } from "./options";
-import { MobileHeader } from "@/layout-components";
 
 interface MobileProps {
   editMode: boolean;

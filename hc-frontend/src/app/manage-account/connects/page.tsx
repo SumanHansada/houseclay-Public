@@ -4,10 +4,10 @@ import { useRouter } from "next/navigation";
 import { default as InstantAccessSvg } from "public/icons/static-pages/instant-access.svg";
 import { default as NoForcedPlansSvg } from "public/icons/static-pages/no-forced-plans.svg";
 import { default as RealOwnersSvg } from "public/icons/static-pages/real-owners.svg";
-
-import { MobileHeader } from "@/layout-components";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+
+import { MobileHeader } from "@/layout-components";
 import { setHideStickyNavBar } from "@/store/appSlice";
 
 // Test

@@ -6,12 +6,12 @@ import { useMemo, useState } from "react";
 
 import { BadgeType, PropertyCategory } from "@/common/enums";
 import Properties from "@/components/Properties";
+import { MobileHeader } from "@/layout-components";
 
 import {
   DUMMY_PROPERTIES_FOR_PROPERTY_CARD,
   PropertyCardDummy,
 } from "../dummy";
-import { MobileHeader } from "@/layout-components";
 
 const filterOptions = [
   { label: "All", value: PropertyCategory.NONE },
@@ -102,7 +102,7 @@ export default function ShortlistsPage() {
                 key={f.value}
                 onClick={() => setSelected(f.value)}
                 aria-pressed={active}
-                className={`px-2 py-1 sm:px-4 sm:py-2 flex-1 shadow-sm whitespace-nowrap ${
+                className={`px-2 py-1 sm:px-4 sm:py-2 flex-1 whitespace-nowrap ${
                   active ? "border border-red-500 text-red-500 rounded-lg" : ""
                 }`}
               >

@@ -1,17 +1,18 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import { Check } from "lucide-react";
+import { useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
 
 import { PropertyCategory } from "@/common/enums";
-import { MY_DUMMY_PROPERTIES } from "../dummy";
-import { PropertyCardList } from "../components/PropertyCardList";
-import { PropertyTable } from "../components/PropertiesTable";
+import MyPropertyActionsDialog from "@/dialogs/my-property-actions";
 import { MobileHeader } from "@/layout-components";
 import { useDialog } from "@/providers/DialogContextProvider";
-import MyPropertyActionsDialog from "@/dialogs/my-property-actions";
-import { useDispatch } from "react-redux";
 import { setHideStickyNavBar } from "@/store/appSlice";
+
+import { PropertyTable } from "../components/PropertiesTable";
+import { PropertyCardList } from "../components/PropertyCardList";
+import { MY_DUMMY_PROPERTIES } from "../dummy";
 
 const filterOptions = [
   { label: "All", value: PropertyCategory.NONE },
@@ -121,7 +122,7 @@ export default function MyPropertiesPage() {
                 key={f.value}
                 onClick={() => setSelected(f.value)}
                 aria-pressed={active}
-                className={`px-2 py-1 sm:px-4 sm:py-2 flex-1 shadow-sm whitespace-nowrap ${
+                className={`px-2 py-1 sm:px-4 sm:py-2 flex-1 whitespace-nowrap ${
                   active ? "border border-red-500 text-red-500 rounded-lg" : ""
                 }`}
               >
@@ -132,6 +133,15 @@ export default function MyPropertiesPage() {
         </div>
       </section>
 
+      {/* Table for ≥ 2xl */}
+      <div className="hidden 2xl:block">
+        <PropertyTable
+          properties={filtered}
+          onDashboard={onDashboard}
+          onMarkSold={onMarkSold}
+        />
+      </div>
+
       {/* Cards for < 2xl */}
       <div className="2xl:hidden max-md:px-8 mb-16 py-5">
         <PropertyCardList
@@ -139,15 +149,6 @@ export default function MyPropertiesPage() {
           onDashboard={onDashboard}
           onMarkSold={onMarkSold}
           onOpenDialog={onOpenDialog}
-        />
-      </div>
-
-      {/* Table for ≥ 2xl */}
-      <div className="hidden 2xl:block">
-        <PropertyTable
-          properties={filtered}
-          onDashboard={onDashboard}
-          onMarkSold={onMarkSold}
         />
       </div>
 

@@ -50,9 +50,9 @@ const MyPropertyActionsDialog: React.FC<MyPropertyActionsDialogProps> = ({
         </div>
       </DialogHeader>
       <DialogContent>
-        <div className="flex flex-col gap-4 items-center">
+        <div className="flex flex-col items-center">
           <button
-            className="w-full text-left px-5 py-3 hover:bg-gray-50"
+            className="w-full text-left px-5 py-3 hover:bg-gray-50 border-b"
             onClick={handleDashboard}
           >
             Dashboard

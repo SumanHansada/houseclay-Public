@@ -1,38 +1,16 @@
 "use client";
 
 import { useMemo } from "react";
-import { PropertyCard } from "./PropertyCard";
-import { PropertyCategory } from "@/common/enums";
 
-export interface Property {
-  propertyID: string;
-  propertyName: string;
-  category: PropertyCategory;
-  listedOn: string;
-  builtupArea: number;
-  price: number | null;
-  rent: number | null;
-  status: string;
-}
+import { MyProperty } from "@/interfaces/ManageAccount";
+
+import { formatDate, getDateKey } from "../utils";
+import { PropertyCard } from "./PropertyCard";
 
 interface GroupedProperties {
   date: string;
-  properties: Property[];
+  properties: MyProperty[];
 }
-
-// Helper function to format date from ISO string to DD-MMM-YYYY
-const formatDate = (isoString: string): string => {
-  const date = new Date(isoString);
-  const day = date.getDate().toString().padStart(2, "0");
-  const month = date.toLocaleString("en-US", { month: "short" });
-  const year = date.getFullYear();
-  return `${day}-${month}-${year}`;
-};
-
-// Helper function to get date only (YYYY-MM-DD) for grouping
-const getDateKey = (isoString: string): string => {
-  return new Date(isoString).toISOString().split("T")[0];
-};
 
 export function PropertyCardList({
   items,
@@ -40,7 +18,7 @@ export function PropertyCardList({
   onMarkSold,
   onOpenDialog,
 }: {
-  items: Property[];
+  items: MyProperty[];
   onDashboard: (propertyId: string) => void;
   onMarkSold: (propertyId: string) => void;
   onOpenDialog: (propertyId: string) => void;
@@ -56,20 +34,19 @@ export function PropertyCardList({
         acc[dateKey].push(property);
         return acc;
       },
-      {} as Record<string, Property[]>,
+      {} as Record<string, MyProperty[]>,
     );
 
     // Convert to array and sort by date (newest first)
     const groupedArray: GroupedProperties[] = Object.entries(grouped)
-      .map(([dateKey, properties]) => ({
-        date: formatDate(properties[0].listedOn), // Use first property's date for display
+      .map(([_, properties]) => ({
+        date: formatDate(properties[0].listedOn),
         properties: properties.sort(
           (a, b) =>
             new Date(b.listedOn).getTime() - new Date(a.listedOn).getTime(),
         ),
       }))
       .sort((a, b) => {
-        // Sort groups by date (newest first)
         const dateA = new Date(a.properties[0].listedOn);
         const dateB = new Date(b.properties[0].listedOn);
         return dateB.getTime() - dateA.getTime();

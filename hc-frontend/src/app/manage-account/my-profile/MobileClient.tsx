@@ -11,10 +11,10 @@ import { useDispatch } from "react-redux";
 import { getInitials } from "@/common/utils";
 import { FormPhoneField, FormTextField } from "@/form-components";
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
+import { MobileHeader } from "@/layout-components";
 import { setHideStickyNavBar } from "@/store/appSlice";
 
 import { EmailVerifyIncentive } from "../components/EmailVerifyIncentive";
-import { MobileHeader } from "@/layout-components";
 
 const WhatsAppIcon = WhatsAppIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const CircleCheckIcon = CircleCheckIconSvg as React.FC<

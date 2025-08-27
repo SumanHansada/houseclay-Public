@@ -10,9 +10,9 @@ import {
   SUPPORT_CONTACT,
   SUPPORT_EMAIL,
 } from "@/common/constants";
+import { MobileHeader } from "@/layout-components";
 
 import { Accordion } from "../components/Accordion";
-import { MobileHeader } from "@/layout-components";
 
 const PhoneIcon = PhoneIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const MailIcon = MailIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;

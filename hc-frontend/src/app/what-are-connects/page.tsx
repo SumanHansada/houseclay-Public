@@ -1,20 +1,17 @@
 "use client";
 
-import { Footer, MobileHeader } from "@/layout-components";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
+import { Footer, MobileHeader } from "@/layout-components";
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
+import { setHideHeader, setHideStickyNavBar } from "@/store/appSlice";
+
+import ConnectsFooter from "./components/ConnectsFooter";
 import HeroSection from "./components/HeroSection";
 import HowToUseConnectsClient from "./components/HowToUseConnectsClient";
 import WhatAreConnects from "./components/WhatAreConnects";
 import WhyChooseConnectsClient from "./components/WhyChooseConnectsClient";
-import ConnectsFooter from "./components/ConnectsFooter";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import {
-  resetUIState,
-  setHideHeader,
-  setHideStickyNavBar,
-} from "@/store/appSlice";
 
 export default function WhatAreConnectsPage() {
   const { isMobile } = useDeviceContext();

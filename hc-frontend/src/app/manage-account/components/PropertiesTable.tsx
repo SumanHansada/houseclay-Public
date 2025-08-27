@@ -5,9 +5,10 @@ import ThreeDotsIconSvg from "public/icons/three-dots-horizontal.svg";
 import { useRef, useState } from "react";
 
 import { PropertyCategory } from "@/common/enums";
-import { Column, WebsiteDataTable } from "@/components/DataTable";
-import { Actions } from "./Actions";
 import { formatINRCurrency } from "@/common/utils";
+import { Column, WebsiteDataTable } from "@/components/DataTable";
+
+import { Actions } from "./Actions";
 
 const CircleCheckIcon = CircleCheckIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
