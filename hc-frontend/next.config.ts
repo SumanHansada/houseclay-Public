@@ -17,8 +17,6 @@ const nextConfig: NextConfig = {
   },
   // Enable compression
   compress: true,
-  // Optimize bundle size
-  swcMinify: true,
   // Enable static generation where possible
   staticPageGenerationTimeout: 120,
   // Optimize images
