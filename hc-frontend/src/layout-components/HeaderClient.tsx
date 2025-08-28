@@ -14,8 +14,8 @@ import { useDialog } from "@/providers/DialogContextProvider";
 import { useLogoutMutation } from "@/store/apiSlice";
 import { clearToken, initializeToken } from "@/store/authSlice";
 
-import ActionMenu from "../components/ActionMenu";
 import { RootState } from "../store/store";
+import { UserDropdown } from "@/utility-components/UserDropdown";
 
 type User = {
   name: string;
@@ -31,6 +31,8 @@ const Coin = CoinSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const HeaderClient: React.FC<HeaderClientProps> = () => {
   const hideHeader = useSelector((state: RootState) => state.app.hideHeader);
   const token = useSelector((state: RootState) => state.auth.token);
+  const userName = useSelector((state: RootState) => state.auth.name);
+
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
   const { openDialog, closeAllDialogs } = useDialog();
@@ -38,7 +40,6 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
   const searchParams = useSearchParams();
 
   const bengaluruLocation = { lat: 12.9716, lng: 77.5946 };
-
   const router = useRouter();
 
   const onLogin = () => {
@@ -64,10 +65,6 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
     } catch (err) {
       console.error(err);
     }
-  };
-
-  const redirectToManageAccount = () => {
-    router.push("/manage-account");
   };
 
   if (hideHeader) {
@@ -145,27 +142,11 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
 
             {/* Login Button */}
             {token ? (
-              <div className="relative">
-                <ActionMenu
-                  options={[
-                    { id: 1, label: "Manage Account" },
-                    { id: 2, label: "Logout" },
-                  ]}
-                  onSelect={(option) => {
-                    if (option.id === 1) {
-                      // console.log("Manage Account");
-                      redirectToManageAccount();
-                    } else {
-                      onLogout();
-                    }
-                  }}
-                >
-                  <button className="flex flex-row xl:gap-2 md:gap-1 gap-1 xl:px-6 lg:px-5 md:px-3 px-3 py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100 text-center">
-                    <UserRound width={20} height={20} />
-                    <ChevronDown width={20} height={20} />
-                  </button>
-                </ActionMenu>
-              </div>
+              <UserDropdown
+                userName={userName}
+                iconSize={40}
+                dropdownWidth={300}
+              />
             ) : (
               <button
                 className="xl:px-8 lg:px-6 md:px-4 px-4  py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100 text-center"
