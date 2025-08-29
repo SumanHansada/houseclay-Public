@@ -117,7 +117,7 @@ const TextField: React.FC<TextFieldProps> = ({
           <button
             type="button"
             onClick={togglePasswordVisibility}
-            className="inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-l-0 border-gray-300 rounded-r-xl"
+            className="inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-l-0 border-gray-300 rounded-r-xl cursor-pointer"
             disabled={disabled}
           >
             <div className="relative w-5 h-5">
