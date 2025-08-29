@@ -1,4 +1,5 @@
-import React from "react";
+import { Eye, EyeClosed } from "lucide-react";
+import React, { useState } from "react";
 
 interface TextFieldProps {
   name: string;
@@ -36,6 +37,11 @@ const TextField: React.FC<TextFieldProps> = ({
   onBlur,
   error,
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   // Format numeric values for display
   const formatNumber = (value: string | number): string => {
     if (value === null || value === undefined || value === "") return "";
@@ -92,12 +98,12 @@ const TextField: React.FC<TextFieldProps> = ({
           </span>
         )}
         <input
-          type={type}
+          type={type === "password" && !showPassword ? "password" : "text"}
           id={id || name}
           placeholder={placeholder}
           className={`w-full p-3 border ${
             prefix ? "rounded-none" : "rounded-l-xl"
-          } ${suffix ? "rounded-none" : "rounded-r-xl"} ${className} ${
+          } ${suffix || type === "password" ? "rounded-none" : "rounded-r-xl"} ${className} ${
             error ? "border-red-500" : "border-gray-300"
           } ${disabled ? "cursor-not-allowed bg-gray-50" : ""}`}
           value={
@@ -107,7 +113,30 @@ const TextField: React.FC<TextFieldProps> = ({
           onBlur={handleBlur}
           disabled={disabled}
         />
-        {suffix && (
+        {type === "password" && (
+          <button
+            type="button"
+            onClick={togglePasswordVisibility}
+            className="inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-l-0 border-gray-300 rounded-r-xl"
+            disabled={disabled}
+          >
+            <div className="relative w-5 h-5">
+              <Eye
+                size={20}
+                className={`absolute inset-0 transition-all duration-300 ease-in-out ${
+                  showPassword ? "opacity-100 scale-100" : "opacity-0 scale-75"
+                }`}
+              />
+              <EyeClosed
+                size={20}
+                className={`absolute inset-0 transition-all duration-300 ease-in-out ${
+                  !showPassword ? "opacity-100 scale-100" : "opacity-0 scale-75"
+                }`}
+              />
+            </div>
+          </button>
+        )}
+        {suffix && type !== "password" && (
           <span className="inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-l-0 border-gray-300 rounded-r-xl">
             {suffix}
           </span>
