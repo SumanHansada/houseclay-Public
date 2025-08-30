@@ -42,8 +42,7 @@ jobs:
           npm install
           npm run build:prod
           EOF
-
-      # Added new host
+          
       - name: Start zebra-ui on Zebra Host
         run: |
           ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.ZEBRA_HOST }} << EOF
