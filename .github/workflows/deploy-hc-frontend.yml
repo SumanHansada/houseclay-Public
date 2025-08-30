@@ -42,7 +42,8 @@ jobs:
           npm install
           npm run build:prod
           EOF
-      
+
+      # Frontend server
       - name: Start hc-frontend on Zebra Host
         run: |
           ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.FRONTEND_HOST }} << EOF
