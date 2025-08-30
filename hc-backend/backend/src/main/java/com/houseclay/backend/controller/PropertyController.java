@@ -1,5 +1,6 @@
 package com.houseclay.backend.controller;
 
+import com.houseclay.backend.dto.PaginatedResponse;
 import com.houseclay.backend.dto.PropertyCardDTO;
 import com.houseclay.backend.entity.Property;
 import com.houseclay.backend.entity.PropertyCategory;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/property")
@@ -38,7 +40,7 @@ public class PropertyController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchProperty(
+    public ResponseEntity<PaginatedResponse<PropertyCardDTO>> searchProperty(
             @RequestParam PropertyCategory propertyCategory,
             @RequestParam double lat,
             @RequestParam double lon,
@@ -51,10 +53,12 @@ public class PropertyController {
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
             @RequestParam(required = false) String preferredTenant,
-            @RequestParam(required = false) List<String> amenities) {
+            @RequestParam(required = false) List<String> amenities,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "50") int size) {
 
-        List<PropertyCardDTO> results = searchService.searchNearbyWithFilters(
-                lat, lon, distance, city, bhkType, minPrice, maxPrice, propertyCategory, furnishing, propertyType, parking, preferredTenant, amenities
+        PaginatedResponse<PropertyCardDTO> results = searchService.searchNearbyWithFilters(
+                lat, lon, distance, city, bhkType, minPrice, maxPrice, propertyCategory, furnishing, propertyType, parking, preferredTenant, amenities, page, size
         );
 
         return ResponseEntity.ok(results);

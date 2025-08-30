@@ -2,6 +2,7 @@ package com.houseclay.backend.service;
 
 import co.elastic.clients.elasticsearch._types.GeoLocation;
 import co.elastic.clients.json.JsonData;
+import com.houseclay.backend.dto.PaginatedResponse;
 import com.houseclay.backend.dto.PropertyCardDTO;
 import com.houseclay.backend.entity.PropertyCategory;
 import com.houseclay.backend.entity.elastic.FlatmateDocument;
@@ -10,9 +11,10 @@ import com.houseclay.backend.entity.elastic.RentDocument;
 import com.houseclay.backend.entity.elastic.SaleDocument;
 import com.houseclay.backend.mapper.PropertyCardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ public class SearchService {
     @Autowired
     private PhotoService photoService;
 
-    public List<PropertyCardDTO> searchNearbyWithFilters(
+    public PaginatedResponse<PropertyCardDTO> searchNearbyWithFilters(
             double lat,
             double lon,
             String distance,
@@ -42,7 +44,9 @@ public class SearchService {
             String propertyType,
             String parking,
             String preferredTenant,
-            List<String> amenities
+            List<String> amenities,
+            int page,
+            int size
     ) {
 
         // Build the list of filters (geo + field filters)
@@ -124,44 +128,72 @@ public class SearchService {
                 .bool(b -> b.filter(filters))
         );
 
+        Pageable pageable = PageRequest.of(page, size);
+
         // Build the query
         NativeQuery searchQuery = NativeQuery.builder()
                 .withQuery(boolQuery)
+                .withPageable(pageable)
                 .build();
 
 
         return switch (propertyCategory) {
-            case RESALE -> {
-                SearchHits<SaleDocument> saleHits = elasticsearchOperations.search(searchQuery, SaleDocument.class);
-                yield saleHits.stream()
-                        .map(hit -> {
-                            SaleDocument sale = hit.getContent();
-                            String imageURL = photoService.getObjectPresignedUrl(sale.getImages().get(0));
-                            return PropertyCardMapper.toPropertyCardDTO(sale, imageURL);
-                        })
-                        .toList();
-            }
-            case RENT -> {
-                SearchHits<RentDocument> rentHits = elasticsearchOperations.search(searchQuery, RentDocument.class);
-                yield rentHits.stream()
-                        .map(hit -> {
-                            RentDocument rent = hit.getContent();
-                            String imageURL = photoService.getObjectPresignedUrl(rent.getImages().get(0));
-                            return PropertyCardMapper.toPropertyCardDTO(rent, imageURL);
-                        })
-                        .toList();
-            }
-            case FLATMATE -> {
-                SearchHits<FlatmateDocument> flatmateHits = elasticsearchOperations.search(searchQuery, FlatmateDocument.class);
-                yield flatmateHits.stream()
-                        .map(hit -> {
-                            FlatmateDocument flatmate = hit.getContent();
-                            String imageURL = photoService.getObjectPresignedUrl(flatmate.getImages().get(0));
-                            return PropertyCardMapper.toPropertyCardDTO(flatmate, imageURL);
-                        })
-                        .toList();
-            }
+            case RESALE -> mapPage(
+                    elasticsearchOperations.search(searchQuery, SaleDocument.class),
+                    pageable,
+                    hit -> {
+                        SaleDocument d = hit.getContent();
+                        String img = safeFirstImageUrl(d.getImages());
+                        return PropertyCardMapper.toPropertyCardDTO(d, img);
+                    }
+            );
+            case RENT -> mapPage(
+                    elasticsearchOperations.search(searchQuery, RentDocument.class),
+                    pageable,
+                    hit -> {
+                        RentDocument d = hit.getContent();
+                        String img = safeFirstImageUrl(d.getImages());
+                        return PropertyCardMapper.toPropertyCardDTO(d, img);
+                    }
+            );
+            case FLATMATE -> mapPage(
+                    elasticsearchOperations.search(searchQuery, FlatmateDocument.class),
+                    pageable,
+                    hit -> {
+                        FlatmateDocument d = hit.getContent();
+                        String img = safeFirstImageUrl(d.getImages());
+                        return PropertyCardMapper.toPropertyCardDTO(d, img);
+                    }
+            );
         };
+    }
+
+    private String safeFirstImageUrl(List<String> images) {
+        if (images == null || images.isEmpty()) return null;
+        return photoService.getObjectPresignedUrl(images.get(0));
+    }
+
+    private <T> PaginatedResponse<PropertyCardDTO> mapPage(
+            SearchHits<T> hits,
+            Pageable pageable,
+            java.util.function.Function<SearchHit<T>, PropertyCardDTO> mapper
+    ) {
+        // Convert to a SearchPage to get total easily
+        SearchPage<T> page = SearchHitSupport.searchPageFor(hits, pageable);
+        List<PropertyCardDTO> items = page.getContent().stream().map(mapper).toList();
+
+        long total = page.getTotalElements();
+        int totalPages = page.getTotalPages();
+        boolean hasNext = page.hasNext();
+
+        return new PaginatedResponse<>(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                total,
+                totalPages,
+                hasNext,
+                items
+        );
     }
 
     private void addRangeFilter(Double minPrice, Double maxPrice, List<Query> filters, PropertyCategory propertyCategory) {
