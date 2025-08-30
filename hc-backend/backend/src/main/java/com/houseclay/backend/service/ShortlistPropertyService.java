@@ -41,8 +41,7 @@ public class ShortlistPropertyService {
         propertyAction.setUser(user);
         propertyAction.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         propertyAction.setUserActionType(UserActionType.SHORTLIST);
-        user.getPropertyActions().add(propertyAction);
-        userRepository.save(user);
+        propertyRepository.save(property);
         return property;
     }
 
