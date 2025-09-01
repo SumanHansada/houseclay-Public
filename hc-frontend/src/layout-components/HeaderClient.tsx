@@ -1,7 +1,7 @@
 "use client";
 
 // import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { ChevronDown, Menu, User, UserRound } from "lucide-react";
+import { Menu, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -10,12 +10,12 @@ import HouseClaySvg from "public/icons/houseclay.svg";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { UserDropdown } from "@/components/UserDropdown";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useLogoutMutation } from "@/store/apiSlice";
 import { clearToken, initializeToken } from "@/store/authSlice";
 
 import { RootState } from "../store/store";
-import { UserDropdown } from "@/utility-components/UserDropdown";
 
 type User = {
   name: string;
