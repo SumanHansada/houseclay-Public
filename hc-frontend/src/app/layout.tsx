@@ -3,6 +3,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Nunito } from "next/font/google";
+import Script from "next/script";
 
 import { Layout } from "@/layout-components";
 import Providers from "@/providers/Providers";
@@ -57,6 +58,11 @@ export default function RootLayout({
         <Providers>
           <Layout>{children}</Layout>
         </Providers>
+        {/* Razorpay checkout script */}
+        <Script
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

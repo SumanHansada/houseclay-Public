@@ -22,6 +22,7 @@ import {
   Phone,
   Share,
   Sofa,
+  SquareStar,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
@@ -55,6 +56,7 @@ import {
   pascalCase,
 } from "@/common/utils";
 import { PhotoGalleryDialog } from "@/dialogs";
+import ReportListingDialog from "@/dialogs/report-listing-dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useGetPublicPropertyByIdQuery } from "@/store/apiSlice";
@@ -168,6 +170,10 @@ export function PropertyDetailsClient({
   const [origin, setOrigin] = useState<string>("");
   const [showDirections, setShowDirections] = useState(false);
   const [isShortlisted, setIsShortlisted] = useState(false);
+  const router = useRouter();
+  const { isMobile } = useDeviceContext();
+  const dispatch = useDispatch();
+  const { isDialogOpen, closeDialog, openDialog } = useDialog();
 
   const handleShare = async () => {
     try {
@@ -180,17 +186,16 @@ export function PropertyDetailsClient({
     }
   };
 
+  const handleReportListingClick = () => {
+    openDialog("report-listing-dialog");
+  };
+
   // Split description into sentences array
   const descriptionSentences = property?.description
     ? property.description
         .split(/[.!?] +/)
         .filter((sentence: string) => sentence.trim().length > 0)
     : [];
-
-  const router = useRouter();
-  const { isMobile } = useDeviceContext();
-  const dispatch = useDispatch();
-  const { isDialogOpen, closeDialog } = useDialog();
 
   useEffect(() => {
     if (isMobile) {
@@ -693,21 +698,34 @@ export function PropertyDetailsClient({
                 </div>
               </div>
             </section>
-            {/* Exclusive listing & Report this listing */}
-            {property.managed && (
-              <section className="flex flex-col justify-between items-center gap-4">
+            {/* Exclusive listing */}
+            {(property.managed || true) && (
+              <section className="flex flex-col justify-between items-center gap-4 mb-6">
                 <button className="px-8 py-3 flex justify-around border rounded-xl w-full text-base max-md:text-sm hover:bg-gray-50 transition-colors">
                   <div className="flex items-center gap-4">
                     <Crown size={24} className="text-yellow-500" />
                     <span>This is an Exclusive listing</span>
                   </div>
                 </button>
-                <button className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-2">
-                  <Flag size={14} />
-                  <span className="underline">Report this listing</span>
+              </section>
+            )}
+            {/* Featured Property */}
+            {(property.featured || true) && (
+              <section className="flex flex-col justify-between items-center gap-4 mb-6">
+                <button className="px-8 py-3 flex justify-around border rounded-xl w-full text-base max-md:text-sm hover:bg-gray-50 transition-colors">
+                  <div className="flex items-center gap-4">
+                    <SquareStar size={24} className="text-red-500" />
+                    <span>This is an Featured Property</span>
+                  </div>
                 </button>
               </section>
             )}
+            <section className="flex flex-col justify-between items-center mb-6">
+              <button className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-2">
+                <Flag size={14} />
+                <span className="underline">Report this listing</span>
+              </button>
+            </section>
           </section>
         </section>
 
@@ -1104,7 +1122,7 @@ export function PropertyDetailsClient({
             </div>
           </section>
 
-          {/* Exclusive listing & Report this listing */}
+          {/* Exclusive listing */}
           <section className="flex flex-col justify-between items-center gap-4">
             <button className="px-8 py-3 flex justify-around border rounded-xl w-full text-base max-md:text-sm max-md:hidden hover:bg-gray-50 transition-colors">
               <div className="flex items-center gap-4">
@@ -1112,7 +1130,14 @@ export function PropertyDetailsClient({
                 <span>This is an Exclusive listing</span>
               </div>
             </button>
-            <button className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-2">
+          </section>
+
+          {/* Report this listing */}
+          <section>
+            <button
+              className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-2"
+              onClick={handleReportListingClick}
+            >
               <Flag size={14} />
               <span className="underline">Report this listing</span>
             </button>
@@ -1149,6 +1174,17 @@ export function PropertyDetailsClient({
           id="photo-gallery-dialog"
           images={property?.images || []}
           onClose={() => closeDialog("photo-gallery-dialog")}
+        />
+      )}
+
+      {/* Report this listing dialog */}
+      {isDialogOpen("report-listing-dialog") && (
+        <ReportListingDialog
+          id="report-listing-dialog"
+          onClose={() => {
+            closeDialog("report-listing-dialog");
+            dispatch(setHideStickyNavBar(false));
+          }}
         />
       )}
     </>

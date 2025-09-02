@@ -214,6 +214,52 @@ export const apiSlice = createApi({
     >({
       query: () => `/property/user/shortlisted-properties`,
     }),
+    createOrder: builder.mutation<
+      {
+        amount: number;
+        amount_paid: number;
+        notes: string[];
+        created_at: number;
+        amount_due: number;
+        currency: string;
+        receipt: string;
+        id: string;
+        entity: string;
+        offer_id: string | null;
+        attempts: number;
+        status: string;
+      },
+      { userId: number; amount: number }
+    >({
+      query: (data) => ({
+        url: "/payment/create-order",
+        method: "POST",
+        body: data,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+    verifyPayment: builder.mutation<
+      { message: string },
+      {
+        paymentId: string;
+        orderId: string;
+        signature: string;
+        userId: number;
+        amount: number;
+        connects: number;
+      }
+    >({
+      query: (data) => ({
+        url: "/payment/verify",
+        method: "POST",
+        body: data,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
   }),
 });
 
@@ -238,4 +284,6 @@ export const {
   useRemoveShortlistedPropertyMutation,
   useGetShortlistedPropertiesQuery,
   useLazyGetShortlistedPropertiesQuery,
+  useCreateOrderMutation,
+  useVerifyPaymentMutation,
 } = apiSlice;

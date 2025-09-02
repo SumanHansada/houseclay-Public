@@ -2,18 +2,15 @@
 
 import { useFormik } from "formik";
 import { X } from "lucide-react";
-import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 
 import { RadioGroup, TextArea } from "@/base-components";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { useDialog } from "@/providers/DialogContextProvider";
-import { setHideStickyNavBar } from "@/store/appSlice";
-
 interface ReportListingDialogProps {
   id: string;
   propertyId?: string;
+  onClose: () => void;
 }
 
 const reportOptions = [
@@ -39,10 +36,9 @@ const validationSchema = Yup.object({
 const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
   id,
   propertyId,
+  onClose,
 }) => {
-  const { closeDialog } = useDialog();
   const { isMobile } = useDeviceContext();
-  const dispatch = useDispatch();
 
   const formik = useFormik({
     initialValues: {
@@ -56,18 +52,13 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
         console.log("Submitting report:", { ...values, propertyId });
 
         // Close dialog and show success message
-        handleClose();
+        onClose();
         // You can add a toast notification here
       } catch (error) {
         console.error("Error submitting report:", error);
       }
     },
   });
-
-  const handleClose = () => {
-    closeDialog(id);
-    dispatch(setHideStickyNavBar(false));
-  };
 
   const handleReasonChange = (value: string) => {
     formik.setFieldValue("reason", value);
@@ -77,7 +68,7 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
     <Dialog
       id={id}
       type={isMobile ? "fullscreen" : "card"}
-      onClose={handleClose}
+      onClose={onClose}
       entryAnimation={isMobile ? "animate-slide-in-right" : "animate-fade-in"}
       exitAnimation={isMobile ? "animate-slide-out-right" : "animate-fade-out"}
     >
@@ -89,7 +80,7 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
             <h1 className="text-xl py-1.5 text-black">Report This Listing</h1>
           )}
           <button className="absolute top-4 right-4 rounded-full">
-            <X onClick={handleClose} size={24} />
+            <X onClick={onClose} size={24} />
           </button>
         </div>
       </DialogHeader>
@@ -151,7 +142,7 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
                 <div className="flex gap-3">
                   <button
                     type="button"
-                    onClick={handleClose}
+                    onClick={onClose}
                     className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
                   >
                     Cancel
@@ -172,7 +163,7 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
               <div className="flex gap-3 justify-end">
                 <button
                   type="button"
-                  onClick={handleClose}
+                  onClick={onClose}
                   className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   Cancel
