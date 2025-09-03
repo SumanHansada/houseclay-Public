@@ -79,12 +79,10 @@ export default function BuyConnectsPage() {
     alert(response.razorpay_signature);
 
     try {
-      const userId = 1; // TODO: replace with actual user id from auth
       const result = await verifyPayment({
         paymentId: response.razorpay_payment_id,
         orderId: response.razorpay_order_id,
         signature: response.razorpay_signature,
-        userId,
         amount: totalAmount * 100,
         connects: currentBundle?.connects || 0,
       });
@@ -98,10 +96,7 @@ export default function BuyConnectsPage() {
     if (!agreedToTerms) return;
 
     try {
-      // TODO: Replace with actual userId from auth context
-      const userId = 1; // Placeholder - should come from auth state
       const response = await createOrder({
-        userId,
         amount: totalAmount * 100,
       });
 
@@ -110,7 +105,8 @@ export default function BuyConnectsPage() {
       const options = Object.assign({}, response.data) as any;
       options.key = "REDACTED_RAZORPAY_KEY_ID";
       options.handler = handlePaymentSuccess;
-      options.callback_url = `${window.location.origin}/payment-success`;
+      // options.callback_url = `${window.location.origin}/payment-success`;
+      options.order_id = options.id;
       const rzp = new Razorpay(options);
       //eslint-disable-next-line @typescript-eslint/no-explicit-any
       rzp.on("payment.failed", function (response: any) {

@@ -4,16 +4,15 @@
 import { Menu, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
 import CoinSvg from "public/icons/coin.svg";
 import HouseClaySvg from "public/icons/houseclay.svg";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { UserDropdown } from "@/components/UserDropdown";
+import { useLogout } from "@/hooks/useLogout";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { useLogoutMutation } from "@/store/apiSlice";
-import { clearToken, initializeToken } from "@/store/authSlice";
+import { initializeToken } from "@/store/authSlice";
 
 import { RootState } from "../store/store";
 
@@ -34,13 +33,12 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
   const userName = useSelector((state: RootState) => state.auth.name);
 
   const dispatch = useDispatch();
-  const [logout] = useLogoutMutation();
+  const { logout } = useLogout();
   const { openDialog, closeAllDialogs } = useDialog();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const bengaluruLocation = { lat: 12.9716, lng: 77.5946 };
-  const router = useRouter();
 
   const onLogin = () => {
     closeAllDialogs();
@@ -56,16 +54,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
     dispatch(initializeToken());
   }, [dispatch]);
 
-  const onLogout = async () => {
-    try {
-      const logoutResponse = await logout();
-      console.log(logoutResponse);
-      router.push("/");
-      dispatch(clearToken());
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const onLogout = () => logout();
 
   if (hideHeader) {
     return null;

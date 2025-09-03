@@ -2,6 +2,7 @@
 
 import "react-international-phone/style.css";
 
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { ShieldCheck, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -12,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import {
   AuthStep,
+  ErrorStatus,
   LeadCategory,
   ListPropertyDesktopStep,
   ListPropertyMobileStep,
@@ -39,7 +41,7 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
-import { setAuthStep, setPhoneNo } from "@/store/authSlice";
+import { setAuthStep } from "@/store/authSlice";
 import { clearFormData } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 import { setCheckUser } from "@/store/userSlice";
@@ -54,17 +56,15 @@ const ListPropertyPage = dynamic(
       const { isMobile } = useDeviceContext();
       const router = useRouter();
       const token = useSelector((state: RootState) => state.auth.token);
-      const phoneNo = useSelector((state: RootState) => state.auth.phoneNo);
       const listingType = useSelector(
         (state: RootState) => state.listProperty.listingType,
       );
       const propertyCategory = useSelector(
         (state: RootState) => state.listProperty.propertyCategory,
       );
-      const handlePhoneChange = (phoneNumber: string) => {
-        dispatch(setPhoneNo(phoneNumber));
-      };
+
       const dispatch = useDispatch();
+      const [phoneNo, setPhoneNo] = useState("");
       const [acceptTerms, setAcceptTerms] = useState(false);
       const [mobileStep, setMobileStep] = useState<ListPropertyMobileStep>(
         ListPropertyMobileStep.GET_STARTED,
@@ -168,9 +168,12 @@ const ListPropertyPage = dynamic(
             if (otpResponse.data) {
               dispatch(setAuthStep(AuthStep.OTP));
             }
-          } catch (err) {
-            console.error("Login Error:", err);
-            dispatch(setAuthStep(AuthStep.CREATE_USER));
+          } catch (error) {
+            const e = error as FetchBaseQueryError;
+            console.error("Login Error:", e);
+            if (e.status === ErrorStatus.NOT_FOUND) {
+              dispatch(setAuthStep(AuthStep.CREATE_USER));
+            }
           }
           openDialog("login-dialog");
         }
@@ -235,7 +238,7 @@ const ListPropertyPage = dynamic(
                           defaultCountry="in"
                           value={phoneNo}
                           placeholder={"Enter phone number"}
-                          onChange={(value) => handlePhoneChange(value)}
+                          onChange={(value) => setPhoneNo(value)}
                           className="custom-phone-input w-full border border-gray-300 rounded-lg px-2 py-0.5 focus:ring-2 focus:ring-blue-500"
                         />
                       </div>

@@ -10,10 +10,7 @@ const baseUrl = process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL;
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl:
-      baseUrl ||
-      "http://ec2-13-201-0-200.ap-south-1.compute.amazonaws.com:8080/api/" ||
-      "https://jsonplaceholder.typicode.com",
+    baseUrl,
     prepareHeaders: (headers, { getState }) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const token = Cookies.get("token") || (getState() as any).auth?.token;
@@ -25,7 +22,14 @@ export const apiSlice = createApi({
   }),
   endpoints: (builder) => ({
     login: builder.mutation<
-      string, // Response type
+      {
+        name: string;
+        emailID: string;
+        connectBal: number;
+        avatarUrl: string | null;
+        token: string;
+        phoneNo: string;
+      },
       { phoneNo: string; otpCode: string } // Request body type
     >({
       query: (data) => {
@@ -34,12 +38,19 @@ export const apiSlice = createApi({
           url: "/user/login",
           method: "POST",
           body: { ...data, phoneNo: phoneNoWithoutCountryCode },
-          responseHandler: (response) => response.text(), // Convert response to text
+          responseHandler: (response) => response.json(), // Convert response to text
         };
       },
     }),
     register: builder.mutation<
-      string, // Response type
+      {
+        name: string;
+        emailID: string;
+        connectBal: number;
+        avatarUrl: string | null;
+        token: string;
+        phoneNo: string;
+      },
       { phoneNo: string; name: string; emailID: string; otpCode: string } // Request body type
     >({
       query: (data) => {
@@ -48,7 +59,7 @@ export const apiSlice = createApi({
           url: "/user/register",
           method: "POST",
           body: { ...data, phoneNo: phoneNoWithoutCountryCode },
-          responseHandler: (response) => response.text(),
+          responseHandler: (response) => response.json(),
         };
       },
     }),
@@ -229,7 +240,7 @@ export const apiSlice = createApi({
         attempts: number;
         status: string;
       },
-      { userId: number; amount: number }
+      { amount: number }
     >({
       query: (data) => ({
         url: "/payment/create-order",
@@ -246,7 +257,6 @@ export const apiSlice = createApi({
         paymentId: string;
         orderId: string;
         signature: string;
-        userId: number;
         amount: number;
         connects: number;
       }

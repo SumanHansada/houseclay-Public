@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import ChevronRightIconSvg from "public/icons/chevron-right.svg";
 
 import { type AccountNavItem } from "@/common/constants";
-import { useAppLogout } from "@/hooks/useAppLogout";
+import { useLogout } from "@/hooks/useLogout";
 
 const ChevronRightIcon = ChevronRightIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
@@ -47,7 +47,7 @@ export function AccountNavList({
 }: AccountNavProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const logout = useAppLogout();
+  const { logout } = useLogout();
 
   // Get userName for header variant
   const userName = variant === "header" ? (props as HeaderProps).userName : "";
@@ -86,7 +86,7 @@ export function AccountNavList({
 
     switch (item.actionId) {
       case "LOGOUT":
-        await logout();
+        logout();
         break;
     }
     router.push(item.href);

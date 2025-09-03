@@ -2,7 +2,8 @@ export enum AuthStep {
   PHONE = "phone",
   OTP = "otp",
   CREATE_USER = "createUser",
-  EMPTY = "",
+  LOGGED_IN = "loggedIn",
+  NONE = "",
 }
 
 export enum PropertyListingType {
@@ -63,4 +64,18 @@ export enum PaymentFilterStatus {
   ALL = "ALL",
   COMPLETED = "COMPLETED",
   CANCELLED = "CANCELLED",
+}
+
+export enum ErrorStatus {
+  BAD_REQUEST = 400,
+  UNAUTHORIZED = 401,
+  PAYMENT_REQUIRED = 402,
+  FORBIDDEN = 403,
+  NOT_FOUND = 404,
+  CONFLICT = 409,
+  PRECONDITION_FAILED = 412,
+  INTERNAL_SERVER_ERROR = 500,
+  SERVICE_UNAVAILABLE = 503,
+  GATEWAY_TIMEOUT = 504,
+  BAD_GATEWAY = 502,
 }

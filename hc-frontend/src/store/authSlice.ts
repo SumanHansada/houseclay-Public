@@ -3,21 +3,28 @@ import Cookies from "js-cookie";
 
 import { AuthStep } from "@/common/enums";
 
-interface AuthState {
-  token: string | null;
-  authStep: AuthStep;
-  phoneNo: string;
-  emailID: string;
+export interface AuthUserDetails {
+  token: string;
   name: string;
+  emailID: string;
+  phoneNo: string;
+  connectBal: number;
+  avatarUrl: string | null;
+}
+
+interface AuthState extends AuthUserDetails {
+  authStep: AuthStep;
   loginFromAddProperty: boolean;
 }
 
 const initialState: AuthState = {
-  token: null, // Initialize as null to avoid hydration issues
-  authStep: AuthStep.EMPTY, // Default to login step
+  token: "", // Initialize as null to avoid hydration issues
+  authStep: AuthStep.NONE, // Default to login step
   phoneNo: "", // Initialize phoneNo as null
   emailID: "", // Initialize emailID as null
   name: "", // Initialize name as null
+  connectBal: 0, // Initialize connectBal as null
+  avatarUrl: "", // Initialize avatarUrl as null
   loginFromAddProperty: false,
 };
 
@@ -25,15 +32,29 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    setAuthUser: (
+      state,
+      action: PayloadAction<{ authUserDetails: AuthUserDetails }>,
+    ) => {
+      const { authUserDetails } = action.payload;
+      // Direct mutation - Redux Toolkit handles immutability internally
+      Object.assign(state, authUserDetails);
+    },
+    clearAuthUser: (state) => {
+      state.token = "";
+      state.name = "";
+      state.phoneNo = "";
+      state.emailID = "";
+      state.connectBal = 0;
+      state.avatarUrl = "";
+    },
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
-      state.name = "Suman";
-      state.phoneNo = "";
       // Set cookie with 7 days expiry
       Cookies.set("token", action.payload, { expires: 7 });
     },
     clearToken: (state) => {
-      state.token = null;
+      state.token = "";
       Cookies.remove("token");
     },
     initializeToken: (state) => {
@@ -48,7 +69,7 @@ const authSlice = createSlice({
       state.authStep = action.payload;
     },
     clearAuthStep: (state) => {
-      state.authStep = AuthStep.EMPTY;
+      state.authStep = AuthStep.NONE;
     },
     setPhoneNo: (state, action: PayloadAction<string>) => {
       state.phoneNo = action.payload;
@@ -75,6 +96,8 @@ const authSlice = createSlice({
 });
 
 export const {
+  setAuthUser,
+  clearAuthUser,
   setToken,
   clearToken,
   initializeToken,

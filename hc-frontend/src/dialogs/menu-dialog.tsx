@@ -18,10 +18,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { ACCOUNT_NAV } from "@/common/constants";
 import { AccountNavList } from "@/components/AccountNavList";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
+import { useLogout } from "@/hooks/useLogout";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { useLogoutMutation } from "@/store/apiSlice";
 import { setHideStickyNavBar } from "@/store/appSlice";
-import { clearToken, setLoginFromAddProperty } from "@/store/authSlice";
+import { setLoginFromAddProperty } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 
 const Property = PropertySvg as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -43,7 +43,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
   );
   const router = useRouter();
   const { openDialog, closeDialog } = useDialog();
-  const [logout] = useLogoutMutation();
+  const { logout } = useLogout();
   const dispatch = useDispatch();
   const pathname = usePathname();
   const initialPathRef = useRef(pathname);
@@ -62,15 +62,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
     openDialog("login-dialog");
   };
 
-  const onLogout = async () => {
-    try {
-      const logoutResponse = await logout();
-      console.log(logoutResponse);
-      dispatch(clearToken());
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const onLogout = () => logout();
 
   const handlePropertyBannerClick = () => {
     closeDialog(id);

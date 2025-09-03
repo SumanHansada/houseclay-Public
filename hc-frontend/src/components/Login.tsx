@@ -19,11 +19,12 @@ import {
   useRegisterMutation,
 } from "@/store/apiSlice";
 import {
+  AuthUserDetails,
   setAuthStep,
+  setAuthUser,
   setEmailID,
   setLoginFromAddProperty,
   setName,
-  setPhoneNo,
   setToken,
 } from "@/store/authSlice";
 import { RootState } from "@/store/store";
@@ -34,7 +35,6 @@ const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const Login = () => {
   const { closeDialog } = useDialog();
   const authStep = useSelector((state: RootState) => state.auth.authStep);
-  const phoneNo = useSelector((state: RootState) => state.auth.phoneNo);
   const emailID = useSelector((state: RootState) => state.auth.emailID);
   const name = useSelector((state: RootState) => state.auth.name);
   const loginFromAddProperty = useSelector(
@@ -50,6 +50,7 @@ const Login = () => {
   const router = useRouter();
 
   const [otpCode, setOtpCode] = useState<string[]>(["", "", "", ""]);
+  const [phoneNo, setPhoneNo] = useState("");
 
   const ref1 = useRef<HTMLInputElement>(null);
   const ref2 = useRef<HTMLInputElement>(null);
@@ -102,7 +103,12 @@ const Login = () => {
           otpCode: otpCode.join(""),
         });
         if (registerResponse.data) {
-          dispatch(setToken(registerResponse.data));
+          dispatch(
+            setAuthUser({
+              authUserDetails: registerResponse.data as AuthUserDetails,
+            }),
+          );
+          dispatch(setToken(registerResponse.data.token));
         }
       } else {
         if (!phoneNo) return;
@@ -112,10 +118,15 @@ const Login = () => {
           otpCode: otpCode.join(""),
         });
         if (loginResponse.data) {
-          dispatch(setToken(loginResponse.data));
+          dispatch(
+            setAuthUser({
+              authUserDetails: loginResponse.data as AuthUserDetails,
+            }),
+          );
+          dispatch(setToken(loginResponse.data.token));
         }
       }
-      dispatch(setAuthStep(AuthStep.EMPTY));
+      dispatch(setAuthStep(AuthStep.LOGGED_IN));
       closeDialog("login-dialog");
       if (loginFromAddProperty) {
         router.push("/list-property");
@@ -126,12 +137,8 @@ const Login = () => {
     }
   };
 
-  const handlePhoneChange = (phoneNo: string) => {
-    dispatch(setPhoneNo(phoneNo));
-  };
-
   useEffect(() => {
-    if (authStep === AuthStep.EMPTY) {
+    if (authStep === AuthStep.NONE) {
       dispatch(setAuthStep(AuthStep.PHONE));
     }
     // Focus the first input when component mounts
@@ -257,7 +264,7 @@ const Login = () => {
                   defaultCountry="in"
                   value={phoneNo}
                   placeholder={"Enter phone number"}
-                  onChange={(value) => handlePhoneChange(value)}
+                  onChange={(value) => setPhoneNo(value)}
                   className="custom-phone-input w-full border border-gray-300 rounded-lg px-2 py-0.5 focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -309,7 +316,7 @@ const Login = () => {
                   defaultCountry="in"
                   value={phoneNo}
                   placeholder={"Enter phone number"}
-                  onChange={(value) => handlePhoneChange(value)}
+                  onChange={(value) => setPhoneNo(value)}
                   className="custom-phone-input w-full border border-gray-300 rounded-lg px-2 py-0.5 focus:ring-2 focus:ring-blue-500"
                 />
                 <label
