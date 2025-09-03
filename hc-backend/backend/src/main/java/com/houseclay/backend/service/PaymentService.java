@@ -18,8 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class PaymentService {
@@ -41,7 +42,7 @@ public class PaymentService {
     @Value("${razorpay.key_secret}")
     private String razorpaySecret;
 
-    private static final int CONNECT_RATE = 50;
+    private static final int CONNECT_RATE = 99;
 
     @PostConstruct
     public void init() throws Exception {
@@ -95,7 +96,7 @@ public class PaymentService {
     }
 
     @Transactional
-    public ResponseEntity<String> verifyPayment(
+    public ResponseEntity<?> verifyPayment(
             String paymentId,
             String orderId,
             String signature,
@@ -147,9 +148,10 @@ public class PaymentService {
         }
         user.setConnectBal(user.getConnectBal() + connectQuantity);
         userRepository.save(user);
-
-
-        return ResponseEntity.ok("Payment verified and balance updated");
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Payment verified and balance updated");
+        response.put("connectBal", user.getConnectBal());
+        return ResponseEntity.ok(response);
     }
 }
 

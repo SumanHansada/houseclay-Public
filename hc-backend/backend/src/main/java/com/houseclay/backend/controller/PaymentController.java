@@ -23,7 +23,7 @@ public class PaymentController {
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<String> verifyPayment(@RequestBody VerifyPaymentRequest request, @RequestAttribute("authenticatedUser") User user) {
+    public ResponseEntity<?> verifyPayment(@RequestBody VerifyPaymentRequest request, @RequestAttribute("authenticatedUser") User user) {
         return paymentService.verifyPayment(
                 request.getPaymentId(),
                 request.getOrderId(),
