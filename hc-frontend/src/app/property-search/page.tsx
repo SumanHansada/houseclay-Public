@@ -82,8 +82,9 @@ export default function PropertySearchPage() {
     if (error) {
       return error as PropertySearch[];
     }
-    if (!data || !Array.isArray(data)) return [];
-    return data.map((property) => ({
+    const properties = data as { items: PropertySearch[] };
+    if (!properties || !Array.isArray(properties.items)) return [];
+    return properties.items.map((property) => ({
       ...property,
       images: property.image ? [property.image] : [],
     })) as PropertySearch[];
