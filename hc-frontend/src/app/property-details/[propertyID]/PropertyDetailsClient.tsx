@@ -225,7 +225,10 @@ export function PropertyDetailsClient({
           )}
           {property.featured && (
             <button className="rounded-full border md:border-none items-center justify-center p-2 bg-gradient-to-br from-red-400 via-red-400 to-red-500 fill-current">
-              <SquareStar onClick={() => console.log("Crown Clicked")} size={18} />
+              <SquareStar
+                onClick={() => console.log("Crown Clicked")}
+                size={18}
+              />
             </button>
           )}
           <button className="rounded-full border md:border-none items-center justify-center p-2">
@@ -726,7 +729,10 @@ export function PropertyDetailsClient({
               </section>
             )}
             <section className="flex flex-col justify-between items-center mb-6">
-              <button className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-2" onClick={handleReportListingClick}>
+              <button
+                className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-2"
+                onClick={handleReportListingClick}
+              >
                 <Flag size={14} />
                 <span className="underline">Report this listing</span>
               </button>
