@@ -3,9 +3,11 @@ package com.houseclay.backend.controller;
 import com.houseclay.backend.entity.LeadCategory;
 import com.houseclay.backend.entity.User;
 import com.houseclay.backend.exception.APIException;
+import com.houseclay.backend.mapper.UserMapper;
 import com.houseclay.backend.payload.LoginPayload;
 import com.houseclay.backend.payload.UserPayload;
 
+import com.houseclay.backend.service.AdminService;
 import com.houseclay.backend.service.LeadService;
 import com.houseclay.backend.service.UserService;
 import jakarta.validation.Valid;
@@ -27,6 +29,9 @@ public class UserController {
 
     @Autowired
     private LeadService leadService;
+
+    @Autowired
+    private AdminService adminService;
 
 
     @RequestMapping (method = RequestMethod.POST, value = "/register",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -74,6 +79,20 @@ public class UserController {
         try {
             userService.logoutUser(authToken.replace("Bearer ", "")); // Remove "Bearer " prefix
             return ResponseEntity.ok(Map.of("message", "Logout successful"));
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/detail")
+    public ResponseEntity<?> getUser(@RequestHeader("Authorization") User user) {
+        try {
+            user = adminService.searchUser(user.getPhoneNo());
+            Map<String, Object> response = new HashMap<>();
+            response.put("user", UserMapper.toDetailDTO(user));
+            return ResponseEntity.ok(response);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {
