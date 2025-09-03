@@ -29,7 +29,7 @@ public class UserService {
     @Autowired
     private OtpService otpService;
 
-    public String createUser(UserPayload userPayload) throws Exception {
+    public UserLoginResponseDTO createUser(UserPayload userPayload) throws Exception {
         if(!otpService.validateOtp(userPayload.getPhoneNo(), userPayload.getOtpCode())) {
             throw new APIException("Invalid OTP Code", HttpStatus.BAD_REQUEST);
         }
@@ -40,7 +40,7 @@ public class UserService {
         userLogins.add(userLogin);
         user.setUserLogins(userLogins);
         userRepository.save(user);
-        return token;
+        return UserMapper.toUserLoginResponseDTO(user, token);
     }
 
     public UserLoginResponseDTO loginUser(LoginPayload loginPayload) throws Exception {

@@ -38,8 +38,8 @@ public class UserController {
     @RequestMapping (method = RequestMethod.POST, value = "/register",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createUser(@Valid @RequestBody UserPayload payload) {
         try {
-            String token = userService.createUser(payload);
-            return ResponseEntity.ok().body(token);
+            UserLoginResponseDTO userLoginResponseDTO = userService.createUser(payload);
+            return ResponseEntity.ok().body(userLoginResponseDTO);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {
