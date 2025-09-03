@@ -1,5 +1,6 @@
 package com.houseclay.backend.controller;
 
+import com.houseclay.backend.dto.UserLoginResponseDTO;
 import com.houseclay.backend.entity.LeadCategory;
 import com.houseclay.backend.entity.User;
 import com.houseclay.backend.exception.APIException;
@@ -49,8 +50,8 @@ public class UserController {
     @RequestMapping (method = RequestMethod.POST, value = "/login",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> login(@Valid @RequestBody LoginPayload payload) {
         try {
-            String token = userService.loginUser(payload);
-            return ResponseEntity.ok().body(token);
+            UserLoginResponseDTO userLoginResponseDTO = userService.loginUser(payload);
+            return ResponseEntity.ok().body(userLoginResponseDTO);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {

@@ -1,8 +1,10 @@
 package com.houseclay.backend.service;
 
+import com.houseclay.backend.dto.UserLoginResponseDTO;
 import com.houseclay.backend.entity.User;
 import com.houseclay.backend.entity.UserLogin;
 import com.houseclay.backend.exception.APIException;
+import com.houseclay.backend.mapper.UserMapper;
 import com.houseclay.backend.payload.LoginPayload;
 import com.houseclay.backend.payload.UserPayload;
 import com.houseclay.backend.repository.UserLoginRepository;
@@ -41,7 +43,7 @@ public class UserService {
         return token;
     }
 
-    public String loginUser(LoginPayload loginPayload) throws Exception {
+    public UserLoginResponseDTO loginUser(LoginPayload loginPayload) throws Exception {
         if(!otpService.validateOtp(loginPayload.getPhoneNo(), loginPayload.getOtpCode())) {
             throw new APIException("Invalid OTP Code", HttpStatus.BAD_REQUEST);
         }
@@ -59,7 +61,7 @@ public class UserService {
         userLogins.add(userLogin);
         user.setUserLogins(userLogins);
         userRepository.save(user);
-        return token;
+        return UserMapper.toUserLoginResponseDTO(user, token);
     }
 
     public boolean logoutUser(String authToken) throws Exception {
