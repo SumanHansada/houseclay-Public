@@ -8,6 +8,8 @@ import LinkedInSvg from "public/icons/linkedin.svg";
 import { useSelector } from "react-redux";
 
 import { RootState } from "@/store/store";
+import { SUPPORT_CONTACT, SUPPORT_EMAIL } from "@/common/constants";
+import { Mail, PhoneCall } from "lucide-react";
 
 const FooterClient: React.FC = () => {
   const HouseClay = HouseclaySvg as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -50,10 +52,10 @@ const FooterClient: React.FC = () => {
                 </li>
                 <li>
                   <Link
-                    href="/contact"
+                    href="/contact-us"
                     className="text-black hover:text-red-500"
                   >
-                    Contact
+                    Contact Us
                   </Link>
                 </li>
                 <li>
@@ -107,14 +109,26 @@ const FooterClient: React.FC = () => {
               </ul>
             </div>
 
-            {/* Contact Us */}
+            {/* Contact */}
             <div>
               <h3 className="text-gray-400 font-medium text-lg mb-5">
-                Contact Us
+                Contact
               </h3>
               <ul className="space-y-2">
-                <li className="text-black">support@houseclay.com</li>
-                <li className="text-black">+91 7892014327</li>
+                <a
+                  href={`mailto:${SUPPORT_EMAIL}`}
+                  className="flex items-center gap-2 w-fit"
+                >
+                  <Mail width={15} height={15} className="text-red-500" />
+                  <span>{SUPPORT_EMAIL}</span>
+                </a>
+                <a
+                  href={`tel:${SUPPORT_CONTACT}`}
+                  className="flex items-center gap-2 w-fit"
+                >
+                  <PhoneCall width={15} height={15} className="text-red-500" />
+                  <span>{SUPPORT_CONTACT}</span>
+                </a>
               </ul>
             </div>
 
@@ -260,8 +274,11 @@ const FooterClient: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-black hover:text-red-500">
-                  Contact
+                <Link
+                  href="/contact-us"
+                  className="text-black hover:text-red-500"
+                >
+                  Contact Us
                 </Link>
               </li>
               <li>
