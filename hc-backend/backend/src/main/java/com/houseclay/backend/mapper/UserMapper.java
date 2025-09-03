@@ -14,7 +14,8 @@ public class UserMapper {
     public static UserLoginResponseDTO toUserLoginResponseDTO(User user, String token) {
         UserLoginResponseDTO userLoginResponseDTO = new UserLoginResponseDTO();
         userLoginResponseDTO.setName(user.getName());
-        userLoginResponseDTO.setEmail(user.getEmailID());
+        userLoginResponseDTO.setEmailID(user.getEmailID());
+        userLoginResponseDTO.setPhoneNo(user.getPhoneNo());
         userLoginResponseDTO.setConnectBal(user.getConnectBal());
         userLoginResponseDTO.setToken(token);
         return userLoginResponseDTO;
