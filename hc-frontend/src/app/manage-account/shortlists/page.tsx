@@ -1,11 +1,12 @@
 "use client";
 
-import { Check, ChevronLeft } from "lucide-react";
+import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
 import { BadgeType, PropertyCategory } from "@/common/enums";
 import Properties from "@/components/Properties";
+import { MobileHeader } from "@/layout-components";
 
 import {
   DUMMY_PROPERTIES_FOR_PROPERTY_CARD,
@@ -88,23 +89,9 @@ export default function ShortlistsPage() {
       </section>
 
       {/* Mobile */}
-      <section className="md:hidden overflow-y-auto">
+      <section className="md:hidden">
         {/* Header */}
-        <header className="fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white">
-          <div className="grid grid-cols-5 items-center h-full px-4">
-            <button
-              aria-label="Go back"
-              className="rounded-full size-10 border flex items-center justify-center col-span-1"
-              onClick={() => router.back()}
-            >
-              <ChevronLeft size={25} />
-            </button>
-
-            <h1 className="col-span-3 text-center font-medium">
-              Shortlisted Properties
-            </h1>
-          </div>
-        </header>
+        <MobileHeader title="Shortlisted Properties" />
 
         {/* Filter buttons */}
         <div className="flex justify-between text-lg m-3 border p-1.5 sm:p-2 rounded-xl mx-8">
@@ -115,7 +102,7 @@ export default function ShortlistsPage() {
                 key={f.value}
                 onClick={() => setSelected(f.value)}
                 aria-pressed={active}
-                className={`px-2 py-1 sm:px-4 sm:py-2 flex-1 shadow-sm whitespace-nowrap ${
+                className={`px-2 py-1 sm:px-4 sm:py-2 flex-1 whitespace-nowrap ${
                   active ? "border border-red-500 text-red-500 rounded-lg" : ""
                 }`}
               >
@@ -127,9 +114,9 @@ export default function ShortlistsPage() {
       </section>
 
       {/* Cards */}
-      <div className="space-y-4 overflow-y-auto max-md:px-8 max-md:pb-16">
+      <div className="space-y-4 overflow-y-auto px-4 sm:px-8 max-md:px-8 max-md:mb-16">
         {/* Property List */}
-        <div className="mx-auto w-full py-4">
+        <div className="mx-auto w-full py-5">
           {filtered.length === 0 ? (
             <div className="text-center text-gray-500 py-12">
               No properties found.

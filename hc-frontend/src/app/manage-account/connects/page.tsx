@@ -1,10 +1,14 @@
 "use client";
-import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { default as InstantAccessSvg } from "public/icons/static-pages/instant-access.svg";
 import { default as NoForcedPlansSvg } from "public/icons/static-pages/no-forced-plans.svg";
 import { default as RealOwnersSvg } from "public/icons/static-pages/real-owners.svg";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+
+import { MobileHeader } from "@/layout-components";
+import { setHideStickyNavBar } from "@/store/appSlice";
 
 // Test
 import { userDummy } from "../dummy";
@@ -19,6 +23,14 @@ const NoForcedPlans = NoForcedPlansSvg as React.FC<
 
 export default function ConnectsPage() {
   const router = useRouter();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setHideStickyNavBar(true));
+    return () => {
+      dispatch(setHideStickyNavBar(false));
+    };
+  }, [dispatch]);
 
   return (
     <>
@@ -159,25 +171,11 @@ export default function ConnectsPage() {
       </section>
 
       {/* Mobile */}
-      <section className="md:hidden overflow-y-auto mb-20">
-        <header className="fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white">
-          <div className="grid grid-cols-3 items-center h-full px-4">
-            <button
-              aria-label="Go back"
-              className="justify-self-start rounded-full size-10 border flex items-center justify-center"
-              onClick={() => router.back()}
-            >
-              <ChevronLeft size={25} />
-            </button>
+      <section className="md:hidden">
+        <MobileHeader title="Connects" />
 
-            <h1 className="col-start-2 text-center font-medium truncate">
-              Connects
-            </h1>
-          </div>
-        </header>
-
-        <div className="px-8">
-          <div className="flex justify-between w-full py-4 rounded-lg mb-16">
+        <div className="px-8 mb-16 py-5">
+          <div className="flex justify-between w-full py-4 rounded-lg mb-12">
             <div className="flex flex-col gap-2 items-start w-2/5">
               <span className="font-medium">Your Connects</span>
               <div className="text-lg flex items-center">
@@ -266,23 +264,26 @@ export default function ConnectsPage() {
                 </span>
               </div>
             </div>
-            <div className="flex justify-between w-full gap-2">
-              <button
-                className="px-5 py-3 border border-black rounded-lg w-1/2"
-                onClick={() => router.push("/what-are-connects")}
-              >
-                Know more
-              </button>
-              <button
-                className="px-5 py-3 bg-red-500 text-white hover:bg-red-600 rounded-lg w-1/2"
-                onClick={() => router.push("/buy-connects")}
-              >
-                Buy Connects
-              </button>
-            </div>
           </div>
         </div>
       </section>
+
+      <footer className="md:hidden fixed inset-x-0 bottom-0 z-40 bg-white border-t border-gray-200 shadow-sm px-4 py-3">
+        <div className="flex gap-4">
+          <button
+            className="px-5 py-2 border border-black rounded-lg w-1/2"
+            onClick={() => router.push("/what-are-connects")}
+          >
+            Know more
+          </button>
+          <button 
+            className="px-5 py-2 bg-red-500 text-white hover:bg-red-600 rounded-lg w-1/2"
+            onClick={() => router.push("/buy-connects")}
+          >
+            Buy Connects
+          </button>
+        </div>
+      </footer>
     </>
   );
 }

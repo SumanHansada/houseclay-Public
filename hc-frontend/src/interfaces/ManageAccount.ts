@@ -1,3 +1,5 @@
+import { PaymentFilterStatus, PropertyCategory } from "@/common/enums";
+
 export interface MyProfileFormValues {
   name: string;
   phoneNumber: string;
@@ -25,3 +27,24 @@ export type MyRequirementsFormValues = {
   preferredTenants: string;
   budget: string;
 };
+
+export interface MyProperty {
+  propertyID: string;
+  propertyName: string;
+  category: PropertyCategory;
+  listedOn: string;
+  builtupArea: number;
+  price: number | null;
+  rent: number | null;
+  status: string;
+}
+
+export interface MyTransaction {
+  id: string;
+  type: string;
+  dateTime: string;
+  connects: number | null;
+  amount: number;
+  status: PaymentFilterStatus;
+  invoice: boolean;
+}

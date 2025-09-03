@@ -165,7 +165,13 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
           </div>
 
           {/* Profile Section */}
-          {token && <AccountNavList items={ACCOUNT_NAV} listClassName="" />}
+          {token && (
+            <AccountNavList
+              items={ACCOUNT_NAV}
+              iconSize={44}
+              variant="mobile"
+            />
+          )}
 
           {/* Quick Links Section */}
           <div>

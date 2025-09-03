@@ -12,7 +12,7 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl:
       baseUrl ||
-      "http://ec2-13-210-204-208.ap-southeast-2.compute.amazonaws.com:8080/api/" ||
+      "http://ec2-13-201-0-200.ap-south-1.compute.amazonaws.com:8080/api/" ||
       "https://jsonplaceholder.typicode.com",
     prepareHeaders: (headers, { getState }) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

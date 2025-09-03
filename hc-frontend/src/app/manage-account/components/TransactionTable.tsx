@@ -5,6 +5,7 @@ import DownloadIconSvg from "public/icons/download.svg";
 
 import { PaymentFilterStatus } from "@/common/enums";
 import { Column, WebsiteDataTable } from "@/components/DataTable";
+import { MyTransaction } from "@/interfaces/ManageAccount";
 
 const CircleCheckIcon = CircleCheckIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
@@ -15,22 +16,18 @@ const CircleCrossIcon = CircleCrossIconSvg as React.FC<
 const CoinIcon = CoinIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const DownloadIcon = DownloadIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
-interface Transaction {
-  id: string;
-  type: string;
-  dateTime: string;
-  connects: number | null;
-  amount: string;
-  status: PaymentFilterStatus;
-  invoice: boolean;
-}
-
 export const TransactionTable = ({
   transactions,
+  onDownload,
 }: {
-  transactions: Transaction[];
+  transactions: MyTransaction[];
+  onDownload: (transactionId: string) => void;
 }) => {
-  const columns: Column<Transaction>[] = [
+  const handleDownload = (transactionId: string) => {
+    console.log("Download Invoice: ", transactionId);
+    onDownload(transactionId);
+  };
+  const columns: Column<MyTransaction>[] = [
     {
       key: "type",
       label: "Type",
@@ -84,10 +81,12 @@ export const TransactionTable = ({
       label: "Invoice",
       render: (item) =>
         item.invoice ? (
-          <button className="">
+          <button className="" onClick={() => handleDownload(item.id)}>
             <DownloadIcon width={20} height={20} className="text-red-500" />
           </button>
-        ) : null,
+        ) : (
+          "-"
+        ),
     },
   ];
 
