@@ -276,7 +276,7 @@ export default function ConnectsPage() {
           >
             Know more
           </button>
-          <button 
+          <button
             className="px-5 py-2 bg-red-500 text-white hover:bg-red-600 rounded-lg w-1/2"
             onClick={() => router.push("/buy-connects")}
           >
