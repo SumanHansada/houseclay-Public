@@ -116,7 +116,7 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({
               variant="header"
               userName={userName}
               iconSize={iconSize}
-              onItemClick={handleItemClick}
+              onItemSelect={handleItemClick}
             />
           </div>,
           document.body,

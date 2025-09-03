@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
-export function Actions({
+export function MyPropertiesActionMenu({
   anchorEl,
   open,
   onClose,

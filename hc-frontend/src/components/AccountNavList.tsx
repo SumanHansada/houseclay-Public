@@ -15,7 +15,10 @@ interface BaseProps {
   items: AccountNavItem[];
   listClassName?: string;
   itemClassName?: string;
-  onItemClick?: () => void;
+  onItemSelect?: (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    item: AccountNavItem,
+  ) => void;
   iconSize?: number;
   chevronSize?: { width: number; height: number };
 }
@@ -37,7 +40,7 @@ export type AccountNavProps = HeaderProps | SidebarProps | MobileProps;
 
 export function AccountNavList({
   items,
-  onItemClick,
+  onItemSelect,
   listClassName,
   itemClassName,
   iconSize = 32,
@@ -82,16 +85,12 @@ export function AccountNavList({
     e: React.MouseEvent<HTMLAnchorElement>,
     item: AccountNavItem,
   ) => {
-    e.preventDefault();
+    onItemSelect?.(e, item);
 
-    switch (item.actionId) {
-      case "LOGOUT":
-        logout();
-        break;
-    }
-    router.push(item.href);
-    if (onItemClick) {
-      onItemClick();
+    if (item.actionId === "LOGOUT") {
+      e.preventDefault();
+      logout();
+      return;
     }
   };
 

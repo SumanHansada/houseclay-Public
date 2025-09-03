@@ -8,7 +8,7 @@ import { PropertyCategory } from "@/common/enums";
 import { formatINRCurrency } from "@/common/utils";
 import { Column, WebsiteDataTable } from "@/components/DataTable";
 
-import { Actions } from "./Actions";
+import { MyPropertiesActionMenu } from "./MyPropertiesActionMenu";
 
 const CircleCheckIcon = CircleCheckIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
@@ -131,7 +131,7 @@ export function PropertyTable({
             <ThreeDotsIcon width={20} height={20} className="text-black" />
           </button>
 
-          <Actions
+          <MyPropertiesActionMenu
             anchorEl={buttonRefs.current[item.propertyID] ?? null}
             open={menuFor === item.propertyID}
             onClose={() => setMenuFor(null)}
