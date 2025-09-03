@@ -34,7 +34,7 @@
     "formik": "^2.4.6",
     "framer-motion": "^12.12.1",
     "js-cookie": "^3.0.5",
-    "lucide-react": "^0.511.0",
+    "lucide-react": "^0.542.0",
     "motion": "^12.4.10",
     "next": "^15.3.2",
     "react": "^19.0.0",

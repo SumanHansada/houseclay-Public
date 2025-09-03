@@ -66,7 +66,10 @@ export default function ConnectsPage() {
                 </span>
               </div>
             </div>
-            <button className="underline text-red-500 hover:text-red-600 lg:text-lg">
+            <button
+              className="underline text-red-500 hover:text-red-600 lg:text-lg"
+              onClick={() => router.push("/buy-connects")}
+            >
               Buy more connects
             </button>
           </div>
@@ -273,7 +276,10 @@ export default function ConnectsPage() {
           >
             Know more
           </button>
-          <button className="px-5 py-2 bg-red-500 text-white hover:bg-red-600 rounded-lg w-1/2">
+          <button 
+            className="px-5 py-2 bg-red-500 text-white hover:bg-red-600 rounded-lg w-1/2"
+            onClick={() => router.push("/buy-connects")}
+          >
             Buy Connects
           </button>
         </div>
