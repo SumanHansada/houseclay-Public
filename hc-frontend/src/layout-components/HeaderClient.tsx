@@ -5,7 +5,7 @@ import { Menu, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import CoinSvg from "public/icons/coin.svg";
-import HouseClaySvg from "public/icons/houseclay.svg";
+import HouseClaySvg from "public/icons/houseclay-main.svg";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -63,20 +63,20 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
 
   return (
     <>
-      <header className="flex fixed top-0 left-0 right-0 bg-white z-50 justify-between w-full items-center py-2 shadow-sm xl:gap-32 lg:gap-16 md:gap-8 gap-8 xl:px-24 md:px-12 px-12 max-md:hidden mx-auto">
+      <header className="flex fixed top-0 left-0 right-0 bg-white z-50 justify-between w-full items-center py-2 shadow-sm xl:gap-32 lg:gap-16 md:gap-2 gap-8 xl:px-24 md:px-12 px-12 max-md:hidden mx-auto">
         {/* Left Section - Logo */}
         <div className="flex items-center">
-          <Link href="/" className="flex items-center gap-1">
-            <HouseClay />
-            <span className="text-red-600 text-lg font-nunito font-bold">
-              HouseClay
+          <Link href="/" className="flex items-center gap-1 py-1">
+            <HouseClay width={24} height={26} />
+            <span className="text-red-600 text-2xl font-inter font-bold">
+              houseclay
             </span>
           </Link>
         </div>
 
         {/* Center - Navigation */}
         <div className="flex justify-between items-center w-full text-sm">
-          <nav className="hidden md:flex xl:gap-12 lg:gap-6 md:gap-6 gap-6 text-gray-800">
+          <nav className="hidden md:flex xl:gap-12 lg:gap-6 md:gap-2 gap-3 text-gray-800">
             <Link
               href={`/property-search?lat=${bengaluruLocation.lat}&lon=${bengaluruLocation.lng}&propertyCategory=rent`}
               data-category="rent"
@@ -161,9 +161,9 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
         <div className="flex items-center gap-2">
           <Menu role="button" onClick={onMenuClick} />
           <Link href="/" className="flex items-center gap-1">
-            <HouseClay />
-            <span className="text-red-600 text-lg font-nunito font-bold">
-              HouseClay
+            <HouseClay width={22} height={24} />
+            <span className="text-red-600 text-xl font-inter font-bold">
+              houseclay
             </span>
           </Link>
         </div>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import FacebookSvg from "public/icons/facebook.svg";
-import HouseclaySvg from "public/icons/houseclay.svg";
+import HouseclaySvg from "public/icons/houseclay-main.svg";
 import InstagramSvg from "public/icons/instagram.svg";
 import LinkedInSvg from "public/icons/linkedin.svg";
 import { useSelector } from "react-redux";
@@ -195,9 +195,9 @@ const FooterClient: React.FC = () => {
         <div className="py-6 flex flex-row justify-between items-center">
           <div className="flex items-center">
             <Link href="/" className="flex items-center gap-1">
-              <HouseClay />
-              <span className="text-red-600 text-lg font-nunito font-bold">
-                HouseClay
+              <HouseClay width={24} height={26} />
+              <span className="text-red-600 text-xl font-inter font-bold">
+                houseclay
               </span>
             </Link>
           </div>
@@ -231,9 +231,9 @@ const FooterClient: React.FC = () => {
         className={`${hideFooter ? "hidden" : "flex"} flex-col gap-6 md:hidden bg-gray-100 px-6 pt-8 pb-16`}
       >
         <Link href="/" className="flex items-center gap-1">
-          <HouseClay />
-          <span className="text-red-600 text-lg font-nunito font-bold">
-            HouseClay
+          <HouseClay width={22} height={24} />
+          <span className="text-red-600 text-xl font-inter font-bold">
+            houseclay
           </span>
         </Link>
         {/* CTA Button and Description */}
