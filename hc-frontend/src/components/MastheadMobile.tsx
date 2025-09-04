@@ -42,7 +42,7 @@ const MastHeadMobile: React.FC = () => {
 
   return (
     <div className="relative flex flex-col px-6 pt-8 pb-14 gap-6">
-      <div className="absolute inset-0 -z-10">
+      {/* <div className="absolute inset-0 -z-10">
         <Image
           src={bannerBackgroundMobile}
           alt="Banner Background"
@@ -51,7 +51,7 @@ const MastHeadMobile: React.FC = () => {
           sizes="100vw"
           priority
         />
-      </div>
+      </div> */}
       {/* Tabs and Search */}
       <div>
         {/* Tabs */}

@@ -102,7 +102,10 @@ const FooterClient: React.FC = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/terms" className="text-black hover:text-red-500">
+                  <Link
+                    href="/terms-and-conditions"
+                    className="text-black hover:text-red-500"
+                  >
                     Terms & Conditions
                   </Link>
                 </li>
@@ -213,7 +216,7 @@ const FooterClient: React.FC = () => {
               </li>
               <li>
                 <Link
-                  href="/terms"
+                  href="/terms-and-conditions"
                   className="text-gray-400 hover:text-red-500"
                 >
                   Terms & Conditions
@@ -325,7 +328,10 @@ const FooterClient: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="text-black hover:text-red-500">
+                <Link
+                  href="/terms-and-conditions"
+                  className="text-black hover:text-red-500"
+                >
                   Terms & Conditions
                 </Link>
               </li>
