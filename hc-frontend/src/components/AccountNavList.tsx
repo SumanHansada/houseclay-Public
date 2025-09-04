@@ -60,8 +60,8 @@ export function AccountNavList({
     switch (variant) {
       case "header":
         return {
-          list: "bg-white border border-gray-200 rounded-lg shadow-lg p-2",
-          item: "gap-3 px-4 py-2 cursor-pointer rounded-md hover:bg-gray-50",
+          list: "bg-white border border-gray-200 rounded-lg shadow-lg py-2 px-3 space-y-1",
+          item: "gap-3 cursor-pointer rounded-md hover:bg-gray-50",
         };
       case "mobile":
         return {
@@ -100,7 +100,7 @@ export function AccountNavList({
 
     if (label === "Logout") {
       return (
-        <div className="w-full flex items-center justify-center text-gray-700">
+        <div className="w-full flex items-center text-gray-700 py-2 px-4 gap-3">
           <NavIcon
             width={iconSize}
             height={iconSize}
@@ -113,7 +113,7 @@ export function AccountNavList({
 
     if (label === "My Profile") {
       return (
-        <div className="flex items-center gap-3 bg-gray-100 w-full rounded-lg p-2">
+        <div className="flex items-center gap-3 bg-gray-100 w-full rounded-xl py-2 px-4">
           <NavIcon
             width={iconSize}
             height={iconSize}
@@ -123,20 +123,24 @@ export function AccountNavList({
             <div className="font-medium text-gray-900">{userName}</div>
             <div className="text-sm text-gray-500">{label}</div>
           </div>
+          <ChevronRightIcon
+            width={chevronSize.width}
+            height={chevronSize.height}
+          />
         </div>
       );
     }
 
     // Default header item rendering
     return (
-      <div className="flex items-center gap-3 w-full">
+      <div className="flex items-center gap-3 w-full py-2 px-4">
         <NavIcon
           width={iconSize}
           height={iconSize}
           className={isActive ? "text-red-500" : "text-gray-700"}
         />
         <span
-          className={`flex justify-between items-center flex-1 border-b-2 pb-2 ${isActive ? "text-red-500 border-red-200" : "text-gray-700"}`}
+          className={`flex justify-between items-center flex-1 border-b-2 py-2 ${isActive ? "text-red-500 border-red-200" : "text-gray-700"}`}
         >
           {label}
           <ChevronRightIcon

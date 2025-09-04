@@ -133,6 +133,7 @@ const MastHeadMobile: React.FC = () => {
         <div className="flex flex-col items-center justify-center self-start justify-self-center">
           <button
             className="bg-white p-4 rounded-2xl shadow-lg justify-center items-center relative"
+            onClick={() => router.push("/list-property")}
             role="button"
           >
             <div className="absolute -top-2 -right-2 bg-red-500 text-white px-2 py-0.5 text-xs rounded">
