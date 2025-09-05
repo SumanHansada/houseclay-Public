@@ -15,7 +15,7 @@ import ZeroPercentRedSvg from "public/icons/zero-percent-red.svg";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { ACCOUNT_NAV } from "@/common/constants";
+import { ACCOUNT_NAV } from "@/common/dataConstants";
 import { AccountNavList } from "@/components/AccountNavList";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { useLogout } from "@/hooks/useLogout";

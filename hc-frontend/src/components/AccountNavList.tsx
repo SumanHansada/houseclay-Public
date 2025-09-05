@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import ChevronRightIconSvg from "public/icons/chevron-right.svg";
 
-import { type AccountNavItem } from "@/common/constants";
+import { type AccountNavItem } from "@/common/dataConstants";
 import { useLogout } from "@/hooks/useLogout";
 
 const ChevronRightIcon = ChevronRightIconSvg as React.FC<

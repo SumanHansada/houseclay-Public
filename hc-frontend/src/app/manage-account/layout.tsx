@@ -3,7 +3,7 @@
 import { type ReactNode, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-import { ACCOUNT_NAV } from "@/common/constants";
+import { ACCOUNT_NAV } from "@/common/dataConstants";
 import { AccountNavList } from "@/components/AccountNavList";
 import { Footer } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";

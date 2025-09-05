@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 
-import { CONNECT_CARDS } from "@/common/constants";
+import { CONNECT_CARDS } from "@/common/dataConstants";
 import Carousel2D from "@/components/Carousel2D";
 
 interface ConnectCardProps {

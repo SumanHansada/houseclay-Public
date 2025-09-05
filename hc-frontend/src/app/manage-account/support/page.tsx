@@ -5,11 +5,8 @@ import MailIconSvg from "public/icons/mail.svg";
 import PhoneIconSvg from "public/icons/phone.svg";
 import { useState } from "react";
 
-import {
-  SUPPORT_ACCORDION,
-  SUPPORT_CONTACT,
-  SUPPORT_EMAIL,
-} from "@/common/constants";
+import { SUPPORT_CONTACT, SUPPORT_EMAIL } from "@/common/constants";
+import { SUPPORT_ACCORDION } from "@/common/dataConstants";
 import { MobileHeader } from "@/layout-components";
 
 import { Accordion } from "../components/Accordion";
