@@ -1,53 +1,21 @@
 "use client";
-import { Check, ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
 import NumberField from "@/base-components/NumberField";
+import RadioGroup from "@/base-components/RadioGroup";
+import ConnectsBundleCard from "@/components/ConnectsBundleCard";
+import ConnectsBundleData from "@/data/ConnectsBundleData.json";
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import {
   useCreateOrderMutation,
   useVerifyPaymentMutation,
 } from "@/store/apiSlice";
+import { RootState } from "@/store/store";
 import { Tab, TabContent, TabHeader, Tabs } from "@/utility-components/Tabs";
-
-// Bundle data
-const bundles = [
-  {
-    id: "basic",
-    title: "Basic Blue Bundle",
-    connects: 10,
-    originalPrice: 990,
-    discountedPrice: 891,
-    discount: "10% Off",
-    validity: "60 Days",
-    color: "from-blue-400 to-blue-600",
-    selected: false,
-  },
-  {
-    id: "premium",
-    title: "Premium Gold Bundle",
-    connects: 30,
-    originalPrice: 2970,
-    discountedPrice: 2524,
-    discount: "15% Off",
-    validity: "60 Days",
-    color: "from-yellow-400 to-yellow-600",
-    selected: true,
-    recommended: true,
-  },
-  {
-    id: "elite",
-    title: "Elite Purple Bundle",
-    connects: 50,
-    originalPrice: 4950,
-    discountedPrice: 3960,
-    discount: "20% Off",
-    validity: "60 Days",
-    color: "from-purple-400 to-purple-600",
-    selected: false,
-  },
-];
 
 export default function BuyConnectsPage() {
   const router = useRouter();
@@ -56,28 +24,54 @@ export default function BuyConnectsPage() {
   const [customConnects, setCustomConnects] = useState(5);
   const [createOrder] = useCreateOrderMutation();
   const [verifyPayment] = useVerifyPaymentMutation();
+  const { isMobile } = useDeviceContext();
 
-  const currentBundle = bundles.find((bundle) => bundle.id === selectedBundle);
-  const gstAmount = currentBundle ? currentBundle.originalPrice * 0.18 : 0;
+  const connectBalance = useSelector(
+    (state: RootState) => state.auth.connectBal,
+  );
+  const currentBundle = ConnectsBundleData.bundles.find(
+    (bundle) => bundle.id === selectedBundle,
+  );
+  const customConnectsPrice = customConnects * 99;
+  const gstAmount = currentBundle
+    ? currentBundle.originalPrice * 0.18
+    : customConnectsPrice * 0.18;
   const totalAmount = currentBundle
     ? currentBundle.originalPrice + gstAmount
-    : 0;
-  const newBalance = 8 + (currentBundle?.connects || 0);
+    : customConnectsPrice + gstAmount;
+  console.log("current Bundle", selectedBundle, currentBundle);
+  const newConnectsBalance =
+    connectBalance + (currentBundle ? currentBundle.connects : customConnects);
 
-  // Calculate expiry date (60 days from today)
+  const bundleOptions = ConnectsBundleData.bundles.map((bundle) => ({
+    value: bundle.id,
+    label: bundle.title,
+    icon: (
+      <ConnectsBundleCard
+        bundle={bundle}
+        selectedBundle={selectedBundle}
+        isMobile={isMobile}
+      />
+    ),
+  }));
+
   const expiryDate = new Date();
   expiryDate.setDate(expiryDate.getDate() + 60);
 
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Razorpay = (window as any).Razorpay;
 
+  const handleTabChange = (value: string) => {
+    if (value === "bundles") {
+      setSelectedBundle("premium");
+    } else {
+      setSelectedBundle(value);
+    }
+  };
+
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handlePaymentSuccess = async (response: any) => {
-    console.log(response);
-    alert(response.razorpay_payment_id);
-    alert(response.razorpay_order_id);
-    alert(response.razorpay_signature);
-
+    console.log("Payment success response:", response);
     try {
       const result = await verifyPayment({
         paymentId: response.razorpay_payment_id,
@@ -110,13 +104,7 @@ export default function BuyConnectsPage() {
       const rzp = new Razorpay(options);
       //eslint-disable-next-line @typescript-eslint/no-explicit-any
       rzp.on("payment.failed", function (response: any) {
-        alert(response.error.code);
-        alert(response.error.description);
-        alert(response.error.source);
-        alert(response.error.step);
-        alert(response.error.reason);
-        alert(response.error.metadata.order_id);
-        alert(response.error.metadata.payment_id);
+        console.log(response);
       });
       rzp.open();
     } catch (error) {
@@ -128,8 +116,8 @@ export default function BuyConnectsPage() {
     <>
       {/* Desktop */}
       <section className="w-full max-md:hidden">
-        <div className="flex justify-between items-start xl:px-28 lg:px-14 md:px-14 px-8 py-12 gap-16">
-          <div className="left-0 flex-1">
+        <div className="flex justify-between items-start xl:px-28 lg:px-14 md:px-14 px-8 py-12 gap-8 md:gap-8 xl:gap-8 2xl:gap-24 relative">
+          <div className="relative w-2/3 max-xl:w-full">
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-4">
@@ -144,17 +132,21 @@ export default function BuyConnectsPage() {
                 <Image
                   src="/icons/coin.svg"
                   alt="coin"
-                  width={20}
-                  height={20}
+                  width={25}
+                  height={25}
                 />
-                <span className="font-medium">8 Connects</span>
+                <span className="font-medium">{connectBalance} Connects</span>
               </div>
             </div>
 
             <div className="flex flex-col gap-2">
               {/* Left Column - Bundle Selection */}
               <div className="lg:col-span-2">
-                <Tabs defaultActive="bundles" className="mb-8">
+                <Tabs
+                  defaultActive="bundles"
+                  className="mb-8"
+                  onTabChange={handleTabChange}
+                >
                   <TabHeader
                     containerClassName="border-b border-gray-200"
                     tabsClassName="flex"
@@ -180,75 +172,21 @@ export default function BuyConnectsPage() {
                       Select the connects bundle to buy
                     </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                      {bundles.map((bundle) => (
-                        <div
-                          key={bundle.id}
-                          className={`relative cursor-pointer h-72 rounded-xl p-6 border-2  transition-all bg-gradient-to-r ${bundle.color}  ${
-                            selectedBundle === bundle.id
-                              ? "border-red-500 shadow-lg border-2"
-                              : "border-white hover:border-gray-300 "
-                          }`}
-                          onClick={() => setSelectedBundle(bundle.id)}
-                        >
-                          {bundle.recommended && (
-                            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                              <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                                Recommended
-                              </span>
-                            </div>
-                          )}
-
-                          {selectedBundle === bundle.id && (
-                            <div className="absolute -top-2 -right-2">
-                              <div className="bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center">
-                                <Check size={16} />
-                              </div>
-                            </div>
-                          )}
-
-                          <h3 className="font-semibold text-2xl mb-4 text-white">
-                            {bundle.title}
-                          </h3>
-                          <div className="flex items-center gap-1 rounded-full mb-4">
-                            <Image
-                              src="/icons/coin.svg"
-                              alt="coin"
-                              width={20}
-                              height={20}
-                            />
-                            <span className="font-medium text-white text-sm">
-                              {bundle.connects} Connects
-                            </span>
-                          </div>
-
-                          <div className="mb-2">
-                            <span className="line-through text-white">
-                              ₹{bundle.originalPrice.toLocaleString()}/-
-                            </span>
-                          </div>
-                          <div>
-                            <span className="text-2xl font-bold text-white mb-4">
-                              ₹{bundle.discountedPrice.toLocaleString()}/-
-                            </span>
-                          </div>
-
-                          <div className="flex items-center justify-between mb-8 bg-transparent p-1 text-white rounded-full">
-                            <span className="text-white font-medium text-xs">
-                              {bundle.discount}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <span className="text-white text-xs">
-                              Validity:
-                            </span>
-                            <span className="text-white text-base">
-                              {bundle.validity}
-                            </span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                    <RadioGroup
+                      name="bundle-selection"
+                      options={bundleOptions}
+                      value={selectedBundle}
+                      onChange={(value) => setSelectedBundle(value as string)}
+                      columns={3}
+                      horizontal={true}
+                      withIcons={true}
+                      selectedColor="shadow-2xl"
+                      radioOptionClassName="rounded-xl relative transition-all"
+                      radioGroupClassName="gap-8 md:gap-10 xl:gap-12 !grid-cols-3"
+                      radioLabelClassName="block p-0 w-full h-full"
+                      radioTextClassName="hidden"
+                      containerClassName="mb-0"
+                    />
                   </TabContent>
 
                   <TabContent value="custom">
@@ -268,7 +206,7 @@ export default function BuyConnectsPage() {
                         {/* Error Message */}
                         {customConnects < 5 && (
                           <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-                            <p className="text-red-600 text-sm text-center">
+                            <p className="text-sm">
                               A minimum of <strong>5 Connects</strong> is
                               required to proceed.
                             </p>
@@ -289,8 +227,10 @@ export default function BuyConnectsPage() {
                         Your account will be charged
                       </span>
                       <span className="font-medium">
-                        ₹{currentBundle?.originalPrice.toLocaleString()} + 18%
-                        GST
+                        ₹
+                        {currentBundle?.originalPrice.toLocaleString() ||
+                          customConnectsPrice.toLocaleString()}{" "}
+                        + 18% GST
                       </span>
                     </div>
 
@@ -302,11 +242,11 @@ export default function BuyConnectsPage() {
                         <Image
                           src="/icons/coin.svg"
                           alt="coin"
-                          width={20}
-                          height={20}
+                          width={24}
+                          height={24}
                         />
                         <span className="font-medium">
-                          {newBalance} Connect
+                          {newConnectsBalance} Connects
                         </span>
                       </div>
                     </div>
@@ -352,7 +292,7 @@ export default function BuyConnectsPage() {
                         type="checkbox"
                         checked={agreedToTerms}
                         onChange={(e) => setAgreedToTerms(e.target.checked)}
-                        className="rounded border-gray-300 text-red-500 focus:ring-red-500"
+                        className="h-5 w-5 accent-red-500"
                       />
                       <span className="text-sm">
                         I agree to{" "}
@@ -374,9 +314,9 @@ export default function BuyConnectsPage() {
                     </button>
                     <button
                       onClick={handleProceedToPay}
-                      disabled={!agreedToTerms}
+                      disabled={!agreedToTerms || newConnectsBalance < 5}
                       className={`flex px-8 py-3 rounded-xl font-medium ${
-                        agreedToTerms
+                        agreedToTerms && newConnectsBalance >= 5
                           ? "bg-red-500 text-white hover:bg-red-600"
                           : "bg-gray-300 text-gray-500 cursor-not-allowed"
                       }`}
@@ -388,7 +328,7 @@ export default function BuyConnectsPage() {
               </div>
             </div>
           </div>
-          <div className="right-0 w-[33.33%] top-0">
+          <div className="sticky top-8 w-1/3 max-xl:hidden">
             <Image
               src="/images/buy-connects-graphic.svg"
               alt="Buy Connects Graphic"
@@ -425,7 +365,7 @@ export default function BuyConnectsPage() {
             <span className="text-gray-600">Your available Connects</span>
             <div className="flex items-center gap-1 bg-yellow-100 px-3 py-1 rounded-full">
               <Image src="/icons/coin.svg" alt="coin" width={20} height={20} />
-              <span className="font-medium">8 Connect</span>
+              <span className="font-medium">{connectBalance} Connects</span>
             </div>
           </div>
 
@@ -456,70 +396,31 @@ export default function BuyConnectsPage() {
                 Select the connects bundle to buy
               </h2>
 
-              <div className="space-y-4 mb-6">
-                {bundles.map((bundle) => (
-                  <div
-                    key={bundle.id}
-                    className={`relative cursor-pointer rounded-lg p-4 border-2 ${
-                      selectedBundle === bundle.id
-                        ? "border-red-500 bg-red-50"
-                        : "border-gray-200"
-                    }`}
-                    onClick={() => setSelectedBundle(bundle.id)}
-                  >
-                    {bundle.recommended && (
-                      <div className="absolute -top-2 left-4">
-                        <span className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-medium">
-                          Recommended
-                        </span>
-                      </div>
-                    )}
-
-                    {selectedBundle === bundle.id && (
-                      <div className="absolute top-2 right-2">
-                        <div className="bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center">
-                          <Check size={12} />
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="flex items-center gap-4">
-                      <div
-                        className={`w-12 h-12 rounded-full bg-gradient-to-r ${bundle.color} flex items-center justify-center`}
-                      >
-                        <span className="text-white font-bold text-lg">
-                          {bundle.connects}
-                        </span>
-                      </div>
-
-                      <div className="flex-1">
-                        <h3 className="font-semibold">{bundle.title}</h3>
-                        <p className="text-gray-600 text-sm">
-                          {bundle.connects} Connects
-                        </p>
-
-                        <div className="mt-2">
-                          <span className="line-through text-gray-400 text-sm">
-                            ₹{bundle.originalPrice.toLocaleString()}/-
-                          </span>
-                          <span className="text-lg font-bold text-gray-900 ml-2">
-                            ₹{bundle.discountedPrice.toLocaleString()}/-
-                          </span>
-                        </div>
-
-                        <div className="flex items-center justify-between mt-2">
-                          <span className="text-green-600 font-medium text-sm">
-                            {bundle.discount}
-                          </span>
-                          <span className="text-gray-600 text-sm">
-                            {bundle.validity}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <RadioGroup
+                name="bundle-selection-mobile"
+                options={ConnectsBundleData.bundles.map((bundle) => ({
+                  value: bundle.id,
+                  label: bundle.title,
+                  icon: (
+                    <ConnectsBundleCard
+                      bundle={bundle}
+                      selectedBundle={selectedBundle}
+                      isMobile={true}
+                    />
+                  ),
+                }))}
+                value={selectedBundle}
+                onChange={(value) => setSelectedBundle(value as string)}
+                columns={1}
+                horizontal={true}
+                withIcons={true}
+                selectedColor="border-red-500"
+                radioOptionClassName="border-0 rounded-lg w-full relative transition-all"
+                radioLabelClassName="block p-0 w-full h-full"
+                radioTextClassName="hidden"
+                containerClassName="mb-6"
+                radioGroupClassName="grid-cols-3 space-y-4 gap-6"
+              />
             </TabContent>
 
             <TabContent value="custom">
@@ -552,7 +453,9 @@ export default function BuyConnectsPage() {
                     width={16}
                     height={16}
                   />
-                  <span className="font-medium">{newBalance} Connect</span>
+                  <span className="font-medium">
+                    {newConnectsBalance} Connects
+                  </span>
                 </div>
               </div>
 

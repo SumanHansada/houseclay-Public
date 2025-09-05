@@ -27,6 +27,7 @@ import ListPropertyAdvantages from "@/components/ListPropertyAdvantages";
 import ListWithUs from "@/components/ListWithUs";
 import PropertyTypeOptions from "@/components/PropertyTypeOptions";
 import { TestimonialCard } from "@/components/Testimonials";
+import PropertiesData from "@/data/PropertiesData.json";
 import { CallWithCaptainDialog } from "@/dialogs";
 import { Footer } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
@@ -46,7 +47,6 @@ import { clearFormData } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 import { setCheckUser } from "@/store/userSlice";
 
-import dummyData from "../../data/dummyData.json";
 import ListPropertyLoading from "./loading";
 
 const ListPropertyPage = dynamic(
@@ -76,7 +76,7 @@ const ListPropertyPage = dynamic(
       const [generateOtp] = useGenerateOtpMutation();
       const [generateLead] = useGenerateLeadMutation();
 
-      const testimonials = dummyData.testimonials;
+      const testimonials = PropertiesData.testimonials;
 
       useEffect(() => {
         dispatch(setAuthStep(AuthStep.PHONE));

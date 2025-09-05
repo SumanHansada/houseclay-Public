@@ -1,0 +1,47 @@
+{
+  "bundles": [
+    {
+      "id": "basic",
+      "title": "Basic",
+      "subTitle": "Blue Bundle",
+      "connects": 10,
+      "originalPrice": 990,
+      "discountedPrice": 891,
+      "discount": "10% Off",
+      "validity": "60 Days",
+      "borderColor": "border-blue-400",
+      "backgroundColor": "bg-blue-400",
+      "selected": false,
+      "background": "blue-bundle"
+    },
+    {
+      "id": "premium",
+      "title": "Premium",
+      "subTitle": "Gold Bundle",
+      "connects": 30,
+      "originalPrice": 2970,
+      "discountedPrice": 2524,
+      "discount": "15% Off",
+      "validity": "60 Days",
+      "borderColor": "border-yellow-400",
+      "backgroundColor": "bg-yellow-400",
+      "selected": false,
+      "recommended": true,
+      "background": "gold-bundle"
+    },
+    {
+      "id": "elite",
+      "title": "Elite",
+      "subTitle": "Purple Bundle",
+      "connects": 50,
+      "originalPrice": 4950,
+      "discountedPrice": 3960,
+      "discount": "20% Off",
+      "validity": "60 Days",
+      "borderColor": "border-purple-400",
+      "backgroundColor": "bg-purple-400",
+      "selected": false,
+      "background": "purple-bundle"
+    }
+  ]
+}

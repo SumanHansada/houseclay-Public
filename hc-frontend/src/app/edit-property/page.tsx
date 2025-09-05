@@ -22,6 +22,7 @@ import ListPropertyAdvantages from "@/components/ListPropertyAdvantages";
 import ListWithUs from "@/components/ListWithUs";
 import PropertyTypeOptions from "@/components/PropertyTypeOptions";
 import { TestimonialCard } from "@/components/Testimonials";
+import PropertiesData from "@/data/PropertiesData.json";
 import { Footer } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import {
@@ -32,7 +33,6 @@ import {
 import { clearFormData } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
-import dummyData from "../../data/dummyData.json";
 import EditPropertyLoading from "./loading";
 
 const EditPropertyPage = dynamic(
@@ -54,7 +54,7 @@ const EditPropertyPage = dynamic(
         ListPropertyDesktopStep.LISTING_OPTIONS,
       );
 
-      const testimonials = dummyData.testimonials;
+      const testimonials = PropertiesData.testimonials;
 
       useEffect(() => {
         dispatch(clearFormData());

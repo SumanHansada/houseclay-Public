@@ -3,15 +3,15 @@ import { Suspense } from "react";
 import Advantages from "@/components/Advantages";
 import MastheadDesktopClient from "@/components/MastheadDesktopClient";
 import MastHeadMobileClient from "@/components/MastheadMobileClient";
+import PropertiesData from "@/data/PropertiesData.json";
 import { Footer } from "@/layout-components";
 
-import dummyData from "../data/dummyData.json";
 import ClientPage from "./ClientPage";
 
 export default async function Home() {
-  const properties = dummyData.properties;
-  const neighbourhoods = dummyData.neighbourhoods;
-  const testimonials = dummyData.testimonials;
+  const properties = PropertiesData.properties;
+  const neighbourhoods = PropertiesData.neighbourhoods;
+  const testimonials = PropertiesData.testimonials;
 
   return (
     <>
