@@ -1,9 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { PropertyCategory } from "@/common/enums";
+import { Location } from "@/interfaces/Location";
 import { PropertySearchFilter } from "@/interfaces/PropertySearchFilter";
 
 const initialState: PropertySearchFilter = {
+  location: null,
   propertyType: "",
   propertyCategory: PropertyCategory.RENT,
   propertyBhk: "",
@@ -27,6 +29,9 @@ const propertySearchSlice = createSlice({
   name: "propertySearch",
   initialState,
   reducers: {
+    setLocation: (state, action: PayloadAction<Location | null>) => {
+      state.location = action.payload;
+    },
     setPropertyType: (
       state,
       action: PayloadAction<string | number | boolean>,
@@ -86,6 +91,7 @@ const propertySearchSlice = createSlice({
       state.bhkType = action.payload;
     },
     resetPropertySearch: (state) => {
+      state.location = null;
       state.propertyType = "";
       state.propertyCategory = PropertyCategory.RENT;
       state.propertyBhk = "";
@@ -108,6 +114,7 @@ const propertySearchSlice = createSlice({
 });
 
 export const {
+  setLocation,
   setPropertyType,
   setPropertyCategory,
   setPropertyBhk,

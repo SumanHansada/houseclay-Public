@@ -1,7 +1,9 @@
 import { PropertyCategory } from "@/common/enums";
+import { Location } from "@/interfaces/Location";
 
 export interface PropertySearchFilter {
   // Basic Filters
+  location: Location | null;
   propertyType: string | number | boolean;
   propertyCategory: PropertyCategory;
   propertyBhk: string | number | boolean;

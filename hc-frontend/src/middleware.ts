@@ -31,6 +31,7 @@ export const config = {
     "/profile/:path*",
     "/edit-property/:path*",
     "/my-property-details/:path*",
+    "/buy-connects",
     // Add other protected routes here
   ],
 };

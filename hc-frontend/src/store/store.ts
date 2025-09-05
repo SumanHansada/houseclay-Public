@@ -44,6 +44,7 @@ const propertySearchPersistConfig = {
   key: "propertySearch",
   storage,
   whitelist: [
+    "location",
     "propertyType",
     "propertyCategory",
     "propertyBhk",

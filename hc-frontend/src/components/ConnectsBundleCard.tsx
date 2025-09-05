@@ -28,8 +28,8 @@ export default function ConnectsBundleCard({
       }}
       whileHover={{
         scale: selectedBundle === bundle.id ? (isMobile ? 1.06 : 1.08) : 1.02,
-        rotateX: isMobile ? 3 : 5,
-        rotateY: isMobile ? 3 : 5,
+        rotateX: isMobile ? 3 : 0,
+        rotateY: isMobile ? 3 : 0,
         backgroundSize: "auto",
         transition: { duration: 0.3 },
       }}

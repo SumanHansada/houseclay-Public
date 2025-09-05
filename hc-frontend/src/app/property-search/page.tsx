@@ -3,9 +3,10 @@
 import { ChevronLeft, SearchIcon, SlidersHorizontal } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Autocomplete, Button, SelectDropdown } from "@/base-components";
+import { Button, PlacesAutocomplete, SelectDropdown } from "@/base-components";
 import { BadgeType, PropertyCategory } from "@/common/enums";
 import { pascalCase } from "@/common/utils";
 import Properties from "@/components/Properties";
@@ -21,6 +22,7 @@ import {
   setHideStickyNavBar,
 } from "@/store/appSlice";
 import {
+  setLocation,
   setPropertyBhk,
   setPropertyCategory,
   setPropertyType,
@@ -37,6 +39,63 @@ export default function PropertySearchPage() {
     ?.toUpperCase() as PropertyCategory;
   const searchState = useSelector((state: RootState) => state.propertySearch);
   const router = useRouter();
+
+  const location = searchState.location;
+  const locationSearch = location?.name || "";
+
+  const handleLocationSelect = (selectedLocation: {
+    latitude: number;
+    longitude: number;
+    name?: string;
+    address?: string;
+    city?: string;
+  }) => {
+    // Update URL with new location coordinates
+    if (selectedLocation.city) {
+      const selectedCity = selectedLocation.city.toLowerCase();
+      const isCityAllowed = "bengaluru" === selectedCity;
+      if (!isCityAllowed) {
+        toast.error(`Please select a location within Bengaluru`, {
+          duration: 5000,
+        });
+        dispatch(
+          setLocation({
+            ...location,
+            name: "",
+          }),
+        );
+        return;
+      }
+    }
+
+    dispatch(setLocation(selectedLocation));
+
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.set("lat", selectedLocation.latitude.toString());
+    newSearchParams.set("lon", selectedLocation.longitude.toString());
+
+    // Navigate to the same page with updated coordinates
+    router.push(`/property-search?${newSearchParams.toString()}`);
+  };
+
+  // Handle location input change
+  const handleLocationChange = (value: string) => {
+    // Update the location name in Redux state
+    if (location) {
+      dispatch(
+        setLocation({
+          ...location,
+          name: value,
+        }),
+      );
+    } else {
+      dispatch(
+        setLocation({
+          name: value,
+        }),
+      );
+    }
+  };
 
   // Only fetch if lat/lon are present and valid
   const shouldFetch = lat && lon && !isNaN(Number(lat)) && !isNaN(Number(lon));
@@ -156,20 +215,15 @@ export default function PropertySearchPage() {
         <button className="rounded-full md:border-none items-center justify-center">
           <ChevronLeft onClick={() => router.back()} size={25} />
         </button>
-        <Autocomplete
+        <PlacesAutocomplete
+          id="location-search-mobile"
           name="location"
-          items={[
-            "Bengaluru",
-            "The Godfather",
-            "12 Angry Men",
-            "The Shawshank Redemption",
-            "Schindler's List",
-            "Pulp Fiction",
-          ]}
-          selectedItems={["Bengaluru"]}
-          disabled={true}
-          inputClassName="flex items-center h-10 bg-gray-100 w-full p-2 border-none rounded-full"
+          value={locationSearch}
+          onChange={handleLocationChange}
+          onLocationSelect={handleLocationSelect}
           placeholder="Search for a property"
+          containerClassName="w-full relative"
+          inputClassName="flex items-center h-10 bg-gray-100 w-full px-3 py-2 border-none rounded-full"
         />
         <Button
           leftIcon={<SlidersHorizontal size={16} />}
@@ -185,20 +239,15 @@ export default function PropertySearchPage() {
       <section className="fixed z-50 flex w-full xl:gap-16 border-b border-t bg-white border-gray-200 lg:gap-8 md:gap-0 gap-0  xl:px-24 md:px-12 px-12 max-md:pt-4 max-md:pb-8 h-16 max-md:hidden">
         <div className="flex justify-between items-center border-gray-200 w-full gap-4">
           <div className="flex-1">
-            <Autocomplete
+            <PlacesAutocomplete
+              id="location-search-desktop"
               name="location"
-              selectedItems={["Bengaluru"]}
-              items={[
-                "The Godfather",
-                "12 Angry Men",
-                "The Shawshank Redemption",
-                "Schindler's List",
-                "Pulp Fiction",
-                "Bengaluru",
-              ]}
-              disabled={true}
-              inputClassName="flex items-center min-h-[46px] w-full px-3 py-2 border border-gray-300 rounded-xl bg-white"
+              value={locationSearch}
+              onChange={handleLocationChange}
+              onLocationSelect={handleLocationSelect}
               placeholder="Search for a property"
+              inputClassName="flex items-center min-h-[46px] w-full px-3 py-2 border border-gray-300 rounded-xl bg-white"
+              containerClassName="w-full relative"
             />
           </div>
           <div className="flex items-center gap-2 flex-row">

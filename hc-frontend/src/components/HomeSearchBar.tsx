@@ -2,12 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import SearchSvg from "public/icons/search.svg";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
 import { PlacesAutocomplete } from "@/base-components";
-import { resetPropertySearch } from "@/store/propertySearchSlice";
+import { resetPropertySearch, setLocation } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
 
 import Dropdown from "./Dropdown";
@@ -36,13 +36,9 @@ const HomeSearchBar: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const dispatch = useDispatch();
-  const [location, setLocation] = useState<{
-    latitude?: number;
-    longitude?: number;
-    name?: string;
-    address?: string;
-    city?: string;
-  } | null>(null);
+  const location = useSelector(
+    (state: RootState) => state.propertySearch.location,
+  );
   const propertyCategory = useSelector(
     (state: RootState) => state.propertySearch.propertyCategory,
   );
@@ -84,25 +80,41 @@ const HomeSearchBar: React.FC = () => {
             duration: 5000,
           },
         );
-        setLocation(null);
+        dispatch(
+          setLocation({
+            ...location,
+            ...value,
+            name: "",
+          }),
+        );
         return;
       }
     }
-    setLocation((prev) => {
-      return {
-        ...prev,
-        latitude: value.latitude,
-        longitude: value.longitude,
-        name: value.name,
-        address: value.address,
-        city: value.city,
-      };
-    });
+
     dispatch(resetPropertySearch());
+    dispatch(setLocation(value));
 
     router.push(
       `/property-search?lat=${value.latitude}&lon=${value.longitude}&propertyCategory=${propertyCategory.toLowerCase()}`,
     );
+  };
+
+  const handleLocationChange = (value: string) => {
+    if (location) {
+      dispatch(
+        setLocation({
+          ...location,
+          name: value,
+        }),
+      );
+    } else {
+      dispatch(
+        setLocation({
+          name: value,
+        }),
+      );
+    }
+    handlePrefetch();
   };
 
   return (
@@ -133,15 +145,7 @@ const HomeSearchBar: React.FC = () => {
           name="location"
           placeholder="Type Localities..."
           value={location?.name || ""}
-          onChange={(value) => {
-            setLocation((prev) => {
-              return {
-                ...prev,
-                name: value,
-              };
-            });
-            handlePrefetch();
-          }}
+          onChange={handleLocationChange}
           onLocationSelect={handleLocationSelect}
           containerClassName="w-full relative"
           labelClassName="text-sm font-medium text-gray-900 mb-1"
