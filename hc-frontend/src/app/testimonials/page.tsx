@@ -6,8 +6,6 @@ import { setHideFooter, setHideHeader } from "@/store/appSlice";
 import { ImageWithLoader } from "@/utility-components";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import bannerBackground from "public/images/banner-testimonials.webp";
-import bannerBackgroundMobile from "public/images/banner-testimonials-mobile.webp";
 import { TestimonialCard } from "./components/TestimonialCard";
 import Carousel2D from "@/components/Carousel2D";
 
@@ -36,7 +34,7 @@ export default function TermsAndConditionsPage() {
         <section className="relative w-full md:aspect-[15/4] md:block">
           <div className="absolute inset-0 hidden md:block">
             <ImageWithLoader
-              src={bannerBackground.src}
+              src="/images/banner-testimonials.svg"
               alt="Banner Background"
               fill
               className="!object-contain object-center"
@@ -93,7 +91,7 @@ export default function TermsAndConditionsPage() {
       <main className="w-full h-full px-6 sm:px-8 md:hidden pt-[55px]">
         <section className="relative w-full aspect-[341/152]">
           <ImageWithLoader
-            src={bannerBackgroundMobile.src}
+            src="/images/banner-testimonials-mobile.svg"
             alt="Banner Background"
             fill
             className="!object-contain object-center"

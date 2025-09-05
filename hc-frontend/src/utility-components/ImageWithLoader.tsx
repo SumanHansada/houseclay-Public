@@ -1,3 +1,5 @@
+"use client";
+
 import "react-loading-skeleton/dist/skeleton.css";
 
 import Image, { ImageProps } from "next/image";

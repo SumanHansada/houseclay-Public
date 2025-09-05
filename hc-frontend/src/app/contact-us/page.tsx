@@ -3,9 +3,9 @@
 import { SUPPORT_CONTACT, SUPPORT_EMAIL } from "@/common/constants";
 import { FormPhoneField, FormTextArea, FormTextField } from "@/form-components";
 import { Footer } from "@/layout-components";
+import { ImageWithLoader } from "@/utility-components";
 import { Form, Formik, useFormikContext } from "formik";
 import { Mail, PhoneCall } from "lucide-react";
-import Image from "next/image";
 import { useState } from "react";
 import * as Yup from "yup";
 
@@ -45,7 +45,7 @@ export default function ContactUsPage() {
                 to chat
               </p>
               <div>
-                <Image
+                <ImageWithLoader
                   src="/icons/static-pages/contact-support.svg"
                   alt="contact support"
                   width={360}
