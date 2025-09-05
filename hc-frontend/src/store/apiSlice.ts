@@ -1,16 +1,15 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
 
+import { BASE_API_URL } from "@/common/constants";
 import { PropertyCategory } from "@/common/enums";
 import { sanitizePhoneNumber } from "@/common/utils";
 import { PropertyForm } from "@/interfaces/PropertyForm";
 
-const baseUrl = process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL;
-
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl,
+    baseUrl: BASE_API_URL,
     prepareHeaders: (headers, { getState }) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const token = Cookies.get("token") || (getState() as any).auth?.token;
