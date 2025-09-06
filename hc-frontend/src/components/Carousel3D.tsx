@@ -35,7 +35,7 @@ const Carousel3D: FC<Carousel3DProps> = ({
   rotationFactor = 45,
   scaleFactor = 0.8,
   centerZoom = 1.1,
-  showNavigationArrows = true,
+  showNavigationArrows = false,
   className = "",
   onChange,
 }) => {
@@ -69,7 +69,7 @@ const Carousel3D: FC<Carousel3DProps> = ({
       // Calculate transforms
       const rotateY = relativeIndex * rotationFactor;
       const translateZ = Math.abs(relativeIndex) * -100;
-      const opacity = Math.max(0.5, 1 - Math.abs(relativeIndex) * 0.3);
+      const opacity = 1;
       const scale =
         relativeIndex === 0
           ? centerZoom
@@ -245,7 +245,7 @@ const Carousel3D: FC<Carousel3DProps> = ({
 
   return (
     <div
-      className={`carousel-container relative mx-auto my-0 ${className}`}
+      className={`relative mx-auto my-0 ${className}`}
       style={{
         width: `${width}px`,
         height: `${height}px`,
@@ -297,40 +297,58 @@ const Carousel3D: FC<Carousel3DProps> = ({
 
       {/* Navigation arrows */}
       {showNavigationArrows && (
-        <div className="carousel-controls absolute w-full top-1/2 flex justify-between pointer-events-none">
+        <>
           <button
             onClick={goToPrev}
             disabled={!enableLoop && currentIndex === 0}
-            className={`
-                bg-white/80 rounded-full w-10 h-10 flex items-center justify-center 
-                pointer-events-auto transform -translate-y-1/2 m-4 
-                shadow-md transition-opacity duration-300
-                ${
-                  !enableLoop && currentIndex === 0
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:bg-white/90 active:scale-95"
-                }
-              `}
+            className={`absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white bg-opacity-70 hover:bg-opacity-90 rounded-full p-2 shadow-md transition-opacity duration-300 flex items-center justify-center ${
+              !enableLoop && currentIndex === 0
+                ? "opacity-0 pointer-events-none"
+                : "opacity-100"
+            }`}
+            aria-label="Previous slide"
           >
-            ←
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
           </button>
           <button
             onClick={goToNext}
             disabled={!enableLoop && currentIndex === totalItems - 1}
-            className={`
-                bg-white/80 rounded-full w-10 h-10 flex items-center justify-center 
-                pointer-events-auto transform -translate-y-1/2 m-4 
-                shadow-md transition-opacity duration-300
-                ${
-                  !enableLoop && currentIndex === totalItems - 1
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:bg-white/90 active:scale-95"
-                }
-              `}
+            className={`absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white bg-opacity-70 hover:bg-opacity-90 rounded-full p-2 shadow-md transition-opacity duration-300 flex items-center justify-center ${
+              !enableLoop && currentIndex === totalItems - 1
+                ? "opacity-0 pointer-events-none"
+                : "opacity-100"
+            }`}
+            aria-label="Next slide"
           >
-            →
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
           </button>
-        </div>
+        </>
       )}
 
       {/* Optional indicators */}
@@ -340,7 +358,7 @@ const Carousel3D: FC<Carousel3DProps> = ({
             key={index}
             onClick={() => goToIndex(index)}
             className={`
-                w-3 h-3 rounded-full 
+                w-2 h-2 rounded-full 
                 ${index === currentIndex ? "bg-gray-700" : "bg-gray-300"}
                 transition-colors duration-300
               `}

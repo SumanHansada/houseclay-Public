@@ -375,8 +375,8 @@ export default function BuyConnectsPage() {
         <div className="px-6 pb-16 pt-4">
           <div className="flex justify-between w-full py-4 rounded-lg mb-4">
             {/* Available Connects */}
-            <div className="flex flex-col gap-2 items-start w-2/5">
-              <span className="font-medium">Your Connects</span>
+            <div className="flex gap-2 items-center w-1/2 justify-between">
+              <span className="font-medium text-xl">Your Connects</span>
               <div className="text-lg flex items-center">
                 <Image
                   src="/icons/coin.svg"
@@ -431,8 +431,8 @@ export default function BuyConnectsPage() {
                   }}
                   width={280}
                   height={450}
-                  showNavigationArrows={false}
                   gap={30}
+                  initialIndex={1}
                 />
               </div>
             </TabContent>
