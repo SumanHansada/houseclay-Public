@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import bannerBackgroundMobile from "public/images/banner-background-mobile.webp";
 import bannerPeopleMobile from "public/images/banner-people-mobile.webp";
 import { useDispatch, useSelector } from "react-redux";
@@ -37,6 +38,8 @@ const MastHeadMobile: React.FC = () => {
   const propertyCategory = useSelector(
     (state: RootState) => state.propertySearch.propertyCategory,
   );
+  const router = useRouter();
+
   return (
     <div className="relative flex flex-col px-6 pt-8 pb-14 gap-6">
       <div className="absolute inset-0 -z-10">
@@ -130,6 +133,7 @@ const MastHeadMobile: React.FC = () => {
         <div className="flex flex-col items-center justify-center self-start justify-self-center">
           <button
             className="bg-white p-4 rounded-2xl shadow-lg justify-center items-center relative"
+            onClick={() => router.push("/list-property")}
             role="button"
           >
             <div className="absolute -top-2 -right-2 bg-red-500 text-white px-2 py-0.5 text-xs rounded">
@@ -176,7 +180,10 @@ const MastHeadMobile: React.FC = () => {
             </div>
           </div>
         </div>
-        <button className="absolute right-6 -bottom-6 bg-red-500 text-white font-nunito px-4 py-2 rounded-2xl border-4 border-red-100 font-bold">
+        <button
+          className="absolute right-6 -bottom-6 bg-red-500 text-white font-nunito px-4 py-2 rounded-2xl border-4 border-red-100 font-bold"
+          onClick={() => router.push("/what-are-connects")}
+        >
           Know More
         </button>
       </div>

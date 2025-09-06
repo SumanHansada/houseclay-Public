@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 import { CONNECT_CARDS } from "@/common/dataConstants";
@@ -35,6 +36,8 @@ export const ConnectCard: React.FC<ConnectCardProps> = ({
 );
 
 const HowToUseConnects = () => {
+  const router = useRouter();
+
   return (
     <div className="flex flex-col items-center justify-between md:gap-10 gap-4 xl:px-28 lg:px-14 md:px-14 md:py-20 p-8 bg-gray-100">
       <div className="flex flex-col items-center justify-center md:gap-4 gap-2">
@@ -75,7 +78,10 @@ const HowToUseConnects = () => {
           />
         ))}
       </Carousel2D>
-      <button className="bg-red-500 text-white text-xl xl:px-6  lg:px-5 lg:py-3 md:px-3 px-3 py-2 rounded-xl size-fit hidden md:block">
+      <button
+        className="bg-red-500 text-white text-xl xl:px-6  lg:px-5 lg:py-3 md:px-3 px-3 py-2 rounded-xl size-fit hidden md:block"
+        onClick={() => router.push("/buy-connects")}
+      >
         Buy Connects Now
       </button>
     </div>

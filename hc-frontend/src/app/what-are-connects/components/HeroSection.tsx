@@ -1,18 +1,20 @@
 import Image from "next/image";
-import bannerBackground from "public/images/banner-background.webp";
+import bannerBackground from "public/images/banner-what-are-connects.webp";
+
+import { ImageWithLoader } from "@/utility-components";
 
 const HeroSection = () => (
   <>
     {/* Desktop background */}
     <div className="absolute inset-0 hidden md:block">
-      <Image
+      <ImageWithLoader
         src={bannerBackground.src}
         alt="Banner Background"
         fill
-        sizes="100vw"
-        className="object-cover object-right"
-        priority
+        className="!object-contain object-center"
+        sizes="(min-width:1536px) 1440px, 100vw"
         fetchPriority="high"
+        priority
       />
     </div>
 
@@ -32,7 +34,7 @@ const HeroSection = () => (
       </div>
 
       <Image
-        src="/images/what-are-connects-mobile.svg"
+        src="/images/what-are-connects-banner-mobile.svg"
         alt="Property Graphic"
         width={500}
         height={500}

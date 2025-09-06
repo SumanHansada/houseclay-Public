@@ -9,7 +9,7 @@ import { formatINRCurrency } from "@/common/utils";
 import { MyProperty } from "@/interfaces/ManageAccount";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 
-import { Actions } from "./Actions";
+import { MyPropertiesActionMenu } from "./MyPropertiesActionMenu";
 
 const CircleCheckIcon = CircleCheckIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
@@ -87,7 +87,7 @@ export function PropertyCard({
 
             {/* Only show Actions menu for md and above */}
             <div className="hidden md:block">
-              <Actions
+              <MyPropertiesActionMenu
                 anchorEl={buttonRef.current}
                 open={menuFor === propertyID}
                 onClose={() => setMenuFor(null)}

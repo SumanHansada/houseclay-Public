@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
@@ -16,6 +17,7 @@ import WhyChooseConnectsClient from "./components/WhyChooseConnectsClient";
 export default function WhatAreConnectsPage() {
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
+  const router = useRouter();
 
   useEffect(() => {
     dispatch(setHideHeader(isMobile));
@@ -25,17 +27,13 @@ export default function WhatAreConnectsPage() {
     };
   }, [dispatch, isMobile]);
 
-  const handleBuyConnects = () => {
-    console.log("Redirect to Buy Connects page!");
-  };
-
   return (
     <>
       <MobileHeader title="What are Connects?" />
 
       <div className="w-full">
         {/* Hero Section */}
-        <section className="relative min-h-[200px] md:h-[500px] xl:h-[600px] w-full overflow-hidden">
+        <section className="relative w-full md:aspect-[15/4] md:block">
           <HeroSection />
         </section>
 
@@ -60,7 +58,7 @@ export default function WhatAreConnectsPage() {
         </div>
       </div>
 
-      <ConnectsFooter onBuyConnects={handleBuyConnects} />
+      <ConnectsFooter onBuyConnects={() => router.push("/buy-connects")} />
     </>
   );
 }

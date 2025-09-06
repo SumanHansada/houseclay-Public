@@ -12,7 +12,7 @@ import CoinSvg from "public/icons/coin.svg";
 import PropertySvg from "public/icons/property.svg";
 import VerifiedTenantsSvg from "public/icons/verified-tenants.svg";
 import ZeroPercentRedSvg from "public/icons/zero-percent-red.svg";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { ACCOUNT_NAV } from "@/common/dataConstants";
@@ -51,10 +51,10 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
   const [quickLinksExpanded, setQuickLinksExpanded] = useState(true);
   const toggleQuickLinks = () => setQuickLinksExpanded(!quickLinksExpanded);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     closeDialog(id);
     dispatch(setHideStickyNavBar(false));
-  };
+  }, [closeDialog, id, dispatch]);
 
   const onLogin = () => {
     dispatch(setLoginFromAddProperty(true));
@@ -77,7 +77,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
     if (pathname !== initialPathRef.current) {
       handleClose();
     }
-  }, [pathname]);
+  }, [pathname, handleClose]);
 
   return (
     <Dialog
@@ -183,7 +183,6 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
                 quickLinksExpanded ? "max-h-screen" : "max-h-0"
               }`}
             >
-              {" "}
               <ul>
                 <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
                   <span className="flex items-center gap-2">For Sale</span>

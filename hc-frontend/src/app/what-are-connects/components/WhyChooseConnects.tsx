@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { default as CurlyArrowIconSvg } from "public/icons/static-pages/curly-arrow.svg";
 import { default as InstantAccessIconSvg } from "public/icons/static-pages/instant-access.svg";
 import { default as NoForcedPlanIconSvg } from "public/icons/static-pages/no-forced-plans.svg";
@@ -18,6 +19,7 @@ const CurlyArrowIcon = CurlyArrowIconSvg as React.FC<
 >;
 
 const WhyChoose = () => {
+  const router = useRouter();
   return (
     <div className="flex items-center justify-between lg:gap-10 xl:px-28 lg:px-14 md:px-14 px-8 md:py-20 py-5 pb-16">
       <div className="w-full md:w-3/5 lg:px-12 md:px-4">
@@ -54,7 +56,10 @@ const WhyChoose = () => {
           </div>
         </div>
         <div className="flex gap-2 items-center px-2">
-          <button className="bg-red-500 text-white text-xl xl:px-6  lg:px-5 lg:py-3 px-3 py-2 rounded-xl size-fit max-md:hidden">
+          <button
+            className="bg-red-500 text-white text-xl xl:px-6  lg:px-5 lg:py-3 px-3 py-2 rounded-xl size-fit max-md:hidden"
+            onClick={() => router.push("/buy-connects")}
+          >
             Buy Connects Now
           </button>
           <div className="size-32 md:block hidden">
