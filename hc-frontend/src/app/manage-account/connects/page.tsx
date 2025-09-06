@@ -8,7 +8,12 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import { MobileHeader } from "@/layout-components";
-import { setHideStickyNavBar } from "@/store/appSlice";
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
+import {
+  setHideFooter,
+  setHideHeader,
+  setHideStickyNavBar,
+} from "@/store/appSlice";
 
 // Test
 import { userDummy } from "../dummy";
@@ -24,13 +29,19 @@ const NoForcedPlans = NoForcedPlansSvg as React.FC<
 export default function ConnectsPage() {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { isMobile } = useDeviceContext();
 
   useEffect(() => {
-    dispatch(setHideStickyNavBar(true));
-    return () => {
+    if (isMobile) {
+      dispatch(setHideHeader(true));
+      dispatch(setHideFooter(true));
+      dispatch(setHideStickyNavBar(true));
+    } else {
+      dispatch(setHideHeader(false));
+      dispatch(setHideFooter(false));
       dispatch(setHideStickyNavBar(false));
-    };
-  }, [dispatch]);
+    }
+  }, [dispatch, isMobile]);
 
   return (
     <>

@@ -415,7 +415,7 @@ export default function BuyConnectsPage() {
             </TabHeader>
 
             <TabContent value="bundles">
-              <div className="py-4">
+              <div className="p-4">
                 <Carousel3D
                   items={ConnectsBundleData.bundles.map((bundle) => (
                     <ConnectsBundleCard
