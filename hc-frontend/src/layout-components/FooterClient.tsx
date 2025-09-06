@@ -84,8 +84,11 @@ const FooterClient: React.FC = () => {
               </h3>
               <ul className="space-y-2">
                 <li>
-                  <Link href="/about" className="text-black hover:text-red-500">
-                    About
+                  <Link
+                    href="/about-us"
+                    className="text-black hover:text-red-500"
+                  >
+                    About Us
                   </Link>
                 </li>
                 <li>
@@ -310,8 +313,11 @@ const FooterClient: React.FC = () => {
             </h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/about" className="text-black hover:text-red-500">
-                  About
+                <Link
+                  href="/about-us"
+                  className="text-black hover:text-red-500"
+                >
+                  About Us
                 </Link>
               </li>
               <li>

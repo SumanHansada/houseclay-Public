@@ -1,6 +1,6 @@
 "use client";
 
-import { SUPPORT_ACCORDION } from "@/common/constants";
+import { SUPPORT_ACCORDION } from "@/common/dataConstants";
 import { useEffect, useState } from "react";
 import { Accordion } from "../manage-account/components/Accordion";
 import { Footer, MobileHeader } from "@/layout-components";

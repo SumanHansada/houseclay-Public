@@ -1,5 +1,5 @@
 import Skeleton from "react-loading-skeleton";
-import { SUPPORT_ACCORDION } from "@/common/constants";
+import { SUPPORT_ACCORDION } from "@/common/dataConstants";
 
 const COUNT =
   Array.isArray(SUPPORT_ACCORDION) && SUPPORT_ACCORDION.length > 0
