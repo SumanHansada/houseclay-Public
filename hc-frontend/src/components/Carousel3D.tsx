@@ -78,7 +78,7 @@ const Carousel3D: FC<Carousel3DProps> = ({
 
       // Apply transforms
       animate(
-        { current: card },
+        card,
         {
           rotateY: `${rotateY}deg`,
           translateX: `${translateX}px`,
