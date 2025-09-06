@@ -504,8 +504,13 @@ export default function BuyConnectsPage() {
           </div>
         </div>
         <button
-          className="px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full  hover:bg-red-600 transition-colors"
+          className={`px-8 py-3 border rounded-xl w-full transition-colors ${
+            agreedToTerms && newConnectsBalance >= 5
+              ? "bg-red-500 border-red-500 text-white hover:bg-red-600"
+              : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
+          }`}
           onClick={() => openDialog("connects-price-breakdown-dialog")}
+          disabled={!agreedToTerms || newConnectsBalance < 5}
         >
           Proceed to Pay
         </button>
