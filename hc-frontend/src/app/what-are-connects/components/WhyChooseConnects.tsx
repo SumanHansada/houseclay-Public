@@ -57,7 +57,7 @@ const WhyChoose = () => {
         </div>
         <div className="flex gap-2 items-center px-2">
           <button
-            className="bg-red-500 text-white text-xl xl:px-6  lg:px-5 lg:py-3 px-3 py-2 rounded-xl size-fit max-md:hidden"
+            className="bg-red-500 text-white text-lg xl:px-6  lg:px-5 lg:py-3 px-3 py-2 rounded-xl size-fit max-md:hidden"
             onClick={() => router.push("/buy-connects")}
           >
             Buy Connects Now

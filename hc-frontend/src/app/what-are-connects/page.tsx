@@ -6,7 +6,11 @@ import { useDispatch } from "react-redux";
 
 import { Footer, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { setHideHeader, setHideStickyNavBar } from "@/store/appSlice";
+import {
+  setHideFooter,
+  setHideHeader,
+  setHideStickyNavBar,
+} from "@/store/appSlice";
 
 import ConnectsFooter from "./components/ConnectsFooter";
 import HeroSection from "./components/HeroSection";
@@ -20,11 +24,15 @@ export default function WhatAreConnectsPage() {
   const router = useRouter();
 
   useEffect(() => {
-    dispatch(setHideHeader(isMobile));
-    dispatch(setHideStickyNavBar(true));
-    return () => {
+    if (isMobile) {
+      dispatch(setHideHeader(true));
+      dispatch(setHideFooter(true));
+      dispatch(setHideStickyNavBar(true));
+    } else {
+      dispatch(setHideHeader(false));
+      dispatch(setHideFooter(false));
       dispatch(setHideStickyNavBar(false));
-    };
+    }
   }, [dispatch, isMobile]);
 
   return (

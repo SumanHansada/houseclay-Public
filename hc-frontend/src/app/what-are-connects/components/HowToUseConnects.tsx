@@ -66,7 +66,6 @@ const HowToUseConnects = () => {
         showDots={true}
         containerClassName="md:hidden"
         className="md:hidden"
-        showArrows={true}
       >
         {CONNECT_CARDS.map((card) => (
           <ConnectCard
@@ -79,7 +78,7 @@ const HowToUseConnects = () => {
         ))}
       </Carousel2D>
       <button
-        className="bg-red-500 text-white text-xl xl:px-6  lg:px-5 lg:py-3 md:px-3 px-3 py-2 rounded-xl size-fit hidden md:block"
+        className="bg-red-500 text-white text-lg xl:px-6  lg:px-5 lg:py-3 md:px-3 px-3 py-2 rounded-xl size-fit hidden md:block"
         onClick={() => router.push("/buy-connects")}
       >
         Buy Connects Now

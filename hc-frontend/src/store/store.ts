@@ -70,6 +70,22 @@ const shortlistPersistConfig = {
   whitelist: ["shortlistedProperties"], // Persist shortlisted properties
 };
 
+// Configure persistence for auth slice
+const authPersistConfig = {
+  key: "auth",
+  storage,
+  whitelist: [
+    "token",
+    "authStep",
+    "phoneNo",
+    "emailID",
+    "connectBal",
+    "name",
+    "avatarUrl",
+    "loginFromAddProperty",
+  ],
+};
+
 const persistedListPropertyReducer = persistReducer(
   listPropertyPersistConfig,
   listPropertyReducer,
@@ -90,11 +106,13 @@ const persistedShortlistReducer = persistReducer(
   shortlistReducer,
 );
 
+const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
+
 export function makeStore() {
   return configureStore({
     reducer: {
       app: appReducer,
-      auth: authReducer,
+      auth: persistedAuthReducer,
       listProperty: persistedListPropertyReducer,
       editProperty: persistedEditPropertyReducer,
       propertySearch: persistedPropertySearchReducer,

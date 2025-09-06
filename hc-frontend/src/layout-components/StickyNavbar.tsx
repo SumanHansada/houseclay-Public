@@ -18,14 +18,12 @@ type NavItem = {
 
 interface StickyNavbarProps {
   defaultActive?: string;
-  onNavChange?: (id: string) => void;
 }
 
 const Coin = CoinSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 const StickyNavbar: React.FC<StickyNavbarProps> = ({
   defaultActive = "home",
-  onNavChange,
 }) => {
   const hideStickyNavbar = useSelector(
     (state: RootState) => state.app.hideStickyNavBar,
@@ -58,22 +56,19 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
       id: "connects",
       icon: <Coin width={25} height={25} />,
       label: "Connects",
-      href: "/connects",
+      href: "/manage-account/connects",
       badge: 2,
     },
     {
       id: "account",
       icon: <UserRound width={25} height={25} />,
       label: "Account",
-      href: "/account",
+      href: "/manage-account/my-profile",
     },
   ];
 
   const handleNavClick = (id: string) => {
     setActiveTab(id);
-    if (onNavChange) {
-      onNavChange(id);
-    }
   };
 
   if (hideStickyNavbar) {
@@ -88,10 +83,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
             <a
               href={item.href}
               className="flex flex-col items-center justify-center relative"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavClick(item.id);
-              }}
+              onClick={() => handleNavClick(item.id)}
               aria-current={activeTab === item.id ? "page" : undefined}
             >
               <div

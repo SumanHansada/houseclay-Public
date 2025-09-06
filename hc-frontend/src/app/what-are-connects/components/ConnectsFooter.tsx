@@ -1,3 +1,4 @@
+import router from "next/router";
 import React from "react";
 
 interface ConnectsFooterProps {
@@ -6,15 +7,19 @@ interface ConnectsFooterProps {
 
 const ConnectsFooter: React.FC<ConnectsFooterProps> = ({ onBuyConnects }) => {
   return (
-    <footer className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 shadow-sm">
-      <div className="flex items-center justify-end px-4 py-3">
-        <button
-          onClick={onBuyConnects}
-          className="px-5 py-2 bg-red-500 text-white hover:bg-red-600 rounded-lg w-1/2"
-        >
-          Buy Connects Now
-        </button>
-      </div>
+    <footer className="fixed bottom-0 left-0 ml-[33.33%] max-md:ml-auto right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
+      <button
+        className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl"
+        onClick={() => router.back()}
+      >
+        Back
+      </button>
+      <button
+        onClick={onBuyConnects}
+        className="px-6 py-3 bg-red-500 text-white hover:bg-red-600 rounded-xl"
+      >
+        Buy Connects Now
+      </button>
     </footer>
   );
 };

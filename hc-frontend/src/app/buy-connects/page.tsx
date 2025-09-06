@@ -372,10 +372,10 @@ export default function BuyConnectsPage() {
       <section className="w-full md:hidden">
         {/* Mobile Header */}
         <MobileHeader title="Buy Connects" />
-        <div className="px-6 pb-16 pt-4">
+        <div className="px-6 pb-16 pt-11">
           <div className="flex justify-between w-full py-4 rounded-lg mb-4">
             {/* Available Connects */}
-            <div className="flex gap-2 items-center w-1/2 justify-between">
+            <div className="flex gap-2 items-center w-2/3 justify-between">
               <span className="font-medium text-xl">Your Connects</span>
               <div className="text-lg flex items-center">
                 <Image
@@ -495,22 +495,21 @@ export default function BuyConnectsPage() {
             </label>
           </div>
         </div>
-
-        <section className="fixed bottom-0 left-0 ml-[33.33%] max-md:ml-auto right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
-          <div className="flex flex-col justify-around items-start w-full">
-            <div className="text-gray-600 text-xs">Total Amount</div>
-            <div className=" text-sm font-bold flex gap-2 items-center">
-              {totalAmount.toFixed(2)} <Info size={16} />
-            </div>
-          </div>
-          <button
-            className="px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full text-base max-md:text-sm hover:bg-red-600 transition-colors"
-            onClick={() => openDialog("connects-price-breakdown-dialog")}
-          >
-            Proceed to Pay
-          </button>
-        </section>
       </section>
+      <footer className="fixed bottom-0 left-0 ml-[33.33%] max-md:ml-auto right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
+        <div className="flex flex-col justify-around items-start w-full">
+          <div className="text-gray-600 text-xs">Total Amount</div>
+          <div className=" text-sm font-bold flex gap-2 items-center">
+            {totalAmount.toFixed(2)} <Info size={16} />
+          </div>
+        </div>
+        <button
+          className="px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full  hover:bg-red-600 transition-colors"
+          onClick={() => openDialog("connects-price-breakdown-dialog")}
+        >
+          Proceed to Pay
+        </button>
+      </footer>
 
       {/* Standouts Dialog */}
       {isDialogOpen("connects-price-breakdown-dialog") && (
@@ -586,7 +585,7 @@ export default function BuyConnectsPage() {
                 </div>
               </div>
               <button
-                className="px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full text-base max-md:text-sm hover:bg-red-600 transition-colors"
+                className="px-6 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full text-base max-md:text-sm hover:bg-red-600 transition-colors"
                 onClick={handleProceedToPay}
               >
                 Proceed to Pay

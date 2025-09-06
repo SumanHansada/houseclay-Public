@@ -5,7 +5,7 @@ import { default as InstantAccessSvg } from "public/icons/static-pages/instant-a
 import { default as NoForcedPlansSvg } from "public/icons/static-pages/no-forced-plans.svg";
 import { default as RealOwnersSvg } from "public/icons/static-pages/real-owners.svg";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
@@ -14,9 +14,9 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
+import { RootState } from "@/store/store";
 
 // Test
-import { userDummy } from "../dummy";
 
 const RealOwners = RealOwnersSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const InstantAccess = InstantAccessSvg as React.FC<
@@ -30,6 +30,9 @@ export default function ConnectsPage() {
   const router = useRouter();
   const dispatch = useDispatch();
   const { isMobile } = useDeviceContext();
+  const connectBalance = useSelector(
+    (state: RootState) => state.auth.connectBal,
+  );
 
   useEffect(() => {
     if (isMobile) {
@@ -73,7 +76,7 @@ export default function ConnectsPage() {
                   className="lg:hidden"
                 />
                 <span className="text-gray-700 text-2xl font-medium">
-                  {userDummy.connects}
+                  {connectBalance}
                 </span>
               </div>
             </div>
@@ -189,7 +192,7 @@ export default function ConnectsPage() {
         <div className="px-6 pb-20 pt-4">
           <div className="flex justify-between w-full py-4 rounded-lg mb-4">
             {/* Available Connects */}
-            <div className="flex gap-2 items-center w-1/2 justify-between">
+            <div className="flex gap-2 items-center w-2/3 justify-between">
               <span className="font-medium text-xl">Your Connects</span>
               <div className="text-lg flex items-center">
                 <Image
@@ -199,7 +202,7 @@ export default function ConnectsPage() {
                   height={36}
                 />
                 <span className="text-gray-700 text-2xl font-medium">
-                  {userDummy.connects}
+                  {connectBalance}
                 </span>
               </div>
             </div>
@@ -281,21 +284,19 @@ export default function ConnectsPage() {
         </div>
       </section>
 
-      <footer className="md:hidden fixed inset-x-0 bottom-0 z-40 bg-white border-t border-gray-200 shadow-sm px-4 py-3">
-        <div className="flex gap-4">
-          <button
-            className="px-5 py-2 border border-black rounded-lg w-1/2"
-            onClick={() => router.push("/what-are-connects")}
-          >
-            Know more
-          </button>
-          <button
-            className="px-5 py-2 bg-red-500 text-white hover:bg-red-600 rounded-lg w-1/2"
-            onClick={() => router.push("/buy-connects")}
-          >
-            Buy Connects
-          </button>
-        </div>
+      <footer className="fixed bottom-0 left-0 ml-[33.33%] max-md:ml-auto right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
+        <button
+          className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl"
+          onClick={() => router.push("/what-are-connects")}
+        >
+          Know more
+        </button>
+        <button
+          className="px-6 py-3 border bg-red-500 text-white hover:bg-red-600 rounded-xl"
+          onClick={() => router.push("/buy-connects")}
+        >
+          Buy Connects
+        </button>
       </footer>
     </>
   );
