@@ -13,13 +13,12 @@ interface ConnectsBundleProps {
 export default function ConnectsBundleCard({
   bundle,
   selectedBundle,
-  isMobile = false,
 }: ConnectsBundleProps) {
   return (
     <motion.div
-      className={`relative w-full rounded-xl p-6 ${
-        isMobile ? "rounded-lg p-4 border-2 border-gray-200" : "h-[26rem]"
-      }`}
+      className={
+        "relative container mx-auto w-full rounded-xl p-4 md:h-auto lg:h-[28rem] xl:h-[24rem] 2xl:h-[24rem]"
+      }
       style={{
         backgroundImage: `url('/images/${bundle.background}.webp')`,
         backgroundSize: "cover",
@@ -27,30 +26,28 @@ export default function ConnectsBundleCard({
         backgroundRepeat: "no-repeat",
       }}
       whileHover={{
-        scale: selectedBundle === bundle.id ? (isMobile ? 1.06 : 1.08) : 1.02,
-        rotateX: isMobile ? 3 : 0,
-        rotateY: isMobile ? 3 : 0,
-        backgroundSize: "auto",
+        scale: selectedBundle === bundle.id ? 1.08 : 1.02,
+        rotateX: 0,
+        rotateY: 0,
+        backgroundSize: "cover",
         transition: { duration: 0.3 },
       }}
-      whileTap={{ scale: 0.98, rotateY: isMobile ? 45 : 0 }}
+      whileTap={{ scale: 0.98, rotateY: 0 }}
       initial={{ rotateX: 0, rotateY: 0, scale: 1 }}
       animate={{
         rotateX: 0,
         rotateY: 0,
-        scale: selectedBundle === bundle.id ? (isMobile ? 1.03 : 1.05) : 1,
+        scale: selectedBundle === bundle.id ? 1.05 : 1,
         zIndex: selectedBundle === bundle.id ? 10 : 1,
       }}
       transition={{ duration: 0.3, ease: "easeOut" }}
     >
       {bundle.recommended && (
-        <div
-          className={`absolute ${isMobile ? "-top-2 left-4" : "-top-3 left-1/2 transform -translate-x-1/2"}`}
-        >
+        <div className={"absolute -top-3 left-1/2 transform -translate-x-1/2"}>
           <span
-            className={`bg-red-500 text-white rounded-full font-medium ${
-              isMobile ? "px-2 py-1 text-xs" : "px-3 py-1 text-sm"
-            }`}
+            className={
+              "bg-red-500 text-white rounded-full font-medium px-3 py-1 text-sm"
+            }
           >
             Recommended
           </span>

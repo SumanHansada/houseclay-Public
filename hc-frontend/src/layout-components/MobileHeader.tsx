@@ -32,10 +32,10 @@ export default function MobileHeader({
           {showBack && (
             <button
               aria-label="Go back"
-              className="rounded-full w-10 h-10 border flex items-center justify-center"
+              className="flex items-center justify-center"
               onClick={onBack ?? (() => router.back())}
             >
-              <ChevronLeft size={22} />
+              <ChevronLeft size={25} />
             </button>
           )}
         </div>

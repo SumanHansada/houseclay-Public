@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import ChevronRightIconSvg from "public/icons/chevron-right.svg";
 
 import { type AccountNavItem } from "@/common/dataConstants";
@@ -49,7 +49,6 @@ export function AccountNavList({
   ...props
 }: AccountNavProps) {
   const pathname = usePathname();
-  const router = useRouter();
   const { logout } = useLogout();
 
   // Get userName for header variant

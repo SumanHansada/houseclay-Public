@@ -249,7 +249,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
               onClick={() =>
                 dispatch(setPropertyCategory(PropertyCategory.RENT))
               }
-              className={`px-8 py-1 border-b-2 text-base border-gray-300 ${propertyCategory === PropertyCategory.RENT ? "text-red-500 border-red-500" : "text-gray-700 "}`}
+              className={`px-8 py-1 border-b-2 text-base border-gray-300 ${propertyCategory === PropertyCategory.RENT || propertyCategory === PropertyCategory.FLATMATE ? "text-red-500 border-red-500" : "text-gray-700 "}`}
             >
               Rent
             </button>
@@ -282,20 +282,20 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                 defaultActive={propertyCategory}
                 onTabChange={handleTabChange}
               >
-                <TabHeader tabsClassName="justify-between border rounded-lg p-2 w-full flex gap-2">
+                <TabHeader tabsClassName="justify-between border rounded-xl p-2 w-full flex gap-2">
                   <Tab
                     label="Full House"
                     value={PropertyCategory.RENT}
-                    containerClassName="w-1/2 p-3 text-base font-medium max-md:font-normal rounded-lg border rounded-lg"
+                    containerClassName="w-1/2 p-3 text-base font-medium max-md:font-normal rounded-xl border transition-colors duration-300"
                     activeClassName="text-red-600 border-red-500"
-                    inactiveClassName="text-gray-700  border-gray-300 hover:border-gray-400"
+                    inactiveClassName="text-gray-700 border-transparent"
                   />
                   <Tab
                     label="Flatmates"
                     value={PropertyCategory.FLATMATE}
-                    containerClassName="w-1/2 p-3 text-base font-medium max-md:font-normal rounded-lg border"
+                    containerClassName="w-1/2 p-3 text-base font-medium max-md:font-normal rounded-xl border transition-colors duration-300"
                     activeClassName="text-red-600 border-red-500"
-                    inactiveClassName="text-gray-700  border-gray-300 hover:border-gray-400"
+                    inactiveClassName="text-gray-700 border-transparent"
                   />
                 </TabHeader>
                 <TabContent value={PropertyCategory.RENT} className="gap-4">

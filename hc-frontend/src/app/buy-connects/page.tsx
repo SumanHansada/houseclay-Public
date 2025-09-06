@@ -1,19 +1,27 @@
 "use client";
-import { ChevronLeft } from "lucide-react";
+import { Info, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import NumberField from "@/base-components/NumberField";
 import RadioGroup from "@/base-components/RadioGroup";
 import ConnectsBundleCard from "@/components/ConnectsBundleCard";
+import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import ConnectsBundleData from "@/data/ConnectsBundleData.json";
+import MobileHeader from "@/layout-components/MobileHeader";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
+import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useCreateOrderMutation,
   useVerifyPaymentMutation,
 } from "@/store/apiSlice";
+import {
+  setHideFooter,
+  setHideHeader,
+  setHideStickyNavBar,
+} from "@/store/appSlice";
 import { RootState } from "@/store/store";
 import { Tab, TabContent, TabHeader, Tabs } from "@/utility-components/Tabs";
 
@@ -22,9 +30,11 @@ export default function BuyConnectsPage() {
   const [selectedBundle, setSelectedBundle] = useState("premium");
   const [agreedToTerms, setAgreedToTerms] = useState(true);
   const [customConnects, setCustomConnects] = useState(5);
+  const dispatch = useDispatch();
   const [createOrder] = useCreateOrderMutation();
   const [verifyPayment] = useVerifyPaymentMutation();
   const { isMobile } = useDeviceContext();
+  const { isDialogOpen, closeDialog, openDialog } = useDialog();
 
   const connectBalance = useSelector(
     (state: RootState) => state.auth.connectBal,
@@ -58,6 +68,18 @@ export default function BuyConnectsPage() {
   const expiryDate = new Date();
   expiryDate.setDate(expiryDate.getDate() + 60);
 
+  useEffect(() => {
+    if (isMobile) {
+      dispatch(setHideHeader(true));
+      dispatch(setHideFooter(true));
+      dispatch(setHideStickyNavBar(true));
+    } else {
+      dispatch(setHideHeader(false));
+      dispatch(setHideFooter(false));
+      dispatch(setHideStickyNavBar(false));
+    }
+  }, [dispatch, isMobile]);
+
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Razorpay = (window as any).Razorpay;
 
@@ -88,6 +110,10 @@ export default function BuyConnectsPage() {
 
   const handleProceedToPay = async () => {
     if (!agreedToTerms) return;
+
+    if (isDialogOpen("connects-price-breakdown-dialog")) {
+      closeDialog("connects-price-breakdown-dialog");
+    }
 
     try {
       const response = await createOrder({
@@ -185,34 +211,32 @@ export default function BuyConnectsPage() {
                       radioGroupClassName="gap-8 md:gap-10 xl:gap-12 !grid-cols-3"
                       radioLabelClassName="block p-0 w-full h-full"
                       radioTextClassName="hidden"
-                      containerClassName="mb-0"
+                      containerClassName="my-4 container mx-auto"
                     />
                   </TabContent>
 
                   <TabContent value="custom">
-                    <div className="mt-4">
+                    <div className="py-4">
                       {/* Connects Input Section */}
-                      <div className="mb-6">
-                        <NumberField
-                          name="customConnects"
-                          label="Enter Connects to buy"
-                          value={customConnects}
-                          onChange={setCustomConnects}
-                          min={0}
-                          required
-                          className="mb-3"
-                        />
+                      <NumberField
+                        name="customConnects"
+                        label="Enter Connects to buy"
+                        value={customConnects}
+                        onChange={setCustomConnects}
+                        min={0}
+                        required
+                        className="mb-3"
+                      />
 
-                        {/* Error Message */}
-                        {customConnects < 5 && (
-                          <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-                            <p className="text-sm">
-                              A minimum of <strong>5 Connects</strong> is
-                              required to proceed.
-                            </p>
-                          </div>
-                        )}
-                      </div>
+                      {/* Error Message */}
+                      {customConnects < 5 && (
+                        <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                          <p className="text-sm">
+                            A minimum of <strong>5 Connects</strong> is required
+                            to proceed.
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </TabContent>
                 </Tabs>
@@ -272,14 +296,17 @@ export default function BuyConnectsPage() {
                     </div>
                   </div>
 
-                  <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                  <div className=" mb-6">
                     <p className="text-sm text-gray-600 mb-2">
                       This bundle of Connects will expire in 60 Days from today.
                       Unused Connects rollover to the next month.
                     </p>
-                    <button className="text-red-500 text-sm hover:underline">
+                    <a
+                      href="#"
+                      className="text-red-500 text-sm hover:underline"
+                    >
                       Learn more
-                    </button>
+                    </a>
                   </div>
 
                   <div className="mb-6">
@@ -294,7 +321,7 @@ export default function BuyConnectsPage() {
                         onChange={(e) => setAgreedToTerms(e.target.checked)}
                         className="h-5 w-5 accent-red-500"
                       />
-                      <span className="text-sm">
+                      <span className="text-sm text-gray-600">
                         I agree to{" "}
                         <button className="text-red-500 hover:underline">
                           Terms & Conditions
@@ -334,7 +361,7 @@ export default function BuyConnectsPage() {
               alt="Buy Connects Graphic"
               height={100}
               width={100}
-              className="w-full h-full max-xl:hidden"
+              className="w-full h-full max-xl:hidden object-scale-down"
               priority
             />
           </div>
@@ -342,187 +369,227 @@ export default function BuyConnectsPage() {
       </section>
 
       {/* Mobile */}
-      <section className="md:hidden min-h-screen bg-gray-50">
-        <header className="fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white">
-          <div className="grid grid-cols-3 items-center h-full px-4">
-            <button
-              aria-label="Go back"
-              className="justify-self-start rounded-full size-10 border flex items-center justify-center"
-              onClick={() => router.back()}
-            >
-              <ChevronLeft size={25} />
-            </button>
-
-            <h1 className="col-start-2 text-center font-medium truncate">
-              Buy Connects
-            </h1>
-          </div>
-        </header>
-
-        <div className="px-4 pt-16 pb-20">
-          {/* Available Connects */}
-          <div className="flex items-center justify-between mb-6">
-            <span className="text-gray-600">Your available Connects</span>
-            <div className="flex items-center gap-1 bg-yellow-100 px-3 py-1 rounded-full">
-              <Image src="/icons/coin.svg" alt="coin" width={20} height={20} />
-              <span className="font-medium">{connectBalance} Connects</span>
+      <section className="w-full md:hidden">
+        {/* Mobile Header */}
+        <MobileHeader title="Buy Connects" />
+        <div className="px-6 pb-16 pt-4">
+          <div className="flex justify-between w-full py-4 rounded-lg mb-4">
+            {/* Available Connects */}
+            <div className="flex flex-col gap-2 items-start w-2/5">
+              <span className="font-medium">Your Connects</span>
+              <div className="text-lg flex items-center">
+                <Image
+                  src="/icons/coin.svg"
+                  alt="coin icon"
+                  width={36}
+                  height={36}
+                />
+                <span className="text-gray-700 text-2xl font-medium">
+                  {connectBalance}
+                </span>
+              </div>
             </div>
           </div>
 
           {/* Tabs */}
-          <Tabs defaultActive="bundles" className="mb-6">
-            <TabHeader
-              containerClassName="border-b border-gray-200"
-              tabsClassName="flex w-full"
-            >
+          <Tabs
+            defaultActive="bundles"
+            className="mb-6"
+            onTabChange={handleTabChange}
+          >
+            <TabHeader tabsClassName="justify-between border rounded-xl p-2 w-full flex gap-2">
               <Tab
                 label="Bundles"
                 value="bundles"
-                containerClassName="flex-1 px-4 py-3 text-center font-medium"
-                activeClassName="text-red-500 border-b-2 border-red-500"
-                inactiveClassName="text-gray-500"
+                containerClassName="w-1/2 p-3 text-base font-medium max-md:font-normal rounded-lg border transition-colors duration-300"
+                activeClassName="text-red-600 border-red-500"
+                inactiveClassName="text-gray-700  border-transparent"
               />
               <Tab
                 label="Custom"
                 value="custom"
-                containerClassName="flex-1 px-4 py-3 text-center font-medium"
-                activeClassName="text-red-500 border-b-2 border-red-500"
-                inactiveClassName="text-gray-500"
+                containerClassName="w-1/2 p-3 text-base font-medium max-md:font-normal rounded-lg border transition-colors duration-300"
+                activeClassName="text-red-600 border-red-500"
+                inactiveClassName="text-gray-700  border-transparent"
               />
             </TabHeader>
 
             <TabContent value="bundles">
-              <h2 className="text-xl mb-4">
-                Select the connects bundle to buy
-              </h2>
-
               <RadioGroup
-                name="bundle-selection-mobile"
-                options={ConnectsBundleData.bundles.map((bundle) => ({
-                  value: bundle.id,
-                  label: bundle.title,
-                  icon: (
-                    <ConnectsBundleCard
-                      bundle={bundle}
-                      selectedBundle={selectedBundle}
-                      isMobile={true}
-                    />
-                  ),
-                }))}
+                name="bundle-selection"
+                options={bundleOptions}
                 value={selectedBundle}
                 onChange={(value) => setSelectedBundle(value as string)}
-                columns={1}
+                columns={3}
                 horizontal={true}
                 withIcons={true}
-                selectedColor="border-red-500"
-                radioOptionClassName="border-0 rounded-lg w-full relative transition-all"
+                selectedColor="shadow-2xl"
+                radioOptionClassName="rounded-xl relative transition-all"
+                radioGroupClassName="gap-8 md:gap-10 xl:gap-12 !grid-cols-3"
                 radioLabelClassName="block p-0 w-full h-full"
                 radioTextClassName="hidden"
-                containerClassName="mb-6"
-                radioGroupClassName="grid-cols-3 space-y-4 gap-6"
+                containerClassName="my-4 container mx-auto"
               />
             </TabContent>
 
             <TabContent value="custom">
-              <div className="text-center py-12">
-                <p className="text-gray-600">
-                  Custom connects feature coming soon...
-                </p>
+              {/* Connects Input Section */}
+              <div className="py-4">
+                <NumberField
+                  name="customConnects"
+                  label="Enter Connects to buy"
+                  value={customConnects}
+                  onChange={setCustomConnects}
+                  min={0}
+                  required
+                  className="mb-3 w-full"
+                />
+
+                {/* Error Message */}
+                {customConnects < 5 && (
+                  <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-sm">
+                      A minimum of <strong>5 Connects</strong> is required to
+                      proceed.
+                    </p>
+                  </div>
+                )}
               </div>
             </TabContent>
           </Tabs>
 
           {/* Mobile Purchase Summary */}
-          <div className="bg-white rounded-lg p-4 shadow-lg">
-            <h3 className="text-lg font-semibold mb-4">Purchase Summary</h3>
+          <div className="mb-6">
+            <p className="text-xs text-gray-600 mb-2">
+              This bundle of Connects will expire in 60 Days from today. Unused
+              Connects rollover to the next month.{" "}
+              <a href="#" className="text-red-500 text-xs hover:underline">
+                Learn more
+              </a>
+            </p>
+          </div>
 
-            <div className="space-y-3 mb-4">
+          <div className="mb-6">
+            <p className="text-xs text-gray-600 mb-4">
+              You&apos;re authorizing HouseClay to charge your account.
+            </p>
+
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={agreedToTerms}
+                onChange={(e) => setAgreedToTerms(e.target.checked)}
+                className="h-5 w-5 accent-red-500"
+              />
+              <span className="text-xs text-gray-600">
+                I agree to{" "}
+                <button className="text-red-500 hover:underline">
+                  Terms & Conditions
+                </button>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <section className="fixed bottom-0 left-0 ml-[33.33%] max-md:ml-auto right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
+          <div className="flex flex-col justify-around items-start w-full">
+            <div className="text-gray-600 text-xs">Total Amount</div>
+            <div className=" text-sm font-bold flex gap-2 items-center">
+              {totalAmount.toFixed(2)} <Info size={16} />
+            </div>
+          </div>
+          <button
+            className="px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full text-base max-md:text-sm hover:bg-red-600 transition-colors"
+            onClick={() => openDialog("connects-price-breakdown-dialog")}
+          >
+            Proceed to Pay
+          </button>
+        </section>
+      </section>
+
+      {/* Standouts Dialog */}
+      {isDialogOpen("connects-price-breakdown-dialog") && (
+        <Dialog
+          id="connects-price-breakdown-dialog"
+          type="bottom-sheet"
+          onClose={() => {
+            closeDialog("connects-price-breakdown-dialog");
+          }}
+          entryAnimation="animate-slide-in-bottom"
+          exitAnimation="animate-slide-out-bottom"
+        >
+          <DialogHeader>
+            <div className="py-2 px-8 flex flex-col justify-between items-center w-full">
+              <h1 className="text-xl mt-1 mb-2 text-black">Price Breakdown</h1>
+            </div>
+            <button className="absolute top-4 right-4">
+              <X
+                onClick={() => {
+                  closeDialog("connects-price-breakdown-dialog");
+                }}
+                size={25}
+              />
+            </button>
+          </DialogHeader>
+          <DialogContent>
+            <div className="space-y-4 my-6 px-6 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600 text-sm">Account charge</span>
+                <span className="text-gray-600">
+                  Your account will be charged
+                </span>
                 <span className="font-medium">
-                  ₹{currentBundle?.originalPrice.toLocaleString()} + 18% GST
+                  ₹
+                  {currentBundle?.originalPrice.toLocaleString() ||
+                    customConnectsPrice.toLocaleString()}{" "}
+                  + <span className="text-xs">18% GST</span>
                 </span>
               </div>
 
               <div className="flex justify-between">
-                <span className="text-gray-600 text-sm">New balance</span>
+                <span className="text-gray-600">
+                  Your new Connects balance will be
+                </span>
                 <div className="flex items-center gap-1">
                   <Image
                     src="/icons/coin.svg"
                     alt="coin"
-                    width={16}
-                    height={16}
+                    width={24}
+                    height={24}
                   />
-                  <span className="font-medium">
-                    {newConnectsBalance} Connects
-                  </span>
+                  <span className="font-medium">{newConnectsBalance}</span>
                 </div>
               </div>
 
               <div className="flex justify-between">
-                <span className="text-gray-600 text-sm">Expires on</span>
-                <span className="font-medium text-sm">
+                <span className="text-gray-600">
+                  These Connects will expire on
+                </span>
+                <span className="font-medium">
                   {expiryDate.toLocaleDateString("en-US", {
                     year: "numeric",
-                    month: "short",
+                    month: "long",
                     day: "numeric",
                   })}
                 </span>
               </div>
-
-              <div className="border-t pt-3">
-                <div className="flex justify-between font-semibold">
-                  <span>Total Amount</span>
-                  <span>₹{totalAmount.toFixed(2)}</span>
+            </div>
+            <section className="relative bottom-0 left-0 ml-[33.33%] max-md:ml-auto right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
+              <div className="flex flex-col justify-around items-start w-full">
+                <div className="text-gray-600 text-xs">Total Amount</div>
+                <div className=" text-sm font-bold flex gap-2 items-center">
+                  {totalAmount.toFixed(2)} <Info size={16} />
                 </div>
               </div>
-            </div>
-
-            <div className="bg-gray-50 rounded-lg p-3 mb-4">
-              <p className="text-xs text-gray-600">
-                This bundle expires in 60 Days. Unused Connects rollover.
-              </p>
-            </div>
-
-            <div className="mb-4">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={agreedToTerms}
-                  onChange={(e) => setAgreedToTerms(e.target.checked)}
-                  className="rounded border-gray-300 text-red-500 focus:ring-red-500"
-                />
-                <span className="text-sm">
-                  I agree to{" "}
-                  <button className="text-red-500 hover:underline">
-                    Terms & Conditions
-                  </button>
-                </span>
-              </label>
-            </div>
-
-            <div className="flex gap-3">
               <button
-                onClick={() => router.back()}
-                className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
+                className="px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full text-base max-md:text-sm hover:bg-red-600 transition-colors"
                 onClick={handleProceedToPay}
-                disabled={!agreedToTerms}
-                className={`flex-1 px-4 py-3 rounded-lg font-medium ${
-                  agreedToTerms
-                    ? "bg-red-500 text-white hover:bg-red-600"
-                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                }`}
               >
                 Proceed to Pay
               </button>
-            </div>
-          </div>
-        </div>
-      </section>
+            </section>
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   );
 }

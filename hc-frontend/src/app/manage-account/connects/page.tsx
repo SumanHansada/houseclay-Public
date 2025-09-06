@@ -83,7 +83,7 @@ export default function ConnectsPage() {
         </div>
 
         <div className="flex">
-          <div className="lg:w-1/2 space-y-6 px-4">
+          <div className="lg:w-2/3 space-y-6 px-4">
             <div className="space-y-4">
               <h1 className="text-3xl font-bold xl:w-2/3">
                 How you can use connects?
@@ -158,13 +158,13 @@ export default function ConnectsPage() {
               Know more about connects
             </button>
           </div>
-          <div className="lg:w-1/2 max-lg:hidden m-auto">
+          <div className="lg:w-1/3 max-lg:hidden m-auto">
             <Image
               src="/icons/static-pages/how-to-use-connects.svg"
               alt="how to use connects"
-              width={420}
-              height={420}
-              className="mx-auto"
+              width={100}
+              height={100}
+              className="w-full h-full object-scale-down"
             />
           </div>
         </div>
@@ -172,10 +172,12 @@ export default function ConnectsPage() {
 
       {/* Mobile */}
       <section className="md:hidden">
+        {/* Mobile Header */}
         <MobileHeader title="Connects" />
 
-        <div className="px-8 mb-16 py-5">
-          <div className="flex justify-between w-full py-4 rounded-lg mb-12">
+        <div className="px-6 pb-20 pt-4">
+          <div className="flex justify-between w-full py-4 rounded-lg mb-4">
+            {/* Available Connects */}
             <div className="flex flex-col gap-2 items-start w-2/5">
               <span className="font-medium">Your Connects</span>
               <div className="text-lg flex items-center">
