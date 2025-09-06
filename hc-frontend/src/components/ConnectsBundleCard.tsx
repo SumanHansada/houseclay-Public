@@ -29,7 +29,6 @@ export default function ConnectsBundleCard({
         scale: selectedBundle === bundle.id ? 1.08 : 1.02,
         rotateX: 0,
         rotateY: 0,
-        backgroundSize: "cover",
         transition: { duration: 0.3 },
       }}
       whileTap={{ scale: 0.98, rotateY: 0 }}

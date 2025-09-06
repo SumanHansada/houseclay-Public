@@ -286,14 +286,14 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                   <Tab
                     label="Full House"
                     value={PropertyCategory.RENT}
-                    containerClassName="w-1/2 p-3 text-base font-medium max-md:font-normal rounded-xl border transition-colors duration-300"
+                    containerClassName="w-1/2 p-2 md:p-3 text-base font-medium max-md:font-normal rounded-xl border transition-colors duration-300"
                     activeClassName="text-red-600 border-red-500"
                     inactiveClassName="text-gray-700 border-transparent"
                   />
                   <Tab
                     label="Flatmates"
                     value={PropertyCategory.FLATMATE}
-                    containerClassName="w-1/2 p-3 text-base font-medium max-md:font-normal rounded-xl border transition-colors duration-300"
+                    containerClassName="w-1/2 p-2 md:p-3 text-base font-medium max-md:font-normal rounded-xl border transition-colors duration-300"
                     activeClassName="text-red-600 border-red-500"
                     inactiveClassName="text-gray-700 border-transparent"
                   />

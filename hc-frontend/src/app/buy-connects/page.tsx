@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import NumberField from "@/base-components/NumberField";
 import RadioGroup from "@/base-components/RadioGroup";
+import Carousel3D from "@/components/Carousel3D";
 import ConnectsBundleCard from "@/components/ConnectsBundleCard";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import ConnectsBundleData from "@/data/ConnectsBundleData.json";
@@ -49,7 +50,6 @@ export default function BuyConnectsPage() {
   const totalAmount = currentBundle
     ? currentBundle.originalPrice + gstAmount
     : customConnectsPrice + gstAmount;
-  console.log("current Bundle", selectedBundle, currentBundle);
   const newConnectsBalance =
     connectBalance + (currentBundle ? currentBundle.connects : customConnects);
 
@@ -401,35 +401,40 @@ export default function BuyConnectsPage() {
               <Tab
                 label="Bundles"
                 value="bundles"
-                containerClassName="w-1/2 p-3 text-base font-medium max-md:font-normal rounded-lg border transition-colors duration-300"
+                containerClassName="w-1/2 p-2 md:p-3 text-base font-medium max-md:font-normal rounded-lg border transition-colors duration-300"
                 activeClassName="text-red-600 border-red-500"
                 inactiveClassName="text-gray-700  border-transparent"
               />
               <Tab
                 label="Custom"
                 value="custom"
-                containerClassName="w-1/2 p-3 text-base font-medium max-md:font-normal rounded-lg border transition-colors duration-300"
+                containerClassName="w-1/2 p-2 md:p-3 text-base font-medium max-md:font-normal rounded-lg border transition-colors duration-300"
                 activeClassName="text-red-600 border-red-500"
                 inactiveClassName="text-gray-700  border-transparent"
               />
             </TabHeader>
 
             <TabContent value="bundles">
-              <RadioGroup
-                name="bundle-selection"
-                options={bundleOptions}
-                value={selectedBundle}
-                onChange={(value) => setSelectedBundle(value as string)}
-                columns={3}
-                horizontal={true}
-                withIcons={true}
-                selectedColor="shadow-2xl"
-                radioOptionClassName="rounded-xl relative transition-all"
-                radioGroupClassName="gap-8 md:gap-10 xl:gap-12 !grid-cols-3"
-                radioLabelClassName="block p-0 w-full h-full"
-                radioTextClassName="hidden"
-                containerClassName="my-4 container mx-auto"
-              />
+              <div className="py-4">
+                <Carousel3D
+                  items={ConnectsBundleData.bundles.map((bundle) => (
+                    <ConnectsBundleCard
+                      bundle={bundle}
+                      key={bundle.id}
+                      selectedBundle={selectedBundle}
+                    />
+                  ))}
+                  onChange={(currentIndex) => {
+                    const currentBundle =
+                      ConnectsBundleData.bundles[currentIndex];
+                    setSelectedBundle(currentBundle.id);
+                  }}
+                  width={280}
+                  height={450}
+                  showNavigationArrows={false}
+                  gap={30}
+                />
+              </div>
             </TabContent>
 
             <TabContent value="custom">
