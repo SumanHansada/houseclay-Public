@@ -129,7 +129,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
 
             {/* Coin Counter */}
             <Link
-              href="/buy-connects"
+              href="/manage-account/connects"
               className="flex items-center xl:px-4 lg:px-3 md:px-2 px-2 py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100"
             >
               <Coin height={20} width={20} />
