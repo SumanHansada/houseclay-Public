@@ -29,7 +29,7 @@ const NeighbourhoodCard: React.FC<NeighbourhoodCardProps> = ({
       <ImageWithLoader
         src={image}
         alt={`${name} neighbourhood`}
-        className="h-full w-full object-cover"
+        className="object-cover"
         fill
         loading="lazy"
       />

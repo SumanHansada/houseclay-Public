@@ -17,7 +17,7 @@ export default function ConnectsBundleCard({
   return (
     <motion.div
       className={
-        "relative container mx-auto w-full rounded-xl p-4 md:h-auto lg:h-[28rem] xl:h-[24rem] 2xl:h-[24rem]"
+        "relative mx-auto w-full rounded-xl p-4 h-[20rem] md:h-[22rem] lg:h-[28rem] xl:h-[24rem] 2xl:h-[24rem]"
       }
       style={{
         backgroundImage: `url('/images/${bundle.background}.webp')`,
@@ -45,7 +45,7 @@ export default function ConnectsBundleCard({
         <div className={"absolute -top-3 left-1/2 transform -translate-x-1/2"}>
           <span
             className={
-              "bg-red-500 text-white rounded-full font-medium px-3 py-1 text-sm"
+              "bg-red-500 text-white rounded-full font-medium px-3 py-1 text-xs md:text-sm"
             }
           >
             Recommended

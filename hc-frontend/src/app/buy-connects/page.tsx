@@ -414,27 +414,25 @@ export default function BuyConnectsPage() {
               />
             </TabHeader>
 
-            <TabContent value="bundles">
-              <div className="p-4">
-                <Carousel3D
-                  items={ConnectsBundleData.bundles.map((bundle) => (
-                    <ConnectsBundleCard
-                      bundle={bundle}
-                      key={bundle.id}
-                      selectedBundle={selectedBundle}
-                    />
-                  ))}
-                  onChange={(currentIndex) => {
-                    const currentBundle =
-                      ConnectsBundleData.bundles[currentIndex];
-                    setSelectedBundle(currentBundle.id);
-                  }}
-                  width={280}
-                  height={450}
-                  gap={30}
-                  initialIndex={1}
-                />
-              </div>
+            <TabContent value="bundles" className="-mx-6">
+              <Carousel3D
+                items={ConnectsBundleData.bundles.map((bundle) => (
+                  <ConnectsBundleCard
+                    bundle={bundle}
+                    key={bundle.id}
+                    selectedBundle={selectedBundle}
+                  />
+                ))}
+                onChange={(currentIndex) => {
+                  const currentBundle =
+                    ConnectsBundleData.bundles[currentIndex];
+                  setSelectedBundle(currentBundle.id);
+                }}
+                width={280}
+                height={450}
+                gap={30}
+                initialIndex={1}
+              />
             </TabContent>
 
             <TabContent value="custom">
@@ -496,7 +494,7 @@ export default function BuyConnectsPage() {
           </div>
         </div>
       </section>
-      <footer className="fixed bottom-0 left-0 ml-[33.33%] max-md:ml-auto right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
+      <footer className="fixed bottom-0 left-0 md:hidden right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
         <div className="flex flex-col justify-around items-start w-full">
           <div className="text-gray-600 text-xs">Total Amount</div>
           <div className=" text-sm font-bold flex gap-2 items-center">

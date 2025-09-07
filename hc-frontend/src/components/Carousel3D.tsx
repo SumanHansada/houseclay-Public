@@ -188,9 +188,8 @@ const Carousel3D: FC<Carousel3DProps> = ({
 
   return (
     <div
-      className={`relative mx-auto my-0 ${className}`}
+      className={`relative mx-auto my-0 w-full ${className}`}
       style={{
-        width: `${width}px`,
         height: `${height}px`,
       }}
       onKeyDown={handleKeyDown}
@@ -198,7 +197,7 @@ const Carousel3D: FC<Carousel3DProps> = ({
     >
       <div
         ref={containerRef}
-        className="carousel-stage  w-full h-full flex justify-center items-center"
+        className="carousel-stage  w-full h-full flex justify-center items-center overflow-x-auto scroll-smooth scrollbar-hide"
         style={{
           perspective: `${perspective}px`,
           transformStyle: "preserve-3d",
@@ -216,8 +215,8 @@ const Carousel3D: FC<Carousel3DProps> = ({
               }}
               className="carousel-card absolute transform transition-all duration-300 ease-out"
               style={{
-                width: `${width * 0.7}px`,
-                height: `${height * 0.8}px`,
+                width: `${width * 0.66}px`,
+                height: `${height * 0.66}px`,
                 transformStyle: "preserve-3d",
                 borderRadius: "16px",
                 cursor: "pointer",

@@ -39,8 +39,8 @@ const HowToUseConnects = () => {
   const router = useRouter();
 
   return (
-    <div className="flex flex-col items-center justify-between md:gap-10 gap-4 xl:px-28 lg:px-14 md:px-14 md:py-20 p-6 bg-gray-100">
-      <div className="flex flex-col items-center justify-center md:gap-4 gap-2">
+    <div className="flex flex-col items-center justify-between md:gap-10 gap-4 xl:px-28 lg:px-14 md:px-14 md:py-20 px-0 py-6 bg-gray-100">
+      <div className="flex flex-col items-center justify-center md:gap-4 gap-2 px-6">
         <h1 className="lg:text-4xl sm:text-3xl text-2xl md:font-bold font-medium text-center">
           How Can You Use Connects?
         </h1>
@@ -64,7 +64,12 @@ const HowToUseConnects = () => {
         role="list"
         className="relative scrollbar-hide flex overflow-x-auto w-full md:hidden"
       >
-        <Carousel2D slideWidth={320} gap={4} showDots={true}>
+        <Carousel2D
+          slideWidth={320}
+          gap={4}
+          showDots={true}
+          containerClassName="px-6"
+        >
           {CONNECT_CARDS.map((card) => (
             <ConnectCard
               key={card.id}
