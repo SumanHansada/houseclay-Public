@@ -372,8 +372,8 @@ export default function BuyConnectsPage() {
       <section className="w-full md:hidden">
         {/* Mobile Header */}
         <MobileHeader title="Buy Connects" />
-        <div className="px-6 pb-16 pt-11">
-          <div className="flex justify-between w-full py-4 rounded-lg mb-4">
+        <div className="px-6 pb-16 pt-4">
+          <div className="flex justify-between items-start w-full py-4 rounded-lg mb-4">
             {/* Available Connects */}
             <div className="flex gap-2 items-center w-2/3 justify-between">
               <span className="font-medium text-xl">Your Connects</span>

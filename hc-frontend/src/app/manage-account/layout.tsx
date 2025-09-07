@@ -44,7 +44,7 @@ export default function ManageProfileLayout({
       </div>
 
       {/* Mobile */}
-      <div className="max-md:block md:hidden w-full h-full">{children}</div>
+      <div className="md:hidden w-full h-full">{children}</div>
     </>
   );
 }

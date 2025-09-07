@@ -86,7 +86,7 @@ export function PropertyCard({
             </button>
 
             {/* Only show Actions menu for md and above */}
-            <div className="hidden md:block">
+            <div className="max-md:hidden">
               <MyPropertiesActionMenu
                 anchorEl={buttonRef.current}
                 open={menuFor === propertyID}

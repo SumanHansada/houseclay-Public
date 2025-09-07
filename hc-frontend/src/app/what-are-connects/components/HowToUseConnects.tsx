@@ -39,7 +39,7 @@ const HowToUseConnects = () => {
   const router = useRouter();
 
   return (
-    <div className="flex flex-col items-center justify-between md:gap-10 gap-4 xl:px-28 lg:px-14 md:px-14 md:py-20 p-8 bg-gray-100">
+    <div className="flex flex-col items-center justify-between md:gap-10 gap-4 xl:px-28 lg:px-14 md:px-14 md:py-20 p-6 bg-gray-100">
       <div className="flex flex-col items-center justify-center md:gap-4 gap-2">
         <h1 className="lg:text-4xl sm:text-3xl text-2xl md:font-bold font-medium text-center">
           How Can You Use Connects?
@@ -49,7 +49,7 @@ const HowToUseConnects = () => {
           Here&apos;s why thousands of property owners trust us:
         </p>
       </div>
-      <div className="md:flex xl:gap-10 lg:gap-6 md:gap-3 max-md:gap-6 justify-between xl:px-12 lg:px-2 hidden">
+      <div className="flex xl:gap-10 lg:gap-6 md:gap-3 max-md:gap-6 justify-between xl:px-12 lg:px-2 max-md:hidden">
         {CONNECT_CARDS.map((card) => (
           <ConnectCard
             key={card.id}
@@ -60,25 +60,24 @@ const HowToUseConnects = () => {
           />
         ))}
       </div>
-      <Carousel2D
-        slideWidth={320}
-        gap={4}
-        showDots={true}
-        containerClassName="md:hidden"
-        className="md:hidden"
+      <div
+        role="list"
+        className="relative scrollbar-hide flex overflow-x-auto w-full md:hidden"
       >
-        {CONNECT_CARDS.map((card) => (
-          <ConnectCard
-            key={card.id}
-            iconSrc={card.iconSrc}
-            iconAlt={card.iconAlt}
-            title={card.title}
-            description={card.description}
-          />
-        ))}
-      </Carousel2D>
+        <Carousel2D slideWidth={320} gap={4} showDots={true}>
+          {CONNECT_CARDS.map((card) => (
+            <ConnectCard
+              key={card.id}
+              iconSrc={card.iconSrc}
+              iconAlt={card.iconAlt}
+              title={card.title}
+              description={card.description}
+            />
+          ))}
+        </Carousel2D>
+      </div>
       <button
-        className="bg-red-500 text-white text-lg xl:px-6  lg:px-5 lg:py-3 md:px-3 px-3 py-2 rounded-xl size-fit hidden md:block"
+        className="bg-red-500 text-white text-lg xl:px-6  lg:px-5 lg:py-3 md:px-3 px-3 py-2 rounded-xl size-fit max-md:hidden"
         onClick={() => router.push("/buy-connects")}
       >
         Buy Connects Now

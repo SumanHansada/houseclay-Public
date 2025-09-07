@@ -1,6 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
@@ -17,6 +18,13 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ id }) => {
   const { closeDialog } = useDialog();
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setHideStickyNavBar(true));
+    return () => {
+      dispatch(setHideStickyNavBar(false));
+    };
+  }, [dispatch]);
 
   const handleClose = () => {
     closeDialog(id);

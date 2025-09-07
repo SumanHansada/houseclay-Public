@@ -6,7 +6,7 @@ import { ImageWithLoader } from "@/utility-components";
 const HeroSection = () => (
   <>
     {/* Desktop background */}
-    <div className="absolute inset-0 hidden md:block">
+    <div className="absolute inset-0 max-md:hidden">
       <ImageWithLoader
         src={bannerBackground.src}
         alt="Banner Background"
@@ -20,7 +20,7 @@ const HeroSection = () => (
 
     {/* Common + mobile image */}
     <div
-      className="flex flex-col justify-center px-8 py-6 gap-2
+      className="flex flex-col justify-center px-6 py-6 gap-2
                     md:absolute md:h-full md:pl-8 lg:pl-14 xl:pl-40
                     md:w-3/5 lg:w-7/12 xl:w-7/12 w-full"
     >

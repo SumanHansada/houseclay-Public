@@ -41,8 +41,6 @@ const Carousel3D: FC<Carousel3DProps> = ({
 }) => {
   // Type annotations for state and refs
   const [currentIndex, setCurrentIndex] = useState<number>(initialIndex);
-  const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [startX, setStartX] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
   const autoplayTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -175,61 +173,6 @@ const Carousel3D: FC<Carousel3DProps> = ({
     };
   }, [autoplay, autoplayInterval, resetAutoplayTimer]);
 
-  // Mouse/touch event handlers with type annotations
-  const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
-    setIsDragging(true);
-    const clientX = "clientX" in e ? e.clientX : e.touches[0].clientX;
-    setStartX(clientX);
-    if (autoplayTimerRef.current) {
-      clearTimeout(autoplayTimerRef.current);
-    }
-  };
-
-  const handleDragMove = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!isDragging) return;
-
-    const clientX = "clientX" in e ? e.clientX : e.touches[0].clientX;
-    const diff = clientX - startX;
-
-    // Apply a subtle rotation to show dragging effect
-    if (containerRef.current) {
-      animate(
-        containerRef.current,
-        { rotateY: `${diff * 0.05}deg` },
-        { duration: 0.1 },
-      );
-    }
-  };
-
-  const handleDragEnd = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!isDragging) return;
-
-    const clientX =
-      "clientX" in e
-        ? e.clientX
-        : "changedTouches" in e
-          ? e.changedTouches[0].clientX
-          : 0;
-    const diff = clientX - startX;
-
-    // Reset container rotation
-    if (containerRef.current) {
-      animate(containerRef.current, { rotateY: "0deg" }, { duration: 0.3 });
-    }
-
-    // Change slide if drag distance is significant
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) {
-        goToPrev();
-      } else {
-        goToNext();
-      }
-    }
-
-    setIsDragging(false);
-    resetAutoplayTimer();
-  };
-
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowLeft") {
       goToPrev();
@@ -260,13 +203,6 @@ const Carousel3D: FC<Carousel3DProps> = ({
           perspective: `${perspective}px`,
           transformStyle: "preserve-3d",
         }}
-        onMouseDown={handleDragStart}
-        onTouchStart={handleDragStart}
-        onMouseMove={handleDragMove}
-        onTouchMove={handleDragMove}
-        onMouseUp={handleDragEnd}
-        onTouchEnd={handleDragEnd}
-        onMouseLeave={(e) => isDragging && handleDragEnd(e as React.MouseEvent)}
       >
         {items.map((Item, index) => {
           // Handle both component and ReactNode types

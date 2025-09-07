@@ -21,7 +21,7 @@ const CurlyArrowIcon = CurlyArrowIconSvg as React.FC<
 const WhyChoose = () => {
   const router = useRouter();
   return (
-    <div className="flex items-center justify-between lg:gap-10 xl:px-28 lg:px-14 md:px-14 px-8 md:py-20 py-5 pb-16">
+    <div className="flex items-center justify-between lg:gap-10 xl:px-28 lg:px-14 md:px-14 px-6 md:py-20 py-5 pb-16">
       <div className="w-full md:w-3/5 lg:px-12 md:px-4">
         <h1 className="mb-2 md:mb-4 xl:text-5xl lg:text-4xl sm:text-3xl text-2xl md:font-bold font-medium">
           Why Choose Connects?
@@ -42,15 +42,15 @@ const WhyChoose = () => {
           </div>
           <div className="space-y-4 lg:space-y-10 sm:space-y-6 lg:px-8 md:px-4 text-lg sm:text-2xl lg:text-3xl mb-2 max-md:w-1/2">
             <div className="flex md:gap-4 gap-1 items-center">
-              <RealOwnerIcon width={70} className="text-red-500" />
+              <RealOwnerIcon width={50} className="text-red-500" />
               <span>Real Owners</span>
             </div>
             <div className="flex md:gap-4 gap-1 items-center">
-              <InstantAccessIcon width={70} className="text-red-500" />
+              <InstantAccessIcon width={50} className="text-red-500" />
               <span>Instant Access</span>
             </div>
             <div className="flex md:gap-4 gap-1 items-center">
-              <NoForcedPlanIcon width={70} className="text-red-500" />
+              <NoForcedPlanIcon width={50} className="text-red-500" />
               <span>No Forced Plans</span>
             </div>
           </div>
@@ -62,12 +62,12 @@ const WhyChoose = () => {
           >
             Buy Connects Now
           </button>
-          <div className="size-32 md:block hidden">
+          <div className="size-32 max-md:hidden">
             <CurlyArrowIcon width={140} className="text-red-500" />
           </div>
         </div>
       </div>
-      <div className="w-2/5 hidden md:block">
+      <div className="w-2/5 max-md:hidden">
         <Image
           src="/images/why-choose-connects.svg"
           alt="Property Graphic"

@@ -3,7 +3,7 @@ import Image from "next/image";
 const WhatAreConnects = () => {
   return (
     <>
-      <div className="flex items-center justify-evenly lg:gap-10 xl:px-28 lg:px-14 md:px-14 px-8 md:py-20 pt-6">
+      <div className="flex items-center justify-evenly lg:gap-10 xl:px-28 lg:px-14 md:px-14 px-6 md:py-20 pt-6">
         <div className="w-2/5 max-md:hidden">
           <Image
             src="/images/what-are-connects.svg"

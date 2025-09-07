@@ -41,7 +41,7 @@ export default function WhatAreConnectsPage() {
 
       <div className="w-full">
         {/* Hero Section */}
-        <section className="relative w-full md:aspect-[15/4] md:block">
+        <section className="relative w-full md:aspect-[15/4]">
           <HeroSection />
         </section>
 
@@ -61,7 +61,7 @@ export default function WhatAreConnectsPage() {
         </section>
 
         {/* Desktop Footer */}
-        <div className="md:block hidden">
+        <div className="max-md:hidden">
           <Footer />
         </div>
       </div>
