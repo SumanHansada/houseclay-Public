@@ -128,10 +128,13 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
             </Link>
 
             {/* Coin Counter */}
-            <button className="flex items-center xl:px-4 lg:px-3 md:px-2 px-2 py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100">
+            <Link
+              href="/buy-connects"
+              className="flex items-center xl:px-4 lg:px-3 md:px-2 px-2 py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100"
+            >
               <Coin height={20} width={20} />
               <span>0</span>
-            </button>
+            </Link>
 
             {/* Login Button */}
             {token ? (
