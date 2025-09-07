@@ -497,7 +497,7 @@ export default function BuyConnectsPage() {
       <footer className="fixed bottom-0 left-0 md:hidden right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
         <div className="flex flex-col justify-around items-start w-full">
           <div className="text-gray-600 text-xs">Total Amount</div>
-          <div className=" text-sm font-bold flex gap-2 items-center">
+          <div className="text-sm font-bold flex gap-2 items-center">
             {totalAmount.toFixed(2)} <Info size={16} />
           </div>
         </div>
@@ -580,20 +580,20 @@ export default function BuyConnectsPage() {
                 </span>
               </div>
             </div>
-            <section className="relative bottom-0 left-0 ml-[33.33%] max-md:ml-auto right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
+            <footer className="relative bottom-0 left-0 ml-[33.33%] max-md:ml-auto right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
               <div className="flex flex-col justify-around items-start w-full">
                 <div className="text-gray-600 text-xs">Total Amount</div>
-                <div className=" text-sm font-bold flex gap-2 items-center">
+                <div className="text-sm font-bold flex gap-2 items-center">
                   {totalAmount.toFixed(2)} <Info size={16} />
                 </div>
               </div>
               <button
-                className="px-6 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full text-base max-md:text-sm hover:bg-red-600 transition-colors"
+                className="px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full hover:bg-red-600 transition-colors"
                 onClick={handleProceedToPay}
               >
                 Proceed to Pay
               </button>
-            </section>
+            </footer>
           </DialogContent>
         </Dialog>
       )}

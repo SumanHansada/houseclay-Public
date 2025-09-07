@@ -92,7 +92,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
                 {item.icon}
                 {item.badge && (
                   <div
-                    className="absolute -top-1 right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
+                    className="absolute top-0 right-3 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center"
                     aria-label={`${item.badge} new notifications`}
                   >
                     {item.badge}
