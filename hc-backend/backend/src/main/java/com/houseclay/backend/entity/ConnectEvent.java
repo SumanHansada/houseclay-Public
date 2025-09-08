@@ -15,7 +15,7 @@ public class ConnectEvent {
     private Long connectEventId;
 
     @ManyToOne
-    @JoinColumn(name = "connectId", nullable = false)
+    @JoinColumn(name = "connect_id", nullable = false)
     private Connect connect;
 
     @Enumerated(EnumType.STRING)

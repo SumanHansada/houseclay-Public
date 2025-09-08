@@ -117,7 +117,7 @@ public class PaymentService {
 
         ExternalPayments payment =  optionalExternalPayments.get();
 
-        if (user.getPhoneNo().equals(payment.getUser().getPhoneNo())) {
+        if (!user.getPhoneNo().equals(payment.getUser().getPhoneNo())) {
             return ResponseEntity.badRequest().body("User not found");
         }
 
@@ -143,6 +143,7 @@ public class PaymentService {
             connect.setUser(user);
             connect.setStatus(ConnectStatus.ACTIVE);
             connect.getEvents().add(connectEvent);
+            connectEvent.setConnect(connect);
 
             user.getConnects().add(connect);
         }
