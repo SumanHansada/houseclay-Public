@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
-import Image from "next/image";
+// import Image from "next/image";
 import { useRouter } from "next/navigation";
-import bannerBackgroundMobile from "public/images/banner-background-mobile.webp";
+// import bannerBackgroundMobile from "public/images/banner-background-mobile.webp";
 import bannerPeopleMobile from "public/images/banner-people-mobile.webp";
 import { useDispatch, useSelector } from "react-redux";
 

@@ -107,7 +107,7 @@ export default function TermsAndConditionsPage() {
 
         <section className="mb-16 py-5">
           <Carousel2D
-            slideWidth={320}
+            slideWidth={380}
             gap={2}
             showDots
             containerClassName="md:hidden"

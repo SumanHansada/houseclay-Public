@@ -7,6 +7,10 @@ import { useRouter } from "next/navigation";
 import { default as TransparencyIconSvg } from "public/icons/transparency.svg";
 import { default as FairnessIconSvg } from "public/icons/fairness.svg";
 import { default as SimplicityIconSvg } from "public/icons/simplicity.svg";
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { setHideFooter, setHideHeader } from "@/store/appSlice";
 
 const TransparencyIcon = TransparencyIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
@@ -18,6 +22,18 @@ const SimplicityIcon = SimplicityIconSvg as React.FC<
 
 export default function AboutUsPage() {
   const router = useRouter();
+  const { isMobile } = useDeviceContext();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isMobile) {
+      dispatch(setHideHeader(true));
+      dispatch(setHideFooter(true));
+    } else {
+      dispatch(setHideHeader(false));
+      dispatch(setHideFooter(false));
+    }
+  }, [isMobile, dispatch]);
 
   return (
     <>

@@ -1,5 +1,4 @@
 import Image from "next/image";
-import bannerBackground from "public/images/banner-what-are-connects.webp";
 
 import { ImageWithLoader } from "@/utility-components";
 
@@ -8,7 +7,7 @@ const HeroSection = () => (
     {/* Desktop background */}
     <div className="absolute inset-0 max-md:hidden">
       <ImageWithLoader
-        src={bannerBackground.src}
+        src="/images/banner-what-are-connects.svg"
         alt="Banner Background"
         fill
         className="!object-contain object-center"
@@ -34,7 +33,7 @@ const HeroSection = () => (
       </div>
 
       <Image
-        src="/images/what-are-connects-banner-mobile.svg"
+        src="/images/banner-what-are-connects-mobile.svg"
         alt="Property Graphic"
         width={500}
         height={500}

@@ -350,8 +350,20 @@ const FooterClient: React.FC = () => {
               Contact Us
             </h3>
             <ul className="space-y-2">
-              <li className="text-black">support@houseclay.com</li>
-              <li className="text-black">+91 7892014327</li>
+              <a
+                href={`mailto:${SUPPORT_EMAIL}`}
+                className="flex items-center gap-2 w-fit"
+              >
+                <Mail width={15} height={15} className="text-red-500" />
+                <span>{SUPPORT_EMAIL}</span>
+              </a>
+              <a
+                href={`tel:${SUPPORT_CONTACT}`}
+                className="flex items-center gap-2 w-fit"
+              >
+                <PhoneCall width={15} height={15} className="text-red-500" />
+                <span>{SUPPORT_CONTACT}</span>
+              </a>
             </ul>
           </div>
         </div>
