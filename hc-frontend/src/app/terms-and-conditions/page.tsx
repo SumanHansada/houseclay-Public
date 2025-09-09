@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+
 import { Footer, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { useDispatch } from "react-redux";
 import { setHideFooter, setHideHeader } from "@/store/appSlice";
 
 export default function TermsAndConditionsPage() {
@@ -177,7 +178,7 @@ export default function TermsAndConditionsPage() {
           </div>
         </div>
       </section>
-      <div className="max-md:hidden">
+      <div className="max-md:hidden w-full">
         <Footer />
       </div>
     </>

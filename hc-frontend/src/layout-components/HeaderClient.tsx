@@ -5,10 +5,11 @@ import { Menu, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import CoinSvg from "public/icons/coin.svg";
-import HouseClaySvg from "public/icons/houseclay-main.svg";
+import HouseClaySvg from "public/newIcons/houseclay-main.svg";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { BENGALURU_LOCATION } from "@/common/constants";
 import { UserDropdown } from "@/components/UserDropdown";
 import { useLogout } from "@/hooks/useLogout";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -39,8 +40,6 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const bengaluruLocation = { lat: 12.9716, lng: 77.5946 };
-
   const onLogin = () => {
     closeAllDialogs();
     openDialog("login-dialog");
@@ -67,8 +66,8 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
         {/* Left Section - Logo */}
         <div className="flex items-center">
           <Link href="/" className="flex items-center gap-1 py-1">
-            <HouseClay width={24} height={26} />
-            <span className="text-red-600 text-2xl font-inter font-bold">
+            <HouseClay width={32} height={34} />
+            <span className="text-red-500 text-3xl font-inter font-bold">
               houseclay
             </span>
           </Link>
@@ -76,9 +75,9 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
 
         {/* Center - Navigation */}
         <div className="flex justify-between items-center w-full text-sm">
-          <nav className="hidden md:flex xl:gap-12 lg:gap-6 md:gap-2 gap-3 text-gray-800">
+          <nav className="hidden md:flex xl:gap-12 lg:gap-6 md:gap-2 gap-3 text-gray-800 lg:text-lg">
             <Link
-              href={`/property-search?lat=${bengaluruLocation.lat}&lon=${bengaluruLocation.lng}&propertyCategory=rent`}
+              href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=rent`}
               data-category="rent"
               data-active={
                 searchParams.get("propertyCategory") === "rent" ||
@@ -92,7 +91,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
               Rent
             </Link>
             <Link
-              href={`/property-search?lat=${bengaluruLocation.lat}&lon=${bengaluruLocation.lng}&propertyCategory=resale`}
+              href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=resale`}
               data-category="resale"
               data-active={
                 searchParams.get("propertyCategory") === "resale"
@@ -161,8 +160,8 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
         <div className="flex items-center gap-2">
           <Menu role="button" onClick={onMenuClick} />
           <Link href="/" className="flex items-center gap-1">
-            <HouseClay width={22} height={24} />
-            <span className="text-red-600 text-xl font-inter font-bold">
+            <HouseClay width={24} height={26} />
+            <span className="text-red-500 text-2xl font-inter font-bold">
               houseclay
             </span>
           </Link>

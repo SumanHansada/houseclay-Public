@@ -7,12 +7,14 @@ import {
   UserRound,
   X,
 } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import VerifiedTenantsSvg from "public/icons/verified-tenants.svg";
 import ZeroPercentRedSvg from "public/icons/zero-percent-red.svg";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { BENGALURU_LOCATION } from "@/common/constants";
 import { ACCOUNT_NAV } from "@/common/dataConstants";
 import { shimmer, toBase64 } from "@/common/utils";
 import { AccountNavList } from "@/components/AccountNavList";
@@ -45,6 +47,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
   const dispatch = useDispatch();
   const pathname = usePathname();
   const initialPathRef = useRef(pathname);
+  const searchParams = useSearchParams();
 
   const [quickLinksExpanded, setQuickLinksExpanded] = useState(true);
   const toggleQuickLinks = () => setQuickLinksExpanded(!quickLinksExpanded);
@@ -62,6 +65,10 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
   };
 
   const onLogout = () => logout();
+
+  const onNavClick = () => {
+    handleClose();
+  };
 
   const handlePropertyBannerClick = () => {
     closeDialog(id);
@@ -197,33 +204,94 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
               }`}
             >
               <ul>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
-                  <span className="flex items-center gap-2">For Sale</span>
-                  <ChevronRight size={20} />
+                <li>
+                  <Link
+                    href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=resale`}
+                    data-category="resale"
+                    data-active={
+                      searchParams.get("propertyCategory") === "resale"
+                        ? "true"
+                        : "false"
+                    }
+                    prefetch
+                    onClick={onNavClick}
+                    className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
+                  >
+                    <span className="flex items-center gap-2">For Resale</span>
+                    <ChevronRight size={20} />
+                  </Link>
                 </li>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
-                  <span className="flex items-center gap-2">For Rent</span>
-                  <ChevronRight size={20} />
+
+                <li>
+                  <Link
+                    href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=rent`}
+                    data-category="rent"
+                    data-active={
+                      searchParams.get("propertyCategory") === "rent" ||
+                      (pathname === "/property-search" &&
+                        !searchParams.get("propertyCategory"))
+                        ? "true"
+                        : "false"
+                    }
+                    prefetch
+                    onClick={onNavClick}
+                    className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
+                  >
+                    <span className="flex items-center gap-2">For Rent</span>
+                    <ChevronRight size={20} />
+                  </Link>
                 </li>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
-                  <span className="flex items-center gap-2">
-                    What Are Connects
-                  </span>
-                  <ChevronRight size={20} />
+
+                <li>
+                  <Link
+                    href="/what-are-connects"
+                    prefetch
+                    onClick={onNavClick}
+                    className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
+                  >
+                    <span className="flex items-center gap-2">
+                      What Are Connects
+                    </span>
+                    <ChevronRight size={20} />
+                  </Link>
                 </li>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
-                  <span className="flex items-center gap-2">Contacts</span>
-                  <ChevronRight size={20} />
+
+                <li>
+                  <Link
+                    href="/contact-us"
+                    prefetch
+                    onClick={onNavClick}
+                    className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
+                  >
+                    <span className="flex items-center gap-2">Contact Us</span>
+                    <ChevronRight size={20} />
+                  </Link>
                 </li>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300">
-                  <span className="flex items-center gap-2">FAQs</span>
-                  <ChevronRight size={20} />
+
+                <li>
+                  <Link
+                    href="/faqs"
+                    prefetch
+                    onClick={onNavClick}
+                    className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
+                  >
+                    <span className="flex items-center gap-2">FAQs</span>
+                    <ChevronRight size={20} />
+                  </Link>
                 </li>
-                <li className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer">
-                  <span className="flex items-center gap-2">
-                    Terms & Conditions
-                  </span>
-                  <ChevronRight size={20} />
+
+                <li>
+                  <Link
+                    href="/terms-and-conditions"
+                    prefetch
+                    onClick={onNavClick}
+                    className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer w-full"
+                  >
+                    <span className="flex items-center gap-2">
+                      Terms & Conditions
+                    </span>
+                    <ChevronRight size={20} />
+                  </Link>
                 </li>
               </ul>
             </div>

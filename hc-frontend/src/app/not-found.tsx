@@ -1,6 +1,7 @@
+import Link from "next/link";
+
 import { Footer } from "@/layout-components";
 import { ImageWithLoader } from "@/utility-components";
-import Link from "next/link";
 
 export default function NotFound() {
   return (

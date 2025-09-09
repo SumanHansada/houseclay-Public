@@ -1,12 +1,14 @@
 "use client";
 
-import { SUPPORT_ACCORDION } from "@/common/dataConstants";
 import { useEffect, useState } from "react";
-import { Accordion } from "../manage-account/components/Accordion";
+import { useDispatch } from "react-redux";
+
+import { SUPPORT_ACCORDION } from "@/common/dataConstants";
 import { Footer, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { useDispatch } from "react-redux";
 import { setHideFooter, setHideHeader } from "@/store/appSlice";
+
+import { Accordion } from "../manage-account/components/Accordion";
 
 export default function FrequentlyAskedQuestionPage() {
   const [openKey, setOpenKey] = useState<string | null>(null);
@@ -33,8 +35,8 @@ export default function FrequentlyAskedQuestionPage() {
             Frequently Asked Questions
           </h1>
           <p className="md:text-xl text-gray-600 md:text-gray-800 w-full">
-            Got questions? We've got answers! In this section, we address the
-            most common inquiries about HouseClay
+            Got questions? We&apos;ve got answers! In this section, we address
+            the most common inquiries about HouseClay
           </p>
         </div>
         <div className="flex flex-col gap-5">
@@ -53,7 +55,7 @@ export default function FrequentlyAskedQuestionPage() {
           })}
         </div>
       </section>
-      <div className="max-md:hidden">
+      <div className="max-md:hidden w-full">
         <Footer />
       </div>
     </>

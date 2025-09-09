@@ -1,16 +1,17 @@
 "use client";
 
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+
+import Carousel2D from "@/components/Carousel2D";
+// data
+import TESTIMONIALS_DATA from "@/data/testimonials.json";
 import { Footer, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { setHideFooter, setHideHeader } from "@/store/appSlice";
 import { ImageWithLoader } from "@/utility-components";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { TestimonialCard } from "./components/TestimonialCard";
-import Carousel2D from "@/components/Carousel2D";
 
-// data
-import TESTIMONIALS_DATA from "@/data/testimonials.json";
+import { TestimonialCard } from "./components/TestimonialCard";
 
 export default function TermsAndConditionsPage() {
   const { isMobile } = useDeviceContext();

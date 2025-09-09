@@ -1,6 +1,7 @@
-import { Testimonial } from "@/interfaces/Testimonial";
 import { Quote, Star } from "lucide-react";
 import Image from "next/image";
+
+import { Testimonial } from "@/interfaces/Testimonial";
 
 const StarRating: React.FC<{ rating: number }> = ({ rating }) => {
   return (

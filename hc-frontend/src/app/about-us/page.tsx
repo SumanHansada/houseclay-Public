@@ -1,16 +1,16 @@
 "use client";
 
-import { Footer, MobileHeader } from "@/layout-components";
-import { ImageWithLoader } from "@/utility-components";
 import { useRouter } from "next/navigation";
-
-import { default as TransparencyIconSvg } from "public/icons/transparency.svg";
-import { default as FairnessIconSvg } from "public/icons/fairness.svg";
-import { default as SimplicityIconSvg } from "public/icons/simplicity.svg";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { useDispatch } from "react-redux";
+import { default as FairnessIconSvg } from "public/newIcons/fairness.svg";
+import { default as SimplicityIconSvg } from "public/newIcons/simplicity.svg";
+import { default as TransparencyIconSvg } from "public/newIcons/transparency.svg";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+
+import { Footer, MobileHeader } from "@/layout-components";
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { setHideFooter, setHideHeader } from "@/store/appSlice";
+import { ImageWithLoader } from "@/utility-components";
 
 const TransparencyIcon = TransparencyIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>

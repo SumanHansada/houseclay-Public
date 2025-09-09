@@ -1,18 +1,18 @@
 "use client";
 
+import { Form, Formik } from "formik";
+import { Mail, PhoneCall } from "lucide-react";
+import bannerBackground from "public/images/banner-background-contact-us.webp";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import * as Yup from "yup";
+
 import { SUPPORT_CONTACT, SUPPORT_EMAIL } from "@/common/constants";
 import { FormPhoneField, FormTextArea, FormTextField } from "@/form-components";
 import { Footer, MobileHeader } from "@/layout-components";
-import { ImageWithLoader } from "@/utility-components";
-import { Form, Formik } from "formik";
-import { Mail, PhoneCall } from "lucide-react";
-import { useEffect, useState } from "react";
-import * as Yup from "yup";
-
-import bannerBackground from "public/images/banner-background-contact-us.webp";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { useDispatch } from "react-redux";
 import { setHideFooter, setHideHeader } from "@/store/appSlice";
+import { ImageWithLoader } from "@/utility-components";
 
 // Added subject and message to the interface
 interface ContactUsFormValues {
