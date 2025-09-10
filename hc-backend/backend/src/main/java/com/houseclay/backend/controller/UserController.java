@@ -88,7 +88,7 @@ public class UserController {
     }
 
     @GetMapping("/detail")
-    public ResponseEntity<?> getUser(@RequestHeader("Authorization") User user) {
+    public ResponseEntity<?> getUser(@RequestAttribute("authenticatedUser") User user) {
         try {
             user = adminService.searchUser(user.getPhoneNo());
             Map<String, Object> response = new HashMap<>();
