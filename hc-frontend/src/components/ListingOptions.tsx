@@ -1,19 +1,11 @@
-import CallWithCaptainSvg from "public/icons/call-with-captain.svg";
-import CreateNewListingSvg from "public/icons/create-new-listing.svg";
 import { useDispatch, useSelector } from "react-redux";
 
 import { PropertyListingType } from "@/common/enums";
 import { setListingType } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
+import { SvgIcon } from "@/utility-components";
 
 import ListingOption from "./ListingOption";
-
-const CreateNewListing = CreateNewListingSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const CallWithCaptain = CallWithCaptainSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
 
 interface ListingOptionsProps {
   isMobile?: boolean;
@@ -37,7 +29,7 @@ const ListingOptions = ({ isMobile = false, onNext }: ListingOptionsProps) => {
       <div className="flex flex-col gap-2">
         <ListingOption
           id="option-diy"
-          icon={<CreateNewListing />}
+          icon={<SvgIcon iconSize="small" name="create-new-listing" />}
           iconColor="blue"
           title="Create a New Listing"
           description="Do it yourself in 5 easy steps"
@@ -48,7 +40,7 @@ const ListingOptions = ({ isMobile = false, onNext }: ListingOptionsProps) => {
 
         <ListingOption
           id="option-call"
-          icon={<CallWithCaptain />}
+          icon={<SvgIcon iconSize="small" name="call-with-captain" />}
           iconColor="green"
           title="Get on a Call with an Captain"
           description="Let us do it for you over a quick phone call"

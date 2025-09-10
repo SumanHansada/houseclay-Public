@@ -1,16 +1,6 @@
 import { Lightbulb } from "lucide-react";
-import GoLiveSvg from "public/icons/get-started/go-live.svg";
-import PropertyBasicsSvg from "public/icons/get-started/property-basics.svg";
-import ShowcaseYourSpaceSvg from "public/icons/get-started/showcase-your-space.svg";
 
-const PropertyBasics = PropertyBasicsSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const ShowcaseYourSpace = ShowcaseYourSpaceSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const GoLive = GoLiveSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-
+import { SvgIcon } from "@/utility-components";
 interface GetStartedProps {
   onGetStarted: () => void;
 }
@@ -21,7 +11,7 @@ const GetStarted = ({ onGetStarted }: GetStartedProps) => {
       <h1 className="text-2xl">It&apos;s easy to list property on Houseclay</h1>
       <div className="flex flex-col gap-6 w-full mx-auto">
         <div className="flex items-start gap-4">
-          <PropertyBasics />
+          <SvgIcon iconSize="large" name="property-basics" size={80} />
           <div className="flex flex-1 flex-col gap-2">
             <div className="font-normal text-lg">1. Property Basics</div>
             <div className="text-gray-500 text-sm">
@@ -30,7 +20,7 @@ const GetStarted = ({ onGetStarted }: GetStartedProps) => {
           </div>
         </div>
         <div className="flex items-start gap-4">
-          <ShowcaseYourSpace />
+          <SvgIcon iconSize="large" name="showcase-your-space" size={80} />
           <div className="flex flex-1 flex-col gap-2">
             <div className="font-normal text-lg">2. Showcase Your Space</div>
             <div className="text-gray-500 text-sm">
@@ -39,7 +29,7 @@ const GetStarted = ({ onGetStarted }: GetStartedProps) => {
           </div>
         </div>
         <div className="flex items-start gap-4">
-          <GoLive />
+          <SvgIcon iconSize="large" name="go-live" size={80} />
           <div className="flex flex-1 flex-col gap-2">
             <div className="font-normal text-lg">3. Go Live & Get Leads!</div>
             <div className="text-gray-500 text-sm">

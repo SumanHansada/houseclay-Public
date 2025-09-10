@@ -1,7 +1,7 @@
 "use client";
 
+import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-import SearchSvg from "public/icons/search.svg";
 import { useRef } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,8 +11,6 @@ import { resetPropertySearch, setLocation } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
 
 import Dropdown from "./Dropdown";
-
-const Search = SearchSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 const cityLatLngMapping: Record<string, { lat: number; lng: number }> = {
   Bengaluru: { lat: 12.9716, lng: 77.5946 },
@@ -158,18 +156,18 @@ const HomeSearchBar: React.FC = () => {
 
       {/* Search Button */}
       <button
-        className="text-white flex items-center justify-center rounded-full md:hidden"
+        className="bg-red-500 flex items-center justify-center rounded-full p-3 shadow-xl md:hidden"
         onClick={handleSearch}
       >
-        <Search height={40} width={40} />
+        <Search size={20} className="text-white fill-red-500" />
       </button>
       <button
-        className="text-white flex items-center justify-center rounded-full max-md:hidden"
+        className="bg-red-500 flex items-center justify-center rounded-full p-3 shadow-xl max-md:hidden"
         onClick={handleSearch}
         onMouseEnter={handlePrefetch}
         onFocus={handlePrefetch}
       >
-        <Search height={50} width={50} />
+        <Search size={30} className="text-white fill-red-500" />
       </button>
     </div>
   );

@@ -1,16 +1,11 @@
 "use client";
 
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import ChevronRightIconSvg from "public/icons/chevron-right.svg";
 
 import { type AccountNavItem } from "@/common/dataConstants";
 import { useLogout } from "@/hooks/useLogout";
-
-const ChevronRightIcon = ChevronRightIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-
 interface BaseProps {
   items: AccountNavItem[];
   listClassName?: string;
@@ -20,7 +15,6 @@ interface BaseProps {
     item: AccountNavItem,
   ) => void;
   iconSize?: number;
-  chevronSize?: { width: number; height: number };
 }
 
 interface HeaderProps extends BaseProps {
@@ -44,7 +38,6 @@ export function AccountNavList({
   listClassName,
   itemClassName,
   iconSize = 32,
-  chevronSize = { width: 10, height: 20 },
   variant = "sidebar",
   ...props
 }: AccountNavProps) {
@@ -59,7 +52,7 @@ export function AccountNavList({
     switch (variant) {
       case "header":
         return {
-          list: "bg-white border border-gray-200 rounded-lg shadow-lg py-2 px-3 space-y-1",
+          list: "bg-white border border-gray-200 rounded-xl shadow-lg py-2 px-3 space-y-1",
           item: "gap-3 cursor-pointer rounded-md hover:bg-gray-50",
         };
       case "mobile":
@@ -122,10 +115,7 @@ export function AccountNavList({
             <div className="font-medium text-gray-900">{userName}</div>
             <div className="text-sm text-gray-500">{label}</div>
           </div>
-          <ChevronRightIcon
-            width={chevronSize.width}
-            height={chevronSize.height}
-          />
+          <ChevronRight size={20} className="text-gray-400" />
         </div>
       );
     }
@@ -142,10 +132,9 @@ export function AccountNavList({
           className={`flex justify-between items-center flex-1 border-b-2 py-2 ${isActive ? "text-red-500 border-red-200" : "text-gray-700"}`}
         >
           {label}
-          <ChevronRightIcon
-            width={chevronSize.width}
-            height={chevronSize.height}
-            className={isActive ? "text-red-500" : ""}
+          <ChevronRight
+            size={20}
+            className={isActive ? "text-red-500" : "text-gray-400"}
           />
         </span>
       </div>
@@ -184,10 +173,9 @@ export function AccountNavList({
 
           {/* Show chevron only for sidebar */}
           {/* {variant === "sidebar" && ( */}
-          <ChevronRightIcon
-            width={chevronSize.width}
-            height={chevronSize.height}
-            className={`shrink-0 ${isActive ? "text-red-500" : ""}`}
+          <ChevronRight
+            size={20}
+            className={`shrink-0 ${isActive ? "text-red-500" : "text-gray-400"}`}
           />
           {/* )} */}
         </div>

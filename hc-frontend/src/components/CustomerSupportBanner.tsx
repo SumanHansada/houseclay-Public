@@ -1,10 +1,5 @@
-import CustomerSupportSvg from "public/icons/customer-support.svg";
-
 import { useDialog } from "@/providers/DialogContextProvider";
-
-const CustomerSupport = CustomerSupportSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
+import { SvgIcon } from "@/utility-components";
 
 const CustomerSupportBanner: React.FC = () => {
   const { openDialog } = useDialog();
@@ -17,7 +12,7 @@ const CustomerSupportBanner: React.FC = () => {
       <div className="p-8 bg-gray-50 border border-gray-200 rounded-2xl shadow-sm flex items-center w-full justify-between gap-16">
         <div className="relative overflow-hidden rounded-lg">
           <div className="absolute inset-0 shadow-[inset_0_0_80px_40px_rgba(255,255,255,0.8)] z-20"></div>
-          <CustomerSupport />
+          <SvgIcon iconSize="large" name="customer-support" size={370} />
         </div>
 
         <div className="flex flex-col justify-between w-1/2">

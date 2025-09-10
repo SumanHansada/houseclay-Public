@@ -1,15 +1,11 @@
 "use client";
 
 import { X } from "lucide-react";
-import HouseClayCaptainSvg from "public/icons/houseclay-captain.svg";
 import React from "react";
 
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-
-const HouseClayCaptain = HouseClayCaptainSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
+import { SvgIcon } from "@/utility-components";
 
 interface CallWithCaptainDialogProps {
   id: string;
@@ -55,7 +51,7 @@ const CallWithCaptainDialog: React.FC<CallWithCaptainDialogProps> = ({
         >
           <div className="relative overflow-hidden rounded-lg">
             <div className="absolute inset-0 shadow-[inset_0_0_25px_25px_rgba(255,255,255,0.8)] z-20"></div>
-            <HouseClayCaptain />
+            <SvgIcon iconSize="medium" name="houseclay-captain" size={150} />
           </div>
           {!isMobile && <h2 className="text-2xl font-medium">Awesome!</h2>}
           {!isMobile && (
