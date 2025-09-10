@@ -1,7 +1,6 @@
 "use client";
 
-import CircleCheckIconSvg from "public/icons/circle-check.svg";
-import ThreeDotsIconSvg from "public/icons/three-dots-horizontal.svg";
+import { CircleCheck, Ellipsis } from "lucide-react";
 import { useRef, useState } from "react";
 
 import { PropertyCategory } from "@/common/enums";
@@ -10,13 +9,6 @@ import { MyProperty } from "@/interfaces/ManageAccount";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 
 import { MyPropertiesActionMenu } from "./MyPropertiesActionMenu";
-
-const CircleCheckIcon = CircleCheckIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const ThreeDotsIcon = ThreeDotsIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
 
 export interface PropertyCardProps extends MyProperty {
   onDashboard: (propertyId: string) => void;
@@ -59,11 +51,7 @@ export function PropertyCard({
           <div className="flex shrink-0 items-center gap-2 text-lg">
             {status === "Active" ? (
               <span className="inline-flex items-center gap-1">
-                <CircleCheckIcon
-                  width={20}
-                  height={20}
-                  className="text-lime-500"
-                />
+                <CircleCheck size={25} className="text-white fill-lime-500" />
                 Active
               </span>
             ) : (
@@ -82,7 +70,7 @@ export function PropertyCard({
               onClick={handleActionClick}
               className="inline-flex items-center justify-center rounded-md p-1 hover:bg-gray-100"
             >
-              <ThreeDotsIcon width={20} height={20} className="text-black" />
+              <Ellipsis size={25} />
             </button>
 
             {/* Only show Actions menu for md and above */}

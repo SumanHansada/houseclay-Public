@@ -1,7 +1,6 @@
 "use client";
 
-import CircleCheckIconSvg from "public/icons/circle-check.svg";
-import ThreeDotsIconSvg from "public/icons/three-dots-horizontal.svg";
+import { CircleCheck, Ellipsis } from "lucide-react";
 import { useRef, useState } from "react";
 
 import { PropertyCategory } from "@/common/enums";
@@ -9,13 +8,6 @@ import { formatINRCurrency } from "@/common/utils";
 import { Column, WebsiteDataTable } from "@/components/DataTable";
 
 import { MyPropertiesActionMenu } from "./MyPropertiesActionMenu";
-
-const CircleCheckIcon = CircleCheckIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const ThreeDotsIcon = ThreeDotsIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
 
 interface Property {
   propertyID: string;
@@ -100,7 +92,7 @@ export function PropertyTable({
       render: (item) =>
         item.status === "Active" ? (
           <div className="flex items-center gap-1">
-            <CircleCheckIcon width={20} height={20} className="text-lime-500" />
+            <CircleCheck size={25} className="text-white fill-lime-500" />
             <span>Active</span>
           </div>
         ) : (
@@ -128,7 +120,7 @@ export function PropertyTable({
             }}
             className="inline-flex items-center justify-center rounded-md p-1 hover:bg-gray-100"
           >
-            <ThreeDotsIcon width={20} height={20} className="text-black" />
+            <Ellipsis size={25} />
           </button>
 
           <MyPropertiesActionMenu

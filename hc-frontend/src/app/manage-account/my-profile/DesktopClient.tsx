@@ -1,9 +1,8 @@
 "use client";
 
 import { Form, useFormikContext } from "formik";
-import CircleCheckIconSvg from "public/icons/circle-check.svg";
-import CircleExclamationIconSvg from "public/icons/circle-exclamation.svg";
-import WhatsAppIconSvg from "public/icons/whatsapp-border.svg";
+import { CircleAlert, CircleCheck } from "lucide-react";
+import WhatsAppIconSvg from "public/icons/whatsapp.svg";
 
 import { getInitials } from "@/common/utils";
 import { FormPhoneField, FormTextField } from "@/form-components";
@@ -12,12 +11,6 @@ import { MyProfileFormValues } from "@/interfaces/ManageAccount";
 import { EmailVerifyIncentive } from "../components/EmailVerifyIncentive";
 
 const WhatsAppIcon = WhatsAppIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const CircleCheckIcon = CircleCheckIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const CircleExclamationIcon = CircleExclamationIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
 
 interface DesktopClientProps {
   savedValues: MyProfileFormValues;
@@ -88,20 +81,12 @@ export function DesktopClient({
               </div>
               {values.phoneVerified ? (
                 <p className="text-green-600 mt-1 flex items-center gap-1">
-                  <CircleCheckIcon
-                    width={20}
-                    height={20}
-                    className="text-green-600"
-                  />
+                  <CircleCheck size={25} className="text-white fill-lime-500" />
                   Verified
                 </p>
               ) : (
                 <p className="text-red-600 mt-1 flex items-center gap-1">
-                  <CircleExclamationIcon
-                    width={20}
-                    height={20}
-                    className="text-red-600"
-                  />
+                  <CircleAlert size={25} className="text-white fill-red-600" />
                   Phone Number is not verified
                 </p>
               )}
@@ -146,21 +131,13 @@ export function DesktopClient({
             />
             {values.emailVerified ? (
               <p className="text-green-600 mt-1 flex items-center gap-1">
-                <CircleCheckIcon
-                  width={20}
-                  height={20}
-                  className="text-green-600"
-                />
+                <CircleCheck size={25} className="text-white fill-lime-500" />
                 Verified
               </p>
             ) : (
               <div className="space-y-6">
                 <p className="text-red-600 mt-1 flex items-center gap-1">
-                  <CircleExclamationIcon
-                    width={20}
-                    height={20}
-                    className="text-red-600"
-                  />
+                  <CircleAlert size={25} className="text-white fill-red-600" />
                   Email is not verified
                 </p>
                 {editMode ? null : (

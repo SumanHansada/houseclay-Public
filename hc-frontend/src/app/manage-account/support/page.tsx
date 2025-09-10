@@ -1,8 +1,7 @@
 "use client";
 
+import { Mail, PhoneCall } from "lucide-react";
 import Image from "next/image";
-import MailIconSvg from "public/icons/mail.svg";
-import PhoneIconSvg from "public/icons/phone.svg";
 import { useState } from "react";
 
 import { SUPPORT_CONTACT, SUPPORT_EMAIL } from "@/common/constants";
@@ -10,9 +9,6 @@ import { SUPPORT_ACCORDION } from "@/common/dataConstants";
 import { MobileHeader } from "@/layout-components";
 
 import { Accordion } from "../components/Accordion";
-
-const PhoneIcon = PhoneIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const MailIcon = MailIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 export default function SupportPage() {
   const [openKey, setOpenKey] = useState<string | null>(null);
@@ -52,14 +48,18 @@ export default function SupportPage() {
                   href={`mailto:${SUPPORT_EMAIL}`}
                   className="flex items-center gap-2 mb-4"
                 >
-                  <MailIcon width={25} className="text-red-500" />
+                  <Mail size={25} className="text-red-500" strokeWidth={1.25} />
                   <span>{SUPPORT_EMAIL}</span>
                 </a>
                 <a
                   href={`tel:${SUPPORT_CONTACT}`}
                   className="flex gap-2 items-start"
                 >
-                  <PhoneIcon width={25} className="text-red-500 pt-2" />
+                  <PhoneCall
+                    size={25}
+                    className="text-red-500"
+                    strokeWidth={1.25}
+                  />
                   <div className="flex flex-col">
                     <span>{SUPPORT_CONTACT}</span>
                     <span className="text-sm text-gray-700">
@@ -130,7 +130,11 @@ export default function SupportPage() {
                   className="flex items-center gap-2 mb-4"
                 >
                   <div>
-                    <MailIcon width={20} height={20} className="text-red-500" />
+                    <Mail
+                      size={25}
+                      className="text-red-500"
+                      strokeWidth={1.25}
+                    />
                   </div>
                   <span className="">{SUPPORT_EMAIL}</span>
                 </a>
@@ -139,10 +143,10 @@ export default function SupportPage() {
                   className="flex gap-2 items-start"
                 >
                   <div>
-                    <PhoneIcon
-                      width={20}
-                      height={40}
-                      className="text-red-500 pt-2"
+                    <PhoneCall
+                      size={25}
+                      className="text-red-500"
+                      strokeWidth={1.25}
                     />
                   </div>
                   <div className="flex flex-col">

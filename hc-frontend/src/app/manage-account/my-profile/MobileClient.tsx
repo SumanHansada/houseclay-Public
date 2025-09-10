@@ -1,10 +1,8 @@
 "use client";
 
 import { Form, useFormikContext } from "formik";
-import { SquarePen } from "lucide-react";
-import CircleCheckIconSvg from "public/icons/circle-check.svg";
-import CircleExclamationIconSvg from "public/icons/circle-exclamation.svg";
-import WhatsAppIconSvg from "public/icons/whatsapp-border.svg";
+import { CircleAlert, CircleCheck, SquarePen } from "lucide-react";
+import WhatsAppIconSvg from "public/icons/whatsapp.svg";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
@@ -17,12 +15,6 @@ import { setHideStickyNavBar } from "@/store/appSlice";
 import { EmailVerifyIncentive } from "../components/EmailVerifyIncentive";
 
 const WhatsAppIcon = WhatsAppIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const CircleCheckIcon = CircleCheckIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const CircleExclamationIcon = CircleExclamationIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
 
 interface MobileClientProps {
   savedValues: MyProfileFormValues;
@@ -36,13 +28,9 @@ function VerifiedBadge({ isVerified }: { isVerified: boolean }) {
   return (
     <span className="inline-flex items-center gap-1 text-sm">
       {isVerified ? (
-        <CircleCheckIcon width={16} height={16} className="text-green-600" />
+        <CircleCheck size={25} className="text-white fill-lime-500" />
       ) : (
-        <CircleExclamationIcon
-          width={16}
-          height={16}
-          className="text-red-600"
-        />
+        <CircleAlert size={25} className="text-white fill-red-600" />
       )}
       {isVerified ? "Verified" : "Not verified"}
     </span>
@@ -141,19 +129,17 @@ export function MobileClient({
                 </div>
                 {values.phoneVerified ? (
                   <p className="text-green-600 mt-1 flex items-center gap-1">
-                    <CircleCheckIcon
-                      width={20}
-                      height={20}
-                      className="text-green-600"
+                    <CircleCheck
+                      size={20}
+                      className="text-white fill-lime-500"
                     />
                     Verified
                   </p>
                 ) : (
                   <p className="text-red-600 mt-1 flex items-center gap-1">
-                    <CircleExclamationIcon
-                      width={20}
-                      height={20}
-                      className="text-red-600"
+                    <CircleAlert
+                      size={25}
+                      className="text-white fill-red-600"
                     />
                     Phone Number is not verified
                   </p>
@@ -194,20 +180,12 @@ export function MobileClient({
               />
               {values.emailVerified ? (
                 <p className="text-green-600 mt-1 flex items-center gap-1">
-                  <CircleCheckIcon
-                    width={20}
-                    height={20}
-                    className="text-green-600"
-                  />
+                  <CircleCheck size={25} className="text-white fill-lime-500" />
                   Verified
                 </p>
               ) : (
                 <p className="text-red-600 mt-1 flex items-center gap-1">
-                  <CircleExclamationIcon
-                    width={20}
-                    height={20}
-                    className="text-red-600"
-                  />
+                  <CircleAlert size={25} className="text-white fill-red-600" />
                   Email is not verified
                 </p>
               )}

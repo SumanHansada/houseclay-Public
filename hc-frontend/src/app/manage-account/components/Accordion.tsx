@@ -1,11 +1,7 @@
 "use client";
 
-import MinusIconSvg from "public/icons/minus-white-circle.svg";
-import PlusIconSvg from "public/icons/plus-red-circle.svg";
+import { CircleMinus, CirclePlus } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
-
-const PlusIcon = PlusIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const MinusIcon = MinusIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 interface AccordionProps {
   question: string;
@@ -60,15 +56,14 @@ export function Accordion({
             className={`transition-transform duration-200 ease-out ${open ? "rotate-180" : "rotate-0"}`}
           >
             <span className="relative block h-8 w-8">
-              <PlusIcon
-                className={`absolute inset-0 transition-opacity duration-150 ${open ? "opacity-0" : "opacity-100"} text-red-500`}
-                width={32}
-                height={32}
+              <CirclePlus
+                size={32}
+                className={`absolute inset-0 transition-opacity duration-150 text-white ${open ? "opacity-0" : "opacity-100"} fill-red-500`}
               />
-              <MinusIcon
-                className={`absolute inset-0 transition-opacity duration-150 ${open ? "opacity-100" : "opacity-0"} text-red-500`}
-                width={32}
-                height={32}
+
+              <CircleMinus
+                size={32}
+                className={`absolute inset-0 transition-opacity duration-150 text-white ${open ? "opacity-100" : "opacity-0"} fill-red-500`}
               />
             </span>
           </span>

@@ -1,20 +1,11 @@
-import CircleCheckIconSvg from "public/icons/circle-check.svg";
-import CircleCrossIconSvg from "public/icons/circle-cross.svg";
+import { CircleCheck, CircleX, Download } from "lucide-react";
 import CoinIconSvg from "public/icons/coin.svg";
-import DownloadIconSvg from "public/icons/download.svg";
 
 import { PaymentFilterStatus } from "@/common/enums";
 import { Column, WebsiteDataTable } from "@/components/DataTable";
 import { MyTransaction } from "@/interfaces/ManageAccount";
 
-const CircleCheckIcon = CircleCheckIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const CircleCrossIcon = CircleCrossIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
 const CoinIcon = CoinIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const DownloadIcon = DownloadIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 export const TransactionTable = ({
   transactions,
@@ -66,12 +57,12 @@ export const TransactionTable = ({
       render: (item) =>
         item.status === PaymentFilterStatus.COMPLETED ? (
           <div className="flex gap-1 items-center">
-            <CircleCheckIcon width={20} height={20} className="text-lime-500" />
+            <CircleCheck size={25} className="text-white fill-lime-500" />
             <span>Completed</span>
           </div>
         ) : (
           <div className="flex gap-1 items-center">
-            <CircleCrossIcon width={20} height={20} className="text-red-500" />
+            <CircleX size={25} className="text-white fill-red-500" />
             <span>Cancelled</span>
           </div>
         ),
@@ -82,7 +73,7 @@ export const TransactionTable = ({
       render: (item) =>
         item.invoice ? (
           <button className="" onClick={() => handleDownload(item.id)}>
-            <DownloadIcon width={20} height={20} className="text-red-500" />
+            <Download size={25} className="text-red-500" />
           </button>
         ) : (
           "-"
