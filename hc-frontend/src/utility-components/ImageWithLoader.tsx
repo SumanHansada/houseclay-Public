@@ -73,8 +73,9 @@ export default function ImageWithLoader({
         loading={loading}
         priority={priority}
         className={`object-cover ${className ?? ""} ${isLoading ? "opacity-0" : "opacity-100"} transition-opacity duration-300`}
-        onLoad={handleLoad}
+        onLoadingComplete={handleLoad}
         onError={handleError}
+        unoptimized
         {...rest}
       />
 

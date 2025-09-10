@@ -1,0 +1,466 @@
+// types/svg.ts
+export interface IconProps {
+  name: string;
+  size?: number | `${number}`;
+  className?: string;
+  color?: string;
+  showBlurPlaceholder?: boolean;
+  blurDataUrl?: string;
+  [key: string]: unknown;
+}
+
+export type IconSize = "small" | "medium" | "large";
+
+// Type for medium icon file paths
+type MediumIconPath = string;
+
+// components/SvgIcon.tsx
+import Image from "next/image";
+import React, { memo, Suspense, useEffect, useRef, useState } from "react";
+
+// Small icons configuration (inlined, < 2KB each)
+const SMALL_ICONS = {
+  "24x7-power": `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 28 29" fill="currentColor">
+    <path fill="#222" stroke="#fff" stroke-width=".25" d="M15.682 23.74h-12.6a.84.84 0 0 1-.84-.84V3.58a.84.84 0 0 1 .84-.84h12.6a.84.84 0 0 1 .84.84V22.9a.84.84 0 0 1-.84.84Zm-11.76-1.68h10.92V4.42H3.922z"/>
+    <path fill="#222" stroke="#fff" stroke-width=".25" d="M9.381 9.46c-1.158 0-2.1-.942-2.1-2.1s.942-2.1 2.1-2.1 2.1.942 2.1 2.1-.941 2.1-2.1 2.1Zm0-2.52a.42.42 0 0 0 0 .84.42.42 0 0 0 0-.84ZM6.442 22.06h-.84a.84.84 0 1 1 0-1.68h.84a.84.84 0 1 1 0 1.68ZM13.164 22.06h-.84a.84.84 0 1 1 0-1.68h.84a.84.84 0 1 1 0 1.68ZM9.805 22.06h-.84a.84.84 0 1 1 0-1.68h.84a.84.84 0 1 1 0 1.68ZM24.083 9.46h-1.68a.84.84 0 0 1-.84-.84V6.94a.84.84 0 0 1 .84-.84h1.68a.84.84 0 0 1 .84.84v1.68a.84.84 0 0 1-.84.84Z"/>
+    <path fill="#222" stroke="#fff" stroke-width=".25" d="M24.083 14.5h-1.68a.84.84 0 0 1-.752-.464l-.84-1.68a.84.84 0 0 1-.088-.376V9.46a.84.84 0 0 1 .84-.84h3.36a.84.84 0 0 1 .84.84v2.52c0 .13-.03.26-.089.376l-.84 1.68a.84.84 0 0 1-.751.464Zm-1.161-1.68h.642l.519-1.039V10.3h-1.68v1.481z"/>
+    <path fill="#222" stroke="#fff" stroke-width=".25" d="M21.564 26.26h-6.72c-1.39 0-2.52-1.13-2.52-2.52a.84.84 0 1 1 1.68 0c0 .463.377.84.84.84h6.72a.84.84 0 0 0 .84-.84V14.5a.84.84 0 1 1 1.68 0v9.24c0 1.39-1.13 2.52-2.52 2.52ZM8.121 18.7a.84.84 0 0 1-.594-1.434l1.559-1.559-1.23-.41a.84.84 0 0 1-.329-1.391l2.52-2.52a.84.84 0 1 1 1.188 1.188l-1.558 1.558 1.23.411a.84.84 0 0 1 .328 1.39l-2.52 2.52a.84.84 0 0 1-.594.247Z"/></svg>`,
+  balcony: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+    <path fill="#878787" stroke="#878787" stroke-width=".35" d="M19.27 18.539h-.244v-4.385h.243a.731.731 0 0 0 0-1.462h-2.192V3.68A2.68 2.68 0 0 0 14.397 1H6.603a2.68 2.68 0 0 0-2.68 2.68v9.012H1.731a.731.731 0 0 0 0 1.462h.243v4.384h-.243a.731.731 0 0 0 0 1.462h17.538a.731.731 0 0 0 0-1.462ZM5.384 3.678a1.22 1.22 0 0 1 1.218-1.217h7.794a1.22 1.22 0 0 1 1.218 1.217v9.013H5.385zm.487 14.86H3.436v-4.385h2.436zm3.897 0H7.333v-4.385H9.77zm3.898 0H11.23v-4.385h2.436zm3.897 0h-2.436v-4.385h2.436z"/>
+</svg>`,
+  wifi: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 28 29">
+    <path fill="#222" d="M14 18.289a3.21 3.21 0 1 1 .001 6.422 3.21 3.21 0 0 1 0-6.422m0 1.75a1.461 1.461 0 1 0 .001 2.922 1.461 1.461 0 0 0 0-2.922m0-6.414a7.88 7.88 0 0 1 7.036 4.34l-1.321 1.321a6.125 6.125 0 0 0-11.428 0l-1.321-1.32A7.88 7.88 0 0 1 14 13.625m0-4.664a12.53 12.53 0 0 1 10.448 5.6l-1.268 1.26a10.79 10.79 0 0 0-18.358 0l-1.269-1.268a12.53 12.53 0 0 1 10.448-5.6zm0-4.672A17.16 17.16 0 0 1 27.79 11.2l-1.25 1.26a15.436 15.436 0 0 0-25.078 0l-1.251-1.25A17.15 17.15 0 0 1 14 4.297z"/>
+</svg>`,
+  "build-up-area": `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 23 19">
+    <path fill="#878787" d="M7.693.44c-1.6 0-2.911 1.311-2.911 2.91 0 .755.3 1.44.776 1.96L3.17 10.13c-.087-.007-.17-.026-.259-.026A2.92 2.92 0 0 0 0 13.015c0 1.6 1.312 2.912 2.911 2.912a2.91 2.91 0 0 0 2.41-1.298l11.966 1.757c.33 1.244 1.458 2.176 2.802 2.176 1.6 0 2.911-1.312 2.911-2.911 0-1.55-1.234-2.821-2.765-2.9l-1.567-4.889a2.9 2.9 0 0 0 1.111-2.266c0-1.6-1.311-2.913-2.91-2.913a2.92 2.92 0 0 0-2.432 1.322l-3.872-1.06C10.364 1.538 9.154.44 7.693.44m0 1.475c.803 0 1.438.633 1.438 1.436a1.427 1.427 0 0 1-1.438 1.437 1.425 1.425 0 0 1-1.436-1.437c0-.803.634-1.436 1.436-1.436m9.175 2.244c.803 0 1.436.635 1.436 1.437 0 .803-.633 1.436-1.436 1.436a1.425 1.425 0 0 1-1.437-1.436 1.426 1.426 0 0 1 1.437-1.437m-6.684.672 3.8 1.04c.142 1.468 1.374 2.63 2.876 2.634l1.533 4.794a2.96 2.96 0 0 0-.92 1.115v.022l-.006.055-.424-.062.356-2.43-.94-.136-.357 2.427-1.436-.21.357-2.43-.942-.138-.356 2.43-1.437-.212.494-3.374-.939-.14-.497 3.375-1.437-.21.356-2.43-.941-.136-.356 2.427-1.436-.211.356-2.428-.94-.139-.357 2.43-.791-.117.01-.043-.018-.002a2.9 2.9 0 0 0-.871-1.81l2.328-4.704c.146.023.292.046.444.046a2.91 2.91 0 0 0 2.491-1.433m-7.273 6.747a1.426 1.426 0 0 1 1.438 1.437 1.427 1.427 0 0 1-1.438 1.438 1.43 1.43 0 0 1-1.438-1.437 1.427 1.427 0 0 1 1.438-1.438m17.178 2.636a1.43 1.43 0 0 1 1.438 1.437c0 .803-.636 1.434-1.438 1.434a1.424 1.424 0 0 1-1.438-1.434 1.43 1.43 0 0 1 1.438-1.437"/>
+</svg>`,
+  "call-with-captain": `<svg xmlns="http://www.w3.org/2000/svg"  fill="none" viewBox="0 0 29 29">
+    <path fill="#066c33" fill-rule="evenodd" d="M16.828 8.804a3.36 3.36 0 0 1 3.365 3.365.907.907 0 0 0 1.813 0 5.17 5.17 0 0 0-5.178-5.178.907.907 0 0 0 0 1.813" clip-rule="evenodd"/>
+    <path fill="#066c33" fill-rule="evenodd" d="M16.832 4.531a7.57 7.57 0 0 1 5.401 2.233 7.57 7.57 0 0 1 2.233 5.401.906.906 0 0 0 1.813.009 9.37 9.37 0 0 0-2.765-6.69 9.37 9.37 0 0 0-6.69-2.765.907.907 0 0 0 .008 1.812M15.62 20.038a20.4 20.4 0 0 1-6.662-6.66c.568-.68 1.587-1.904 2.17-2.604a2.11 2.11 0 0 0 .371-2.043c-.584-1.708-.913-3.42-.944-5.134A2.113 2.113 0 0 0 8.44 1.51h-4.75c-1.123 0-2.05.878-2.112 1.999l-.071 1.324c0 12.504 10.152 22.657 22.656 22.657l1.324-.072a2.115 2.115 0 0 0 1.999-2.112c0-1.288 0-3.375-.007-4.711a2.107 2.107 0 0 0-2.141-2.103c-1.676.014-3.352-.307-5.027-.95a2.12 2.12 0 0 0-2.115.347zm-.754 1.664.002.002c.551.33 1.251.276 1.744-.135l2.744-2.285c.085-.07.2-.09.303-.05l.004.001q2.844 1.092 5.69 1.07h.013a.3.3 0 0 1 .213.083.3.3 0 0 1 .088.212v.005c.007 1.334.007 3.415.007 4.701 0 .16-.125.294-.285.302l-1.25.069C12.662 25.664 3.343 16.351 3.32 4.873l.07-1.265a.3.3 0 0 1 .301-.285H8.44c.166 0 .3.134.302.3v.008c.035 1.897.395 3.793 1.043 5.69l.001.004c.035.099.015.209-.053.29h-.001c-.632.763-1.781 2.142-2.305 2.77a1.51 1.51 0 0 0-.135 1.744l.003.004a22.2 22.2 0 0 0 7.57 7.569" clip-rule="evenodd"/>
+</svg>`,
+  clubhouse: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 28 29">
+    <g fill="#191919" stroke="#191919" stroke-width=".25" clip-path="url(#a)">
+        <path d="M20.796 20.93a1.4 1.4 0 0 0-1.901-.539l-3.197 1.782-1.071-1.912 2.78-4.962a.547.547 0 1 0-.954-.535L14 19.142l-2.453-4.378a.547.547 0 0 0-.954.535l2.78 4.962-1.071 1.912-3.197-1.782a1.4 1.4 0 0 0-1.9.538l-.657 1.17a1.4 1.4 0 0 0 .54 1.9l1.868 1.041a2.616 2.616 0 0 0 3.556-1.003L14 21.38l1.489 2.657a2.616 2.616 0 0 0 3.555 1.003l1.87-1.04a1.4 1.4 0 0 0 .538-1.901zm-9.238 2.572c-.41.73-1.337.991-2.07.583l-1.867-1.04a.303.303 0 0 1-.119-.41l.658-1.172a.307.307 0 0 1 .413-.117l3.194 1.781zm8.823-.458-1.87 1.04a1.524 1.524 0 0 1-2.068-.581l-.21-.376 3.194-1.78a.31.31 0 0 1 .414.117l.657 1.169a.303.303 0 0 1-.117.411ZM14.09 13.296a2.351 2.351 0 0 0 1.667-4.014 2.363 2.363 0 0 0-3.332 0 2.33 2.33 0 0 0-.69 1.663 2.351 2.351 0 0 0 2.356 2.35Zm-.893-3.24c.247-.246.57-.369.894-.369a1.26 1.26 0 0 1 1.263 1.258c0 .336-.131.652-.37.89a1.27 1.27 0 0 1-1.787 0 1.25 1.25 0 0 1-.369-.89c0-.336.131-.651.37-.89ZM12.695 1.373Z"/>
+        <path d="M27.988 12.397a2.06 2.06 0 0 0-.758-1.394l-11.924-9.63a2.06 2.06 0 0 0-2.612 0L.77 11.003c-.431.348-.7.843-.758 1.394a2.06 2.06 0 0 0 .451 1.523c.41.504 1.01.766 1.616.766.459 0 .92-.15 1.304-.46l.44-.355v13.676c0 .302.244.547.547.547h19.26a.547.547 0 0 0 .547-.547V13.87l.44.355c.89.718 2.2.58 2.92-.306.35-.43.51-.971.451-1.523ZM4.916 27V12.987l9.085-7.337 9.083 7.338V27zM26.69 13.23a.99.99 0 0 1-1.385.145l-10.96-8.853a.55.55 0 0 0-.687 0L2.696 13.375a.99.99 0 0 1-1.384-.145.97.97 0 0 1-.213-.718.97.97 0 0 1 .358-.658l11.924-9.63a.98.98 0 0 1 1.238 0l11.924 9.63a.97.97 0 0 1 .358.658.97.97 0 0 1-.212.718Z"/>
+    </g>
+    <defs>
+        <clipPath id="a">
+            <path fill="#fff" d="M0 .5h28v28H0z"/>
+        </clipPath>
+    </defs>
+</svg>
+`,
+  connects: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 40 40">
+    <g clip-path="url(#a)">
+        <rect width="40" height="40" fill="#fff" rx="20"/>
+        <g fill="currentColor" stroke="#fff" stroke-width=".78" clip-path="url(#b)">
+            <path d="m19.567 16.763-1.308-1.264c-.912.888-1.428 2.012-1.507 3.14a4.1 4.1 0 0 0 .227 1.67c.192.536.508 1.04.944 1.46l2.093 2.023 1.452 1.403 1.553 1.5c.435.422.955.727 1.51.913.832.28 1.737.297 2.602.082a5.27 5.27 0 0 0 2.385-1.33c.919-.889 1.437-2.017 1.516-3.149a4.1 4.1 0 0 0-.226-1.67 3.8 3.8 0 0 0-.944-1.46l-5.097-4.926a4 4 0 0 0-1.51-.913 4.67 4.67 0 0 0-2.603-.082c-.29.072-.578.174-.857.298l1.451 1.402q.203-.04.404-.054c.353-.022.692.021.997.124q.459.153.81.488l5.098 4.927q.348.34.506.783c.16.441.18.96.04 1.483a3.24 3.24 0 0 1-.892 1.486c-.61.589-1.368.901-2.075.946a2.6 2.6 0 0 1-.997-.122 2.14 2.14 0 0 1-.812-.489l-1.323-1.279-1.308-1.263-2.466-2.384a2 2 0 0 1-.505-.784c-.16-.441-.18-.96-.04-1.483.137-.518.43-1.036.882-1.476Z"/>
+            <path d="m21.697 22.889 1.307 1.263c.913-.888 1.429-2.012 1.508-3.14a4.1 4.1 0 0 0-.226-1.67 3.8 3.8 0 0 0-.945-1.46l-2.093-2.023-1.451-1.402-1.553-1.501a4 4 0 0 0-1.51-.913 4.66 4.66 0 0 0-2.603-.081 5.3 5.3 0 0 0-2.385 1.329c-.92.89-1.438 2.017-1.517 3.15-.04.565.033 1.134.226 1.67.192.535.509 1.038.945 1.459l5.098 4.927a4 4 0 0 0 1.51.912c.833.28 1.737.296 2.602.082q.438-.11.857-.297l-1.451-1.402a3 3 0 0 1-.403.053 2.6 2.6 0 0 1-.998-.122 2.15 2.15 0 0 1-.81-.489l-5.098-4.927a2.04 2.04 0 0 1-.506-.784c-.16-.441-.18-.96-.04-1.483a3.24 3.24 0 0 1 .893-1.485c.609-.59 1.367-.902 2.074-.947.354-.023.693.02.998.123q.458.153.81.488l1.324 1.28 1.308 1.263 2.466 2.384q.348.339.506.783c.16.442.18.96.04 1.483a3.24 3.24 0 0 1-.883 1.476Z"/>
+        </g>
+    </g>
+    <defs>
+        <clipPath id="a">
+            <rect width="40" height="40" fill="#fff" rx="20"/>
+        </clipPath>
+        <clipPath id="b">
+            <path fill="#fff" d="M10.219 11.816h20.826v16.02H10.219z"/>
+        </clipPath>
+    </defs>
+</svg>
+`,
+  "create-new-listing": `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 28 28">
+    <g fill="#154e8d" clip-path="url(#a)">
+        <path d="M27.616 21.165a.657.657 0 0 0-.06-.927l-.84-.738v-3.245a2.084 2.084 0 0 0-4.132-.389l-.718-.631a2.214 2.214 0 0 0-2.915 0l-5.687 5.003a.654.654 0 0 0 .837 1.003V25.9a1.883 1.883 0 0 0 1.881 1.881h8.855a1.88 1.88 0 0 0 1.88-1.881v-4.66a.65.65 0 0 0 .899-.075m-3.763-4.91a.773.773 0 1 1 1.546 0v2.09l-1.546-1.359zm-2.292 10.212h-2.188v-1.53a.97.97 0 0 1 .971-.97h.25a.97.97 0 0 1 .97.97zm3.675-.167a.56.56 0 0 1-.402.167h-1.96v-1.53a2.287 2.287 0 0 0-2.285-2.283h-.25a2.286 2.286 0 0 0-2.283 2.284v1.527H15.98a.57.57 0 0 1-.569-.569v-5.8l4.407-3.875a.9.9 0 0 1 1.182 0l4.404 3.872V25.9a.56.56 0 0 1-.166.4z"/>
+        <path d="M20.411 17.588a1.942 1.942 0 1 0-.001 3.884 1.942 1.942 0 0 0 .001-3.885m0 2.57a.63.63 0 1 1-.001-1.255.63.63 0 0 1 .001 1.253zM3.306 27.778h8.054a.656.656 0 1 0 0-1.313H3.306A1.77 1.77 0 0 1 1.53 24.7V5.981a1.767 1.767 0 0 1 1.775-1.755h2.88v.864a.656.656 0 0 0 .656.656h8.16a.656.656 0 0 0 .657-.656v-.864h2.88a1.766 1.766 0 0 1 1.774 1.755v5.994a.656.656 0 0 0 1.313 0V5.981a3.08 3.08 0 0 0-3.087-3.067H15.65A2.764 2.764 0 0 0 12.894.22H8.95a2.765 2.765 0 0 0-2.758 2.694H3.306A3.08 3.08 0 0 0 .219 5.98v18.72a3.086 3.086 0 0 0 3.087 3.077M7.498 2.986A1.455 1.455 0 0 1 8.95 1.533h3.944a1.454 1.454 0 0 1 1.454 1.453v1.448h-6.85z"/>
+        <path d="M17.356 10.209a.657.657 0 0 0-.657-.657H5.15a.656.656 0 1 0 0 1.313h11.55a.657.657 0 0 0 .657-.656M6.977 14.467h7.9a.657.657 0 0 0 0-1.312h-7.9a.656.656 0 1 0 0 1.312"/>
+    </g>
+    <defs>
+        <clipPath id="a">
+            <path fill="#fff" d="M0 0h28v28H0z"/>
+        </clipPath>
+    </defs>
+</svg>
+`,
+  "faster-deal-closures": `<svg xmlns="http://www.w3.org/2000/svg"  fill="none" viewBox="0 0 29 29">
+    <path fill="#154e8d" d="M25.71 12.177c1.773-1.552 2.026-4.297.314-6.007a4.04 4.04 0 0 0-5.7 0l-.043.043a12.1 12.1 0 0 0-3.374-1.22V3.662h.595a.62.62 0 0 0 .62-.62V.62a.62.62 0 0 0-.62-.62h-5.715a.62.62 0 0 0-.62.62v2.422c0 .342.278.62.62.62h.596v1.276c-1.304.23-2.536.666-3.661 1.275l-.044-.043a4.04 4.04 0 0 0-5.699 0c-1.713 1.71-1.459 4.455.314 6.007a12 12 0 0 0-.952 4.7C2.341 23.562 7.796 29 14.501 29c6.623 0 12.16-5.492 12.16-12.123 0-1.666-.338-3.254-.951-4.7m-1.252 5.288h.948a10.82 10.82 0 0 1-2.706 6.593l-.68-.644a.62.62 0 0 0-.851.9l.66.626a10.9 10.9 0 0 1-6.603 2.796v-.933a.62.62 0 0 0-1.24 0v.945a10.9 10.9 0 0 1-6.66-2.672l.7-.7a.62.62 0 0 0-.877-.876l-.71.71a10.83 10.83 0 0 1-2.836-6.64H4.65a.62.62 0 1 0 0-1.24H3.594A10.82 10.82 0 0 1 6.35 9.645l.726.726q.438.363.876 0a.62.62 0 0 0 0-.877l-.725-.725a10.9 10.9 0 0 1 6.656-2.757v.982a.62.62 0 1 0 1.24 0v-.982a10.9 10.9 0 0 1 6.612 2.719l-.664.702a.62.62 0 0 0 .024.876q.444.35.877-.025l.645-.682a10.82 10.82 0 0 1 2.786 6.625h-.944a.62.62 0 0 0 0 1.24m.69-10.419c1.12 1.12.97 2.831-.014 3.954a12.2 12.2 0 0 0-3.756-4.116 2.797 2.797 0 0 1 3.77.162M12.407 1.24h4.476v1.183h-4.476zm1.215 2.423h2.046V4.81a12 12 0 0 0-2.046-.024zm-9.767 7.325c-1.076-1.075-1.076-2.866 0-3.94a2.797 2.797 0 0 1 3.77-.163A12.2 12.2 0 0 0 3.868 11z"/>
+    <path fill="#154e8d" d="m19.623 11.136-3.934 3.929a2.172 2.172 0 0 0-3.361 1.812c0 1.196.974 2.169 2.17 2.169a2.172 2.172 0 0 0 1.993-3.03l4.008-4.003a.62.62 0 1 0-.876-.877m-5.124 6.67a.93.93 0 0 1-.932-.93.932.932 0 0 1 1.863 0c0 .513-.418.93-.931.93"/>
+</svg>
+`,
+};
+
+// Medium icons configuration (lazy loaded, 2KB - 20KB)
+const MEDIUM_ICONS = {
+  "affordable-upgrades": "/optimizedIcons/medium/affordable-upgrades.svg",
+  "bbq-grill": "/optimizedIcons/medium/bbq-grill.svg",
+  "buyers-connections": "/optimizedIcons/medium/buyers-connections.svg",
+  coin: "/optimizedIcons/medium/coin.svg",
+  "coin-egg": "/optimizedIcons/medium/coin-egg.svg",
+  "connect-with-owners": "/optimizedIcons/medium/connect-with-owners.svg",
+  "direct-owner-access": "/optimizedIcons/medium/direct-owner-access.svg",
+  "email-verified": "/optimizedIcons/medium/email-verified.svg",
+  "exclusive-listings": "/optimizedIcons/medium/exclusive-listings.svg",
+  female: "/optimizedIcons/medium/female.svg",
+  "hassle-free-listings": "/optimizedIcons/medium/hassle-free-listings.svg",
+  "high-rental": "/optimizedIcons/medium/high-rental.svg",
+  "houseclay-captain": "/optimizedIcons/medium/houseclay-captain.svg",
+  male: "/optimizedIcons/medium/male.svg",
+  "my-requirements": "/optimizedIcons/medium/my-requirements.svg",
+  "no-forced-plans": "/optimizedIcons/medium/no-forced-plans.svg",
+  "owners-contacted": "/optimizedIcons/medium/owners-contacted.svg",
+  rent: "/optimizedIcons/medium/rent.svg",
+  "smoke-alarm": "/optimizedIcons/medium/smoke-alarm.svg",
+  "use-connects": "/optimizedIcons/medium/use-connects.svg",
+  "wide-reach": "/optimizedIcons/medium/wide-reach.svg",
+  "zero-percent": "/optimizedIcons/medium/zero-percent.svg",
+  "zero-percent-red": "/optimizedIcons/medium/zero-percent-red.svg",
+};
+
+// Large icons configuration (external files, > 20KB)
+const LARGE_ICONS = {
+  "access-property-services":
+    "/optimizedIcons/large/access-property-services.svg",
+  bachelor: "/optimizedIcons/large/bachelor.svg",
+  "coin-stack": "/optimizedIcons/large/coin-stack.svg",
+  company: "/optimizedIcons/large/company.svg",
+  "contact-support": "/optimizedIcons/large/contact-support.svg",
+  couple: "/optimizedIcons/large/couple.svg",
+  "customer-support": "/optimizedIcons/large/customer-support.svg",
+  "direct-owner-connections":
+    "/optimizedIcons/large/direct-owner-connections.svg",
+  family: "/optimizedIcons/large/family.svg",
+  "fast-results": "/optimizedIcons/large/fast-results.svg",
+  "go-live": "/optimizedIcons/large/go-live.svg",
+  "how-to-use-connects": "/optimizedIcons/large/how-to-use-connects.svg",
+  "list-property-success": "/optimizedIcons/large/list-property-success.svg",
+  "non-veg": "/optimizedIcons/large/non-veg.svg",
+  "pay-as-you-go": "/optimizedIcons/large/pay-as-you-go.svg",
+  "property-add-graphic": "/optimizedIcons/large/property-add-graphic.svg",
+  "property-basics": "/optimizedIcons/large/property-basics.svg",
+  "showcase-your-space": "/optimizedIcons/large/showcase-your-space.svg",
+  "simplify-rental-processes":
+    "/optimizedIcons/large/simplify-rental-processes.svg",
+  veg: "/optimizedIcons/large/veg.svg",
+};
+
+// Default blur placeholder data URLs for different icon categories
+const DEFAULT_BLUR_PLACEHOLDERS = {
+  medium:
+    "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiBmaWxsPSIjRjNGNEY2Ii8+CjxjaXJjbGUgY3g9IjI0IiBjeT0iMjQiIHI9IjEyIiBmaWxsPSIjRTVFN0VCIi8+Cjwvc3ZnPgo=",
+  large:
+    "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwMCIgcj0iNDAiIGZpbGw9IiNFNUU3RUIiLz4KPC9zdmc+Cg==",
+};
+
+// NocoJS-inspired blur effect component
+const BlurPlaceholder = memo(
+  ({
+    size,
+    className = "",
+    customBlurData,
+  }: {
+    size: number | `${number}`;
+    className?: string;
+    customBlurData?: string;
+  }) => {
+    const numericSize = typeof size === "string" ? parseInt(size) : size;
+    const blurData =
+      customBlurData ||
+      (numericSize > 100
+        ? DEFAULT_BLUR_PLACEHOLDERS.large
+        : DEFAULT_BLUR_PLACEHOLDERS.medium);
+
+    return (
+      <div
+        className={`animate-pulse transition-opacity duration-300 ${className}`}
+        style={{
+          width: size,
+          height: size,
+          backgroundImage: `url("${blurData}")`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          filter: "blur(8px)",
+          opacity: 0.7,
+        }}
+      />
+    );
+  },
+);
+
+BlurPlaceholder.displayName = "BlurPlaceholder";
+
+// Determine icon size category
+const getIconCategory = (name: string, explicitSize?: IconSize): IconSize => {
+  if (explicitSize) return explicitSize;
+
+  if (name in SMALL_ICONS) return "small";
+  if (name in MEDIUM_ICONS) return "medium";
+  if (name in LARGE_ICONS) return "large";
+
+  return "small";
+};
+
+// Small icon component (inlined SVG)
+const SmallIcon = memo(
+  ({
+    name,
+    size = 24,
+    className = "",
+    color = "currentColor",
+    ...props
+  }: IconProps) => {
+    const svgContent = SMALL_ICONS[name as keyof typeof SMALL_ICONS];
+
+    if (!svgContent) {
+      console.warn(`Small icon "${name}" not found`);
+      return null;
+    }
+
+    return (
+      <span
+        className={`inline-flex items-center justify-center ${className}`}
+        style={{
+          width: size,
+          height: size,
+          color,
+          flexShrink: 0,
+        }}
+        {...props}
+        dangerouslySetInnerHTML={{
+          __html: svgContent.replace('fill="currentColor"', `fill="${color}"`),
+        }}
+      />
+    );
+  },
+);
+
+SmallIcon.displayName = "SmallIcon";
+
+// Medium icon component (lazy loaded with blur placeholder)
+const MediumIcon = memo(
+  ({
+    name,
+    size = 48,
+    className = "",
+    color: _color,
+    showBlurPlaceholder = true,
+    blurDataUrl,
+    ...props
+  }: IconProps) => {
+    const iconPath = MEDIUM_ICONS[name as keyof typeof MEDIUM_ICONS];
+
+    if (!iconPath) {
+      console.warn(`Medium icon "${name}" not found`);
+      return null;
+    }
+
+    const fallback = showBlurPlaceholder ? (
+      <BlurPlaceholder
+        size={size}
+        className={className}
+        customBlurData={blurDataUrl}
+      />
+    ) : (
+      <div
+        className={`animate-pulse bg-gray-200 rounded ${className}`}
+        style={{ width: size, height: size }}
+      />
+    );
+
+    return (
+      <Suspense fallback={fallback}>
+        <Image
+          src={iconPath}
+          alt={`${name} icon`}
+          width={size}
+          height={size}
+          className={`object-contain ${className}`}
+          loading="lazy"
+          unoptimized
+          {...props}
+        />
+      </Suspense>
+    );
+  },
+);
+
+MediumIcon.displayName = "MediumIcon";
+
+// Large icon component (client-side loading with blur)
+const LargeIcon = memo(
+  ({
+    name,
+    size = 200,
+    className = "",
+    alt,
+    showBlurPlaceholder = true,
+    blurDataUrl,
+    ...props
+  }: IconProps & { alt?: string }) => {
+    const iconPath = LARGE_ICONS[name as keyof typeof LARGE_ICONS];
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(false);
+    const imgRef = useRef<HTMLImageElement | null>(null);
+
+    const numericSize = typeof size === "string" ? parseInt(size) : size;
+
+    useEffect(() => {
+      if (!iconPath) return;
+      const img = new window.Image();
+      imgRef.current = img;
+
+      img.onload = () => {
+        setIsLoaded(true);
+        setIsLoading(false);
+      };
+
+      img.onerror = () => {
+        setError(true);
+        setIsLoading(false);
+      };
+
+      // Start loading
+      img.src = iconPath;
+
+      return () => {
+        if (imgRef.current) {
+          imgRef.current.onload = null;
+          imgRef.current.onerror = null;
+        }
+      };
+    }, [iconPath]);
+
+    if (!iconPath) {
+      console.warn(`Large icon "${name}" not found`);
+      return null;
+    }
+
+    if (error) {
+      return (
+        <div
+          className={`bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center ${className}`}
+          style={{ width: size, height: size }}
+        >
+          <span className="text-gray-400 text-sm">Failed to load</span>
+        </div>
+      );
+    }
+
+    return (
+      <div className="relative inline-block">
+        {/* Blur placeholder */}
+        {isLoading && showBlurPlaceholder && (
+          <BlurPlaceholder
+            size={size}
+            className={className}
+            customBlurData={blurDataUrl}
+          />
+        )}
+
+        {/* Actual image */}
+        <Image
+          src={iconPath}
+          alt={alt || `${name} icon`}
+          width={numericSize}
+          height={numericSize}
+          className={`transition-opacity duration-300 ${isLoaded ? "opacity-100" : "opacity-0"} ${isLoading ? "absolute inset-0" : ""} ${className}`}
+          loading="lazy"
+          unoptimized
+          {...props}
+        />
+      </div>
+    );
+  },
+);
+
+LargeIcon.displayName = "LargeIcon";
+
+// Main SVG Icon wrapper component
+const SvgIcon = memo(
+  (
+    props: IconProps & {
+      iconSize?: IconSize;
+      alt?: string;
+    },
+  ) => {
+    const { name, iconSize, ...restProps } = props;
+    const category = getIconCategory(name, iconSize);
+
+    switch (category) {
+      case "small":
+        return <SmallIcon name={name} {...restProps} />;
+      case "medium":
+        return <MediumIcon name={name} {...restProps} />;
+      case "large":
+        return <LargeIcon name={name} {...restProps} />;
+      default:
+        console.warn(`Unknown icon category for "${name}"`);
+        return null;
+    }
+  },
+);
+
+SvgIcon.displayName = "SvgIcon";
+
+export default SvgIcon;
+
+// Hook for preloading medium icons
+export const usePreloadIcon = (name: string) => {
+  useEffect(() => {
+    const iconPath = MEDIUM_ICONS[name as keyof typeof MEDIUM_ICONS];
+    if (iconPath) {
+      // Preload the image
+      const img = new window.Image();
+      img.src = iconPath;
+    }
+  }, [name]);
+};
+
+// Hook for preloading large icons
+export const usePreloadLargeIcon = (name: string) => {
+  useEffect(() => {
+    const iconPath = LARGE_ICONS[name as keyof typeof LARGE_ICONS];
+    if (iconPath) {
+      const img = new window.Image();
+      img.src = iconPath;
+    }
+  }, [name]);
+};
+
+// Client-side blur data URL generator (NocoJS-inspired)
+export const generateBlurPlaceholder = (
+  width: number = 48,
+  height: number = 48,
+  backgroundColor: string = "#F3F4F6",
+  accentColor: string = "#E5E7EB",
+): string => {
+  const svg = `
+      <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="${width}" height="${height}" fill="${backgroundColor}"/>
+        <circle cx="${width / 2}" cy="${height / 2}" r="${Math.min(width, height) / 4}" fill="${accentColor}"/>
+      </svg>
+    `;
+
+  return `data:image/svg+xml;base64,${btoa(svg)}`;
+};
+
+// Utility to add new icons dynamically
+export const addIcons = {
+  small: (icons: Record<string, string>) => {
+    Object.assign(SMALL_ICONS, icons);
+  },
+  medium: (icons: Record<string, MediumIconPath>) => {
+    Object.assign(MEDIUM_ICONS, icons);
+  },
+  large: (icons: Record<string, string>) => {
+    Object.assign(LARGE_ICONS, icons);
+  },
+};
+
+// Client-side icon optimizer utility
+export const optimizeSvgString = (svgString: string): string => {
+  return svgString
+    .replace(/\s+/g, " ") // Collapse whitespace
+    .replace(/>\s+</g, "><") // Remove space between tags
+    .replace(/\s*=\s*"/g, '="') // Clean up attribute spacing
+    .trim();
+};
