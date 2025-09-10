@@ -2,8 +2,6 @@
 
 import { useFormikContext } from "formik";
 import { IndianRupee } from "lucide-react";
-import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
-import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
 import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
 import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
 import FireExtinguisherIconSvg from "public/icons/amenities/fire-extinguisher.svg";
@@ -16,13 +14,7 @@ import ParkingSpaceIconSvg from "public/icons/amenities/parking-space.svg";
 import PoolIconSvg from "public/icons/amenities/pool.svg";
 import PoolTableIconSvg from "public/icons/amenities/pool-table.svg";
 import SecurityIconSvg from "public/icons/amenities/security.svg";
-import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
 import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
-import WifiIconSvg from "public/icons/amenities/wifi.svg";
-import NonVegIconSvg from "public/icons/food-preferences/non-veg.svg";
-import VegIconSvg from "public/icons/food-preferences/veg.svg";
-import FemaleIconSvg from "public/icons/preferred-tenants/female.svg";
-import MaleIconSvg from "public/icons/preferred-tenants/male.svg";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
@@ -37,15 +29,12 @@ import {
 import { FormValues } from "@/interfaces/FormValues";
 import { setFlatmateDetails, setFormValidity } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
+import { SvgIcon } from "@/utility-components";
 import {
   getFlatmateDetailsErrors,
   getFlatmateDetailsTouched,
 } from "@/utils/formHelpers";
 
-const FemaleIcon = FemaleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const MaleIcon = MaleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const VegIcon = VegIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const NonVegIcon = NonVegIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ClubhouseIcon = ClubhouseIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
@@ -61,13 +50,7 @@ const PoolIcon = PoolIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const FireExtinguisherIcon = FireExtinguisherIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
-const SmokeAlarmIcon = SmokeAlarmIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
 const SwimmingPoolIcon = SwimmingPoolIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const TwentyFourSevenPowerIcon = TwentyFourSevenPowerIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
 const SecurityIcon = SecurityIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -77,8 +60,6 @@ const ParkingSpaceIcon = ParkingSpaceIconSvg as React.FC<
 const DedicatedWorkspaceIcon = DedicatedWorkspaceIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
-const WifiIcon = WifiIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const BBQGrillIcon = BBQGrillIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const PoolTableIcon = PoolTableIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
@@ -299,12 +280,12 @@ export const FlatmateDetailsClient: React.FC = () => {
               {
                 value: "Female",
                 label: "Female",
-                icon: <FemaleIcon />,
+                icon: <SvgIcon name="female" iconSize="medium" size={75} />,
               },
               {
                 value: "Male",
                 label: "Male",
-                icon: <MaleIcon />,
+                icon: <SvgIcon name="male" iconSize="medium" size={75} />,
               },
             ]}
             withIcons={true}
@@ -319,12 +300,12 @@ export const FlatmateDetailsClient: React.FC = () => {
               {
                 value: false,
                 label: "Veg",
-                icon: <VegIcon />,
+                icon: <SvgIcon name="veg" iconSize="large" size={68} />,
               },
               {
                 value: true,
                 label: "Non-Veg",
-                icon: <NonVegIcon />,
+                icon: <SvgIcon name="non-veg" iconSize="large" size={68} />,
               },
             ]}
             withIcons={true}
@@ -476,7 +457,7 @@ export const FlatmateDetailsClient: React.FC = () => {
             {
               value: "Smoke Alarm",
               label: "Smoke Alarm",
-              icon: <SmokeAlarmIcon />,
+              icon: <SvgIcon name="smoke-alarm" iconSize="medium" size={28} />,
             },
             {
               value: "Swimming Pool",
@@ -486,7 +467,7 @@ export const FlatmateDetailsClient: React.FC = () => {
             {
               value: "24/7 Power",
               label: "24/7 Power",
-              icon: <TwentyFourSevenPowerIcon />,
+              icon: <SvgIcon name="24x7-power" iconSize="small" size={28} />,
             },
             {
               value: "Security",
@@ -503,11 +484,15 @@ export const FlatmateDetailsClient: React.FC = () => {
               label: "Dedicated Workspace",
               icon: <DedicatedWorkspaceIcon />,
             },
-            { value: "Wifi", label: "Wifi", icon: <WifiIcon /> },
+            {
+              value: "Wifi",
+              label: "Wifi",
+              icon: <SvgIcon name="wifi" iconSize="small" size={28} />,
+            },
             {
               value: "BBQ Grill",
               label: "BBQ Grill",
-              icon: <BBQGrillIcon />,
+              icon: <SvgIcon name="bbq-grill" iconSize="medium" size={28} />,
             },
             {
               value: "Pool Table",
