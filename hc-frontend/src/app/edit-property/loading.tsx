@@ -1,8 +1,9 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
-import Image from "next/image";
 import React from "react";
+
+import { ImageWithLoader } from "@/utility-components";
 
 const EditPropertyLoading = () => {
   return (
@@ -26,10 +27,9 @@ const EditPropertyLoading = () => {
       <section className="xl:min-h-[500px] min-h-[400px] max-md:min-h-[fit-content] w-full overflow-hidden max-md:hidden">
         <div className="container py-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 flex justify-between gap-16">
           <div className="flex w-2/5 justify-around items-start">
-            <Image
-              src={"/images/list-your-property.svg"}
+            <ImageWithLoader
+              src={"/images/list-your-property.webp"}
               alt="Edit Your Property"
-              objectFit="contain"
               width={550}
               height={475}
               className="my-0"

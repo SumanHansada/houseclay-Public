@@ -17,7 +17,7 @@ export default async function PropertyCategoryRootPage({
     category &&
     Object.values(PropertyCategory).includes(category as PropertyCategory)
   ) {
-    redirect(`/list-property/${category}/property-details`);
+    redirect(`/list-property/${category.toLowerCase()}/property-details`);
   } else {
     // Redirect to home if invalid category
     redirect("/");

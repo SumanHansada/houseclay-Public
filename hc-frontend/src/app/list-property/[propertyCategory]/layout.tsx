@@ -1,7 +1,6 @@
 "use client";
 
 import { Form, Formik, FormikProvider } from "formik";
-import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -34,6 +33,7 @@ import {
   setPropertyID,
 } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
+import { ImageWithLoader } from "@/utility-components";
 
 import ListPropertyStepper from "../components/ListPropertyStepper";
 
@@ -369,7 +369,7 @@ export default function ListPropertyTypeLayout({
       <div className="flex w-full h-full top-14">
         {/* Background SVG behind left section only */}
         <div className="left-0 top-14 bottom-0 z-40 w-[33.33%] fixed  bg-gray-50 max-md:hidden">
-          <Image
+          <ImageWithLoader
             src="/images/property-add-graphic.svg"
             alt="Property Graphic"
             width={500}
