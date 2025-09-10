@@ -1,13 +1,27 @@
 "use client";
 
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { X } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useSelector } from "react-redux";
 
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { RootState } from "@/store/store";
+
+// Lazy load DotLottieReact component
+const DotLottieReact = dynamic(
+  () =>
+    import("@lottiefiles/dotlottie-react").then((mod) => mod.DotLottieReact),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="animate-pulse bg-gray-200 rounded-lg w-full h-full"></div>
+      </div>
+    ),
+  },
+);
 
 interface UploadDialogProps {
   id: string;

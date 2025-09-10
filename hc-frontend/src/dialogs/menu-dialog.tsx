@@ -9,13 +9,13 @@ import {
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import CoinSvg from "public/icons/coin.svg";
-import PropertySvg from "public/icons/property.svg";
 import VerifiedTenantsSvg from "public/icons/verified-tenants.svg";
 import ZeroPercentRedSvg from "public/icons/zero-percent-red.svg";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { ACCOUNT_NAV } from "@/common/dataConstants";
+import { shimmer, toBase64 } from "@/common/utils";
 import { AccountNavList } from "@/components/AccountNavList";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { useLogout } from "@/hooks/useLogout";
@@ -23,8 +23,8 @@ import { useDialog } from "@/providers/DialogContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
 import { setLoginFromAddProperty } from "@/store/authSlice";
 import { RootState } from "@/store/store";
+import { ImageWithLoader } from "@/utility-components";
 
-const Property = PropertySvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ZeroPercentRed = ZeroPercentRedSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
@@ -131,22 +131,33 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
           {/* Property Banner */}
           <div
             onClick={handlePropertyBannerClick}
-            className="relative px-4 py-6 border border-gray-100 rounded-lg shadow-md inset-shadow-xs flex flex-col justify-between items-start gap-4 overflow-hidden"
+            className="relative px-4 py-6 border border-gray-100 rounded-lg shadow-md inset-shadow-xs flex justify-between overflow-hidden "
           >
-            <h2 className="relative text-base font-bold z-10">
-              List Your Property For Free
-            </h2>
-            <div className="relative flex flex-col z-10">
-              <div className="flex items-center text-gray-700 gap-2">
-                <VerifiedTenants />
-                <span>Verified Tenants/Buyers.</span>
-              </div>
-              <div className="flex items-center text-gray-700 gap-2">
-                <ZeroPercentRed fill="text-red-500" />
-                <span>Zero Brokerage.</span>
+            <div className="flex flex-col justify-between items-start gap-4">
+              <h2 className="relative text-base font-bold z-10">
+                List Your Property For Free
+              </h2>
+              <div className="relative flex flex-col z-10">
+                <div className="flex items-center text-gray-700 gap-2">
+                  <VerifiedTenants />
+                  <span>Verified Tenants/Buyers.</span>
+                </div>
+                <div className="flex items-center text-gray-700 gap-2">
+                  <ZeroPercentRed fill="text-red-500" />
+                  <span>Zero Brokerage.</span>
+                </div>
               </div>
             </div>
-            <Property className="absolute right-0 bottom-0" />
+            <ImageWithLoader
+              src="/images/property.webp"
+              alt="Property"
+              loading="lazy"
+              placeholder="blur"
+              height={100}
+              width={100}
+              className="items-end"
+              blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(300, 400))}`}
+            />
           </div>
           {/* Connects Balance */}
           <div className="flex justify-between items-center">
