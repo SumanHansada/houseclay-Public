@@ -822,35 +822,32 @@ export function MyPropertyDetailsClient({
                   {property?.images?.length > 0 && (
                     <section className="py-6 my-6 max-md:py-3 max-md:my-3">
                       <h2 className="text-lg mb-4">Images</h2>
-                      <div className="flex">
-                        <Carousel2D
-                          slideWidth={300}
-                          gap={4}
-                          showArrows={true}
-                          showDots={false}
-                          autoScroll={false}
-                        >
-                          {property?.images?.map(
-                            (imgUrl: string, idx: number) => (
-                              <div
-                                key={idx}
-                                className="relative w-full aspect-[4/3] rounded-lg overflow-hidden border cursor-zoom-in"
-                                onClick={() => handleImageClick(imgUrl, idx)}
-                              >
-                                <ImageWithLoader
-                                  src={imgUrl}
-                                  alt={`Property image ${idx + 1}`}
-                                  fill
-                                  loading="lazy"
-                                  className="object-cover transition-transform duration-300 ease-in-out"
-                                  placeholder="blur"
-                                  blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(300, 400))}`}
-                                />
-                              </div>
-                            ),
-                          )}
-                        </Carousel2D>
-                      </div>
+                      <Carousel2D
+                        slideWidth={300}
+                        gap={4}
+                        showDots={false}
+                        autoScroll={false}
+                      >
+                        {property?.images?.map(
+                          (imgUrl: string, idx: number) => (
+                            <div
+                              key={idx}
+                              className="relative w-full aspect-[4/3] rounded-lg overflow-hidden border cursor-zoom-in"
+                              onClick={() => handleImageClick(imgUrl, idx)}
+                            >
+                              <ImageWithLoader
+                                src={imgUrl}
+                                alt={`Property image ${idx + 1}`}
+                                fill
+                                loading="lazy"
+                                className="object-cover transition-transform duration-300 ease-in-out"
+                                placeholder="blur"
+                                blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(300, 400))}`}
+                              />
+                            </div>
+                          ),
+                        )}
+                      </Carousel2D>
                     </section>
                   )}
                 </TabContent>
