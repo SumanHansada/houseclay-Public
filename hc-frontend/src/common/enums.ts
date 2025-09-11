@@ -85,3 +85,16 @@ export enum PaymentVerificationStatus {
   SUCCESS = "success",
   ERROR = "error",
 }
+
+export enum PropertyStatus {
+  PENDING = "PENDING_VERIFICATION",
+  VERIFIED = "ACTIVE",
+  REPORT = "REPORT",
+  INACTIVE = "INACTIVE",
+}
+
+export enum PaymentStatus {
+  COMPLETED = "COMPLETED",
+  FAILED = "FAILED",
+  PROGRESS = "IN_PROGRESS",
+}

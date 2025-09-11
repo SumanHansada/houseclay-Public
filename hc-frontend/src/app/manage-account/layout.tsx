@@ -8,6 +8,7 @@ import { AccountNavList } from "@/components/AccountNavList";
 import { Footer } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { setHideFooter, setHideHeader } from "@/store/appSlice";
+import { useGetUserDetailQuery } from "@/store/apiSlice";
 
 export default function ManageProfileLayout({
   children,
@@ -16,6 +17,10 @@ export default function ManageProfileLayout({
 }) {
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
+
+  const { data: user, isLoading: _isUserDetailLoading } =
+    useGetUserDetailQuery();
+  _isUserDetailLoading ? "Loading" : console.log(user);
 
   useEffect(() => {
     if (isMobile) {

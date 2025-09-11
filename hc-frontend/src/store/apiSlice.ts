@@ -5,6 +5,7 @@ import { BASE_API_URL } from "@/common/constants";
 import { PropertyCategory } from "@/common/enums";
 import { sanitizePhoneNumber } from "@/common/utils";
 import { PropertyForm } from "@/interfaces/PropertyForm";
+import { GetUserDetail } from "@/interfaces/User";
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -95,6 +96,10 @@ export const apiSlice = createApi({
         method: "POST",
       }),
     }),
+    getUserDetail: builder.query<GetUserDetail, void>({
+      query: () => "/user/detail",
+    }),
+
     presignedUrls: builder.mutation<
       {
         propertyID: string;
@@ -279,6 +284,7 @@ export const {
   useCheckUserQuery,
   useLazyCheckUserQuery,
   useLogoutMutation,
+  useGetUserDetailQuery,
   usePresignedUrlsMutation,
   usePropertyAddMutation,
   usePropertyUpdateMutation,
