@@ -34,38 +34,17 @@ import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
 import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 import WifiIconSvg from "public/icons/amenities/wifi.svg";
-import NonVegIconSvg from "public/icons/food-preferences/non-veg.svg";
-import VegIconSvg from "public/icons/food-preferences/veg.svg";
-import BachelorIconSvg from "public/icons/preferred-tenants/bachelor.svg";
-import CompanyIconSvg from "public/icons/preferred-tenants/company.svg";
-import CoupleIconSvg from "public/icons/preferred-tenants/couple.svg";
-import FamilyIconSvg from "public/icons/preferred-tenants/family.svg";
-import FemaleIconSvg from "public/icons/preferred-tenants/female.svg";
-import MaleIconSvg from "public/icons/preferred-tenants/male.svg";
-import ApartmentIcon from "public/icons/property-types/apartment.webp";
-import CommunityVillaIcon from "public/icons/property-types/community-villa.webp";
-import IndependentHouseIcon from "public/icons/property-types/independent-house.webp";
-import StandaloneBuildingIcon from "public/icons/property-types/standalone-building.webp";
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 
+import { Button, RadioGroup, RangeSlider } from "@/base-components";
+import { PropertyCategory } from "@/common/enums";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
 } from "@/components/Dialog";
-
-const VegIcon = VegIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const NonVegIcon = NonVegIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const FamilyIcon = FamilyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const CompanyIcon = CompanyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const BachelorIcon = BachelorIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const CoupleIcon = CoupleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-
-import { useDispatch, useSelector } from "react-redux";
-
-import { Button, RadioGroup, RangeSlider } from "@/base-components";
-import { PropertyCategory } from "@/common/enums";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import {
   resetPropertySearch,
@@ -84,7 +63,14 @@ import {
   setTenant,
 } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
-import { Tab, TabContent, TabHeader, Tabs } from "@/utility-components";
+import {
+  ImageWithLoader,
+  SvgIcon,
+  Tab,
+  TabContent,
+  TabHeader,
+  Tabs,
+} from "@/utility-components";
 
 interface SearchFiltersDialogProps {
   id: string;
@@ -155,9 +141,6 @@ const PoolTableIcon = PoolTableIconSvg as React.FC<
 const FirstAidKitIcon = FirstAidKitIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
-
-const MaleIcon = MaleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const FemaleIcon = FemaleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 const amenities = [
   { label: "Lift", icon: <LiftIcon /> },
@@ -312,8 +295,8 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           value: "Apartment",
                           label: "Apartment",
                           icon: (
-                            <Image
-                              src={ApartmentIcon}
+                            <ImageWithLoader
+                              src="images/apartment.webp"
                               alt="Apartment"
                               height={75}
                               width={75}
@@ -324,8 +307,8 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           value: "Independent House/Villa",
                           label: "Independent House/Villa",
                           icon: (
-                            <Image
-                              src={IndependentHouseIcon}
+                            <ImageWithLoader
+                              src="images/independent-house.webp"
                               alt="Independent House/Villa"
                               height={75}
                               width={75}
@@ -336,8 +319,8 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           value: "Community Villa",
                           label: "Community Villa",
                           icon: (
-                            <Image
-                              src={CommunityVillaIcon}
+                            <ImageWithLoader
+                              src="images/community-villa.webp"
                               alt="Community Villa"
                               height={75}
                               width={75}
@@ -348,8 +331,8 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           value: "Standalone Building",
                           label: "Standalone Building",
                           icon: (
-                            <Image
-                              src={StandaloneBuildingIcon}
+                            <ImageWithLoader
+                              src="images/standalone-building.webp"
                               alt="Standalone Building"
                               height={75}
                               width={75}
@@ -416,22 +399,38 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                         {
                           value: "Family",
                           label: "Family",
-                          icon: <FamilyIcon />,
+                          icon: (
+                            <SvgIcon iconSize="large" name="family" size={68} />
+                          ),
                         },
                         {
                           value: "Company",
                           label: "Company",
-                          icon: <CompanyIcon />,
+                          icon: (
+                            <SvgIcon
+                              iconSize="large"
+                              name="company"
+                              size={68}
+                            />
+                          ),
                         },
                         {
                           value: "Bachelor",
                           label: "Bachelor",
-                          icon: <BachelorIcon />,
+                          icon: (
+                            <SvgIcon
+                              iconSize="large"
+                              name="bachelor"
+                              size={68}
+                            />
+                          ),
                         },
                         {
                           value: "Couple",
                           label: "Couple",
-                          icon: <CoupleIcon />,
+                          icon: (
+                            <SvgIcon iconSize="large" name="couple" size={68} />
+                          ),
                         },
                       ]}
                       withIcons={true}
@@ -548,7 +547,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           label: "Apartment",
                           icon: (
                             <Image
-                              src={ApartmentIcon}
+                              src="images/apartment.webp"
                               alt="Apartment"
                               height={75}
                               width={75}
@@ -560,7 +559,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           label: "Independent House/Villa",
                           icon: (
                             <Image
-                              src={IndependentHouseIcon}
+                              src="images/independent-house.webp"
                               alt="Independent House/Villa"
                               height={75}
                               width={75}
@@ -572,7 +571,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           label: "Community Villa",
                           icon: (
                             <Image
-                              src={CommunityVillaIcon}
+                              src="images/community-villa.webp"
                               alt="Community Villa"
                               height={75}
                               width={75}
@@ -584,7 +583,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           label: "Standalone Building",
                           icon: (
                             <Image
-                              src={StandaloneBuildingIcon}
+                              src="images/standalone-building.webp"
                               alt="Standalone Building"
                               height={75}
                               width={75}
@@ -634,12 +633,24 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           {
                             value: "Female",
                             label: "Female",
-                            icon: <FemaleIcon />,
+                            icon: (
+                              <SvgIcon
+                                name="female"
+                                iconSize="medium"
+                                size={75}
+                              />
+                            ),
                           },
                           {
                             value: "Male",
                             label: "Male",
-                            icon: <MaleIcon />,
+                            icon: (
+                              <SvgIcon
+                                name="male"
+                                iconSize="medium"
+                                size={75}
+                              />
+                            ),
                           },
                         ]}
                         withIcons={true}
@@ -660,12 +671,20 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           {
                             value: false,
                             label: "Veg",
-                            icon: <VegIcon />,
+                            icon: (
+                              <SvgIcon name="veg" iconSize="large" size={68} />
+                            ),
                           },
                           {
                             value: true,
                             label: "Non-Veg",
-                            icon: <NonVegIcon />,
+                            icon: (
+                              <SvgIcon
+                                name="non-veg"
+                                iconSize="large"
+                                size={68}
+                              />
+                            ),
                           },
                         ]}
                         withIcons={true}
@@ -810,7 +829,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       label: "Apartment",
                       icon: (
                         <Image
-                          src={ApartmentIcon}
+                          src="images/apartment.webp"
                           alt="Apartment"
                           height={75}
                           width={75}
@@ -822,7 +841,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       label: "Independent House/Villa",
                       icon: (
                         <Image
-                          src={IndependentHouseIcon}
+                          src="images/independent-house.webp"
                           alt="Independent House/Villa"
                           height={75}
                           width={75}
@@ -834,7 +853,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       label: "Community Villa",
                       icon: (
                         <Image
-                          src={CommunityVillaIcon}
+                          src="images/community-villa.webp"
                           alt="Community Villa"
                           height={75}
                           width={75}
@@ -846,7 +865,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       label: "Standalone Building",
                       icon: (
                         <Image
-                          src={StandaloneBuildingIcon}
+                          src="images/standalone-building.webp"
                           alt="Standalone Building"
                           height={75}
                           width={75}
@@ -914,22 +933,30 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                     {
                       value: "Family",
                       label: "Family",
-                      icon: <FamilyIcon />,
+                      icon: (
+                        <SvgIcon iconSize="large" name="family" size={68} />
+                      ),
                     },
                     {
                       value: "Company",
                       label: "Company",
-                      icon: <CompanyIcon />,
+                      icon: (
+                        <SvgIcon iconSize="large" name="company" size={68} />
+                      ),
                     },
                     {
                       value: "Bachelor",
                       label: "Bachelor",
-                      icon: <BachelorIcon />,
+                      icon: (
+                        <SvgIcon iconSize="large" name="bachelor" size={68} />
+                      ),
                     },
                     {
                       value: "Couple",
                       label: "Couple",
-                      icon: <CoupleIcon />,
+                      icon: (
+                        <SvgIcon iconSize="large" name="couple" size={68} />
+                      ),
                     },
                   ]}
                   withIcons={true}

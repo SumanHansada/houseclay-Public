@@ -2,7 +2,6 @@
 
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import ListPropertySuccessSvg from "public/icons/list-property-success.svg";
 import { useDispatch } from "react-redux";
 
 import { PropertyCategory } from "@/common/enums";
@@ -10,10 +9,7 @@ import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
-
-const ListPropertySuccess = ListPropertySuccessSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
+import { SvgIcon } from "@/utility-components";
 
 interface ListPropertySuccessDialogProps {
   id: string;
@@ -71,7 +67,7 @@ const ListPropertySuccessDialog: React.FC<ListPropertySuccessDialogProps> = ({
         <div className="flex flex-col items-center justify-center text-center px-6 pb-2 pt-6 gap-4">
           <div className="relative overflow-hidden rounded-lg">
             <div className="absolute inset-0 shadow-[inset_0_0_25px_25px_rgba(255,255,255,0.8)] z-20"></div>
-            <ListPropertySuccess />
+            <SvgIcon iconSize="large" name="list-property-success" size={270} />
           </div>
           {!isMobile && (
             <h2 className="text-3xl text-gray-800">Congratulations!</h2>

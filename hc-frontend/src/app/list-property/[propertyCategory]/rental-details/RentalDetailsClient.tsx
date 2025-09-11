@@ -19,10 +19,6 @@ import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
 import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 import WifiIconSvg from "public/icons/amenities/wifi.svg";
-import BachelorIconSvg from "public/icons/preferred-tenants/bachelor.svg";
-import CompanyIconSvg from "public/icons/preferred-tenants/company.svg";
-import CoupleIconSvg from "public/icons/preferred-tenants/couple.svg";
-import FamilyIconSvg from "public/icons/preferred-tenants/family.svg";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
@@ -37,15 +33,12 @@ import {
 import { FormValues } from "@/interfaces/FormValues";
 import { setFormValidity, setRentalDetails } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
+import { SvgIcon } from "@/utility-components";
 import {
   getRentalDetailsErrors,
   getRentalDetailsTouched,
 } from "@/utils/formHelpers";
 
-const FamilyIcon = FamilyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const CompanyIcon = CompanyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const BachelorIcon = BachelorIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const CoupleIcon = CoupleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ClubhouseIcon = ClubhouseIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
@@ -279,22 +272,22 @@ export const RentalDetailsClient: React.FC = () => {
               {
                 value: "Family",
                 label: "Family",
-                icon: <FamilyIcon />,
+                icon: <SvgIcon iconSize="large" name="family" size={68} />,
               },
               {
                 value: "Company",
                 label: "Company",
-                icon: <CompanyIcon />,
+                icon: <SvgIcon iconSize="large" name="company" size={68} />,
               },
               {
                 value: "Bachelor",
                 label: "Bachelor",
-                icon: <BachelorIcon />,
+                icon: <SvgIcon iconSize="large" name="bachelor" size={68} />,
               },
               {
                 value: "Couple",
                 label: "Couple",
-                icon: <CoupleIcon />,
+                icon: <SvgIcon iconSize="large" name="couple" size={68} />,
               },
             ]}
             withIcons={true}

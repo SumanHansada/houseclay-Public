@@ -1,18 +1,8 @@
-import Image from "next/image";
-import FemaleIconSvg from "public/icons/preferred-tenants/female.svg";
-import MaleIconSvg from "public/icons/preferred-tenants/male.svg";
-import ApartmentIcon from "public/icons/property-types/apartment.webp";
-import CommunityVillaIcon from "public/icons/property-types/community-villa.webp";
-import IndependentHouseIcon from "public/icons/property-types/independent-house.webp";
-import StandaloneBuildingIcon from "public/icons/property-types/standalone-building.webp";
-
 import {
   RequirementIconOption,
   RequirementOption,
 } from "@/interfaces/ManageAccount";
-
-const FemaleIcon = FemaleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const MaleIcon = MaleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+import { ImageWithLoader, SvgIcon } from "@/utility-components";
 
 export const userTypeOptions: RequirementOption[] = [
   { label: "Tenant", value: "tenant" },
@@ -33,8 +23,16 @@ export const lookingForARoomOptions: RequirementOption[] = [
 ];
 
 export const preferredTenantOptions: RequirementIconOption[] = [
-  { label: "Female", value: "female", icon: <FemaleIcon /> },
-  { label: "Male", value: "male", icon: <MaleIcon /> },
+  {
+    label: "Female",
+    value: "female",
+    icon: <SvgIcon name="female" iconSize="medium" size={75} />,
+  },
+  {
+    label: "Male",
+    value: "male",
+    icon: <SvgIcon name="male" iconSize="medium" size={75} />,
+  },
 ];
 
 export const rentBudgetOptions: RequirementOption[] = [
@@ -55,14 +53,21 @@ export const propertyTypeOptions: RequirementIconOption[] = [
   {
     label: "Apartment",
     value: "Apartment",
-    icon: <Image src={ApartmentIcon} alt="Apartment" height={75} width={75} />,
+    icon: (
+      <ImageWithLoader
+        src="../images/apartment.webp"
+        alt="Apartment"
+        height={75}
+        width={75}
+      />
+    ),
   },
   {
     label: "Independent House/Villa",
     value: "Independent House/Villa",
     icon: (
-      <Image
-        src={IndependentHouseIcon}
+      <ImageWithLoader
+        src="../images/independent-house.webp"
         alt="Independent House/Villa"
         height={75}
         width={75}
@@ -73,8 +78,8 @@ export const propertyTypeOptions: RequirementIconOption[] = [
     label: "Community Villa",
     value: "Community Villa",
     icon: (
-      <Image
-        src={CommunityVillaIcon}
+      <ImageWithLoader
+        src="../images/community-villa.webp"
         alt="Community Villa"
         height={75}
         width={75}
@@ -85,8 +90,8 @@ export const propertyTypeOptions: RequirementIconOption[] = [
     label: "Standalone Building",
     value: "Standalone Building",
     icon: (
-      <Image
-        src={StandaloneBuildingIcon}
+      <ImageWithLoader
+        src="../images/standalone-building.webp"
         alt="Standalone Building"
         height={75}
         width={75}
