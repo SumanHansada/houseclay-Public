@@ -133,7 +133,8 @@ public class PaymentService {
         int connectQuantity = connects;
 
         // int connectQuantity = (int)payment.getAmount()/CONNECT_RATE;
-        // payment amount was in paise.. hence ex for this amount 350460. Loop was running 3504 times
+        // Loop was running 1000 times
+        // payment amount was in paise.. Ex for this amount 350460. Loop was running 3504 times
         // Will need to factor the discount rates also otherwise payment from UI will not match actual payment.
         // double amountFromConnects = (connectQuantity * CONNECT_RATE * 0.18 * 100);
         // double amountFromPayment = payment.getAmount();
