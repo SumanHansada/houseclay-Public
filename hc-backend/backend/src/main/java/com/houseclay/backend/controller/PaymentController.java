@@ -28,6 +28,7 @@ public class PaymentController {
                 request.getPaymentId(),
                 request.getOrderId(),
                 request.getSignature(),
+                request.getConnects(),
                 user
         );
     }

@@ -101,6 +101,7 @@ public class PaymentService {
             String paymentId,
             String orderId,
             String signature,
+            int connects,
             User user
     ) {
         try {
@@ -129,10 +130,15 @@ public class PaymentService {
         payment.setStatus(ExternalPaymentStatus.COMPLETED);
         payment.setCompletedAt(new Timestamp(System.currentTimeMillis()));
 
-        int connectQuantity = (int)payment.getAmount()/CONNECT_RATE;
+        int connectQuantity = connects;
+
+        // int connectQuantity = (int)payment.getAmount()/CONNECT_RATE;
+        // payment amount was in paise.. hence ex for this amount 350460. Loop was running 3504 times
+        // Will need to factor the discount rates also otherwise payment from UI will not match actual payment.
+        // double amountFromConnects = (connectQuantity * CONNECT_RATE * 0.18 * 100);
+        // double amountFromPayment = payment.getAmount();
 
         for (int i = 0; i < connectQuantity; i++) {
-
             ConnectEvent connectEvent = new ConnectEvent();
             connectEvent.setEventType(ConnectEventType.CREATED);
             connectEvent.setActorType(ActorType.USER);
