@@ -99,8 +99,6 @@ export default function BuyConnectsPage() {
         paymentId: response.razorpay_payment_id,
         orderId: response.razorpay_order_id,
         signature: response.razorpay_signature,
-        amount: totalAmount * 100,
-        connects: currentBundle?.connects || 0,
       });
       console.log("Payment verification response:", result);
     } catch (e) {

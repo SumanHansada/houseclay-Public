@@ -396,8 +396,7 @@ export default function EditPropertyTypeLayout({
           <ImageWithLoader
             src="/images/property-add-graphic.svg"
             alt="Property Graphic"
-            width={500}
-            height={500}
+            fill
             className="w-full h-full object-cover max-xl:hidden"
             priority
           />
