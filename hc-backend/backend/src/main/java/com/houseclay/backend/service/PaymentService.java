@@ -65,6 +65,7 @@ public class PaymentService {
         Order order = razorpayClient.orders.create(orderRequest);
         String orderID = (String) order.toJson().get("id");
 
+
         // Saving order in external payment entity.
         ExternalPayments externalPayments = new ExternalPayments();
         externalPayments.setAmount(amount);
