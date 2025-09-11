@@ -1,6 +1,5 @@
 import bundleAnalyzer from "@next/bundle-analyzer";
 import type { NextConfig } from "next";
-import path from "path";
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
@@ -37,12 +36,6 @@ const nextConfig: NextConfig = {
   },
   productionBrowserSourceMaps: false, // Disable in production for better performance
   webpack(config, { dev, isServer }) {
-    // Force Next’s compiled react-dom to resolve to your app’s react-dom
-    config.resolve.alias["next/dist/compiled/react-dom"] = path.resolve(
-      __dirname,
-      "node_modules/react-dom",
-    );
-
     // This webpack config will only apply when NOT using Turbopack
     config.module.rules.push({
       test: /\.svg$/,
