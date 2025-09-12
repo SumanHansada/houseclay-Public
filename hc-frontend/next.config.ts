@@ -50,11 +50,82 @@ const nextConfig: NextConfig = {
         maxInitialRequests: 25,
         minSize: 20000,
         cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
+          // Framework-only vendor chunk (Next.js + React + React DOM)
+          framework: {
+            test: /[\\/]node_modules[\\/](react|react-dom|next)[\\/]/,
             name: "vendors",
             chunks: "all",
-            priority: 10,
+            priority: 40,
+          },
+          // Redux Toolkit and related
+          rtk: {
+            test: /[\\/]node_modules[\\/](@reduxjs|redux|immer|reselect)[\\/]/,
+            name: "rtk",
+            chunks: "all",
+            priority: 30,
+          },
+          // Form libraries
+          formik: {
+            test: /[\\/]node_modules[\\/](formik|yup)[\\/]/,
+            name: "formik",
+            chunks: "all",
+            priority: 30,
+          },
+          // Date utilities
+          dateFns: {
+            test: /[\\/]node_modules[\\/]date-fns[\\/]/,
+            name: "date-fns",
+            chunks: "all",
+            priority: 30,
+          },
+          // HTTP client
+          axios: {
+            test: /[\\/]node_modules[\\/]axios[\\/]/,
+            name: "axios",
+            chunks: "all",
+            priority: 30,
+          },
+          // Phone input
+          phone: {
+            test: /[\\/]node_modules[\\/]react-international-phone[\\/]/,
+            name: "react-international-phone",
+            chunks: "all",
+            priority: 30,
+          },
+          // File dropzone
+          dropzone: {
+            test: /[\\/]node_modules[\\/]react-dropzone[\\/]/,
+            name: "react-dropzone",
+            chunks: "all",
+            priority: 30,
+          },
+          // Query libraries
+          query: {
+            test: /[\\/]node_modules[\\/](@tanstack|react-query)[\\/]/,
+            name: "query",
+            chunks: "all",
+            priority: 30,
+          },
+          // UI libraries
+          ui: {
+            test: /[\\/]node_modules[\\/](react-hot-toast|focus-trap|tabbable|react-loading-skeleton)[\\/]/,
+            name: "ui",
+            chunks: "all",
+            priority: 30,
+          },
+          // Maps and media
+          media: {
+            test: /[\\/]node_modules[\\/](@vis\.gl|react-photo-album)[\\/]/,
+            name: "media",
+            chunks: "all",
+            priority: 30,
+          },
+          // Utilities
+          utils: {
+            test: /[\\/]node_modules[\\/](buffer|process|base64-js|ieee754|js-cookie|property-expr|tiny-case|toposort|prop-types|react-fast-compare|react-is)[\\/]/,
+            name: "utils",
+            chunks: "all",
+            priority: 30,
           },
           // Separate dialog chunks
           dialogs: {
