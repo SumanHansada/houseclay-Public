@@ -81,7 +81,10 @@ export function DesktopClient({
               </div>
               {values.phoneVerified ? (
                 <p className="text-green-600 mt-1 flex items-center gap-1">
-                  <CircleCheck size={25} className="text-white fill-lime-500" />
+                  <CircleCheck
+                    size={25}
+                    className="text-white fill-green-600"
+                  />
                   Verified
                 </p>
               ) : (

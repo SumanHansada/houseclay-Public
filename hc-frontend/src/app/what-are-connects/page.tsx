@@ -41,7 +41,7 @@ export default function WhatAreConnectsPage() {
 
       <div className="w-full">
         {/* Hero Section */}
-        <section className="relative w-full md:aspect-[15/4]">
+        <section className="relative w-full md:aspect-[3/1] xl:aspect-[15/4]">
           <HeroSection />
         </section>
 

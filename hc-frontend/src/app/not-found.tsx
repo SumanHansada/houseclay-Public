@@ -12,7 +12,7 @@ export default function NotFound() {
             src="/images/not-found.svg"
             alt="Banner Background"
             fill
-            className="!object-contain object-center"
+            className="object-center"
             sizes="100vw"
             priority
           />

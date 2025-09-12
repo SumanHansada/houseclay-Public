@@ -2,10 +2,6 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import FacebookSvg from "public/newIcons/facebook.svg";
-import HouseclaySvg from "public/newIcons/houseclay-main.svg";
-import InstagramSvg from "public/newIcons/instagram.svg";
-import LinkedInSvg from "public/newIcons/linkedin.svg";
 import { useSelector } from "react-redux";
 
 import {
@@ -16,12 +12,9 @@ import {
 } from "@/common/constants";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { RootState } from "@/store/store";
+import { SvgIcon } from "@/utility-components";
 
 const FooterClient: React.FC = () => {
-  const HouseClay = HouseclaySvg as React.FC<React.SVGProps<SVGSVGElement>>;
-  const LinkedIn = LinkedInSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-  const Facebook = FacebookSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-  const Instagram = InstagramSvg as React.FC<React.SVGProps<SVGSVGElement>>;
   const hideFooter = useSelector((state: RootState) => state.app.hideFooter);
   const { token } = useSelector((state: RootState) => state.auth);
   const { openDialog, closeAllDialogs } = useDialog();
@@ -48,7 +41,7 @@ const FooterClient: React.FC = () => {
               <div className="pb-4 space-y-4">
                 <div className="flex items-center">
                   <Link href="/" className="flex items-center gap-1">
-                    <HouseClay width={32} height={34} />
+                    <SvgIcon iconSize="small" name="houseclay" size={34} />
                     <span className="text-red-500 text-3xl font-inter font-bold">
                       houseclay
                     </span>
@@ -56,7 +49,7 @@ const FooterClient: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-gray-600">
-                    HouseClay is an assistance based platform connecting owners
+                    Houseclay is an assistance based platform connecting owners
                     and buyers, validating property and promising the best deal.
                   </p>
                 </div>
@@ -68,7 +61,7 @@ const FooterClient: React.FC = () => {
                         target="_blank"
                         className="flex items-center text-black hover:text-red-500 gap-1"
                       >
-                        <Instagram width={30} className="text-black" />
+                        <SvgIcon iconSize="small" name="instagram" size={30} />
                       </Link>
                     </li>
                     <li>
@@ -77,7 +70,7 @@ const FooterClient: React.FC = () => {
                         target="_blank"
                         className="flex items-center text-black hover:text-red-500 gap-1"
                       >
-                        <Facebook width={30} className="text-black" />
+                        <SvgIcon iconSize="small" name="facebook" size={30} />
                       </Link>
                     </li>
                     <li>
@@ -86,7 +79,7 @@ const FooterClient: React.FC = () => {
                         target="_blank"
                         className="flex items-start text-black hover:text-red-500 gap-1"
                       >
-                        <LinkedIn width={30} className="text-black" />
+                        <SvgIcon iconSize="small" name="linkedin" size={30} />
                       </Link>
                     </li>
                   </ul>

@@ -5,7 +5,6 @@ import { Menu, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import CoinSvg from "public/icons/coin.svg";
-import HouseClaySvg from "public/newIcons/houseclay-main.svg";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -16,6 +15,7 @@ import { useDialog } from "@/providers/DialogContextProvider";
 import { initializeToken } from "@/store/authSlice";
 
 import { RootState } from "../store/store";
+import { SvgIcon } from "@/utility-components";
 
 type User = {
   name: string;
@@ -25,7 +25,6 @@ export interface HeaderClientProps {
   user?: User;
 }
 
-const HouseClay = HouseClaySvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const Coin = CoinSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 const HeaderClient: React.FC<HeaderClientProps> = () => {
@@ -62,11 +61,11 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
 
   return (
     <>
-      <header className="flex fixed top-0 left-0 right-0 bg-white z-50 justify-between w-full items-center py-2 shadow-sm xl:gap-32 lg:gap-16 md:gap-2 gap-8 xl:px-24 md:px-12 px-12 max-md:hidden mx-auto">
+      <header className="flex fixed top-0 left-0 right-0 bg-white z-50 justify-between w-full items-center py-2 shadow-sm xl:gap-32 lg:gap-16 md:gap-2 gap-8 xl:px-24 lg:px-12 md:px-8 px-12 max-md:hidden mx-auto">
         {/* Left Section - Logo */}
         <div className="flex items-center">
           <Link href="/" className="flex items-center gap-1 py-1">
-            <HouseClay width={32} height={34} />
+            <SvgIcon iconSize="small" name="houseclay" size={34} />
             <span className="text-red-500 text-3xl font-inter font-bold">
               houseclay
             </span>
@@ -160,7 +159,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
         <div className="flex items-center gap-2">
           <Menu role="button" onClick={onMenuClick} />
           <Link href="/" className="flex items-center gap-1">
-            <HouseClay width={24} height={26} />
+            <SvgIcon iconSize="small" name="houseclay" size={26} />
             <span className="text-red-500 text-2xl font-inter font-bold">
               houseclay
             </span>
