@@ -13,7 +13,7 @@ const WhyChoose = () => {
           access what you need, when you need it.
         </p>
         <div className="flex max-md:mb-6 items-center">
-          <div className="md:hidden w-1/2">
+          <div className="md:hidden w-1/2 flex justify-center">
             <SvgIcon iconSize="large" name="why-choose-connects" size={200} />
           </div>
           <div className="space-y-4 lg:space-y-10 sm:space-y-6 lg:px-8 md:px-4 text-lg sm:text-xl lg:text-2xl xl:text-3xl mb-2 max-md:w-1/2">
@@ -50,7 +50,7 @@ const WhyChoose = () => {
             </div>
           </div>
         </div>
-        <div className="flex gap-2 items-center px-2">
+        <div className="flex gap-1 xl:gap-3 items-center px-2">
           <button
             className="bg-red-500 text-white text-lg xl:px-6  lg:px-5 lg:py-3 px-3 py-2 rounded-xl size-fit max-md:hidden"
             onClick={() => router.push("/buy-connects")}
@@ -61,7 +61,7 @@ const WhyChoose = () => {
             <SvgIcon
               iconSize="small"
               name="curly-arrow"
-              size={120}
+              size={125}
               color="#ef4444"
               className="scale-90 md:scale-100 xl:scale-110"
             />

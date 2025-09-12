@@ -1,5 +1,3 @@
-"use client";
-
 export interface IconProps {
   name: string;
   size?: number | `${number}`;
@@ -141,6 +139,9 @@ const MEDIUM_ICONS = {
   "zero-percent": "/optimizedIcons/medium/zero-percent.svg",
   "zero-percent-red": "/optimizedIcons/medium/zero-percent-red.svg",
   connects: "/optimizedIcons/medium/connects.svg",
+  transparency: "/optimizedIcons/medium/transparency.svg",
+  simplicity: "/optimizedIcons/medium/simplicity.svg",
+  fairness: "/optimizedIcons/medium/fairness.svg",
 };
 
 // Large icons configuration (external files, > 20KB)
@@ -170,6 +171,7 @@ const LARGE_ICONS = {
   veg: "/optimizedIcons/large/veg.svg",
   "what-are-connects": "/optimizedIcons/large/what-are-connects.svg",
   "why-choose-connects": "/optimizedIcons/large/why-choose-connects.svg",
+  "not-found": "/optimizedIcons/large/not-found.svg",
 };
 
 // Default blur placeholder data URLs for different icon categories

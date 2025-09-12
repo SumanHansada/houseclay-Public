@@ -1,10 +1,9 @@
 import Skeleton from "react-loading-skeleton";
-
-import { SUPPORT_ACCORDION } from "@/common/dataConstants";
+import { default as ACCORDION_DATA } from "@/data/SupportAccordionData.json";
 
 const COUNT =
-  Array.isArray(SUPPORT_ACCORDION) && SUPPORT_ACCORDION.length > 0
-    ? SUPPORT_ACCORDION.length
+  Array.isArray(ACCORDION_DATA) && ACCORDION_DATA.length > 0
+    ? ACCORDION_DATA.length
     : 5;
 
 const widths = [72, 64, 80, 58, 70];

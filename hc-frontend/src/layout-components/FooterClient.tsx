@@ -37,12 +37,17 @@ const FooterClient: React.FC = () => {
         <div className="border-b border-gray-300 pt-24 pb-16">
           <div className="flex justify-between">
             {/* CTA Button and Description */}
-            <div className="space-y-3 w-1/4">
+            <div className="space-y-3 w-1/2 lg:w-2/5 2xl:w-1/4">
               <div className="pb-4 space-y-4">
                 <div className="flex items-center">
                   <Link href="/" className="flex items-center gap-1">
-                    <SvgIcon iconSize="small" name="houseclay" size={34} />
-                    <span className="text-red-500 text-3xl font-inter font-bold">
+                    <SvgIcon
+                      iconSize="small"
+                      name="houseclay"
+                      size={34}
+                      className="scale-90 lg:scale-100"
+                    />
+                    <span className="text-red-500 text-2xl lg:text-3xl font-inter font-bold">
                       houseclay
                     </span>
                   </Link>
@@ -54,14 +59,14 @@ const FooterClient: React.FC = () => {
                   </p>
                 </div>
                 <div className="flex justify-between">
-                  <ul className="flex gap-4 items-center">
+                  <ul className="flex gap-4 items-end">
                     <li>
                       <Link
                         href={HOUSECLAY_INSTAGRAM}
                         target="_blank"
                         className="flex items-center text-black hover:text-red-500 gap-1"
                       >
-                        <SvgIcon iconSize="small" name="instagram" size={30} />
+                        <SvgIcon iconSize="small" name="instagram" size={34} />
                       </Link>
                     </li>
                     <li>
@@ -70,7 +75,7 @@ const FooterClient: React.FC = () => {
                         target="_blank"
                         className="flex items-center text-black hover:text-red-500 gap-1"
                       >
-                        <SvgIcon iconSize="small" name="facebook" size={30} />
+                        <SvgIcon iconSize="small" name="facebook" size={34} />
                       </Link>
                     </li>
                     <li>
@@ -79,7 +84,7 @@ const FooterClient: React.FC = () => {
                         target="_blank"
                         className="flex items-start text-black hover:text-red-500 gap-1"
                       >
-                        <SvgIcon iconSize="small" name="linkedin" size={30} />
+                        <SvgIcon iconSize="small" name="linkedin" size={34} />
                       </Link>
                     </li>
                   </ul>
@@ -93,7 +98,7 @@ const FooterClient: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex gap-12">
+            <div className="flex md:gap-8 lg:gap-12">
               {/* Quick Links */}
               <div>
                 <h3 className="text-gray-400 font-medium text-lg mb-5">

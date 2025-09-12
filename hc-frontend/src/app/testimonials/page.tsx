@@ -13,7 +13,7 @@ import { ImageWithLoader } from "@/utility-components";
 
 import { TestimonialCard } from "./components/TestimonialCard";
 
-export default function TermsAndConditionsPage() {
+export default function TestimonialsPage() {
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
 
@@ -35,11 +35,11 @@ export default function TermsAndConditionsPage() {
         <section className="relative w-full md:aspect-[15/4] md:block">
           <div className="absolute inset-0 hidden md:block">
             <ImageWithLoader
-              src="/images/banner-testimonials.svg"
+              src="/images/banner-testimonials.webp"
               alt="Banner Background"
               fill
-              className="!object-contain object-center"
-              sizes="(min-width:1536px) 1440px, 100vw"
+              className="object-center"
+              sizes="100vw"
               fetchPriority="high"
               priority
             />
@@ -90,12 +90,12 @@ export default function TermsAndConditionsPage() {
 
       {/* Mobile */}
       <main className="w-full h-full px-6 sm:px-8 md:hidden pt-[55px]">
-        <section className="relative w-full aspect-[341/152]">
+        <section className="relative w-full aspect-[9/4]">
           <ImageWithLoader
-            src="/images/banner-testimonials-mobile.svg"
+            src="/images/banner-testimonials-mobile.webp"
             alt="Banner Background"
             fill
-            className="!object-contain object-center"
+            className="object-center"
             sizes="100vw"
             priority
           />

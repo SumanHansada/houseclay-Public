@@ -3,12 +3,13 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { SUPPORT_ACCORDION } from "@/common/dataConstants";
 import { Footer, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { setHideFooter, setHideHeader } from "@/store/appSlice";
 
 import { Accordion } from "../manage-account/components/Accordion";
+
+import { default as ACCORDION_DATA } from "@/data/SupportAccordionData.json";
 
 export default function FrequentlyAskedQuestionPage() {
   const [openKey, setOpenKey] = useState<string | null>(null);
@@ -40,7 +41,7 @@ export default function FrequentlyAskedQuestionPage() {
           </p>
         </div>
         <div className="flex flex-col gap-5">
-          {SUPPORT_ACCORDION.map((item) => {
+          {ACCORDION_DATA.map((item) => {
             const key = item.question;
             const isOpen = openKey === key;
             return (

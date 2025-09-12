@@ -61,12 +61,17 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
 
   return (
     <>
-      <header className="flex fixed top-0 left-0 right-0 bg-white z-50 justify-between w-full items-center py-2 shadow-sm xl:gap-32 lg:gap-16 md:gap-2 gap-8 xl:px-24 lg:px-12 md:px-8 px-12 max-md:hidden mx-auto">
+      <header className="flex fixed top-0 left-0 right-0 bg-white z-50 justify-between w-full items-center py-2 shadow-sm xl:gap-32 lg:gap-16 md:gap-5 gap-8 xl:px-24 lg:px-12 md:px-8 px-12 max-md:hidden mx-auto">
         {/* Left Section - Logo */}
         <div className="flex items-center">
           <Link href="/" className="flex items-center gap-1 py-1">
-            <SvgIcon iconSize="small" name="houseclay" size={34} />
-            <span className="text-red-500 text-3xl font-inter font-bold">
+            <SvgIcon
+              iconSize="small"
+              name="houseclay"
+              size={34}
+              className="scale-90 lg:scale-100"
+            />
+            <span className="text-red-500 text-2xl lg:text-3xl font-inter font-bold">
               houseclay
             </span>
           </Link>

@@ -28,7 +28,7 @@ function VerifiedBadge({ isVerified }: { isVerified: boolean }) {
   return (
     <span className="inline-flex items-center gap-1 text-sm">
       {isVerified ? (
-        <CircleCheck size={25} className="text-white fill-lime-500" />
+        <CircleCheck size={25} className="text-white fill-green-600" />
       ) : (
         <CircleAlert size={25} className="text-white fill-red-600" />
       )}
@@ -131,7 +131,7 @@ export function MobileClient({
                   <p className="text-green-600 mt-1 flex items-center gap-1">
                     <CircleCheck
                       size={20}
-                      className="text-white fill-lime-500"
+                      className="text-white fill-green-600"
                     />
                     Verified
                   </p>
@@ -180,7 +180,10 @@ export function MobileClient({
               />
               {values.emailVerified ? (
                 <p className="text-green-600 mt-1 flex items-center gap-1">
-                  <CircleCheck size={25} className="text-white fill-lime-500" />
+                  <CircleCheck
+                    size={25}
+                    className="text-white fill-green-600"
+                  />
                   Verified
                 </p>
               ) : (
