@@ -21,7 +21,6 @@ const MastHeadDesktop = () => {
           alt="Banner Background"
           fill
           className="object-cover object-right"
-          sizes="100vw"
           fetchPriority="high"
           priority
         />

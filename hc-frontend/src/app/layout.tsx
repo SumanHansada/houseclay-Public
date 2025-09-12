@@ -60,7 +60,7 @@ export default function RootLayout({
         </Providers>
         {/* Razorpay checkout script */}
         <Script
-          async
+          defer
           src="https://checkout.razorpay.com/v1/checkout.js"
           strategy="afterInteractive"
         />

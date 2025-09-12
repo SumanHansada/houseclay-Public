@@ -28,7 +28,6 @@ const useGoogleMapsAPI = () => {
 
         const script = document.createElement("script");
         script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places`;
-        script.async = true;
         script.defer = true;
         script.id = "google-maps-script";
 
