@@ -14,12 +14,12 @@
       "landmark": "Nagavarapalya, 15th cross, Landmark - Life in...",
       "latitude": 12.9716,
       "longitude": 77.5946,
-      "image": "/photos/House1.webp",
+      "image": "/photos/House1.avif",
       "images": [
-        "/photos/House1.webp",
-        "/photos/House2.webp",
-        "/photos/House3.webp",
-        "/photos/House4.webp"
+        "/photos/House1.avif",
+        "/photos/House2.avif",
+        "/photos/House3.avif",
+        "/photos/House4.avif"
       ],
       "badges": "Featured"
     },
@@ -37,12 +37,12 @@
       "landmark": "Varthur, Gunjur, Bangalore",
       "latitude": 12.9716,
       "longitude": 77.5946,
-      "image": "/photos/House2.webp",
+      "image": "/photos/House2.avif",
       "images": [
-        "/photos/House2.webp",
-        "/photos/House1.webp",
-        "/photos/House3.webp",
-        "/photos/House4.webp"
+        "/photos/House2.avif",
+        "/photos/House1.avif",
+        "/photos/House3.avif",
+        "/photos/House4.avif"
       ],
       "badges": null
     },
@@ -60,12 +60,12 @@
       "landmark": "Gunjur Road, Bangalore",
       "latitude": 12.9716,
       "longitude": 77.5946,
-      "image": "/photos/House4.webp",
+      "image": "/photos/House4.avif",
       "images": [
-        "/photos/House4.webp",
-        "/photos/House1.webp",
-        "/photos/House3.webp",
-        "/photos/House2.webp"
+        "/photos/House4.avif",
+        "/photos/House1.avif",
+        "/photos/House3.avif",
+        "/photos/House2.avif"
       ],
       "badges": "Exclusive"
     },
@@ -83,12 +83,12 @@
       "landmark": "Doddenakundi, Marathahalli, Bangalore",
       "latitude": 12.9716,
       "longitude": 77.5946,
-      "image": "/photos/House3.webp",
+      "image": "/photos/House3.avif",
       "images": [
-        "/photos/House3.webp",
-        "/photos/House4.webp",
-        "/photos/House2.webp",
-        "/photos/House1.webp"
+        "/photos/House3.avif",
+        "/photos/House4.avif",
+        "/photos/House2.avif",
+        "/photos/House1.avif"
       ],
       "badges": "Exclusive"
     }
