@@ -23,6 +23,7 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
+import { setConnectBal } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 import { Tab, TabContent, TabHeader, Tabs } from "@/utility-components/Tabs";
 
@@ -99,8 +100,11 @@ export default function BuyConnectsPage() {
         paymentId: response.razorpay_payment_id,
         orderId: response.razorpay_order_id,
         signature: response.razorpay_signature,
-      });
+        amount: totalAmount * 100,
+        connects: currentBundle?.connects || 0,
+      }).unwrap();
       console.log("Payment verification response:", result);
+      dispatch(setConnectBal(result.connectBal));
     } catch (e) {
       console.error("Payment verification failed:", e);
     }
