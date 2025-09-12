@@ -251,11 +251,13 @@ export const apiSlice = createApi({
       }),
     }),
     verifyPayment: builder.mutation<
-      { message: string },
+      { message: string; connectBal: number },
       {
         paymentId: string;
         orderId: string;
         signature: string;
+        amount: number;
+        connects: number;
       }
     >({
       query: (data) => ({

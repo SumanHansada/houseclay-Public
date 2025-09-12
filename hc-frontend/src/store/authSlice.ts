@@ -57,6 +57,9 @@ const authSlice = createSlice({
       state.token = "";
       Cookies.remove("token");
     },
+    setConnectBal: (state, action: PayloadAction<number>) => {
+      state.connectBal = action.payload;
+    },
     initializeToken: (state) => {
       const token = Cookies.get("token");
       if (token) {
@@ -100,6 +103,7 @@ export const {
   clearAuthUser,
   setToken,
   clearToken,
+  setConnectBal,
   initializeToken,
   setAuthStep,
   clearAuthStep,
