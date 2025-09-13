@@ -57,50 +57,39 @@ export default function ConnectsPage() {
         </div>
 
         <div className="flex mb-10">
-          <div className="flex justify-between w-2/3 lg:w-full py-4 px-3 lg:px-8 bg-red-50 rounded-lg">
-            <div className="flex max-lg:flex-col gap-2 lg:gap-5 items-start lg:items-center">
-              <span className="lg:hidden">Available Connects</span>
+          <div className="flex justify-between w-2/3 md:w-full py-4 px-2 lg:px-8 bg-red-50 rounded-lg">
+            <div className="flex gap-4 items-center">
               <Image
                 src="/icons/coin.svg"
                 alt="coin icon"
                 width={40}
                 height={40}
-                className="max-lg:hidden"
               />
-              <div className="text-lg flex items-center gap-2 lg:gap-4">
-                <span className="max-lg:hidden">Available Connects</span>
-                <Image
-                  src="/icons/coin.svg"
-                  alt="coin icon"
-                  width={40}
-                  height={40}
-                  className="lg:hidden"
-                />
-                <span className="text-gray-700 text-2xl font-medium">
-                  {connectBalance}
-                </span>
-              </div>
+              <span className="max-md:hidden text-lg">Available Connects</span>
+              <span className="text-gray-700 text-2xl font-medium">
+                {connectBalance}
+              </span>
             </div>
             <button
-              className="underline text-red-500 hover:text-red-600 lg:text-lg"
+              className="border border-red-500 rounded-xl px-4 py-2 text-red-500 hover:bg-red-500 hover:text-white"
               onClick={() => router.push("/buy-connects")}
             >
-              Buy more connects
+              Buy more
             </button>
           </div>
-          <Image
+          <ImageWithLoader
             src="/icons/static-pages/how-to-use-connects.svg"
             alt="how to use connects"
             width={80}
             height={80}
-            className="m-auto lg:hidden"
+            className="m-auto md:hidden"
           />
         </div>
 
         <div className="flex">
           <div className="lg:w-2/3 space-y-6 px-4">
             <div className="space-y-4">
-              <h1 className="text-3xl font-bold xl:w-2/3">
+              <h1 className="md:text-2xl lg:text-3xl md:font-medium lg:font-bold">
                 How you can use connects?
               </h1>
               <p className="text-gray-800 font-light leading-relaxed">
@@ -167,7 +156,7 @@ export default function ConnectsPage() {
               </div>
             </div>
             <button
-              className="px-4 py-3 bg-red-500 text-white hover:bg-red-600 rounded-lg"
+              className="px-4 py-3 bg-red-500 text-white hover:bg-red-600 rounded-xl"
               onClick={() => router.push("/what-are-connects")}
             >
               Know more about connects

@@ -64,8 +64,6 @@ const authSlice = createSlice({
       const token = Cookies.get("token");
       if (token) {
         state.token = token;
-        state.name = "Suman";
-        state.phoneNo = "";
       }
     },
     setAuthStep: (state, action: PayloadAction<AuthStep>) => {

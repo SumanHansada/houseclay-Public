@@ -1,12 +1,12 @@
 "use client";
 
 import { Heart, Search, UserRound } from "lucide-react";
-import CoinSvg from "public/icons/coin.svg";
 import HouseClayHomeSvg from "public/icons/houseclay-home.svg";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
 import { RootState } from "@/store/store";
+import { SvgIcon } from "@/utility-components";
 
 type NavItem = {
   id: string;
@@ -19,8 +19,6 @@ type NavItem = {
 interface StickyNavbarProps {
   defaultActive?: string;
 }
-
-const Coin = CoinSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 const StickyNavbar: React.FC<StickyNavbarProps> = ({
   defaultActive = "home",
@@ -55,7 +53,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
     },
     {
       id: "connects",
-      icon: <Coin width={25} height={25} />,
+      icon: <SvgIcon iconSize="medium" name="connects" size={25} />,
       label: "Connects",
       href: "/manage-account/connects",
       badge: connectBal,
@@ -76,6 +74,8 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
     return null;
   }
 
+  console.log(navItems);
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-md z-50 w-full md:hidden">
       <ul className="flex items-center justify-between px-4 py-2 max-w-7xl mx-auto">
@@ -88,12 +88,12 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
               aria-current={activeTab === item.id ? "page" : undefined}
             >
               <div
-                className={`p-1 flex justify-center items-center ${activeTab === item.id && item.id !== "connects" ? "text-red-500 border-red-500 stroke-red-500 fill-red-500" : "text-gray-500"}`}
+                className={`p-1 flex relative justify-center items-center ${activeTab === item.id && item.id !== "connects" ? "text-red-500 border-red-500 stroke-red-500 fill-red-500" : "text-gray-500"}`}
               >
                 {item.icon}
-                {item.badge && (
+                {item.badge != null && (
                   <div
-                    className="absolute -top-1 right-3 bg-red-500 text-white text-xs rounded-full px-1 w-fit h-4 flex items-center justify-center"
+                    className="absolute top-0 right-0 -mt-0.5 -mr-0.5 bg-red-500 text-white text-xxs rounded-full w-4 h-4 min-w-fit px-1 flex items-center justify-center"
                     aria-label={`${item.badge} connects`}
                   >
                     {item.badge}

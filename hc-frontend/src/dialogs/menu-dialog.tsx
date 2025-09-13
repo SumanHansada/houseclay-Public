@@ -8,7 +8,6 @@ import {
   X,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import CoinSvg from "public/icons/coin.svg";
 import VerifiedTenantsSvg from "public/icons/verified-tenants.svg";
 import ZeroPercentRedSvg from "public/icons/zero-percent-red.svg";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -23,7 +22,7 @@ import { useDialog } from "@/providers/DialogContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
 import { setLoginFromAddProperty } from "@/store/authSlice";
 import { RootState } from "@/store/store";
-import { ImageWithLoader } from "@/utility-components";
+import { ImageWithLoader, SvgIcon } from "@/utility-components";
 
 const ZeroPercentRed = ZeroPercentRedSvg as React.FC<
   React.SVGProps<SVGSVGElement>
@@ -31,7 +30,6 @@ const ZeroPercentRed = ZeroPercentRedSvg as React.FC<
 const VerifiedTenants = VerifiedTenantsSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
-const Coin = CoinSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 interface MenuDialogProps {
   id: string;
@@ -50,6 +48,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
 
   const [quickLinksExpanded, setQuickLinksExpanded] = useState(true);
   const toggleQuickLinks = () => setQuickLinksExpanded(!quickLinksExpanded);
+  const connectBal = useSelector((state: RootState) => state.auth.connectBal);
 
   const handleClose = useCallback(() => {
     closeDialog(id);
@@ -88,7 +87,9 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
       exitAnimation="animate-slide-out-left"
     >
       <DialogHeader>
-        <div className={`py-2 px-4 flex justify-between items-center w-full`}>
+        <div
+          className={`py-2 px-4 flex justify-between items-center w-full shadow-sm`}
+        >
           <button className="rounded-full items-center justify-center">
             <X onClick={handleClose} size={25} />
           </button>
@@ -115,7 +116,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
         <div className="px-6 py-4 flex flex-col gap-8">
           {/* Profile Section */}
           {token && (
-            <div className="flex items-center p-4 gap-4 border border-gray-100 rounded-full shadow-md inset-shadow-xs">
+            <div className="flex items-center p-4 gap-4 border border-gray-100 rounded-full shadow-lg inset-shadow-xs">
               <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-white">
                 <UserRound size={32} />
               </div>
@@ -131,7 +132,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
           {/* Property Banner */}
           <div
             onClick={handlePropertyBannerClick}
-            className="relative px-4 py-6 border border-gray-100 rounded-lg shadow-md inset-shadow-xs flex justify-between overflow-hidden "
+            className="relative px-4 py-6 border-t border-gray-100 rounded-xl shadow-lg inset-shadow-xs flex justify-between overflow-hidden "
           >
             <div className="flex flex-col justify-between items-start gap-4">
               <h2 className="relative text-base font-bold z-10">
@@ -155,7 +156,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
               placeholder="blur"
               height={100}
               width={100}
-              className="items-end"
+              className="!absolute items-end right-0 bottom-0 scale-125"
               blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(300, 400))}`}
             />
           </div>
@@ -163,7 +164,8 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
           <div className="flex justify-between items-center">
             <span>Connects Balance</span>
             <span className="flex items-center gap-1 font-semibold">
-              <Coin width={25} height={25} /> {token ? 34 : 0}
+              <SvgIcon iconSize="medium" name="connects" size={25} />{" "}
+              {connectBal ? connectBal : 0}
             </span>
           </div>
 
