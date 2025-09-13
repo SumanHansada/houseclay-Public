@@ -43,32 +43,22 @@ export default function ConnectsPage() {
           <h1 className="text-2xl font-medium">Connects</h1>
         </div>
 
-        <div className="flex mb-10">
-          <div className="flex flex-col items-start justify-evenly lg:flex-row lg:justify-between  w-2/3 lg:w-full py-4 px-3 lg:px-8 bg-red-50 rounded-lg">
-            <div className="flex items-center gap-4">
-              <span className="text-lg lg:text-xl">Available Connects</span>
-              <div className="flex gap-1 items-center">
-                <SvgIcon iconSize="medium" name="coin" size={34} />
-                <span className="text-gray-700 text-2xl font-medium">
-                  {connectBalance}
-                </span>
-              </div>
+        <div className="flex justify-between w-full py-4 px-3 lg:px-8 bg-red-50 rounded-lg mb-10">
+          <div className="flex items-center gap-4">
+            <span className="text-lg lg:text-xl">Available Connects</span>
+            <div className="flex gap-1 items-center">
+              <SvgIcon iconSize="medium" name="coin" size={34} />
+              <span className="text-gray-700 text-2xl font-medium">
+                {connectBalance}
+              </span>
             </div>
-            <button
-              className="underline text-red-500 hover:text-red-600 text-lg lg:text-xl"
-              onClick={() => router.push("/buy-connects")}
-            >
-              Buy more
-            </button>
           </div>
-          <div className="flex flex-1 justify-center">
-            <SvgIcon
-              iconSize="large"
-              name="how-to-use-connects-mobile"
-              size={140}
-              className="lg:hidden"
-            />
-          </div>
+          <button
+            className="border border-red-500 rounded-xl px-4 py-2 text-red-500 hover:bg-red-500 hover:text-white"
+            onClick={() => router.push("/buy-connects")}
+          >
+            Buy more
+          </button>
         </div>
 
         <div className="flex">

@@ -1,10 +1,12 @@
 "use client";
 
 import { CircleCheck, Ellipsis } from "lucide-react";
+
 import { PropertyCategory } from "@/common/enums";
 import { formatINRCurrency } from "@/common/utils";
 import { MyProperty } from "@/interfaces/ManageAccount";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
+
 import { ActionMenu, type ActionOption } from "./ActionMenu";
 
 export interface PropertyCardProps extends MyProperty {

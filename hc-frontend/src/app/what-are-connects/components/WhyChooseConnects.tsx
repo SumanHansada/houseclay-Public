@@ -1,5 +1,6 @@
-import { SvgIcon } from "@/utility-components";
 import { useRouter } from "next/navigation";
+
+import { SvgIcon } from "@/utility-components";
 const WhyChoose = () => {
   const router = useRouter();
   return (

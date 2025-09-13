@@ -4,11 +4,11 @@ import { Mail, PhoneCall } from "lucide-react";
 import { useState } from "react";
 
 import { SUPPORT_CONTACT, SUPPORT_EMAIL } from "@/common/constants";
+import { default as ACCORDION_DATA } from "@/data/SupportAccordionData.json";
 import { MobileHeader } from "@/layout-components";
+import { SvgIcon } from "@/utility-components";
 
 import { Accordion } from "../components/Accordion";
-import { default as ACCORDION_DATA } from "@/data/SupportAccordionData.json";
-import { SvgIcon } from "@/utility-components";
 
 export default function SupportPage() {
   const [openKey, setOpenKey] = useState<string | null>(null);

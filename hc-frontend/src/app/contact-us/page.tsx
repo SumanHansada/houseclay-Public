@@ -11,7 +11,7 @@ import { FormPhoneField, FormTextArea, FormTextField } from "@/form-components";
 import { Footer, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { setHideFooter, setHideHeader } from "@/store/appSlice";
-import { ImageWithLoader, SvgIcon } from "@/utility-components";
+import { ImageWithLoader } from "@/utility-components";
 
 interface ContactUsFormValues {
   name: string;

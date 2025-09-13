@@ -6,9 +6,9 @@ import { CircleAlert, CircleCheck } from "lucide-react";
 import { getInitials } from "@/common/utils";
 import { FormPhoneField, FormTextField } from "@/form-components";
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
+import { SvgIcon } from "@/utility-components";
 
 import { EmailVerifyIncentive } from "../components/EmailVerifyIncentive";
-import { SvgIcon } from "@/utility-components";
 
 interface DesktopClientProps {
   savedValues: MyProfileFormValues;

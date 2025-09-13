@@ -13,9 +13,9 @@ import { UserDropdown } from "@/components/UserDropdown";
 import { useLogout } from "@/hooks/useLogout";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { initializeToken } from "@/store/authSlice";
+import { SvgIcon } from "@/utility-components";
 
 import { RootState } from "../store/store";
-import { SvgIcon } from "@/utility-components";
 
 type User = {
   name: string;
@@ -79,7 +79,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
 
         {/* Center - Navigation */}
         <div className="flex justify-between items-center w-full text-sm">
-          <nav className="hidden md:flex xl:gap-12 lg:gap-6 md:gap-2 gap-3 text-gray-800 lg:text-lg">
+          <nav className="hidden md:flex xl:gap-8 lg:gap-4 md:gap-2 gap-3 text-gray-800 text-base lg:text-lg">
             <Link
               href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=rent`}
               data-category="rent"
@@ -119,7 +119,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
           </nav>
 
           {/* Right Section - Actions */}
-          <div className="flex items-center xl:gap-6 lg:gap-3 md:gap-2 gap-2">
+          <div className="flex items-center xl:gap-6 lg:gap-4 md:gap-2 gap-2">
             {/* List Property Button */}
             <Link
               href="/list-property"

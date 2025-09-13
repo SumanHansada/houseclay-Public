@@ -3,13 +3,12 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
+import { default as ACCORDION_DATA } from "@/data/SupportAccordionData.json";
 import { Footer, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { setHideFooter, setHideHeader } from "@/store/appSlice";
 
 import { Accordion } from "../manage-account/components/Accordion";
-
-import { default as ACCORDION_DATA } from "@/data/SupportAccordionData.json";
 
 export default function FrequentlyAskedQuestionPage() {
   const [openKey, setOpenKey] = useState<string | null>(null);

@@ -1,15 +1,14 @@
 "use client";
 
+import { default as RequirementsIcon } from "public/optimizedIcons/medium/my-requirements.svg";
+import { default as OwnersIcon } from "public/optimizedIcons/medium/owners-contacted.svg";
 import { default as ConnectsIcon } from "public/optimizedIcons/small/connects.svg";
 import { default as LogoutIcon } from "public/optimizedIcons/small/logout.svg";
 import { default as PaymentsIcon } from "public/optimizedIcons/small/my-payments.svg";
 import { default as ProfileIcon } from "public/optimizedIcons/small/my-profile.svg";
 import { default as PropertiesIcon } from "public/optimizedIcons/small/my-properties.svg";
-import { default as RequirementsIcon } from "public/optimizedIcons/medium/my-requirements.svg";
-import { default as OwnersIcon } from "public/optimizedIcons/medium/owners-contacted.svg";
 import { default as ShortlistsIcon } from "public/optimizedIcons/small/shortlists.svg";
 import { default as SupportIcon } from "public/optimizedIcons/small/support.svg";
-
 import type { FC, SVGProps } from "react";
 
 export type NavIconType = FC<SVGProps<SVGSVGElement>>;

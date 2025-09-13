@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+
 import { Footer } from "@/layout-components";
 import { ImageWithLoader } from "@/utility-components";
 
