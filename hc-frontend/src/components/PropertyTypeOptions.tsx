@@ -4,6 +4,7 @@ import ResaleSvg from "public/icons/resale.svg";
 import { useDispatch, useSelector } from "react-redux";
 
 import { PropertyCategory } from "@/common/enums";
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { setPropertyCategory } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
@@ -14,14 +15,12 @@ const Resale = ResaleSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const Flatmates = FlatmatesSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 interface PropertyTypeOptionsProps {
-  isMobile?: boolean;
   onBack?: () => void;
   onNext?: () => void;
   handlePrefetch?: () => void;
 }
 
 const PropertyTypeOptions = ({
-  isMobile = false,
   onBack,
   onNext,
   handlePrefetch,
@@ -30,6 +29,7 @@ const PropertyTypeOptions = ({
   const propertyCategory = useSelector(
     (state: RootState) => state.listProperty.propertyCategory,
   );
+  const { isMobile, isTablet } = useDeviceContext();
 
   const propertyTypes = [
     {
@@ -53,7 +53,7 @@ const PropertyTypeOptions = ({
   ];
 
   return (
-    <div className="flex flex-col gap-8 h-full">
+    <div className="flex flex-col gap-4 xl:gap-8 h-full">
       <h1
         className={`${isMobile ? "text-2xl" : "lg:text-2xl text-xl lg:mb-8 mb-4"}`}
       >
@@ -81,7 +81,7 @@ const PropertyTypeOptions = ({
         {onBack && (
           <button
             type="button"
-            className={`text-center ${isMobile ? "w-full" : "w-1/3"} border border-gray-300 text-gray-700 hover:bg-gray-50 lg:py-4 py-3 rounded-lg font-medium transition duration-200`}
+            className={`text-center ${isMobile ? "w-full" : "w-1/3"} border border-gray-300 text-gray-700 hover:bg-gray-50 py-3 rounded-lg font-medium transition duration-200`}
             onClick={onBack}
           >
             Back
@@ -89,12 +89,17 @@ const PropertyTypeOptions = ({
         )}
         <button
           type="button"
-          className={`text-center ${isMobile ? "w-full" : "flex-1"} bg-red-500 hover:bg-red-600 text-white lg:py-4 py-3 rounded-lg font-medium transition duration-200`}
+          className={`text-center ${isMobile ? "w-full" : "flex-1"} bg-red-500 disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-red-600 text-white py-3 rounded-lg font-medium transition duration-200`}
           onClick={onNext}
           onMouseEnter={handlePrefetch}
           onFocus={handlePrefetch}
+          disabled={!propertyCategory}
         >
-          {isMobile ? "Next" : "Start Posting Your Free Listing"}
+          {isMobile
+            ? "Next"
+            : isTablet
+              ? "Start Posting"
+              : "Start Posting Your Free Listing"}
         </button>
       </div>
     </div>

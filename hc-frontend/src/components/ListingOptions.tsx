@@ -19,9 +19,9 @@ const ListingOptions = ({ isMobile = false, onNext }: ListingOptionsProps) => {
   );
 
   return (
-    <div className="flex flex-col gap-8 h-full">
+    <div className="flex flex-col gap-4 xl:gap-8 h-full">
       <h1
-        className={`${isMobile ? "text-2xl" : "lg:text-2xl text-xl lg:mb-8 mb-4"}`}
+        className={`${isMobile ? "text-2xl" : "lg:text-2xl text-base lg:mb-8 mb-4"}`}
       >
         Select How You Want to List Your Property
       </h1>
@@ -52,8 +52,9 @@ const ListingOptions = ({ isMobile = false, onNext }: ListingOptionsProps) => {
 
       <button
         type="button"
-        className={`w-full bg-red-500 hover:bg-red-600 text-white lg:py-4 py-3 rounded-lg ${isMobile ? "lg:mt-4 font-medium transition duration-200 mt-auto" : "lg:mt-4 mt-2 font-medium transition duration-200"}`}
+        className={`w-full bg-red-500 disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-red-600 text-white py-3 rounded-lg font-medium transition duration-200 ${isMobile ? "mt-auto" : ""}`}
         onClick={onNext}
+        disabled={!listingType}
       >
         {listingType === PropertyListingType.CALL
           ? "Get a call back!"

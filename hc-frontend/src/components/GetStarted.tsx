@@ -7,7 +7,7 @@ interface GetStartedProps {
 
 const GetStarted = ({ onGetStarted }: GetStartedProps) => {
   return (
-    <div className="flex flex-col gap-8 h-full">
+    <div className="flex flex-col gap-4 xl:gap-8 h-full">
       <h1 className="text-2xl">It&apos;s easy to list property on Houseclay</h1>
       <div className="flex flex-col gap-6 w-full mx-auto">
         <div className="flex items-start gap-4">
@@ -48,7 +48,7 @@ const GetStarted = ({ onGetStarted }: GetStartedProps) => {
           </span>
         </div>
         <button
-          className="text-center w-full bg-red-500 hover:bg-red-600 text-white lg:py-4 py-3 rounded-lg font-medium transition duration-200"
+          className="text-center w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-medium transition duration-200"
           onClick={onGetStarted}
         >
           Get Started

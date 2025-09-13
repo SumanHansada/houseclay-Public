@@ -205,7 +205,6 @@ const ListPropertyPage = dynamic(
             )}
             {mobileStep === ListPropertyMobileStep.PROPERTY_TYPE && (
               <PropertyTypeOptions
-                isMobile={true}
                 onNext={handlePostListingClick}
                 onBack={handleBack}
                 handlePrefetch={handlePrefetch}
@@ -225,7 +224,7 @@ const ListPropertyPage = dynamic(
                   className="my-0"
                 />
               </div>
-              <div className="flex w-3/5 justify-end items-center">
+              <div className="flex w-3/5 justify-end items-start">
                 <div className="max-w-lg xl:max-w-xl lg:w-full my-0 flex flex-col gap-8">
                   {!token ? (
                     <>
@@ -303,7 +302,6 @@ const ListPropertyPage = dynamic(
                       {desktopStep ===
                         ListPropertyDesktopStep.PROPERTY_TYPE && (
                         <PropertyTypeOptions
-                          isMobile={false}
                           onNext={handlePostListingClick}
                           onBack={handleBack}
                           handlePrefetch={handlePrefetch}
