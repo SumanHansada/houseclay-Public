@@ -31,6 +31,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
   const hideHeader = useSelector((state: RootState) => state.app.hideHeader);
   const token = useSelector((state: RootState) => state.auth.token);
   const userName = useSelector((state: RootState) => state.auth.name);
+  const connectBal = useSelector((state: RootState) => state.auth.connectBal);
 
   const dispatch = useDispatch();
   const { logout } = useLogout();
@@ -133,7 +134,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
               className="flex items-center xl:px-4 lg:px-3 md:px-2 px-2 py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100"
             >
               <Coin height={20} width={20} />
-              <span>0</span>
+              <span>{connectBal}</span>
             </Link>
 
             {/* Login Button */}

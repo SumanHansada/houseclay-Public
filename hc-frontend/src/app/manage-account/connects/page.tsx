@@ -15,6 +15,7 @@ import {
   setHideStickyNavBar,
 } from "@/store/appSlice";
 import { RootState } from "@/store/store";
+import { ImageWithLoader } from "@/utility-components";
 
 // Test
 
@@ -195,11 +196,11 @@ export default function ConnectsPage() {
             <div className="flex gap-2 items-center w-2/3 justify-between">
               <span className="font-medium text-xl">Your Connects</span>
               <div className="text-lg flex items-center">
-                <Image
+                <ImageWithLoader
                   src="/icons/coin.svg"
                   alt="coin icon"
-                  width={36}
-                  height={36}
+                  width={32}
+                  height={32}
                 />
                 <span className="text-gray-700 text-2xl font-medium">
                   {connectBalance}
@@ -207,7 +208,7 @@ export default function ConnectsPage() {
               </div>
             </div>
             <div>
-              <Image
+              <ImageWithLoader
                 src="/icons/static-pages/how-to-use-connects.svg"
                 alt="how to use connects"
                 width={80}

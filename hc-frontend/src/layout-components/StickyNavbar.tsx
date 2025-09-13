@@ -32,6 +32,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
   const HouseClayHome = HouseClayHomeSvg as React.FC<
     React.SVGProps<SVGSVGElement>
   >;
+  const connectBal = useSelector((state: RootState) => state.auth.connectBal);
 
   const navItems: NavItem[] = [
     {
@@ -57,7 +58,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
       icon: <Coin width={25} height={25} />,
       label: "Connects",
       href: "/manage-account/connects",
-      badge: 2,
+      badge: connectBal,
     },
     {
       id: "account",
@@ -92,8 +93,8 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
                 {item.icon}
                 {item.badge && (
                   <div
-                    className="absolute top-0 right-3 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center"
-                    aria-label={`${item.badge} new notifications`}
+                    className="absolute -top-1 right-3 bg-red-500 text-white text-xs rounded-full px-1 w-fit h-4 flex items-center justify-center"
+                    aria-label={`${item.badge} connects`}
                   >
                     {item.badge}
                   </div>

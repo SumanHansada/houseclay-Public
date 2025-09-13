@@ -7,10 +7,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 import NumberField from "@/base-components/NumberField";
 import RadioGroup from "@/base-components/RadioGroup";
+import { PaymentVerificationStatus } from "@/common/enums";
 import Carousel3D from "@/components/Carousel3D";
 import ConnectsBundleCard from "@/components/ConnectsBundleCard";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import ConnectsBundleData from "@/data/ConnectsBundleData.json";
+import VerifyConnectsDialog from "@/dialogs/verify-connects-dialog";
 import MobileHeader from "@/layout-components/MobileHeader";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -25,6 +27,7 @@ import {
 } from "@/store/appSlice";
 import { setConnectBal } from "@/store/authSlice";
 import { RootState } from "@/store/store";
+import { ImageWithLoader } from "@/utility-components";
 import { Tab, TabContent, TabHeader, Tabs } from "@/utility-components/Tabs";
 
 export default function BuyConnectsPage() {
@@ -37,6 +40,10 @@ export default function BuyConnectsPage() {
   const [verifyPayment] = useVerifyPaymentMutation();
   const { isMobile } = useDeviceContext();
   const { isDialogOpen, closeDialog, openDialog } = useDialog();
+  const [paymentStatus, setPaymentStatus] = useState<PaymentVerificationStatus>(
+    PaymentVerificationStatus.SUCCESS,
+  );
+  const [newConnectBalanceFromAPI, setNewConnectBalanceFromAPI] = useState(0);
 
   const connectBalance = useSelector(
     (state: RootState) => state.auth.connectBal,
@@ -96,6 +103,8 @@ export default function BuyConnectsPage() {
   const handlePaymentSuccess = async (response: any) => {
     console.log("Payment success response:", response);
     try {
+      openDialog("verify-connects-dialog");
+      setPaymentStatus(PaymentVerificationStatus.VERIFYING);
       const result = await verifyPayment({
         paymentId: response.razorpay_payment_id,
         orderId: response.razorpay_order_id,
@@ -104,9 +113,11 @@ export default function BuyConnectsPage() {
         connects: currentBundle?.connects || 0,
       }).unwrap();
       console.log("Payment verification response:", result);
-      dispatch(setConnectBal(result.connectBal));
+      setPaymentStatus(PaymentVerificationStatus.SUCCESS);
+      setNewConnectBalanceFromAPI(result.connectBal);
     } catch (e) {
       console.error("Payment verification failed:", e);
+      setPaymentStatus(PaymentVerificationStatus.ERROR);
     }
   };
 
@@ -157,7 +168,7 @@ export default function BuyConnectsPage() {
             <div className="flex items-center gap-2 justify-between mb-6">
               <span className="font-medium">Your available Connects</span>
               <div className="flex items-center gap-1 px-3 py-1 rounded-full">
-                <Image
+                <ImageWithLoader
                   src="/icons/coin.svg"
                   alt="coin"
                   width={25}
@@ -265,7 +276,7 @@ export default function BuyConnectsPage() {
                         Your new Connects balance will be
                       </span>
                       <div className="flex items-center gap-1">
-                        <Image
+                        <ImageWithLoader
                           src="/icons/coin.svg"
                           alt="coin"
                           width={24}
@@ -380,11 +391,11 @@ export default function BuyConnectsPage() {
             <div className="flex gap-2 items-center w-2/3 justify-between">
               <span className="font-medium text-xl">Your Connects</span>
               <div className="text-lg flex items-center">
-                <Image
+                <ImageWithLoader
                   src="/icons/coin.svg"
                   alt="coin icon"
-                  width={36}
-                  height={36}
+                  width={32}
+                  height={32}
                 />
                 <span className="text-gray-700 text-2xl font-medium">
                   {connectBalance}
@@ -516,7 +527,7 @@ export default function BuyConnectsPage() {
         </button>
       </footer>
 
-      {/* Standouts Dialog */}
+      {/* Connects Price Dialog */}
       {isDialogOpen("connects-price-breakdown-dialog") && (
         <Dialog
           id="connects-price-breakdown-dialog"
@@ -559,7 +570,7 @@ export default function BuyConnectsPage() {
                   Your new Connects balance will be
                 </span>
                 <div className="flex items-center gap-1">
-                  <Image
+                  <ImageWithLoader
                     src="/icons/coin.svg"
                     alt="coin"
                     width={24}
@@ -598,6 +609,25 @@ export default function BuyConnectsPage() {
             </footer>
           </DialogContent>
         </Dialog>
+      )}
+
+      {/* Verify Connects Dialog */}
+      {isDialogOpen("verify-connects-dialog") && (
+        <VerifyConnectsDialog
+          id="verify-connects-dialog"
+          status={paymentStatus}
+          connects={currentBundle ? currentBundle.connects : customConnects}
+          onClose={() => {
+            if (paymentStatus === PaymentVerificationStatus.VERIFYING) {
+              // Don't allow closing during verification
+              return;
+            }
+            if (paymentStatus === PaymentVerificationStatus.SUCCESS) {
+              dispatch(setConnectBal(newConnectBalanceFromAPI));
+            }
+            closeDialog("verify-connects-dialog");
+          }}
+        />
       )}
     </>
   );

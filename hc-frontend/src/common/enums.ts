@@ -79,3 +79,9 @@ export enum ErrorStatus {
   GATEWAY_TIMEOUT = 504,
   BAD_GATEWAY = 502,
 }
+
+export enum PaymentVerificationStatus {
+  VERIFYING = "verifying",
+  SUCCESS = "success",
+  ERROR = "error",
+}

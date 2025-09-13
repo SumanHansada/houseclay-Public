@@ -113,6 +113,7 @@ const MEDIUM_ICONS = {
   "wide-reach": "/optimizedIcons/medium/wide-reach.svg",
   "zero-percent": "/optimizedIcons/medium/zero-percent.svg",
   "zero-percent-red": "/optimizedIcons/medium/zero-percent-red.svg",
+  connects: "/optimizedIcons/medium/connects.svg",
 };
 
 // Large icons configuration (external files, > 20KB)

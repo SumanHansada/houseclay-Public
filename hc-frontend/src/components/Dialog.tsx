@@ -21,6 +21,7 @@ interface DialogProps {
   children: React.ReactNode;
   entryAnimation?: string; // New prop for entry animation
   exitAnimation?: string; // New prop for exit animation
+  disableOverlayClick?: boolean; // New prop to disable overlay click
 }
 
 const getDialogStyles = (
@@ -71,6 +72,7 @@ export const Dialog: React.FC<DialogProps> = ({
   children,
   entryAnimation = "animate-fade-in", // Default entry animation
   exitAnimation = "animate-fade-out", // Default exit animation
+  disableOverlayClick = false, // Default to allowing overlay click
 }) => {
   const { isDialogOpen, closeDialog } = useDialog();
   const isOpen = isDialogOpen(id);
@@ -113,7 +115,7 @@ export const Dialog: React.FC<DialogProps> = ({
 
   const handleOverlayClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isOpen) {
+    if (isOpen && !disableOverlayClick) {
       closeDialog(id); // Close dialog via context
       onClose();
     }
