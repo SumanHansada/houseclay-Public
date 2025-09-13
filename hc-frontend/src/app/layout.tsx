@@ -43,15 +43,84 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
+        {/* <!-- Set the viewport. --> */}
         <meta
           name="viewport"
-          content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+          content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimal-ui"
         />
+        {/* <!-- Theme color of the web app --> */}
         <meta name="theme-color" content="#EA3934" />
+        {/* <!-- Make the app title different than the page title - iOS. --> */}
         <meta name="apple-mobile-web-app-title" content="Houseclay" />
+        {/* <!-- Description of the web app --> */}
         <meta
           name="description"
           content="Houseclay - No Middleman, Just Connects"
+        />
+        {/* <!-- Allow web app to be run in full-screen mode - iOS. --> */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        {/* <!-- Allow web app to be run in full-screen mode - Android. --> */}
+        <meta name="mobile-web-app-capable" content="yes" />
+        {/* <!-- Configure the status bar - iOS. --> */}
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
+
+        {/* <!-- STARTUP IMAGES - iOS only --> */}
+
+        {/* <!-- iPad retina portrait startup image --> */}
+        <link
+          href="/web-app-manifest-512x512.png"
+          media="(device-width: 768px) and (device-height: 1024px)
+             and (-webkit-device-pixel-ratio: 2)
+             and (orientation: portrait)"
+          rel="apple-touch-startup-image"
+        />
+
+        {/* <!-- iPad retina landscape startup image --> */}
+        <link
+          href="/web-app-manifest-512x512.png"
+          media="(device-width: 768px) and (device-height: 1024px)
+             and (-webkit-device-pixel-ratio: 2)
+             and (orientation: landscape)"
+          rel="apple-touch-startup-image"
+        />
+
+        {/* <!-- iPad non-retina portrait startup image --> */}
+        <link
+          href="/web-app-manifest-512x512.png"
+          media="(device-width: 768px) and (device-height: 1024px)
+             and (-webkit-device-pixel-ratio: 1)
+             and (orientation: portrait)"
+          rel="apple-touch-startup-image"
+        />
+
+        {/* <!-- iPad non-retina landscape startup image --> */}
+        <link
+          href="/web-app-manifest-512x512.png"
+          media="(device-width: 768px) and (device-height: 1024px)
+             and (-webkit-device-pixel-ratio: 1)
+             and (orientation: landscape)"
+          rel="apple-touch-startup-image"
+        />
+
+        {/* <!-- iPhone 6 Plus portrait startup image --> */}
+        <link
+          href="/web-app-manifest-192x192.png"
+          media="(device-width: 414px) and (device-height: 736px)
+             and (-webkit-device-pixel-ratio: 3)
+             and (orientation: portrait)"
+          rel="apple-touch-startup-image"
+        />
+
+        {/* <!-- iPhone 6 Plus landscape startup image --> */}
+        <link
+          href="/web-app-manifest-192x192.png"
+          media="(device-width: 414px) and (device-height: 736px)
+             and (-webkit-device-pixel-ratio: 3)
+             and (orientation: landscape)"
+          rel="apple-touch-startup-image"
         />
       </head>
       <body className={`${inter.variable} ${nutino.variable}`}>
