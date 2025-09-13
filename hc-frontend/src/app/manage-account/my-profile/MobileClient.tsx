@@ -2,7 +2,6 @@
 
 import { Form, useFormikContext } from "formik";
 import { CircleAlert, CircleCheck, SquarePen } from "lucide-react";
-import WhatsAppIconSvg from "public/icons/whatsapp.svg";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
@@ -13,8 +12,7 @@ import { MobileHeader } from "@/layout-components";
 import { setHideStickyNavBar } from "@/store/appSlice";
 
 import { EmailVerifyIncentive } from "../components/EmailVerifyIncentive";
-
-const WhatsAppIcon = WhatsAppIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+import { SvgIcon } from "@/utility-components";
 
 interface MobileClientProps {
   savedValues: MyProfileFormValues;
@@ -87,7 +85,7 @@ export function MobileClient({
             type="button"
             onClick={() => setEditMode(true)}
             disabled={editMode}
-            className="justify-self-end rounded-full size-10 border flex items-center justify-center"
+            className="justify-self-end size-10 flex items-center justify-center"
           >
             <SquarePen size={20} />
           </button>
@@ -149,7 +147,7 @@ export function MobileClient({
               {/* WhatsApp toggle */}
               <label className="flex items-center gap-4 cursor-pointer w-full justify-between">
                 <div className="flex gap-1 items-center">
-                  <WhatsAppIcon className="w-10 h-10 text-black" />
+                  <SvgIcon iconSize="small" name="whatsapp" size={40} />
                   <span className="text-nowrap">Available on WhatsApp</span>
                 </div>
                 <div className="relative">

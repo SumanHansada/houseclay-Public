@@ -22,7 +22,6 @@ const WhyChoose = () => {
                 iconSize="small"
                 name="real-owners"
                 size={45}
-                color="#ef4444"
                 className="scale-90 md:scale-100 xl:scale-125"
               />
               <span>Real Owners</span>
@@ -32,7 +31,6 @@ const WhyChoose = () => {
                 iconSize="small"
                 name="instant-access"
                 size={45}
-                color="#ef4444"
                 className="scale-90 md:scale-100 xl:scale-125"
               />
               <span>Instant Access</span>
@@ -42,8 +40,6 @@ const WhyChoose = () => {
                 iconSize="medium"
                 name="no-forced-plans"
                 size={45}
-                // className="text-red-500"
-                color="#ef4444"
                 className="scale-90 md:scale-100 xl:scale-125"
               />
               <span>No Forced Plans</span>
@@ -62,7 +58,6 @@ const WhyChoose = () => {
               iconSize="small"
               name="curly-arrow"
               size={125}
-              color="#ef4444"
               className="scale-90 md:scale-100 xl:scale-110"
             />
           </div>

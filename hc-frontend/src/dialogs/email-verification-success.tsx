@@ -1,5 +1,4 @@
 import { X } from "lucide-react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import EmailVerifiedIconSvg from "public/icons/email-verified.svg";
 
@@ -10,6 +9,7 @@ import {
   DialogHeader,
 } from "@/components/Dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
+import { SvgIcon } from "@/utility-components";
 
 const EmailVerifiedIcon = EmailVerifiedIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
@@ -58,12 +58,7 @@ const EmailVerificationSuccessDialog: React.FC<
               Great job! Your email is now verified, and you&apos;ve
               earned&nbsp;
               <span className="inline-flex items-center align-middle gap-1 mx-1">
-                <Image
-                  src="/icons/coin.svg"
-                  alt="coin icon"
-                  width={18}
-                  height={18}
-                />
+                <SvgIcon iconSize="medium" name="coin" size={18} />
                 <b>1 Connect</b>
               </span>
               &nbsp;to help you list and manage your property.

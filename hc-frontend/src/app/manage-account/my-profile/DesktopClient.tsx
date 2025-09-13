@@ -2,15 +2,13 @@
 
 import { Form, useFormikContext } from "formik";
 import { CircleAlert, CircleCheck } from "lucide-react";
-import WhatsAppIconSvg from "public/icons/whatsapp.svg";
 
 import { getInitials } from "@/common/utils";
 import { FormPhoneField, FormTextField } from "@/form-components";
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
 
 import { EmailVerifyIncentive } from "../components/EmailVerifyIncentive";
-
-const WhatsAppIcon = WhatsAppIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+import { SvgIcon } from "@/utility-components";
 
 interface DesktopClientProps {
   savedValues: MyProfileFormValues;
@@ -101,7 +99,7 @@ export function DesktopClient({
               aria-disabled={editMode ? false : true}
             >
               <div className="flex gap-1 xl:gap-2 items-center">
-                <WhatsAppIcon className="w-10 h-10 text-black" />
+                <SvgIcon iconSize="small" name="whatsapp" size={45} />
                 <span className="text-nowrap">Available on WhatsApp</span>
               </div>
               <div className="relative">

@@ -1,9 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-// import { default as FairnessIconSvg } from "public/newIcons/fairness.svg";
-// import { default as SimplicityIconSvg } from "public/newIcons/simplicity.svg";
-// import { default as TransparencyIconSvg } from "public/newIcons/transparency.svg";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
@@ -11,14 +8,6 @@ import { Footer, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { setHideFooter, setHideHeader } from "@/store/appSlice";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
-
-// const TransparencyIcon = TransparencyIconSvg as React.FC<
-//   React.SVGProps<SVGSVGElement>
-// >;
-// const FairnessIcon = FairnessIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-// const SimplicityIcon = SimplicityIconSvg as React.FC<
-//   React.SVGProps<SVGSVGElement>
-// >;
 
 export default function AboutUsPage() {
   const router = useRouter();
@@ -110,7 +99,6 @@ export default function AboutUsPage() {
               {/* Card 1 */}
               <article className="flex-1 basis-0 min-w-0 2xl:max-w-[420px]">
                 <div className="h-full flex flex-col items-center text-center gap-4 sm:px-6 md:px-0 lg:px-6">
-                  {/* <TransparencyIcon width={110} height={110} /> */}
                   <SvgIcon iconSize="medium" name="transparency" size={110} />
                   <div className="space-y-2">
                     <h3 className="text-2xl md:text-3xl font-semibold">
@@ -128,7 +116,6 @@ export default function AboutUsPage() {
               {/* Card 2 */}
               <article className="flex-1 basis-0 min-w-0 2xl:max-w-[420px]">
                 <div className="h-full flex flex-col items-center text-center gap-4 sm:px-6 md:px-0 lg:px-6">
-                  {/* <FairnessIcon width={110} height={110} /> */}
                   <SvgIcon iconSize="medium" name="fairness" size={110} />
                   <div className="space-y-2">
                     <h3 className="text-2xl md:text-3xl font-semibold">
@@ -146,7 +133,6 @@ export default function AboutUsPage() {
               {/* Card 3 */}
               <article className="flex-1 basis-0 min-w-0 2xl:max-w-[420px]">
                 <div className="h-full flex flex-col items-center text-center gap-4 sm:px-6 md:px-0 lg:px-6">
-                  {/* <SimplicityIcon width={110} height={110} /> */}
                   <SvgIcon iconSize="medium" name="simplicity" size={110} />
                   <div className="space-y-2">
                     <h3 className="text-2xl md:text-3xl font-semibold">

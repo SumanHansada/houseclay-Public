@@ -93,7 +93,7 @@ export function MobileClient({
             type="button"
             onClick={() => setEditMode(true)}
             disabled={editMode}
-            className="justify-self-end rounded-full size-10 border flex items-center justify-center"
+            className="justify-self-end size-10 flex items-center justify-center"
           >
             <SquarePen size={20} />
           </button>

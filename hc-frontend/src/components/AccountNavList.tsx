@@ -58,7 +58,7 @@ export function AccountNavList({
       case "mobile":
         return {
           list: "bg-white w-full divide-y-2 divide-gray-200",
-          item: "gap-3 p-2 cursor-pointer w-full flex items-center",
+          item: "gap-3 py-2 cursor-pointer w-full flex items-center",
         };
       case "sidebar":
       default:
@@ -146,7 +146,7 @@ export function AccountNavList({
     const { label, NavIcon } = item;
 
     return (
-      <>
+      <div className="flex justify-between items-center w-full">
         {/* Icon */}
         <NavIcon
           width={iconSize}
@@ -155,7 +155,7 @@ export function AccountNavList({
         />
 
         <div
-          className={`flex justify-between items-center w-full transition-colors ${
+          className={`flex-1 flex justify-between items-center ml-2 lg:ml-3 transition-colors ${
             variant === "mobile"
               ? ""
               : `border-b-2 py-2 ${
@@ -179,7 +179,7 @@ export function AccountNavList({
           />
           {/* )} */}
         </div>
-      </>
+      </div>
     );
   };
 

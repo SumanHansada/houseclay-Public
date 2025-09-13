@@ -1,14 +1,11 @@
 "use client";
 
 import { CircleCheck, Ellipsis } from "lucide-react";
-import { useRef, useState } from "react";
-
 import { PropertyCategory } from "@/common/enums";
 import { formatINRCurrency } from "@/common/utils";
 import { MyProperty } from "@/interfaces/ManageAccount";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-
-import { MyPropertiesActionMenu } from "./MyPropertiesActionMenu";
+import { ActionMenu, type ActionOption } from "./ActionMenu";
 
 export interface PropertyCardProps extends MyProperty {
   onDashboard: (propertyId: string) => void;
@@ -28,20 +25,20 @@ export function PropertyCard({
   onMarkSold,
   onOpenDialog,
 }: PropertyCardProps) {
-  const [menuFor, setMenuFor] = useState<string | null>(null);
-  const buttonRef = useRef<HTMLButtonElement | null>(null);
   const { isMobile } = useDeviceContext();
 
   const isResale = category === PropertyCategory.RESALE;
   const amount = isResale ? price : rent;
 
-  const handleActionClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (isMobile) {
-      onOpenDialog(propertyID);
-    } else {
-      setMenuFor((cur) => (cur === propertyID ? null : propertyID));
-    }
+  // Desktop menu options
+  const options: ActionOption[] = [
+    { id: "dashboard", label: "Open Dashboard" },
+    { id: "sold", label: "Mark as Sold/Rented" },
+  ];
+
+  const handleSelect = (opt: ActionOption) => {
+    if (opt.id === "dashboard") onDashboard(propertyID);
+    if (opt.id === "sold") onMarkSold(propertyID);
   };
 
   return (
@@ -63,25 +60,30 @@ export function PropertyCard({
             <span className="py-1 px-2 border border-black rounded-lg text-sm">
               {category}
             </span>
+
+            {/* Mobile: open your existing dialog */}
             <button
-              ref={buttonRef}
-              aria-haspopup="menu"
-              aria-expanded={menuFor === propertyID}
-              onClick={handleActionClick}
-              className="inline-flex items-center justify-center rounded-md p-1 hover:bg-gray-100"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (isMobile) onOpenDialog(propertyID);
+              }}
+              className="md:hidden inline-flex items-center justify-center rounded-md p-1 hover:bg-gray-100"
+              aria-label="Open actions"
             >
               <Ellipsis size={25} />
             </button>
 
-            {/* Only show Actions menu for md and above */}
+            {/* Desktop: use ActionMenu (portal + fixed) */}
             <div className="max-md:hidden">
-              <MyPropertiesActionMenu
-                anchorEl={buttonRef.current}
-                open={menuFor === propertyID}
-                onClose={() => setMenuFor(null)}
-                onDashboard={() => onDashboard(propertyID)}
-                onMarkSold={() => onMarkSold(propertyID)}
-              />
+              <ActionMenu
+                options={options}
+                onSelect={handleSelect}
+                alignEnd
+                minWidthPx={180}
+                className="inline-flex items-center justify-center rounded-md p-1 hover:bg-gray-100"
+              >
+                <Ellipsis size={25} />
+              </ActionMenu>
             </div>
           </div>
         </div>

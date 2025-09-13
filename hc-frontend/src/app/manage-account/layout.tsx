@@ -35,7 +35,7 @@ export default function ManageProfileLayout({
           <h1 className="pb-6 text-3xl font-medium">Manage Account</h1>
           <div className="flex md:gap-6 lg:gap-8 xl:gap-24">
             <aside className="md:w-[320px] lg:w-[380px] xl:w-[460px]">
-              <AccountNavList items={ACCOUNT_NAV} />
+              <AccountNavList items={ACCOUNT_NAV} iconSize={36} />
             </aside>
             <main className="overflow-y-auto w-full">{children}</main>
           </div>
