@@ -1,11 +1,9 @@
 import { CircleCheck, CircleX, Download } from "lucide-react";
-import CoinIconSvg from "public/icons/coin.svg";
 
 import { PaymentFilterStatus } from "@/common/enums";
 import { Column, WebsiteDataTable } from "@/components/DataTable";
 import { MyTransaction } from "@/interfaces/ManageAccount";
-
-const CoinIcon = CoinIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+import { SvgIcon } from "@/utility-components";
 
 export const TransactionTable = ({
   transactions,
@@ -36,7 +34,7 @@ export const TransactionTable = ({
       render: (item) =>
         item.connects ? (
           <span className="flex items-center">
-            <CoinIcon width={20} height={20} />
+            <SvgIcon iconSize="medium" name="coin" size={20} />
             <span className="text-xl font-medium text-gray-700">
               {item.connects}
             </span>

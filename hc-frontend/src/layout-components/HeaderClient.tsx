@@ -5,14 +5,15 @@ import { Menu, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import CoinSvg from "public/icons/coin.svg";
-import HouseClaySvg from "public/icons/houseclay.svg";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { BENGALURU_LOCATION } from "@/common/constants";
 import { UserDropdown } from "@/components/UserDropdown";
 import { useLogout } from "@/hooks/useLogout";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { initializeToken } from "@/store/authSlice";
+import { SvgIcon } from "@/utility-components";
 
 import { RootState } from "../store/store";
 
@@ -24,7 +25,6 @@ export interface HeaderClientProps {
   user?: User;
 }
 
-const HouseClay = HouseClaySvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const Coin = CoinSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 const HeaderClient: React.FC<HeaderClientProps> = () => {
@@ -38,8 +38,6 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
   const { openDialog, closeAllDialogs } = useDialog();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
-  const bengaluruLocation = { lat: 12.9716, lng: 77.5946 };
 
   const onLogin = () => {
     closeAllDialogs();
@@ -63,22 +61,27 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
 
   return (
     <>
-      <header className="flex fixed top-0 left-0 right-0 bg-white z-50 justify-between w-full items-center py-2 shadow-sm xl:gap-32 lg:gap-16 md:gap-8 gap-8 xl:px-24 md:px-12 px-12 max-md:hidden mx-auto">
+      <header className="flex fixed top-0 left-0 right-0 bg-white z-50 justify-between w-full items-center py-2 shadow-sm xl:gap-32 lg:gap-16 md:gap-5 gap-8 xl:px-24 lg:px-12 md:px-8 px-12 max-md:hidden mx-auto">
         {/* Left Section - Logo */}
         <div className="flex items-center">
-          <Link href="/" className="flex items-center gap-1">
-            <HouseClay />
-            <span className="text-red-600 text-lg font-nunito font-bold">
-              HouseClay
+          <Link href="/" className="flex items-center gap-1 py-1">
+            <SvgIcon
+              iconSize="small"
+              name="houseclay"
+              size={34}
+              className="scale-90 lg:scale-100"
+            />
+            <span className="text-red-500 text-2xl lg:text-3xl font-inter font-bold">
+              houseclay
             </span>
           </Link>
         </div>
 
         {/* Center - Navigation */}
         <div className="flex justify-between items-center w-full text-sm">
-          <nav className="hidden md:flex xl:gap-12 lg:gap-6 md:gap-6 gap-6 text-gray-800">
+          <nav className="hidden md:flex xl:gap-8 lg:gap-4 md:gap-2 gap-3 text-gray-800 text-base lg:text-lg">
             <Link
-              href={`/property-search?lat=${bengaluruLocation.lat}&lon=${bengaluruLocation.lng}&propertyCategory=rent`}
+              href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=rent`}
               data-category="rent"
               data-active={
                 searchParams.get("propertyCategory") === "rent" ||
@@ -92,7 +95,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
               Rent
             </Link>
             <Link
-              href={`/property-search?lat=${bengaluruLocation.lat}&lon=${bengaluruLocation.lng}&propertyCategory=resale`}
+              href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=resale`}
               data-category="resale"
               data-active={
                 searchParams.get("propertyCategory") === "resale"
@@ -110,13 +113,13 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
             >
               Buy Connects
             </Link>
-            <Link href="#" className="hover:text-red-500 py-2">
+            <Link href="/about-us" className="hover:text-red-500 py-2">
               About Us
             </Link>
           </nav>
 
           {/* Right Section - Actions */}
-          <div className="flex items-center xl:gap-6 lg:gap-3 md:gap-2 gap-2">
+          <div className="flex items-center xl:gap-6 lg:gap-4 md:gap-2 gap-2">
             {/* List Property Button */}
             <Link
               href="/list-property"
@@ -161,9 +164,9 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
         <div className="flex items-center gap-2">
           <Menu role="button" onClick={onMenuClick} />
           <Link href="/" className="flex items-center gap-1">
-            <HouseClay />
-            <span className="text-red-600 text-lg font-nunito font-bold">
-              HouseClay
+            <SvgIcon iconSize="small" name="houseclay" size={26} />
+            <span className="text-red-500 text-2xl font-inter font-bold">
+              houseclay
             </span>
           </Link>
         </div>

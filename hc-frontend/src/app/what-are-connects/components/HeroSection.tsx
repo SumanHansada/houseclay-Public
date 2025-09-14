@@ -1,6 +1,3 @@
-import Image from "next/image";
-import bannerBackground from "public/images/banner-what-are-connects.webp";
-
 import { ImageWithLoader } from "@/utility-components";
 
 const HeroSection = () => (
@@ -8,11 +5,11 @@ const HeroSection = () => (
     {/* Desktop background */}
     <div className="absolute inset-0 max-md:hidden">
       <ImageWithLoader
-        src={bannerBackground.src}
+        src="/images/banner-what-are-connects.webp"
         alt="Banner Background"
         fill
-        className="!object-contain object-center"
-        sizes="(min-width:1536px) 1440px, 100vw"
+        className="object-center"
+        sizes="100vw"
         fetchPriority="high"
         priority
       />
@@ -25,21 +22,23 @@ const HeroSection = () => (
                     md:w-3/5 lg:w-7/12 xl:w-7/12 w-full"
     >
       <div>
-        <h1 className="font-bold text-gray-900 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
+        <h1 className="font-bold text-gray-900 text-2xl sm:text-3xl md:text-4xl lg:text-5xl 2xl:text-6xl">
           Say Goodbye to Subscriptions.
         </h1>
-        <h1 className="font-medium md:font-normal text-gray-800 text-2xl sm:text-4xl lg:text-5xl xl:text-6xl">
+        <h1 className="font-medium md:font-normal text-gray-800 text-2xl sm:text-4xl lg:text-5xl 2xl:text-6xl">
           Say Hello to Connects.
         </h1>
       </div>
 
-      <Image
-        src="/images/what-are-connects-banner-mobile.svg"
-        alt="Property Graphic"
-        width={500}
-        height={500}
-        className="w-full md:hidden"
-      />
+      <div className="relative aspect-[16/9] md:hidden rounded-xl overflow-hidden">
+        <ImageWithLoader
+          src="/images/banner-what-are-connects-mobile.webp"
+          alt="Property Graphic"
+          fill
+          className="object-center"
+          sizes="100vw"
+        />
+      </div>
     </div>
   </>
 );

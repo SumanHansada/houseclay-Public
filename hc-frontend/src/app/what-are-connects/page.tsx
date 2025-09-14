@@ -12,7 +12,7 @@ import {
   setHideStickyNavBar,
 } from "@/store/appSlice";
 
-import ConnectsFooter from "./components/ConnectsFooter";
+import ConnectsMobileFooter from "./components/ConnectsMobileFooter";
 import HeroSection from "./components/HeroSection";
 import HowToUseConnectsClient from "./components/HowToUseConnectsClient";
 import WhatAreConnects from "./components/WhatAreConnects";
@@ -41,7 +41,7 @@ export default function WhatAreConnectsPage() {
 
       <div className="w-full">
         {/* Hero Section */}
-        <section className="relative w-full md:aspect-[15/4]">
+        <section className="relative w-full md:aspect-[3/1] xl:aspect-[15/4]">
           <HeroSection />
         </section>
 
@@ -66,7 +66,9 @@ export default function WhatAreConnectsPage() {
         </div>
       </div>
 
-      <ConnectsFooter onBuyConnects={() => router.push("/buy-connects")} />
+      <ConnectsMobileFooter
+        onBuyConnects={() => router.push("/buy-connects")}
+      />
     </>
   );
 }

@@ -2,7 +2,6 @@
 
 import { Form, useFormikContext } from "formik";
 import { CircleAlert, CircleCheck, SquarePen } from "lucide-react";
-import WhatsAppIconSvg from "public/icons/whatsapp.svg";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
@@ -11,10 +10,9 @@ import { FormPhoneField, FormTextField } from "@/form-components";
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
 import { MobileHeader } from "@/layout-components";
 import { setHideStickyNavBar } from "@/store/appSlice";
+import { SvgIcon } from "@/utility-components";
 
 import { EmailVerifyIncentive } from "../components/EmailVerifyIncentive";
-
-const WhatsAppIcon = WhatsAppIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 interface MobileClientProps {
   savedValues: MyProfileFormValues;
@@ -28,7 +26,7 @@ function VerifiedBadge({ isVerified }: { isVerified: boolean }) {
   return (
     <span className="inline-flex items-center gap-1 text-sm">
       {isVerified ? (
-        <CircleCheck size={25} className="text-white fill-lime-500" />
+        <CircleCheck size={25} className="text-white fill-green-600" />
       ) : (
         <CircleAlert size={25} className="text-white fill-red-600" />
       )}
@@ -87,7 +85,7 @@ export function MobileClient({
             type="button"
             onClick={() => setEditMode(true)}
             disabled={editMode}
-            className="justify-self-end rounded-full size-10 border flex items-center justify-center"
+            className="justify-self-end size-10 flex items-center justify-center"
           >
             <SquarePen size={20} />
           </button>
@@ -131,7 +129,7 @@ export function MobileClient({
                   <p className="text-green-600 mt-1 flex items-center gap-1">
                     <CircleCheck
                       size={20}
-                      className="text-white fill-lime-500"
+                      className="text-white fill-green-600"
                     />
                     Verified
                   </p>
@@ -149,7 +147,7 @@ export function MobileClient({
               {/* WhatsApp toggle */}
               <label className="flex items-center gap-4 cursor-pointer w-full justify-between">
                 <div className="flex gap-1 items-center">
-                  <WhatsAppIcon className="w-10 h-10 text-black" />
+                  <SvgIcon iconSize="small" name="whatsapp" size={40} />
                   <span className="text-nowrap">Available on WhatsApp</span>
                 </div>
                 <div className="relative">
@@ -180,7 +178,10 @@ export function MobileClient({
               />
               {values.emailVerified ? (
                 <p className="text-green-600 mt-1 flex items-center gap-1">
-                  <CircleCheck size={25} className="text-white fill-lime-500" />
+                  <CircleCheck
+                    size={25}
+                    className="text-white fill-green-600"
+                  />
                   Verified
                 </p>
               ) : (

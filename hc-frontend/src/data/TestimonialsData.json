@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "name": "Samir T.",
+    "initial": "S",
+    "avatar": "/people/daniel.png",
+    "rating": 5,
+    "content": "Finding the perfect home felt effortless with HouseClay. The team was incredibly supportive, guiding me through every step and providing all the resources I needed."
+  },
+  {
+    "id": 2,
+    "name": "Rajesh M.",
+    "initial": "R",
+    "avatar": "/people/garry.png",
+    "rating": 5,
+    "content": "The extensive listings, along with accurate property details and legal assistance, made this a smooth, stress-free journey."
+  },
+  {
+    "id": 3,
+    "name": "Aditya C.",
+    "initial": "A",
+    "avatar": "/people/tommy.png",
+    "rating": 5,
+    "content": "The verified properties and transparent details made all the difference. Their commitment to quality and customer support reassured me, and I'm thrilled with my purchase."
+  },
+  {
+    "id": 4,
+    "name": "Priya K.",
+    "initial": "P",
+    "avatar": "/people/garry.png",
+    "rating": 4,
+    "content": "As a first-time buyer, I was nervous about the process. The team at HouseClay made everything so simple and straightforward. Couldn't be happier!"
+  },
+  {
+    "id": 5,
+    "name": "Vikram S.",
+    "initial": "V",
+    "avatar": "/people/tommy.png",
+    "rating": 5,
+    "content": "After months of searching elsewhere, I found my dream apartment within two weeks of using this platform. The filters and neighborhood insights were game-changers."
+  },
+  {
+    "id": 6,
+    "name": "Vikram S.",
+    "initial": "V",
+    "avatar": "/people/tommy.png",
+    "rating": 5,
+    "content": "After months of searching elsewhere, I found my dream apartment within two weeks of using this platform. The filters and neighborhood insights were game-changers."
+  },
+  {
+    "id": 7,
+    "name": "Vikram S.",
+    "initial": "V",
+    "avatar": "/people/tommy.png",
+    "rating": 5,
+    "content": "After months of searching elsewhere, I found my dream apartment within two weeks of using this platform. The filters and neighborhood insights were game-changers."
+  },
+  {
+    "id": 8,
+    "name": "Vikram S.",
+    "initial": "V",
+    "avatar": "/people/tommy.png",
+    "rating": 5,
+    "content": "After months of searching elsewhere, I found my dream apartment within two weeks of using this platform. The filters and neighborhood insights were game-changers."
+  },
+  {
+    "id": 9,
+    "name": "Rajesh M.",
+    "initial": "R",
+    "avatar": "/people/garry.png",
+    "rating": 5,
+    "content": "The extensive listings, along with accurate property details and legal assistance, made this a smooth, stress-free journey."
+  },
+  {
+    "id": 10,
+    "name": "Rajesh M.",
+    "initial": "R",
+    "avatar": "/people/garry.png",
+    "rating": 5,
+    "content": "The extensive listings, along with accurate property details and legal assistance, made this a smooth, stress-free journey."
+  },
+  {
+    "id": 11,
+    "name": "Rajesh M.",
+    "initial": "R",
+    "avatar": "/people/garry.png",
+    "rating": 5,
+    "content": "The extensive listings, along with accurate property details and legal assistance, made this a smooth, stress-free journey."
+  },
+  {
+    "id": 12,
+    "name": "Rajesh M.",
+    "initial": "R",
+    "avatar": "/people/garry.png",
+    "rating": 5,
+    "content": "The extensive listings, along with accurate property details and legal assistance, made this a smooth, stress-free journey."
+  }
+]

@@ -1,9 +1,6 @@
 "use client";
-import Image from "next/image";
+
 import { useRouter } from "next/navigation";
-import { default as InstantAccessSvg } from "public/icons/static-pages/instant-access.svg";
-import { default as NoForcedPlansSvg } from "public/icons/static-pages/no-forced-plans.svg";
-import { default as RealOwnersSvg } from "public/icons/static-pages/real-owners.svg";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -15,17 +12,7 @@ import {
   setHideStickyNavBar,
 } from "@/store/appSlice";
 import { RootState } from "@/store/store";
-import { ImageWithLoader } from "@/utility-components";
-
-// Test
-
-const RealOwners = RealOwnersSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const InstantAccess = InstantAccessSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const NoForcedPlans = NoForcedPlansSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
+import { SvgIcon } from "@/utility-components";
 
 export default function ConnectsPage() {
   const router = useRouter();
@@ -56,34 +43,22 @@ export default function ConnectsPage() {
           <h1 className="text-2xl font-medium">Connects</h1>
         </div>
 
-        <div className="flex mb-10">
-          <div className="flex justify-between w-2/3 md:w-full py-4 px-2 lg:px-8 bg-red-50 rounded-lg">
-            <div className="flex gap-4 items-center">
-              <Image
-                src="/icons/coin.svg"
-                alt="coin icon"
-                width={40}
-                height={40}
-              />
-              <span className="max-md:hidden text-lg">Available Connects</span>
+        <div className="flex justify-between w-full py-4 px-3 lg:px-8 bg-red-50 rounded-lg mb-10">
+          <div className="flex items-center gap-4">
+            <span className="text-lg lg:text-xl">Available Connects</span>
+            <div className="flex gap-1 items-center">
+              <SvgIcon iconSize="medium" name="coin" size={34} />
               <span className="text-gray-700 text-2xl font-medium">
                 {connectBalance}
               </span>
             </div>
-            <button
-              className="border border-red-500 rounded-xl px-4 py-2 text-red-500 hover:bg-red-500 hover:text-white"
-              onClick={() => router.push("/buy-connects")}
-            >
-              Buy more
-            </button>
           </div>
-          <ImageWithLoader
-            src="/icons/static-pages/how-to-use-connects.svg"
-            alt="how to use connects"
-            width={80}
-            height={80}
-            className="m-auto md:hidden"
-          />
+          <button
+            className="border border-red-500 rounded-xl px-4 py-2 text-red-500 hover:bg-red-500 hover:text-white"
+            onClick={() => router.push("/buy-connects")}
+          >
+            Buy more
+          </button>
         </div>
 
         <div className="flex">
@@ -101,14 +76,12 @@ export default function ConnectsPage() {
             </div>
             <div className="space-y-6 lg:space-y-8 md:px-2 lg:px-4 text-lg lg:text-xl mb-2">
               <div className="flex gap-4 items-center">
-                <div>
-                  <InstantAccess
-                    width={50}
-                    height={50}
-                    className="text-red-500"
-                    aria-label="Instant Access"
-                  />
-                </div>
+                <SvgIcon
+                  iconSize="small"
+                  name="instant-access"
+                  size={45}
+                  className="scale-90 md:scale-100 xl:scale-125"
+                />
                 <div>
                   <h1 className="font-medium text-lg">Unlock Owner Details</h1>
                   <p className="text-base text-gray-700 font-light">
@@ -117,14 +90,12 @@ export default function ConnectsPage() {
                 </div>
               </div>
               <div className="flex gap-4 items-center">
-                <div>
-                  <RealOwners
-                    width={50}
-                    height={50}
-                    className="text-red-500"
-                    aria-label="Real owners"
-                  />
-                </div>
+                <SvgIcon
+                  iconSize="small"
+                  name="real-owners"
+                  size={45}
+                  className="scale-90 md:scale-100 xl:scale-125"
+                />
 
                 <div>
                   <h1 className="font-medium text-lg">
@@ -136,15 +107,12 @@ export default function ConnectsPage() {
                 </div>
               </div>
               <div className="flex gap-4 items-center">
-                <div>
-                  <NoForcedPlans
-                    width={50}
-                    height={50}
-                    className="text-red-500"
-                    aria-label="No Forced Plans"
-                  />
-                </div>
-
+                <SvgIcon
+                  iconSize="medium"
+                  name="no-forced-plans"
+                  size={45}
+                  className="scale-90 md:scale-100 xl:scale-125"
+                />
                 <span>
                   <h1 className="font-medium text-lg">
                     Upgrade to Property Management
@@ -162,14 +130,8 @@ export default function ConnectsPage() {
               Know more about connects
             </button>
           </div>
-          <div className="lg:w-1/3 max-lg:hidden m-auto">
-            <Image
-              src="/icons/static-pages/how-to-use-connects.svg"
-              alt="how to use connects"
-              width={100}
-              height={100}
-              className="w-full h-full object-scale-down"
-            />
+          <div className="lg:w-1/3 max-lg:hidden lg:pt-12 2xl:pt-0">
+            <SvgIcon iconSize="large" name="how-to-use-connects" size={380} />
           </div>
         </div>
       </section>
@@ -182,29 +144,20 @@ export default function ConnectsPage() {
         <div className="px-6 pb-20 pt-4">
           <div className="flex justify-between items-start w-full py-4 rounded-lg mb-4">
             {/* Available Connects */}
-            <div className="flex gap-2 items-center w-2/3 justify-between">
+            <div className="flex flex-col gap-2 justify-between">
               <span className="font-medium text-xl">Your Connects</span>
-              <div className="text-lg flex items-center">
-                <ImageWithLoader
-                  src="/icons/coin.svg"
-                  alt="coin icon"
-                  width={32}
-                  height={32}
-                />
+              <div className="flex items-center text-lg">
+                <SvgIcon iconSize="medium" name="coin" size={32} />
                 <span className="text-gray-700 text-2xl font-medium">
                   {connectBalance}
                 </span>
               </div>
             </div>
-            <div>
-              <ImageWithLoader
-                src="/icons/static-pages/how-to-use-connects.svg"
-                alt="how to use connects"
-                width={80}
-                height={80}
-                className=""
-              />
-            </div>
+            <SvgIcon
+              iconSize="large"
+              name="how-to-use-connects-mobile"
+              size={140}
+            />
           </div>
 
           <div className="w-full space-y-6">
@@ -219,14 +172,12 @@ export default function ConnectsPage() {
             </div>
             <div className="space-y-4 mb-2">
               <div className="flex gap-2 items-center">
-                <div>
-                  <InstantAccess
-                    width={50}
-                    height={50}
-                    className="text-red-500"
-                    aria-label="Instant Access"
-                  />
-                </div>
+                <SvgIcon
+                  iconSize="small"
+                  name="instant-access"
+                  size={45}
+                  className="scale-90 md:scale-100 xl:scale-125"
+                />
                 <div>
                   <h1 className="font-medium">Unlock Owner Details</h1>
                   <p className="text-sm text-gray-700 font-light">
@@ -235,14 +186,12 @@ export default function ConnectsPage() {
                 </div>
               </div>
               <div className="flex gap-2 items-center">
-                <div>
-                  <RealOwners
-                    width={50}
-                    height={50}
-                    className="text-red-500"
-                    aria-label="Real owners"
-                  />
-                </div>
+                <SvgIcon
+                  iconSize="small"
+                  name="real-owners"
+                  size={45}
+                  className="scale-90 md:scale-100 xl:scale-125"
+                />
 
                 <div>
                   <h1 className="font-medium">Access Additional Services</h1>
@@ -252,14 +201,12 @@ export default function ConnectsPage() {
                 </div>
               </div>
               <div className="flex gap-2 items-center">
-                <div>
-                  <NoForcedPlans
-                    width={50}
-                    height={50}
-                    className="text-red-500"
-                    aria-label="No Forced Plans"
-                  />
-                </div>
+                <SvgIcon
+                  iconSize="medium"
+                  name="no-forced-plans"
+                  size={45}
+                  className="scale-90 md:scale-100 xl:scale-125"
+                />
                 <span>
                   <h1 className="font-medium">
                     Upgrade to Property Management

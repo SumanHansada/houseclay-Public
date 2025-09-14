@@ -31,7 +31,7 @@ const nutino = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "HouseClay",
+  title: "houseclay",
   description: "No Middleman, Just Connects",
 };
 

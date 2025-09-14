@@ -1,7 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-    <rect width="24" height="24" fill="#ea3934" rx="3"/>
-    <path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width=".722" d="M12.839 14.63h1.685M9.95 14.63h1.444"/>
-    <rect width="1.444" height="1.444" x="13.32" y="10.296" fill="#fff" rx=".722"/>
-    <rect width="1.444" height="1.444" x="9.469" y="10.296" fill="#fff" rx=".722"/>
-    <path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.204" d="M9.95 12.845v4.914a.24.24 0 0 1-.24.241H5.856a.24.24 0 0 1-.24-.24v-7.712a.24.24 0 0 1 .091-.19l6.04-4.745a.24.24 0 0 1 .292-.005l6.478 4.75a.24.24 0 0 1 .098.195v7.706a.24.24 0 0 1-.24.241h-3.852a.24.24 0 0 1-.24-.24v-4.915"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 31 31"><rect width="31" height="31" fill="#ef4a50" rx="4.502"/><path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.125" d="M16.978 20.153h2.584M12.547 20.153h2.215"/><rect width="2.215" height="2.163" x="17.715" y="13.665" fill="#fff" rx="1.081"/><rect width="2.215" height="2.163" x="11.81" y="13.665" fill="#fff" rx="1.081"/><path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.876" d="M12.547 17.48v7.344a.375.375 0 0 1-.375.375H6.279a.375.375 0 0 1-.375-.375V13.303c0-.117.055-.227.147-.298l9.253-7.101a.375.375 0 0 1 .447-.008l9.925 7.11c.099.07.157.184.157.304v11.514a.375.375 0 0 1-.375.375h-5.893a.375.375 0 0 1-.375-.375v-7.343"/></svg>

@@ -1,12 +1,12 @@
 "use client";
 
 import { Mail, PhoneCall } from "lucide-react";
-import Image from "next/image";
 import { useState } from "react";
 
 import { SUPPORT_CONTACT, SUPPORT_EMAIL } from "@/common/constants";
-import { SUPPORT_ACCORDION } from "@/common/dataConstants";
+import { default as ACCORDION_DATA } from "@/data/SupportAccordionData.json";
 import { MobileHeader } from "@/layout-components";
+import { SvgIcon } from "@/utility-components";
 
 import { Accordion } from "../components/Accordion";
 
@@ -31,13 +31,7 @@ export default function SupportPage() {
             </p>
             <div className="flex items-center gap-4">
               <div className="flex items-center">
-                <Image
-                  src="/icons/static-pages/contact-support.svg"
-                  alt="contact support"
-                  width={360}
-                  height={360}
-                  className="max-lg:m-auto"
-                />
+                <SvgIcon iconSize="large" name="contact-support" size={360} />
               </div>
               <div className="text-lg">
                 <p className="w-11/12 mb-8 tracking-wide max-lg:hidden">
@@ -84,7 +78,7 @@ export default function SupportPage() {
             </div>
 
             <div className="flex flex-col gap-5">
-              {SUPPORT_ACCORDION.map((item) => {
+              {ACCORDION_DATA.map((item) => {
                 const key = item.question;
                 const isOpen = openKey === key;
                 return (
@@ -116,13 +110,7 @@ export default function SupportPage() {
 
             <div className="flex gap-2 w-full items-center">
               <div className="w-1/3 sm:w-2/5">
-                <Image
-                  src="/icons/static-pages/contact-support.svg"
-                  alt="contact support"
-                  width={200}
-                  height={200}
-                  className="m-auto"
-                />
+                <SvgIcon iconSize="large" name="contact-support" size={200} />
               </div>
               <div className="w-2/3 sm:w-3/5 p-1">
                 <a
@@ -173,7 +161,7 @@ export default function SupportPage() {
             </div>
 
             <div className="flex flex-col gap-3 py-5">
-              {SUPPORT_ACCORDION.map((item) => {
+              {ACCORDION_DATA.map((item) => {
                 const key = item.question;
                 const isOpen = openKey === key;
                 return (

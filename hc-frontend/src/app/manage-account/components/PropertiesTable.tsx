@@ -1,13 +1,12 @@
 "use client";
 
 import { CircleCheck, Ellipsis } from "lucide-react";
-import { useRef, useState } from "react";
 
 import { PropertyCategory } from "@/common/enums";
 import { formatINRCurrency } from "@/common/utils";
 import { Column, WebsiteDataTable } from "@/components/DataTable";
 
-import { MyPropertiesActionMenu } from "./MyPropertiesActionMenu";
+import { ActionMenu, type ActionOption } from "./ActionMenu";
 
 interface Property {
   propertyID: string;
@@ -29,9 +28,6 @@ export function PropertyTable({
   onDashboard: (propertyId: string) => void;
   onMarkSold: (propertyId: string) => void;
 }) {
-  const [menuFor, setMenuFor] = useState<string | null>(null);
-  const buttonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-
   const columns: Column<Property>[] = [
     {
       key: "propertyName",
@@ -105,31 +101,22 @@ export function PropertyTable({
       headerClassName: "w-[8%] text-center",
       cellClassName: "w-[8%] text-center",
       render: (item) => (
-        <div className="relative inline-flex">
-          <button
-            ref={(el) => {
-              buttonRefs.current[item.propertyID] = el;
-            }}
-            aria-haspopup="menu"
-            aria-expanded={menuFor === item.propertyID}
-            onClick={(e) => {
-              e.stopPropagation();
-              setMenuFor((cur) =>
-                cur === item.propertyID ? null : item.propertyID,
-              );
+        <div className="inline-flex">
+          <ActionMenu<ActionOption>
+            alignEnd
+            minWidthPx={180}
+            options={[
+              { id: "dashboard", label: "Open Dashboard" },
+              { id: "sold", label: "Mark as Sold/Rented" },
+            ]}
+            onSelect={(opt: ActionOption) => {
+              if (opt.id === "dashboard") onDashboard(item.propertyID);
+              if (opt.id === "sold") onMarkSold(item.propertyID);
             }}
             className="inline-flex items-center justify-center rounded-md p-1 hover:bg-gray-100"
           >
-            <Ellipsis size={25} />
-          </button>
-
-          <MyPropertiesActionMenu
-            anchorEl={buttonRefs.current[item.propertyID] ?? null}
-            open={menuFor === item.propertyID}
-            onClose={() => setMenuFor(null)}
-            onDashboard={() => onDashboard(item.propertyID)}
-            onMarkSold={() => onMarkSold(item.propertyID)}
-          />
+            <Ellipsis size={24} />
+          </ActionMenu>
         </div>
       ),
     },
