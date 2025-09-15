@@ -13,7 +13,7 @@ import ConnectsBundleCard from "@/components/ConnectsBundleCard";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import ConnectsBundleData from "@/data/ConnectsBundleData.json";
 import VerifyConnectsDialog from "@/dialogs/verify-connects-dialog";
-import MobileHeader from "@/layout-components/MobileHeader";
+import { MobileFooter, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -41,7 +41,7 @@ export default function BuyConnectsPage() {
   const { isMobile } = useDeviceContext();
   const { isDialogOpen, closeDialog, openDialog } = useDialog();
   const [paymentStatus, setPaymentStatus] = useState<PaymentVerificationStatus>(
-    PaymentVerificationStatus.SUCCESS,
+    PaymentVerificationStatus.VERIFYING,
   );
   const [newConnectBalanceFromAPI, setNewConnectBalanceFromAPI] = useState(0);
 
@@ -149,6 +149,18 @@ export default function BuyConnectsPage() {
     } catch (error) {
       console.error("Error creating payment order:", error);
     }
+  };
+
+  const handleVerifyConnectsDialogClose = () => {
+    if (paymentStatus === PaymentVerificationStatus.VERIFYING) {
+      // Don't allow closing during verification
+      return;
+    }
+    if (paymentStatus === PaymentVerificationStatus.SUCCESS) {
+      dispatch(setConnectBal(newConnectBalanceFromAPI));
+    }
+    closeDialog("verify-connects-dialog");
+    router.push("/manage-account/connects");
   };
 
   return (
@@ -384,7 +396,7 @@ export default function BuyConnectsPage() {
       {/* Mobile */}
       <section className="w-full md:hidden">
         {/* Mobile Header */}
-        <MobileHeader title="Buy Connects" />
+        <MobileHeader title="Buy Connects" onBack={() => router.back()} />
         <div className="px-6 pb-16 pt-4">
           <div className="flex justify-between items-start w-full py-4 rounded-lg mb-4">
             {/* Available Connects */}
@@ -507,7 +519,7 @@ export default function BuyConnectsPage() {
           </div>
         </div>
       </section>
-      <footer className="fixed bottom-0 left-0 md:hidden right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
+      <MobileFooter>
         <div className="flex flex-col justify-around items-start w-full">
           <div className="text-gray-600 text-xs">Total Amount</div>
           <div className="text-sm font-bold flex gap-2 items-center">
@@ -525,7 +537,7 @@ export default function BuyConnectsPage() {
         >
           Proceed to Pay
         </button>
-      </footer>
+      </MobileFooter>
 
       {/* Connects Price Dialog */}
       {isDialogOpen("connects-price-breakdown-dialog") && (
@@ -593,7 +605,7 @@ export default function BuyConnectsPage() {
                 </span>
               </div>
             </div>
-            <footer className="relative bottom-0 left-0 ml-[33.33%] max-md:ml-auto right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
+            <MobileFooter>
               <div className="flex flex-col justify-around items-start w-full">
                 <div className="text-gray-600 text-xs">Total Amount</div>
                 <div className="text-sm font-bold flex gap-2 items-center">
@@ -606,7 +618,7 @@ export default function BuyConnectsPage() {
               >
                 Proceed to Pay
               </button>
-            </footer>
+            </MobileFooter>
           </DialogContent>
         </Dialog>
       )}
@@ -617,16 +629,7 @@ export default function BuyConnectsPage() {
           id="verify-connects-dialog"
           status={paymentStatus}
           connects={currentBundle ? currentBundle.connects : customConnects}
-          onClose={() => {
-            if (paymentStatus === PaymentVerificationStatus.VERIFYING) {
-              // Don't allow closing during verification
-              return;
-            }
-            if (paymentStatus === PaymentVerificationStatus.SUCCESS) {
-              dispatch(setConnectBal(newConnectBalanceFromAPI));
-            }
-            closeDialog("verify-connects-dialog");
-          }}
+          onClose={handleVerifyConnectsDialogClose}
         />
       )}
     </>

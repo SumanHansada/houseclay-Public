@@ -27,6 +27,7 @@ export default {
         "safe-right": "env(safe-area-inset-right)",
         "safe-bottom": "env(safe-area-inset-bottom)",
         "safe-left": "env(safe-area-inset-left)",
+        "safe-bottom-2": "calc(env(safe-area-inset-bottom) + 0.5rem)",
       },
       colors: {
         background: "var(--background)",
