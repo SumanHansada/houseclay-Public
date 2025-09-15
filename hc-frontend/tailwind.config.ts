@@ -17,7 +17,16 @@ export default {
   theme: {
     extend: {
       fontSize: {
+        // Smaller fonts
         xxs: "0.625rem", // 10px
+        xxxs: "0.5rem", // 8px
+      },
+      spacing: {
+        // Safe area variables
+        "safe-top": "env(safe-area-inset-top)",
+        "safe-right": "env(safe-area-inset-right)",
+        "safe-bottom": "env(safe-area-inset-bottom)",
+        "safe-left": "env(safe-area-inset-left)",
       },
       colors: {
         background: "var(--background)",

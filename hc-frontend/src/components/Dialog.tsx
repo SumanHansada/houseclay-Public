@@ -182,4 +182,6 @@ export const DialogContent: React.FC<{ children: React.ReactNode }> = ({
 
 export const DialogFooter: React.FC<{ children: React.ReactNode }> = ({
   children,
-}) => <div className="border-t border-gray-200 flex">{children}</div>;
+}) => (
+  <div className="border-t border-gray-200 flex pb-safe-bottom">{children}</div>
+);

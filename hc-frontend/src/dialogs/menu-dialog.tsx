@@ -123,7 +123,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
         <div className="px-6 py-4 flex flex-col gap-8">
           {/* Profile Section */}
           {token && (
-            <div className="flex items-center p-4 gap-4 border border-gray-100 rounded-full shadow-lg inset-shadow-xs">
+            <div className="flex items-center p-4 gap-4 border border-gray-200 rounded-full shadow-lg inset-shadow-xs">
               <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-white">
                 <UserRound size={32} />
               </div>
@@ -139,7 +139,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
           {/* Property Banner */}
           <div
             onClick={handlePropertyBannerClick}
-            className="relative px-4 py-6 border-t border-gray-100 rounded-xl shadow-lg inset-shadow-xs flex justify-between overflow-hidden "
+            className="relative px-4 py-6 border border-gray-200 rounded-xl shadow-lg inset-shadow-xs flex justify-between overflow-hidden "
           >
             <div className="flex flex-col justify-between items-start gap-4">
               <h2 className="relative text-base font-bold z-10">

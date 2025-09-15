@@ -118,7 +118,7 @@ const HomeSearchBar: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      className="flex pl-4 pr-2 rounded-full bg-white shadow-lg justify-between items-center md:h-16 h-14"
+      className="flex pl-4 pr-2 rounded-full border border-gray-200 bg-white shadow-lg inset-shadow-xs justify-between items-center md:h-16 h-14"
     >
       {/* City */}
       <div className="w-1/4 px-3 py-2 border-r border-gray-200 max-md:hidden">

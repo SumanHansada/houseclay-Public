@@ -89,7 +89,7 @@ const MastHeadMobile: React.FC = () => {
       <div className="grid grid-cols-4 gap-4 place-items-start">
         <div className="flex flex-col items-center justify-center self-start justify-self-center">
           <button
-            className="bg-white p-4 rounded-2xl shadow-lg justify-center items-center "
+            className="bg-white p-4 border border-gray-200 rounded-2xl shadow-lg justify-center items-center "
             role="button"
           >
             <div className="rounded-full">
@@ -103,7 +103,7 @@ const MastHeadMobile: React.FC = () => {
 
         <div className="flex flex-col items-center justify-center self-start justify-self-center">
           <button
-            className="bg-white p-4 rounded-2xl shadow-lg justify-center items-center"
+            className="bg-white p-4 border border-gray-200 rounded-2xl shadow-lg justify-center items-center"
             role="button"
           >
             <div className="rounded-full">
@@ -117,7 +117,7 @@ const MastHeadMobile: React.FC = () => {
 
         <div className="flex flex-col items-center justify-center self-start justify-self-center">
           <button
-            className="bg-white p-4 rounded-2xl shadow-lg justify-center items-center"
+            className="bg-white p-4 border border-gray-200 rounded-2xl shadow-lg justify-center items-center"
             role="button"
             onClick={() => openDialog("standouts-dialog")}
           >
@@ -132,7 +132,7 @@ const MastHeadMobile: React.FC = () => {
 
         <div className="flex flex-col items-center justify-center self-start justify-self-center">
           <button
-            className="bg-white p-4 rounded-2xl shadow-lg justify-center items-center relative"
+            className="bg-white p-4 border border-gray-200 rounded-2xl shadow-lg justify-center items-center relative"
             onClick={() => router.push("/list-property")}
             role="button"
           >
