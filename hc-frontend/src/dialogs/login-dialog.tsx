@@ -9,6 +9,8 @@ import Login from "@/components/Login";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
+import { MobileHeader } from "@/layout-components";
+import { useRouter } from "next/navigation";
 
 interface LoginDialogProps {
   id: string;
@@ -18,6 +20,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ id }) => {
   const { closeDialog } = useDialog();
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
+  const router = useRouter();
 
   useEffect(() => {
     dispatch(setHideStickyNavBar(true));
@@ -35,6 +38,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ id }) => {
     <Dialog
       id={id}
       type={isMobile ? "fullscreen" : "card"}
+      width={isMobile ? 100 : 45}
       onClose={handleClose}
       entryAnimation={isMobile ? "animate-slide-in-right" : "animate-fade-in"}
       exitAnimation={isMobile ? "animate-slide-out-right" : "animate-fade-out"}
@@ -43,14 +47,19 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ id }) => {
         <div
           className={`${isMobile ? "py-2 px-8" : ""}  flex flex-col justify-between items-center w-full`}
         >
-          {isMobile && (
-            <h1 className="text-xl py-1.5 text-black">
-              Log In to Your Account
-            </h1>
+          {isMobile ? (
+            <MobileHeader
+              title="Log In to Your Account"
+              onBack={() => router.back()}
+            />
+          ) : (
+            <button
+              className="absolute top-4 right-4 rounded-full p-2 border border-gray-200"
+              onClick={handleClose}
+            >
+              <X size={24} />
+            </button>
           )}
-          <button className="absolute top-4 right-4 rounded-full">
-            <X onClick={handleClose} size={24} />
-          </button>
         </div>
       </DialogHeader>
       <DialogContent>

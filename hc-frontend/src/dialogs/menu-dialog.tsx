@@ -21,7 +21,6 @@ import { AccountNavList } from "@/components/AccountNavList";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { useLogout } from "@/hooks/useLogout";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { setHideStickyNavBar } from "@/store/appSlice";
 import { setLoginFromAddProperty } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
@@ -55,8 +54,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
 
   const handleClose = useCallback(() => {
     closeDialog(id);
-    // dispatch(setHideStickyNavBar(false));
-  }, [closeDialog, id, dispatch]);
+  }, [closeDialog, id]);
 
   const onLogin = () => {
     dispatch(setLoginFromAddProperty(true));

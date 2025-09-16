@@ -3,22 +3,22 @@
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
 
 import { BadgeType, PropertyCategory } from "@/common/enums";
 import Properties from "@/components/Properties";
 import { MobileHeader } from "@/layout-components";
-
-import {
-  DUMMY_PROPERTIES_FOR_PROPERTY_CARD,
-  PropertyCardDummy,
-} from "../dummy";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { useDispatch } from "react-redux";
 import {
   setHideFooter,
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
+
+import {
+  DUMMY_PROPERTIES_FOR_PROPERTY_CARD,
+  PropertyCardDummy,
+} from "../dummy";
 
 const filterOptions = [
   { label: "All", value: PropertyCategory.NONE },

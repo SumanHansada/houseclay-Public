@@ -1,20 +1,20 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
 
 import { PaymentFilterStatus } from "@/common/enums";
 import { MobileHeader } from "@/layout-components";
-
-import { TransactionCardList } from "../components/TransactionCardList";
-import { TransactionTable } from "../components/TransactionTable";
-import { DUMMY_PAYMENTS } from "../dummy";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { useDispatch } from "react-redux";
 import {
   setHideFooter,
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
+
+import { TransactionCardList } from "../components/TransactionCardList";
+import { TransactionTable } from "../components/TransactionTable";
+import { DUMMY_PAYMENTS } from "../dummy";
 
 const filterOptions = [
   { label: "All", value: PaymentFilterStatus.ALL },

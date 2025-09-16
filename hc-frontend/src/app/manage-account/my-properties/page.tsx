@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { PropertyCategory } from "@/common/enums";
 import MyPropertyActionsDialog from "@/dialogs/my-property-actions";
 import { MobileHeader } from "@/layout-components";
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   setHideFooter,
@@ -17,7 +18,6 @@ import {
 import { PropertyTable } from "../components/PropertiesTable";
 import { PropertyCardList } from "../components/PropertyCardList";
 import { MY_DUMMY_PROPERTIES } from "../dummy";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
 
 const filterOptions = [
   { label: "All", value: PropertyCategory.NONE },
