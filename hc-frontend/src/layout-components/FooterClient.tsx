@@ -44,10 +44,10 @@ const FooterClient: React.FC = () => {
                     <SvgIcon
                       iconSize="small"
                       name="houseclay"
-                      size={34}
+                      size={28}
                       className="scale-90 lg:scale-100"
                     />
-                    <span className="text-red-500 text-2xl lg:text-3xl font-inter font-bold">
+                    <span className="text-red-500 text-2xl lg:text-[28px] font-inter font-bold">
                       houseclay
                     </span>
                   </Link>
