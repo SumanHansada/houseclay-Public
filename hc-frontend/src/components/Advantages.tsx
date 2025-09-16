@@ -1,4 +1,6 @@
-import Image from "next/image";
+"use client";
+
+import { SvgIcon } from "@/utility-components";
 
 const Advantages: React.FC = () => {
   return (
@@ -12,40 +14,26 @@ const Advantages: React.FC = () => {
       </div>
       <div className="flex flex-wrap xl:gap-12 lg:gap-6 gap-6 justify-between">
         <div className="flex flex-1 flex-col bg-white rounded-3xl  border border-gray-200 shadow-lg xl:px-12 lg:px-6 px-3 py-6 justify-between items-center gap-4">
-          <Image
-            src="/icons/direct-owner-access.svg"
-            alt="Direct Owner Accesss"
-            width={150}
-            height={150}
-          />
+          <SvgIcon iconSize="medium" name="direct-owner-access" size={150} />
           <h1 className="font-bold text-center">Direct Owner Access</h1>
           <p className="text-center">
             Skip the brokers — connect straight to property owners with ease.
           </p>
         </div>
         <div className="flex flex-1 flex-col bg-white rounded-3xl border border-gray-200 shadow-lg xl:px-12 lg:px-6 px-3  py-6 justify-between items-center gap-4">
-          <Image
-            src="/icons/pay-as-you-go.svg"
-            alt="Pay-As-You-Go"
-            width={150}
-            height={150}
-          />
+          <SvgIcon iconSize="large" name="pay-as-you-go" size={150} />
           <h1 className="font-bold text-center">Pay-As-You-Go</h1>
           <p className="text-center">
             Buy connects only when you need them. No subscriptions, no hidden
             fees.
           </p>
         </div>
-        <div className="flex flex-1 flex-col bg-white rounded-3xl border border-gray-200 shadow-lg xl:px-12 lg:px-6 px-3  py-6 justify-between items-center gap-4">
-          <Image
-            src="/icons/exclusive-listings.svg"
-            alt="Exclusive Listings"
-            width={150}
-            height={150}
-          />
+        <div className="flex flex-1 flex-col bg-white rounded-3xl border border-gray-200 shadow-lg xl:px-12 lg:px-6 px-3 py-6 justify-between items-center gap-4">
+          <SvgIcon iconSize="medium" name="exclusive-listings" size={160} />
           <h1 className="font-bold text-center">Exclusive Listings</h1>
           <p className="text-center">
-            Access properties you won’t find anywhere else, only on HouseClay.
+            Access properties you won&apos;t find anywhere else, only on
+            HouseClay.
           </p>
         </div>
       </div>

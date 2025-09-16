@@ -66,12 +66,14 @@ export default function WhatAreConnectsPage() {
       </div>
 
       <MobileFooter>
-        <button
-          onClick={() => router.push("/buy-connects")}
-          className="px-6 py-3 bg-red-500 text-white hover:bg-red-600 rounded-xl"
-        >
-          Buy Connects Now
-        </button>
+        <div className="flex justify-end w-full">
+          <button
+            onClick={() => router.push("/buy-connects")}
+            className="px-6 py-3 bg-red-500 text-white hover:bg-red-600 rounded-xl"
+          >
+            Buy Connects Now
+          </button>
+        </div>
       </MobileFooter>
     </>
   );

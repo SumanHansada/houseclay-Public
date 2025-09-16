@@ -8,7 +8,11 @@ import Carousel2D from "@/components/Carousel2D";
 import TESTIMONIALS_DATA from "@/data/TestimonialsData.json";
 import { Footer, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { setHideFooter, setHideHeader } from "@/store/appSlice";
+import {
+  setHideFooter,
+  setHideHeader,
+  setHideStickyNavBar,
+} from "@/store/appSlice";
 import { ImageWithLoader } from "@/utility-components";
 
 import { TestimonialCard } from "./components/TestimonialCard";
@@ -21,9 +25,11 @@ export default function TestimonialsPage() {
     if (isMobile) {
       dispatch(setHideHeader(true));
       dispatch(setHideFooter(true));
+      dispatch(setHideStickyNavBar(false));
     } else {
       dispatch(setHideHeader(false));
       dispatch(setHideFooter(false));
+      dispatch(setHideStickyNavBar(true));
     }
   }, [isMobile, dispatch]);
 

@@ -21,6 +21,7 @@ import { AccountNavList } from "@/components/AccountNavList";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { useLogout } from "@/hooks/useLogout";
 import { useDialog } from "@/providers/DialogContextProvider";
+import { setHideStickyNavBar } from "@/store/appSlice";
 import { setLoginFromAddProperty } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
@@ -96,7 +97,13 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
           className={`py-2 px-4 flex justify-between items-center w-full shadow-sm`}
         >
           <button className="rounded-full items-center justify-center">
-            <X onClick={handleClose} size={25} />
+            <X
+              onClick={() => {
+                handleClose();
+                dispatch(setHideStickyNavBar(false));
+              }}
+              size={25}
+            />
           </button>
           <div className="text-sm">
             {token ? (
@@ -274,6 +281,20 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
                     className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
                   >
                     <span className="flex items-center gap-2">FAQs</span>
+                    <ChevronRight size={20} />
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    href="/testimonials"
+                    prefetch
+                    onClick={onNavClick}
+                    className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
+                  >
+                    <span className="flex items-center gap-2">
+                      Hall of Fame
+                    </span>
                     <ChevronRight size={20} />
                   </Link>
                 </li>

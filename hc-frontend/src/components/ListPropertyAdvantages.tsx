@@ -26,7 +26,7 @@ const ListPropertyAdvantages: React.FC = () => {
           </p>
         </div>
         <div className="flex flex-1 flex-col bg-white rounded-3xl border border-gray-200 shadow-lg xl:px-12 lg:px-6 px-3  py-6 justify-between items-center gap-4">
-          <SvgIcon iconSize="medium" name="wide-reach" size={150} />
+          <SvgIcon iconSize="medium" name="connect-with-owners" size={150} />
           <h1 className="font-bold text-center">Wide Reach</h1>
           <p className="text-center">
             Showcase your property to thousands across top cities.

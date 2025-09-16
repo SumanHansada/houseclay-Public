@@ -2,7 +2,6 @@
 
 import "react-international-phone/style.css";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PhoneInput } from "react-international-phone";

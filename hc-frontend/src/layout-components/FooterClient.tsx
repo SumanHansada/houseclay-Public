@@ -187,7 +187,7 @@ const FooterClient: React.FC = () => {
                       href="/testimonials"
                       className="text-black hover:text-red-500"
                     >
-                      Testimonials
+                      Hall of Fame
                     </Link>
                   </li>
                   <li>
