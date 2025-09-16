@@ -66,7 +66,7 @@ const FooterClient: React.FC = () => {
                         target="_blank"
                         className="flex items-center text-black hover:text-red-500 gap-1"
                       >
-                        <SvgIcon iconSize="small" name="instagram" size={34} />
+                        <SvgIcon iconSize="small" name="instagram" size={32} />
                       </Link>
                     </li>
                     <li>
@@ -75,7 +75,7 @@ const FooterClient: React.FC = () => {
                         target="_blank"
                         className="flex items-center text-black hover:text-red-500 gap-1"
                       >
-                        <SvgIcon iconSize="small" name="facebook" size={34} />
+                        <SvgIcon iconSize="small" name="facebook" size={32} />
                       </Link>
                     </li>
                     <li>
@@ -84,13 +84,13 @@ const FooterClient: React.FC = () => {
                         target="_blank"
                         className="flex items-start text-black hover:text-red-500 gap-1"
                       >
-                        <SvgIcon iconSize="small" name="linkedin" size={34} />
+                        <SvgIcon iconSize="small" name="linkedin" size={32} />
                       </Link>
                     </li>
                   </ul>
                   <Link
                     href="/list-property"
-                    className="inline-block border border-red-500 text-black px-6 py-2 rounded-md hover:bg-red-500 hover:text-white transition-colors"
+                    className="inline-block border border-red-500 text-black px-6 py-2 rounded-xl hover:bg-red-500 hover:text-white transition-colors"
                   >
                     List Your Property
                   </Link>

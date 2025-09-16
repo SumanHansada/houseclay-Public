@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-import { Footer, MobileHeader } from "@/layout-components";
+import { Footer, MobileFooter, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import {
   setHideFooter,
@@ -12,7 +12,6 @@ import {
   setHideStickyNavBar,
 } from "@/store/appSlice";
 
-import ConnectsMobileFooter from "./components/ConnectsMobileFooter";
 import HeroSection from "./components/HeroSection";
 import HowToUseConnectsClient from "./components/HowToUseConnectsClient";
 import WhatAreConnects from "./components/WhatAreConnects";
@@ -66,9 +65,14 @@ export default function WhatAreConnectsPage() {
         </div>
       </div>
 
-      <ConnectsMobileFooter
-        onBuyConnects={() => router.push("/buy-connects")}
-      />
+      <MobileFooter>
+        <button
+          onClick={() => router.push("/buy-connects")}
+          className="px-6 py-3 bg-red-500 text-white hover:bg-red-600 rounded-xl"
+        >
+          Buy Connects Now
+        </button>
+      </MobileFooter>
     </>
   );
 }

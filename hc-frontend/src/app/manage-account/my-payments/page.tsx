@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { PaymentFilterStatus } from "@/common/enums";
 import { MobileHeader } from "@/layout-components";
@@ -8,6 +8,13 @@ import { MobileHeader } from "@/layout-components";
 import { TransactionCardList } from "../components/TransactionCardList";
 import { TransactionTable } from "../components/TransactionTable";
 import { DUMMY_PAYMENTS } from "../dummy";
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
+import { useDispatch } from "react-redux";
+import {
+  setHideFooter,
+  setHideHeader,
+  setHideStickyNavBar,
+} from "@/store/appSlice";
 
 const filterOptions = [
   { label: "All", value: PaymentFilterStatus.ALL },
@@ -16,6 +23,9 @@ const filterOptions = [
 ];
 
 export default function MyPaymentsPage() {
+  const { isMobile } = useDeviceContext();
+  const dispatch = useDispatch();
+
   const [selected, setSelected] = useState<PaymentFilterStatus>(
     PaymentFilterStatus.ALL,
   );
@@ -27,6 +37,18 @@ export default function MyPaymentsPage() {
       return true;
     });
   }, [selected]);
+
+  useEffect(() => {
+    if (isMobile) {
+      dispatch(setHideHeader(true));
+      dispatch(setHideFooter(true));
+      dispatch(setHideStickyNavBar(false));
+    } else {
+      dispatch(setHideHeader(false));
+      dispatch(setHideFooter(false));
+      dispatch(setHideStickyNavBar(true));
+    }
+  }, [isMobile, dispatch]);
 
   const onDownload = (id: string) => {
     console.log("Download Invoice: ", id);

@@ -55,7 +55,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
 
   const handleClose = useCallback(() => {
     closeDialog(id);
-    dispatch(setHideStickyNavBar(false));
+    // dispatch(setHideStickyNavBar(false));
   }, [closeDialog, id, dispatch]);
 
   const onLogin = () => {
