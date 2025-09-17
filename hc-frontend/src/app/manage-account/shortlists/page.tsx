@@ -2,11 +2,18 @@
 
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
 
 import { BadgeType, PropertyCategory } from "@/common/enums";
 import Properties from "@/components/Properties";
 import { MobileHeader } from "@/layout-components";
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
+import {
+  setHideFooter,
+  setHideHeader,
+  setHideStickyNavBar,
+} from "@/store/appSlice";
 
 import {
   DUMMY_PROPERTIES_FOR_PROPERTY_CARD,
@@ -21,6 +28,9 @@ const filterOptions = [
 ];
 
 export default function ShortlistsPage() {
+  const { isMobile } = useDeviceContext();
+  const dispatch = useDispatch();
+
   const [selected, setSelected] = useState<PropertyCategory>(
     PropertyCategory.NONE,
   );
@@ -35,6 +45,18 @@ export default function ShortlistsPage() {
       return true;
     });
   }, [selected, onlyAvailable]);
+
+  useEffect(() => {
+    if (isMobile) {
+      dispatch(setHideHeader(true));
+      dispatch(setHideFooter(true));
+      dispatch(setHideStickyNavBar(false));
+    } else {
+      dispatch(setHideHeader(false));
+      dispatch(setHideFooter(false));
+      dispatch(setHideStickyNavBar(true));
+    }
+  }, [isMobile, dispatch]);
 
   const handleCardClick = (e: React.MouseEvent, propertyID: string) => {
     e.stopPropagation();

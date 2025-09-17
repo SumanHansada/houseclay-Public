@@ -44,10 +44,10 @@ const FooterClient: React.FC = () => {
                     <SvgIcon
                       iconSize="small"
                       name="houseclay"
-                      size={34}
+                      size={28}
                       className="scale-90 lg:scale-100"
                     />
-                    <span className="text-red-500 text-2xl lg:text-3xl font-inter font-bold">
+                    <span className="text-red-500 text-2xl lg:text-[28px] font-inter font-bold">
                       houseclay
                     </span>
                   </Link>
@@ -66,7 +66,7 @@ const FooterClient: React.FC = () => {
                         target="_blank"
                         className="flex items-center text-black hover:text-red-500 gap-1"
                       >
-                        <SvgIcon iconSize="small" name="instagram" size={34} />
+                        <SvgIcon iconSize="small" name="instagram" size={32} />
                       </Link>
                     </li>
                     <li>
@@ -75,7 +75,7 @@ const FooterClient: React.FC = () => {
                         target="_blank"
                         className="flex items-center text-black hover:text-red-500 gap-1"
                       >
-                        <SvgIcon iconSize="small" name="facebook" size={34} />
+                        <SvgIcon iconSize="small" name="facebook" size={32} />
                       </Link>
                     </li>
                     <li>
@@ -84,13 +84,13 @@ const FooterClient: React.FC = () => {
                         target="_blank"
                         className="flex items-start text-black hover:text-red-500 gap-1"
                       >
-                        <SvgIcon iconSize="small" name="linkedin" size={34} />
+                        <SvgIcon iconSize="small" name="linkedin" size={32} />
                       </Link>
                     </li>
                   </ul>
                   <Link
                     href="/list-property"
-                    className="inline-block border border-red-500 text-black px-6 py-2 rounded-md hover:bg-red-500 hover:text-white transition-colors"
+                    className="inline-block border border-red-500 text-black px-6 py-2 rounded-xl hover:bg-red-500 hover:text-white transition-colors"
                   >
                     List Your Property
                   </Link>
@@ -187,7 +187,7 @@ const FooterClient: React.FC = () => {
                       href="/testimonials"
                       className="text-black hover:text-red-500"
                     >
-                      Testimonials
+                      Hall of Fame
                     </Link>
                   </li>
                   <li>

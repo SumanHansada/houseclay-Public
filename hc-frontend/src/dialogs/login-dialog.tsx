@@ -35,24 +35,39 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ id }) => {
     <Dialog
       id={id}
       type={isMobile ? "fullscreen" : "card"}
+      width={isMobile ? 100 : 45}
       onClose={handleClose}
       entryAnimation={isMobile ? "animate-slide-in-right" : "animate-fade-in"}
       exitAnimation={isMobile ? "animate-slide-out-right" : "animate-fade-out"}
     >
       <DialogHeader>
-        <div
-          className={`${isMobile ? "py-2 px-8" : ""}  flex flex-col justify-between items-center w-full`}
-        >
-          {isMobile && (
-            <h1 className="text-xl py-1.5 text-black">
+        {isMobile ? (
+          <div className="relative w-full h-[55px] border-b border-gray-200 bg-white flex items-center">
+            <div className="absolute left-2 w-10 h-10" aria-hidden />
+            <h1 className="mx-auto text-lg font-medium">
               Log In to Your Account
             </h1>
-          )}
-          <button className="absolute top-4 right-4 rounded-full">
-            <X onClick={handleClose} size={24} />
-          </button>
-        </div>
+            <button
+              aria-label="Close"
+              onClick={handleClose}
+              className="absolute right-2 rounded-full p-2 border border-gray-200"
+            >
+              <X size={20} />
+            </button>
+          </div>
+        ) : (
+          <div className="relative w-full h-0">
+            <button
+              aria-label="Close"
+              onClick={handleClose}
+              className="absolute top-4 right-4 rounded-full p-2 border border-gray-200"
+            >
+              <X size={20} />
+            </button>
+          </div>
+        )}
       </DialogHeader>
+
       <DialogContent>
         <Login />
       </DialogContent>

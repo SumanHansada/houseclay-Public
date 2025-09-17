@@ -68,10 +68,10 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
             <SvgIcon
               iconSize="small"
               name="houseclay"
-              size={34}
+              size={25}
               className="scale-90 lg:scale-100"
             />
-            <span className="text-red-500 text-2xl lg:text-3xl font-inter font-bold">
+            <span className="text-red-500 text-xl lg:text-2xl font-inter font-bold">
               houseclay
             </span>
           </Link>
@@ -79,7 +79,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
 
         {/* Center - Navigation */}
         <div className="flex justify-between items-center w-full text-sm">
-          <nav className="hidden md:flex xl:gap-8 lg:gap-4 md:gap-2 gap-3 text-gray-800 text-base lg:text-lg">
+          <nav className="hidden md:flex xl:gap-8 lg:gap-4 md:gap-2 gap-3 text-gray-800 text-base">
             <Link
               href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=rent`}
               data-category="rent"
@@ -164,7 +164,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
         <div className="flex items-center gap-2">
           <Menu role="button" onClick={onMenuClick} />
           <Link href="/" className="flex items-center gap-1">
-            <SvgIcon iconSize="small" name="houseclay" size={26} />
+            <SvgIcon iconSize="small" name="houseclay" size={22} />
             <span className="text-red-500 text-2xl font-inter font-bold">
               houseclay
             </span>

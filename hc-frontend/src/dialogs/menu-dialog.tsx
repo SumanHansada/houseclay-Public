@@ -55,8 +55,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
 
   const handleClose = useCallback(() => {
     closeDialog(id);
-    dispatch(setHideStickyNavBar(false));
-  }, [closeDialog, id, dispatch]);
+  }, [closeDialog, id]);
 
   const onLogin = () => {
     dispatch(setLoginFromAddProperty(true));
@@ -98,7 +97,13 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
           className={`py-2 px-4 flex justify-between items-center w-full shadow-sm`}
         >
           <button className="rounded-full items-center justify-center">
-            <X onClick={handleClose} size={25} />
+            <X
+              onClick={() => {
+                handleClose();
+                dispatch(setHideStickyNavBar(false));
+              }}
+              size={25}
+            />
           </button>
           <div className="text-sm">
             {token ? (
@@ -276,6 +281,20 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
                     className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
                   >
                     <span className="flex items-center gap-2">FAQs</span>
+                    <ChevronRight size={20} />
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    href="/testimonials"
+                    prefetch
+                    onClick={onNavClick}
+                    className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
+                  >
+                    <span className="flex items-center gap-2">
+                      Hall of Fame
+                    </span>
                     <ChevronRight size={20} />
                   </Link>
                 </li>

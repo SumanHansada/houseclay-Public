@@ -10,7 +10,11 @@ import { SUPPORT_CONTACT, SUPPORT_EMAIL } from "@/common/constants";
 import { FormPhoneField, FormTextArea, FormTextField } from "@/form-components";
 import { Footer, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { setHideFooter, setHideHeader } from "@/store/appSlice";
+import {
+  setHideFooter,
+  setHideHeader,
+  setHideStickyNavBar,
+} from "@/store/appSlice";
 import { ImageWithLoader } from "@/utility-components";
 
 interface ContactUsFormValues {
@@ -47,9 +51,11 @@ export default function ContactUsPage() {
     if (isMobile) {
       dispatch(setHideHeader(true));
       dispatch(setHideFooter(true));
+      dispatch(setHideStickyNavBar(false));
     } else {
       dispatch(setHideHeader(false));
       dispatch(setHideFooter(false));
+      dispatch(setHideStickyNavBar(true));
     }
   }, [isMobile, dispatch]);
 

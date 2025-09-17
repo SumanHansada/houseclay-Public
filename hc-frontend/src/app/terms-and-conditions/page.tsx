@@ -5,7 +5,11 @@ import { useDispatch } from "react-redux";
 
 import { Footer, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { setHideFooter, setHideHeader } from "@/store/appSlice";
+import {
+  setHideFooter,
+  setHideHeader,
+  setHideStickyNavBar,
+} from "@/store/appSlice";
 
 export default function TermsAndConditionsPage() {
   const { isMobile } = useDeviceContext();
@@ -15,9 +19,11 @@ export default function TermsAndConditionsPage() {
     if (isMobile) {
       dispatch(setHideHeader(true));
       dispatch(setHideFooter(true));
+      dispatch(setHideStickyNavBar(false));
     } else {
       dispatch(setHideHeader(false));
       dispatch(setHideFooter(false));
+      dispatch(setHideStickyNavBar(true));
     }
   }, [isMobile, dispatch]);
 

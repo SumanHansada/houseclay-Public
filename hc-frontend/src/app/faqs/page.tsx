@@ -6,7 +6,11 @@ import { useDispatch } from "react-redux";
 import { default as ACCORDION_DATA } from "@/data/SupportAccordionData.json";
 import { Footer, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { setHideFooter, setHideHeader } from "@/store/appSlice";
+import {
+  setHideFooter,
+  setHideHeader,
+  setHideStickyNavBar,
+} from "@/store/appSlice";
 
 import { Accordion } from "../manage-account/components/Accordion";
 
@@ -19,9 +23,11 @@ export default function FrequentlyAskedQuestionPage() {
     if (isMobile) {
       dispatch(setHideHeader(true));
       dispatch(setHideFooter(true));
+      dispatch(setHideStickyNavBar(false));
     } else {
       dispatch(setHideHeader(false));
       dispatch(setHideFooter(false));
+      dispatch(setHideStickyNavBar(true));
     }
   }, [isMobile, dispatch]);
 

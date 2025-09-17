@@ -1,14 +1,19 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { PropertyCategory } from "@/common/enums";
 import MyPropertyActionsDialog from "@/dialogs/my-property-actions";
 import { MobileHeader } from "@/layout-components";
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { setHideStickyNavBar } from "@/store/appSlice";
+import {
+  setHideFooter,
+  setHideHeader,
+  setHideStickyNavBar,
+} from "@/store/appSlice";
 
 import { PropertyTable } from "../components/PropertiesTable";
 import { PropertyCardList } from "../components/PropertyCardList";
@@ -24,6 +29,7 @@ const filterOptions = [
 const PROPERTY_ACTIONS_DIALOG_ID = "property-actions-dialog";
 
 export default function MyPropertiesPage() {
+  const { isMobile } = useDeviceContext();
   const [selected, setSelected] = useState<PropertyCategory>(
     PropertyCategory.NONE,
   );
@@ -41,8 +47,20 @@ export default function MyPropertiesPage() {
     });
   }, [selected, onlyActive]);
 
+  useEffect(() => {
+    if (isMobile) {
+      dispatch(setHideHeader(true));
+      dispatch(setHideFooter(true));
+      dispatch(setHideStickyNavBar(false));
+    } else {
+      dispatch(setHideHeader(false));
+      dispatch(setHideFooter(false));
+      dispatch(setHideStickyNavBar(true));
+    }
+  }, [isMobile, dispatch]);
+
   const onDashboard = (id: string) => {
-    // router.push(`/account/properties/${id}`) or open modal, etc.
+    // router.push(`/account/properties/${id}`)
     console.log("Redirect to my-properties-details for: ", id);
   };
 

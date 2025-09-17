@@ -2,9 +2,7 @@
 
 import "react-international-phone/style.css";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
-import loginImage from "public/images/login.webp";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PhoneInput } from "react-international-phone";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,6 +27,7 @@ import {
 } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 import { setCheckUser } from "@/store/userSlice";
+import { ImageWithLoader, SvgIcon } from "@/utility-components";
 
 const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -210,31 +209,20 @@ const Login = () => {
 
   return (
     <div className="flex items-center justify-center h-full bg-white rounded-lg">
-      {/* Left pane (image) - takes full height */}
       {!isMobile && (
-        <div className="h-full w-5/12">
-          <Image
-            src={loginImage}
+        <div className="relative w-2/5 rounded-l-lg h-[420px] 2xl:h-[480px] overflow-hidden">
+          <ImageWithLoader
+            src="/images/login.webp"
             alt="Login"
-            className="relative rounded-l-lg"
-            width={500}
-            height={400}
-            placeholder="blur"
+            fill
+            className="object-center"
+            sizes="100vw"
             priority
           />
         </div>
       )}
       {/* Right pane (form) - takes remaining width */}
       <div className="flex flex-1 h-full px-8 mx-auto relative">
-        <div className="absolute inset-0 md:hidden pointer-events-none">
-          <Image
-            src="/images/login-ellipse.svg"
-            alt="Login Background"
-            fill
-            className="object-contain object-center"
-            sizes="100vw"
-          />
-        </div>
         {authStep === AuthStep.PHONE && (
           <div className="w-full flex flex-col align-center justify-center gap-8">
             {/* Form header */}
@@ -362,7 +350,7 @@ const Login = () => {
           </div>
         )}
         {authStep === AuthStep.OTP && (
-          <div className="w-full flex flex-col align-center justify-center gap-4">
+          <div className="w-full flex flex-col align-center justify-center gap-6">
             {/* Form header */}
             <div>
               <h1 className="text-2xl mb-1 text-black ">
@@ -374,7 +362,7 @@ const Login = () => {
             </div>
 
             {/* Form fields */}
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-5">
               <div className="flex gap-2">
                 <input
                   id="otp-1"
@@ -423,32 +411,30 @@ const Login = () => {
                   maxLength={1}
                 />
               </div>
-              {/* Info box */}
-              <div className="bg-red-50 p-2 rounded-lg flex items-center gap-2">
-                <Image
-                  src="/icons/coin-egg.svg"
-                  alt="Info"
-                  width={60}
-                  height={60}
-                />
 
-                <div>
-                  <p className="text-gray-800 font-normal">
-                    Verify your Phone Number and earn
-                    <br />
-                    <span className="font-bold">2 Connects</span> instantly!
-                  </p>
+              <div className="flex flex-col gap-4">
+                {/* Info box */}
+                <div className="bg-red-50 p-2 rounded-lg flex items-center gap-2">
+                  <SvgIcon iconSize="medium" name="coin-egg" size={40} />
+
+                  <div>
+                    <p className="text-gray-800 font-normal">
+                      Verify your Phone Number and earn
+                      <span className="font-bold"> 2 Connects</span> instantly!
+                    </p>
+                  </div>
                 </div>
+                {/* Verify Button */}
+                <button
+                  type="submit"
+                  className={`w-full text-white py-3 px-4 rounded-lg ${isVerifyEnabled ? "bg-red-500 hover:bg-red-600" : "bg-red-300"}`}
+                  onClick={handleVerifyAndContinue}
+                  disabled={!isVerifyEnabled}
+                >
+                  {checkUser ? "Verify" : "Verify and Continue"}
+                </button>
               </div>
-              {/* Verify Button */}
-              <button
-                type="submit"
-                className={`w-full text-white py-3 px-4 rounded-lg ${isVerifyEnabled ? "bg-red-500 hover:bg-red-600" : "bg-red-300"}`}
-                onClick={handleVerifyAndContinue}
-                disabled={!isVerifyEnabled}
-              >
-                {checkUser ? "Verify" : "Verify and Continue"}
-              </button>
+
               {/* Resend option */}
               <div className="text-center">
                 <span className="text-gray-500">Didn&apos;t receive code?</span>{" "}
