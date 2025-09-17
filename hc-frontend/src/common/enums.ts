@@ -92,9 +92,3 @@ export enum PropertyStatus {
   REPORT = "REPORT",
   INACTIVE = "INACTIVE",
 }
-
-export enum PaymentStatus {
-  COMPLETED = "COMPLETED",
-  FAILED = "FAILED",
-  PROGRESS = "IN_PROGRESS",
-}

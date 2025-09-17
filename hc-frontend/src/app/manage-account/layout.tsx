@@ -20,7 +20,7 @@ export default function ManageProfileLayout({
 
   const { data: user, isLoading: _isUserDetailLoading } =
     useGetUserDetailQuery();
-  _isUserDetailLoading ? "Loading" : console.log(user);
+  _isUserDetailLoading ? console.log("Loading") : console.log(user);
 
   useEffect(() => {
     if (isMobile) {

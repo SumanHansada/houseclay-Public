@@ -30,15 +30,8 @@ export default function MyProfilePage() {
   const { isDialogOpen, openDialog, closeDialog } = useDialog();
   const dispatch = useDispatch();
 
-  const {
-    name,
-    phone,
-    phoneVerified,
-    onWhatsapp,
-    email,
-    emailVerified,
-    connects,
-  } = userDummy;
+  const { name, phone, phoneVerified, onWhatsapp, email, emailVerified } =
+    userDummy;
 
   const initialValues: MyProfileFormValues = {
     name,
@@ -47,7 +40,6 @@ export default function MyProfilePage() {
     onWhatsapp,
     email,
     emailVerified,
-    connects,
   };
   const [savedValues, setSavedValues] =
     useState<MyProfileFormValues>(initialValues);

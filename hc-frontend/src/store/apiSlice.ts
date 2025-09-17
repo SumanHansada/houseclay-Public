@@ -5,7 +5,7 @@ import { BASE_API_URL } from "@/common/constants";
 import { PropertyCategory } from "@/common/enums";
 import { sanitizePhoneNumber } from "@/common/utils";
 import { PropertyForm } from "@/interfaces/PropertyForm";
-import { GetUserDetail } from "@/interfaces/User";
+import { GetUserDetailResponse } from "@/interfaces/User";
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -96,7 +96,7 @@ export const apiSlice = createApi({
         method: "POST",
       }),
     }),
-    getUserDetail: builder.query<GetUserDetail, void>({
+    getUserDetail: builder.query<GetUserDetailResponse, void>({
       query: () => "/user/detail",
     }),
 

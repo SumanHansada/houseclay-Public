@@ -7,7 +7,6 @@ export interface MyProfileFormValues {
   onWhatsapp: boolean;
   email: string;
   emailVerified: boolean;
-  connects: number;
 }
 
 export type UserType = "tenant" | "buyer" | "";
