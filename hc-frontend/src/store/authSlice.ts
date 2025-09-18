@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
-
 import { AuthStep } from "@/common/enums";
 
 export interface AuthUserDetails {
@@ -93,6 +92,24 @@ const authSlice = createSlice({
     setLoginFromAddProperty: (state, action: PayloadAction<boolean>) => {
       state.loginFromAddProperty = action.payload;
     },
+
+    syncUserDetails: (
+      state,
+      action: PayloadAction<{
+        name?: string;
+        email?: string;
+        phoneNo?: string;
+        connectBal?: number;
+        avatarUrl?: string | null;
+      }>,
+    ) => {
+      const { name, email, phoneNo, connectBal, avatarUrl } = action.payload;
+      if (typeof name === "string") state.name = name;
+      if (typeof email === "string") state.emailID = email;
+      if (typeof phoneNo === "string") state.phoneNo = phoneNo;
+      if (typeof connectBal === "number") state.connectBal = connectBal;
+      if ("avatarUrl" in action.payload) state.avatarUrl = avatarUrl ?? "";
+    },
   },
 });
 
@@ -112,5 +129,7 @@ export const {
   setName,
   clearName,
   setLoginFromAddProperty,
+  syncUserDetails,
 } = authSlice.actions;
+
 export default authSlice.reducer;

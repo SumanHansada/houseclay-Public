@@ -1,8 +1,8 @@
 "use client";
 
-import { Formik } from "formik";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { Formik, FormikHelpers } from "formik";
+import { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import EmailVerificationDialog from "@/dialogs/email-verification";
@@ -11,9 +11,11 @@ import { MyProfileFormValues } from "@/interfaces/ManageAccount";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
 
-import { userDummy } from "../dummy";
 import { DesktopClient } from "./DesktopClient";
 import { MobileClient } from "./MobileClient";
+import { selectUserDetail, selectUserDetailLoading } from "@/store/userSlice";
+import { RootState } from "@/store/store";
+import Loading from "./loading";
 
 const validationSchema = Yup.object({
   name: Yup.string().required("Name is required"),
@@ -26,23 +28,33 @@ const EMAIL_VERIFICATION_SUCCESS_DIALOG_ID =
   "email-verification-success-dialog";
 
 export default function MyProfilePage() {
-  const [editMode, setEditMode] = useState(false);
+  const _isUserDetailLoading = useSelector(selectUserDetailLoading);
+  const auth = useSelector((state: RootState) => state.auth);
+  const userDetail = useSelector(selectUserDetail);
   const { isDialogOpen, openDialog, closeDialog } = useDialog();
   const dispatch = useDispatch();
 
-  const { name, phone, phoneVerified, onWhatsapp, email, emailVerified } =
-    userDummy;
+  const initialValues: MyProfileFormValues = useMemo(
+    () => ({
+      name: auth.name || "",
+      phoneNumber: auth.phoneNo || "",
+      email: auth.emailID || "",
 
-  const initialValues: MyProfileFormValues = {
-    name,
-    phoneNumber: phone,
-    phoneVerified,
-    onWhatsapp,
-    email,
-    emailVerified,
-  };
-  const [savedValues, setSavedValues] =
+      // backend not ready yet
+      phoneVerified: true,
+      onWhatsapp: true,
+      emailVerified: false,
+    }),
+    [auth.name, auth.phoneNo, auth.emailID],
+  );
+
+  const [currentFormValues, setCurrentFormValues] =
     useState<MyProfileFormValues>(initialValues);
+  const [editMode, setEditMode] = useState(false);
+
+  useEffect(() => {
+    setCurrentFormValues(initialValues);
+  }, [initialValues]);
 
   const handleEmailVerification = () =>
     openDialog(EMAIL_VERIFICATION_DIALOG_ID);
@@ -57,25 +69,44 @@ export default function MyProfilePage() {
     openDialog(EMAIL_VERIFICATION_SUCCESS_DIALOG_ID);
   };
 
+  const handleSubmit = async (
+    values: MyProfileFormValues,
+    helpers: FormikHelpers<MyProfileFormValues>,
+  ) => {
+    try {
+      console.log("Submit all data:", values);
+
+      // TODO: Call API to update user profile
+      // await updateUserProfile(values);
+
+      setCurrentFormValues(values);
+      helpers.resetForm({ values });
+      setEditMode(false);
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+    }
+  };
+
+  if (_isUserDetailLoading || !userDetail) {
+    return <Loading />;
+  }
+
   return (
     <>
       <Formik
-        initialValues={savedValues}
+        initialValues={currentFormValues}
         validationSchema={validationSchema}
         validateOnBlur={false}
         validateOnChange={false}
-        onSubmit={(values) => {
-          console.log("Submit all data:", values);
-          setSavedValues(values);
-          setEditMode(false);
-        }}
+        onSubmit={handleSubmit}
+        enableReinitialize={true}
+        key={`${currentFormValues.name}-${currentFormValues.email}-${currentFormValues.phoneNumber}`} // Force re-render when values change
       >
         {() => (
           <>
             {/* Desktop */}
             <section className="max-md:hidden">
               <DesktopClient
-                savedValues={savedValues}
                 editMode={editMode}
                 setEditMode={setEditMode}
                 onVerifyEmail={handleEmailVerification}
@@ -85,7 +116,6 @@ export default function MyProfilePage() {
             {/* Mobile */}
             <section className="md:hidden">
               <MobileClient
-                savedValues={savedValues}
                 editMode={editMode}
                 setEditMode={setEditMode}
                 onVerifyEmail={handleEmailVerification}
@@ -98,7 +128,7 @@ export default function MyProfilePage() {
       {isDialogOpen(EMAIL_VERIFICATION_DIALOG_ID) && (
         <EmailVerificationDialog
           id={EMAIL_VERIFICATION_DIALOG_ID}
-          emailToVerify={email}
+          emailToVerify={auth.emailID}
           onSuccess={onVerificationSuccess}
           onClose={closeVerificationDialog}
         />

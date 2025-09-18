@@ -11,7 +11,6 @@ import { SvgIcon } from "@/utility-components";
 import { EmailVerifyIncentive } from "../components/EmailVerifyIncentive";
 
 interface DesktopClientProps {
-  savedValues: MyProfileFormValues;
   editMode: boolean;
   setEditMode: (v: boolean) => void;
   onVerifyEmail: () => void;
@@ -21,10 +20,14 @@ export function DesktopClient({
   editMode,
   setEditMode,
   onVerifyEmail,
-  savedValues,
 }: DesktopClientProps) {
-  const { values, setFieldValue, resetForm } =
+  const { values, setFieldValue, resetForm, initialValues } =
     useFormikContext<MyProfileFormValues>();
+
+  const handleCancel = () => {
+    resetForm({ values: initialValues });
+    setEditMode(false);
+  };
 
   return (
     <>
@@ -95,14 +98,16 @@ export function DesktopClient({
 
             {/* WhatsApp toggle */}
             <label
-              className="flex items-center gap-4 lg:gap-1 xl:gap-4 cursor-pointer w-fit disabled:cursor-not-allowed"
+              className="flex items-center gap-4 lg:gap-1 xl:gap-4 w-fit"
               aria-disabled={editMode ? false : true}
             >
               <div className="flex gap-1 xl:gap-2 items-center">
                 <SvgIcon iconSize="small" name="whatsapp" size={45} />
                 <span className="text-nowrap">Available on WhatsApp</span>
               </div>
-              <div className="relative">
+              <div
+                className={`relative ${editMode ? "cursor-pointer" : "cursor-not-allowed"}`}
+              >
                 <input
                   type="checkbox"
                   name="onWhatsapp"
@@ -110,7 +115,7 @@ export function DesktopClient({
                   onChange={() =>
                     setFieldValue("onWhatsapp", !values.onWhatsapp)
                   }
-                  className="sr-only peer disabled:cursor-not-allowed"
+                  className="sr-only peer"
                   disabled={!editMode}
                 />
                 <div className="w-10 h-6 rounded-full bg-gray-300 peer-checked:bg-black transition-colors" />
@@ -154,10 +159,7 @@ export function DesktopClient({
               <button
                 type="reset"
                 className="px-3 py-1 md:px-5 md:py-2 border rounded-lg shadow-sm"
-                onClick={() => {
-                  resetForm({ values: savedValues });
-                  setEditMode(false);
-                }}
+                onClick={handleCancel}
               >
                 Cancel
               </button>

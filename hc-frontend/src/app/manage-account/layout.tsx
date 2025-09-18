@@ -9,6 +9,15 @@ import { Footer } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { setHideFooter, setHideHeader } from "@/store/appSlice";
 import { useGetUserDetailQuery } from "@/store/apiSlice";
+import {
+  setUser,
+  setUserDetailError,
+  setUserDetailLoading,
+} from "@/store/userSlice";
+import { syncUserDetails } from "@/store/authSlice";
+import { mapUserDTOToDetail } from "@/interfaces/User";
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import type { SerializedError } from "@reduxjs/toolkit";
 
 export default function ManageProfileLayout({
   children,
@@ -18,9 +27,34 @@ export default function ManageProfileLayout({
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
 
-  const { data: user, isLoading: _isUserDetailLoading } =
+  const { data, isLoading, isFetching, isError, error } =
     useGetUserDetailQuery();
-  _isUserDetailLoading ? console.log("Loading") : console.log(user);
+
+  useEffect(() => {
+    dispatch(setUserDetailLoading(isLoading || isFetching));
+  }, [dispatch, isLoading, isFetching]);
+
+  useEffect(() => {
+    if (!isError) return;
+    const msg = extractErrorMessage(error);
+    dispatch(setUserDetailError(msg));
+  }, [dispatch, isError, error]);
+
+  useEffect(() => {
+    const userDetails = data?.user;
+    if (!userDetails) return;
+
+    dispatch(
+      syncUserDetails({
+        name: userDetails.name,
+        email: userDetails.email,
+        phoneNo: userDetails.phoneNo,
+        // connectBal
+      }),
+    );
+
+    dispatch(setUser(mapUserDTOToDetail(userDetails)));
+  }, [dispatch, data]);
 
   useEffect(() => {
     if (isMobile) {
@@ -52,4 +86,15 @@ export default function ManageProfileLayout({
       <div className="md:hidden w-full h-full">{children}</div>
     </>
   );
+}
+
+function extractErrorMessage(
+  err: FetchBaseQueryError | SerializedError | undefined,
+): string {
+  if (!err) return "Unknown error";
+  if ("status" in err) {
+    const data = (err.data ?? {}) as { message?: string; error?: string };
+    return data.message || data.error || `HTTP ${String(err.status)}`;
+  }
+  return err.message ?? "Request failed";
 }

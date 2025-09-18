@@ -1,5 +1,6 @@
 import { UserDetailsDTO } from "@/interfaces/User";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "./store";
 
 export interface UserDetailState {
   createdAt: string | null;
@@ -26,52 +27,85 @@ export interface CheckUser {
 
 interface UserState {
   user: UserDetailState | undefined;
+  userDetailLoading: boolean;
+  userDetailError: string | undefined;
   checkUser: CheckUser | undefined;
-  loading: boolean;
-  error: string | undefined;
+  checkUserLoading: boolean;
+  checkUserError: string | undefined;
 }
 
 const initialState: UserState = {
   user: undefined,
+  userDetailLoading: false,
+  userDetailError: undefined,
+
   checkUser: undefined,
-  loading: false,
-  error: undefined,
+  checkUserLoading: false,
+  checkUserError: undefined,
 };
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
+    // userDetails
     setUser(state, action: PayloadAction<UserDetailState>) {
       state.user = action.payload;
-      state.loading = false;
-      state.error = undefined;
+      state.userDetailLoading = false;
+      state.userDetailError = undefined;
     },
     clearUser(state) {
       state.user = undefined;
-      state.loading = false;
-      state.error = undefined;
+      state.userDetailLoading = false;
+      state.userDetailError = undefined;
     },
+    setUserDetailLoading(state, action: PayloadAction<boolean>) {
+      state.userDetailLoading = action.payload;
+    },
+    setUserDetailError(state, action: PayloadAction<string | undefined>) {
+      state.userDetailError = action.payload;
+      state.userDetailLoading = false;
+    },
+
+    // checkUser
     setCheckUser(state, action: PayloadAction<CheckUser>) {
       state.checkUser = action.payload;
-      state.loading = false;
-      state.error = undefined;
+      state.checkUserLoading = false;
+      state.checkUserError = undefined;
     },
-    setLoading(state, action: PayloadAction<boolean>) {
-      state.loading = action.payload;
+    setCheckUserLoading(state, action: PayloadAction<boolean>) {
+      state.checkUserLoading = action.payload;
     },
-    setError(state, action: PayloadAction<string | undefined>) {
-      state.error = action.payload;
+    setCheckUserError(state, action: PayloadAction<string | undefined>) {
+      state.checkUserError = action.payload;
+      state.checkUserLoading = false;
+    },
+    clearCheckUser(state) {
+      state.checkUser = undefined;
+      state.checkUserLoading = false;
+      state.checkUserError = undefined;
     },
   },
 });
 
-export const { setUser, clearUser, setCheckUser, setLoading, setError } =
-  userSlice.actions;
+export const {
+  setUser,
+  clearUser,
+  setUserDetailLoading,
+  setUserDetailError,
+  setCheckUser,
+  setCheckUserLoading,
+  setCheckUserError,
+  clearCheckUser,
+} = userSlice.actions;
 export default userSlice.reducer;
 
 // Selectors
-export const selectUserDetail = (s: any) =>
-  s.user.user as UserDetailState | undefined;
-export const selectUserLoading = (s: any) => s.user.loading as boolean;
-export const selectUserError = (s: any) => s.user.error as string | undefined;
+export const selectUserDetail = (s: RootState) => s.user.user;
+export const selectUserDetailLoading = (s: RootState) =>
+  s.user.userDetailLoading;
+export const selectUserDetailError = (s: RootState) => s.user.userDetailError;
+
+export const selectCheckUser = (s: RootState) => s.user.checkUser;
+export const selectCheckUserLoading = (s: RootState) => s.user.checkUserLoading;
+export const selectCheckUserError = (s: RootState) => s.user.checkUserError;
