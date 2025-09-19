@@ -4,12 +4,12 @@ import { SvgIcon } from "@/utility-components";
 const WhyChoose = () => {
   const router = useRouter();
   return (
-    <div className="flex items-center justify-between lg:gap-10 xl:px-28 lg:px-14 md:px-14 px-6 md:py-20 py-5 pb-16">
+    <div className="flex items-center justify-between lg:gap-10 xl:px-28 px-6 md:px-14 py-5 md:py-20 pb-16">
       <div className="w-full md:w-3/5 lg:px-12 md:px-4">
-        <h1 className="mb-2 md:mb-4 xl:text-5xl lg:text-4xl sm:text-3xl text-2xl md:font-bold font-medium">
+        <h1 className="text-2xl md:text-4xl md:font-bold font-medium md:p-2">
           Why Choose Connects?
         </h1>
-        <p className="mb-4 md:mb-8 lg:3/4 md:w-4/5 p-1 md:text-gray-800 text-gray-600 md:font-light lg:text-xl text-lg">
+        <p className="max-md:text-base md:p-2 md:mb-4">
           Enjoy a hassle-free, pay-as-you-go model with no subscriptions—just
           access what you need, when you need it.
         </p>
@@ -17,7 +17,7 @@ const WhyChoose = () => {
           <div className="md:hidden w-1/2 flex justify-center">
             <SvgIcon iconSize="large" name="why-choose-connects" size={200} />
           </div>
-          <div className="space-y-4 lg:space-y-10 sm:space-y-6 lg:px-8 md:px-4 text-lg sm:text-xl lg:text-2xl xl:text-3xl mb-2 max-md:w-1/2">
+          <div className="space-y-4 md:space-y-6 lg:space-y-8 lg:px-8 md:px-4 text-base sm:text-xl lg:text-2xl xl:text-3xl mb-2 max-md:w-1/2">
             <div className="flex md:gap-4 gap-1 items-center">
               <SvgIcon
                 iconSize="small"

@@ -13,10 +13,10 @@ const HowToUseConnects = () => {
     <div className="flex flex-col items-center justify-between md:gap-10 gap-4 xl:px-28 lg:px-14 md:px-14 md:py-20 px-0 py-6 bg-gray-100">
       {/* Heading */}
       <div className="flex flex-col items-center justify-center md:gap-4 gap-2 px-6">
-        <h1 className="lg:text-4xl sm:text-3xl text-2xl md:font-bold font-medium text-center">
+        <h1 className="lg:text-4xl sm:text-3xl text-xl md:font-bold font-medium text-center">
           How Can You Use Connects?
         </h1>
-        <p className="text-center md:text-gray-800 text-gray-600 md:font-light sm:text-xl text-lg lg:w-3/4 md:w-11/12">
+        <p className="text-center md:text-gray-800 text-gray-600 md:font-light max-md:text-base lg:w-3/4 md:w-11/12">
           Listing your property has never been easier or more effective.
           Here&apos;s why thousands of property owners trust us:
         </p>
@@ -94,7 +94,7 @@ const HowToUseConnects = () => {
               <h3 className="font-semibold text-xl w-11/12">
                 Find &amp; Connect with Owners
               </h3>
-              <p className="text-gray-800 text-balance text-lg">
+              <p className="text-gray-800 text-balance text-base">
                 Unlock verified owner details and contact them directly—no
                 middlemen, no extra charges.
               </p>
@@ -112,7 +112,7 @@ const HowToUseConnects = () => {
               <h3 className="font-semibold text-xl w-11/12">
                 Simplify Rental Processes
               </h3>
-              <p className="text-gray-800 text-balance text-lg">
+              <p className="text-gray-800 text-balance text-base">
                 Use Connects for rent agreements, tenant verification, and
                 seamless property transactions.
               </p>
@@ -130,7 +130,7 @@ const HowToUseConnects = () => {
               <h3 className="font-semibold text-xl w-11/12">
                 Access Property Services
               </h3>
-              <p className="text-gray-800 text-balance text-lg">
+              <p className="text-gray-800 text-balance text-base">
                 Redeem Connects for maintenance, cleaning, painting, and expert
                 property management.
               </p>

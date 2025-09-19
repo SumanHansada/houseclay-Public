@@ -12,7 +12,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Header />
-      <main className="mx-auto my-0 pt-14 pb-16 min-h-fit flex-1 flex flex-wrap justify-center">
+      <main className="mx-auto my-0 pt-14 max-md:pb-16 min-h-fit flex-1 flex flex-wrap justify-center">
         {children}
       </main>
 

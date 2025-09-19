@@ -8,18 +8,18 @@ const WhatAreConnects = () => {
           <SvgIcon iconSize="large" name="what-are-connects" size={500} />
         </div>
         <div className="w-full md:w-3/5 xl:px-10 lg:px-6 flex flex-col lg:gap-6 md:gap-4 gap-2">
-          <h1 className="xl:text-5xl lg:text-4xl sm:text-3xl text-2xl md:font-bold font-medium">
+          <h1 className="text-2xl md:text-4xl md:font-bold font-medium md:p-2">
             What Are Connects?
           </h1>
           <div className="md:text-gray-800 text-gray-600 md:font-light lg:text-xl text-lg lg:space-y-6 sm:space-y-2 md:leading-relaxed leading-7 md:p-2">
-            <p>
+            <p className="max-md:text-base">
               Connects are a smarter way to access property services without the
               commitment of a subscription. Whether you&apos;re looking to
               contact a verified owner, create a rent agreement, or avail
               additional property-related services, Connects give you complete
               flexibility.
             </p>
-            <p>
+            <p className="max-md:text-base">
               Use them only when needed, ensuring a cost-effective and
               hassle-free experience. Say goodbye to recurring fees and hello to
               a pay-as-you-go model designed for your convenience!

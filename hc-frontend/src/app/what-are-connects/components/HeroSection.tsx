@@ -22,20 +22,20 @@ const HeroSection = () => (
                     md:w-3/5 lg:w-7/12 xl:w-7/12 w-full"
     >
       <div>
-        <h1 className="font-bold text-gray-900 text-2xl sm:text-3xl md:text-4xl lg:text-5xl 2xl:text-6xl">
+        <h1 className="font-bold text-gray-900 text-xl md:text-3xl xl:text-6xl">
           Say Goodbye to Subscriptions.
         </h1>
-        <h1 className="font-medium md:font-normal text-gray-800 text-2xl sm:text-4xl lg:text-5xl 2xl:text-6xl">
+        <h1 className="font-medium md:font-normal text-gray-800 text-xl md:text-3xl xl:text-6xl">
           Say Hello to Connects.
         </h1>
       </div>
 
-      <div className="relative aspect-[16/9] md:hidden rounded-xl overflow-hidden">
+      <div className="relative aspect-[16/9] md:hidden rounded-xl shadow-lg overflow-hidden">
         <ImageWithLoader
           src="/images/banner-what-are-connects-mobile.webp"
           alt="Property Graphic"
           fill
-          className="object-center"
+          className="object-center rounded-xl shadow-lg"
           sizes="100vw"
         />
       </div>
