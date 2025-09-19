@@ -91,6 +91,48 @@ public class UserMapper {
         return dto;
     }
 
+    public static UserProfileDTO toUserProfileDTO(User user) {
+        UserProfileDTO dto = new UserProfileDTO();
+        dto.setName(user.getName());
+        dto.setEmail(user.getEmailID());
+        dto.setPhoneNo(user.getPhoneNo());
+
+        dto.setOwnedProperties(
+                user.getOwnedProperties().stream()
+                        .map(PropertyBasicMapper::toBasicEntity)
+                        .collect(Collectors.toList())
+        );
+
+        dto.setShortlistedProperties(
+                user.getPropertyActions().stream()
+                        .filter(action -> Objects.equals(action.getUserActionType(), UserActionType.SHORTLIST))
+                        .map(action -> PropertyCardMapper.toPropertyCardDTO(action.getProperty()))
+                        .collect(Collectors.toList())
+        );
+
+        dto.setViewedProperties(
+                user.getPropertyActions().stream()
+                        .filter(action -> Objects.equals(action.getUserActionType(), UserActionType.VIEW))
+                        .map(action -> PropertyCardMapper.toPropertyCardDTO(action.getProperty()))
+                        .collect(Collectors.toList())
+        );
+
+        dto.setContactedProperties(
+                user.getPropertyActions().stream()
+                        .filter(action -> Objects.equals(action.getUserActionType(), UserActionType.CONTACT))
+                        .map(action -> PropertyCardMapper.toPropertyCardDTO(action.getProperty()))
+                        .collect(Collectors.toList())
+        );
+
+        dto.setExternalPayments(
+                user.getExternalPayments().stream()
+                        .map(UserMapper::toUserExternalPaymentDTO)
+                        .collect(Collectors.toList())
+        );
+
+        return dto;
+    }
+
     public static UserPropertyDTO toUserPropertyDTO(Property property) {
         UserPropertyDTO dto = new UserPropertyDTO();
         dto.setPropertyID(property.getPropertyID());
@@ -111,6 +153,16 @@ public class UserMapper {
         dto.setStatus(payment.getStatus());
         dto.setSignature(payment.getSignature());
         dto.setRazorPaymentId(payment.getRazorPaymentId());
+        dto.setCreatedAt(payment.getCreatedAt());
+        dto.setCompletedAt(payment.getCompletedAt());
+        return dto;
+    }
+
+    private static UserExternalPaymentDTO toUserExternalPaymentDTO(ExternalPayments payment) {
+        UserExternalPaymentDTO dto = new UserExternalPaymentDTO();
+        dto.setPaymentId(payment.getPaymentId());
+        dto.setAmount(payment.getAmount());
+        dto.setStatus(payment.getStatus());
         dto.setCreatedAt(payment.getCreatedAt());
         dto.setCompletedAt(payment.getCompletedAt());
         return dto;

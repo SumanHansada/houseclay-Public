@@ -92,7 +92,7 @@ public class UserController {
         try {
             user = adminService.searchUser(user.getPhoneNo());
             Map<String, Object> response = new HashMap<>();
-            response.put("user", UserMapper.toDetailDTO(user));
+            response.put("user", UserMapper.toUserProfileDTO(user));
             return ResponseEntity.ok(response);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());

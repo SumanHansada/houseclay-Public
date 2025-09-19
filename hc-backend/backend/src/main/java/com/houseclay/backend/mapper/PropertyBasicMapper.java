@@ -51,6 +51,30 @@ public class PropertyBasicMapper {
         }
     }
 
+    public static OwnedPropertyDTO toBasicEntity(Property property) {
+        OwnedPropertyDTO dto = new OwnedPropertyDTO();
+        copyBaseFields(property, dto);
+        if(property instanceof SaleProperty sale) {
+            dto.setPrice(sale.getPrice());
+        }
+        if(property instanceof RentProperty rent) {
+            dto.setPrice(rent.getRent());
+        }
+        if(property instanceof FlatmateProperty flatmate) {
+            dto.setPrice(flatmate.getRent());
+        }
+        return dto;
+    }
+
+    public static void copyBaseFields(Property source, OwnedPropertyDTO target) {
+        target.setPropertyID(source.getPropertyID());
+        target.setPropertyType(source.getPropertyType());
+        target.setBhkType(source.getBhkType());
+        target.setLocationOrSocietyName(source.getLocationOrSocietyName());
+        target.setAvailableFrom(source.getAvailableFrom());
+        target.setPropertyState(source.getPropertyState().toString());
+    }
+
     private static void copyBaseFields(Property source, PropertyDTO target) {
         target.setPropertyID(source.getPropertyID());
         target.setTitle(source.getTitle());
