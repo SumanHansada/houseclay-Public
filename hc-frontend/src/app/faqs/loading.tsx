@@ -14,7 +14,7 @@ export default function Loading() {
     <>
       {/* Mobile header */}
       <header className="fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white md:hidden">
-        <div className="flex items-center h-full px-4 gap-2">
+        <div className="flex items-center h-full px-6 gap-2">
           <div className="shrink-0 w-10 h-10 grid place-items-center">
             <Skeleton circle width={36} height={36} />
           </div>

@@ -16,6 +16,7 @@ import { useS3Uploader } from "@/hooks/useS3Uploader";
 import { transformFormValuesToPropertyForm } from "@/interfaces/FormTransformers";
 import { FormValues } from "@/interfaces/FormValues";
 import { PropertyImage } from "@/interfaces/PropertyImage";
+import { MobileFooter } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -399,7 +400,7 @@ export default function ListPropertyTypeLayout({
               )}
             </Formik>
           </div>
-          <div className="fixed bottom-0 left-0 ml-[33.33%] max-md:ml-auto right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
+          <div className="fixed bottom-0 left-0 ml-[33.33%] max-md:hidden right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
             <button
               type="button"
               className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 disabled:bg-gray-300 disabled:cursor-not-allowed"
@@ -419,6 +420,28 @@ export default function ListPropertyTypeLayout({
                 : "Save & Continue"}
             </button>
           </div>
+          <MobileFooter>
+            <div className="md:hidden flex w-full justify-between">
+              <button
+                type="button"
+                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                onClick={handleBack}
+              >
+                Back
+              </button>
+
+              <button
+                type="submit"
+                className="px-6 py-3 border border-red-500 bg-red-500 text-white rounded-xl hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300"
+                disabled={!isFormValid}
+                onClick={handleSaveAndNext}
+              >
+                {currentStep === ListPropertyFormStep.ADDITIONAL_INFO
+                  ? "List Property"
+                  : "Save & Continue"}
+              </button>
+            </div>
+          </MobileFooter>
         </div>
 
         {/* Upload Dialog */}

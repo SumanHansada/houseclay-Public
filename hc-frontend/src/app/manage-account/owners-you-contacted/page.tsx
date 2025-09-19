@@ -135,7 +135,7 @@ export default function OwnersContactedPage() {
       </section>
 
       {/* Cards */}
-      <div className="space-y-4 overflow-y-auto px-4 sm:px-8 max-md:px-8 max-md:mb-16">
+      <div className="space-y-4 overflow-y-auto max-md:px-6 pt-4 pb-16">
         {/* Property List */}
         <div className="mx-auto w-full py-5">
           {filtered.length === 0 ? (

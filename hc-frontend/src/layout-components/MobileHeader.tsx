@@ -23,7 +23,7 @@ export default function MobileHeader({
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white md:hidden ${className}`}
+      className={`fixed top-0 inset-x-0 z-50 h-[55px] border-b shadow-sm border-gray-200 bg-white md:hidden ${className}`}
       role="banner"
     >
       <div className="flex items-center h-full px-4">

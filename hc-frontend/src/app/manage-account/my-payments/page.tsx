@@ -112,7 +112,7 @@ export default function MyPaymentsPage() {
         <TransactionTable transactions={filtered} onDownload={onDownload} />
       </div>
 
-      <div className="2xl:hidden max-md:px-8 mb-16 py-5">
+      <div className="2xl:hidden max-md:px-6 pt-4 pb-16">
         <TransactionCardList items={filtered} onDownload={onDownload} />
       </div>
     </main>

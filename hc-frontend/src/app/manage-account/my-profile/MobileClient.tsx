@@ -214,7 +214,7 @@ export function MobileClient({
             </footer>
           </Form>
         ) : (
-          <div className="px-8 py-4 mb-16 space-y-4">
+          <div className="px-6 pt-4 pb-16 space-y-4">
             <DisplayRow label="Name" value={values.name} />
             <DisplayRow
               label="Phone Number"

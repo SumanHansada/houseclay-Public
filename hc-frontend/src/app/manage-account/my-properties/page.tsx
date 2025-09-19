@@ -161,7 +161,7 @@ export default function MyPropertiesPage() {
       </div>
 
       {/* Cards for < 2xl */}
-      <div className="2xl:hidden max-md:px-8 mb-16 py-5">
+      <div className="2xl:hidden max-md:px-6 pt-4 pb-16">
         <PropertyCardList
           items={filtered}
           onDashboard={onDashboard}

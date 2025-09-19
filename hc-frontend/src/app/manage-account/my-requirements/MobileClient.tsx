@@ -100,7 +100,7 @@ export function MobileClient({
         }
       />
 
-      <Form className="flex-1 space-y-6 px-8 py-5 mb-16">
+      <Form className="flex-1 space-y-6 px-6 pt-4 pb-16">
         {/* Who am I */}
         <div className="flex flex-col items-start gap-2 w-full">
           <label className="text-lg">I&apos;m a&nbsp;</label>

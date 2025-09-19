@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 
 import { PropertyListingType } from "@/common/enums";
+import { MobileFooter } from "@/layout-components";
 import { setListingType } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 import { SvgIcon } from "@/utility-components";
@@ -50,18 +51,33 @@ const ListingOptions = ({ isMobile = false, onNext }: ListingOptionsProps) => {
         />
       </div>
 
-      <button
-        type="button"
-        className={`w-full bg-red-500 disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-red-600 text-white py-3 rounded-lg font-medium transition duration-200 ${isMobile ? "mt-auto" : ""}`}
-        onClick={onNext}
-        disabled={!listingType}
-      >
-        {listingType === PropertyListingType.CALL
-          ? "Get a call back!"
-          : isMobile
-            ? "Start Posting Your Free Listing"
+      <div className="flex mt-auto w-full max-md:hidden">
+        <button
+          type="button"
+          className={`w-full  bg-red-500 disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-red-600 text-white py-3 rounded-lg font-medium transition duration-200 ${isMobile ? "mt-auto" : ""}`}
+          onClick={onNext}
+          disabled={!listingType}
+        >
+          {listingType === PropertyListingType.CALL
+            ? "Get a call back!"
             : "Get Started"}
-      </button>
+        </button>
+      </div>
+
+      <MobileFooter>
+        <div className="flex mt-auto w-full md:hidden">
+          <button
+            type="button"
+            className={`w-full border bg-red-500 disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-red-600 text-white py-3 rounded-lg font-medium transition duration-200 ${isMobile ? "mt-auto" : ""}`}
+            onClick={onNext}
+            disabled={!listingType}
+          >
+            {listingType === PropertyListingType.CALL
+              ? "Get a call back!"
+              : "Start Posting Your Free Listing"}
+          </button>
+        </div>
+      </MobileFooter>
     </div>
   );
 };

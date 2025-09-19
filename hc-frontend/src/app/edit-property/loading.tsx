@@ -16,7 +16,7 @@ const EditPropertyLoading = () => {
       </section>
 
       {/* Mobile Content */}
-      <section className="w-full my-0 min-h-[calc(100svh-55px)] flex-col container pt-4 pb-2 px-6 mx-auto flex justify-between gap-16 md:hidden">
+      <section className="w-full my-0 flex-col container pt-4 pb-2 px-6 mx-auto flex justify-between gap-16 md:hidden">
         <div className="flex flex-col items-center justify-center space-y-4">
           <Loader2 className="h-8 w-8 animate-spin text-red-500" />
           <p className="text-gray-600">Loading edit property form...</p>

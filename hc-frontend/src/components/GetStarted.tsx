@@ -1,5 +1,6 @@
 import { Lightbulb } from "lucide-react";
 
+import { MobileFooter } from "@/layout-components";
 import { SvgIcon } from "@/utility-components";
 interface GetStartedProps {
   onGetStarted: () => void;
@@ -39,7 +40,7 @@ const GetStarted = ({ onGetStarted }: GetStartedProps) => {
         </div>
       </div>
       <div className="w-full mx-auto mt-auto">
-        <div className="flex items-center bg-green-100 rounded-lg p-4 gap-4 mb-8">
+        <div className="flex items-center bg-green-100 rounded-lg p-4 gap-4 mb-4">
           <span className="bg-teal-500 text-white rounded-md py-2 px-3 text-xs font-medium flex gap-1 items-center">
             <Lightbulb size={15} /> Tip
           </span>
@@ -47,12 +48,14 @@ const GetStarted = ({ onGetStarted }: GetStartedProps) => {
             On an average it takes less than 2 minutes to list the property
           </span>
         </div>
-        <button
-          className="text-center w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-medium transition duration-200"
-          onClick={onGetStarted}
-        >
-          Get Started
-        </button>
+        <MobileFooter>
+          <button
+            className="text-center w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-medium transition duration-200"
+            onClick={onGetStarted}
+          >
+            Get Started
+          </button>
+        </MobileFooter>
       </div>
     </div>
   );

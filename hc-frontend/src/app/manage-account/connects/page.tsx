@@ -141,7 +141,7 @@ export default function ConnectsPage() {
         {/* Mobile Header */}
         <MobileHeader title="Connects" />
 
-        <div className="px-6 pb-20 pt-4">
+        <div className="px-6 pt-4 pb-16">
           <div className="flex justify-between items-start w-full py-4 rounded-lg mb-4">
             {/* Available Connects */}
             <div className="flex flex-col gap-2 justify-between">

@@ -4,6 +4,7 @@ import ResaleSvg from "public/icons/resale.svg";
 import { useDispatch, useSelector } from "react-redux";
 
 import { PropertyCategory } from "@/common/enums";
+import { MobileFooter } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { setPropertyCategory } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
@@ -77,11 +78,11 @@ const PropertyTypeOptions = ({
           />
         ))}
       </div>
-      <div className={`flex ${isMobile ? "gap-2" : "gap-4"} mt-auto`}>
+      <div className={`flex gap-4 mt-auto max-md:hidden`}>
         {onBack && (
           <button
             type="button"
-            className={`text-center ${isMobile ? "w-full" : "w-1/3"} border border-gray-300 text-gray-700 hover:bg-gray-50 py-3 rounded-lg font-medium transition duration-200`}
+            className={`text-center  w-1/3 border border-gray-300 text-gray-700 hover:bg-gray-50 py-3 rounded-lg font-medium transition duration-200`}
             onClick={onBack}
           >
             Back
@@ -89,19 +90,38 @@ const PropertyTypeOptions = ({
         )}
         <button
           type="button"
-          className={`text-center ${isMobile ? "w-full" : "flex-1"} bg-red-500 disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-red-600 text-white py-3 rounded-lg font-medium transition duration-200`}
+          className={`text-center  flex-1 bg-red-500 disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-red-600 text-white py-3 rounded-lg font-medium transition duration-200`}
           onClick={onNext}
           onMouseEnter={handlePrefetch}
           onFocus={handlePrefetch}
           disabled={!propertyCategory}
         >
-          {isMobile
-            ? "Next"
-            : isTablet
-              ? "Start Posting"
-              : "Start Posting Your Free Listing"}
+          {isTablet ? "Start Posting" : "Start Posting Your Free Listing"}
         </button>
       </div>
+      <MobileFooter>
+        <div className={`flex gap-2 mt-auto w-full md:hidden`}>
+          {onBack && (
+            <button
+              type="button"
+              className={`text-center w-full border border-gray-300 text-gray-700 hover:bg-gray-50 py-3 rounded-lg font-medium transition duration-200`}
+              onClick={onBack}
+            >
+              Back
+            </button>
+          )}
+          <button
+            type="button"
+            className={`text-center w-full bg-red-500 disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-red-600 text-white py-3 rounded-lg font-medium transition duration-200`}
+            onClick={onNext}
+            onMouseEnter={handlePrefetch}
+            onFocus={handlePrefetch}
+            disabled={!propertyCategory}
+          >
+            Next
+          </button>
+        </div>
+      </MobileFooter>
     </div>
   );
 };
