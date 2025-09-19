@@ -9,11 +9,7 @@ import { BadgeType, PropertyCategory } from "@/common/enums";
 import Properties from "@/components/Properties";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import {
-  setHideFooter,
-  setHideHeader,
-  setHideStickyNavBar,
-} from "@/store/appSlice";
+import { setHideStickyNavBar } from "@/store/appSlice";
 
 import {
   DUMMY_PROPERTIES_FOR_PROPERTY_CARD,
@@ -48,12 +44,8 @@ export default function ShortlistsPage() {
 
   useEffect(() => {
     if (isMobile) {
-      dispatch(setHideHeader(true));
-      dispatch(setHideFooter(true));
       dispatch(setHideStickyNavBar(false));
     } else {
-      dispatch(setHideHeader(false));
-      dispatch(setHideFooter(false));
       dispatch(setHideStickyNavBar(true));
     }
   }, [isMobile, dispatch]);

@@ -9,11 +9,7 @@ import MyPropertyActionsDialog from "@/dialogs/my-property-actions";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
-import {
-  setHideFooter,
-  setHideHeader,
-  setHideStickyNavBar,
-} from "@/store/appSlice";
+import { setHideStickyNavBar } from "@/store/appSlice";
 
 import { PropertyTable } from "../components/PropertiesTable";
 import { PropertyCardList } from "../components/PropertyCardList";
@@ -49,12 +45,8 @@ export default function MyPropertiesPage() {
 
   useEffect(() => {
     if (isMobile) {
-      dispatch(setHideHeader(true));
-      dispatch(setHideFooter(true));
       dispatch(setHideStickyNavBar(false));
     } else {
-      dispatch(setHideHeader(false));
-      dispatch(setHideFooter(false));
       dispatch(setHideStickyNavBar(true));
     }
   }, [isMobile, dispatch]);

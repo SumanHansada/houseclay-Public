@@ -6,11 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { MobileFooter, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import {
-  setHideFooter,
-  setHideHeader,
-  setHideStickyNavBar,
-} from "@/store/appSlice";
+import { setHideStickyNavBar } from "@/store/appSlice";
 import { RootState } from "@/store/store";
 import { SvgIcon } from "@/utility-components";
 
@@ -24,12 +20,8 @@ export default function ConnectsPage() {
 
   useEffect(() => {
     if (isMobile) {
-      dispatch(setHideHeader(true));
-      dispatch(setHideFooter(true));
       dispatch(setHideStickyNavBar(true));
     } else {
-      dispatch(setHideHeader(false));
-      dispatch(setHideFooter(false));
       dispatch(setHideStickyNavBar(false));
     }
   }, [dispatch, isMobile]);
