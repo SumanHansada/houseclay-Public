@@ -1,12 +1,10 @@
 import axios from "axios";
 import { cookies } from "next/headers";
 
-const baseUrl = process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL;
+import { BASE_API_URL } from "@/common/constants";
 
 const serverAxiosInstance = axios.create({
-  baseURL:
-    baseUrl ||
-    "http://ec2-3-107-183-183.ap-southeast-2.compute.amazonaws.com:8080/api",
+  baseURL: BASE_API_URL,
   headers: {
     "Content-Type": "application/json",
   },
