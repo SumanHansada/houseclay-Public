@@ -6,6 +6,7 @@ import com.houseclay.backend.entity.User;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.mapper.UserMapper;
 import com.houseclay.backend.service.AdminService;
+import com.houseclay.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +24,9 @@ public class AdminUserController {
 
     @Autowired
     private AdminService adminService;
+
+    @Autowired
+    private UserService userService;
 
 
     @PostMapping("/blacklist-user")
@@ -97,6 +101,21 @@ public class AdminUserController {
             User user = adminService.searchUser(phoneNo);
             Map<String, Object> response = new HashMap<>();
             response.put("user", UserMapper.toDetailDTO(user));
+            return ResponseEntity.ok(response);
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/add-connects")
+    public ResponseEntity<?> addConnects(@RequestParam int connectCount, @RequestParam String phoneNo,
+                                         @RequestAttribute("authenticatedAdmin") Admin admin) {
+        try {
+            userService.addConnect(phoneNo, connectCount, admin);
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Connect balance updated");
             return ResponseEntity.ok(response);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());

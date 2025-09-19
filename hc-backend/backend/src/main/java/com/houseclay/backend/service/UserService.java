@@ -1,8 +1,7 @@
 package com.houseclay.backend.service;
 
 import com.houseclay.backend.dto.UserLoginResponseDTO;
-import com.houseclay.backend.entity.User;
-import com.houseclay.backend.entity.UserLogin;
+import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.mapper.UserMapper;
 import com.houseclay.backend.payload.LoginPayload;
@@ -13,6 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -72,6 +72,32 @@ public class UserService {
         userLoginRepository.delete(userLogins.get(0));
         return true;
 
+    }
+
+    @Transactional
+    public boolean addConnect(String phoneNo, int connectCount, Admin admin) throws Exception {
+        Optional<User> optionalUser = userRepository.findById(phoneNo);
+        if(optionalUser.isEmpty()) {
+            throw new APIException("Invalid user login", HttpStatus.BAD_REQUEST);
+        }
+        User user = optionalUser.get();
+        for (int i = 0; i < connectCount; i++) {
+            ConnectEvent connectEvent = new ConnectEvent();
+            connectEvent.setEventType(ConnectEventType.CREATED);
+            connectEvent.setActorType(ActorType.ADMIN);
+            connectEvent.setActorId(admin.getUsername());
+            Connect connect = new Connect();
+            connect.setSourceType(ConnectSourceType.ADMIN_GRANT);
+            connect.setSourceId(admin.getUsername());
+            connect.setUser(user);
+            connect.setStatus(ConnectStatus.ACTIVE);
+            connect.getEvents().add(connectEvent);
+            connectEvent.setConnect(connect);
+            user.getConnects().add(connect);
+        }
+        user.setConnectBal(user.getConnectBal() + connectCount);
+        userRepository.save(user);
+        return true;
     }
 
     public boolean doesUserExist(String phoneNo) {
