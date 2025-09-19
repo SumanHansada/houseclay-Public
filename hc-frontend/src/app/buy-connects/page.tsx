@@ -417,25 +417,21 @@ export default function BuyConnectsPage() {
           </div>
 
           {/* Tabs */}
-          <Tabs
-            defaultActive="bundles"
-            className="mb-6"
-            onTabChange={handleTabChange}
-          >
+          <Tabs defaultActive="bundles" onTabChange={handleTabChange}>
             <TabHeader tabsClassName="justify-between border rounded-xl p-2 w-full flex gap-2">
               <Tab
                 label="Bundles"
                 value="bundles"
                 containerClassName="w-1/2 p-2 md:p-3 text-base font-medium max-md:font-normal rounded-lg border transition-colors duration-300"
                 activeClassName="text-red-600 border-red-500"
-                inactiveClassName="text-gray-700  border-transparent"
+                inactiveClassName="text-gray-700 border-transparent"
               />
               <Tab
                 label="Custom"
                 value="custom"
                 containerClassName="w-1/2 p-2 md:p-3 text-base font-medium max-md:font-normal rounded-lg border transition-colors duration-300"
                 activeClassName="text-red-600 border-red-500"
-                inactiveClassName="text-gray-700  border-transparent"
+                inactiveClassName="text-gray-700 border-transparent"
               />
             </TabHeader>
 
@@ -453,9 +449,9 @@ export default function BuyConnectsPage() {
                     ConnectsBundleData.bundles[currentIndex];
                   setSelectedBundle(currentBundle.id);
                 }}
-                width={280}
+                width={275}
                 height={450}
-                gap={30}
+                gap={5}
                 initialIndex={1}
               />
             </TabContent>
@@ -487,7 +483,7 @@ export default function BuyConnectsPage() {
           </Tabs>
 
           {/* Mobile Purchase Summary */}
-          <div className="mb-6">
+          <div className="mt-2 mb-6">
             <p className="text-xs text-gray-600 mb-2">
               This bundle of Connects will expire in 60 Days from today. Unused
               Connects rollover to the next month.{" "}

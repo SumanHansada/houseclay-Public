@@ -54,7 +54,7 @@ export default function ConnectsBundleCard({
       )}
 
       <div
-        className={`w-6 h-6 mb-2 md:mb-4 rounded-full border-2 flex items-center justify-center ${
+        className={`w-4 h-4 md:w-6 md:h-6 mb-2 md:mb-4 rounded-full border-2 flex items-center justify-center ${
           selectedBundle === bundle.id
             ? `${bundle.borderColor} bg-white`
             : "border-slate-300 bg-slate-300 opacity-75"
@@ -62,45 +62,45 @@ export default function ConnectsBundleCard({
       >
         {selectedBundle === bundle.id ? (
           <div
-            className={`w-3 h-3 rounded-full ${bundle.backgroundColor}`}
+            className={`w-2 h-2 md:w-3 md:h-3 rounded-full ${bundle.backgroundColor}`}
           ></div>
         ) : (
-          <div className="w-3 h-3 rounded-full bg-white"></div>
+          <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-white"></div>
         )}
       </div>
 
-      <h2 className="flex font-bold text-xl md:text-2xl text-white">
+      <h2 className="flex font-bold text-lg md:text-2xl text-white">
         {bundle.title}
       </h2>
-      <h2 className="flex font-bold text-xl md:text-2xl mb-4 text-white">
+      <h2 className="flex font-bold text-lg md:text-2xl md:mb-4 text-white">
         {bundle.subTitle}
       </h2>
       <div className="flex items-center gap-1 rounded-full mb-2 md:mb-4">
         <Image src="/icons/coin.svg" alt="coin" width={24} height={24} />
-        <span className="flex font-medium text-white text-xs md:text-sm">
+        <span className="flex font-medium text-white text-xxs md:text-sm">
           {bundle.connects} Connects
         </span>
       </div>
 
-      <div className="flex mb-2">
+      <div className="flex md:mb-2">
         <span className="line-through text-white text-sm md:text-base">
           ₹{bundle.originalPrice.toLocaleString()}/-
         </span>
       </div>
       <div className="flex">
-        <span className="text-xl md:text-2xl font-bold text-white mb-4">
+        <span className="text-lg md:text-2xl font-bold text-white mb-2 md:mb-4">
           ₹{bundle.discountedPrice.toLocaleString()}/-
         </span>
       </div>
 
       <div className="flex items-center justify-between mb-8  text-white">
-        <span className="text-white font-medium text-xs bg-gray-200 bg-opacity-30 px-2 py-1 rounded-full">
+        <span className="text-white font-medium text-xxs bg-gray-200 bg-opacity-30 px-2 py-1 rounded-full">
           {bundle.discount}
         </span>
       </div>
-      <div className="flex items-center gap-1">
-        <span className="text-white text-xs">Validity:</span>
-        <span className="text-white text-sm md:text-base">
+      <div className="flex items-center gap-1 max-md:mt-20">
+        <span className="text-white text-xxs">Validity:</span>
+        <span className="text-white text-xs md:text-base">
           {bundle.validity}
         </span>
       </div>
