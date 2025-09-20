@@ -40,7 +40,7 @@ const GetStarted = ({ onGetStarted }: GetStartedProps) => {
         </div>
       </div>
       <div className="w-full mx-auto mt-auto">
-        <div className="flex items-center bg-green-100 rounded-lg p-4 gap-4 mb-4">
+        <div className="flex items-center bg-green-100 rounded-xl p-4 gap-4 mb-4">
           <span className="bg-teal-500 text-white rounded-md py-2 px-3 text-xs font-medium flex gap-1 items-center">
             <Lightbulb size={15} /> Tip
           </span>
