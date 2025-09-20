@@ -20,7 +20,7 @@ const PropertyOwners: React.FC = () => {
         </p>
         <Link
           href="/list-property"
-          className="inline-block mt-4 px-6 py-2 border-2 border-red-500 text-red-500 rounded-lg font-medium hover:bg-red-500 hover:text-white transition"
+          className="inline-block text-center mt-4 px-6 py-2 border-2 border-red-500 text-red-500 rounded-xl font-medium hover:bg-red-500 hover:text-white transition duration-200"
         >
           List Your Property
         </Link>

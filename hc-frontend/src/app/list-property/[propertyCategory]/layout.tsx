@@ -403,7 +403,7 @@ export default function ListPropertyTypeLayout({
           <div className="fixed bottom-0 left-0 ml-[33.33%] max-md:hidden right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
             <button
               type="button"
-              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="text-center px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 disabled:bg-gray-300 disabled:cursor-not-allowed transition duration-200"
               onClick={handleBack}
             >
               Back
@@ -411,7 +411,7 @@ export default function ListPropertyTypeLayout({
 
             <button
               type="submit"
-              className="px-6 py-3 border border-red-500 bg-red-500 text-white rounded-xl hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300"
+              className="text-center px-6 py-3 border border-red-500 bg-red-500 text-white rounded-xl hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300 transition duration-200"
               disabled={!isFormValid}
               onClick={handleSaveAndNext}
             >
@@ -424,7 +424,7 @@ export default function ListPropertyTypeLayout({
             <div className="md:hidden flex w-full justify-between">
               <button
                 type="button"
-                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                className="text-center px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50  disabled:bg-gray-300 disabled:cursor-not-allowed transition duration-200"
                 onClick={handleBack}
               >
                 Back
@@ -432,7 +432,7 @@ export default function ListPropertyTypeLayout({
 
               <button
                 type="submit"
-                className="px-6 py-3 border border-red-500 bg-red-500 text-white rounded-xl hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300"
+                className="text-center px-6 py-3 border border-red-500 bg-red-500 text-white rounded-xl hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300 transition duration-200"
                 disabled={!isFormValid}
                 onClick={handleSaveAndNext}
               >

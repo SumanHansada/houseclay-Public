@@ -82,7 +82,7 @@ const PropertyTypeOptions = ({
         {onBack && (
           <button
             type="button"
-            className={`text-center  w-1/3 border border-gray-300 text-gray-700 hover:bg-gray-50 py-3 rounded-lg font-medium transition duration-200`}
+            className={`text-center w-1/3 border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 rounded-xl transition duration-200`}
             onClick={onBack}
           >
             Back
@@ -90,7 +90,7 @@ const PropertyTypeOptions = ({
         )}
         <button
           type="button"
-          className={`text-center  flex-1 bg-red-500 disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-red-600 text-white py-3 rounded-lg font-medium transition duration-200`}
+          className={`text-center flex-1 border border-red-500 bg-red-500 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300 hover:bg-red-600 text-white px-6 py-3 rounded-xl transition duration-200`}
           onClick={onNext}
           onMouseEnter={handlePrefetch}
           onFocus={handlePrefetch}
@@ -104,7 +104,7 @@ const PropertyTypeOptions = ({
           {onBack && (
             <button
               type="button"
-              className={`text-center w-full border border-gray-300 text-gray-700 hover:bg-gray-50 py-3 rounded-lg font-medium transition duration-200`}
+              className={`text-center w-full border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 rounded-xl transition duration-200`}
               onClick={onBack}
             >
               Back
@@ -112,7 +112,7 @@ const PropertyTypeOptions = ({
           )}
           <button
             type="button"
-            className={`text-center w-full bg-red-500 disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-red-600 text-white py-3 rounded-lg font-medium transition duration-200`}
+            className={`text-center w-full border border-red-500  bg-red-500 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300 hover:bg-red-600 text-white px-6 py-3 rounded-xl transition duration-200`}
             onClick={onNext}
             onMouseEnter={handlePrefetch}
             onFocus={handlePrefetch}

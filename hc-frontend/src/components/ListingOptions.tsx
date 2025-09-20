@@ -54,7 +54,7 @@ const ListingOptions = ({ isMobile = false, onNext }: ListingOptionsProps) => {
       <div className="flex mt-auto w-full max-md:hidden">
         <button
           type="button"
-          className={`w-full  bg-red-500 disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-red-600 text-white py-3 rounded-lg font-medium transition duration-200 ${isMobile ? "mt-auto" : ""}`}
+          className={`text-center w-full border border-red-500 bg-red-500 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300 hover:bg-red-600 text-white py-3 rounded-xl transition duration-200`}
           onClick={onNext}
           disabled={!listingType}
         >
@@ -68,7 +68,7 @@ const ListingOptions = ({ isMobile = false, onNext }: ListingOptionsProps) => {
         <div className="flex mt-auto w-full md:hidden">
           <button
             type="button"
-            className={`w-full border bg-red-500 disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-red-600 text-white py-3 rounded-lg font-medium transition duration-200 ${isMobile ? "mt-auto" : ""}`}
+            className={`text-center w-full border border-red-500 bg-red-500 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300 hover:bg-red-600 text-white py-3 rounded-xl transition duration-200`}
             onClick={onNext}
             disabled={!listingType}
           >

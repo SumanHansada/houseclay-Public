@@ -523,7 +523,7 @@ export default function BuyConnectsPage() {
           </div>
         </div>
         <button
-          className={`px-8 py-3 border rounded-xl w-full transition-colors ${
+          className={`text-center px-6 py-3 border rounded-xl w-full transition duration-200 ${
             agreedToTerms && newConnectsBalance >= 5
               ? "bg-red-500 border-red-500 text-white hover:bg-red-600"
               : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
@@ -609,7 +609,7 @@ export default function BuyConnectsPage() {
                 </div>
               </div>
               <button
-                className="px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full hover:bg-red-600 transition-colors"
+                className="text-center px-6 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full hover:bg-red-600 transition duration-200"
                 onClick={handleProceedToPay}
               >
                 Proceed to Pay

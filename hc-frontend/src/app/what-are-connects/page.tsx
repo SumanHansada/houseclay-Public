@@ -69,7 +69,7 @@ export default function WhatAreConnectsPage() {
         <div className="flex justify-end w-full">
           <button
             onClick={() => router.push("/buy-connects")}
-            className="px-6 py-3 bg-red-500 text-white hover:bg-red-600 rounded-xl"
+            className="text-center border border-red-500 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl transition duration-200"
           >
             Buy Connects Now
           </button>

@@ -223,13 +223,13 @@ export default function ConnectsPage() {
 
       <MobileFooter>
         <button
-          className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl"
+          className="text-center border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 rounded-xl transition duration-200"
           onClick={() => router.push("/what-are-connects")}
         >
           Know more
         </button>
         <button
-          className="px-6 py-3 border bg-red-500 text-white hover:bg-red-600 rounded-xl"
+          className="text-center border border-red-500 bg-red-500  hover:bg-red-600 text-white px-6 py-3 rounded-xl transition duration-200"
           onClick={() => router.push("/buy-connects")}
         >
           Buy Connects

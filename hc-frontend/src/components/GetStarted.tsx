@@ -50,7 +50,7 @@ const GetStarted = ({ onGetStarted }: GetStartedProps) => {
         </div>
         <MobileFooter>
           <button
-            className="text-center w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-medium transition duration-200"
+            className="text-center w-full border border-red-500 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl transition duration-200"
             onClick={onGetStarted}
           >
             Get Started
