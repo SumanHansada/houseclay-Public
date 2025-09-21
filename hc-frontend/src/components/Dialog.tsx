@@ -175,7 +175,7 @@ export const DialogHeader: React.FC<{ children: React.ReactNode }> = ({
 export const DialogContent: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <div className="overflow-y-auto overflow-x-hidden flex-grow max-h-svh scroll-smooth">
+  <div className="overflow-y-auto overflow-x-hidden flex-grow max-h-svh scroll-smooth max-md:pb-16">
     {children}
   </div>
 );
