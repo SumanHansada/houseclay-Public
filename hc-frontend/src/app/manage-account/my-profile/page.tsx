@@ -29,7 +29,7 @@ const EMAIL_VERIFICATION_SUCCESS_DIALOG_ID =
 
 export default function MyProfilePage() {
   const _isUserDetailLoading = useSelector(selectUserDetailLoading);
-  const auth = useSelector((state: RootState) => state.auth);
+  const { auth } = useSelector((state: RootState) => state);
   const userDetail = useSelector(selectUserDetail);
   const { isDialogOpen, openDialog, closeDialog } = useDialog();
   const dispatch = useDispatch();
@@ -39,13 +39,11 @@ export default function MyProfilePage() {
       name: auth.name || "",
       phoneNumber: auth.phoneNo || "",
       email: auth.emailID || "",
-
-      // backend not ready yet
       phoneVerified: true,
-      onWhatsapp: true,
-      emailVerified: false,
+      onWhatsapp: userDetail ? userDetail.onWhatsApp : false,
+      emailVerified: userDetail ? userDetail.emailVerified : false,
     }),
-    [auth.name, auth.phoneNo, auth.emailID],
+    [auth.name, auth.phoneNo, auth.emailID, userDetail],
   );
 
   const [currentFormValues, setCurrentFormValues] =

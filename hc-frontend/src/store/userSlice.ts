@@ -3,21 +3,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 
 export interface UserDetailState {
-  createdAt: string | null;
-  blacklistedAt: string | null;
-  blacklisted: boolean;
-  broker: boolean;
-
-  userUpdates: UserDetailsDTO["userUpdates"];
-
+  onWhatsApp: boolean;
+  emailVerified: boolean;
   ownedProperties: UserDetailsDTO["ownedProperties"];
   shortlistedProperties: UserDetailsDTO["shortlistedProperties"];
-  viewedProperties: UserDetailsDTO["viewedProperties"];
   contactedProperties: UserDetailsDTO["contactedProperties"];
-
   externalPayments: UserDetailsDTO["externalPayments"];
-  connectTransactions: UserDetailsDTO["connectTransactions"];
-  reportProperties: UserDetailsDTO["reportProperties"];
 }
 
 export interface CheckUser {
@@ -26,7 +17,7 @@ export interface CheckUser {
 }
 
 interface UserState {
-  user: UserDetailState | undefined;
+  userDetail: UserDetailState | undefined;
   userDetailLoading: boolean;
   userDetailError: string | undefined;
   checkUser: CheckUser | undefined;
@@ -35,7 +26,7 @@ interface UserState {
 }
 
 const initialState: UserState = {
-  user: undefined,
+  userDetail: undefined,
   userDetailLoading: false,
   userDetailError: undefined,
 
@@ -50,12 +41,12 @@ const userSlice = createSlice({
   reducers: {
     // userDetails
     setUser(state, action: PayloadAction<UserDetailState>) {
-      state.user = action.payload;
+      state.userDetail = action.payload;
       state.userDetailLoading = false;
       state.userDetailError = undefined;
     },
     clearUser(state) {
-      state.user = undefined;
+      state.userDetail = undefined;
       state.userDetailLoading = false;
       state.userDetailError = undefined;
     },
@@ -101,7 +92,7 @@ export const {
 export default userSlice.reducer;
 
 // Selectors
-export const selectUserDetail = (s: RootState) => s.user.user;
+export const selectUserDetail = (s: RootState) => s.user.userDetail;
 export const selectUserDetailLoading = (s: RootState) =>
   s.user.userDetailLoading;
 export const selectUserDetailError = (s: RootState) => s.user.userDetailError;

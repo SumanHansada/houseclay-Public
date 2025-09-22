@@ -1,21 +1,40 @@
-import { PropertyInfo } from "./PropertyInfo";
+import { PropertyStatus } from "@/common/enums";
 import type { UserDetailState } from "@/store/userSlice";
 
-export interface UserInfoDTO {
-  name: string;
-  email: string;
-  phoneNo: string;
-  blacklisted: boolean;
+interface UserOwnedProperties {
+  propertyID: string;
+  // propertyCategory: PropertyCategory;    // pending
+  propertyType: string;
+  bhkType: string;
+  // rent: number | null;   // pending
+  price: number;
+  locationOrSocietyName: string;
+  propertyState: PropertyStatus;
+  createdOn: string | null;
+  updatedOn: string | null;
+  availableFrom: string;
 }
 
-export interface UserUpdateDTO {
-  updateType: "BLACKLISTED" | "ACTIVATED" | string;
-  updateTime: string;
-  updateBy: string;
-  comment: string;
+export interface PropertyCardWithImages {
+  propertyID: string;
+  propertyType: string;
+  builtUpArea: number;
+  bhkType: string;
+  bathrooms?: number;
+  rent: number | null;
+  furnishing: string;
+  price: number | null;
+  city: string;
+  locationOrSocietyName: string;
+  landmark: string;
+  latitude: number;
+  longitude: number;
+  image: string;
+  images: string[];
+  badges: string | null;
 }
 
-export interface UserExternalPaymentDTO {
+interface UserExternalPayment {
   paymentId: string;
   amount: number;
   status: "COMPLETED" | "FAILED" | "IN_PROGRESS" | string;
@@ -24,44 +43,19 @@ export interface UserExternalPaymentDTO {
   createdAt: string;
   completedAt: string | null;
 }
-export interface UserConnectEventDTO {
-  type: "CREATED" | string;
-  actor: "USER" | "ADMIN" | string;
-  eventTime: string;
-  notes: string | null;
-}
 
-export interface UserConnectTransactionDTO {
-  connectId: string | null;
-  propertyID: string | null;
-  status: "ACTIVE" | "USED" | "EXPIRED" | string;
-  sourceType: "EXTERNAL_PAYMENT" | "ADMIN_GRANT" | string;
-  connectEvents: UserConnectEventDTO[];
-}
+export interface UserDetailsDTO {
+  name: string;
+  phoneNo: string;
+  onWhatsApp: boolean;
+  email: string;
+  emailVerified: boolean;
+  // connectBal: number;    //pending
 
-export interface UserReportPropertyDTO {
-  reportId: number;
-  reportType: string;
-  reportTime: string;
-  userProperty: PropertyInfo;
-}
-
-export interface UserDetailsDTO extends UserInfoDTO {
-  createdAt: string;
-  blacklistedAt: string | null;
-  broker: boolean;
-
-  userUpdates: UserUpdateDTO[];
-
-  ownedProperties: PropertyInfo[];
-  shortlistedProperties: PropertyInfo[];
-  viewedProperties: PropertyInfo[];
-  contactedProperties: PropertyInfo[];
-
-  externalPayments: UserExternalPaymentDTO[];
-  connectTransactions: UserConnectTransactionDTO[];
-
-  reportProperties: UserReportPropertyDTO[];
+  ownedProperties: UserOwnedProperties[];
+  externalPayments: UserExternalPayment[];
+  shortlistedProperties: PropertyCardWithImages[];
+  contactedProperties: PropertyCardWithImages[];
 }
 
 export interface GetUserDetailResponse {
@@ -70,20 +64,12 @@ export interface GetUserDetailResponse {
 
 export function mapUserDTOToDetail(user: UserDetailsDTO): UserDetailState {
   return {
-    createdAt: user.createdAt ?? null,
-    blacklistedAt: user.blacklistedAt ?? null,
-    blacklisted: user.blacklisted,
-    broker: user.broker,
-
-    userUpdates: user.userUpdates,
+    onWhatsApp: user.onWhatsApp,
+    emailVerified: user.emailVerified,
 
     ownedProperties: user.ownedProperties,
     shortlistedProperties: user.shortlistedProperties,
-    viewedProperties: user.viewedProperties,
     contactedProperties: user.contactedProperties,
-
     externalPayments: user.externalPayments,
-    connectTransactions: user.connectTransactions,
-    reportProperties: user.reportProperties,
   };
 }
