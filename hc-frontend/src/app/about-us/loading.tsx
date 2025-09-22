@@ -41,7 +41,7 @@ export default function Loading() {
         </div>
       </header>
 
-      <main className="w-full h-full">
+      <section className="w-full h-full">
         <div className="py-8 max-md:mb-16 md:py-12 xl:py-20 xl:px-28 lg:px-14 md:px-14 px-8">
           {/* Spacer below fixed mobile header */}
           <div className="md:hidden h-[55px]" />
@@ -95,7 +95,7 @@ export default function Loading() {
             </div>
           </section>
         </div>
-      </main>
+      </section>
     </>
   );
 }

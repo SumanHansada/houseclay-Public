@@ -84,7 +84,7 @@ export default function ShortlistsPage() {
   }
 
   return (
-    <main>
+    <section>
       {/* Desktop */}
       <section className="max-md:hidden">
         {/* Header */}
@@ -183,6 +183,6 @@ export default function ShortlistsPage() {
           )}
         </div>
       </div>
-    </main>
+    </section>
   );
 }

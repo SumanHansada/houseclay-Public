@@ -37,7 +37,7 @@ export default function TestimonialsPage() {
     <>
       <MobileHeader title="Success Stories & Testimonials" />
       {/* Desktop */}
-      <main className="w-full h-full max-md:hidden md:block">
+      <section className="w-full h-full max-md:hidden md:block">
         <section className="relative w-full md:aspect-[15/4] md:block">
           <div className="absolute inset-0 hidden md:block">
             <ImageWithLoader
@@ -92,10 +92,10 @@ export default function TestimonialsPage() {
         </div>
 
         <Footer />
-      </main>
+      </section>
 
       {/* Mobile */}
-      <main className="w-full h-full px-6 sm:px-8 md:hidden pt-[55px]">
+      <section className="w-full h-full px-6 sm:px-8 md:hidden pt-[55px]">
         <section className="relative w-full aspect-[9/4]">
           <ImageWithLoader
             src="/images/banner-testimonials-mobile.webp"
@@ -126,7 +126,7 @@ export default function TestimonialsPage() {
             ))}
           </Carousel2D>
         </section>
-      </main>
+      </section>
     </>
   );
 }

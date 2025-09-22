@@ -63,7 +63,7 @@ export default function ContactUsPage() {
     <>
       <MobileHeader title="Contact Us" />
 
-      <main className="relative w-full">
+      <section className="relative w-full">
         {/* --- UNIFIED UPPER Section --- */}
         <section className="relative w-full">
           {/* Desktop Content */}
@@ -238,7 +238,7 @@ export default function ContactUsPage() {
             </div>
           </div>
         </section>
-      </main>
+      </section>
 
       <Footer />
     </>

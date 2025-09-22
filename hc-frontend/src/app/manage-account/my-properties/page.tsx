@@ -99,7 +99,7 @@ export default function MyPropertiesPage() {
   }
 
   return (
-    <main>
+    <section>
       {/* Desktop */}
       <section className="max-md:hidden">
         {/* Header */}
@@ -196,6 +196,6 @@ export default function MyPropertiesPage() {
           onClose={handleCloseDialog}
         />
       )}
-    </main>
+    </section>
   );
 }

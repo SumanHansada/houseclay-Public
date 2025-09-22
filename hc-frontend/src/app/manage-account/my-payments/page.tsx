@@ -68,7 +68,7 @@ export default function MyPaymentsPage() {
   }
 
   return (
-    <main>
+    <section>
       {/* Desktop */}
       <section className="max-md:hidden">
         {/* Header */}
@@ -131,6 +131,6 @@ export default function MyPaymentsPage() {
       <div className="2xl:hidden max-md:px-6 pt-4 pb-16">
         <TransactionCardList items={filteredPayments} onDownload={onDownload} />
       </div>
-    </main>
+    </section>
   );
 }

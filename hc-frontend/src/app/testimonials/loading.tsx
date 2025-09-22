@@ -51,21 +51,21 @@ export default function Loading() {
       </header>
 
       {/* Desktop */}
-      <main className="w-full h-full max-md:hidden md:block">
-        <section className="relative w-full md:aspect-[15/4] md:block">
+      <section className="w-full h-full max-md:hidden md:block">
+        <div className="relative w-full md:aspect-[15/4] md:block">
           <div className="absolute inset-0 hidden md:block">
             <Skeleton height="100%" />
           </div>
           <div className="absolute flex items-center pl-14 h-full xl:pl-40 w-1/4 lg:w-1/3 xl:w-2/5">
             <Skeleton height={44} width={360} />
           </div>
-        </section>
+        </div>
 
         <div className="w-2/3 xl:w-2/5 mx-auto text-center py-16">
           <Skeleton height={20} width={"80%"} className="mx-auto" />
         </div>
 
-        <section className="w-full xl:px-28 lg:px-14 md:px-14 px-8 py-8">
+        <div className="w-full xl:px-28 lg:px-14 md:px-14 px-8 py-8">
           <div className="hidden lg:grid gap-x-8 gap-y-12 grid-cols-[repeat(auto-fill,minmax(380px,1fr))]">
             {Array.from({ length: 6 }).map((_, i) => (
               <CardSkeleton key={i} />
@@ -87,25 +87,25 @@ export default function Loading() {
               </div>
             </div>
           </div>
-        </section>
+        </div>
 
         <div className="lg:flex w-full justify-center py-6 max-lg:hidden">
           <Skeleton width={160} height={44} borderRadius={12} />
         </div>
-      </main>
+      </section>
 
       {/* Mobile */}
-      <main className="w-full h-full px-6 sm:px-8 md:hidden pt-[55px]">
+      <section className="w-full h-full px-6 sm:px-8 md:hidden pt-[55px]">
         {/* Mobile banner: aspect matches 341×152, no crop */}
-        <section className="relative w-full aspect-[341/152]">
+        <div className="relative w-full aspect-[341/152]">
           <Skeleton height="100%" />
-        </section>
+        </div>
 
         <div className="mt-2 px-6">
           <Skeleton height={16} width={"90%"} className="mx-auto" />
         </div>
 
-        <section className="mt-4">
+        <div className="mt-4">
           <div className="relative w-full">
             <div className="grid grid-flow-col auto-cols-max gap-2 py-2 overflow-x-hidden">
               {Array.from({ length: 3 }).map((_, i) => (
@@ -120,8 +120,8 @@ export default function Loading() {
               ))}
             </div>
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
     </>
   );
 }

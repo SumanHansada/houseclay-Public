@@ -28,7 +28,7 @@ export default function AboutUsPage() {
     <>
       <MobileHeader title="About Us" />
 
-      <main className="w-full h-full">
+      <section className="w-full h-full">
         <div className="py-8 max-md:mb-16 md:py-12 xl:py-20 xl:px-28 lg:px-14 md:px-14 px-8">
           {/* HERO */}
           <section className="relative w-full h-[240px] sm:h-[360px] md:h-[460px] lg:h-[620px]">
@@ -178,7 +178,7 @@ export default function AboutUsPage() {
         <div className="max-md:hidden">
           <Footer />
         </div>
-      </main>
+      </section>
     </>
   );
 }

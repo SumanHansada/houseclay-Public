@@ -65,7 +65,7 @@ export default function ManageProfileLayout({
             <aside className="md:w-[320px] lg:w-[380px] xl:w-[460px]">
               <AccountNavList items={ACCOUNT_NAV} iconSize={36} />
             </aside>
-            <main className="overflow-y-auto w-full">{children}</main>
+            <section className="overflow-y-auto w-full">{children}</section>
           </div>
         </div>
         <Footer />
