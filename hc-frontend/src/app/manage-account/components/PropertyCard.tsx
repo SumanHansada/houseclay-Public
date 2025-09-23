@@ -46,7 +46,7 @@ export function PropertyCard({
           <div className="flex shrink-0 items-center gap-2 text-lg">
             {property.propertyState === PropertyStatus.VERIFIED ? (
               <span className="inline-flex items-center gap-1">
-                <CircleCheck size={25} className="text-white fill-green-500" />
+                <CircleCheck size={25} className="text-white fill-green-600" />
                 Active
               </span>
             ) : (
@@ -96,7 +96,7 @@ export function PropertyCard({
 
       <div className="w-full flex justify-between items-center mt-4">
         <div className="text-gray-400 text-sm">
-          Buildup Area
+          BuiltUp Area
           <span className="ml-2 text-gray-800">
             {property.builtUpArea}&nbsp;Sqft.
           </span>

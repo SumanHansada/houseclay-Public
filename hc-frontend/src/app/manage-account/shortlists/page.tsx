@@ -3,18 +3,20 @@
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { BadgeType, PropertyCategory } from "@/common/enums";
+import { BadgeType, PropertyCategory, PropertyStatus } from "@/common/enums";
 import Properties from "@/components/Properties";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
 
-import {
-  DUMMY_PROPERTIES_FOR_PROPERTY_CARD,
-  PropertyCardDummy,
-} from "../dummy";
+import { selectUserDetail, selectUserDetailLoading } from "@/store/userSlice";
+import { PropertyCardWithImages } from "@/interfaces/User";
+import Loading from "./loading";
+
+// 1x1 transparent GIF — tiny, inline, no network
+const FALLBACK_IMG = "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
 
 const filterOptions = [
   { label: "All", value: PropertyCategory.NONE },
@@ -25,22 +27,36 @@ const filterOptions = [
 
 export default function ShortlistsPage() {
   const { isMobile } = useDeviceContext();
+  const _isUserDetailLoading = useSelector(selectUserDetailLoading);
   const dispatch = useDispatch();
 
-  const [selected, setSelected] = useState<PropertyCategory>(
+  const [selectedCategory, setSelectedCategory] = useState<PropertyCategory>(
     PropertyCategory.NONE,
   );
   const [onlyAvailable, setOnlyAvailable] = useState(false);
   const router = useRouter();
+  const userDetail = useSelector(selectUserDetail);
+  const shortlistedProperties = userDetail?.shortlistedProperties ?? [];
 
-  const filtered: PropertyCardDummy[] = useMemo(() => {
-    return DUMMY_PROPERTIES_FOR_PROPERTY_CARD.filter((p) => {
-      if (selected !== PropertyCategory.NONE && p.category !== selected)
+  const propertyCards: PropertyCardWithImages[] = useMemo(() => {
+    return shortlistedProperties.map((prop: PropertyCardWithImages) => ({
+      ...prop,
+      images: prop.image ? [prop.image] : [FALLBACK_IMG],
+    }));
+  }, [shortlistedProperties]);
+
+  const filteredProperties: PropertyCardWithImages[] = useMemo(() => {
+    return propertyCards.filter((prop) => {
+      if (
+        selectedCategory !== PropertyCategory.NONE &&
+        prop.propertyCategory !== selectedCategory
+      )
         return false;
-      if (onlyAvailable) return false;
+      if (onlyAvailable && prop.propertyState !== PropertyStatus.VERIFIED)
+        return false;
       return true;
     });
-  }, [selected, onlyAvailable]);
+  }, [propertyCards, selectedCategory, onlyAvailable]);
 
   useEffect(() => {
     if (isMobile) {
@@ -54,6 +70,10 @@ export default function ShortlistsPage() {
     e.stopPropagation();
     router.push(`/property-details/${propertyID}`);
   };
+
+  if (_isUserDetailLoading) {
+    return <Loading />;
+  }
 
   return (
     <main>
@@ -85,11 +105,11 @@ export default function ShortlistsPage() {
         {/* Filter buttons */}
         <div className="flex gap-3 text-lg font-medium text-gray-700 mb-4">
           {filterOptions.map((f) => {
-            const active = selected === f.value;
+            const active = selectedCategory === f.value;
             return (
               <button
                 key={f.value}
-                onClick={() => setSelected(f.value)}
+                onClick={() => setSelectedCategory(f.value)}
                 aria-pressed={active}
                 className={`px-4 py-2 rounded-lg border shadow-sm whitespace-nowrap ${
                   active ? "bg-red-500 text-white border-red-500" : "bg-white"
@@ -110,11 +130,11 @@ export default function ShortlistsPage() {
         {/* Filter buttons */}
         <div className="flex justify-between text-lg m-3 border p-1.5 sm:p-2 rounded-xl mx-8">
           {filterOptions.map((f) => {
-            const active = selected === f.value;
+            const active = selectedCategory === f.value;
             return (
               <button
                 key={f.value}
-                onClick={() => setSelected(f.value)}
+                onClick={() => setSelectedCategory(f.value)}
                 aria-pressed={active}
                 className={`px-2 py-1 sm:px-4 sm:py-2 flex-1 whitespace-nowrap ${
                   active ? "border border-red-500 text-red-500 rounded-lg" : ""
@@ -131,13 +151,13 @@ export default function ShortlistsPage() {
       <div className="space-y-4 overflow-y-auto max-md:px-6 pt-4 pb-16">
         {/* Property List */}
         <div className="mx-auto w-full py-5">
-          {filtered.length === 0 ? (
+          {filteredProperties.length === 0 ? (
             <div className="text-center text-gray-500 py-12">
               No properties found.
             </div>
           ) : (
             <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(330px,1fr))]">
-              {filtered.map((property, idx) => (
+              {filteredProperties.map((property, idx) => (
                 <Properties
                   key={`${property.propertyID}-${idx}`}
                   property={property}

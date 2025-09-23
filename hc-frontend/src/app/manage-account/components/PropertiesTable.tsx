@@ -78,7 +78,7 @@ export function PropertyTable({
       render: (prop) =>
         prop.propertyState === PropertyStatus.VERIFIED ? (
           <div className="flex items-center gap-1">
-            <CircleCheck size={25} className="text-white fill-green-500" />
+            <CircleCheck size={25} className="text-white fill-green-600" />
             <span>Active</span>
           </div>
         ) : (

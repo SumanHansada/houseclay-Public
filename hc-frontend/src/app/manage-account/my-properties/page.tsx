@@ -13,7 +13,6 @@ import { setHideStickyNavBar } from "@/store/appSlice";
 
 import { PropertyTable } from "../components/PropertiesTable";
 import { PropertyCardList } from "../components/PropertyCardList";
-import { MY_DUMMY_PROPERTIES } from "../dummy";
 import { selectUserDetail, selectUserDetailLoading } from "@/store/userSlice";
 import Loading from "./loading";
 
@@ -37,9 +36,10 @@ export default function MyPropertiesPage() {
   const { isDialogOpen, openDialog, closeDialog } = useDialog();
   const dispatch = useDispatch();
   const userDetail = useSelector(selectUserDetail);
+  const ownedProperties = userDetail?.ownedProperties ?? [];
 
-  const filtered = useMemo(() => {
-    return userDetail?.ownedProperties.filter((prop) => {
+  const filteredProperties = useMemo(() => {
+    return ownedProperties.filter((prop) => {
       if (
         selectedCategory !== PropertyCategory.NONE &&
         prop.propertyCategory !== selectedCategory
@@ -49,7 +49,7 @@ export default function MyPropertiesPage() {
         return false;
       return true;
     });
-  }, [selectedCategory, onlyActive, userDetail]);
+  }, [ownedProperties, selectedCategory, onlyActive]);
 
   useEffect(() => {
     if (isMobile) {
@@ -81,7 +81,7 @@ export default function MyPropertiesPage() {
     setSelectedPropertyId("");
   };
 
-  if (_isUserDetailLoading || !filtered) {
+  if (_isUserDetailLoading) {
     return <Loading />;
   }
 
@@ -158,7 +158,7 @@ export default function MyPropertiesPage() {
       {/* Table for ≥ 2xl */}
       <div className="max-2xl:hidden">
         <PropertyTable
-          properties={filtered}
+          properties={filteredProperties}
           onDashboard={onDashboard}
           onMarkSold={onMarkSold}
         />
@@ -167,7 +167,7 @@ export default function MyPropertiesPage() {
       {/* Cards for < 2xl */}
       <div className="2xl:hidden max-md:px-6 pt-4 pb-16">
         <PropertyCardList
-          items={filtered}
+          items={filteredProperties}
           onDashboard={onDashboard}
           onMarkSold={onMarkSold}
           onOpenDialog={onOpenDialog}
