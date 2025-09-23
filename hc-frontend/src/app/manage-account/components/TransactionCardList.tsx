@@ -1,10 +1,9 @@
 import { useMemo } from "react";
 
-import { MyTransaction } from "@/interfaces/ManageAccount";
+import { UserExternalPayment } from "@/interfaces/User";
 
 import { formatDate, getDateKey } from "../utils";
 import { TransactionCard } from "./TransactionCard";
-import { UserExternalPayment } from "@/interfaces/User";
 
 interface TransactionCardListProps {
   items: UserExternalPayment[];

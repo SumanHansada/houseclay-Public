@@ -1,6 +1,6 @@
-import { UserDetailsDTO } from "@/interfaces/User";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "./store";
+
+import { UserDetailsDTO } from "@/interfaces/User";
 
 export interface UserDetailState {
   onWhatsApp: boolean;
@@ -90,13 +90,3 @@ export const {
   clearCheckUser,
 } = userSlice.actions;
 export default userSlice.reducer;
-
-// Selectors
-export const selectUserDetail = (s: RootState) => s.user.userDetail;
-export const selectUserDetailLoading = (s: RootState) =>
-  s.user.userDetailLoading;
-export const selectUserDetailError = (s: RootState) => s.user.userDetailError;
-
-export const selectCheckUser = (s: RootState) => s.user.checkUser;
-export const selectCheckUserLoading = (s: RootState) => s.user.checkUserLoading;
-export const selectCheckUserError = (s: RootState) => s.user.checkUserError;

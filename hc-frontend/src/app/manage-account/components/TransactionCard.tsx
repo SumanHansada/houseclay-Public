@@ -1,8 +1,9 @@
 import { Download } from "lucide-react";
 
 import { PaymentFilterStatus } from "@/common/enums";
-import { SvgIcon } from "@/utility-components";
 import { UserExternalPayment } from "@/interfaces/User";
+import { SvgIcon } from "@/utility-components";
+
 import { TransactionStatus } from "./TransactionStatus";
 
 interface TransactionCardProps {

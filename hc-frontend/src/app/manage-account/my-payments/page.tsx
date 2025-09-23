@@ -7,10 +7,10 @@ import { PaymentFilterStatus } from "@/common/enums";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
+import { RootState } from "@/store/store";
 
 import { TransactionCardList } from "../components/TransactionCardList";
 import { TransactionTable } from "../components/TransactionTable";
-import { selectUserDetail, selectUserDetailLoading } from "@/store/userSlice";
 import Loading from "./loading";
 
 const filterOptions = [
@@ -21,13 +21,19 @@ const filterOptions = [
 
 export default function MyPaymentsPage() {
   const { isMobile } = useDeviceContext();
-  const _isUserDetailLoading = useSelector(selectUserDetailLoading);
+  const _isUserDetailLoading = useSelector(
+    (state: RootState) => state.user.userDetailLoading,
+  );
   const dispatch = useDispatch();
-  const userDetail = useSelector(selectUserDetail);
-  const externalPayments = userDetail?.externalPayments ?? [];
+  const { userDetail } = useSelector((state: RootState) => state.user);
 
   const [selectedFilter, setSelectedFilter] = useState<PaymentFilterStatus>(
     PaymentFilterStatus.ALL,
+  );
+
+  const externalPayments = useMemo(
+    () => userDetail?.externalPayments ?? [],
+    [userDetail],
   );
 
   const filteredPayments = useMemo(() => {

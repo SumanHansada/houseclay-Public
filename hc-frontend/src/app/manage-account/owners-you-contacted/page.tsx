@@ -7,12 +7,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { BadgeType, PropertyCategory, PropertyStatus } from "@/common/enums";
 import Properties from "@/components/Properties";
+import { PropertyCardWithImages } from "@/interfaces/User";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
+import { RootState } from "@/store/store";
 
-import { selectUserDetail, selectUserDetailLoading } from "@/store/userSlice";
-import { PropertyCardWithImages } from "@/interfaces/User";
 import Loading from "./loading";
 
 const filterOptions = [
@@ -28,14 +28,20 @@ const FALLBACK_IMG = "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
 export default function OwnersContactedPage() {
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
-  const _isUserDetailLoading = useSelector(selectUserDetailLoading);
+  const _isUserDetailLoading = useSelector(
+    (state: RootState) => state.user.userDetailLoading,
+  );
   const [selectedCategory, setSelectedCategory] = useState<PropertyCategory>(
     PropertyCategory.NONE,
   );
   const [onlyAvailable, setOnlyAvailable] = useState(false);
   const router = useRouter();
-  const userDetail = useSelector(selectUserDetail);
-  const contactedProperties = userDetail?.contactedProperties ?? [];
+  const { userDetail } = useSelector((state: RootState) => state.user);
+
+  const contactedProperties = useMemo(
+    () => userDetail?.contactedProperties ?? [],
+    [userDetail],
+  );
 
   const propertyCards: PropertyCardWithImages[] = useMemo(() => {
     return contactedProperties.map((prop: PropertyCardWithImages) => ({

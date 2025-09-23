@@ -1,5 +1,7 @@
 "use client";
 
+import type { SerializedError } from "@reduxjs/toolkit";
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { type ReactNode, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
@@ -7,16 +9,14 @@ import { ACCOUNT_NAV } from "@/common/dataConstants";
 import { AccountNavList } from "@/components/AccountNavList";
 import { Footer } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { setHideFooter, setHideHeader } from "@/store/appSlice";
 import { useGetUserDetailQuery } from "@/store/apiSlice";
+import { setHideFooter, setHideHeader } from "@/store/appSlice";
+import { syncUserDetails } from "@/store/authSlice";
 import {
   setUser,
   setUserDetailError,
   setUserDetailLoading,
 } from "@/store/userSlice";
-import { syncUserDetails } from "@/store/authSlice";
-import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import type { SerializedError } from "@reduxjs/toolkit";
 
 export default function ManageProfileLayout({
   children,

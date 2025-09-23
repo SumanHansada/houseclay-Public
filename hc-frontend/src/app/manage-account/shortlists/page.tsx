@@ -7,12 +7,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { BadgeType, PropertyCategory, PropertyStatus } from "@/common/enums";
 import Properties from "@/components/Properties";
+import { PropertyCardWithImages } from "@/interfaces/User";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
+import { RootState } from "@/store/store";
 
-import { selectUserDetail, selectUserDetailLoading } from "@/store/userSlice";
-import { PropertyCardWithImages } from "@/interfaces/User";
 import Loading from "./loading";
 
 // 1x1 transparent GIF — tiny, inline, no network
@@ -27,7 +27,9 @@ const filterOptions = [
 
 export default function ShortlistsPage() {
   const { isMobile } = useDeviceContext();
-  const _isUserDetailLoading = useSelector(selectUserDetailLoading);
+  const _isUserDetailLoading = useSelector(
+    (state: RootState) => state.user.userDetailLoading,
+  );
   const dispatch = useDispatch();
 
   const [selectedCategory, setSelectedCategory] = useState<PropertyCategory>(
@@ -35,8 +37,12 @@ export default function ShortlistsPage() {
   );
   const [onlyAvailable, setOnlyAvailable] = useState(false);
   const router = useRouter();
-  const userDetail = useSelector(selectUserDetail);
-  const shortlistedProperties = userDetail?.shortlistedProperties ?? [];
+  const { userDetail } = useSelector((state: RootState) => state.user);
+
+  const shortlistedProperties = useMemo(
+    () => userDetail?.shortlistedProperties ?? [],
+    [userDetail],
+  );
 
   const propertyCards: PropertyCardWithImages[] = useMemo(() => {
     return shortlistedProperties.map((prop: PropertyCardWithImages) => ({

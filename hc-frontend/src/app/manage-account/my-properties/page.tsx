@@ -10,10 +10,10 @@ import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
+import { RootState } from "@/store/store";
 
 import { PropertyTable } from "../components/PropertiesTable";
 import { PropertyCardList } from "../components/PropertyCardList";
-import { selectUserDetail, selectUserDetailLoading } from "@/store/userSlice";
 import Loading from "./loading";
 
 const filterOptions = [
@@ -26,7 +26,9 @@ const filterOptions = [
 const PROPERTY_ACTIONS_DIALOG_ID = "property-actions-dialog";
 
 export default function MyPropertiesPage() {
-  const _isUserDetailLoading = useSelector(selectUserDetailLoading);
+  const _isUserDetailLoading = useSelector(
+    (state: RootState) => state.user.userDetailLoading,
+  );
   const { isMobile } = useDeviceContext();
   const [selectedCategory, setSelectedCategory] = useState<PropertyCategory>(
     PropertyCategory.NONE,
@@ -35,8 +37,12 @@ export default function MyPropertiesPage() {
   const [selectedPropertyId, setSelectedPropertyId] = useState<string>("");
   const { isDialogOpen, openDialog, closeDialog } = useDialog();
   const dispatch = useDispatch();
-  const userDetail = useSelector(selectUserDetail);
-  const ownedProperties = userDetail?.ownedProperties ?? [];
+  const { userDetail } = useSelector((state: RootState) => state.user);
+
+  const ownedProperties = useMemo(
+    () => userDetail?.ownedProperties ?? [],
+    [userDetail],
+  );
 
   const filteredProperties = useMemo(() => {
     return ownedProperties.filter((prop) => {

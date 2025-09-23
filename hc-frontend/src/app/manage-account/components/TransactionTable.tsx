@@ -1,8 +1,9 @@
 import { Download } from "lucide-react";
 
 import { Column, WebsiteDataTable } from "@/components/DataTable";
-import { SvgIcon } from "@/utility-components";
 import { UserExternalPayment } from "@/interfaces/User";
+import { SvgIcon } from "@/utility-components";
+
 import { TransactionStatus } from "./TransactionStatus";
 
 export const TransactionTable = ({

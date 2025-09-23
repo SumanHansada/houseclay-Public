@@ -5,9 +5,9 @@ import { CircleCheck, Ellipsis } from "lucide-react";
 import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { formatINRCurrency, pascalCase } from "@/common/utils";
 import { Column, WebsiteDataTable } from "@/components/DataTable";
+import { UserOwnedProperties } from "@/interfaces/User";
 
 import { ActionMenu, type ActionOption } from "./ActionMenu";
-import { UserOwnedProperties } from "@/interfaces/User";
 
 export function PropertyTable({
   properties,

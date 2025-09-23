@@ -4,10 +4,10 @@ import { CircleCheck, Ellipsis } from "lucide-react";
 
 import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { formatINRCurrency, pascalCase } from "@/common/utils";
+import { UserOwnedProperties } from "@/interfaces/User";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 
 import { ActionMenu, type ActionOption } from "./ActionMenu";
-import { UserOwnedProperties } from "@/interfaces/User";
 
 export interface PropertyCardProps {
   property: UserOwnedProperties;

@@ -10,12 +10,11 @@ import EmailVerificationSuccessDialog from "@/dialogs/email-verification-success
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
+import { RootState } from "@/store/store";
 
 import { DesktopClient } from "./DesktopClient";
-import { MobileClient } from "./MobileClient";
-import { selectUserDetail, selectUserDetailLoading } from "@/store/userSlice";
-import { RootState } from "@/store/store";
 import Loading from "./loading";
+import { MobileClient } from "./MobileClient";
 
 const validationSchema = Yup.object({
   name: Yup.string().required("Name is required"),
@@ -28,11 +27,13 @@ const EMAIL_VERIFICATION_SUCCESS_DIALOG_ID =
   "email-verification-success-dialog";
 
 export default function MyProfilePage() {
-  const _isUserDetailLoading = useSelector(selectUserDetailLoading);
+  const _isUserDetailLoading = useSelector(
+    (state: RootState) => state.user.userDetailLoading,
+  );
   const { auth } = useSelector((state: RootState) => state);
-  const userDetail = useSelector(selectUserDetail);
   const { isDialogOpen, openDialog, closeDialog } = useDialog();
   const dispatch = useDispatch();
+  const { userDetail } = useSelector((state: RootState) => state.user);
 
   const initialValues: MyProfileFormValues = useMemo(
     () => ({
