@@ -36,14 +36,20 @@ export interface PropertyCardWithImages {
   badges: string | null;
 }
 
-interface UserExternalPayment {
+export interface UserExternalPayment {
+  paymentType:
+    | "Basic Blue Bundle"
+    | "Premium Gold Bundle"
+    | "Elite Purple Bundle"
+    | "Custom Connects"
+    | string; // pending
   paymentId: string;
   amount: number;
+  connects: number;
   status: "COMPLETED" | "FAILED" | "IN_PROGRESS" | string;
-  signature: string | null;
-  razorPaymentId: string | null;
   createdAt: string;
   completedAt: string | null;
+  invoice: boolean;
 }
 
 export interface UserDetailsDTO {

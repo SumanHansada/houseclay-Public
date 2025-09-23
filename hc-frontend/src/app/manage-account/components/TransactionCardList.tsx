@@ -4,9 +4,10 @@ import { MyTransaction } from "@/interfaces/ManageAccount";
 
 import { formatDate, getDateKey } from "../utils";
 import { TransactionCard } from "./TransactionCard";
+import { UserExternalPayment } from "@/interfaces/User";
 
 interface TransactionCardListProps {
-  items: MyTransaction[];
+  items: UserExternalPayment[];
   onDownload: (transactionId: string) => void;
 }
 
@@ -17,27 +18,27 @@ export function TransactionCardList({
   const groupedTransactions = useMemo(() => {
     const grouped = items.reduce(
       (acc, transaction) => {
-        const dateKey = getDateKey(transaction.dateTime);
+        const dateKey = getDateKey(transaction.createdAt);
         if (!acc[dateKey]) {
           acc[dateKey] = [];
         }
         acc[dateKey].push(transaction);
         return acc;
       },
-      {} as Record<string, MyTransaction[]>,
+      {} as Record<string, UserExternalPayment[]>,
     );
 
     const groupedArray = Object.entries(grouped)
       .map(([_, transactions]) => ({
-        date: formatDate(transactions[0].dateTime),
+        date: formatDate(transactions[0].createdAt),
         transactions: transactions.sort(
           (a, b) =>
-            new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime(),
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
         ),
       }))
       .sort((a, b) => {
-        const dateA = new Date(a.transactions[0].dateTime).getTime();
-        const dateB = new Date(b.transactions[0].dateTime).getTime();
+        const dateA = new Date(a.transactions[0].createdAt).getTime();
+        const dateB = new Date(b.transactions[0].createdAt).getTime();
         return dateB - dateA;
       });
 
@@ -54,8 +55,8 @@ export function TransactionCardList({
           <div className="grid gap-4 grid-cols-1">
             {group.transactions.map((transaction) => (
               <TransactionCard
-                key={transaction.id}
-                {...transaction}
+                key={transaction.paymentId}
+                transaction={transaction}
                 onDownload={onDownload}
               />
             ))}
@@ -64,7 +65,7 @@ export function TransactionCardList({
       ))}
       {groupedTransactions.length === 0 && (
         <div className="text-center py-12 text-gray-500">
-          No properties found
+          No transactions found
         </div>
       )}
     </div>

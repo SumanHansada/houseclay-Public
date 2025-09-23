@@ -63,7 +63,8 @@ export enum LeadCategory {
 export enum PaymentFilterStatus {
   ALL = "ALL",
   COMPLETED = "COMPLETED",
-  CANCELLED = "CANCELLED",
+  FAILED = "FAILED",
+  IN_PROGRESS = "IN_PROGRESS",
 }
 
 export enum ErrorStatus {

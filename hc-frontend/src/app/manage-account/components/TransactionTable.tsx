@@ -1,42 +1,42 @@
-import { CircleCheck, CircleX, Download } from "lucide-react";
+import { Download } from "lucide-react";
 
-import { PaymentFilterStatus } from "@/common/enums";
 import { Column, WebsiteDataTable } from "@/components/DataTable";
-import { MyTransaction } from "@/interfaces/ManageAccount";
 import { SvgIcon } from "@/utility-components";
+import { UserExternalPayment } from "@/interfaces/User";
+import { TransactionStatus } from "./TransactionStatus";
 
 export const TransactionTable = ({
   transactions,
   onDownload,
 }: {
-  transactions: MyTransaction[];
+  transactions: UserExternalPayment[];
   onDownload: (transactionId: string) => void;
 }) => {
   const handleDownload = (transactionId: string) => {
     console.log("Download Invoice: ", transactionId);
     onDownload(transactionId);
   };
-  const columns: Column<MyTransaction>[] = [
+  const columns: Column<UserExternalPayment>[] = [
     {
       key: "type",
       label: "Type",
       cellClassName: "font-medium text-gray-800",
-      accessor: "type",
+      accessor: "paymentType",
     },
     {
       key: "dateTime",
       label: "Date & Time",
-      render: (p) => new Date(p.dateTime).toLocaleString("en-IN"),
+      render: (payInfo) => new Date(payInfo.createdAt).toLocaleString("en-IN"),
     },
     {
       key: "connects",
       label: "Connects",
-      render: (item) =>
-        item.connects ? (
+      render: (payInfo) =>
+        payInfo.connects ? (
           <span className="flex items-center">
             <SvgIcon iconSize="medium" name="coin" size={20} />
             <span className="text-xl font-medium text-gray-700">
-              {item.connects}
+              {payInfo.connects}
             </span>
           </span>
         ) : (
@@ -47,30 +47,24 @@ export const TransactionTable = ({
       key: "amount",
       label: "Amount",
       cellClassName: "font-medium text-gray-800",
-      render: (item) => <span>&#8377;{item.amount}/-</span>,
+      render: (payInfo) => <span>&#8377;{payInfo.amount}/-</span>,
     },
     {
       key: "status",
       label: "Status",
-      render: (item) =>
-        item.status === PaymentFilterStatus.COMPLETED ? (
-          <div className="flex gap-1 items-center">
-            <CircleCheck size={25} className="text-white fill-lime-500" />
-            <span>Completed</span>
-          </div>
-        ) : (
-          <div className="flex gap-1 items-center">
-            <CircleX size={25} className="text-white fill-red-500" />
-            <span>Cancelled</span>
-          </div>
-        ),
+      render: (payInfo) => {
+        return TransactionStatus(payInfo.status);
+      },
     },
     {
       key: "invoice",
       label: "Invoice",
-      render: (item) =>
-        item.invoice ? (
-          <button className="" onClick={() => handleDownload(item.id)}>
+      render: (payInfo) =>
+        payInfo.invoice ? (
+          <button
+            className=""
+            onClick={() => handleDownload(payInfo.paymentId)}
+          >
             <Download size={25} className="text-red-500" />
           </button>
         ) : (
@@ -84,7 +78,7 @@ export const TransactionTable = ({
       <WebsiteDataTable
         columns={columns}
         data={transactions}
-        getRowId={(item) => item.id}
+        getRowId={(item) => item.paymentId}
         noDataMessage="No transactions found"
       />
     </div>
