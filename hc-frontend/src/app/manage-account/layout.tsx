@@ -15,7 +15,6 @@ import {
   setUserDetailLoading,
 } from "@/store/userSlice";
 import { syncUserDetails } from "@/store/authSlice";
-import { mapUserDTOToDetail } from "@/interfaces/User";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import type { SerializedError } from "@reduxjs/toolkit";
 
@@ -41,19 +40,19 @@ export default function ManageProfileLayout({
   }, [dispatch, isError, error]);
 
   useEffect(() => {
-    const userDetails = data?.user;
-    if (!userDetails) return;
+    const userDetail = data?.user;
+    if (!userDetail) return;
 
     dispatch(
       syncUserDetails({
-        name: userDetails.name,
-        email: userDetails.email,
-        phoneNo: userDetails.phoneNo,
-        // connectBal
+        name: userDetail.name,
+        email: userDetail.email,
+        phoneNo: userDetail.phoneNo,
+        connectBal: userDetail.connectBal,
       }),
     );
 
-    dispatch(setUser(mapUserDTOToDetail(userDetails)));
+    dispatch(setUser(userDetail));
   }, [dispatch, data]);
 
   useEffect(() => {

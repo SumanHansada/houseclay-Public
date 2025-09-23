@@ -27,17 +27,6 @@ export type MyRequirementsFormValues = {
   budget: string;
 };
 
-export interface MyProperty {
-  propertyID: string;
-  propertyName: string;
-  category: PropertyCategory;
-  listedOn: string;
-  builtupArea: number;
-  price: number | null;
-  rent: number | null;
-  status: string;
-}
-
 export interface MyTransaction {
   id: string;
   type: string;

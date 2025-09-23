@@ -2,14 +2,13 @@
 
 import { useMemo } from "react";
 
-import { MyProperty } from "@/interfaces/ManageAccount";
-
 import { formatDate, getDateKey } from "../utils";
 import { PropertyCard } from "./PropertyCard";
+import { UserOwnedProperties } from "@/interfaces/User";
 
 interface GroupedProperties {
   date: string;
-  properties: MyProperty[];
+  properties: UserOwnedProperties[];
 }
 
 export function PropertyCardList({
@@ -18,7 +17,7 @@ export function PropertyCardList({
   onMarkSold,
   onOpenDialog,
 }: {
-  items: MyProperty[];
+  items: UserOwnedProperties[];
   onDashboard: (propertyId: string) => void;
   onMarkSold: (propertyId: string) => void;
   onOpenDialog: (propertyId: string) => void;
@@ -27,28 +26,28 @@ export function PropertyCardList({
     // Group properties by date
     const grouped = items.reduce(
       (acc, property) => {
-        const dateKey = getDateKey(property.listedOn);
+        const dateKey = getDateKey(property.createdOn);
         if (!acc[dateKey]) {
           acc[dateKey] = [];
         }
         acc[dateKey].push(property);
         return acc;
       },
-      {} as Record<string, MyProperty[]>,
+      {} as Record<string, UserOwnedProperties[]>,
     );
 
     // Convert to array and sort by date (newest first)
     const groupedArray: GroupedProperties[] = Object.entries(grouped)
       .map(([_, properties]) => ({
-        date: formatDate(properties[0].listedOn),
+        date: formatDate(properties[0].createdOn),
         properties: properties.sort(
           (a, b) =>
-            new Date(b.listedOn).getTime() - new Date(a.listedOn).getTime(),
+            new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime(),
         ),
       }))
       .sort((a, b) => {
-        const dateA = new Date(a.properties[0].listedOn);
-        const dateB = new Date(b.properties[0].listedOn);
+        const dateA = new Date(a.properties[0].createdOn);
+        const dateB = new Date(b.properties[0].createdOn);
         return dateB.getTime() - dateA.getTime();
       });
 
@@ -66,7 +65,7 @@ export function PropertyCardList({
             {group.properties.map((property) => (
               <PropertyCard
                 key={property.propertyID}
-                {...property}
+                property={property}
                 onDashboard={onDashboard}
                 onMarkSold={onMarkSold}
                 onOpenDialog={onOpenDialog}

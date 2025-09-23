@@ -2,9 +2,9 @@
 
 import { Check } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { PropertyCategory } from "@/common/enums";
+import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import MyPropertyActionsDialog from "@/dialogs/my-property-actions";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
@@ -14,6 +14,8 @@ import { setHideStickyNavBar } from "@/store/appSlice";
 import { PropertyTable } from "../components/PropertiesTable";
 import { PropertyCardList } from "../components/PropertyCardList";
 import { MY_DUMMY_PROPERTIES } from "../dummy";
+import { selectUserDetail, selectUserDetailLoading } from "@/store/userSlice";
+import Loading from "./loading";
 
 const filterOptions = [
   { label: "All", value: PropertyCategory.NONE },
@@ -25,23 +27,29 @@ const filterOptions = [
 const PROPERTY_ACTIONS_DIALOG_ID = "property-actions-dialog";
 
 export default function MyPropertiesPage() {
+  const _isUserDetailLoading = useSelector(selectUserDetailLoading);
   const { isMobile } = useDeviceContext();
-  const [selected, setSelected] = useState<PropertyCategory>(
+  const [selectedCategory, setSelectedCategory] = useState<PropertyCategory>(
     PropertyCategory.NONE,
   );
   const [onlyActive, setOnlyActive] = useState(false);
   const [selectedPropertyId, setSelectedPropertyId] = useState<string>("");
   const { isDialogOpen, openDialog, closeDialog } = useDialog();
   const dispatch = useDispatch();
+  const userDetail = useSelector(selectUserDetail);
 
   const filtered = useMemo(() => {
-    return MY_DUMMY_PROPERTIES.filter((p) => {
-      if (selected !== PropertyCategory.NONE && p.category !== selected)
+    return userDetail?.ownedProperties.filter((prop) => {
+      if (
+        selectedCategory !== PropertyCategory.NONE &&
+        prop.propertyCategory !== selectedCategory
+      )
         return false;
-      if (onlyActive && p.status === "Inactive") return false;
+      if (onlyActive && prop.propertyState !== PropertyStatus.VERIFIED)
+        return false;
       return true;
     });
-  }, [selected, onlyActive]);
+  }, [selectedCategory, onlyActive, userDetail]);
 
   useEffect(() => {
     if (isMobile) {
@@ -73,6 +81,10 @@ export default function MyPropertiesPage() {
     setSelectedPropertyId("");
   };
 
+  if (_isUserDetailLoading || !filtered) {
+    return <Loading />;
+  }
+
   return (
     <main>
       {/* Desktop */}
@@ -102,11 +114,11 @@ export default function MyPropertiesPage() {
         {/* Filters */}
         <div className="mb-8 flex gap-3 text-lg font-medium text-gray-700">
           {filterOptions.map((f) => {
-            const active = selected === f.value;
+            const active = selectedCategory === f.value;
             return (
               <button
                 key={f.value}
-                onClick={() => setSelected(f.value)}
+                onClick={() => setSelectedCategory(f.value)}
                 aria-pressed={active}
                 className={`whitespace-nowrap rounded-lg border px-4 py-2 shadow-sm ${
                   active ? "bg-red-500 text-white border-red-500" : "bg-white"
@@ -126,11 +138,11 @@ export default function MyPropertiesPage() {
         {/* Filter buttons */}
         <div className="flex justify-between text-lg m-3 border p-1.5 sm:p-2 rounded-xl mx-8">
           {filterOptions.map((f) => {
-            const active = selected === f.value;
+            const active = selectedCategory === f.value;
             return (
               <button
                 key={f.value}
-                onClick={() => setSelected(f.value)}
+                onClick={() => setSelectedCategory(f.value)}
                 aria-pressed={active}
                 className={`px-2 py-1 sm:px-4 sm:py-2 flex-1 whitespace-nowrap ${
                   active ? "border border-red-500 text-red-500 rounded-lg" : ""
@@ -144,7 +156,7 @@ export default function MyPropertiesPage() {
       </section>
 
       {/* Table for ≥ 2xl */}
-      <div className="hidden 2xl:block">
+      <div className="max-2xl:hidden">
         <PropertyTable
           properties={filtered}
           onDashboard={onDashboard}

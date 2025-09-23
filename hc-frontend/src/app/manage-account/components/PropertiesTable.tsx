@@ -2,62 +2,52 @@
 
 import { CircleCheck, Ellipsis } from "lucide-react";
 
-import { PropertyCategory } from "@/common/enums";
-import { formatINRCurrency } from "@/common/utils";
+import { PropertyCategory, PropertyStatus } from "@/common/enums";
+import { formatINRCurrency, pascalCase } from "@/common/utils";
 import { Column, WebsiteDataTable } from "@/components/DataTable";
 
 import { ActionMenu, type ActionOption } from "./ActionMenu";
-
-interface Property {
-  propertyID: string;
-  propertyName: string;
-  category: PropertyCategory;
-  listedOn: string;
-  builtupArea: number;
-  price: number | null;
-  rent: number | null;
-  status: string;
-}
+import { UserOwnedProperties } from "@/interfaces/User";
 
 export function PropertyTable({
   properties,
   onDashboard,
   onMarkSold,
 }: {
-  properties: Property[];
+  properties: UserOwnedProperties[];
   onDashboard: (propertyId: string) => void;
   onMarkSold: (propertyId: string) => void;
 }) {
-  const columns: Column<Property>[] = [
+  const columns: Column<UserOwnedProperties>[] = [
     {
       key: "propertyName",
       label: "Property",
       cellClassName: "max-w-20",
-      render: (item) => (
-        <span
-          title={item.propertyName}
-          className="inline-block max-w-[90%] truncate align-middle font-medium text-gray-800"
-        >
-          {item.propertyName}
-        </span>
-      ),
-    },
-    {
-      key: "type",
-      label: "Type",
-      accessor: "category",
-      headerClassName: "w-[12%]",
-      cellClassName: "w-[12%] whitespace-nowrap",
+      render: (prop) => {
+        const propertyTitle = `${prop.bhkType} in ${prop.locationOrSocietyName} for ${pascalCase(prop.propertyCategory)}`;
+        return (
+          <span
+            title={propertyTitle}
+            className="inline-block max-w-[90%] truncate align-middle font-medium text-gray-800"
+          >
+            {propertyTitle}
+          </span>
+        );
+      },
     },
     {
       key: "price",
       label: "Price",
       headerClassName: "w-[14%]",
       cellClassName: "w-[14%] font-medium text-gray-800 whitespace-nowrap",
-      render: (item) => {
-        const isResale = item.category === PropertyCategory.RESALE;
-        const amount = isResale ? item.price : item.rent;
-        return <span>{amount != null ? formatINRCurrency(amount) : "-"}</span>;
+      render: (prop) => {
+        const isResale = prop.propertyCategory === PropertyCategory.RESALE;
+        const amount = isResale ? prop.price : prop.rent;
+        const formattedAmount =
+          amount != null ? formatINRCurrency(amount) : "-";
+        return (
+          <span>{isResale ? formattedAmount : `${formattedAmount}/Month`}</span>
+        );
       },
     },
     {
@@ -65,8 +55,8 @@ export function PropertyTable({
       label: "Listed on",
       headerClassName: "w-[14%]",
       cellClassName: "w-[14%] whitespace-nowrap text-gray-700",
-      render: (item) => {
-        const date = new Date(item.listedOn);
+      render: (prop) => {
+        const date = new Date(prop.createdOn);
         const day = date.getDate().toString().padStart(2, "0");
         const month = date.toLocaleString("en-US", { month: "short" });
         const year = date.getFullYear();
@@ -78,17 +68,17 @@ export function PropertyTable({
       label: "Built-up",
       headerClassName: "w-[12%]",
       cellClassName: "w-[12%] whitespace-nowrap",
-      render: (item) => <span>{item.builtupArea}&nbsp;Sqft.</span>,
+      render: (prop) => <span>{prop.builtUpArea}&nbsp;Sqft.</span>,
     },
     {
       key: "status",
       label: "Status",
       headerClassName: "w-[10%]",
       cellClassName: "w-[10%]",
-      render: (item) =>
-        item.status === "Active" ? (
+      render: (prop) =>
+        prop.propertyState === PropertyStatus.VERIFIED ? (
           <div className="flex items-center gap-1">
-            <CircleCheck size={25} className="text-white fill-lime-500" />
+            <CircleCheck size={25} className="text-white fill-green-500" />
             <span>Active</span>
           </div>
         ) : (
@@ -125,8 +115,7 @@ export function PropertyTable({
   return (
     <div className="bg-white overflow-x-auto 2xl:overflow-visible">
       <WebsiteDataTable
-        // enforce fixed layout so widths behave
-        className="hidden 2xl:block"
+        className="max-2xl:hidden"
         columns={columns}
         data={properties}
         getRowId={(row) => row.propertyID}

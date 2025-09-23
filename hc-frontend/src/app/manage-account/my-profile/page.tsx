@@ -39,7 +39,7 @@ export default function MyProfilePage() {
       name: auth.name || "",
       phoneNumber: auth.phoneNo || "",
       email: auth.emailID || "",
-      phoneVerified: true,
+      phoneVerified: true, //Already verified when a new user register, so always true
       onWhatsapp: userDetail ? userDetail.onWhatsApp : false,
       emailVerified: userDetail ? userDetail.emailVerified : false,
     }),

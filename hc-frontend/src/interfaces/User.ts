@@ -1,22 +1,24 @@
-import { PropertyStatus } from "@/common/enums";
-import type { UserDetailState } from "@/store/userSlice";
+import { PropertyCategory, PropertyStatus } from "@/common/enums";
 
-interface UserOwnedProperties {
+export interface UserOwnedProperties {
   propertyID: string;
-  // propertyCategory: PropertyCategory;    // pending
+  propertyCategory: PropertyCategory; // pending
   propertyType: string;
   bhkType: string;
-  // rent: number | null;   // pending
-  price: number;
+  rent: number | null; // pending
+  builtUpArea: number; // pending
+  price: number | null;
   locationOrSocietyName: string;
   propertyState: PropertyStatus;
-  createdOn: string | null;
+  createdOn: string;
   updatedOn: string | null;
   availableFrom: string;
 }
 
 export interface PropertyCardWithImages {
   propertyID: string;
+  propertyCategory: PropertyCategory; // pending
+  propertyState: PropertyStatus; // pending
   propertyType: string;
   builtUpArea: number;
   bhkType: string;
@@ -47,10 +49,10 @@ interface UserExternalPayment {
 export interface UserDetailsDTO {
   name: string;
   phoneNo: string;
-  onWhatsApp: boolean;
   email: string;
+  onWhatsApp: boolean;
   emailVerified: boolean;
-  // connectBal: number;    //pending
+  connectBal: number; // pending
 
   ownedProperties: UserOwnedProperties[];
   externalPayments: UserExternalPayment[];
@@ -60,16 +62,4 @@ export interface UserDetailsDTO {
 
 export interface GetUserDetailResponse {
   user: UserDetailsDTO;
-}
-
-export function mapUserDTOToDetail(user: UserDetailsDTO): UserDetailState {
-  return {
-    onWhatsApp: user.onWhatsApp,
-    emailVerified: user.emailVerified,
-
-    ownedProperties: user.ownedProperties,
-    shortlistedProperties: user.shortlistedProperties,
-    contactedProperties: user.contactedProperties,
-    externalPayments: user.externalPayments,
-  };
 }
