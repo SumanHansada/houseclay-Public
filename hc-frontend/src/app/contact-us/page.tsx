@@ -65,13 +65,16 @@ export default function ContactUsPage() {
 
       <section className="relative w-full">
         {/* --- UNIFIED UPPER Section --- */}
-        <section className="relative w-full">
+        <section
+          aria-labelledby="contact-hero-title contact-hero-title mobile"
+          className="relative w-full"
+        >
           {/* Desktop Content */}
           <div className="hidden lg:block">
-            <div className="absolute inset-0 -z-10">
+            <div className="absolute inset-0 -z-10" aria-hidden="true">
               <ImageWithLoader
                 src="/images/banner-background-contact-us.webp"
-                alt="Banner Background"
+                alt=""
                 fill
                 className="object-cover object-top md:object-center"
                 sizes="100vw"
@@ -80,7 +83,10 @@ export default function ContactUsPage() {
             </div>
             <div className="xl:px-28 lg:px-14 md:px-14 px-8 pt-12 md:pt-16 lg:pt-20">
               <div className="w-2/3">
-                <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
+                <h1
+                  id="contact-hero-title"
+                  className="text-3xl md:text-4xl font-bold text-gray-900"
+                >
                   Contact Us
                 </h1>
                 <p className="mt-2 text-gray-900 text-2xl w-1/2">
@@ -103,10 +109,10 @@ export default function ContactUsPage() {
 
           {/* Mobile/Tablet Content*/}
           <div className="relative h-96 sm:h-[400px] md:h-[500px] lg:hidden">
-            <div className="absolute inset-0 -z-10">
+            <div className="absolute inset-0 -z-10" aria-hidden="true">
               <ImageWithLoader
                 src="/optimizedIcons/large/banner-background-contact-us-mobile.svg"
-                alt="Banner Background"
+                alt=""
                 fill
                 className="object-center"
                 sizes="100vw"
@@ -115,7 +121,10 @@ export default function ContactUsPage() {
             </div>
             {/* Centering container */}
             <div className="absolute inset-0 top-5 flex justify-center p-4 sm:p-8 h-fit">
-              <h1 className="text-center text-xl sm:text-2xl md:text-3xl md:w-3/4 font-bold text-gray-900">
+              <h1
+                id="contact-hero-title mobile"
+                className="text-center text-xl sm:text-2xl md:text-3xl md:w-3/4 font-bold text-gray-900"
+              >
                 We&apos;d love to hear from you. Our friendly team is always
                 here to chat
               </h1>
@@ -203,7 +212,13 @@ export default function ContactUsPage() {
         </section>
 
         {/* --- LOWER Section --- */}
-        <section className="w-full bg-white max-md:mb-16">
+        <section
+          aria-labelledby="contact-channels"
+          className="w-full bg-white max-md:mb-16"
+        >
+          <h2 id="contact-channels" className="sr-only">
+            Contact channels
+          </h2>
           <div className="xl:px-28 lg:px-14 md:px-14 px-8 py-8 sm:py-12 lg:py-24 lg:pt-16 lg:pb-36 xl:pb-56">
             <div className="text-lg lg:w-1/2">
               <p className="w-full lg:w-4/5 xl:w-2/3 mb-8 tracking-wide">

@@ -1,5 +1,3 @@
-import Skeleton from "react-loading-skeleton";
-
 function TextLines({
   lines = 3,
   base = 85,
@@ -12,7 +10,11 @@ function TextLines({
   return (
     <div className="space-y-2">
       {Array.from({ length: lines }).map((_, i) => (
-        <Skeleton key={i} height={16} width={`${base - i * step}%`} />
+        <div
+          key={i}
+          className="h-4 rounded bg-neutral-200 dark:bg-neutral-700"
+          style={{ width: `${Math.max(20, base - i * step)}%` }}
+        />
       ))}
     </div>
   );
@@ -22,16 +24,17 @@ function CardList({ count = 4 }: { count?: number }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
       {Array.from({ length: count }).map((_, i) => (
-        <div
+        <article
           key={i}
           className="border border-gray-200 rounded-2xl p-5 bg-white shadow-sm"
+          aria-label={`Loading card ${i + 1}`}
         >
           <div className="flex items-center gap-4 mb-4">
-            <Skeleton circle width={44} height={44} />
-            <Skeleton width={"40%"} height={18} />
+            <div className="h-11 w-11 rounded-full bg-neutral-200 dark:bg-neutral-700" />
+            <div className="h-[18px] w-[40%] rounded bg-neutral-200 dark:bg-neutral-700" />
           </div>
           <TextLines lines={3} />
-        </div>
+        </article>
       ))}
     </div>
   );
@@ -40,14 +43,14 @@ function CardList({ count = 4 }: { count?: number }) {
 export default function Loading() {
   return (
     <>
-      {/* Mobile header skeleton (to match <MobileHeader /> height) */}
+      {/* Mobile header skeleton (matches <MobileHeader /> height) */}
       <header className="fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white md:hidden">
-        <div className="flex items-center h-full px-6 gap-2">
+        <div className="animate-pulse flex items-center h-full px-6 gap-2">
           <div className="shrink-0 w-10 h-10 grid place-items-center">
-            <Skeleton circle width={36} height={36} />
+            <div className="h-9 w-9 rounded-full bg-neutral-200 dark:bg-neutral-700" />
           </div>
           <div className="flex-1 px-2">
-            <Skeleton height={20} width={180} className="mx-auto" />
+            <div className="h-5 w-[180px] mx-auto rounded bg-neutral-200 dark:bg-neutral-700" />
           </div>
           <div className="shrink-0 w-10 h-10" />
         </div>
@@ -55,27 +58,44 @@ export default function Loading() {
       {/* Spacer below fixed header (mobile) */}
       <div className="md:hidden h-[55px]" />
 
-      <div className="w-full">
+      <section
+        className="w-full animate-pulse"
+        role="status"
+        aria-live="polite"
+        aria-busy="true"
+        aria-labelledby="connects-loading-title"
+      >
+        <h1 id="connects-loading-title" className="sr-only">
+          Loading Connects page
+        </h1>
+
         {/* Hero Section */}
-        <section className="relative w-full overflow-hidden">
-          <div className="h-[220px] md:h-[500px] xl:h-[600px]">
-            <Skeleton height="100%" />
-          </div>
-          {/* Optional hero text hint */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none max-md:hidden">
+        <section
+          className="relative w-full overflow-hidden"
+          aria-labelledby="hero-loading"
+        >
+          <h2 id="hero-loading" className="sr-only">
+            Hero banner
+          </h2>
+          <div className="h-[220px] md:h-[500px] xl:h-[600px] bg-neutral-200 dark:bg-neutral-700" />
+          {/* Optional hero text hint (desktop only) */}
+          <div className="absolute inset-0 hidden md:flex items-center justify-center pointer-events-none">
             <div className="w-1/2 text-center space-y-3">
-              <Skeleton height={32} width={"70%"} className="mx-auto" />
-              <Skeleton height={18} width={"60%"} className="mx-auto" />
+              <div className="h-8 w-[70%] mx-auto rounded bg-neutral-100/70 dark:bg-neutral-600" />
+              <div className="h-4 w-[60%] mx-auto rounded bg-neutral-100/70 dark:bg-neutral-600" />
             </div>
           </div>
         </section>
 
         {/* What are connects? */}
-        <section className="w-full">
+        <section className="w-full" aria-labelledby="what-heading">
+          <h2 id="what-heading" className="sr-only">
+            What are Connects
+          </h2>
           <div className="container mx-auto xl:px-28 lg:px-14 md:px-8 px-8 py-10 md:py-14">
             <div className="text-center mb-8 md:mb-12">
-              <Skeleton height={28} width={"40%"} className="mx-auto mb-3" />
-              <Skeleton height={16} width={"70%"} className="mx-auto" />
+              <div className="h-7 w-[40%] mx-auto mb-3 rounded bg-neutral-200 dark:bg-neutral-700" />
+              <div className="h-4 w-[70%] mx-auto rounded bg-neutral-200 dark:bg-neutral-700" />
             </div>
             <div className="mx-auto xl:w-1/2 lg:w-2/3 md:w-3/4">
               <TextLines lines={4} />
@@ -84,38 +104,51 @@ export default function Loading() {
         </section>
 
         {/* How can you use connects? */}
-        <section className="w-full">
+        <section className="w-full" aria-labelledby="how-heading">
+          <h2 id="how-heading" className="sr-only">
+            How to use Connects
+          </h2>
           <div className="container mx-auto xl:px-28 lg:px-14 md:px-8 px-8 py-10 md:py-14">
             <div className="mb-8 md:mb-12">
-              <Skeleton height={26} width={"35%"} className="mb-2" />
-              <Skeleton height={16} width={"55%"} />
+              <div className="h-6 w-[35%] mb-2 rounded bg-neutral-200 dark:bg-neutral-700" />
+              <div className="h-4 w-[55%] rounded bg-neutral-200 dark:bg-neutral-700" />
             </div>
             <CardList count={4} />
           </div>
         </section>
 
         {/* Why choose connects? */}
-        <section className="w-full">
+        <section className="w-full" aria-labelledby="why-heading">
+          <h2 id="why-heading" className="sr-only">
+            Why choose Connects
+          </h2>
           <div className="container mx-auto xl:px-28 lg:px-14 md:px-8 px-8 py-10 md:py-14">
             <div className="mb-8 md:mb-12">
-              <Skeleton height={26} width={"30%"} className="mb-2" />
-              <Skeleton height={16} width={"50%"} />
+              <div className="h-6 w-[30%] mb-2 rounded bg-neutral-200 dark:bg-neutral-700" />
+              <div className="h-4 w-[50%] rounded bg-neutral-200 dark:bg-neutral-700" />
             </div>
             <CardList count={6} />
           </div>
         </section>
 
-        {/* Desktop footer: render real footer later, skeleton not needed */}
-      </div>
+        {/* Fixed mobile CTA skeleton (matches ConnectsMobileFooter) */}
+        <footer
+          className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 shadow-sm"
+          aria-labelledby="mobile-cta-loading"
+        >
+          <h2 id="mobile-cta-loading" className="sr-only">
+            Mobile call to action
+          </h2>
+          <div className="flex items-center justify-end px-4 py-3">
+            <div className="h-10 w-1/2 rounded-lg bg-neutral-200 dark:bg-neutral-700" />
+          </div>
+        </footer>
+        {/* Spacer above fixed mobile CTA so content doesn't hide behind it */}
+        <div className="md:hidden h-[64px]" />
 
-      {/* Fixed mobile CTA skeleton (matches ConnectsMobileFooter) */}
-      <footer className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200 shadow-sm">
-        <div className="flex items-center justify-end px-4 py-3">
-          <Skeleton width={"50%"} height={40} borderRadius={8} />
-        </div>
-      </footer>
-      {/* Spacer above fixed mobile CTA so content doesn't hide behind it */}
-      <div className="md:hidden h-[64px]" />
+        {/* SR-only fallback text */}
+        <p className="sr-only">Loading…</p>
+      </section>
     </>
   );
 }
