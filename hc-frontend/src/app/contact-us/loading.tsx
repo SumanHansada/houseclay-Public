@@ -1,27 +1,3 @@
-"use client";
-
-function Lines({
-  n = 3,
-  widthStart = 85,
-  step = 8,
-}: {
-  n?: number;
-  widthStart?: number;
-  step?: number;
-}) {
-  return (
-    <div className="space-y-2">
-      {Array.from({ length: n }).map((_, i) => (
-        <div
-          key={i}
-          className="h-4 rounded bg-neutral-200 dark:bg-neutral-700"
-          style={{ width: `${Math.max(20, widthStart - i * step)}%` }}
-        />
-      ))}
-    </div>
-  );
-}
-
 function InputSkeleton() {
   return <div className="h-10 rounded-lg bg-neutral-200 dark:bg-neutral-700" />;
 }
@@ -45,7 +21,7 @@ function FormCardSkeleton() {
 export default function Loading() {
   return (
     <>
-      {/* Mobile header skeleton (55px high, like your MobileHeader) */}
+      {/* Mobile header skeleton (55px high, matches MobileHeader) */}
       <header className="fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white md:hidden">
         <div className="animate-pulse flex items-center h-full px-4 gap-2">
           <div className="shrink-0 w-10 h-10 grid place-items-center">
@@ -63,8 +39,12 @@ export default function Loading() {
         role="status"
         aria-live="polite"
         aria-busy="true"
-        aria-label="Loading Contact Us content"
+        aria-labelledby="contact-loading-title"
       >
+        <h1 id="contact-loading-title" className="sr-only">
+          Loading Contact Us content
+        </h1>
+
         {/* ── UNIFIED UPPER Section ── */}
         <section className="relative w-full">
           {/* Desktop */}
@@ -75,10 +55,8 @@ export default function Loading() {
 
             <div className="xl:px-28 lg:px-14 md:px-14 px-8 pt-12 md:pt-16 lg:pt-20">
               <div className="w-2/3 space-y-4">
-                <div className="h-9 w-64 rounded bg-neutral-100/70 dark:bg-neutral-600" />{" "}
-                {/* h1 */}
-                <div className="h-7 w-1/2 rounded bg-neutral-100/70 dark:bg-neutral-600" />{" "}
-                {/* subtext */}
+                <div className="h-9 w-64 rounded bg-neutral-100/70 dark:bg-neutral-600" />
+                <div className="h-7 w-1/2 rounded bg-neutral-100/70 dark:bg-neutral-600" />
                 <div className="mt-8 h-80 md:w-1/2 lg:w-7/12 xl:w-1/2 rounded bg-neutral-100/70 dark:bg-neutral-600" />
               </div>
             </div>
@@ -101,12 +79,18 @@ export default function Loading() {
         {/* ── Form Section (overlays on desktop) ── */}
         <section
           className="
-            px-6 sm:px-8 lg:px-0 -mt-10 sm:-mt-8 md:-mt-6 lg:mt-0
-            lg:absolute lg:z-10 lg:top-20 lg:right-14 xl:right-28
+            px-6 sm:px-8 lg:px-0 -mt-10
+            sm:-mt-8 md:-mt-6 lg:mt-0
+            lg:absolute lg:z-10
+            lg:top-20
+            lg:right-14 xl:right-28
             lg:w-[45%] xl:w-2/5
           "
-          aria-label="Loading contact form"
+          aria-labelledby="form-skel-heading"
         >
+          <h2 id="form-skel-heading" className="sr-only">
+            Contact form
+          </h2>
           <FormCardSkeleton />
         </section>
 
@@ -114,7 +98,13 @@ export default function Loading() {
         <div className="md:hidden h-[55px]" />
 
         {/* ── LOWER Section ── */}
-        <section className="w-full bg-white max-md:mb-16">
+        <section
+          className="w-full bg-white max-md:mb-16"
+          aria-labelledby="channels-skel"
+        >
+          <h2 id="channels-skel" className="sr-only">
+            Contact channels
+          </h2>
           <div className="xl:px-28 lg:px-14 md:px-14 px-8 py-8 sm:py-12 lg:py-24 lg:pt-16 lg:pb-36 xl:pb-56">
             <div className="text-lg lg:w-1/2">
               <div className="w-full lg:w-4/5 xl:w-2/3 mb-8 space-y-2">
@@ -140,6 +130,7 @@ export default function Loading() {
           </div>
         </section>
 
+        {/* SR-only text for screen readers */}
         <p className="sr-only">Loading…</p>
       </section>
     </>

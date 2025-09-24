@@ -55,9 +55,9 @@ export default function Loading() {
         </div>
       </header>
 
-      {/* Desktop skeleton */}
+      {/* Desktop skeleton (visible on lg+) */}
       <section
-        className="w-full h-full max-md:hidden md:block animate-pulse"
+        className="w-full h-full max-md:hidden animate-pulse"
         role="status"
         aria-live="polite"
         aria-busy="true"
@@ -67,8 +67,9 @@ export default function Loading() {
           Loading testimonials
         </h1>
 
+        {/* Hero */}
         <section
-          className="relative w-full md:aspect-[15/4] md:block"
+          className="relative w-full md:aspect-[15/4]"
           aria-labelledby="hero-sk"
         >
           <h2 id="hero-sk" className="sr-only">
@@ -82,6 +83,7 @@ export default function Loading() {
           </div>
         </section>
 
+        {/* Intro */}
         <section
           className="w-2/3 xl:w-2/5 mx-auto text-center py-16"
           aria-labelledby="intro-sk"
@@ -92,6 +94,7 @@ export default function Loading() {
           <div className="h-5 w-[80%] mx-auto rounded bg-neutral-200 dark:bg-neutral-700" />
         </section>
 
+        {/* List/Carousel section */}
         <section
           className="w-full xl:px-28 lg:px-14 md:px-14 px-8 py-8"
           aria-labelledby="cards-sk"
@@ -125,6 +128,7 @@ export default function Loading() {
           </div>
         </section>
 
+        {/* CTA */}
         <section
           className="lg:flex w-full justify-center py-6 max-lg:hidden"
           aria-labelledby="cta-sk"
@@ -148,6 +152,7 @@ export default function Loading() {
           Loading testimonials (mobile)
         </h2>
 
+        {/* Mobile hero */}
         <section
           className="relative w-full aspect-[9/4]"
           aria-labelledby="mobile-hero-sk"
@@ -158,6 +163,7 @@ export default function Loading() {
           <div className="absolute inset-0 bg-neutral-200 dark:bg-neutral-700" />
         </section>
 
+        {/* Mobile intro */}
         <section
           className="pt-6 pb-8 px-4 sm:px-6 text-center"
           aria-labelledby="mobile-intro-sk"
@@ -168,6 +174,7 @@ export default function Loading() {
           <div className="h-4 w-[90%] mx-auto rounded bg-neutral-200 dark:bg-neutral-700" />
         </section>
 
+        {/* Mobile carousel placeholder */}
         <section className="mb-16 py-5" aria-labelledby="mobile-cards-sk">
           <h3 id="mobile-cards-sk" className="sr-only">
             Mobile testimonials list

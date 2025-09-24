@@ -1,5 +1,3 @@
-"use client";
-
 import { default as ACCORDION_DATA } from "@/data/SupportAccordionData.json";
 
 const COUNT =
@@ -12,7 +10,7 @@ const widths = [72, 64, 80, 58, 70];
 export default function Loading() {
   return (
     <>
-      {/* Mobile header skeleton */}
+      {/* Mobile header skeleton (matches MobileHeader height) */}
       <header className="fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white md:hidden">
         <div className="animate-pulse flex items-center h-full px-6 gap-2">
           <div className="shrink-0 w-10 h-10 grid place-items-center">
@@ -36,7 +34,7 @@ export default function Loading() {
           Loading Frequently Asked Questions
         </h1>
 
-        {/* Desktop hero */}
+        {/* Desktop title + subtitle */}
         <section
           className="mx-auto w-11/12 text-center max-md:hidden"
           aria-labelledby="faq-hero-heading"
@@ -94,7 +92,7 @@ export default function Loading() {
         </section>
       </section>
 
-      {/* Desktop footer placeholder */}
+      {/* Desktop footer placeholder (page shows real Footer only on desktop) */}
       <section className="max-md:hidden" aria-label="Loading footer">
         <div className="border-t border-gray-200 py-10 px-8">
           <div className="container mx-auto flex items-center justify-between gap-6">

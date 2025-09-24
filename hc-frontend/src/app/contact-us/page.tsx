@@ -66,7 +66,7 @@ export default function ContactUsPage() {
       <section className="relative w-full">
         {/* --- UNIFIED UPPER Section --- */}
         <section
-          aria-labelledby="contact-hero-title contact-hero-title mobile"
+          aria-labelledby="contact-hero-title contact-hero-title-mobile"
           className="relative w-full"
         >
           {/* Desktop Content */}
@@ -122,7 +122,7 @@ export default function ContactUsPage() {
             {/* Centering container */}
             <div className="absolute inset-0 top-5 flex justify-center p-4 sm:p-8 h-fit">
               <h1
-                id="contact-hero-title mobile"
+                id="contact-hero-title-mobile"
                 className="text-center text-xl sm:text-2xl md:text-3xl md:w-3/4 font-bold text-gray-900"
               >
                 We&apos;d love to hear from you. Our friendly team is always

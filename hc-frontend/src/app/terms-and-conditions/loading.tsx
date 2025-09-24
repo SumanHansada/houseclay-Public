@@ -1,5 +1,3 @@
-"use client";
-
 function ParagraphBlock({ lines = 3 }: { lines?: number }) {
   return (
     <div className="space-y-2">
@@ -73,6 +71,7 @@ export default function Loading() {
         {/* Mobile spacer under fixed header */}
         <div className="md:hidden h-[55px]" />
 
+        {/* Content sections (mirror page structure) */}
         <section
           className="flex flex-col gap-8 xl:w-1/2 lg:w-2/3 md:w-3/4 max-md:px-8 mb-16 pb-5 mx-auto"
           aria-labelledby="tc-content"
@@ -130,6 +129,16 @@ export default function Loading() {
             </div>
           </article>
         </section>
+      </section>
+
+      {/* Desktop footer placeholder (real Footer renders only on desktop) */}
+      <section className="max-md:hidden" aria-label="Loading footer">
+        <div className="border-top border-gray-200 py-10 px-8">
+          <div className="container mx-auto flex items-center justify-between gap-6">
+            <div className="h-5 w-[30%] rounded bg-neutral-200 dark:bg-neutral-700" />
+            <div className="h-5 w-[20%] rounded bg-neutral-200 dark:bg-neutral-700" />
+          </div>
+        </div>
       </section>
     </>
   );

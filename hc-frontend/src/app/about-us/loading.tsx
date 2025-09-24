@@ -1,5 +1,3 @@
-"use client";
-
 function Lines({ n = 3 }: { n?: number }) {
   return (
     <div className="space-y-2">
@@ -32,7 +30,7 @@ function ValueCardSkeleton() {
 export default function Loading() {
   return (
     <>
-      {/* Mobile header skeleton */}
+      {/* Mobile header skeleton (matches MobileHeader height) */}
       <header className="fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white md:hidden">
         <div className="animate-pulse flex items-center h-full px-4 gap-2">
           <div className="shrink-0 w-10 h-10 grid place-items-center">
@@ -45,19 +43,30 @@ export default function Loading() {
         </div>
       </header>
 
+      {/* Root loading container */}
       <section
         className="w-full h-full"
         role="status"
         aria-live="polite"
-        aria-label="Loading About Us content"
         aria-busy="true"
+        aria-labelledby="about-loading-title"
       >
+        <h1 id="about-loading-title" className="sr-only">
+          Loading About Us content
+        </h1>
+
         <div className="py-8 max-md:mb-16 md:py-12 xl:py-20 xl:px-28 lg:px-14 md:px-14 px-8 animate-pulse">
           {/* Spacer below fixed mobile header */}
           <div className="md:hidden h-[55px]" />
 
-          {/* HERO */}
-          <section className="relative w-full h-[240px] sm:h-[360px] md:h-[460px] lg:h-[620px]">
+          {/* HERO (matches page: aspect + min/max height guards) */}
+          <section
+            className="relative w-full aspect-[15/7] min-h-[240px] md:min-h-[360px] xl:max-h-[620px]"
+            aria-labelledby="hero-skel"
+          >
+            <h2 id="hero-skel" className="sr-only">
+              Hero
+            </h2>
             <div className="absolute inset-0 rounded bg-neutral-200 dark:bg-neutral-700" />
             <div className="absolute left-1/2 -translate-x-1/2 top-2 sm:top-6 md:top-8 xl:top-10 w-full max-w-5xl sm:px-4 flex items-center justify-center">
               <div className="text-center flex flex-col gap-3 w-4/5">
@@ -68,7 +77,13 @@ export default function Loading() {
           </section>
 
           {/* MISSION */}
-          <section className="space-y-3 mt-4 md:mt-6 lg:mt-10 xl:mt-16">
+          <section
+            className="space-y-3 mt-4 md:mt-6 lg:mt-10 xl:mt-16"
+            aria-labelledby="mission-skel"
+          >
+            <h2 id="mission-skel" className="sr-only">
+              Mission
+            </h2>
             <div className="mx-auto w-fit">
               <div className="h-9 w-[150px] rounded bg-neutral-200 dark:bg-neutral-700" />
             </div>
@@ -79,8 +94,14 @@ export default function Loading() {
           </section>
 
           {/* VALUES */}
-          <section className="relative bg-neutral-100 dark:bg-neutral-800/40 w-full h-full rounded-lg py-8 sm:py-12 px-10 lg:px-20 mt-16 md:mt-14 lg:mt-16 xl:mt-28">
-            <div className="absolute -top-4 md:-top-5 left-1/2 -translate-x-1/2">
+          <section
+            className="relative bg-gray-50 dark:bg-neutral-800/40 w-full h-full rounded-lg py-8 sm:py-12 px-10 lg:px-20 mt-16 md:mt-14 lg:mt-16 xl:mt-28"
+            aria-labelledby="values-skel"
+          >
+            <h2 id="values-skel" className="sr-only">
+              Our values
+            </h2>
+            <div className="absolute -top-3 md:-top-4 left-1/2 -translate-x-1/2">
               <div className="h-8 w-[140px] rounded bg-neutral-200 dark:bg-neutral-700" />
             </div>
 
@@ -92,7 +113,13 @@ export default function Loading() {
           </section>
 
           {/* CTA */}
-          <section className="mt-10 md:mt-16 lg:mt-24 w-11/12 lg:w-2/3 2xl:w-2/5 mx-auto text-center space-y-4">
+          <section
+            className="mt-10 md:mt-16 lg:mt-24 w-11/12 lg:w-2/3 2xl:w-2/5 mx-auto text-center space-y-4"
+            aria-labelledby="cta-skel"
+          >
+            <h2 id="cta-skel" className="sr-only">
+              Call to action
+            </h2>
             <div className="h-7 w-3/4 mx-auto rounded bg-neutral-200 dark:bg-neutral-700" />
             <Lines n={3} />
             <div className="flex justify-center">
@@ -100,9 +127,11 @@ export default function Loading() {
             </div>
           </section>
 
-          {/* sr-only text for screen readers */}
+          {/* SR-only text for screen readers */}
           <p className="sr-only">Loading…</p>
         </div>
+
+        {/* Desktop-only footer area is real on the page; no skeleton necessary */}
       </section>
     </>
   );
