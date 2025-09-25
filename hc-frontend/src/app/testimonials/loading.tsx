@@ -4,7 +4,7 @@ function Lines({ n = 3 }: { n?: number }) {
       {Array.from({ length: n }).map((_, i) => (
         <div
           key={i}
-          className="h-4 rounded bg-neutral-200 dark:bg-neutral-700"
+          className="h-4 rounded bg-neutral-200"
           style={{ width: `${85 - i * 8}%` }}
         />
       ))}
@@ -16,21 +16,18 @@ function CardSkeleton({ wide = false }: { wide?: boolean }) {
   return (
     <div className={`flex h-full flex-col ${wide ? "max-md:p-4" : ""}`}>
       <div className="px-6 md:px-8 pt-8 md:pt-10 pb-4 rounded-t-2xl rounded-es-2xl bg-gray-50 h-[220px] md:h-[280px]">
-        <div className="h-10 w-10 mb-4 rounded bg-neutral-200 dark:bg-neutral-700" />
+        <div className="h-10 w-10 mb-4 rounded bg-neutral-200" />
         <Lines n={4} />
       </div>
       <div className="flex items-center">
         <div className="flex items-center gap-3 bg-white pt-4 pr-4 pb-2 pl-2 rounded-se-2xl basis-[45%]">
-          <div className="h-12 w-12 rounded-full bg-neutral-200 dark:bg-neutral-700" />
-          <div className="h-4 w-28 rounded bg-neutral-200 dark:bg-neutral-700" />
+          <div className="h-12 w-12 rounded-full bg-neutral-200" />
+          <div className="h-4 w-28 rounded bg-neutral-200" />
         </div>
         <div className="flex-1 h-full flex items-center justify-center rounded-b-2xl bg-gray-50">
           <div className="flex gap-2">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div
-                key={i}
-                className="h-5 w-5 rounded-full bg-neutral-200 dark:bg-neutral-700"
-              />
+              <div key={i} className="h-5 w-5 rounded-full bg-neutral-200" />
             ))}
           </div>
         </div>
@@ -46,10 +43,10 @@ export default function Loading() {
       <header className="fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white md:hidden">
         <div className="animate-pulse flex items-center h-full px-6 gap-2">
           <div className="shrink-0 w-10 h-10 grid place-items-center">
-            <div className="h-9 w-9 rounded-full bg-neutral-200 dark:bg-neutral-700" />
+            <div className="h-9 w-9 rounded-full bg-neutral-200" />
           </div>
           <div className="flex-1 px-2">
-            <div className="h-5 w-[220px] mx-auto rounded bg-neutral-200 dark:bg-neutral-700" />
+            <div className="h-5 w-[220px] mx-auto rounded bg-neutral-200" />
           </div>
           <div className="shrink-0 w-10 h-10" />
         </div>
@@ -76,10 +73,10 @@ export default function Loading() {
             Hero banner
           </h2>
           <div className="absolute inset-0 hidden md:block">
-            <div className="h-full w-full bg-neutral-200 dark:bg-neutral-700" />
+            <div className="h-full w-full bg-neutral-200" />
           </div>
           <div className="absolute flex items-center pl-14 h-full xl:pl-40 w-1/4 lg:w-1/3 xl:w-2/5">
-            <div className="h-11 w-[360px] rounded bg-neutral-100/70 dark:bg-neutral-600" />
+            <div className="h-11 w-[360px] rounded bg-neutral-100/70" />
           </div>
         </section>
 
@@ -91,7 +88,7 @@ export default function Loading() {
           <h2 id="intro-sk" className="sr-only">
             Intro
           </h2>
-          <div className="h-5 w-[80%] mx-auto rounded bg-neutral-200 dark:bg-neutral-700" />
+          <div className="h-5 w-[80%] mx-auto rounded bg-neutral-200" />
         </section>
 
         {/* List/Carousel section */}
@@ -120,7 +117,7 @@ export default function Loading() {
                 {Array.from({ length: 3 }).map((_, i) => (
                   <div
                     key={i}
-                    className="h-2 w-2 rounded-full bg-neutral-200 dark:bg-neutral-700"
+                    className="h-2 w-2 rounded-full bg-neutral-200"
                   />
                 ))}
               </div>
@@ -136,7 +133,7 @@ export default function Loading() {
           <h2 id="cta-sk" className="sr-only">
             Load more
           </h2>
-          <div className="h-11 w-40 rounded-[12px] bg-neutral-200 dark:bg-neutral-700" />
+          <div className="h-11 w-40 rounded-[12px] bg-neutral-200" />
         </section>
       </section>
 
@@ -160,7 +157,7 @@ export default function Loading() {
           <h3 id="mobile-hero-sk" className="sr-only">
             Mobile hero banner
           </h3>
-          <div className="absolute inset-0 bg-neutral-200 dark:bg-neutral-700" />
+          <div className="absolute inset-0 bg-neutral-200" />
         </section>
 
         {/* Mobile intro */}
@@ -171,7 +168,7 @@ export default function Loading() {
           <h3 id="mobile-intro-sk" className="sr-only">
             Mobile intro
           </h3>
-          <div className="h-4 w-[90%] mx-auto rounded bg-neutral-200 dark:bg-neutral-700" />
+          <div className="h-4 w-[90%] mx-auto rounded bg-neutral-200" />
         </section>
 
         {/* Mobile carousel placeholder */}
@@ -189,10 +186,7 @@ export default function Loading() {
             </div>
             <div className="py-4 flex justify-center gap-1">
               {Array.from({ length: 3 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="h-2 w-2 rounded-full bg-neutral-200 dark:bg-neutral-700"
-                />
+                <div key={i} className="h-2 w-2 rounded-full bg-neutral-200" />
               ))}
             </div>
           </div>

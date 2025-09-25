@@ -4,7 +4,7 @@ function ParagraphBlock({ lines = 3 }: { lines?: number }) {
       {Array.from({ length: lines }).map((_, i) => (
         <div
           key={i}
-          className="h-4 rounded bg-neutral-200 dark:bg-neutral-700"
+          className="h-4 rounded bg-neutral-200"
           style={{ width: `${85 - i * 8}%` }}
         />
       ))}
@@ -17,9 +17,9 @@ function ListBlock({ items = 4 }: { items?: number }) {
     <ul className="list-none space-y-2">
       {Array.from({ length: items }).map((_, i) => (
         <li key={i} className="flex items-start gap-3">
-          <div className="mt-2 h-2.5 w-2.5 rounded-full bg-neutral-200 dark:bg-neutral-700" />
+          <div className="mt-2 h-2.5 w-2.5 rounded-full bg-neutral-200" />
           <div
-            className="h-4 rounded bg-neutral-200 dark:bg-neutral-700"
+            className="h-4 rounded bg-neutral-200"
             style={{ width: `${90 - (i % 3) * 12}%` }}
           />
         </li>
@@ -35,10 +35,10 @@ export default function Loading() {
       <header className="fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white md:hidden">
         <div className="animate-pulse flex items-center h-full px-6 gap-2">
           <div className="shrink-0 w-10 h-10 grid place-items-center">
-            <div className="h-9 w-9 rounded-full bg-neutral-200 dark:bg-neutral-700" />
+            <div className="h-9 w-9 rounded-full bg-neutral-200" />
           </div>
           <div className="flex-1 px-2">
-            <div className="h-5 w-[180px] mx-auto rounded bg-neutral-200 dark:bg-neutral-700" />
+            <div className="h-5 w-[180px] mx-auto rounded bg-neutral-200" />
           </div>
           <div className="shrink-0 w-10 h-10" />
         </div>
@@ -64,7 +64,7 @@ export default function Loading() {
             Terms title
           </h2>
           <div className="py-24">
-            <div className="h-10 w-[320px] mx-auto rounded bg-neutral-200 dark:bg-neutral-700" />
+            <div className="h-10 w-[320px] mx-auto rounded bg-neutral-200" />
           </div>
         </section>
 
@@ -83,7 +83,7 @@ export default function Loading() {
           {/* Section 1: heading + paragraph */}
           <article aria-label="Section 1">
             <div className="space-y-3">
-              <div className="h-7 w-[260px] rounded bg-neutral-200 dark:bg-neutral-700" />
+              <div className="h-7 w-[260px] rounded bg-neutral-200" />
               <ParagraphBlock lines={3} />
             </div>
           </article>
@@ -91,7 +91,7 @@ export default function Loading() {
           {/* Section 2: heading + list */}
           <article aria-label="Section 2">
             <div className="space-y-3">
-              <div className="h-7 w-[220px] rounded bg-neutral-200 dark:bg-neutral-700" />
+              <div className="h-7 w-[220px] rounded bg-neutral-200" />
               <ListBlock items={4} />
             </div>
           </article>
@@ -99,7 +99,7 @@ export default function Loading() {
           {/* Section 3 */}
           <article aria-label="Section 3">
             <div className="space-y-3">
-              <div className="h-7 w-[240px] rounded bg-neutral-200 dark:bg-neutral-700" />
+              <div className="h-7 w-[240px] rounded bg-neutral-200" />
               <ListBlock items={2} />
             </div>
           </article>
@@ -107,7 +107,7 @@ export default function Loading() {
           {/* Section 4 */}
           <article aria-label="Section 4">
             <div className="space-y-3">
-              <div className="h-7 w-[230px] rounded bg-neutral-200 dark:bg-neutral-700" />
+              <div className="h-7 w-[230px] rounded bg-neutral-200" />
               <ListBlock items={5} />
             </div>
           </article>
@@ -115,8 +115,8 @@ export default function Loading() {
           {/* Section 5 */}
           <article aria-label="Section 5">
             <div className="space-y-3">
-              <div className="h-7 w-[220px] rounded bg-neutral-200 dark:bg-neutral-700" />
-              <div className="h-4 w-[140px] rounded bg-neutral-200 dark:bg-neutral-700" />
+              <div className="h-7 w-[220px] rounded bg-neutral-200" />
+              <div className="h-4 w-[140px] rounded bg-neutral-200" />
               <ListBlock items={4} />
             </div>
           </article>
@@ -124,7 +124,7 @@ export default function Loading() {
           {/* Section 6 */}
           <article aria-label="Section 6">
             <div className="space-y-3">
-              <div className="h-7 w-[230px] rounded bg-neutral-200 dark:bg-neutral-700" />
+              <div className="h-7 w-[230px] rounded bg-neutral-200" />
               <ParagraphBlock lines={3} />
             </div>
           </article>
@@ -135,8 +135,8 @@ export default function Loading() {
       <section className="max-md:hidden" aria-label="Loading footer">
         <div className="border-top border-gray-200 py-10 px-8">
           <div className="container mx-auto flex items-center justify-between gap-6">
-            <div className="h-5 w-[30%] rounded bg-neutral-200 dark:bg-neutral-700" />
-            <div className="h-5 w-[20%] rounded bg-neutral-200 dark:bg-neutral-700" />
+            <div className="h-5 w-[30%] rounded bg-neutral-200" />
+            <div className="h-5 w-[20%] rounded bg-neutral-200" />
           </div>
         </div>
       </section>

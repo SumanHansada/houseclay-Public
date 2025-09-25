@@ -14,10 +14,10 @@ export default function Loading() {
       <header className="fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white md:hidden">
         <div className="animate-pulse flex items-center h-full px-6 gap-2">
           <div className="shrink-0 w-10 h-10 grid place-items-center">
-            <div className="h-9 w-9 rounded-full bg-neutral-200 dark:bg-neutral-700" />
+            <div className="h-9 w-9 rounded-full bg-neutral-200" />
           </div>
           <div className="flex-1 px-2">
-            <div className="h-5 w-[180px] mx-auto rounded bg-neutral-200 dark:bg-neutral-700" />
+            <div className="h-5 w-[180px] mx-auto rounded bg-neutral-200" />
           </div>
           <div className="shrink-0 w-10 h-10" />
         </div>
@@ -42,8 +42,8 @@ export default function Loading() {
           <h2 id="faq-hero-heading" className="sr-only">
             FAQ hero
           </h2>
-          <div className="h-10 w-[360px] mx-auto mb-6 rounded bg-neutral-200 dark:bg-neutral-700" />
-          <div className="h-5 w-[80%] mx-auto rounded bg-neutral-200 dark:bg-neutral-700" />
+          <div className="h-10 w-[360px] mx-auto mb-6 rounded bg-neutral-200" />
+          <div className="h-5 w-[80%] mx-auto rounded bg-neutral-200" />
         </section>
 
         {/* Mobile intro text */}
@@ -54,7 +54,7 @@ export default function Loading() {
           <h2 id="faq-intro-heading" className="sr-only">
             FAQ intro
           </h2>
-          <div className="h-4 w-[90%] mx-auto rounded bg-neutral-200 dark:bg-neutral-700" />
+          <div className="h-4 w-[90%] mx-auto rounded bg-neutral-200" />
         </section>
 
         {/* Accordion list */}
@@ -75,17 +75,17 @@ export default function Loading() {
               <div className="flex justify-between items-center">
                 <div className="pr-4 w-full">
                   <div
-                    className="h-5 rounded bg-neutral-200 dark:bg-neutral-700"
+                    className="h-5 rounded bg-neutral-200"
                     style={{ width: `${widths[i % widths.length]}%` }}
                   />
                 </div>
-                <div className="h-8 w-8 rounded-full bg-neutral-200 dark:bg-neutral-700" />
+                <div className="h-8 w-8 rounded-full bg-neutral-200" />
               </div>
 
               {/* Collapsible body placeholder */}
               <div className="mt-3 md:mt-4">
-                <div className="h-3 w-[90%] mb-2 rounded bg-neutral-200 dark:bg-neutral-700" />
-                <div className="h-3 w-[75%] rounded bg-neutral-200 dark:bg-neutral-700" />
+                <div className="h-3 w-[90%] mb-2 rounded bg-neutral-200" />
+                <div className="h-3 w-[75%] rounded bg-neutral-200" />
               </div>
             </article>
           ))}
@@ -96,8 +96,8 @@ export default function Loading() {
       <section className="max-md:hidden" aria-label="Loading footer">
         <div className="border-t border-gray-200 py-10 px-8">
           <div className="container mx-auto flex items-center justify-between gap-6">
-            <div className="h-5 w-[30%] rounded bg-neutral-200 dark:bg-neutral-700" />
-            <div className="h-5 w-[20%] rounded bg-neutral-200 dark:bg-neutral-700" />
+            <div className="h-5 w-[30%] rounded bg-neutral-200" />
+            <div className="h-5 w-[20%] rounded bg-neutral-200" />
           </div>
         </div>
       </section>
