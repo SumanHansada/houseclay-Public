@@ -55,7 +55,7 @@ import {
   formatINRCurrency,
   pascalCase,
 } from "@/common/utils";
-import { PhotoGalleryDialog } from "@/dialogs";
+import { ContactOwnerLoginDialog, PhotoGalleryDialog } from "@/dialogs";
 import ReportListingDialog from "@/dialogs/report-listing-dialog";
 import { MobileFooter } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
@@ -203,6 +203,10 @@ export function PropertyDetailsClient({
 
   const handleReportListingClick = () => {
     openDialog("report-listing-dialog");
+  };
+
+  const handleContactOwnerClick = () => {
+    openDialog("contact-owner-login-dialog");
   };
 
   // Split description into sentences array
@@ -676,91 +680,92 @@ export function PropertyDetailsClient({
 
                 <hr className="my-6" />
 
-                {/* Price & Contact Section */}
-                <div className="">
-                  <div className="flex justify-between items-center">
-                    <div className="text-gray-600">
-                      {property?.propertyCategory === PropertyCategory.RESALE
-                        ? "Price"
-                        : "Rent"}
-                    </div>
-                    <div>
-                      {property?.propertyCategory === PropertyCategory.RESALE
-                        ? property?.price
-                          ? formatINRCurrency(property.price)
-                          : "-"
-                        : property?.rent
-                          ? formatINRCurrency(property.rent)
-                          : "-"}
-                    </div>
+              {/* Price & Contact Section */}
+              <div className="">
+                <div className="flex justify-between items-center">
+                  <div className="text-gray-600">
+                    {property?.propertyCategory === PropertyCategory.RESALE
+                      ? "Price"
+                      : "Rent"}
                   </div>
-                  <button className="mt-4 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full text-base max-md:text-sm hover:bg-red-600 transition-colors">
-                    Contact Owner
-                  </button>
-                </div>
-              </section>
-              {/* Activity Card */}
-              <section className="bg-white border rounded-xl px-4 py-6 mb-6">
-                <h3 className="text-xl mb-4">Activity On This Property</h3>
-                <div className="grid grid-cols-3 gap-4 divide-x">
-                  <div className="flex flex-col items-start gap-3">
-                    <Eye size={24} className="text-red-500" />
-                    <div className="text-start">
-                      <div className="font-semibold text-gray-900 mb-1">
-                        161
-                      </div>
-                      <div className="text-sm text-gray-500">Unique Views</div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-start gap-3 pl-4">
-                    <Heart size={24} className="text-red-500" />
-                    <div className="text-start">
-                      <div className="font-semibold text-gray-900 mb-1">2</div>
-                      <div className="text-sm text-gray-500">Shortlists</div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-start gap-3 pl-4">
-                    <Phone size={24} className="text-red-500" />
-                    <div className="text-start">
-                      <div className="font-semibold text-gray-900 mb-1">10</div>
-                      <div className="text-sm text-gray-500">Contacted</div>
-                    </div>
+                  <div>
+                    {property?.propertyCategory === PropertyCategory.RESALE
+                      ? property?.price
+                        ? formatINRCurrency(property.price)
+                        : "-"
+                      : property?.rent
+                        ? formatINRCurrency(property.rent)
+                        : "-"}
                   </div>
                 </div>
-              </section>
-              {/* Exclusive listing */}
-              {property.managed && (
-                <section className="flex flex-col justify-between items-center gap-4 mb-6">
-                  <button className="px-8 py-3 flex justify-around border rounded-xl w-full text-base max-md:text-sm hover:bg-gray-50 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <Crown size={24} className="text-yellow-500" />
-                      <span>This is an Exclusive listing</span>
-                    </div>
-                  </button>
-                </section>
-              )}
-              {/* Featured Property */}
-              {property.featured && (
-                <section className="flex flex-col justify-between items-center gap-4 mb-6">
-                  <button className="px-8 py-3 flex justify-around border rounded-xl w-full text-base max-md:text-sm hover:bg-gray-50 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <SquareStar size={24} className="text-red-500" />
-                      <span>This is an Featured Property</span>
-                    </div>
-                  </button>
-                </section>
-              )}
-              <section className="flex flex-col justify-between items-center mb-6">
                 <button
-                  className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-2"
-                  onClick={handleReportListingClick}
+                  className="mt-4 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full text-base max-md:text-sm hover:bg-red-600 transition-colors"
+                  onClick={handleContactOwnerClick}
                 >
-                  <Flag size={14} />
-                  <span className="underline">Report this listing</span>
+                  Contact Owner
+                </button>
+              </div>
+            </section>
+            {/* Activity Card */}
+            <section className="bg-white border rounded-xl px-4 py-6 mb-6">
+              <h3 className="text-xl mb-4">Activity On This Property</h3>
+              <div className="grid grid-cols-3 gap-4 divide-x">
+                <div className="flex flex-col items-start gap-3">
+                  <Eye size={24} className="text-red-500" />
+                  <div className="text-start">
+                    <div className="font-semibold text-gray-900 mb-1">161</div>
+                    <div className="text-sm text-gray-500">Unique Views</div>
+                  </div>
+                </div>
+                <div className="flex flex-col items-start gap-3 pl-4">
+                  <Heart size={24} className="text-red-500" />
+                  <div className="text-start">
+                    <div className="font-semibold text-gray-900 mb-1">2</div>
+                    <div className="text-sm text-gray-500">Shortlists</div>
+                  </div>
+                </div>
+                <div className="flex flex-col items-start gap-3 pl-4">
+                  <Phone size={24} className="text-red-500" />
+                  <div className="text-start">
+                    <div className="font-semibold text-gray-900 mb-1">10</div>
+                    <div className="text-sm text-gray-500">Contacted</div>
+                  </div>
+                </div>
+              </div>
+            </section>
+            {/* Exclusive listing */}
+            {property.managed && (
+              <section className="flex flex-col justify-between items-center gap-4 mb-6">
+                <button className="px-8 py-3 flex justify-around border rounded-xl w-full text-base max-md:text-sm hover:bg-gray-50 transition-colors">
+                  <div className="flex items-center gap-4">
+                    <Crown size={24} className="text-yellow-500" />
+                    <span>This is an Exclusive listing</span>
+                  </div>
                 </button>
               </section>
+            )}
+            {/* Featured Property */}
+            {property.featured && (
+              <section className="flex flex-col justify-between items-center gap-4 mb-6">
+                <button className="px-8 py-3 flex justify-around border rounded-xl w-full text-base max-md:text-sm hover:bg-gray-50 transition-colors">
+                  <div className="flex items-center gap-4">
+                    <SquareStar size={24} className="text-red-500" />
+                    <span>This is an Featured Property</span>
+                  </div>
+                </button>
+              </section>
+            )}
+            <section className="flex flex-col justify-between items-center mb-6">
+              <button
+                className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-2"
+                onClick={handleReportListingClick}
+              >
+                <Flag size={14} />
+                <span className="underline">Report this listing</span>
+              </button>
             </section>
           </section>
+        </section>
 
           {/* Main Content Section Mobile*/}
           <section className="flex-col w-full xl:gap-16 lg:gap-8 md:gap-0 gap-0 max-md:pt-4 md:hidden">
@@ -850,23 +855,49 @@ export function PropertyDetailsClient({
                   </div>
                 </div>
 
-                <div className="flex w-full justify-start items-start gap-2 text-gray-600 pl-2">
-                  <div className="flex-col">
-                    <div className="p-0.5">
-                      <HousePlus size={20} />
-                    </div>
+              <div className="flex w-full justify-start items-start gap-2 text-gray-600 pl-2">
+                <div className="flex-col">
+                  <div className="p-0.5">
+                    <HousePlus size={20} />
                   </div>
-                  <div className="flex-col">
-                    <div className="flex gap-2 items-center font-nunito text-xs">
-                      Available From
-                    </div>
-                    <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {formatDateToReadable(property?.availableFrom)}
-                    </div>
+                </div>
+                <div className="flex-col">
+                  <div className="flex gap-2 items-center font-nunito text-xs">
+                    Available From
+                  </div>
+                  <div className="text-gray-900 font-semibold font-nunito text-sm">
+                    {formatDateToReadable(property?.availableFrom)}
                   </div>
                 </div>
               </div>
-            </section>
+            </div>
+
+            {/* Price & Contact Section - max-md:hidden in mobile section? */}
+            <div className="max-md:hidden">
+              <div className="flex justify-between items-center">
+                <div className="text-gray-600">
+                  {property?.propertyCategory === PropertyCategory.RESALE
+                    ? "Price"
+                    : "Rent"}
+                </div>
+                <div>
+                  {property?.propertyCategory === PropertyCategory.RESALE
+                    ? property?.price
+                      ? formatINRCurrency(property.price)
+                      : "-"
+                    : property?.rent
+                      ? formatINRCurrency(property.rent)
+                      : "-"}
+                </div>
+              </div>
+              <button
+                className="mt-4 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full text-base max-md:text-sm hover:bg-red-600 transition-colors"
+                onClick={handleContactOwnerClick}
+              >
+                Contact Owner
+              </button>
+            </div>
+          </section>
 
             {/* Description Section */}
             <section className="py-6">
@@ -1187,28 +1218,34 @@ export function PropertyDetailsClient({
         </section>
       </section>
 
-      {/* Contact Owner Section */}
-      <MobileFooter>
-        <div className="flex-col justify-between items-center w-full">
-          <div className="text-gray-600 text-xs">
-            {property?.propertyCategory === PropertyCategory.RESALE
-              ? "Price"
-              : "Rent"}
-          </div>
-          <div className="text-lg">
-            {property?.propertyCategory === PropertyCategory.RESALE
-              ? property?.price
-                ? formatINRCurrency(property.price)
-                : "-"
-              : property?.rent
-                ? formatINRCurrency(property.rent)
-                : "-"}
-          </div>
-        </div>
-        <button className="px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full hover:bg-red-600 transition-colors">
-          Contact Owner
-        </button>
-      </MobileFooter>
+          {/* Contact Owner Section */}
+          <MobileFooter>
+            <div className="flex-col justify-between items-center w-full">
+              <div className="text-gray-600 text-xs">
+                {property?.propertyCategory === PropertyCategory.RESALE
+                  ? "Price"
+                  : "Rent"}
+              </div>
+              <div className="text-lg">
+                {property?.propertyCategory === PropertyCategory.RESALE
+                  ? property?.price
+                    ? formatINRCurrency(property.price)
+                    : "-"
+                  : property?.rent
+                    ? formatINRCurrency(property.rent)
+                    : "-"}
+              </div>
+            </div>
+            <button
+              className="px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full text-base max-md:text-sm hover:bg-red-600 transition-colors"
+              onClick={handleContactOwnerClick}
+            >
+              Contact Owner
+            </button>
+          </MobileFooter>
+        </section>
+      </section>
+
       {/* Mobile Photo Gallery Dialog */}
       {isDialogOpen("photo-gallery-dialog") && (
         <PhotoGalleryDialog
@@ -1226,6 +1263,14 @@ export function PropertyDetailsClient({
             closeDialog("report-listing-dialog");
             dispatch(setHideStickyNavBar(true));
           }}
+        />
+      )}
+
+      {/* Contact owner dialog */}
+      {isDialogOpen("contact-owner-login-dialog") && (
+        <ContactOwnerLoginDialog
+          id="contact-owner-login-dialog"
+          onClose={() => closeDialog("contact-owner-login-dialog")}
         />
       )}
     </>
