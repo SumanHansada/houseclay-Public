@@ -18,14 +18,17 @@ import {
 import { RootState } from "@/store/store";
 import { setCheckUser } from "@/store/userSlice";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
-import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PhoneInput } from "react-international-phone";
 import { useDispatch, useSelector } from "react-redux";
 
 const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-export const ContactLogin = () => {
+interface ContactLoginProps {
+  onSuccess: () => void;
+}
+
+export const ContactLogin = ({ onSuccess }: ContactLoginProps) => {
   const { closeDialog } = useDialog();
   const authStep = useSelector((state: RootState) => state.auth.authStep);
   const emailID = useSelector((state: RootState) => state.auth.emailID);
@@ -38,7 +41,6 @@ export const ContactLogin = () => {
   const [generateOtp] = useGenerateOtpMutation();
   const dispatch = useDispatch();
   const { isMobile } = useDeviceContext();
-  const router = useRouter();
 
   const [otpCode, setOtpCode] = useState<string[]>(["", "", "", ""]);
   const [phoneNo, setPhoneNo] = useState("");
@@ -118,7 +120,7 @@ export const ContactLogin = () => {
         }
       }
       dispatch(setAuthStep(AuthStep.LOGGED_IN));
-      closeDialog("login-dialog");
+      onSuccess();
     } catch (err) {
       console.error(err);
     }
@@ -198,7 +200,7 @@ export const ContactLogin = () => {
   return (
     <div className="flex items-center justify-center h-full bg-white rounded-lg">
       {!isMobile && (
-        <div className="relative w-[45%] rounded-l-lg h-[420px] 2xl:h-[480px] overflow-hidden">
+        <div className="relative w-2/5 rounded-l-lg h-[420px] 2xl:h-[480px] overflow-hidden">
           <ImageWithLoader
             src="/images/contact-owner.svg"
             alt="Login"
@@ -216,19 +218,24 @@ export const ContactLogin = () => {
             {/* Form header */}
             <div className="max-md:hidden">
               <h1 className="text-lg lg:text-xl xl:text-2xl 2xl:text-3xl mb-3 text-black ">
-                Log In to Your Account
+                Unlock Owner Details
               </h1>
               <p className="text-gray-600 text-sm">
-                Enter phone number to log in
+                You&apos;re one step away from connecting with the property
+                owner. Use 1 Connect to view their contact information.
               </p>
             </div>
 
             {/* Form fields */}
             <div className="space-y-1 lg:space-y-2 xl:space-y-3 2xl:space-y-4">
               <div>
-                <div className="md:hidden mb-8">
+                <div className="md:hidden mb-6">
                   <span className="text-2xl font-bold">No spam, </span>
-                  <span className="text-2xl">just updates.</span>
+                  <span className="text-2xl font-medium">just updates.</span>
+                  <p className="text-lg text-gray-700">
+                    You're one step away from connecting with the property
+                    owner. Use 1 Connect to view their contact information
+                  </p>
                 </div>
                 <label
                   htmlFor="phone"
@@ -277,8 +284,11 @@ export const ContactLogin = () => {
         {authStep === AuthStep.CREATE_USER && (
           <div className="w-full flex flex-col align-center justify-center gap-2">
             {/* Form header */}
-            <div>
-              <h1 className="text-2xl mb-1 text-black ">Create New Account</h1>
+            <div className="flex flex-col gap-1 mb-2">
+              <h1 className="text-2xl text-black ">
+                Looks like you don't have an Account!
+              </h1>
+              <h2 className="text-lg">Create New Account</h2>
             </div>
             <div className="space-y-2">
               <div>
@@ -341,11 +351,19 @@ export const ContactLogin = () => {
           <div className="w-full flex flex-col align-center justify-center gap-6">
             {/* Form header */}
             <div>
-              <h1 className="text-2xl mb-1 text-black ">
-                Verify Your Phone Number
+              <h1 className="text-2xl mb-1 text-black max-md:hidden">
+                Unlock Owner Details
               </h1>
+              <div className="md:hidden mb-6">
+                <span className="text-2xl font-bold">No spam, </span>
+                <span className="text-2xl font-medium">just updates.</span>
+                <p className="text-lg text-gray-700">
+                  You're one step away from connecting with the property owner.
+                  Use 1 Connect to view their contact information
+                </p>
+              </div>
               <p className="text-gray-600 text-sm">
-                We&apos;ve sent a 4-digit OTP to your phone number.
+                We&apos;ve sent a 4-digit OTP to your phone number: {phoneNo}
               </p>
             </div>
 
@@ -401,17 +419,6 @@ export const ContactLogin = () => {
               </div>
 
               <div className="flex flex-col gap-4">
-                {/* Info box */}
-                <div className="bg-red-50 p-2 rounded-lg flex items-center gap-2">
-                  <SvgIcon iconSize="medium" name="coin-egg" size={40} />
-
-                  <div>
-                    <p className="text-gray-800 font-normal">
-                      Verify your Phone Number and earn
-                      <span className="font-bold"> 2 Connects</span> instantly!
-                    </p>
-                  </div>
-                </div>
                 {/* Verify Button */}
                 <button
                   type="submit"

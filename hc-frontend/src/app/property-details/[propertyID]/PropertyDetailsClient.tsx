@@ -46,7 +46,7 @@ import BalconyIconSvg from "public/icons/common/balcony.svg";
 import BuildUpAreaIconSvg from "public/icons/common/build-up-area.svg";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { PlacesAutocomplete } from "@/base-components";
 import { PropertyCategory } from "@/common/enums";
@@ -68,6 +68,9 @@ import {
 } from "@/store/appSlice";
 import { PhotoGallery } from "@/utility-components";
 import { GoogleMapsDirection } from "@/utility-components";
+import { MobileFooter } from "@/layout-components";
+import UnlockOwnerDetailsDialog from "@/dialogs/unlock-owner-details-dialog";
+import { RootState } from "@/store/store";
 
 const BalconyIcon = BalconyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const BuildUpAreaIcon = BuildUpAreaIconSvg as React.FC<
@@ -174,6 +177,7 @@ export function PropertyDetailsClient({
   const router = useRouter();
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
+  const { token } = useSelector((state: RootState) => state.auth);
   const { isDialogOpen, closeDialog, openDialog } = useDialog();
 
   const handleShare = async () => {
@@ -206,7 +210,14 @@ export function PropertyDetailsClient({
   };
 
   const handleContactOwnerClick = () => {
-    openDialog("contact-owner-login-dialog");
+    token
+      ? openDialog("unlock-owner-details-dialog")
+      : openDialog("contact-owner-login-dialog");
+  };
+
+  const handleContactLoginSuccess = () => {
+    closeDialog("contact-owner-login-dialog");
+    openDialog("unlock-owner-details-dialog");
   };
 
   // Split description into sentences array
@@ -1266,11 +1277,21 @@ export function PropertyDetailsClient({
         />
       )}
 
-      {/* Contact owner dialog */}
+      {/* Contact owner login dialog */}
       {isDialogOpen("contact-owner-login-dialog") && (
         <ContactOwnerLoginDialog
           id="contact-owner-login-dialog"
+          onSuccess={handleContactLoginSuccess}
           onClose={() => closeDialog("contact-owner-login-dialog")}
+        />
+      )}
+
+      {/* Unlock owner details dialog */}
+      {isDialogOpen("unlock-owner-details-dialog") && (
+        <UnlockOwnerDetailsDialog
+          id="unlock-owner-details-dialog"
+          propertyID={propertyID}
+          onClose={() => closeDialog("unlock-owner-details-dialog")}
         />
       )}
     </>

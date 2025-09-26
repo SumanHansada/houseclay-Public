@@ -282,6 +282,15 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: [USER_DETAIL_TAG],
     }),
+    contactOwner: builder.mutation<
+      { phone: string; name: string; email: string; connectBal: number },
+      { propertyID: string }
+    >({
+      query: ({ propertyID }) => ({
+        url: `/property/user/contact/${propertyID}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -309,4 +318,5 @@ export const {
   useLazyGetShortlistedPropertiesQuery,
   useCreateOrderMutation,
   useVerifyPaymentMutation,
+  useContactOwnerMutation,
 } = apiSlice;

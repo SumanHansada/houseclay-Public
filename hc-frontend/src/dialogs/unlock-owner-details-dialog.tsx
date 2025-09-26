@@ -1,18 +1,18 @@
-import { ContactLogin } from "@/app/property-details/[propertyID]/components/ContactLogin";
+import { UnlockOwnerDetails } from "@/app/property-details/[propertyID]/components/UnlockOwnerDetails";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { X } from "lucide-react";
 
-interface ContactOwnerLoginDialogProps {
+interface UnlockOwnerDetailsProps {
   id: string;
   onClose: () => void;
-  onSuccess: () => void;
+  propertyID: string;
 }
 
-const ContactOwnerLoginDialog: React.FC<ContactOwnerLoginDialogProps> = ({
+const UnlockOwnerDetailsDialog: React.FC<UnlockOwnerDetailsProps> = ({
   id,
   onClose,
-  onSuccess,
+  propertyID,
 }) => {
   const { isMobile } = useDeviceContext();
 
@@ -53,10 +53,10 @@ const ContactOwnerLoginDialog: React.FC<ContactOwnerLoginDialogProps> = ({
         )}
       </DialogHeader>
       <DialogContent>
-        <ContactLogin onSuccess={onSuccess} />
+        <UnlockOwnerDetails propertyID={propertyID} onClose={onClose} />
       </DialogContent>
     </Dialog>
   );
 };
 
-export default ContactOwnerLoginDialog;
+export default UnlockOwnerDetailsDialog;
