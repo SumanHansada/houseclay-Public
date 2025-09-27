@@ -5,7 +5,12 @@ import { X } from "lucide-react";
 import * as Yup from "yup";
 
 import { RadioGroup, TextArea } from "@/base-components";
-import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+} from "@/components/Dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 interface ReportListingDialogProps {
   id: string;
@@ -135,51 +140,43 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
               rows={4}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
             />
-
-            {/* Mobile Footer */}
-            {isMobile && (
-              <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
-                <div className="flex gap-3">
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={!formik.isValid || formik.isSubmitting}
-                    className="flex-1 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-                  >
-                    {formik.isSubmitting ? "Submitting..." : "Submit"}
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Desktop Buttons */}
-            {!isMobile && (
-              <div className="flex gap-3 justify-end">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={!formik.isValid || formik.isSubmitting}
-                  className="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-                >
-                  {formik.isSubmitting ? "Submitting..." : "Submit"}
-                </button>
-              </div>
-            )}
           </form>
         </div>
       </DialogContent>
+      <DialogFooter>
+        <div className="flex w-full gap-4  px-6 py-3 justify-between md:hidden">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={!formik.isValid || formik.isSubmitting}
+            className="flex-1 px-6 py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+          >
+            {formik.isSubmitting ? "Submitting..." : "Submit"}
+          </button>
+        </div>
+        <div className="flex border-gray-200 w-full px-6 py-3 md:py-3 justify-end max-md:px-4 gap-4 max-md:hidden">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={!formik.isValid || formik.isSubmitting}
+            className="px-6 py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+          >
+            {formik.isSubmitting ? "Submitting..." : "Submit"}
+          </button>
+        </div>
+      </DialogFooter>
     </Dialog>
   );
 };

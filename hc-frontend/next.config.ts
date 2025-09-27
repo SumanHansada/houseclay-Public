@@ -23,7 +23,7 @@ const nextConfig: NextConfig = {
       },
     ],
     formats: ["image/webp", "image/avif"],
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 3600,
   },
   // Turbopack configuration for development
   turbopack: {

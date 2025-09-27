@@ -4,7 +4,7 @@ import { ChevronLeft, Crown, Heart, Share } from "lucide-react";
 import Skeleton from "react-loading-skeleton";
 
 const PhotoGallerySkeleton = ({ className = "" }: { className?: string }) => (
-  <div className={`bg-gray-200 rounded-xl ${className}`}>
+  <div className={`bg-gray-200 ${className}`}>
     <Skeleton height="100%" width="100%" borderRadius={12} />
   </div>
 );
@@ -144,7 +144,7 @@ export default function Loading() {
 
       {/* Photo Gallery Section Mobile */}
       <section className="h-60 w-full md:hidden">
-        <PhotoGallerySkeleton className="h-60 rounded-none" />
+        <PhotoGallerySkeleton className="h-60" />
       </section>
 
       <section className="flex-col w-full xl:gap-16 lg:gap-8 md:gap-0 gap-0 xl:px-28 lg:px-14 md:px-8 px-6 max-md:pt-4 max-md:pb-20">

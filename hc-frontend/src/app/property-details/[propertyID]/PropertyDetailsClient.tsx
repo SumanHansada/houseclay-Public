@@ -1172,7 +1172,7 @@ export function PropertyDetailsClient({
           id="report-listing-dialog"
           onClose={() => {
             closeDialog("report-listing-dialog");
-            dispatch(setHideStickyNavBar(false));
+            dispatch(setHideStickyNavBar(true));
           }}
         />
       )}

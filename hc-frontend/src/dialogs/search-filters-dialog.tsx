@@ -1054,12 +1054,12 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
         </div>
       </DialogContent>
       <DialogFooter>
-        <div className="flex border-t border-gray-200 w-full px-6 py-2 md:py-3 justify-between max-md:px-4">
+        <div className="flex border-gray-200 w-full px-6 py-3 md:py-3 justify-between max-md:px-4">
           <Button
             variant="outline"
             leftIcon={<RefreshCcw size={20} />}
             size="md"
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 text-gray-500 bg-white hover:bg-gray-100"
+            className="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-300 text-gray-500 bg-white hover:bg-gray-100"
             onClick={handleReset}
           >
             Reset All
@@ -1067,7 +1067,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
           <Button
             variant="primary"
             size="md"
-            className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors"
+            className="px-4 py-3 rounded-xl bg-red-500 text-white hover:bg-red-600 transition-colors"
             onClick={onApply}
           >
             Show Results
