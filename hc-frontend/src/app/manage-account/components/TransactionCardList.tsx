@@ -1,9 +1,14 @@
+"use client";
+
 import { useMemo } from "react";
-
 import { UserExternalPayment } from "@/interfaces/User";
-
 import { formatDate, getDateKey } from "../utils";
 import { TransactionCard } from "./TransactionCard";
+
+interface GroupedTransactions {
+  date: string;
+  transactions: UserExternalPayment[];
+}
 
 interface TransactionCardListProps {
   items: UserExternalPayment[];
@@ -14,34 +19,26 @@ export function TransactionCardList({
   items,
   onDownload,
 }: TransactionCardListProps) {
-  const groupedTransactions = useMemo(() => {
-    const grouped = items.reduce(
-      (acc, transaction) => {
-        const dateKey = getDateKey(transaction.createdAt);
-        if (!acc[dateKey]) {
-          acc[dateKey] = [];
-        }
-        acc[dateKey].push(transaction);
-        return acc;
-      },
-      {} as Record<string, UserExternalPayment[]>,
-    );
+  // backend guarantees items are already sorted
+  const groupedTransactions = useMemo<GroupedTransactions[]>(() => {
+    const groups: GroupedTransactions[] = [];
+    if (!items || items.length === 0) return groups;
 
-    const groupedArray = Object.entries(grouped)
-      .map(([_, transactions]) => ({
-        date: formatDate(transactions[0].createdAt),
-        transactions: transactions.sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-        ),
-      }))
-      .sort((a, b) => {
-        const dateA = new Date(a.transactions[0].createdAt).getTime();
-        const dateB = new Date(b.transactions[0].createdAt).getTime();
-        return dateB - dateA;
-      });
-
-    return groupedArray;
+    let currentKey = "";
+    for (let i = 0; i < items.length; i++) {
+      const tx = items[i];
+      const key = getDateKey(tx.createdAt);
+      if (key !== currentKey) {
+        currentKey = key;
+        groups.push({
+          date: formatDate(tx.createdAt),
+          transactions: [tx],
+        });
+      } else {
+        groups[groups.length - 1].transactions.push(tx);
+      }
+    }
+    return groups;
   }, [items]);
 
   return (

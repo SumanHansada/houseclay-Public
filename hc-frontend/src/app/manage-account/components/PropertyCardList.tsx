@@ -1,9 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-
 import { UserOwnedProperties } from "@/interfaces/User";
-
 import { formatDate, getDateKey } from "../utils";
 import { PropertyCard } from "./PropertyCard";
 
@@ -23,36 +21,26 @@ export function PropertyCardList({
   onMarkSold: (propertyId: string) => void;
   onOpenDialog: (propertyId: string) => void;
 }) {
-  const groupedProperties = useMemo(() => {
-    // Group properties by date
-    const grouped = items.reduce(
-      (acc, property) => {
-        const dateKey = getDateKey(property.createdOn);
-        if (!acc[dateKey]) {
-          acc[dateKey] = [];
-        }
-        acc[dateKey].push(property);
-        return acc;
-      },
-      {} as Record<string, UserOwnedProperties[]>,
-    );
+  // backend guarantees items are already sorted
+  const groupedProperties = useMemo<GroupedProperties[]>(() => {
+    const groups: GroupedProperties[] = [];
+    if (!items || items.length === 0) return groups;
 
-    // Convert to array and sort by date (newest first)
-    const groupedArray: GroupedProperties[] = Object.entries(grouped)
-      .map(([_, properties]) => ({
-        date: formatDate(properties[0].createdOn),
-        properties: properties.sort(
-          (a, b) =>
-            new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime(),
-        ),
-      }))
-      .sort((a, b) => {
-        const dateA = new Date(a.properties[0].createdOn);
-        const dateB = new Date(b.properties[0].createdOn);
-        return dateB.getTime() - dateA.getTime();
-      });
-
-    return groupedArray;
+    let currentKey = "";
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      const key = getDateKey(item.createdOn);
+      if (key !== currentKey) {
+        currentKey = key;
+        groups.push({
+          date: formatDate(item.createdOn),
+          properties: [item],
+        });
+      } else {
+        groups[groups.length - 1].properties.push(item);
+      }
+    }
+    return groups;
   }, [items]);
 
   return (
