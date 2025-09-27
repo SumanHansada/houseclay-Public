@@ -57,6 +57,7 @@ import {
 } from "@/common/utils";
 import { PhotoGalleryDialog } from "@/dialogs";
 import ReportListingDialog from "@/dialogs/report-listing-dialog";
+import { MobileFooter } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useGetPublicPropertyByIdQuery } from "@/store/apiSlice";
@@ -199,13 +200,13 @@ export function PropertyDetailsClient({
 
   useEffect(() => {
     if (isMobile) {
+      dispatch(setHideStickyNavBar(true));
       dispatch(setHideHeader(true));
       dispatch(setHideFooter(true));
-      dispatch(setHideStickyNavBar(true));
     } else {
+      dispatch(setHideStickyNavBar(true));
       dispatch(setHideHeader(false));
       dispatch(setHideFooter(false));
-      dispatch(setHideStickyNavBar(false));
     }
   }, [dispatch, isMobile]);
 
@@ -844,29 +845,6 @@ export function PropertyDetailsClient({
                 </div>
               </div>
             </div>
-
-            {/* Price & Contact Section */}
-            <div className="max-md:hidden">
-              <div className="flex justify-between items-center">
-                <div className="text-gray-600">
-                  {property?.propertyCategory === PropertyCategory.RESALE
-                    ? "Price"
-                    : "Rent"}
-                </div>
-                <div>
-                  {property?.propertyCategory === PropertyCategory.RESALE
-                    ? property?.price
-                      ? formatINRCurrency(property.price)
-                      : "-"
-                    : property?.rent
-                      ? formatINRCurrency(property.rent)
-                      : "-"}
-                </div>
-              </div>
-              <button className="mt-4 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full text-base max-md:text-sm hover:bg-red-600 transition-colors">
-                Contact Owner
-              </button>
-            </div>
           </section>
 
           {/* Description Section */}
@@ -1155,7 +1133,7 @@ export function PropertyDetailsClient({
           </section>
 
           {/* Contact Owner Section */}
-          <section className="fixed bottom-0 left-0 md:hidden right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
+          <MobileFooter>
             <div className="flex-col justify-between items-center w-full">
               <div className="text-gray-600 text-xs">
                 {property?.propertyCategory === PropertyCategory.RESALE
@@ -1172,10 +1150,10 @@ export function PropertyDetailsClient({
                     : "-"}
               </div>
             </div>
-            <button className="px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full text-base max-md:text-sm hover:bg-red-600 transition-colors">
+            <button className="px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full hover:bg-red-600 transition-colors">
               Contact Owner
             </button>
-          </section>
+          </MobileFooter>
         </section>
       </section>
 

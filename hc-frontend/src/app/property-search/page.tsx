@@ -153,6 +153,7 @@ export default function PropertySearchPage() {
 
   useEffect(() => {
     if (isMobile) {
+      dispatch(setHideStickyNavBar(false));
       dispatch(setHideHeader(true));
       dispatch(setHideFooter(true));
     } else {
