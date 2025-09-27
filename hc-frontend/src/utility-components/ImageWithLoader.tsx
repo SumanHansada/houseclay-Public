@@ -1,15 +1,11 @@
-import "react-loading-skeleton/dist/skeleton.css";
-
+"use client";
 import Image, { ImageProps } from "next/image";
 import { useState } from "react";
-import Skeleton from "react-loading-skeleton";
 
 interface ImageWithLoaderProps extends Omit<ImageProps, "src" | "alt"> {
   src: string;
   alt: string;
   className?: string;
-  skeletonHeight?: number;
-  skeletonWidth?: number;
   rounded?: boolean;
   fill?: boolean;
   loading?: "eager" | "lazy" | undefined;
@@ -20,8 +16,6 @@ export default function ImageWithLoader({
   src,
   alt,
   className = "",
-  skeletonHeight,
-  skeletonWidth,
   rounded,
   fill,
   loading,
@@ -30,14 +24,6 @@ export default function ImageWithLoader({
 }: ImageWithLoaderProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
-
-  const skeletonStyles = {
-    position: "absolute" as const,
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  };
 
   const handleLoad = () => {
     setIsLoading(false);
@@ -53,13 +39,10 @@ export default function ImageWithLoader({
       className={`relative ${fill ? "w-full h-full" : ""} ${className}`}
       style={!fill ? { width: rest.width, height: rest.height } : {}}
     >
-      {/* Skeleton loader */}
+      {/* Pulse loader */}
       {isLoading && (
-        <Skeleton
-          height={skeletonHeight ?? (fill ? "100%" : rest.height)}
-          width={skeletonWidth ?? (fill ? "100%" : rest.width)}
-          borderRadius={rounded ? 8 : 0}
-          style={skeletonStyles}
+        <div
+          className={`absolute inset-0 h-full w-full bg-gray-300 animate-pulse ${rounded ? "rounded-lg" : ""}`}
         />
       )}
 

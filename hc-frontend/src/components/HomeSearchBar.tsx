@@ -30,7 +30,11 @@ const CITY_OPTIONS = Object.keys(cityLatLngMapping).map((city) => ({
   label: city,
 }));
 
-const HomeSearchBar: React.FC = () => {
+interface HomeSearchBarProps {
+  id: string;
+}
+
+const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -139,9 +143,9 @@ const HomeSearchBar: React.FC = () => {
       {/* Location */}
       <div className="w-3/4 max-md:w-full max-md:flex-1 md:px-3 px-2 md:py-2 py-1 border-gray-200">
         <PlacesAutocomplete
-          id="location"
+          id={id}
           name="location"
-          placeholder="Type Localities..."
+          placeholder="Type Locality..."
           value={location?.name || ""}
           onChange={handleLocationChange}
           onLocationSelect={handleLocationSelect}

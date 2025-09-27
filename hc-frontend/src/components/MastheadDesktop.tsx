@@ -55,7 +55,7 @@ const MastHeadDesktop = () => {
         </div>
 
         {/* Search Form */}
-        <HomeSearchBar />
+        <HomeSearchBar id="desktop-search-bar" />
       </div>
     </>
   );

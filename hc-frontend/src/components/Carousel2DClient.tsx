@@ -170,6 +170,8 @@ const Carousel2DClient: React.FC<Carousel2DProps> = ({
               className={`w-2 h-2 rounded-full ${
                 index === currentSlideIndex ? "bg-black" : "bg-gray-400"
               }`}
+              name={`carousel-item-${index}`}
+              aria-label={`carousel-item-${index}`}
               onClick={() => {
                 const container = scrollContainerRef.current;
                 if (!container) return;

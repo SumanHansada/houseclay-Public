@@ -73,7 +73,7 @@ const MastHeadMobile: React.FC = () => {
         </div>
 
         {/* Search */}
-        <HomeSearchBar />
+        <HomeSearchBar id="mobile-search-bar" />
       </div>
       {/* Tagline */}
       <div className="flex justify-center items-center">
@@ -91,6 +91,8 @@ const MastHeadMobile: React.FC = () => {
           <button
             className="bg-white p-4 border border-gray-200 rounded-2xl shadow-lg justify-center items-center "
             role="button"
+            name="find-flatmates"
+            aria-label="find-flatmates"
           >
             <div className="rounded-full">
               <FindFlatmates />
@@ -105,6 +107,8 @@ const MastHeadMobile: React.FC = () => {
           <button
             className="bg-white p-4 border border-gray-200 rounded-2xl shadow-lg justify-center items-center"
             role="button"
+            name="find-rooms"
+            aria-label="find-rooms"
           >
             <div className="rounded-full">
               <FindRooms />
@@ -120,6 +124,8 @@ const MastHeadMobile: React.FC = () => {
             className="bg-white p-4 border border-gray-200 rounded-2xl shadow-lg justify-center items-center"
             role="button"
             onClick={() => openDialog("standouts-dialog")}
+            name="weekly-standouts"
+            aria-label="weekly-standouts"
           >
             <div className="rounded-full">
               <WeeklyStandouts />
@@ -135,6 +141,8 @@ const MastHeadMobile: React.FC = () => {
             className="bg-white p-4 border border-gray-200 rounded-2xl shadow-lg justify-center items-center relative"
             onClick={() => router.push("/list-property")}
             role="button"
+            name="list-property"
+            aria-label="list-property"
           >
             <div className="absolute -top-2 -right-2 bg-red-500 text-white px-2 py-0.5 text-xs rounded">
               FREE
