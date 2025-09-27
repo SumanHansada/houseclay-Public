@@ -23,7 +23,7 @@ public class PhotoService {
     @Value("${aws.s3.bucketName}")
     private String bucketName;
 
-    private final static int EXPIRATION_TIME = 1;
+    private final static int EXPIRATION_TIME = 60; // 60 minutes for better caching
 
     private final S3Presigner presigner;
 
@@ -51,7 +51,7 @@ public class PhotoService {
 
         PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
                 .putObjectRequest(objectRequest)
-                .signatureDuration(Duration.ofMinutes(10))
+                .signatureDuration(Duration.ofMinutes(EXPIRATION_TIME))
                 .build();
 
         PresignedPutObjectRequest presignedRequest = presigner.presignPutObject(presignRequest);
@@ -71,6 +71,7 @@ public class PhotoService {
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(bucketName)
                 .key(objectKey)
+                .responseCacheControl("public, max-age=3600, must-revalidate") // 1 hour cache
                 .build();
 
         GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
