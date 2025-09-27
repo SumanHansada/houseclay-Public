@@ -10,7 +10,12 @@ import RadioGroup from "@/base-components/RadioGroup";
 import { PaymentVerificationStatus } from "@/common/enums";
 import Carousel3D from "@/components/Carousel3D";
 import ConnectsBundleCard from "@/components/ConnectsBundleCard";
-import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+} from "@/components/Dialog";
 import ConnectsBundleData from "@/data/ConnectsBundleData.json";
 import VerifyConnectsDialog from "@/dialogs/verify-connects-dialog";
 import { MobileFooter, MobileHeader } from "@/layout-components";
@@ -601,6 +606,8 @@ export default function BuyConnectsPage() {
                 </span>
               </div>
             </div>
+          </DialogContent>
+          <DialogFooter>
             <MobileFooter>
               <div className="flex flex-col justify-around items-start w-full">
                 <div className="text-gray-600 text-xs">Total Amount</div>
@@ -615,7 +622,7 @@ export default function BuyConnectsPage() {
                 Proceed to Pay
               </button>
             </MobileFooter>
-          </DialogContent>
+          </DialogFooter>
         </Dialog>
       )}
 

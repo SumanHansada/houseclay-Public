@@ -53,6 +53,7 @@ const PhoneField: React.FC<PhoneFieldProps> = ({
       <div className="relative">
         <PhoneInput
           name={id || name}
+          disableFormatting={true}
           defaultCountry={defaultCountry}
           value={value}
           placeholder={placeholder}

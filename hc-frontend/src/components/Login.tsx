@@ -250,6 +250,7 @@ const Login = () => {
                 </label>
                 <PhoneInput
                   defaultCountry="in"
+                  disableFormatting={true}
                   value={phoneNo}
                   placeholder={"Enter phone number"}
                   onChange={(value) => setPhoneNo(value)}
@@ -302,6 +303,7 @@ const Login = () => {
                 </label>
                 <PhoneInput
                   defaultCountry="in"
+                  disableFormatting={true}
                   value={phoneNo}
                   placeholder={"Enter phone number"}
                   onChange={(value) => setPhoneNo(value)}

@@ -234,6 +234,7 @@ const ListPropertyPage = dynamic(
                         </label>
                         <PhoneInput
                           defaultCountry="in"
+                          disableFormatting={true}
                           value={phoneNo}
                           placeholder={"Enter phone number"}
                           onChange={(value) => setPhoneNo(value)}
