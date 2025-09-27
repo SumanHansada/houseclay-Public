@@ -1054,7 +1054,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
         </div>
       </DialogContent>
       <DialogFooter>
-        <div className="flex border-gray-200 w-full px-6 py-3 md:py-3 justify-between max-md:px-4">
+        <div className="flex border-gray-200 w-full px-6 md:py-3 justify-between max-md:px-4">
           <Button
             variant="outline"
             leftIcon={<RefreshCcw size={20} />}
