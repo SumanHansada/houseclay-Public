@@ -125,6 +125,8 @@ public class PropertyUserService {
         Map<String, String> contact = new HashMap<>();
         contact.put("phone", owner.getPhoneNo());
         contact.put("name", owner.getName());
+        contact.put("email", owner.getEmailID());
+        contact.put("connectBal", Integer.toString(owner.getConnectBal()));
         return contact;
     }
 

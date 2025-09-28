@@ -1,10 +1,7 @@
 package com.houseclay.backend.mapper;
 
 import com.houseclay.backend.dto.PropertyCardDTO;
-import com.houseclay.backend.entity.FlatmateProperty;
-import com.houseclay.backend.entity.Property;
-import com.houseclay.backend.entity.RentProperty;
-import com.houseclay.backend.entity.SaleProperty;
+import com.houseclay.backend.entity.*;
 import com.houseclay.backend.entity.elastic.FlatmateDocument;
 import com.houseclay.backend.entity.elastic.PropertyDocument;
 import com.houseclay.backend.entity.elastic.RentDocument;
@@ -18,10 +15,13 @@ public class PropertyCardMapper {
         copyBaseFields(propertyDocument, dto);
         if (propertyDocument instanceof SaleDocument sale) {
             dto.setPrice(sale.getPrice());
+            dto.setPropertyCategory(PropertyCategory.RESALE);
         } else if (propertyDocument instanceof RentDocument rent) {
             dto.setRent(rent.getRent());
+            dto.setPropertyCategory(PropertyCategory.RENT);
         } else if (propertyDocument instanceof FlatmateDocument flatmate) {
             dto.setRent(flatmate.getRent());
+            dto.setPropertyCategory(PropertyCategory.FLATMATE);
         }
         return dto;
     }
@@ -63,5 +63,6 @@ public class PropertyCardMapper {
         target.setLandmark(source.getLandmark());
         target.setLatitude(source.getLatitude());
         target.setLongitude(source.getLongitude());
+        target.setPropertyState(source.getPropertyState());
     }
 }

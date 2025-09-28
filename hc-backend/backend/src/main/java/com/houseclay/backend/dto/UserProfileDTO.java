@@ -11,9 +11,9 @@ public class UserProfileDTO {
     private String name;
     private boolean isEmailVerified;
     private boolean onWhatsApp;
+    private int connectBal;
     private List<OwnedPropertyDTO> ownedProperties;
     private List<PropertyCardDTO> shortlistedProperties;
-    private List<PropertyCardDTO> viewedProperties;
     private List<PropertyCardDTO> contactedProperties;
     private List<UserExternalPaymentDTO> externalPayments;
 }

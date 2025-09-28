@@ -80,6 +80,33 @@
 			<artifactId>utils</artifactId>
 			<version>2.31.23</version>
 		</dependency>
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>ses</artifactId>
+			<version>2.25.67</version>
+		</dependency>
+
+
+		<!-- FreeMarker for on-server templating (used for the attachment path) -->
+		<dependency>
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+			<version>2.3.33</version>
+		</dependency>
+
+		<!-- Jakarta Mail for building MIME messages with attachments -->
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>jakarta.mail</artifactId>
+			<version>1.6.7</version>
+		</dependency>
+
+		<!-- ByteArrayDataSource for attachments -->
+		<dependency>
+			<groupId>org.eclipse.angus</groupId>
+			<artifactId>angus-activation</artifactId>
+			<version>2.0.2</version>
+		</dependency>
 
 		<!-- Razorpay SDK -->
 		<dependency>

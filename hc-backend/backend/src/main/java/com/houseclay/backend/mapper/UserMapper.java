@@ -96,6 +96,7 @@ public class UserMapper {
         dto.setName(user.getName());
         dto.setEmail(user.getEmailID());
         dto.setPhoneNo(user.getPhoneNo());
+        dto.setConnectBal(user.getConnectBal());
 
         dto.setOwnedProperties(
                 user.getOwnedProperties().stream()
@@ -106,13 +107,6 @@ public class UserMapper {
         dto.setShortlistedProperties(
                 user.getPropertyActions().stream()
                         .filter(action -> Objects.equals(action.getUserActionType(), UserActionType.SHORTLIST))
-                        .map(action -> PropertyCardMapper.toPropertyCardDTO(action.getProperty()))
-                        .collect(Collectors.toList())
-        );
-
-        dto.setViewedProperties(
-                user.getPropertyActions().stream()
-                        .filter(action -> Objects.equals(action.getUserActionType(), UserActionType.VIEW))
                         .map(action -> PropertyCardMapper.toPropertyCardDTO(action.getProperty()))
                         .collect(Collectors.toList())
         );
