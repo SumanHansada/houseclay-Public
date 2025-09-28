@@ -63,8 +63,8 @@ export default function BuyConnectsPage() {
   const totalAmount = currentBundle
     ? currentBundle.originalPrice + gstAmount
     : customConnectsPrice + gstAmount;
-  const newConnectsBalance =
-    connectBalance + (currentBundle ? currentBundle.connects : customConnects);
+  const connectsToBuy = currentBundle ? currentBundle.connects : customConnects;
+  const newConnectsBalance = connectBalance + connectsToBuy;
 
   const bundleOptions = ConnectsBundleData.bundles.map((bundle) => ({
     value: bundle.id,
@@ -371,12 +371,12 @@ export default function BuyConnectsPage() {
                     </button>
                     <button
                       onClick={handleProceedToPay}
-                      disabled={!agreedToTerms || newConnectsBalance < 5}
-                      className={`flex px-8 py-3 rounded-xl font-medium ${
-                        agreedToTerms && newConnectsBalance >= 5
+                      className={`flex px-8 py-3 rounded-xl ${
+                        agreedToTerms && connectsToBuy >= 5
                           ? "bg-red-500 text-white hover:bg-red-600"
                           : "bg-gray-300 text-gray-500 cursor-not-allowed"
                       }`}
+                      disabled={!agreedToTerms && connectsToBuy < 5}
                     >
                       Proceed to Pay
                     </button>
@@ -529,12 +529,12 @@ export default function BuyConnectsPage() {
         </div>
         <button
           className={`text-center px-6 py-3 border rounded-xl w-full transition duration-200 ${
-            agreedToTerms && newConnectsBalance >= 5
+            agreedToTerms && connectsToBuy >= 5
               ? "bg-red-500 border-red-500 text-white hover:bg-red-600"
               : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
           }`}
           onClick={() => openDialog("connects-price-breakdown-dialog")}
-          disabled={!agreedToTerms || newConnectsBalance < 5}
+          disabled={!agreedToTerms && connectsToBuy < 5}
         >
           Proceed to Pay
         </button>
@@ -616,8 +616,13 @@ export default function BuyConnectsPage() {
                 </div>
               </div>
               <button
-                className="text-center px-6 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full hover:bg-red-600 transition duration-200"
+                className={`text-center px-6 py-3 border rounded-xl w-full transition duration-200 ${
+                  agreedToTerms && connectsToBuy >= 5
+                    ? "bg-red-500 border-red-500 text-white hover:bg-red-600"
+                    : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
                 onClick={handleProceedToPay}
+                disabled={!agreedToTerms && connectsToBuy < 5}
               >
                 Proceed to Pay
               </button>

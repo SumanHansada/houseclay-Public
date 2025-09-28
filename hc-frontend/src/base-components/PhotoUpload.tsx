@@ -1,4 +1,3 @@
-import { useField } from "formik";
 import { motion } from "framer-motion";
 import {
   Image as ImageIcon,
@@ -15,8 +14,10 @@ import { useDropzone } from "react-dropzone";
 import { FileData } from "@/interfaces/FileData";
 import { PropertyImage } from "@/interfaces/PropertyImage";
 
-interface FormPhotoUploadProps {
+interface PhotoUploadProps {
   name: string;
+  id?: string;
+  label?: string;
   photoCountName?: string;
   noPhotosName?: string;
   maxPhotos?: number;
@@ -25,10 +26,23 @@ interface FormPhotoUploadProps {
   className?: string;
   placeholder?: string;
   tipText?: string;
+  disabled?: boolean;
+  // Formik props
+  value: PropertyImage[];
+  onChange: (value: PropertyImage[]) => void;
+  onBlur?: () => void;
+  error?: string;
+  // noPhotos field props
+  noPhotosValue?: boolean;
+  onNoPhotosChange?: (value: boolean) => void;
+  onNoPhotosBlur?: () => void;
+  noPhotosError?: string;
 }
 
-const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
+const PhotoUpload: React.FC<PhotoUploadProps> = ({
   name,
+  id,
+  label,
   photoCountName,
   noPhotosName = "noPhotos",
   maxPhotos = 10,
@@ -37,19 +51,22 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
   className = "",
   placeholder = "Drag & drop files or",
   tipText = "Properties with picture get more visibility",
+  disabled = false,
+  value,
+  onChange,
+  onBlur,
+  error,
+  noPhotosValue = false,
+  onNoPhotosChange,
+  onNoPhotosBlur,
+  noPhotosError,
 }) => {
-  // Field hooks
-  const [field, meta, helpers] = useField<PropertyImage[]>(name);
-
-  // Local state for noPhotos instead of using formik
-  const [noPhotos, setNoPhotos] = useState(false);
-
   // UI state
   const [hoveredPhotoId, setHoveredPhotoId] = useState<string | null>(null);
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
 
   // Get the current photos value
-  const photos = field.value || [];
+  const photos = value || [];
 
   // Handle file drop/selection
   const onDrop = (acceptedFiles: File[]) => {
@@ -74,7 +91,7 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
       };
     });
 
-    helpers.setValue([...photos, ...newPhotos]);
+    onChange([...photos, ...newPhotos]);
 
     // Update photo count field if provided
     if (photoCountName) {
@@ -86,8 +103,8 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
       }
     }
 
-    // Set noPhotos to false when photos are added
-    setNoPhotos(false);
+    // Clear noPhotos field when photos are added
+    onNoPhotosChange?.(false);
   };
 
   // Configure dropzone
@@ -96,7 +113,7 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
       "image/*": [".jpeg", ".jpg", ".png", ".webp", ".heic"],
     },
     onDrop,
-    disabled: noPhotos,
+    disabled: noPhotosValue || disabled,
   });
 
   // Make a photo the cover
@@ -116,7 +133,7 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
         })),
     ];
 
-    helpers.setValue(updatedPhotos);
+    onChange(updatedPhotos);
     setActiveMenuId(null);
   };
 
@@ -127,12 +144,12 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
 
     const filteredPhotos = photos.filter((photo) => photo.id !== photoId);
 
-    // If the deleted photo was the cover, make the first remaining photo the cover
+    // If the deleted photo was the cover and there are remaining photos, make the first remaining photo the cover
     if (wasCover && filteredPhotos.length > 0) {
-      filteredPhotos[0]!.isCover = true;
+      filteredPhotos[0] = { ...filteredPhotos[0]!, isCover: true };
     }
 
-    helpers.setValue(filteredPhotos);
+    onChange(filteredPhotos);
     setActiveMenuId(null);
 
     // Update photo count field if provided
@@ -153,14 +170,23 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
 
   // Handle noPhotos checkbox change
   const handleNoPhotosChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNoPhotos(e.target.checked);
+    onNoPhotosChange?.(e.target.checked);
   };
 
   // Determine UI state classes
-  const disabledClass = noPhotos ? "opacity-50 pointer-events-none" : "";
+  const disabledClass =
+    noPhotosValue || disabled ? "opacity-50 pointer-events-none" : "";
 
   return (
     <div className={`w-full ${className}`}>
+      {label && (
+        <label
+          htmlFor={id || name}
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          {label}
+        </label>
+      )}
       {showPhotoCount && (
         <div className="flex justify-between items-center mb-4">
           <span className="text-gray-500">
@@ -175,8 +201,9 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
             <div
               {...getRootProps()}
               className={`rounded-lg p-16 mb-4 cursor-pointer bg-gray-50 flex flex-col items-center gap-6 ${
-                noPhotos ? "cursor-not-allowed" : ""
+                noPhotosValue || disabled ? "cursor-not-allowed" : ""
               }`}
+              onBlur={onBlur}
             >
               <input {...getInputProps()} />
               <div className="flex flex-col gap-4">
@@ -184,7 +211,7 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
                 <button
                   type="button"
                   className="border border-gray-600 rounded-xl px-6 py-2 hover:bg-gray-50"
-                  disabled={noPhotos}
+                  disabled={noPhotosValue || disabled}
                 >
                   Browse File
                 </button>
@@ -202,8 +229,11 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
               <div
                 {...getRootProps()}
                 className={`border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center aspect-square object-cover ${
-                  noPhotos ? "cursor-not-allowed" : "cursor-pointer"
+                  noPhotosValue || disabled
+                    ? "cursor-not-allowed"
+                    : "cursor-pointer"
                 }`}
+                onBlur={onBlur}
               >
                 <input {...getInputProps()} />
                 <ImageIcon size={40} className="text-gray-400" />
@@ -211,8 +241,11 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
               <div
                 {...getRootProps()}
                 className={`border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center aspect-square object-cover ${
-                  noPhotos ? "cursor-not-allowed" : "cursor-pointer"
+                  noPhotosValue || disabled
+                    ? "cursor-not-allowed"
+                    : "cursor-pointer"
                 }`}
+                onBlur={onBlur}
               >
                 <input {...getInputProps()} />
                 <ImageIcon size={40} className="text-gray-400" />
@@ -220,8 +253,11 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
               <div
                 {...getRootProps()}
                 className={`border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center aspect-square object-cover ${
-                  noPhotos ? "cursor-not-allowed" : "cursor-pointer"
+                  noPhotosValue || disabled
+                    ? "cursor-not-allowed"
+                    : "cursor-pointer"
                 }`}
+                onBlur={onBlur}
               >
                 <input {...getInputProps()} />
                 <ImageIcon size={40} className="text-gray-400" />
@@ -229,8 +265,11 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
               <div
                 {...getRootProps()}
                 className={`border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center aspect-square object-cover ${
-                  noPhotos ? "cursor-not-allowed" : "cursor-pointer"
+                  noPhotosValue || disabled
+                    ? "cursor-not-allowed"
+                    : "cursor-pointer"
                 }`}
+                onBlur={onBlur}
               >
                 <input {...getInputProps()} />
                 <Plus size={40} className="text-gray-400" />
@@ -303,7 +342,7 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
                       e.stopPropagation();
                       toggleMenu(photo.id);
                     }}
-                    disabled={noPhotos}
+                    disabled={noPhotosValue || disabled}
                   >
                     <MoreHorizontal size={28} />
                   </motion.button>
@@ -323,7 +362,7 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
                       type="button"
                       className="w-full text-left text-gray-500 px-2 py-1 hover:bg-gray-100 text-sm flex gap-2 items-center"
                       onClick={() => handleMakeCover(photo.id)}
-                      disabled={photo.isCover || noPhotos}
+                      disabled={photo.isCover || noPhotosValue || disabled}
                     >
                       <Star size={20} className="text-yellow-500" />
                       Make Cover
@@ -335,7 +374,7 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
                       type="button"
                       className="w-full text-left text-gray-500 px-2 py-1 hover:bg-gray-100 text-sm flex gap-2 items-center"
                       onClick={() => handleDeletePhoto(photo.id)}
-                      disabled={noPhotos}
+                      disabled={noPhotosValue || disabled}
                     >
                       <Trash2 size={20} className="text-red-500" />
                       Delete
@@ -349,8 +388,11 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
               <div
                 {...getRootProps()}
                 className={`border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center aspect-square w-full object-cover ${
-                  noPhotos ? "cursor-not-allowed" : "cursor-pointer"
+                  noPhotosValue || disabled
+                    ? "cursor-not-allowed"
+                    : "cursor-pointer"
                 }`}
+                onBlur={onBlur}
               >
                 <input {...getInputProps()} />
                 <Plus size={56} className="text-gray-400" />
@@ -366,10 +408,11 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
             type="checkbox"
             id={noPhotosName}
             name={noPhotosName}
-            checked={noPhotos}
+            checked={noPhotosValue}
             onChange={handleNoPhotosChange}
+            onBlur={onNoPhotosBlur}
             className="h-5 w-5 accent-red-500"
-            disabled={photos.length > 0} // Disable checkbox if photos exist
+            disabled={photos.length > 0 || disabled} // Disable checkbox if photos exist or component is disabled
           />
           <label htmlFor={noPhotosName} className="text-gray-600 text-lg">
             I don&apos;t have photos now
@@ -377,11 +420,13 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
         </div>
       )}
 
-      {meta.touched && meta.error ? (
-        <div className="text-red-500 text-xs mt-1">{meta.error}</div>
+      {noPhotosError ? (
+        <div className="text-red-500 text-sm mt-1">{noPhotosError}</div>
       ) : null}
+
+      {error ? <div className="text-red-500 text-sm mt-1">{error}</div> : null}
     </div>
   );
 };
 
-export default FormPhotoUpload;
+export default PhotoUpload;

@@ -5,6 +5,7 @@ export { default as Checkbox } from "./Checkbox";
 export { default as CurrencyField } from "./CurrencyField";
 export { default as NumberField } from "./NumberField";
 export { default as PhoneField } from "./PhoneField";
+export { default as PhotoUpload } from "./PhotoUpload";
 export { default as PlacesAutocomplete } from "./PlacesAutocomplete";
 export { default as RadioGroup } from "./RadioGroup";
 export { default as RangeSlider } from "./RangeSlider";

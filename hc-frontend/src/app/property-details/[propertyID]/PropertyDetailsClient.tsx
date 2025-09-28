@@ -1069,23 +1069,27 @@ export function PropertyDetailsClient({
                   onClick={() => {
                     if (origin) {
                       const destination = `${property?.latitude || 12.9716},${property?.longitude || 77.5946}`;
-                      if (isMobile) {
-                        // Use mobile-specific Google Maps URL scheme for native app
-                        const mobileMapsUrl = `comgooglemaps://?saddr=${encodeURIComponent(origin)}&daddr=${destination}&directionsmode=driving`;
-                        const webMapsUrl = `https://www.google.com/maps/dir/${encodeURIComponent(origin)}/${destination}`;
 
-                        // Try to open native app first, fallback to web
-                        const link = document.createElement("a");
-                        link.href = mobileMapsUrl;
-                        link.click();
+                      // Try Google Maps first, then Apple Maps, then web
+                      const googleMapsUrl = `comgooglemaps://?saddr=${encodeURIComponent(origin)}&daddr=${destination}&directionsmode=driving`;
+                      const appleMapsUrl = `maps://?saddr=${encodeURIComponent(origin)}&daddr=${destination}&dirflg=d`;
 
-                        // Fallback to web version after a short delay
+                      // Try to open Google Maps first
+                      const link = document.createElement("a");
+                      link.href = googleMapsUrl;
+                      link.click();
+
+                      // Fallback to Apple Maps after a short delay
+                      setTimeout(() => {
+                        const appleLink = document.createElement("a");
+                        appleLink.href = appleMapsUrl;
+                        appleLink.click();
+
+                        // Final fallback to web version
                         setTimeout(() => {
-                          window.open(webMapsUrl, "_blank");
+                          setShowDirections(!!origin);
                         }, 1000);
-                      } else {
-                        setShowDirections(!!origin);
-                      }
+                      }, 1000);
                     } else {
                       setShowDirections(!!origin);
                     }

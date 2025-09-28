@@ -5,10 +5,38 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
-import FormPhotoUpload from "@/components/common/FormPhotoUpload";
+import { FormPhotoUpload } from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
 import { setFormValidity, setPropertyImages } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
+
+const gallerySchema = Yup.object().shape({
+  images: Yup.array().of(
+    Yup.object().shape({
+      id: Yup.string().required(),
+      file: Yup.object()
+        .shape({
+          name: Yup.string().required(),
+          type: Yup.string().required(),
+          webkitRelativePath: Yup.string().required(),
+        })
+        .required(),
+      url: Yup.string().required(),
+      isCover: Yup.boolean().required(),
+    }),
+  ),
+  noPhotos: Yup.boolean().test(
+    "photos-or-checkbox",
+    "Please confirm that you don't have photos or upload at least one photo",
+    function (value) {
+      const { images } = this.parent;
+      // Form is valid if:
+      // 1. There are images uploaded, OR
+      // 2. The "noPhotos" checkbox is checked
+      return (images && images.length > 0) || value === true;
+    },
+  ),
+});
 
 const GalleryClient: React.FC = () => {
   const { values, setFieldError, setErrors } = useFormikContext<FormValues>();
@@ -16,15 +44,8 @@ const GalleryClient: React.FC = () => {
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
 
-  const gallerySchema = Yup.object().shape({
-    images: Yup.array().of(
-      Yup.object().shape({
-        description: Yup.string().optional(),
-      }),
-    ),
-  });
-
   const imagesString = JSON.stringify(values.images);
+  const noPhotosString = JSON.stringify(values.noPhotos);
 
   useEffect(() => {
     const validateAndDispatch = async () => {
@@ -59,11 +80,11 @@ const GalleryClient: React.FC = () => {
     validateAndDispatch();
   }, [
     imagesString,
+    noPhotosString,
     dispatch,
     setErrors,
     setFieldError,
     isFormValid,
-    gallerySchema,
     values,
   ]);
 

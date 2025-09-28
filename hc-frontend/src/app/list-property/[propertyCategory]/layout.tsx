@@ -11,6 +11,7 @@ import {
   PropertyCategory,
 } from "@/common/enums";
 import { extractS3KeyFromUrl } from "@/common/utils";
+import Spinner from "@/components/Spinner";
 import { ListPropertySuccessDialog, UploadDialog } from "@/dialogs";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
 import { transformFormValuesToPropertyForm } from "@/interfaces/FormTransformers";
@@ -108,7 +109,8 @@ export default function ListPropertyTypeLayout({
   const currentStep = getCurrentStepFromPath();
   const completedSteps = getCompletedSteps();
 
-  const [addProperty] = usePropertyAddMutation();
+  const [addProperty, { isLoading: isAddingProperty }] =
+    usePropertyAddMutation();
 
   const propertyID = useSelector(
     (state: RootState) => state.listProperty.propertyID,
@@ -131,6 +133,7 @@ export default function ListPropertyTypeLayout({
     return {
       localityDetails: data.localityDetails,
       images: data.images || [],
+      noPhotos: data.noPhotos || false,
       propertyDetails: data.propertyDetails,
       rentalDetails: data.rentalDetails,
       resaleDetails: data.resaleDetails,
@@ -337,9 +340,13 @@ export default function ListPropertyTypeLayout({
 
       await addProperty(apiPayload);
 
+      // In case of no images, open list-property-success-dialog
+      if (imagesS3Keys.length === 0) {
+        openDialog("list-property-success-dialog");
+      }
+
       // Don't open success dialog here anymore - it will be opened automatically after upload completes
     } catch (error) {
-      // openDialog("list-property-success-dialog");
       setRoute(ListPropertyRouteStep.ADDITIONAL_INFO);
       console.error("Error posting property:", error);
     }
@@ -412,12 +419,18 @@ export default function ListPropertyTypeLayout({
             <button
               type="submit"
               className="text-center px-6 py-3 border border-red-500 bg-red-500 text-white rounded-xl hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300 transition duration-200"
-              disabled={!isFormValid}
+              disabled={!isFormValid || isAddingProperty}
               onClick={handleSaveAndNext}
             >
-              {currentStep === ListPropertyFormStep.ADDITIONAL_INFO
-                ? "List Property"
-                : "Save & Continue"}
+              {currentStep === ListPropertyFormStep.ADDITIONAL_INFO ? (
+                isAddingProperty ? (
+                  <Spinner size="sm" />
+                ) : (
+                  "List Property"
+                )
+              ) : (
+                "Save & Continue"
+              )}
             </button>
           </div>
           <MobileFooter>
@@ -433,12 +446,18 @@ export default function ListPropertyTypeLayout({
               <button
                 type="submit"
                 className="text-center px-6 py-3 border border-red-500 bg-red-500 text-white rounded-xl hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300 transition duration-200"
-                disabled={!isFormValid}
+                disabled={!isFormValid || isAddingProperty}
                 onClick={handleSaveAndNext}
               >
-                {currentStep === ListPropertyFormStep.ADDITIONAL_INFO
-                  ? "List Property"
-                  : "Save & Continue"}
+                {currentStep === ListPropertyFormStep.ADDITIONAL_INFO ? (
+                  isAddingProperty ? (
+                    <Spinner size="sm" />
+                  ) : (
+                    "List Property"
+                  )
+                ) : (
+                  "Save & Continue"
+                )}
               </button>
             </div>
           </MobileFooter>
