@@ -14,6 +14,7 @@ import { setHideStickyNavBar } from "@/store/appSlice";
 import { RootState } from "@/store/store";
 
 import Loading from "./loading";
+import { useGetUserDetailQuery } from "@/store/apiSlice";
 
 const filterOptions = [
   { label: "All", value: PropertyCategory.NONE },
@@ -28,19 +29,17 @@ const FALLBACK_IMG = "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
 export default function OwnersContactedPage() {
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
-  const _isUserDetailLoading = useSelector(
-    (state: RootState) => state.user.userDetailLoading,
-  );
   const [selectedCategory, setSelectedCategory] = useState<PropertyCategory>(
     PropertyCategory.NONE,
   );
   const [onlyAvailable, setOnlyAvailable] = useState(false);
   const router = useRouter();
-  const { userDetail } = useSelector((state: RootState) => state.user);
+
+  const { data, isLoading, error } = useGetUserDetailQuery();
 
   const contactedProperties = useMemo(
-    () => userDetail?.contactedProperties ?? [],
-    [userDetail],
+    () => data?.user?.contactedProperties ?? [],
+    [data],
   );
 
   const propertyCards: PropertyCardWithImages[] = useMemo(() => {
@@ -76,8 +75,12 @@ export default function OwnersContactedPage() {
     router.push(`/property-details/${propertyID}`);
   };
 
-  if (_isUserDetailLoading) {
+  if (isLoading) {
     return <Loading />;
+  }
+
+  if (error) {
+    return <div>Error loading properties</div>;
   }
 
   return (

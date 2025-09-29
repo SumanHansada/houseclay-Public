@@ -17,16 +17,17 @@ import {
   useRegisterMutation,
 } from "@/store/apiSlice";
 import {
-  AuthUserDetails,
   setAuthStep,
-  setAuthUser,
-  setEmailID,
   setLoginFromAddProperty,
-  setName,
   setToken,
 } from "@/store/authSlice";
 import { RootState } from "@/store/store";
-import { setCheckUser } from "@/store/userSlice";
+import {
+  setCheckUser,
+  setEmailID,
+  setName,
+  setUserDetail,
+} from "@/store/userSlice";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
 
 const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -34,8 +35,9 @@ const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const Login = () => {
   const { closeDialog } = useDialog();
   const authStep = useSelector((state: RootState) => state.auth.authStep);
-  const emailID = useSelector((state: RootState) => state.auth.emailID);
-  const name = useSelector((state: RootState) => state.auth.name);
+  const { name, emailID } = useSelector(
+    (state: RootState) => state.user.userDetail,
+  );
   const loginFromAddProperty = useSelector(
     (state: RootState) => state.auth.loginFromAddProperty,
   );
@@ -102,11 +104,7 @@ const Login = () => {
           otpCode: otpCode.join(""),
         });
         if (registerResponse.data) {
-          dispatch(
-            setAuthUser({
-              authUserDetails: registerResponse.data as AuthUserDetails,
-            }),
-          );
+          dispatch(setUserDetail(registerResponse.data));
           dispatch(setToken(registerResponse.data.token));
         }
       } else {
@@ -117,11 +115,7 @@ const Login = () => {
           otpCode: otpCode.join(""),
         });
         if (loginResponse.data) {
-          dispatch(
-            setAuthUser({
-              authUserDetails: loginResponse.data as AuthUserDetails,
-            }),
-          );
+          dispatch(setUserDetail(loginResponse.data));
           dispatch(setToken(loginResponse.data.token));
         }
       }

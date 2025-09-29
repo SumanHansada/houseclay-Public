@@ -15,6 +15,7 @@ import { RootState } from "@/store/store";
 import { PropertyTable } from "../components/PropertiesTable";
 import { PropertyCardList } from "../components/PropertyCardList";
 import Loading from "./loading";
+import { useGetUserDetailQuery } from "@/store/apiSlice";
 
 const filterOptions = [
   { label: "All", value: PropertyCategory.NONE },
@@ -26,9 +27,6 @@ const filterOptions = [
 const PROPERTY_ACTIONS_DIALOG_ID = "property-actions-dialog";
 
 export default function MyPropertiesPage() {
-  const _isUserDetailLoading = useSelector(
-    (state: RootState) => state.user.userDetailLoading,
-  );
   const { isMobile } = useDeviceContext();
   const [selectedCategory, setSelectedCategory] = useState<PropertyCategory>(
     PropertyCategory.NONE,
@@ -37,11 +35,12 @@ export default function MyPropertiesPage() {
   const [selectedPropertyId, setSelectedPropertyId] = useState<string>("");
   const { isDialogOpen, openDialog, closeDialog } = useDialog();
   const dispatch = useDispatch();
-  const { userDetail } = useSelector((state: RootState) => state.user);
+
+  const { data, isLoading, error } = useGetUserDetailQuery();
 
   const ownedProperties = useMemo(
-    () => userDetail?.ownedProperties ?? [],
-    [userDetail],
+    () => data?.user?.ownedProperties ?? [],
+    [data],
   );
 
   const filteredProperties = useMemo(() => {
@@ -71,8 +70,13 @@ export default function MyPropertiesPage() {
   };
 
   const onMarkSold = (id: string) => {
-    // call API -> mark sold, then mutate UI cache
-    console.log("Mark the property as sold or rented out, ID: ", id);
+    try {
+      // TODO: call API -> mark sold, then mutate UI cache
+      // await markPropertySold(id).unwrap();
+      console.log("Property marked as sold:", id);
+    } catch (error) {
+      console.error("Failed to mark property as sold:", error);
+    }
   };
 
   const onOpenDialog = (propertyId: string) => {
@@ -87,8 +91,12 @@ export default function MyPropertiesPage() {
     setSelectedPropertyId("");
   };
 
-  if (_isUserDetailLoading) {
+  if (isLoading) {
     return <Loading />;
+  }
+
+  if (error) {
+    return <div>Error loading properties</div>;
   }
 
   return (

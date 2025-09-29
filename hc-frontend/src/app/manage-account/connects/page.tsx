@@ -15,7 +15,7 @@ export default function ConnectsPage() {
   const dispatch = useDispatch();
   const { isMobile } = useDeviceContext();
   const connectBalance = useSelector(
-    (state: RootState) => state.auth.connectBal,
+    (state: RootState) => state.user.userDetail.connectBal,
   );
 
   useEffect(() => {

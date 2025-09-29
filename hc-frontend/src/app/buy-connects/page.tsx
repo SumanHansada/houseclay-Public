@@ -30,10 +30,10 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
-import { setConnectBal } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 import { ImageWithLoader } from "@/utility-components";
 import { Tab, TabContent, TabHeader, Tabs } from "@/utility-components/Tabs";
+import { setConnectBal } from "@/store/userSlice";
 
 export default function BuyConnectsPage() {
   const router = useRouter();
@@ -51,7 +51,7 @@ export default function BuyConnectsPage() {
   const [newConnectBalanceFromAPI, setNewConnectBalanceFromAPI] = useState(0);
 
   const connectBalance = useSelector(
-    (state: RootState) => state.auth.connectBal,
+    (state: RootState) => state.user.userDetail.connectBal,
   );
   const currentBundle = ConnectsBundleData.bundles.find(
     (bundle) => bundle.id === selectedBundle,

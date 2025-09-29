@@ -11,9 +11,8 @@ import { Footer } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useGetUserDetailQuery } from "@/store/apiSlice";
 import { setHideFooter, setHideHeader } from "@/store/appSlice";
-import { syncUserDetails } from "@/store/authSlice";
 import {
-  setUser,
+  setUserDetail,
   setUserDetailError,
   setUserDetailLoading,
 } from "@/store/userSlice";
@@ -43,16 +42,7 @@ export default function ManageProfileLayout({
     const userDetail = data?.user;
     if (!userDetail) return;
 
-    dispatch(
-      syncUserDetails({
-        name: userDetail.name,
-        email: userDetail.email,
-        phoneNo: userDetail.phoneNo,
-        connectBal: userDetail.connectBal,
-      }),
-    );
-
-    dispatch(setUser(userDetail));
+    dispatch(setUserDetail(userDetail));
   }, [dispatch, data]);
 
   useEffect(() => {

@@ -27,24 +27,28 @@ const EMAIL_VERIFICATION_SUCCESS_DIALOG_ID =
   "email-verification-success-dialog";
 
 export default function MyProfilePage() {
-  const _isUserDetailLoading = useSelector(
-    (state: RootState) => state.user.userDetailLoading,
-  );
-  const { auth } = useSelector((state: RootState) => state);
   const { isDialogOpen, openDialog, closeDialog } = useDialog();
   const dispatch = useDispatch();
-  const { userDetail } = useSelector((state: RootState) => state.user);
+  const { userDetail, userDetailLoading } = useSelector(
+    (state: RootState) => state.user,
+  );
+
+  // RTK Query mutations
+  // const [updateUserProfile, { isLoading: isUpdating }] =
+  //   useUpdateUserProfileMutation();
+  // const [sendEmailVerification] = useSendEmailVerificationMutation();
+  // const [verifyEmailOTP] = useVerifyEmailOTPMutation();
 
   const initialValues: MyProfileFormValues = useMemo(
     () => ({
-      name: auth.name || "",
-      phoneNumber: auth.phoneNo || "",
-      email: auth.emailID || "",
+      name: userDetail?.name || "",
+      phoneNumber: userDetail?.phoneNo || "",
+      email: userDetail?.emailID || "",
       phoneVerified: true, //Already verified when a new user register, so always true
-      onWhatsapp: userDetail ? userDetail.onWhatsApp : false,
-      emailVerified: userDetail ? userDetail.emailVerified : false,
+      onWhatsapp: userDetail?.onWhatsApp || false,
+      emailVerified: userDetail?.emailVerified || false,
     }),
-    [auth.name, auth.phoneNo, auth.emailID, userDetail],
+    [userDetail],
   );
 
   const [currentFormValues, setCurrentFormValues] =
@@ -58,14 +62,25 @@ export default function MyProfilePage() {
   const handleEmailVerification = () =>
     openDialog(EMAIL_VERIFICATION_DIALOG_ID);
 
+  const handleEmailVerificationSubmit = async (email: string, otp: string) => {
+    try {
+      console.log("email: " + email + ", otp: " + otp);
+      // await verifyEmailOTP({ email, otp }).unwrap();
+
+      // Update Redux state to reflect email verification
+      // dispatch(updateUserInfo({ emailVerified: true }));
+
+      closeVerificationDialog();
+      openDialog(EMAIL_VERIFICATION_SUCCESS_DIALOG_ID);
+    } catch (error) {
+      console.error("Failed to verify email:", error);
+      throw error; // Let the dialog handle the error
+    }
+  };
+
   const closeVerificationDialog = () => {
     closeDialog(EMAIL_VERIFICATION_DIALOG_ID);
     dispatch(setHideStickyNavBar(false));
-  };
-
-  const onVerificationSuccess = () => {
-    closeVerificationDialog();
-    openDialog(EMAIL_VERIFICATION_SUCCESS_DIALOG_ID);
   };
 
   const handleSubmit = async (
@@ -73,20 +88,33 @@ export default function MyProfilePage() {
     helpers: FormikHelpers<MyProfileFormValues>,
   ) => {
     try {
-      console.log("Submit all data:", values);
+      // const updatedData = {
+      //   name: values.name,
+      //   phoneNo: values.phoneNumber,
+      //   email: values.email,
+      //   onWhatsApp: values.onWhatsapp,
+      // };
 
       // TODO: Call API to update user profile
-      // await updateUserProfile(values);
+      // const result = await updateUserProfile(updatedData).unwrap();
+      // dispatch(updateUserInfo({
+      //   name: result.name,
+      //   phoneNo: result.phoneNo,
+      //   emailID: result.email,
+      //   onWhatsApp: result.onWhatsApp,
+      // }));
 
       setCurrentFormValues(values);
       helpers.resetForm({ values });
       setEditMode(false);
+      console.log("Profile updated successfully: " + currentFormValues);
     } catch (error) {
       console.error("Failed to update profile:", error);
+      helpers.setStatus({ error: "Failed to update profile" });
     }
   };
 
-  if (_isUserDetailLoading || !userDetail) {
+  if (userDetailLoading || !userDetail) {
     return <Loading />;
   }
 
@@ -127,8 +155,8 @@ export default function MyProfilePage() {
       {isDialogOpen(EMAIL_VERIFICATION_DIALOG_ID) && (
         <EmailVerificationDialog
           id={EMAIL_VERIFICATION_DIALOG_ID}
-          emailToVerify={auth.emailID}
-          onSuccess={onVerificationSuccess}
+          emailToVerify={userDetail.emailID}
+          onSubmit={handleEmailVerificationSubmit}
           onClose={closeVerificationDialog}
         />
       )}

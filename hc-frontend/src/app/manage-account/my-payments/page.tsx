@@ -12,6 +12,7 @@ import { RootState } from "@/store/store";
 import { TransactionCardList } from "../components/TransactionCardList";
 import { TransactionTable } from "../components/TransactionTable";
 import Loading from "./loading";
+import { useGetUserDetailQuery } from "@/store/apiSlice";
 
 const filterOptions = [
   { label: "All", value: PaymentFilterStatus.ALL },
@@ -21,19 +22,16 @@ const filterOptions = [
 
 export default function MyPaymentsPage() {
   const { isMobile } = useDeviceContext();
-  const _isUserDetailLoading = useSelector(
-    (state: RootState) => state.user.userDetailLoading,
-  );
   const dispatch = useDispatch();
-  const { userDetail } = useSelector((state: RootState) => state.user);
 
   const [selectedFilter, setSelectedFilter] = useState<PaymentFilterStatus>(
     PaymentFilterStatus.ALL,
   );
+  const { data, isLoading, error } = useGetUserDetailQuery();
 
   const externalPayments = useMemo(
-    () => userDetail?.externalPayments ?? [],
-    [userDetail],
+    () => data?.user?.externalPayments ?? [],
+    [data],
   );
 
   const filteredPayments = useMemo(() => {
@@ -62,8 +60,12 @@ export default function MyPaymentsPage() {
   console.log("externalPayments: " + externalPayments);
   console.log("filteredPayments: " + filteredPayments);
 
-  if (_isUserDetailLoading) {
+  if (isLoading) {
     return <Loading />;
+  }
+
+  if (error) {
+    return <div>Error loading payments</div>;
   }
 
   return (

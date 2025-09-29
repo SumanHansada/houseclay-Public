@@ -14,6 +14,7 @@ import { setHideStickyNavBar } from "@/store/appSlice";
 import { RootState } from "@/store/store";
 
 import Loading from "./loading";
+import { useGetUserDetailQuery } from "@/store/apiSlice";
 
 // 1x1 transparent GIF — tiny, inline, no network
 const FALLBACK_IMG = "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
@@ -27,9 +28,6 @@ const filterOptions = [
 
 export default function ShortlistsPage() {
   const { isMobile } = useDeviceContext();
-  const _isUserDetailLoading = useSelector(
-    (state: RootState) => state.user.userDetailLoading,
-  );
   const dispatch = useDispatch();
 
   const [selectedCategory, setSelectedCategory] = useState<PropertyCategory>(
@@ -37,11 +35,12 @@ export default function ShortlistsPage() {
   );
   const [onlyAvailable, setOnlyAvailable] = useState(false);
   const router = useRouter();
-  const { userDetail } = useSelector((state: RootState) => state.user);
+
+  const { data, isLoading, error } = useGetUserDetailQuery();
 
   const shortlistedProperties = useMemo(
-    () => userDetail?.shortlistedProperties ?? [],
-    [userDetail],
+    () => data?.user?.shortlistedProperties ?? [],
+    [data],
   );
 
   const propertyCards: PropertyCardWithImages[] = useMemo(() => {
@@ -77,8 +76,12 @@ export default function ShortlistsPage() {
     router.push(`/property-details/${propertyID}`);
   };
 
-  if (_isUserDetailLoading) {
+  if (isLoading) {
     return <Loading />;
+  }
+
+  if (error) {
+    return <div>Error loading properties</div>;
   }
 
   return (
