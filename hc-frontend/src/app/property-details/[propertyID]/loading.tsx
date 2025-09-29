@@ -142,7 +142,7 @@ export default function Loading() {
         </div>
       </section>
 
-      <section className="overflow-y-auto overflow-x-hidden flex-grow max-h-svh scroll-smooth max-md:pb-16">
+      <section className="overflow-x-hidden flex-grow max-md:pb-16">
         {/* Photo Gallery Section Mobile */}
         <section className="h-60 w-full md:hidden">
           <PhotoGallerySkeleton className="h-60" />
