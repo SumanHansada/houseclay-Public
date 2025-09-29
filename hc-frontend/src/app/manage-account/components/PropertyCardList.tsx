@@ -1,7 +1,9 @@
 "use client";
 
 import { useMemo } from "react";
+
 import { UserOwnedProperties } from "@/interfaces/User";
+
 import { formatDate, getDateKey } from "../utils";
 import { PropertyCard } from "./PropertyCard";
 

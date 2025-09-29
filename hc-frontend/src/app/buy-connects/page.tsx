@@ -31,9 +31,9 @@ import {
   setHideStickyNavBar,
 } from "@/store/appSlice";
 import { RootState } from "@/store/store";
+import { setConnectBal } from "@/store/userSlice";
 import { ImageWithLoader } from "@/utility-components";
 import { Tab, TabContent, TabHeader, Tabs } from "@/utility-components/Tabs";
-import { setConnectBal } from "@/store/userSlice";
 
 export default function BuyConnectsPage() {
   const router = useRouter();

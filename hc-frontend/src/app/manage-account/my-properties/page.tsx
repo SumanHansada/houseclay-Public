@@ -2,20 +2,19 @@
 
 import { Check } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import MyPropertyActionsDialog from "@/dialogs/my-property-actions";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
+import { useGetUserDetailQuery } from "@/store/apiSlice";
 import { setHideStickyNavBar } from "@/store/appSlice";
-import { RootState } from "@/store/store";
 
 import { PropertyTable } from "../components/PropertiesTable";
 import { PropertyCardList } from "../components/PropertyCardList";
 import Loading from "./loading";
-import { useGetUserDetailQuery } from "@/store/apiSlice";
 
 const filterOptions = [
   { label: "All", value: PropertyCategory.NONE },

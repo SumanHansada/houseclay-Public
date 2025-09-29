@@ -1,10 +1,12 @@
 "use client";
 
 import { CircleCheck, Ellipsis } from "lucide-react";
+
 import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { formatINRCurrency, pascalCase } from "@/common/utils";
-import { DataTable, Column } from "@/components/DataTable";
+import { Column, DataTable } from "@/components/DataTable";
 import { UserOwnedProperties } from "@/interfaces/User";
+
 import { ActionMenu, type ActionOption } from "./ActionMenu";
 
 export function PropertyTable({

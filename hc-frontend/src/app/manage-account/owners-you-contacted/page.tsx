@@ -3,18 +3,17 @@
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { BadgeType, PropertyCategory, PropertyStatus } from "@/common/enums";
 import Properties from "@/components/Properties";
 import { PropertyCardWithImages } from "@/interfaces/User";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
+import { useGetUserDetailQuery } from "@/store/apiSlice";
 import { setHideStickyNavBar } from "@/store/appSlice";
-import { RootState } from "@/store/store";
 
 import Loading from "./loading";
-import { useGetUserDetailQuery } from "@/store/apiSlice";
 
 const filterOptions = [
   { label: "All", value: PropertyCategory.NONE },

@@ -1,9 +1,11 @@
 "use client";
 
 import { Download } from "lucide-react";
-import { DataTable, type Column } from "@/components/DataTable";
+
+import { type Column, DataTable } from "@/components/DataTable";
 import type { UserExternalPayment } from "@/interfaces/User";
 import { SvgIcon } from "@/utility-components";
+
 import { TransactionStatus } from "./TransactionStatus";
 
 export function TransactionTable({
