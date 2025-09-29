@@ -11,6 +11,7 @@ import {
   DialogFooter,
   DialogHeader,
 } from "@/components/Dialog";
+import { MobileFooter } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 interface ReportListingDialogProps {
   id: string;
@@ -79,22 +80,20 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
     >
       <DialogHeader>
         <div
-          className={`${isMobile ? "py-2 px-8" : ""} flex flex-col justify-between items-center w-full`}
+          className={`${isMobile ? "py-2 px-8 justify-between items-center" : "py-2 px-6 justify-start items-start"} flex flex-col w-full`}
         >
-          {isMobile && (
-            <h1 className="text-xl py-1.5 text-black">Report This Listing</h1>
-          )}
+          {
+            <h1 className="text-xl md:text-2xl py-1.5 text-black">
+              Report This Listing
+            </h1>
+          }
           <button className="absolute top-4 right-4 rounded-full">
             <X onClick={onClose} size={24} />
           </button>
         </div>
       </DialogHeader>
       <DialogContent>
-        <div className={`${isMobile ? "px-8" : "p-6"}`}>
-          {!isMobile && (
-            <h2 className="text-xl font-semibold mb-2">Report This Listing</h2>
-          )}
-
+        <div className={`${isMobile ? "px-8 py-6" : "p-6"}`}>
           <p className="text-gray-600 mb-6">
             Help us maintain a safe and reliable platform. Let us know if this
             listing violates our policies or seems inaccurate.
@@ -144,22 +143,24 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
         </div>
       </DialogContent>
       <DialogFooter>
-        <div className="flex w-full gap-4  px-6 py-3 justify-between md:hidden">
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={!formik.isValid || formik.isSubmitting}
-            className="flex-1 px-6 py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
-          >
-            {formik.isSubmitting ? "Submitting..." : "Submit"}
-          </button>
-        </div>
+        <MobileFooter>
+          <div className="flex gap-4 w-full">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={!formik.isValid || formik.isSubmitting}
+              className="flex-1 px-6 py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+            >
+              {formik.isSubmitting ? "Submitting..." : "Submit"}
+            </button>
+          </div>
+        </MobileFooter>
         <div className="flex border-gray-200 w-full px-6 py-3 md:py-3 justify-end max-md:px-4 gap-4 max-md:hidden">
           <button
             type="button"

@@ -1072,7 +1072,7 @@ export function PropertyDetailsClient({
 
                       // Try Google Maps first, then Apple Maps, then web
                       const googleMapsUrl = `comgooglemaps://?saddr=${encodeURIComponent(origin)}&daddr=${destination}&directionsmode=driving`;
-                      const appleMapsUrl = `maps://?saddr=${encodeURIComponent(origin)}&daddr=${destination}&dirflg=d`;
+                      // const appleMapsUrl = `maps://?saddr=${encodeURIComponent(origin)}&daddr=${destination}&dirflg=d`;
 
                       // Try to open Google Maps first
                       const link = document.createElement("a");
@@ -1080,15 +1080,19 @@ export function PropertyDetailsClient({
                       link.click();
 
                       // Fallback to Apple Maps after a short delay
-                      setTimeout(() => {
-                        const appleLink = document.createElement("a");
-                        appleLink.href = appleMapsUrl;
-                        appleLink.click();
+                      // setTimeout(() => {
+                      //   const appleLink = document.createElement("a");
+                      //   appleLink.href = appleMapsUrl;
+                      //   appleLink.click();
 
-                        // Final fallback to web version
-                        setTimeout(() => {
-                          setShowDirections(!!origin);
-                        }, 1000);
+                      //   // Final fallback to web version
+                      //   setTimeout(() => {
+                      //     setShowDirections(!!origin);
+                      //   }, 1000);
+                      // }, 1000);
+
+                      setTimeout(() => {
+                        setShowDirections(!!origin);
                       }, 1000);
                     } else {
                       setShowDirections(!!origin);
