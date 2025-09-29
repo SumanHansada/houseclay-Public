@@ -4,7 +4,7 @@ import { PaymentFilterStatus } from "@/common/enums";
 import { UserExternalPayment } from "@/interfaces/User";
 import { SvgIcon } from "@/utility-components";
 
-import { TransactionStatus } from "./TransactionStatus";
+import { getStatusConfig } from "./statusConfig";
 
 interface TransactionCardProps {
   transaction: UserExternalPayment;
@@ -15,6 +15,9 @@ export function TransactionCard({
   transaction,
   onDownload,
 }: TransactionCardProps) {
+  const statusInfo = getStatusConfig(transaction.status);
+  const StatusIcon = statusInfo.icon;
+
   const handleDownload = () => {
     onDownload(transaction.paymentId);
   };
@@ -38,7 +41,16 @@ export function TransactionCard({
         ) : null}
       </div>
       <div className="w-full flex justify-between items-center mt-4">
-        {TransactionStatus(transaction.status)}
+        {/* {TransactionStatus(transaction.status)} */}
+        <div
+          className={`inline-flex items-center gap-2 ${statusInfo.textClassName}`}
+        >
+          <StatusIcon
+            size={statusInfo.iconSize}
+            className={statusInfo.iconClassName}
+          />
+          <span>{statusInfo.label}</span>
+        </div>
 
         {transaction.invoice ? (
           <button className="flex gap-2 items-center" onClick={handleDownload}>

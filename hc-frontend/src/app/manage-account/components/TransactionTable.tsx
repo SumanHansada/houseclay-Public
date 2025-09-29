@@ -6,7 +6,7 @@ import { type Column, DataTable } from "@/components/DataTable";
 import type { UserExternalPayment } from "@/interfaces/User";
 import { SvgIcon } from "@/utility-components";
 
-import { TransactionStatus } from "./TransactionStatus";
+import { getStatusConfig } from "./statusConfig";
 
 export function TransactionTable({
   transactions,
@@ -53,7 +53,22 @@ export function TransactionTable({
     {
       key: "status",
       label: "Status",
-      render: (transaction) => TransactionStatus(transaction.status),
+      render: (transaction) => {
+        const statusInfo = getStatusConfig(transaction.status);
+        const StatusIcon = statusInfo.icon;
+
+        return (
+          <div
+            className={`inline-flex items-center gap-2 ${statusInfo.textClassName}`}
+          >
+            <StatusIcon
+              size={statusInfo.iconSize}
+              className={statusInfo.iconClassName}
+            />
+            <span>{statusInfo.label}</span>
+          </div>
+        );
+      },
     },
     {
       key: "invoice",
