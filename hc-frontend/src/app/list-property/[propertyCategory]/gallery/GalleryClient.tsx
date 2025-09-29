@@ -13,14 +13,8 @@ import { RootState } from "@/store/store";
 const gallerySchema = Yup.object().shape({
   images: Yup.array().of(
     Yup.object().shape({
+      file: Yup.object().optional(),
       id: Yup.string().required(),
-      file: Yup.object()
-        .shape({
-          name: Yup.string().required(),
-          type: Yup.string().required(),
-          webkitRelativePath: Yup.string().required(),
-        })
-        .required(),
       url: Yup.string().required(),
       isCover: Yup.boolean().required(),
     }),
