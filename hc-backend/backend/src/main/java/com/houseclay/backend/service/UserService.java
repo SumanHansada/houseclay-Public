@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,8 +27,12 @@ public class UserService {
 
     @Autowired
     UserLoginRepository userLoginRepository;
+
     @Autowired
     private OtpService otpService;
+
+    @Autowired
+    private EmailService emailService;
 
     public UserLoginResponseDTO createUser(UserPayload userPayload) throws Exception {
         if(!otpService.validateOtp(userPayload.getPhoneNo(), userPayload.getOtpCode())) {
