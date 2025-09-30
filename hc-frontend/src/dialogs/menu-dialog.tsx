@@ -38,9 +38,7 @@ interface MenuDialogProps {
 }
 
 const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
-  const { token, name, phoneNo } = useSelector(
-    (state: RootState) => state.auth,
-  );
+  const { token } = useSelector((state: RootState) => state.auth);
   const router = useRouter();
   const { openDialog, closeDialog } = useDialog();
   const { logout } = useLogout();
@@ -51,7 +49,9 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
 
   const [quickLinksExpanded, setQuickLinksExpanded] = useState(true);
   const toggleQuickLinks = () => setQuickLinksExpanded(!quickLinksExpanded);
-  const connectBal = useSelector((state: RootState) => state.auth.connectBal);
+  const { name, phoneNo, connectBal } = useSelector(
+    (state: RootState) => state.user.userDetail,
+  );
 
   const handleClose = useCallback(() => {
     closeDialog(id);

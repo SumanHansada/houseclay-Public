@@ -63,7 +63,8 @@ export enum LeadCategory {
 export enum PaymentFilterStatus {
   ALL = "ALL",
   COMPLETED = "COMPLETED",
-  CANCELLED = "CANCELLED",
+  FAILED = "FAILED",
+  IN_PROGRESS = "IN_PROGRESS",
 }
 
 export enum ErrorStatus {
@@ -84,4 +85,11 @@ export enum PaymentVerificationStatus {
   VERIFYING = "verifying",
   SUCCESS = "success",
   ERROR = "error",
+}
+
+export enum PropertyStatus {
+  PENDING = "PENDING_VERIFICATION",
+  VERIFIED = "ACTIVE",
+  REPORT = "REPORT",
+  INACTIVE = "INACTIVE",
 }

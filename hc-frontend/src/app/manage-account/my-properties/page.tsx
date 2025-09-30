@@ -4,20 +4,17 @@ import { Check } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { PropertyCategory } from "@/common/enums";
+import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import MyPropertyActionsDialog from "@/dialogs/my-property-actions";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
-import {
-  setHideFooter,
-  setHideHeader,
-  setHideStickyNavBar,
-} from "@/store/appSlice";
+import { useGetUserDetailQuery } from "@/store/apiSlice";
+import { setHideStickyNavBar } from "@/store/appSlice";
 
 import { PropertyTable } from "../components/PropertiesTable";
 import { PropertyCardList } from "../components/PropertyCardList";
-import { MY_DUMMY_PROPERTIES } from "../dummy";
+import Loading from "./loading";
 
 const filterOptions = [
   { label: "All", value: PropertyCategory.NONE },
@@ -30,7 +27,7 @@ const PROPERTY_ACTIONS_DIALOG_ID = "property-actions-dialog";
 
 export default function MyPropertiesPage() {
   const { isMobile } = useDeviceContext();
-  const [selected, setSelected] = useState<PropertyCategory>(
+  const [selectedCategory, setSelectedCategory] = useState<PropertyCategory>(
     PropertyCategory.NONE,
   );
   const [onlyActive, setOnlyActive] = useState(false);
@@ -38,23 +35,30 @@ export default function MyPropertiesPage() {
   const { isDialogOpen, openDialog, closeDialog } = useDialog();
   const dispatch = useDispatch();
 
-  const filtered = useMemo(() => {
-    return MY_DUMMY_PROPERTIES.filter((p) => {
-      if (selected !== PropertyCategory.NONE && p.category !== selected)
+  const { data, isLoading, error } = useGetUserDetailQuery();
+
+  const ownedProperties = useMemo(
+    () => data?.user?.ownedProperties ?? [],
+    [data],
+  );
+
+  const filteredProperties = useMemo(() => {
+    return ownedProperties.filter((prop) => {
+      if (
+        selectedCategory !== PropertyCategory.NONE &&
+        prop.propertyCategory !== selectedCategory
+      )
         return false;
-      if (onlyActive && p.status === "Inactive") return false;
+      if (onlyActive && prop.propertyState !== PropertyStatus.VERIFIED)
+        return false;
       return true;
     });
-  }, [selected, onlyActive]);
+  }, [ownedProperties, selectedCategory, onlyActive]);
 
   useEffect(() => {
     if (isMobile) {
-      dispatch(setHideHeader(true));
-      dispatch(setHideFooter(true));
       dispatch(setHideStickyNavBar(false));
     } else {
-      dispatch(setHideHeader(false));
-      dispatch(setHideFooter(false));
       dispatch(setHideStickyNavBar(true));
     }
   }, [isMobile, dispatch]);
@@ -65,8 +69,13 @@ export default function MyPropertiesPage() {
   };
 
   const onMarkSold = (id: string) => {
-    // call API -> mark sold, then mutate UI cache
-    console.log("Mark the property as sold or rented out, ID: ", id);
+    try {
+      // TODO: call API -> mark sold, then mutate UI cache
+      // await markPropertySold(id).unwrap();
+      console.log("Property marked as sold:", id);
+    } catch (error) {
+      console.error("Failed to mark property as sold:", error);
+    }
   };
 
   const onOpenDialog = (propertyId: string) => {
@@ -80,6 +89,14 @@ export default function MyPropertiesPage() {
     dispatch(setHideStickyNavBar(false));
     setSelectedPropertyId("");
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <div>Error loading properties</div>;
+  }
 
   return (
     <main>
@@ -110,11 +127,11 @@ export default function MyPropertiesPage() {
         {/* Filters */}
         <div className="mb-8 flex gap-3 text-lg font-medium text-gray-700">
           {filterOptions.map((f) => {
-            const active = selected === f.value;
+            const active = selectedCategory === f.value;
             return (
               <button
                 key={f.value}
-                onClick={() => setSelected(f.value)}
+                onClick={() => setSelectedCategory(f.value)}
                 aria-pressed={active}
                 className={`whitespace-nowrap rounded-lg border px-4 py-2 shadow-sm ${
                   active ? "bg-red-500 text-white border-red-500" : "bg-white"
@@ -134,11 +151,11 @@ export default function MyPropertiesPage() {
         {/* Filter buttons */}
         <div className="flex justify-between text-lg m-3 border p-1.5 sm:p-2 rounded-xl mx-8">
           {filterOptions.map((f) => {
-            const active = selected === f.value;
+            const active = selectedCategory === f.value;
             return (
               <button
                 key={f.value}
-                onClick={() => setSelected(f.value)}
+                onClick={() => setSelectedCategory(f.value)}
                 aria-pressed={active}
                 className={`px-2 py-1 sm:px-4 sm:py-2 flex-1 whitespace-nowrap ${
                   active ? "border border-red-500 text-red-500 rounded-lg" : ""
@@ -152,9 +169,9 @@ export default function MyPropertiesPage() {
       </section>
 
       {/* Table for ≥ 2xl */}
-      <div className="hidden 2xl:block">
+      <div className="max-2xl:hidden">
         <PropertyTable
-          properties={filtered}
+          properties={filteredProperties}
           onDashboard={onDashboard}
           onMarkSold={onMarkSold}
         />
@@ -163,7 +180,7 @@ export default function MyPropertiesPage() {
       {/* Cards for < 2xl */}
       <div className="2xl:hidden max-md:px-6 pt-4 pb-16">
         <PropertyCardList
-          items={filtered}
+          items={filteredProperties}
           onDashboard={onDashboard}
           onMarkSold={onMarkSold}
           onOpenDialog={onOpenDialog}

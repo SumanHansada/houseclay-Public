@@ -1,5 +1,7 @@
 "use client";
 
+import type { SerializedError } from "@reduxjs/toolkit";
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { type ReactNode, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
@@ -7,7 +9,13 @@ import { ACCOUNT_NAV } from "@/common/dataConstants";
 import { AccountNavList } from "@/components/AccountNavList";
 import { Footer } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
+import { useGetUserDetailQuery } from "@/store/apiSlice";
 import { setHideFooter, setHideHeader } from "@/store/appSlice";
+import {
+  setUserDetail,
+  setUserDetailError,
+  setUserDetailLoading,
+} from "@/store/userSlice";
 
 export default function ManageProfileLayout({
   children,
@@ -16,6 +24,26 @@ export default function ManageProfileLayout({
 }) {
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
+
+  const { data, isLoading, isFetching, isError, error } =
+    useGetUserDetailQuery();
+
+  useEffect(() => {
+    dispatch(setUserDetailLoading(isLoading || isFetching));
+  }, [dispatch, isLoading, isFetching]);
+
+  useEffect(() => {
+    if (!isError) return;
+    const msg = extractErrorMessage(error);
+    dispatch(setUserDetailError(msg));
+  }, [dispatch, isError, error]);
+
+  useEffect(() => {
+    const userDetail = data?.user;
+    if (!userDetail) return;
+
+    dispatch(setUserDetail(userDetail));
+  }, [dispatch, data]);
 
   useEffect(() => {
     if (isMobile) {
@@ -47,4 +75,15 @@ export default function ManageProfileLayout({
       <div className="md:hidden w-full h-full">{children}</div>
     </>
   );
+}
+
+function extractErrorMessage(
+  err: FetchBaseQueryError | SerializedError | undefined,
+): string {
+  if (!err) return "Unknown error";
+  if ("status" in err) {
+    const data = (err.data ?? {}) as { message?: string; error?: string };
+    return data.message || data.error || `HTTP ${String(err.status)}`;
+  }
+  return err.message ?? "Request failed";
 }

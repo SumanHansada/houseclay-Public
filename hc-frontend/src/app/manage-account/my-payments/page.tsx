@@ -6,46 +6,48 @@ import { useDispatch } from "react-redux";
 import { PaymentFilterStatus } from "@/common/enums";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import {
-  setHideFooter,
-  setHideHeader,
-  setHideStickyNavBar,
-} from "@/store/appSlice";
+import { useGetUserDetailQuery } from "@/store/apiSlice";
+import { setHideStickyNavBar } from "@/store/appSlice";
 
 import { TransactionCardList } from "../components/TransactionCardList";
 import { TransactionTable } from "../components/TransactionTable";
-import { DUMMY_PAYMENTS } from "../dummy";
+import Loading from "./loading";
 
 const filterOptions = [
   { label: "All", value: PaymentFilterStatus.ALL },
   { label: "Completed", value: PaymentFilterStatus.COMPLETED },
-  { label: "Cancelled", value: PaymentFilterStatus.CANCELLED },
+  { label: "Failed", value: PaymentFilterStatus.FAILED },
 ];
 
 export default function MyPaymentsPage() {
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
 
-  const [selected, setSelected] = useState<PaymentFilterStatus>(
+  const [selectedFilter, setSelectedFilter] = useState<PaymentFilterStatus>(
     PaymentFilterStatus.ALL,
   );
+  const { data, isLoading, error } = useGetUserDetailQuery();
 
-  const filtered = useMemo(() => {
-    return DUMMY_PAYMENTS.filter((p) => {
-      if (selected !== PaymentFilterStatus.ALL && p.status !== selected)
+  const externalPayments = useMemo(
+    () => data?.user?.externalPayments ?? [],
+    [data],
+  );
+
+  const filteredPayments = useMemo(() => {
+    return externalPayments.filter((prop) => {
+      if (
+        selectedFilter !== PaymentFilterStatus.ALL &&
+        prop.status !== selectedFilter
+      )
         return false;
       return true;
     });
-  }, [selected]);
+  }, [externalPayments, selectedFilter]);
 
   useEffect(() => {
     if (isMobile) {
-      dispatch(setHideHeader(true));
-      dispatch(setHideFooter(true));
       dispatch(setHideStickyNavBar(false));
     } else {
-      dispatch(setHideHeader(false));
-      dispatch(setHideFooter(false));
       dispatch(setHideStickyNavBar(true));
     }
   }, [isMobile, dispatch]);
@@ -53,6 +55,17 @@ export default function MyPaymentsPage() {
   const onDownload = (id: string) => {
     console.log("Download Invoice: ", id);
   };
+
+  console.log("externalPayments: " + externalPayments);
+  console.log("filteredPayments: " + filteredPayments);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <div>Error loading payments</div>;
+  }
 
   return (
     <main>
@@ -66,11 +79,11 @@ export default function MyPaymentsPage() {
         {/* Filter buttons */}
         <div className="flex gap-3 text-lg font-medium text-gray-700 mb-8">
           {filterOptions.map((f) => {
-            const active = selected === f.value;
+            const active = selectedFilter === f.value;
             return (
               <button
                 key={f.value}
-                onClick={() => setSelected(f.value)}
+                onClick={() => setSelectedFilter(f.value)}
                 aria-pressed={active}
                 className={`px-4 py-2 rounded-lg border shadow-sm whitespace-nowrap ${
                   active ? "bg-red-500 text-white border-red-500" : "bg-white"
@@ -91,11 +104,11 @@ export default function MyPaymentsPage() {
         {/* Filter buttons */}
         <div className="flex justify-between text-lg m-3 border p-1.5 sm:p-2 rounded-xl mx-8">
           {filterOptions.map((f) => {
-            const active = selected === f.value;
+            const active = selectedFilter === f.value;
             return (
               <button
                 key={f.value}
-                onClick={() => setSelected(f.value)}
+                onClick={() => setSelectedFilter(f.value)}
                 aria-pressed={active}
                 className={`px-2 py-1 sm:px-4 sm:py-2 flex-1 whitespace-nowrap ${
                   active ? "border border-red-500 text-red-500 rounded-lg" : ""
@@ -109,11 +122,14 @@ export default function MyPaymentsPage() {
       </section>
 
       <div className="hidden 2xl:block">
-        <TransactionTable transactions={filtered} onDownload={onDownload} />
+        <TransactionTable
+          transactions={filteredPayments}
+          onDownload={onDownload}
+        />
       </div>
 
       <div className="2xl:hidden max-md:px-6 pt-4 pb-16">
-        <TransactionCardList items={filtered} onDownload={onDownload} />
+        <TransactionCardList items={filteredPayments} onDownload={onDownload} />
       </div>
     </main>
   );

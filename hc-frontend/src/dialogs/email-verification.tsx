@@ -12,14 +12,14 @@ import { useDeviceContext } from "@/providers/DeviceContextProvider";
 interface EmailVerificationDialogProps {
   id: string;
   emailToVerify: string;
-  onSuccess: () => void;
+  onSubmit: (email: string, otp: string) => void;
   onClose: () => void;
 }
 
 const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
   id,
   emailToVerify,
-  onSuccess,
+  onSubmit,
   onClose,
 }) => {
   const { isMobile } = useDeviceContext();
@@ -93,8 +93,9 @@ const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
 
   const handleVerifyAndContinue = () => {
     // run the api
+    const otp = otpCode.join("");
     console.log("Email is Verified - OTP: " + otpCode);
-    onSuccess();
+    onSubmit(emailToVerify, otp);
   };
 
   const isVerifyEnabled = otpCode.every((digit) => digit && digit !== "");

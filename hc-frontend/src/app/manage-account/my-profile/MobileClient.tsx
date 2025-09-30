@@ -15,7 +15,6 @@ import { SvgIcon } from "@/utility-components";
 import { EmailVerifyIncentive } from "../components/EmailVerifyIncentive";
 
 interface MobileClientProps {
-  savedValues: MyProfileFormValues;
   editMode: boolean;
   setEditMode: (v: boolean) => void;
   onBack?: () => void;
@@ -60,12 +59,11 @@ function DisplayRow({
 }
 
 export function MobileClient({
-  savedValues,
   editMode,
   setEditMode,
   onVerifyEmail,
 }: MobileClientProps) {
-  const { values, setFieldValue, resetForm } =
+  const { values, setFieldValue, resetForm, initialValues } =
     useFormikContext<MyProfileFormValues>();
   const dispatch = useDispatch();
 
@@ -75,6 +73,11 @@ export function MobileClient({
       dispatch(setHideStickyNavBar(false));
     };
   }, [dispatch, editMode]);
+
+  const handleCancel = () => {
+    resetForm({ values: initialValues });
+    setEditMode(false);
+  };
 
   return (
     <>
@@ -197,10 +200,7 @@ export function MobileClient({
               <button
                 type="button"
                 className="px-5 py-2 border rounded-lg shadow-sm hover:bg-gray-50"
-                onClick={() => {
-                  resetForm({ values: savedValues });
-                  setEditMode(false);
-                }}
+                onClick={handleCancel}
               >
                 Cancel
               </button>

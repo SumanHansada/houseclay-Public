@@ -30,8 +30,12 @@ const Coin = CoinSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const HeaderClient: React.FC<HeaderClientProps> = () => {
   const hideHeader = useSelector((state: RootState) => state.app.hideHeader);
   const token = useSelector((state: RootState) => state.auth.token);
-  const userName = useSelector((state: RootState) => state.auth.name);
-  const connectBal = useSelector((state: RootState) => state.auth.connectBal);
+  const userName = useSelector(
+    (state: RootState) => state.user.userDetail.name,
+  );
+  const connectBal = useSelector(
+    (state: RootState) => state.user.userDetail.connectBal,
+  );
 
   const dispatch = useDispatch();
   const { logout } = useLogout();

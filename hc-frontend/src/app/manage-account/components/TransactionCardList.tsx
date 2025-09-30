@@ -1,12 +1,19 @@
+"use client";
+
 import { useMemo } from "react";
 
-import { MyTransaction } from "@/interfaces/ManageAccount";
+import { UserExternalPayment } from "@/interfaces/User";
 
 import { formatDate, getDateKey } from "../utils";
 import { TransactionCard } from "./TransactionCard";
 
+interface GroupedTransactions {
+  date: string;
+  transactions: UserExternalPayment[];
+}
+
 interface TransactionCardListProps {
-  items: MyTransaction[];
+  items: UserExternalPayment[];
   onDownload: (transactionId: string) => void;
 }
 
@@ -14,34 +21,26 @@ export function TransactionCardList({
   items,
   onDownload,
 }: TransactionCardListProps) {
-  const groupedTransactions = useMemo(() => {
-    const grouped = items.reduce(
-      (acc, transaction) => {
-        const dateKey = getDateKey(transaction.dateTime);
-        if (!acc[dateKey]) {
-          acc[dateKey] = [];
-        }
-        acc[dateKey].push(transaction);
-        return acc;
-      },
-      {} as Record<string, MyTransaction[]>,
-    );
+  // backend guarantees items are already sorted
+  const groupedTransactions = useMemo<GroupedTransactions[]>(() => {
+    const groups: GroupedTransactions[] = [];
+    if (!items || items.length === 0) return groups;
 
-    const groupedArray = Object.entries(grouped)
-      .map(([_, transactions]) => ({
-        date: formatDate(transactions[0].dateTime),
-        transactions: transactions.sort(
-          (a, b) =>
-            new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime(),
-        ),
-      }))
-      .sort((a, b) => {
-        const dateA = new Date(a.transactions[0].dateTime).getTime();
-        const dateB = new Date(b.transactions[0].dateTime).getTime();
-        return dateB - dateA;
-      });
-
-    return groupedArray;
+    let currentKey = "";
+    for (let i = 0; i < items.length; i++) {
+      const tx = items[i];
+      const key = getDateKey(tx.createdAt);
+      if (key !== currentKey) {
+        currentKey = key;
+        groups.push({
+          date: formatDate(tx.createdAt),
+          transactions: [tx],
+        });
+      } else {
+        groups[groups.length - 1].transactions.push(tx);
+      }
+    }
+    return groups;
   }, [items]);
 
   return (
@@ -54,8 +53,8 @@ export function TransactionCardList({
           <div className="grid gap-4 grid-cols-1">
             {group.transactions.map((transaction) => (
               <TransactionCard
-                key={transaction.id}
-                {...transaction}
+                key={transaction.paymentId}
+                transaction={transaction}
                 onDownload={onDownload}
               />
             ))}
@@ -64,7 +63,7 @@ export function TransactionCardList({
       ))}
       {groupedTransactions.length === 0 && (
         <div className="text-center py-12 text-gray-500">
-          No properties found
+          No transactions found
         </div>
       )}
     </div>

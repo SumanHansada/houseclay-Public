@@ -1,42 +1,42 @@
-import { CircleCheck, CircleX, Download } from "lucide-react";
+"use client";
 
-import { PaymentFilterStatus } from "@/common/enums";
-import { Column, WebsiteDataTable } from "@/components/DataTable";
-import { MyTransaction } from "@/interfaces/ManageAccount";
+import { Download } from "lucide-react";
+
+import { type Column, DataTable } from "@/components/DataTable";
+import type { UserExternalPayment } from "@/interfaces/User";
 import { SvgIcon } from "@/utility-components";
 
-export const TransactionTable = ({
+import { getStatusConfig } from "./statusConfig";
+
+export function TransactionTable({
   transactions,
   onDownload,
 }: {
-  transactions: MyTransaction[];
-  onDownload: (transactionId: string) => void;
-}) => {
-  const handleDownload = (transactionId: string) => {
-    console.log("Download Invoice: ", transactionId);
-    onDownload(transactionId);
-  };
-  const columns: Column<MyTransaction>[] = [
+  transactions: UserExternalPayment[];
+  onDownload: (paymentId: string) => void;
+}) {
+  const columns: Column<UserExternalPayment>[] = [
     {
       key: "type",
       label: "Type",
-      cellClassName: "font-medium text-gray-800",
-      accessor: "type",
+      accessor: "paymentType",
+      // you can add className here if you want header-specific styling
     },
     {
       key: "dateTime",
       label: "Date & Time",
-      render: (p) => new Date(p.dateTime).toLocaleString("en-IN"),
+      render: (transaction) =>
+        new Date(transaction.createdAt).toLocaleString("en-IN"),
     },
     {
       key: "connects",
       label: "Connects",
-      render: (item) =>
-        item.connects ? (
-          <span className="flex items-center">
-            <SvgIcon iconSize="medium" name="coin" size={20} />
-            <span className="text-xl font-medium text-gray-700">
-              {item.connects}
+      render: (transaction) =>
+        transaction.connects ? (
+          <span className="inline-flex items-center gap-2">
+            <SvgIcon iconSize="medium" name="coin" size={18} />
+            <span className="text-base font-medium">
+              {transaction.connects}
             </span>
           </span>
         ) : (
@@ -46,32 +46,44 @@ export const TransactionTable = ({
     {
       key: "amount",
       label: "Amount",
-      cellClassName: "font-medium text-gray-800",
-      render: (item) => <span>&#8377;{item.amount}/-</span>,
+      render: (transaction) => (
+        <span className="font-medium">₹{transaction.amount}/-</span>
+      ),
     },
     {
       key: "status",
       label: "Status",
-      render: (item) =>
-        item.status === PaymentFilterStatus.COMPLETED ? (
-          <div className="flex gap-1 items-center">
-            <CircleCheck size={25} className="text-white fill-lime-500" />
-            <span>Completed</span>
+      render: (transaction) => {
+        const statusInfo = getStatusConfig(transaction.status);
+        const StatusIcon = statusInfo.icon;
+
+        return (
+          <div
+            className={`inline-flex items-center gap-2 ${statusInfo.textClassName}`}
+          >
+            <StatusIcon
+              size={statusInfo.iconSize}
+              className={statusInfo.iconClassName}
+            />
+            <span>{statusInfo.label}</span>
           </div>
-        ) : (
-          <div className="flex gap-1 items-center">
-            <CircleX size={25} className="text-white fill-red-500" />
-            <span>Cancelled</span>
-          </div>
-        ),
+        );
+      },
     },
     {
       key: "invoice",
       label: "Invoice",
-      render: (item) =>
-        item.invoice ? (
-          <button className="" onClick={() => handleDownload(item.id)}>
-            <Download size={25} className="text-red-500" />
+      render: (transaction) =>
+        transaction.invoice ? (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onDownload(transaction.paymentId);
+            }}
+            className="rounded-md p-1 hover:bg-gray-200"
+            aria-label="Download invoice"
+          >
+            <Download size={20} className="text-red-500" />
           </button>
         ) : (
           "-"
@@ -80,13 +92,13 @@ export const TransactionTable = ({
   ];
 
   return (
-    <div className="bg-white overflow-hidden">
-      <WebsiteDataTable
+    <div className="bg-white overflow-x-auto">
+      <DataTable<UserExternalPayment>
         columns={columns}
         data={transactions}
-        getRowId={(item) => item.id}
+        getRowId={(row) => row.paymentId}
         noDataMessage="No transactions found"
       />
     </div>
   );
-};
+}

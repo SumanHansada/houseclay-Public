@@ -1,4 +1,4 @@
-import { PaymentFilterStatus, PropertyCategory } from "@/common/enums";
+import { PaymentFilterStatus } from "@/common/enums";
 
 export interface MyProfileFormValues {
   name: string;
@@ -7,7 +7,6 @@ export interface MyProfileFormValues {
   onWhatsapp: boolean;
   email: string;
   emailVerified: boolean;
-  connects: number;
 }
 
 export type UserType = "tenant" | "buyer" | "";
@@ -27,17 +26,6 @@ export type MyRequirementsFormValues = {
   preferredTenants: string;
   budget: string;
 };
-
-export interface MyProperty {
-  propertyID: string;
-  propertyName: string;
-  category: PropertyCategory;
-  listedOn: string;
-  builtupArea: number;
-  price: number | null;
-  rent: number | null;
-  status: string;
-}
 
 export interface MyTransaction {
   id: string;

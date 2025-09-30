@@ -30,7 +30,9 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
   const HouseClayHome = HouseClayHomeSvg as React.FC<
     React.SVGProps<SVGSVGElement>
   >;
-  const connectBal = useSelector((state: RootState) => state.auth.connectBal);
+  const connectBal = useSelector(
+    (state: RootState) => state.user.userDetail.connectBal,
+  );
 
   const navItems: NavItem[] = [
     {

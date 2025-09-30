@@ -1,62 +1,66 @@
-import { CircleCheck, CircleX, Download } from "lucide-react";
+import { Download } from "lucide-react";
 
 import { PaymentFilterStatus } from "@/common/enums";
-import { MyTransaction } from "@/interfaces/ManageAccount";
+import { UserExternalPayment } from "@/interfaces/User";
 import { SvgIcon } from "@/utility-components";
 
-interface TransactionCardProps extends MyTransaction {
+import { getStatusConfig } from "./statusConfig";
+
+interface TransactionCardProps {
+  transaction: UserExternalPayment;
   onDownload: (transactionId: string) => void;
 }
 
 export function TransactionCard({
-  id,
-  type,
-  status,
-  invoice,
-  connects,
-  amount,
+  transaction,
   onDownload,
 }: TransactionCardProps) {
+  const statusInfo = getStatusConfig(transaction.status);
+  const StatusIcon = statusInfo.icon;
+
   const handleDownload = () => {
-    onDownload(id);
+    onDownload(transaction.paymentId);
   };
 
   return (
     <div className="rounded-xl bg-gray-50 p-4 shadow-sm">
       <div className="border-b-2 pb-2 flex flex-col">
         <div className="w-full flex items-center justify-between mb-2">
-          <h1 className="text-lg">{type}</h1>
-          <span className="text-lg font-medium">&#8377;{amount}/-</span>
+          <h1 className="text-lg">{transaction.paymentType}</h1>
+          <span className="text-lg font-medium">
+            &#8377;{transaction.amount}/-
+          </span>
         </div>
-        {connects ? (
+        {transaction.connects ? (
           <div className="flex items-center">
             <SvgIcon iconSize="medium" name="coin" size={20} />
             <span className="text-xl font-medium text-gray-700">
-              {connects}
+              {transaction.connects}
             </span>
           </div>
         ) : null}
       </div>
       <div className="w-full flex justify-between items-center mt-4">
-        {status === PaymentFilterStatus.COMPLETED ? (
-          <div className="flex gap-1 items-center">
-            <CircleCheck size={25} className="text-white fill-lime-500" />
-            <span>Completed</span>
-          </div>
-        ) : (
-          <div className="flex gap-1 items-center">
-            <CircleX size={25} className="text-white fill-red-500" />
-            <span>Cancelled</span>
-          </div>
-        )}
+        {/* {TransactionStatus(transaction.status)} */}
+        <div
+          className={`inline-flex items-center gap-2 ${statusInfo.textClassName}`}
+        >
+          <StatusIcon
+            size={statusInfo.iconSize}
+            className={statusInfo.iconClassName}
+          />
+          <span>{statusInfo.label}</span>
+        </div>
 
-        {invoice ? (
+        {transaction.invoice ? (
           <button className="flex gap-2 items-center" onClick={handleDownload}>
             <span className="text-red-500">Download Invoice</span>
             <Download size={25} className="text-red-500" />
           </button>
-        ) : (
+        ) : transaction.status === PaymentFilterStatus.FAILED ? (
           <span className="text-red-500">Transaction Failed!</span>
+        ) : (
+          "Invoice: NA"
         )}
       </div>
     </div>

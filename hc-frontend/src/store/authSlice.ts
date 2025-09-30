@@ -3,28 +3,15 @@ import Cookies from "js-cookie";
 
 import { AuthStep } from "@/common/enums";
 
-export interface AuthUserDetails {
+interface AuthState {
   token: string;
-  name: string;
-  emailID: string;
-  phoneNo: string;
-  connectBal: number;
-  avatarUrl: string | null;
-}
-
-interface AuthState extends AuthUserDetails {
   authStep: AuthStep;
   loginFromAddProperty: boolean;
 }
 
 const initialState: AuthState = {
-  token: "", // Initialize as null to avoid hydration issues
-  authStep: AuthStep.NONE, // Default to login step
-  phoneNo: "", // Initialize phoneNo as null
-  emailID: "", // Initialize emailID as null
-  name: "", // Initialize name as null
-  connectBal: 0, // Initialize connectBal as null
-  avatarUrl: "", // Initialize avatarUrl as null
+  token: "",
+  authStep: AuthStep.NONE,
   loginFromAddProperty: false,
 };
 
@@ -32,22 +19,6 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setAuthUser: (
-      state,
-      action: PayloadAction<{ authUserDetails: AuthUserDetails }>,
-    ) => {
-      const { authUserDetails } = action.payload;
-      // Direct mutation - Redux Toolkit handles immutability internally
-      Object.assign(state, authUserDetails);
-    },
-    clearAuthUser: (state) => {
-      state.token = "";
-      state.name = "";
-      state.phoneNo = "";
-      state.emailID = "";
-      state.connectBal = 0;
-      state.avatarUrl = "";
-    },
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
       // Set cookie with 7 days expiry
@@ -56,9 +27,6 @@ const authSlice = createSlice({
     clearToken: (state) => {
       state.token = "";
       Cookies.remove("token");
-    },
-    setConnectBal: (state, action: PayloadAction<number>) => {
-      state.connectBal = action.payload;
     },
     initializeToken: (state) => {
       const token = Cookies.get("token");
@@ -72,45 +40,27 @@ const authSlice = createSlice({
     clearAuthStep: (state) => {
       state.authStep = AuthStep.NONE;
     },
-    setPhoneNo: (state, action: PayloadAction<string>) => {
-      state.phoneNo = action.payload;
-    },
-    clearPhoneNo: (state) => {
-      state.phoneNo = "";
-    },
-    setEmailID: (state, action: PayloadAction<string>) => {
-      state.emailID = action.payload;
-    },
-    clearEmailID: (state) => {
-      state.emailID = "";
-    },
-    setName: (state, action: PayloadAction<string>) => {
-      state.name = action.payload;
-    },
-    clearName: (state) => {
-      state.name = "";
-    },
     setLoginFromAddProperty: (state, action: PayloadAction<boolean>) => {
       state.loginFromAddProperty = action.payload;
+    },
+    // Complete logout - clear all auth state
+    logout: (state) => {
+      state.token = "";
+      state.authStep = AuthStep.NONE;
+      state.loginFromAddProperty = false;
+      Cookies.remove("token");
     },
   },
 });
 
 export const {
-  setAuthUser,
-  clearAuthUser,
   setToken,
   clearToken,
-  setConnectBal,
   initializeToken,
   setAuthStep,
   clearAuthStep,
-  setPhoneNo,
-  clearPhoneNo,
-  setEmailID,
-  clearEmailID,
-  setName,
-  clearName,
   setLoginFromAddProperty,
+  logout,
 } = authSlice.actions;
+
 export default authSlice.reducer;

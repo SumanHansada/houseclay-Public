@@ -2,14 +2,14 @@
 
 import { useMemo } from "react";
 
-import { MyProperty } from "@/interfaces/ManageAccount";
+import { UserOwnedProperties } from "@/interfaces/User";
 
 import { formatDate, getDateKey } from "../utils";
 import { PropertyCard } from "./PropertyCard";
 
 interface GroupedProperties {
   date: string;
-  properties: MyProperty[];
+  properties: UserOwnedProperties[];
 }
 
 export function PropertyCardList({
@@ -18,41 +18,31 @@ export function PropertyCardList({
   onMarkSold,
   onOpenDialog,
 }: {
-  items: MyProperty[];
+  items: UserOwnedProperties[];
   onDashboard: (propertyId: string) => void;
   onMarkSold: (propertyId: string) => void;
   onOpenDialog: (propertyId: string) => void;
 }) {
-  const groupedProperties = useMemo(() => {
-    // Group properties by date
-    const grouped = items.reduce(
-      (acc, property) => {
-        const dateKey = getDateKey(property.listedOn);
-        if (!acc[dateKey]) {
-          acc[dateKey] = [];
-        }
-        acc[dateKey].push(property);
-        return acc;
-      },
-      {} as Record<string, MyProperty[]>,
-    );
+  // backend guarantees items are already sorted
+  const groupedProperties = useMemo<GroupedProperties[]>(() => {
+    const groups: GroupedProperties[] = [];
+    if (!items || items.length === 0) return groups;
 
-    // Convert to array and sort by date (newest first)
-    const groupedArray: GroupedProperties[] = Object.entries(grouped)
-      .map(([_, properties]) => ({
-        date: formatDate(properties[0].listedOn),
-        properties: properties.sort(
-          (a, b) =>
-            new Date(b.listedOn).getTime() - new Date(a.listedOn).getTime(),
-        ),
-      }))
-      .sort((a, b) => {
-        const dateA = new Date(a.properties[0].listedOn);
-        const dateB = new Date(b.properties[0].listedOn);
-        return dateB.getTime() - dateA.getTime();
-      });
-
-    return groupedArray;
+    let currentKey = "";
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      const key = getDateKey(item.createdOn);
+      if (key !== currentKey) {
+        currentKey = key;
+        groups.push({
+          date: formatDate(item.createdOn),
+          properties: [item],
+        });
+      } else {
+        groups[groups.length - 1].properties.push(item);
+      }
+    }
+    return groups;
   }, [items]);
 
   return (
@@ -66,7 +56,7 @@ export function PropertyCardList({
             {group.properties.map((property) => (
               <PropertyCard
                 key={property.propertyID}
-                {...property}
+                property={property}
                 onDashboard={onDashboard}
                 onMarkSold={onMarkSold}
                 onOpenDialog={onOpenDialog}

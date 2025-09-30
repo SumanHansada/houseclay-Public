@@ -5,20 +5,15 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { BadgeType, PropertyCategory } from "@/common/enums";
+import { BadgeType, PropertyCategory, PropertyStatus } from "@/common/enums";
 import Properties from "@/components/Properties";
+import { PropertyCardWithImages } from "@/interfaces/User";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import {
-  setHideFooter,
-  setHideHeader,
-  setHideStickyNavBar,
-} from "@/store/appSlice";
+import { useGetUserDetailQuery } from "@/store/apiSlice";
+import { setHideStickyNavBar } from "@/store/appSlice";
 
-import {
-  DUMMY_PROPERTIES_FOR_PROPERTY_CARD,
-  PropertyCardDummy,
-} from "../dummy";
+import Loading from "./loading";
 
 const filterOptions = [
   { label: "All", value: PropertyCategory.NONE },
@@ -27,32 +22,49 @@ const filterOptions = [
   { label: "Flatmate", value: PropertyCategory.FLATMATE },
 ];
 
+// 1x1 transparent GIF — tiny, inline, no network
+const FALLBACK_IMG = "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
+
 export default function OwnersContactedPage() {
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
-  const [selected, setSelected] = useState<PropertyCategory>(
+  const [selectedCategory, setSelectedCategory] = useState<PropertyCategory>(
     PropertyCategory.NONE,
   );
   const [onlyAvailable, setOnlyAvailable] = useState(false);
   const router = useRouter();
 
-  const filtered: PropertyCardDummy[] = useMemo(() => {
-    return DUMMY_PROPERTIES_FOR_PROPERTY_CARD.filter((p) => {
-      if (selected !== PropertyCategory.NONE && p.category !== selected)
+  const { data, isLoading, error } = useGetUserDetailQuery();
+
+  const contactedProperties = useMemo(
+    () => data?.user?.contactedProperties ?? [],
+    [data],
+  );
+
+  const propertyCards: PropertyCardWithImages[] = useMemo(() => {
+    return contactedProperties.map((prop: PropertyCardWithImages) => ({
+      ...prop,
+      images: prop.image ? [prop.image] : [FALLBACK_IMG],
+    }));
+  }, [contactedProperties]);
+
+  const filteredProperties: PropertyCardWithImages[] = useMemo(() => {
+    return propertyCards.filter((prop) => {
+      if (
+        selectedCategory !== PropertyCategory.NONE &&
+        prop.propertyCategory !== selectedCategory
+      )
         return false;
-      if (onlyAvailable) return false;
+      if (onlyAvailable && prop.propertyState !== PropertyStatus.VERIFIED)
+        return false;
       return true;
     });
-  }, [selected, onlyAvailable]);
+  }, [propertyCards, selectedCategory, onlyAvailable]);
 
   useEffect(() => {
     if (isMobile) {
-      dispatch(setHideHeader(true));
-      dispatch(setHideFooter(true));
       dispatch(setHideStickyNavBar(false));
     } else {
-      dispatch(setHideHeader(false));
-      dispatch(setHideFooter(false));
       dispatch(setHideStickyNavBar(true));
     }
   }, [isMobile, dispatch]);
@@ -61,6 +73,14 @@ export default function OwnersContactedPage() {
     e.stopPropagation();
     router.push(`/property-details/${propertyID}`);
   };
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <div>Error loading properties</div>;
+  }
 
   return (
     <main>
@@ -92,11 +112,11 @@ export default function OwnersContactedPage() {
         {/* Filter buttons */}
         <div className="flex gap-3 text-lg font-medium text-gray-700 mb-4">
           {filterOptions.map((f) => {
-            const active = selected === f.value;
+            const active = selectedCategory === f.value;
             return (
               <button
                 key={f.value}
-                onClick={() => setSelected(f.value)}
+                onClick={() => setSelectedCategory(f.value)}
                 aria-pressed={active}
                 className={`px-4 py-2 rounded-lg border shadow-sm whitespace-nowrap ${
                   active ? "bg-red-500 text-white border-red-500" : "bg-white"
@@ -117,11 +137,11 @@ export default function OwnersContactedPage() {
         {/* Filter buttons */}
         <div className="flex justify-between text-lg m-3 border p-1.5 sm:p-2 rounded-xl mx-8">
           {filterOptions.map((f) => {
-            const active = selected === f.value;
+            const active = selectedCategory === f.value;
             return (
               <button
                 key={f.value}
-                onClick={() => setSelected(f.value)}
+                onClick={() => setSelectedCategory(f.value)}
                 aria-pressed={active}
                 className={`px-2 py-1 sm:px-4 sm:py-2 flex-1 whitespace-nowrap ${
                   active ? "border border-red-500 text-red-500 rounded-lg" : ""
@@ -138,13 +158,13 @@ export default function OwnersContactedPage() {
       <div className="space-y-4 overflow-y-auto max-md:px-6 pt-4 pb-16">
         {/* Property List */}
         <div className="mx-auto w-full py-5">
-          {filtered.length === 0 ? (
+          {filteredProperties.length === 0 ? (
             <div className="text-center text-gray-500 py-12">
               No properties found.
             </div>
           ) : (
             <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(330px,1fr))]">
-              {filtered.map((property, idx) => (
+              {filteredProperties.map((property, idx) => (
                 <Properties
                   key={`${property.propertyID}-${idx}`}
                   property={property}

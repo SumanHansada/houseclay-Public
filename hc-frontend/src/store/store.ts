@@ -74,16 +74,14 @@ const shortlistPersistConfig = {
 const authPersistConfig = {
   key: "auth",
   storage,
-  whitelist: [
-    "token",
-    "authStep",
-    "phoneNo",
-    "emailID",
-    "connectBal",
-    "name",
-    "avatarUrl",
-    "loginFromAddProperty",
-  ],
+  whitelist: ["token", "authStep", "loginFromAddProperty"],
+};
+
+// Configure persistence for user slice (user data)
+const userPersistConfig = {
+  key: "user",
+  storage,
+  whitelist: ["userDetail"],
 };
 
 const persistedListPropertyReducer = persistReducer(
@@ -107,17 +105,18 @@ const persistedShortlistReducer = persistReducer(
 );
 
 const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
+const persistedUserReducer = persistReducer(userPersistConfig, userReducer);
 
 export function makeStore() {
   return configureStore({
     reducer: {
       app: appReducer,
       auth: persistedAuthReducer,
+      user: persistedUserReducer,
       listProperty: persistedListPropertyReducer,
       editProperty: persistedEditPropertyReducer,
       propertySearch: persistedPropertySearchReducer,
       shortlist: persistedShortlistReducer,
-      user: userReducer,
       uploadToS3: uploadToS3SliceReducer,
       [apiSlice.reducerPath]: apiSlice.reducer,
     },
