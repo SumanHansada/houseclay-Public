@@ -31,9 +31,20 @@ export default function TermsAndConditionsPage() {
     <>
       <MobileHeader title="Terms and Conditions" />
 
-      <section className="w-full">
+      <section
+        className="w-full"
+        aria-labelledby="terms-title terms-title-mobile"
+      >
         <div className="w-full text-center mb-8">
-          <h1 className="text-4xl font-bold py-24 max-md:hidden">
+          {/* Desktop visible title */}
+          <h1
+            id="terms-title"
+            className="text-4xl font-bold py-24 max-md:hidden"
+          >
+            Terms and Conditions
+          </h1>
+          {/* Mobile hidden (screen-reader only) title */}
+          <h1 id="terms-title-mobile" className="sr-only md:hidden">
             Terms and Conditions
           </h1>
         </div>

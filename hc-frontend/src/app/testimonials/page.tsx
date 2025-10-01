@@ -37,12 +37,15 @@ export default function TestimonialsPage() {
     <>
       <MobileHeader title="Success Stories & Testimonials" />
       {/* Desktop */}
-      <main className="w-full h-full max-md:hidden md:block">
-        <section className="relative w-full md:aspect-[15/4] md:block">
-          <div className="absolute inset-0 hidden md:block">
+      <section className="w-full h-full max-md:hidden">
+        <section
+          className="relative w-full md:aspect-[15/4]"
+          aria-labelledby="testimonials-hero-title"
+        >
+          <div className="absolute inset-0 max-md:hidden" aria-hidden="true">
             <ImageWithLoader
               src="/images/banner-testimonials.webp"
-              alt="Banner Background"
+              alt=""
               fill
               className="object-center"
               sizes="100vw"
@@ -51,8 +54,11 @@ export default function TestimonialsPage() {
             />
           </div>
           <div className="absolute flex items-center pl-14 h-full xl:pl-40 w-1/4 lg:w-1/3 xl:w-2/5">
-            <h1 className="font-bold text-gray-900 md:text-4xl xl:text-[44px]">
-              Success Stories & Testimonials
+            <h1
+              id="testimonials-hero-title"
+              className="font-bold text-gray-900 md:text-4xl xl:text-[44px]"
+            >
+              Success Stories &amp; Testimonials
             </h1>
           </div>
         </section>
@@ -60,46 +66,78 @@ export default function TestimonialsPage() {
           Our users success stories reflect our commitment to delivering
           excellent service, transparency, and value.
         </h2>
-        <section className="w-full xl:px-28 lg:px-14 md:px-14 px-8 py-8">
+
+        <section
+          className="w-full xl:px-28 lg:px-14 md:px-14 px-8 py-8"
+          aria-labelledby="testimonials-list-heading"
+        >
+          <h2 id="testimonials-list-heading" className="sr-only">
+            Testimonials
+          </h2>
           <div className="lg:grid gap-x-8 gap-y-12 grid-cols-[repeat(auto-fill,minmax(380px,1fr))] hidden">
             {TESTIMONIALS_DATA.map((testimonial) => (
-              <TestimonialCard key={testimonial.id} testimonial={testimonial} />
+              <article
+                key={testimonial.id}
+                aria-label={`Testimonial by ${testimonial.name ?? "user"}`}
+              >
+                <TestimonialCard testimonial={testimonial} />
+              </article>
             ))}
           </div>
-          <div className="lg:hidden">
+          <div
+            className="lg:hidden"
+            aria-labelledby="testimonials-carousel-heading"
+          >
+            <h3 id="testimonials-carousel-heading" className="sr-only">
+              Testimonials carousel
+            </h3>
             <Carousel2D
               slideWidth={400}
               gap={4}
-              showDots={true}
+              showDots={false}
               containerClassName=""
               className=""
               showArrows={true}
             >
               {TESTIMONIALS_DATA.map((testimonial) => (
-                <TestimonialCard
+                <article
                   key={testimonial.id}
-                  testimonial={testimonial}
-                />
+                  aria-label={`Testimonial by ${testimonial.name ?? "user"}`}
+                >
+                  <TestimonialCard testimonial={testimonial} />
+                </article>
               ))}
             </Carousel2D>
           </div>
         </section>
 
-        <div className="lg:flex w-full justify-center py-6 max-lg:hidden">
-          <button className="rounded-xl px-5 py-3 border border-red-600 hover:bg-red-50">
+        <div
+          className="lg:flex w-full justify-center py-6 max-lg:hidden"
+          aria-labelledby="testimonials-cta"
+        >
+          <h2 id="testimonials-cta" className="sr-only">
+            More testimonials
+          </h2>
+          <button className="rounded-xl px-6 py-2 border border-red-600 hover:bg-red-50">
             Load More
           </button>
         </div>
 
         <Footer />
-      </main>
+      </section>
 
       {/* Mobile */}
-      <main className="w-full h-full px-6 sm:px-8 md:hidden pt-[55px]">
-        <section className="relative w-full aspect-[9/4]">
+      <section className="w-full h-full px-6 sm:px-8 md:hidden pt-[55px]">
+        <section
+          className="relative w-full aspect-[9/4]"
+          aria-labelledby="mobile-hero-title"
+        >
+          <h1 id="mobile-hero-title" className="sr-only">
+            Success Stories &amp; Testimonials
+          </h1>
           <ImageWithLoader
             src="/images/banner-testimonials-mobile.webp"
-            alt="Banner Background"
+            alt=""
             fill
             className="object-center"
             sizes="100vw"
@@ -126,7 +164,7 @@ export default function TestimonialsPage() {
             ))}
           </Carousel2D>
         </section>
-      </main>
+      </section>
     </>
   );
 }

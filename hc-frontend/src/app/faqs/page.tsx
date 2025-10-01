@@ -35,9 +35,17 @@ export default function FrequentlyAskedQuestionPage() {
     <>
       <MobileHeader title="Frequently Asked Questions" />
 
-      <section className="space-y-12 md:space-y-24 xl:w-1/2 lg:w-2/3 md:w-3/4 md:py-20 max-md:px-8 pb-16 pt-12">
+      <section
+        aria-labelledby="faq-title faq-title-mobile"
+        className="space-y-12 md:space-y-24 xl:w-1/2 lg:w-2/3 md:w-3/4 md:py-20 max-md:px-8 pb-16 pt-12"
+      >
         <div className="mx-auto w-11/12 text-center">
-          <h1 className="text-4xl font-bold mb-16 max-md:hidden">
+          {/* Desktop visible title */}
+          <h1 id="faq-title" className="text-4xl font-bold mb-16 max-md:hidden">
+            Frequently Asked Questions
+          </h1>
+          {/* Mobile hidden (screen-reader only) title */}
+          <h1 id="faq-title-mobile" className="sr-only md:hidden">
             Frequently Asked Questions
           </h1>
           <p className="md:text-xl text-gray-600 md:text-gray-800 w-full">
@@ -45,7 +53,10 @@ export default function FrequentlyAskedQuestionPage() {
             the most common inquiries about HouseClay
           </p>
         </div>
-        <div className="flex flex-col gap-5">
+        <section aria-labelledby="faq-list" className="flex flex-col gap-5">
+          <h2 id="faq-list" className="sr-only">
+            Questions list
+          </h2>
           {ACCORDION_DATA.map((item) => {
             const key = item.question;
             const isOpen = openKey === key;
@@ -59,7 +70,7 @@ export default function FrequentlyAskedQuestionPage() {
               />
             );
           })}
-        </div>
+        </section>
       </section>
       <div className="max-md:hidden w-full">
         <Footer />

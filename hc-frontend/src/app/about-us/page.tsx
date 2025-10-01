@@ -28,17 +28,20 @@ export default function AboutUsPage() {
     <>
       <MobileHeader title="About Us" />
 
-      <main className="w-full h-full">
+      <section className="w-full h-full">
         <div className="py-8 max-md:mb-16 md:py-12 xl:py-20 xl:px-28 lg:px-14 md:px-14 px-8">
           {/* HERO */}
-          <section className="relative w-full h-[240px] sm:h-[360px] md:h-[460px] lg:h-[620px]">
+          <section
+            aria-labelledby="about-hero-title"
+            className="relative w-full aspect-[15/7] min-h-[240px] md:min-h-[360px] xl:max-h-[620px]"
+          >
             {/* Background image */}
-            <div className="absolute inset-0">
+            <div className="absolute inset-0" aria-hidden="true">
               <ImageWithLoader
                 src="/images/banner-about-us.webp"
-                alt="Banner Background"
+                alt=""
                 fill
-                className="!object-contain object-center"
+                className="object-center"
                 sizes="100vw"
                 fetchPriority="high"
                 priority
@@ -55,23 +58,32 @@ export default function AboutUsPage() {
                 flex items-center justify-center
               "
             >
-              <div className="font-bold text-center flex flex-col gap-1 md:gap-3">
-                <h1 className="text-gray-900 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[56px] md:leading-tight">
+              <h1
+                id="about-hero-title"
+                className="font-bold text-center flex flex-col gap-1 md:gap-3"
+              >
+                <span className="text-gray-900 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[56px] md:leading-tight">
                   Welcome to the future of
-                </h1>
-                <h1 className="text-red-500 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[56px] md:leading-tight">
+                </span>
+                <span className="text-red-500 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[56px] md:leading-tight">
                   Smart Living.
-                </h1>
-              </div>
+                </span>
+              </h1>
             </div>
           </section>
 
           {/* MISSION */}
-          <section className="space-y-3 mt-4 md:mt-6 lg:mt-10 xl:mt-16">
-            <div className="bg-red-500 px-5 py-2 md:px-7 md:py-3 text-white rounded-lg w-fit mx-auto sm:text-lg md:text-xl">
+          <section
+            aria-labelledby="mission-heading"
+            className="space-y-3 mt-4 md:mt-6 lg:mt-10 xl:mt-16"
+          >
+            <p className="bg-red-500 px-5 py-2 md:px-7 md:py-3 text-white rounded-lg w-fit mx-auto sm:text-lg md:text-xl">
               OUR MISSION
-            </div>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-center lg:leading-normal xl:leading-normal md:w-4/5 mx-auto">
+            </p>
+            <h2
+              id="mission-heading"
+              className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-center lg:leading-normal xl:leading-normal md:w-4/5 mx-auto"
+            >
               Houseclay makes renting{" "}
               <span className="text-red-500">simple</span>,{" "}
               <span className="text-red-500">fair</span>, and{" "}
@@ -82,17 +94,21 @@ export default function AboutUsPage() {
           </section>
 
           {/* VALUES */}
-          <section className="relative bg-gray-50 w-full h-full rounded-lg py-8 sm:py-12 px-10 lg:px-20 mt-16 md:mt-14 lg:mt-16 xl:mt-28">
+          <section
+            aria-labelledby="values-heading"
+            className="relative bg-gray-50 w-full h-full rounded-lg py-8 sm:py-12 px-10 lg:px-20 mt-16 md:mt-14 lg:mt-16 xl:mt-28"
+          >
+            <h2 id="values-heading" className="sr-only">
+              Our values
+            </h2>
             {/* Centered tag */}
             <div
-              className="
-                absolute -top-4 md:-top-5
-                left-1/2 -translate-x-1/2
-                bg-red-500 px-4 md:px-6 py-1 text-white rounded-lg w-fit
-                text-sm md:text-lg
-              "
+              className="absolute -top-3 md:-top-4 left-1/2 -translate-x-1/2"
+              aria-hidden="true"
             >
-              OUR VALUES
+              <span className="bg-red-500 px-4 md:px-6 py-1 text-white rounded-lg w-fit text-sm md:text-lg">
+                OUR VALUES
+              </span>
             </div>
 
             <div className="flex flex-col md:flex-row md:flex-nowrap gap-6 md:gap-10 xl:gap-12 2xl:justify-between">
@@ -156,8 +172,14 @@ export default function AboutUsPage() {
           </section> */}
 
           {/* CTA */}
-          <section className="mt-10 md:mt-16 lg:mt-24 w-11/12 lg:w-2/3 2xl:w-2/5 mx-auto text-center space-y-4">
-            <h2 className="text-2xl sm:text-3xl lg:text-3xl xl:text-4xl font-bold">
+          <section
+            aria-labelledby="cta-heading"
+            className="mt-10 md:mt-16 lg:mt-24 w-11/12 lg:w-2/3 2xl:w-2/5 mx-auto text-center space-y-4"
+          >
+            <h2
+              id="cta-heading"
+              className="text-2xl sm:text-3xl lg:text-3xl xl:text-4xl font-bold"
+            >
               We don&apos;t do subscription traps.
             </h2>
             <p className="text-gray-800 sm:tracking-wide sm:text-lg">
@@ -178,7 +200,7 @@ export default function AboutUsPage() {
         <div className="max-md:hidden">
           <Footer />
         </div>
-      </main>
+      </section>
     </>
   );
 }
