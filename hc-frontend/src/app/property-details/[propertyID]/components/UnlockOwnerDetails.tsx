@@ -1,8 +1,8 @@
 "use client";
 
+import { Lightbulb, Mail, Phone, PhoneCall } from "lucide-react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Lightbulb, Mail, Phone, PhoneCall } from "lucide-react";
 
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useContactOwnerMutation } from "@/store/apiSlice";
@@ -16,18 +16,33 @@ interface UnlockOwnerDetailsProps {
 
 type Step = "confirm" | "unlocked" | "error";
 
+type ApiError = {
+  data?: {
+    code?: string;
+    message?: string;
+  };
+  error?:
+    | string
+    | {
+        code?: string;
+        message?: string;
+      };
+};
+
 function getErrorMeta(err: unknown): {
   title: string;
   message: string;
   code?: string;
 } {
-  const data = (err as any)?.data ?? (err as any)?.error;
-  const code = data?.code as string | undefined;
+  const apiError = err as ApiError;
+  const errorPayload =
+    apiError?.data ??
+    (typeof apiError?.error === "object" ? apiError.error : undefined);
+
+  const code = errorPayload?.code;
   const message =
-    data?.message ||
-    (typeof (err as any)?.error === "string"
-      ? (err as any).error
-      : undefined) ||
+    errorPayload?.message ||
+    (typeof apiError?.error === "string" ? apiError.error : undefined) ||
     "Unable to unlock. Please try again.";
 
   if (code === "INSUFFICIENT_CONNECTS") {
@@ -72,7 +87,6 @@ export const UnlockOwnerDetails = ({
     setLastError(undefined);
     try {
       const res = await contactOwner({ propertyID }).unwrap();
-      // update connect balance in auth slice
       if (typeof res?.connectBal === "number") {
         dispatch(setConnectBal(res.connectBal));
       }

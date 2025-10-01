@@ -1,6 +1,9 @@
+import { useEffect, useMemo, useRef, useState } from "react";
+import { PhoneInput } from "react-international-phone";
+import { useDispatch, useSelector } from "react-redux";
+
 import { AuthStep } from "@/common/enums";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useGenerateOtpMutation,
   useLazyCheckUserQuery,
@@ -17,10 +20,7 @@ import {
 } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 import { setCheckUser } from "@/store/userSlice";
-import { ImageWithLoader, SvgIcon } from "@/utility-components";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { PhoneInput } from "react-international-phone";
-import { useDispatch, useSelector } from "react-redux";
+import { ImageWithLoader } from "@/utility-components";
 
 const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -29,7 +29,6 @@ interface ContactLoginProps {
 }
 
 export const ContactLogin = ({ onSuccess }: ContactLoginProps) => {
-  const { closeDialog } = useDialog();
   const authStep = useSelector((state: RootState) => state.auth.authStep);
   const emailID = useSelector((state: RootState) => state.auth.emailID);
   const name = useSelector((state: RootState) => state.auth.name);
@@ -233,7 +232,7 @@ export const ContactLogin = ({ onSuccess }: ContactLoginProps) => {
                   <span className="text-2xl font-bold">No spam, </span>
                   <span className="text-2xl font-medium">just updates.</span>
                   <p className="text-lg text-gray-700">
-                    You're one step away from connecting with the property
+                    You&apos;re one step away from connecting with the property
                     owner. Use 1 Connect to view their contact information
                   </p>
                 </div>
@@ -286,7 +285,7 @@ export const ContactLogin = ({ onSuccess }: ContactLoginProps) => {
             {/* Form header */}
             <div className="flex flex-col gap-1 mb-2">
               <h1 className="text-2xl text-black ">
-                Looks like you don't have an Account!
+                Looks like you don&apos;t have an Account!
               </h1>
               <h2 className="text-lg">Create New Account</h2>
             </div>
@@ -358,8 +357,8 @@ export const ContactLogin = ({ onSuccess }: ContactLoginProps) => {
                 <span className="text-2xl font-bold">No spam, </span>
                 <span className="text-2xl font-medium">just updates.</span>
                 <p className="text-lg text-gray-700">
-                  You're one step away from connecting with the property owner.
-                  Use 1 Connect to view their contact information
+                  You&apos;re one step away from connecting with the property
+                  owner. Use 1 Connect to view their contact information
                 </p>
               </div>
               <p className="text-gray-600 text-sm">

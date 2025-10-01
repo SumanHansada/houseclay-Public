@@ -1,7 +1,8 @@
+import { X } from "lucide-react";
+
 import { ContactLogin } from "@/app/property-details/[propertyID]/components/ContactLogin";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { X } from "lucide-react";
 
 interface ContactOwnerLoginDialogProps {
   id: string;

@@ -5,6 +5,10 @@ import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
+import {
+  EmailVerificationDialog,
+  EmailVerificationSuccessDialog,
+} from "@/dialogs";
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
@@ -13,10 +17,6 @@ import { RootState } from "@/store/store";
 import { DesktopClient } from "./DesktopClient";
 import Loading from "./loading";
 import { MobileClient } from "./MobileClient";
-import {
-  EmailVerificationDialog,
-  EmailVerificationSuccessDialog,
-} from "@/dialogs";
 
 const validationSchema = Yup.object({
   name: Yup.string().required("Name is required"),
