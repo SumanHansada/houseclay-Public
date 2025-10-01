@@ -124,6 +124,8 @@ const Login = () => {
       if (loginFromAddProperty) {
         router.push("/list-property");
         dispatch(setLoginFromAddProperty(false));
+      } else {
+        router.push("/");
       }
     } catch (err) {
       console.error(err);

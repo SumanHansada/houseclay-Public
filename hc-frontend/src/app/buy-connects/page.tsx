@@ -608,25 +608,23 @@ export default function BuyConnectsPage() {
             </div>
           </DialogContent>
           <DialogFooter>
-            <MobileFooter>
-              <div className="flex flex-col justify-around items-start w-full">
-                <div className="text-gray-600 text-xs">Total Amount</div>
-                <div className="text-sm font-bold flex gap-2 items-center">
-                  {totalAmount.toFixed(2)} <Info size={16} />
-                </div>
+            <div className="flex flex-col justify-around items-start w-full">
+              <div className="text-gray-600 text-xs">Total Amount</div>
+              <div className="text-sm font-bold flex gap-2 items-center">
+                {totalAmount.toFixed(2)} <Info size={16} />
               </div>
-              <button
-                className={`text-center px-6 py-3 border rounded-xl w-full transition duration-200 ${
-                  agreedToTerms && connectsToBuy >= 5
-                    ? "bg-red-500 border-red-500 text-white hover:bg-red-600"
-                    : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
-                }`}
-                onClick={handleProceedToPay}
-                disabled={!agreedToTerms && connectsToBuy < 5}
-              >
-                Proceed to Pay
-              </button>
-            </MobileFooter>
+            </div>
+            <button
+              className={`text-center px-6 py-3 border rounded-xl w-full transition duration-200 ${
+                agreedToTerms && connectsToBuy >= 5
+                  ? "bg-red-500 border-red-500 text-white hover:bg-red-600"
+                  : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
+              }`}
+              onClick={handleProceedToPay}
+              disabled={!agreedToTerms && connectsToBuy < 5}
+            >
+              Proceed to Pay
+            </button>
           </DialogFooter>
         </Dialog>
       )}

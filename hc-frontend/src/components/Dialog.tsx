@@ -175,7 +175,7 @@ export const DialogHeader: React.FC<{ children: React.ReactNode }> = ({
 export const DialogContent: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <div className="overflow-y-auto overflow-x-hidden flex-grow max-h-svh scroll-smooth max-md:pb-16">
+  <div className="overflow-y-auto overflow-x-hidden flex-grow max-h-svh scroll-smooth">
     {children}
   </div>
 );
@@ -183,7 +183,7 @@ export const DialogContent: React.FC<{ children: React.ReactNode }> = ({
 export const DialogFooter: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <div className="border-t border-gray-200 flex pb-safe-bottom-2 pt-2">
+  <div className="border-t border-t-gray-200 flex pb-safe-bottom-2 pt-2 xl:px-28 lg:px-14 md:px-8 px-4">
     {children}
   </div>
 );

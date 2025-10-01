@@ -44,7 +44,10 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // Property category redirects
-    "/list-property/:path*",
+    "/list-property/rent/:path*",
+    "/list-property/resale/:path*",
+    "/list-property/flatmate/:path*",
+
     // Protected routes that require authentication
     "/profile/:path*",
     "/edit-property/:path*",

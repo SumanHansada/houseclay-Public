@@ -54,7 +54,7 @@ export default function RootLayout({
         <meta name="application-name" content="Houseclay" />
 
         {/* Critical meta tags - must come before splash screens */}
-        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Houseclay" />
         <meta name="theme-color" content="#ED1E26" />
