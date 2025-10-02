@@ -60,7 +60,7 @@ const VerifyConnectsDialog: React.FC<VerifyConnectsDialogProps> = ({
           <div className="bg-green-50 border border-green-200 rounded-lg p-4 w-full">
             <div className="flex items-center justify-center gap-2">
               <span className="text-green-600 text-sm md:text-lg">
-                Verifying your payment...
+                Verifying your payment
               </span>
             </div>
           </div>
@@ -124,7 +124,7 @@ const VerifyConnectsDialog: React.FC<VerifyConnectsDialogProps> = ({
         </div>
       </DialogHeader>
       <DialogContent>
-        <div className="flex flex-col items-center justify-center text-center p-6 gap-6 text-sm md:text-base">
+        <div className="flex flex-col items-center justify-center text-center px-6 py-2 gap-6 text-sm md:text-base">
           {status === "verifying" && (
             <div>
               This will only take a few seconds
@@ -165,7 +165,7 @@ const VerifyConnectsDialog: React.FC<VerifyConnectsDialogProps> = ({
       <DialogFooter>
         {/* Action Buttons */}
         {status !== PaymentVerificationStatus.VERIFYING && (
-          <div className="flex gap-4 w-full px-6 py-2">
+          <div className="flex gap-4 w-full">
             <button
               onClick={onClose}
               className={`w-full py-3 font-medium rounded-lg transition duration-200 ${

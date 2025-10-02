@@ -36,7 +36,7 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({
           <div className="max-w-4xl mb-4 flex">
             <button
               className={`px-6 py-2 border-b-2 font-medium ${
-                listingType === "rent"
+                listingType === PropertyCategory.RENT
                   ? "text-red-500 border-red-500"
                   : "text-gray-700"
               }`}

@@ -12,7 +12,7 @@ import {
   FormRadioGroup,
 } from "@/form-components";
 import { MyRequirementsFormValues } from "@/interfaces/ManageAccount";
-import { MobileHeader } from "@/layout-components";
+import { MobileFooter, MobileHeader } from "@/layout-components";
 import { setHideStickyNavBar } from "@/store/appSlice";
 
 import {
@@ -226,10 +226,10 @@ export function MobileClient({
 
         {/* Actions */}
         {editMode ? (
-          <footer className="fixed bottom-0 inset-x-0 z-50 border-t border-gray-200 bg-white py-4 px-5 flex items-center justify-between">
+          <MobileFooter>
             <button
               type="button"
-              className="px-5 py-2 border rounded-lg shadow-sm hover:bg-gray-50"
+              className="px-4 py-3 border rounded-xl hover:bg-gray-50"
               onClick={() => {
                 resetForm({ values: savedValues });
                 setEditMode(false);
@@ -237,7 +237,7 @@ export function MobileClient({
             >
               Cancel
             </button>
-            <div className="flex gap-4">
+            <div className="flex gap-6">
               <button
                 type="button"
                 className=""
@@ -250,12 +250,12 @@ export function MobileClient({
               <button
                 type="submit"
                 onClick={() => setFieldValue("locationSearch", "")}
-                className="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-sm"
+                className="px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl"
               >
                 Save
               </button>
             </div>
-          </footer>
+          </MobileFooter>
         ) : null}
       </Form>
     </>

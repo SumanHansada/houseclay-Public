@@ -55,21 +55,11 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ id }) => {
               <X size={20} />
             </button>
           </div>
-        ) : (
-          <div className="relative w-full h-0">
-            <button
-              aria-label="Close"
-              onClick={handleClose}
-              className="absolute top-4 right-4 rounded-full p-2 border border-gray-200"
-            >
-              <X size={20} />
-            </button>
-          </div>
-        )}
+        ) : null}
       </DialogHeader>
 
       <DialogContent>
-        <Login />
+        <Login onClose={handleClose} />
       </DialogContent>
     </Dialog>
   );

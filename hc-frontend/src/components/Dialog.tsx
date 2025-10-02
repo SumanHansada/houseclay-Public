@@ -168,7 +168,7 @@ export const DialogHeader: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <div
-      className={`${isMobile ? " h-[55px] border-b border-gray-200" : ""} flex items-center justify-between `}
+      className={`${isMobile ? " h-[55px] " : ""} ${children ? "border-b border-gray-200" : ""} flex items-center justify-between `}
     >
       {children}
     </div>
@@ -186,7 +186,9 @@ export const DialogContent: React.FC<{ children: React.ReactNode }> = ({
 export const DialogFooter: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <div className="border-t border-t-gray-200 flex pb-safe-bottom-2 pt-2 xl:px-28 lg:px-14 md:px-8 px-4">
+  <div
+    className={`${children ? "border-t border-t-gray-200" : ""} flex pb-safe-bottom-2 pt-2 md:px-6 px-4`}
+  >
     {children}
   </div>
 );

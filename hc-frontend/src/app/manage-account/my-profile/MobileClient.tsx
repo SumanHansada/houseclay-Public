@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { getInitials } from "@/common/utils";
 import { FormPhoneField, FormTextField } from "@/form-components";
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
-import { MobileHeader } from "@/layout-components";
+import { MobileFooter, MobileHeader } from "@/layout-components";
 import { setHideStickyNavBar } from "@/store/appSlice";
 import { SvgIcon } from "@/utility-components";
 
@@ -196,10 +196,10 @@ export function MobileClient({
             </div>
 
             {/* Actions */}
-            <footer className="fixed bottom-0 inset-x-0 z-50 border-t border-gray-200 bg-white py-4 px-5 flex items-center justify-between">
+            <MobileFooter>
               <button
                 type="button"
-                className="px-5 py-2 border rounded-lg shadow-sm hover:bg-gray-50"
+                className="px-4 py-3 border rounded-xl hover:bg-gray-50"
                 onClick={handleCancel}
               >
                 Cancel
@@ -207,11 +207,11 @@ export function MobileClient({
 
               <button
                 type="submit"
-                className="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-sm"
+                className="px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl"
               >
                 Save
               </button>
-            </footer>
+            </MobileFooter>
           </Form>
         ) : (
           <div className="px-6 pt-4 pb-16 space-y-4">

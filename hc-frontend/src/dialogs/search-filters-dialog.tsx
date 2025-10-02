@@ -16,7 +16,6 @@ import {
   Venus,
   X,
 } from "lucide-react";
-import Image from "next/image";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
 import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
 import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
@@ -546,7 +545,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           value: "Apartment",
                           label: "Apartment",
                           icon: (
-                            <Image
+                            <ImageWithLoader
                               src="images/apartment.webp"
                               alt="Apartment"
                               height={75}
@@ -558,7 +557,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           value: "Independent House/Villa",
                           label: "Independent House/Villa",
                           icon: (
-                            <Image
+                            <ImageWithLoader
                               src="images/independent-house.webp"
                               alt="Independent House/Villa"
                               height={75}
@@ -570,7 +569,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           value: "Community Villa",
                           label: "Community Villa",
                           icon: (
-                            <Image
+                            <ImageWithLoader
                               src="images/community-villa.webp"
                               alt="Community Villa"
                               height={75}
@@ -582,7 +581,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           value: "Standalone Building",
                           label: "Standalone Building",
                           icon: (
-                            <Image
+                            <ImageWithLoader
                               src="images/standalone-building.webp"
                               alt="Standalone Building"
                               height={75}
@@ -828,7 +827,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       value: "Apartment",
                       label: "Apartment",
                       icon: (
-                        <Image
+                        <ImageWithLoader
                           src="images/apartment.webp"
                           alt="Apartment"
                           height={75}
@@ -840,7 +839,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       value: "Independent House/Villa",
                       label: "Independent House/Villa",
                       icon: (
-                        <Image
+                        <ImageWithLoader
                           src="images/independent-house.webp"
                           alt="Independent House/Villa"
                           height={75}
@@ -852,7 +851,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       value: "Community Villa",
                       label: "Community Villa",
                       icon: (
-                        <Image
+                        <ImageWithLoader
                           src="images/community-villa.webp"
                           alt="Community Villa"
                           height={75}
@@ -864,7 +863,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       value: "Standalone Building",
                       label: "Standalone Building",
                       icon: (
-                        <Image
+                        <ImageWithLoader
                           src="images/standalone-building.webp"
                           alt="Standalone Building"
                           height={75}
@@ -1054,7 +1053,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
         </div>
       </DialogContent>
       <DialogFooter>
-        <div className="flex border-gray-200 w-full px-6 justify-between max-md:px-4">
+        <div className="flex border-gray-200 w-full justify-between">
           <Button
             variant="outline"
             leftIcon={<RefreshCcw size={20} />}
