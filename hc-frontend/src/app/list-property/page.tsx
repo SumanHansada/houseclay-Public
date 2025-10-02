@@ -39,7 +39,7 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
-import { setAuthStep } from "@/store/authSlice";
+import { setAuthStep, setLoginFromAddProperty } from "@/store/authSlice";
 import { clearFormData } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 import { setCheckUser, setPhoneNo } from "@/store/userSlice";
@@ -175,6 +175,7 @@ const ListPropertyPage = dynamic(
               dispatch(setAuthStep(AuthStep.CREATE_USER));
             }
           }
+          dispatch(setLoginFromAddProperty(true));
           openDialog("login-dialog");
         }
       };
