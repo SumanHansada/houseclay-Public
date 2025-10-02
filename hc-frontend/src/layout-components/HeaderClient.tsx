@@ -9,10 +9,11 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { BENGALURU_LOCATION } from "@/common/constants";
+import { AuthStep } from "@/common/enums";
 import { UserDropdown } from "@/components/UserDropdown";
 import { useLogout } from "@/hooks/useLogout";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { initializeToken } from "@/store/authSlice";
+import { initializeToken, setAuthStep } from "@/store/authSlice";
 import { SvgIcon } from "@/utility-components";
 
 import { RootState } from "../store/store";
@@ -45,6 +46,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
 
   const onLogin = () => {
     closeAllDialogs();
+    dispatch(setAuthStep(AuthStep.NONE));
     openDialog("login-dialog");
   };
 

@@ -74,22 +74,25 @@ export const Dialog: React.FC<DialogProps> = ({
   exitAnimation = "animate-fade-out", // Default exit animation
   disableOverlayClick = false, // Default to allowing overlay click
 }) => {
-  const { isDialogOpen, closeDialog } = useDialog();
+  const { isDialogOpen, isDialogClosing, closeDialog } = useDialog();
   const isOpen = isDialogOpen(id);
+  const isClosing = isDialogClosing(id);
   const deviceContext = useDeviceContext();
   const dispatch = useDispatch();
   const hideStickyFooter = useSelector(
     (state: RootState) => state.app.hideStickyNavBar,
   );
-  const [isClosing, setIsClosing] = useState(false);
+  const [shouldRender, setShouldRender] = useState(isOpen);
   const dialogOverlayStyles = overlayStyles(type, hideStickyFooter);
 
   useEffect(() => {
-    if (!isOpen) {
-      setIsClosing(true);
-      setTimeout(() => setIsClosing(false), 300); // Animation duration
+    if (isOpen) {
+      setShouldRender(true);
+    } else if (!isOpen && !isClosing) {
+      // Only unmount when dialog is fully closed (not open and not closing)
+      setShouldRender(false);
     }
-  }, [isOpen]);
+  }, [isOpen, isClosing]);
 
   useEffect(() => {
     if (deviceContext?.isMobile && type === "fullscreen") {
@@ -111,7 +114,7 @@ export const Dialog: React.FC<DialogProps> = ({
     };
   }, [isOpen]);
 
-  if (!isOpen && !isClosing) return null;
+  if (!shouldRender) return null;
 
   const handleOverlayClick = (e: React.MouseEvent) => {
     e.stopPropagation();

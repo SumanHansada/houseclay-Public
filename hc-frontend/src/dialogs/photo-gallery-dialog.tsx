@@ -38,8 +38,8 @@ const PhotoGalleryDialog: React.FC<PhotoGalleryDialogProps> = ({
       id={id}
       type={isMobile ? "fullscreen" : "card"}
       onClose={onClose}
-      entryAnimation="animate-fade-in"
-      exitAnimation="animate-fade-out"
+      entryAnimation={isMobile ? "animate-slide-in-bottom" : "animate-fade-in"}
+      exitAnimation={isMobile ? "animate-slide-out-bottom" : "animate-fade-out"}
     >
       <DialogHeader>
         <div className="flex border-b border-gray-200 h-[55px] items-center w-full justify-between py-4 px-6 max-md:py-2 max-md:px-4">

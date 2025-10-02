@@ -110,8 +110,8 @@ const VerifyConnectsDialog: React.FC<VerifyConnectsDialogProps> = ({
       id={id}
       type={isMobile ? "bottom-sheet" : "card"}
       onClose={onClose}
-      entryAnimation="animate-fade-in"
-      exitAnimation="animate-fade-out"
+      entryAnimation={isMobile ? "animate-slide-in-bottom" : "animate-fade-in"}
+      exitAnimation={isMobile ? "animate-slide-out-bottom" : "animate-fade-out"}
       disableOverlayClick={true}
     >
       <DialogHeader>

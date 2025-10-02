@@ -221,8 +221,8 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
       id={id}
       type={isMobile ? "fullscreen" : "card"}
       onClose={onClose}
-      entryAnimation="animate-fade-in"
-      exitAnimation="animate-fade-out"
+      entryAnimation={isMobile ? "animate-slide-in-bottom" : "animate-fade-in"}
+      exitAnimation={isMobile ? "animate-slide-out-bottom" : "animate-fade-out"}
     >
       <DialogHeader>
         <div className="flex border-gray-200 items-center w-full justify-between py-4 px-6 max-md:py-2 max-md:px-4">

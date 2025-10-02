@@ -39,7 +39,7 @@ const MyPropertyActionsDialog: React.FC<MyPropertyActionsDialogProps> = ({
       onClose={onClose}
       width={100}
       entryAnimation="animate-slide-in-bottom"
-      exitAnimation="animate-slide-out-top"
+      exitAnimation="animate-slide-out-bottom"
     >
       <DialogHeader>
         <div className="py-2 px-8 flex flex-col justify-between items-center w-full">

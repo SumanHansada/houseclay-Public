@@ -33,7 +33,7 @@ const EmailVerificationSuccessDialog: React.FC<
       onClose={onClose}
       width={isMobile ? 100 : 20}
       entryAnimation={isMobile ? "animate-slide-in-bottom" : "animate-fade-in"}
-      exitAnimation={isMobile ? "animate-slide-out-top" : "animate-fade-out"}
+      exitAnimation={isMobile ? "animate-slide-out-bottom" : "animate-fade-out"}
     >
       <DialogHeader>
         <div

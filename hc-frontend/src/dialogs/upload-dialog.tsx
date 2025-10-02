@@ -67,8 +67,8 @@ const UploadDialog: React.FC<UploadDialogProps> = ({ id }) => {
       id={id}
       type={isMobile ? "bottom-sheet" : "card"}
       onClose={handleClose}
-      entryAnimation="animate-fade-in"
-      exitAnimation="animate-fade-out"
+      entryAnimation={isMobile ? "animate-slide-in-bottom" : "animate-fade-in"}
+      exitAnimation={isMobile ? "animate-slide-out-bottom" : "animate-fade-out"}
     >
       <DialogHeader>
         <div
