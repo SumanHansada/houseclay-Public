@@ -1,7 +1,6 @@
-import "react-international-phone/style.css";
-
 import React from "react";
-import { PhoneInput } from "react-international-phone";
+
+import LazyPhoneInput from "@/components/LazyPhoneInput";
 
 interface PhoneFieldProps {
   name: string;
@@ -51,9 +50,8 @@ const PhoneField: React.FC<PhoneFieldProps> = ({
       )}
 
       <div className="relative">
-        <PhoneInput
+        <LazyPhoneInput
           name={id || name}
-          disableFormatting={true}
           defaultCountry={defaultCountry}
           value={value}
           placeholder={placeholder}

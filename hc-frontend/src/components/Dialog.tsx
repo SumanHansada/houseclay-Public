@@ -165,7 +165,7 @@ export const DialogHeader: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <div
-      className={`${isMobile ? " h-[55px]" : ""} flex items-center justify-between border-b border-gray-200`}
+      className={`${isMobile ? " h-[55px] border-b border-gray-200" : ""} flex items-center justify-between `}
     >
       {children}
     </div>

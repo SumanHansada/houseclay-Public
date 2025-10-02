@@ -1,13 +1,10 @@
 "use client";
 
-import "react-international-phone/style.css";
-
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { ShieldCheck, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { PhoneInput } from "react-international-phone";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -21,6 +18,7 @@ import {
 import Carousel2D from "@/components/Carousel2D";
 import CustomerSupportBanner from "@/components/CustomerSupportBanner";
 import GetStarted from "@/components/GetStarted";
+import LazyPhoneInput from "@/components/LazyPhoneInput";
 import ListingOptions from "@/components/ListingOptions";
 import ListPropertyAdvantages from "@/components/ListPropertyAdvantages";
 import ListWithUs from "@/components/ListWithUs";
@@ -44,7 +42,7 @@ import {
 import { setAuthStep } from "@/store/authSlice";
 import { clearFormData } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
-import { setCheckUser } from "@/store/userSlice";
+import { setCheckUser, setPhoneNo } from "@/store/userSlice";
 import { ImageWithLoader } from "@/utility-components";
 
 import ListPropertyLoading from "./loading";
@@ -64,7 +62,9 @@ const ListPropertyPage = dynamic(
       );
 
       const dispatch = useDispatch();
-      const [phoneNo, setPhoneNo] = useState("");
+      const { phoneNo } = useSelector(
+        (state: RootState) => state.user.userDetail,
+      );
       const [acceptTerms, setAcceptTerms] = useState(false);
       const [mobileStep, setMobileStep] = useState<ListPropertyMobileStep>(
         ListPropertyMobileStep.GET_STARTED,
@@ -232,12 +232,12 @@ const ListPropertyPage = dynamic(
                         <label className="block mb-2 text-base font-medium text-gray-700">
                           Phone Number
                         </label>
-                        <PhoneInput
+                        <LazyPhoneInput
                           defaultCountry="in"
-                          disableFormatting={true}
                           value={phoneNo}
+                          disableFormatting={true}
                           placeholder={"Enter phone number"}
-                          onChange={(value) => setPhoneNo(value)}
+                          onChange={(value) => dispatch(setPhoneNo(value))}
                           className="custom-phone-input w-full border border-gray-300 rounded-lg px-2 py-0.5 focus:ring-2 focus:ring-blue-500"
                         />
                       </div>

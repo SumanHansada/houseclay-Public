@@ -27,3 +27,16 @@ axiosInstance.interceptors.request.use(
 );
 
 export default axiosInstance;
+
+// Add a response interceptor to handle 401 errors globally on the client
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error?.response?.status === 401) {
+      if (typeof window !== "undefined") {
+        window.location.assign("/login");
+      }
+    }
+    return Promise.reject(error);
+  },
+);

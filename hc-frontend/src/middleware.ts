@@ -32,9 +32,9 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // If no token is present, redirect to home
+  // If no token is present, redirect to login
   if (!token) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   return NextResponse.next();

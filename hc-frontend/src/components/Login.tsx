@@ -1,10 +1,7 @@
 "use client";
 
-import "react-international-phone/style.css";
-
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { PhoneInput } from "react-international-phone";
 import { useDispatch, useSelector } from "react-redux";
 
 import { AuthStep } from "@/common/enums";
@@ -26,16 +23,19 @@ import {
   setCheckUser,
   setEmailID,
   setName,
+  setPhoneNo,
   setUserDetail,
 } from "@/store/userSlice";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
+
+import LazyPhoneInput from "./LazyPhoneInput";
 
 const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const Login = () => {
   const { closeDialog } = useDialog();
   const authStep = useSelector((state: RootState) => state.auth.authStep);
-  const { name, emailID } = useSelector(
+  const { name, emailID, phoneNo } = useSelector(
     (state: RootState) => state.user.userDetail,
   );
   const loginFromAddProperty = useSelector(
@@ -51,7 +51,6 @@ const Login = () => {
   const router = useRouter();
 
   const [otpCode, setOtpCode] = useState<string[]>(["", "", "", ""]);
-  const [phoneNo, setPhoneNo] = useState("");
 
   const ref1 = useRef<HTMLInputElement>(null);
   const ref2 = useRef<HTMLInputElement>(null);
@@ -204,15 +203,14 @@ const Login = () => {
   const isVerifyEnabled = otpCode.every((digit) => digit && digit !== "");
 
   return (
-    <div className="flex items-center justify-center h-full bg-white rounded-lg">
+    <div className="flex items-center justify-center h-full bg-white rounded-xl">
       {!isMobile && (
-        <div className="relative w-2/5 rounded-l-lg h-[420px] 2xl:h-[480px] overflow-hidden">
+        <div className="w-5/12 min-h-[500px]">
           <ImageWithLoader
             src="/images/login.webp"
             alt="Login"
             fill
-            className="object-center"
-            sizes="100vw"
+            className="rounded-l-lg object-cover w-full min-h-[500px]"
             priority
           />
         </div>
@@ -244,12 +242,12 @@ const Login = () => {
                 >
                   Phone Number
                 </label>
-                <PhoneInput
+                <LazyPhoneInput
                   defaultCountry="in"
-                  disableFormatting={true}
                   value={phoneNo}
+                  disableFormatting={true}
                   placeholder={"Enter phone number"}
-                  onChange={(value) => setPhoneNo(value)}
+                  onChange={(value) => dispatch(setPhoneNo(value))}
                   className="custom-phone-input w-full border border-gray-300 rounded-lg px-2 py-0.5 focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -297,12 +295,12 @@ const Login = () => {
                 >
                   Phone Number<span className="text-red-600">*</span>
                 </label>
-                <PhoneInput
+                <LazyPhoneInput
                   defaultCountry="in"
-                  disableFormatting={true}
                   value={phoneNo}
+                  disableFormatting={true}
                   placeholder={"Enter phone number"}
-                  onChange={(value) => setPhoneNo(value)}
+                  onChange={(value) => dispatch(setPhoneNo(value))}
                   className="custom-phone-input w-full border border-gray-300 rounded-lg px-2 py-0.5 focus:ring-2 focus:ring-blue-500"
                 />
                 <label
