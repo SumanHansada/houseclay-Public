@@ -17,7 +17,6 @@ import {
   setEmailID,
   setName,
   setUserDetail,
-  UserDetail,
 } from "@/store/userSlice";
 import { ImageWithLoader } from "@/utility-components";
 

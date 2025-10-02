@@ -57,6 +57,7 @@ import {
 } from "@/common/utils";
 import { ContactOwnerLoginDialog, PhotoGalleryDialog } from "@/dialogs";
 import ReportListingDialog from "@/dialogs/report-listing-dialog";
+import UnlockOwnerDetailsDialog from "@/dialogs/unlock-owner-details-dialog";
 import { MobileFooter } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -69,7 +70,6 @@ import {
 import { RootState } from "@/store/store";
 import { PhotoGallery } from "@/utility-components";
 import { GoogleMapsDirection } from "@/utility-components";
-import UnlockOwnerDetailsDialog from "@/dialogs/unlock-owner-details-dialog";
 
 const BalconyIcon = BalconyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const BuildUpAreaIcon = BuildUpAreaIconSvg as React.FC<

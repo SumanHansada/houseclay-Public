@@ -21,7 +21,7 @@ const UnlockOwnerDetailsDialog: React.FC<UnlockOwnerDetailsProps> = ({
     <Dialog
       id={id}
       type={isMobile ? "fullscreen" : "card"}
-      width={isMobile ? 100 : 45}
+      width={isMobile ? 100 : 55}
       onClose={onClose}
       entryAnimation={isMobile ? "animate-slide-in-right" : "animate-fade-in"}
       exitAnimation={isMobile ? "animate-slide-out-right" : "animate-fade-out"}
