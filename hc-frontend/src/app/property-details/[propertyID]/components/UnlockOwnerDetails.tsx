@@ -6,8 +6,8 @@ import { useDispatch } from "react-redux";
 
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useContactOwnerMutation } from "@/store/apiSlice";
-import { setConnectBal } from "@/store/authSlice";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
+import { setConnectBal } from "@/store/userSlice";
 
 interface UnlockOwnerDetailsProps {
   onClose: () => void;
@@ -87,7 +87,7 @@ export const UnlockOwnerDetails = ({
     setLastError(undefined);
     try {
       const res = await contactOwner({ propertyID }).unwrap();
-      if (typeof res?.connectBal === "number") {
+      if (res) {
         dispatch(setConnectBal(res.connectBal));
       }
       setStep("unlocked");

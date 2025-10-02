@@ -69,6 +69,7 @@ import {
 import { RootState } from "@/store/store";
 import { PhotoGallery } from "@/utility-components";
 import { GoogleMapsDirection } from "@/utility-components";
+import UnlockOwnerDetailsDialog from "@/dialogs/unlock-owner-details-dialog";
 
 const BalconyIcon = BalconyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const BuildUpAreaIcon = BuildUpAreaIconSvg as React.FC<

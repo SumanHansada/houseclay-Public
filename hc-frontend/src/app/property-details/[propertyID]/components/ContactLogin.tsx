@@ -10,16 +10,15 @@ import {
   useLoginMutation,
   useRegisterMutation,
 } from "@/store/apiSlice";
+import { setAuthStep, setToken } from "@/store/authSlice";
+import { RootState } from "@/store/store";
 import {
-  AuthUserDetails,
-  setAuthStep,
-  setAuthUser,
+  setCheckUser,
   setEmailID,
   setName,
-  setToken,
-} from "@/store/authSlice";
-import { RootState } from "@/store/store";
-import { setCheckUser } from "@/store/userSlice";
+  setUserDetail,
+  UserDetail,
+} from "@/store/userSlice";
 import { ImageWithLoader } from "@/utility-components";
 
 const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -30,8 +29,9 @@ interface ContactLoginProps {
 
 export const ContactLogin = ({ onSuccess }: ContactLoginProps) => {
   const authStep = useSelector((state: RootState) => state.auth.authStep);
-  const emailID = useSelector((state: RootState) => state.auth.emailID);
-  const name = useSelector((state: RootState) => state.auth.name);
+  const { name, emailID } = useSelector(
+    (state: RootState) => state.user.userDetail,
+  );
 
   const checkUser = useSelector((state: RootState) => state.user.checkUser);
   const [login] = useLoginMutation();
@@ -95,11 +95,7 @@ export const ContactLogin = ({ onSuccess }: ContactLoginProps) => {
           otpCode: otpCode.join(""),
         });
         if (registerResponse.data) {
-          dispatch(
-            setAuthUser({
-              authUserDetails: registerResponse.data as AuthUserDetails,
-            }),
-          );
+          dispatch(setUserDetail(registerResponse.data));
           dispatch(setToken(registerResponse.data.token));
         }
       } else {
@@ -110,11 +106,7 @@ export const ContactLogin = ({ onSuccess }: ContactLoginProps) => {
           otpCode: otpCode.join(""),
         });
         if (loginResponse.data) {
-          dispatch(
-            setAuthUser({
-              authUserDetails: loginResponse.data as AuthUserDetails,
-            }),
-          );
+          dispatch(setUserDetail(loginResponse.data));
           dispatch(setToken(loginResponse.data.token));
         }
       }
@@ -244,6 +236,7 @@ export const ContactLogin = ({ onSuccess }: ContactLoginProps) => {
                 </label>
                 <PhoneInput
                   defaultCountry="in"
+                  disableFormatting={true}
                   value={phoneNo}
                   placeholder={"Enter phone number"}
                   onChange={(value) => setPhoneNo(value)}
