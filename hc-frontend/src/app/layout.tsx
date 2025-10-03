@@ -53,11 +53,22 @@ export default function RootLayout({
         />
         <meta name="application-name" content="Houseclay" />
 
+        {/* PWA Manifest */}
+        <link rel="manifest" href="/manifest.json" />
+
         {/* Critical meta tags - must come before splash screens */}
         <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Houseclay" />
         <meta name="theme-color" content="#ED1E26" />
+        <meta name="msapplication-TileColor" content="#ED1E26" />
+        <meta name="msapplication-tap-highlight" content="no" />
+
+        {/* Android Chrome specific */}
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="application-name" content="Houseclay" />
+
         <link rel="apple-touch-icon" href="/splash_screens/icon.png" />
 
         {/* <!-- STARTUP IMAGES - iOS only --> */}
@@ -281,6 +292,27 @@ export default function RootLayout({
           defer
           src="https://checkout.razorpay.com/v1/checkout.js"
           strategy="afterInteractive"
+        />
+
+        {/* Service Worker Registration */}
+        <Script
+          id="sw-registration"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                      console.log('SW registered: ', registration);
+                    })
+                    .catch(function(registrationError) {
+                      console.log('SW registration failed: ', registrationError);
+                    });
+                });
+              }
+            `,
+          }}
         />
       </body>
     </html>

@@ -1,22 +1,28 @@
 {
-  "name": "Houseclay",
+  "name": "Houseclay - No Middleman, Just Connects",
   "short_name": "Houseclay",
+  "description": "Houseclay - No Middleman, Just Connects",
+  "start_url": "/",
+  "scope": "/",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "maskable any"
     },
     {
       "src": "/web-app-manifest-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "maskable any"
     }
   ],
   "theme_color": "#ED1E26",
   "background_color": "#ffffff",
   "display": "standalone",
-  "orientation": "portrait-primary"
+  "orientation": "portrait-primary",
+  "categories": ["business", "productivity", "utilities"],
+  "lang": "en",
+  "dir": "ltr"
 }
