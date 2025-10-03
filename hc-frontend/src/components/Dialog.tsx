@@ -4,10 +4,7 @@ import { FocusTrap } from "focus-trap-react";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  DeviceContextProps,
-  useDeviceContext,
-} from "@/providers/DeviceContextProvider";
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
 import { RootState } from "@/store/store";
@@ -26,10 +23,9 @@ interface DialogProps {
 
 const getDialogStyles = (
   type: string,
-  deviceContext?: DeviceContextProps,
+  isMobile?: boolean,
   hideStickyFooter?: boolean,
 ): string => {
-  const isMobile = deviceContext?.isMobile;
   switch (type) {
     case "fullscreen":
       return `fixed inset-0 bg-white flex flex-col ${
@@ -77,7 +73,7 @@ export const Dialog: React.FC<DialogProps> = ({
   const { isDialogOpen, isDialogClosing, closeDialog } = useDialog();
   const isOpen = isDialogOpen(id);
   const isClosing = isDialogClosing(id);
-  const deviceContext = useDeviceContext();
+  const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
   const hideStickyFooter = useSelector(
     (state: RootState) => state.app.hideStickyNavBar,
@@ -95,12 +91,12 @@ export const Dialog: React.FC<DialogProps> = ({
   }, [isOpen, isClosing]);
 
   useEffect(() => {
-    if (deviceContext?.isMobile && type === "fullscreen") {
+    if (isMobile && type === "fullscreen") {
       dispatch(setHideStickyNavBar(true));
-    } else if (deviceContext?.isMobile && type === "bottom-sheet") {
+    } else if (isMobile && type === "bottom-sheet") {
       dispatch(setHideStickyNavBar(true));
     }
-  }, [deviceContext?.isMobile, type, dispatch]);
+  }, [isMobile, type, dispatch]);
 
   useEffect(() => {
     if (isOpen) {
@@ -124,7 +120,7 @@ export const Dialog: React.FC<DialogProps> = ({
     }
   };
 
-  const dialogStyles = getDialogStyles(type, deviceContext, hideStickyFooter);
+  const dialogStyles = getDialogStyles(type, isMobile, hideStickyFooter);
 
   return (
     <FocusTrap
@@ -154,6 +150,14 @@ export const Dialog: React.FC<DialogProps> = ({
           }}
           onClick={(e) => e.stopPropagation()}
         >
+          {isMobile && type === "bottom-sheet" && (
+            <div
+              id="dragArea"
+              className="w-full flex justify-center items-center px-4 pt-2"
+            >
+              <div className="w-12 h-1.5 rounded-full bg-gray-300"></div>
+            </div>
+          )}
           {children}
         </div>
       </div>
