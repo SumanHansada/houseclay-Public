@@ -125,7 +125,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
         router.push("/list-property");
         dispatch(setLoginFromAddProperty(false));
       } else {
-        router.back();
+        router.replace("/");
       }
     } catch (err) {
       console.error(err);
