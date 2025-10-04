@@ -6,7 +6,7 @@ import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { formatINRCurrency, pascalCase } from "@/common/utils";
 import { UserOwnedProperties } from "@/interfaces/User";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { ActionMenu, ActionOption } from "@/utility-components";
+import { Popover } from "@/utility-components";
 
 export interface PropertyCardProps {
   property: UserOwnedProperties;
@@ -26,17 +26,6 @@ export function PropertyCard({
   const isResale = property.propertyCategory === PropertyCategory.RESALE;
   const amount = isResale ? property.price : property.rent;
   const formattedAmount = amount != null ? formatINRCurrency(amount) : "NA";
-
-  // Desktop menu options
-  const options: ActionOption[] = [
-    { id: "dashboard", label: "Open Dashboard" },
-    { id: "sold", label: "Mark as Sold/Rented" },
-  ];
-
-  const handleSelect = (opt: ActionOption) => {
-    if (opt.id === "dashboard") onDashboard(property.propertyID);
-    if (opt.id === "sold") onMarkSold(property.propertyID);
-  };
 
   return (
     <div className="rounded-xl bg-gray-50 p-4 shadow-sm">
@@ -72,15 +61,44 @@ export function PropertyCard({
 
             {/* Desktop: use ActionMenu (portal + fixed) */}
             <div className="max-md:hidden">
-              <ActionMenu
-                options={options}
-                onSelect={handleSelect}
-                alignEnd
-                minWidthPx={180}
-                className="inline-flex items-center justify-center rounded-md p-1 hover:bg-gray-100"
+              <Popover
+                trigger="click"
+                align="end"
+                offset={2}
+                panelClassName="w-44 py-1 text-sm"
+                content={({ close }) => (
+                  <div>
+                    <button
+                      type="button"
+                      className="block w-full px-3 py-2 text-left hover:bg-gray-100"
+                      onClick={() => {
+                        onDashboard(property.propertyID);
+                        close();
+                      }}
+                    >
+                      Open Dashboard
+                    </button>
+                    <button
+                      type="button"
+                      className="block w-full px-3 py-2 text-left hover:bg-gray-100"
+                      onClick={() => {
+                        onMarkSold(property.propertyID);
+                        close();
+                      }}
+                    >
+                      Mark as Sold/Rented
+                    </button>
+                  </div>
+                )}
               >
-                <Ellipsis size={25} />
-              </ActionMenu>
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center rounded-md p-1 hover:bg-gray-100"
+                  aria-label="Actions"
+                >
+                  <Ellipsis size={24} />
+                </button>
+              </Popover>
             </div>
           </div>
         </div>

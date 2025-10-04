@@ -14,9 +14,10 @@ import { UserDropdown } from "@/components/UserDropdown";
 import { useLogout } from "@/hooks/useLogout";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { initializeToken, setAuthStep } from "@/store/authSlice";
-import { InfoTip, SvgIcon } from "@/utility-components";
+import { SvgIcon } from "@/utility-components";
 
 import { RootState } from "../store/store";
+import { Popover } from "@/utility-components";
 
 type User = {
   name: string;
@@ -156,10 +157,10 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
             </Link>
 
             {/* Coin Counter with hover tip */}
-            <InfoTip
+            <Popover
+              trigger="hover"
               enabled={showLoginTip || showZeroTip}
-              minWidthPx={220}
-              className="pointer-events-auto"
+              panelClassName="min-w-[220px] p-3 text-sm"
               content={showLoginTip ? <InfoTipLogin /> : <InfoTipZeroBalance />}
             >
               <Link
@@ -169,7 +170,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
                 <Coin height={20} width={20} />
                 <span>{connectBal}</span>
               </Link>
-            </InfoTip>
+            </Popover>
 
             {/* Login Button */}
             {token ? (

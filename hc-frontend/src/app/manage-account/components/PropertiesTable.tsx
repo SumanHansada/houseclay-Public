@@ -6,7 +6,7 @@ import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { formatINRCurrency, pascalCase } from "@/common/utils";
 import { Column, DataTable } from "@/components/DataTable";
 import { UserOwnedProperties } from "@/interfaces/User";
-import { ActionMenu, type ActionOption } from "@/utility-components";
+import { Popover } from "@/utility-components";
 
 export function PropertyTable({
   properties,
@@ -92,30 +92,44 @@ export function PropertyTable({
       label: "Action",
       className: "w-20 text-center",
       render: (item) => (
-        <div className="flex justify-center">
-          {/* <div
-          className="flex justify-center"
-          onMouseDown={(e) => e.stopPropagation()}
-          onClick={(e) => e.stopPropagation()}
-          onKeyDown={(e) => e.stopPropagation()}
-          onPointerDownCapture={(e) => e.stopPropagation()}
-        > */}
-          <ActionMenu<ActionOption>
-            alignEnd
-            minWidthPx={180}
-            options={[
-              { id: "dashboard", label: "Open Dashboard" },
-              { id: "sold", label: "Mark as Sold/Rented" },
-            ]}
-            onSelect={(opt: ActionOption) => {
-              if (opt.id === "dashboard") onDashboard(item.propertyID);
-              if (opt.id === "sold") onMarkSold(item.propertyID);
-            }}
+        <Popover
+          trigger="click"
+          align="end"
+          offset={2}
+          panelClassName="w-44 py-1 text-sm"
+          content={({ close }) => (
+            <div>
+              <button
+                type="button"
+                className="block w-full px-3 py-2 text-left hover:bg-gray-100"
+                onClick={() => {
+                  onDashboard(item.propertyID);
+                  close();
+                }}
+              >
+                Open Dashboard
+              </button>
+              <button
+                type="button"
+                className="block w-full px-3 py-2 text-left hover:bg-gray-100"
+                onClick={() => {
+                  onMarkSold(item.propertyID);
+                  close();
+                }}
+              >
+                Mark as Sold/Rented
+              </button>
+            </div>
+          )}
+        >
+          <button
+            type="button"
             className="inline-flex items-center justify-center rounded-md p-1 hover:bg-gray-100"
+            aria-label="Actions"
           >
             <Ellipsis size={24} />
-          </ActionMenu>
-        </div>
+          </button>
+        </Popover>
       ),
     },
   ];
