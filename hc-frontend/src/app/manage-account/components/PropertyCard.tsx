@@ -6,8 +6,7 @@ import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { formatINRCurrency, pascalCase } from "@/common/utils";
 import { UserOwnedProperties } from "@/interfaces/User";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-
-import { ActionMenu, type ActionOption } from "./ActionMenu";
+import { ActionMenu, ActionOption } from "@/utility-components";
 
 export interface PropertyCardProps {
   property: UserOwnedProperties;

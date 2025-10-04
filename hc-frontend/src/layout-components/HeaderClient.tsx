@@ -14,7 +14,7 @@ import { UserDropdown } from "@/components/UserDropdown";
 import { useLogout } from "@/hooks/useLogout";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { initializeToken, setAuthStep } from "@/store/authSlice";
-import { SvgIcon } from "@/utility-components";
+import { InfoTip, SvgIcon } from "@/utility-components";
 
 import { RootState } from "../store/store";
 
@@ -28,6 +28,22 @@ export interface HeaderClientProps {
 
 const Coin = CoinSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
+export const InfoTipLogin: React.FC = () => (
+  <div className="space-y-1">
+    <div className="font-medium">Login to earn Connects</div>
+    <div className="text-gray-600">Unlock owner details, faster.</div>
+  </div>
+);
+
+export const InfoTipZeroBalance: React.FC = () => (
+  <div className="space-y-1">
+    <div className="font-medium text-red-600">Insufficient connects</div>
+    <Link href="/buy-connects" className="underline">
+      Buy Connects
+    </Link>
+  </div>
+);
+
 const HeaderClient: React.FC<HeaderClientProps> = () => {
   const hideHeader = useSelector((state: RootState) => state.app.hideHeader);
   const token = useSelector((state: RootState) => state.auth.token);
@@ -37,6 +53,8 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
   const connectBal = useSelector(
     (state: RootState) => state.user.userDetail.connectBal,
   );
+  const showLoginTip = !token;
+  const showZeroTip = !!token && Number(connectBal) === 0;
 
   const dispatch = useDispatch();
   const { logout } = useLogout();
@@ -137,14 +155,21 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
               </span>
             </Link>
 
-            {/* Coin Counter */}
-            <Link
-              href="/manage-account/connects"
-              className="flex items-center xl:px-4 lg:px-3 md:px-2 px-2 py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100"
+            {/* Coin Counter with hover tip */}
+            <InfoTip
+              enabled={showLoginTip || showZeroTip}
+              minWidthPx={220}
+              className="pointer-events-auto"
+              content={showLoginTip ? <InfoTipLogin /> : <InfoTipZeroBalance />}
             >
-              <Coin height={20} width={20} />
-              <span>{connectBal}</span>
-            </Link>
+              <Link
+                href="/manage-account/connects"
+                className="flex items-center xl:px-4 lg:px-3 md:px-2 px-2 py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100"
+              >
+                <Coin height={20} width={20} />
+                <span>{connectBal}</span>
+              </Link>
+            </InfoTip>
 
             {/* Login Button */}
             {token ? (

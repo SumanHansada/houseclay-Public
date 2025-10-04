@@ -6,8 +6,7 @@ import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { formatINRCurrency, pascalCase } from "@/common/utils";
 import { Column, DataTable } from "@/components/DataTable";
 import { UserOwnedProperties } from "@/interfaces/User";
-
-import { ActionMenu, type ActionOption } from "./ActionMenu";
+import { ActionMenu, type ActionOption } from "@/utility-components";
 
 export function PropertyTable({
   properties,
@@ -94,6 +93,13 @@ export function PropertyTable({
       className: "w-20 text-center",
       render: (item) => (
         <div className="flex justify-center">
+          {/* <div
+          className="flex justify-center"
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
+          onPointerDownCapture={(e) => e.stopPropagation()}
+        > */}
           <ActionMenu<ActionOption>
             alignEnd
             minWidthPx={180}
