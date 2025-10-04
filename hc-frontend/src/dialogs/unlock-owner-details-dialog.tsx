@@ -37,7 +37,7 @@ const UnlockOwnerDetailsDialog: React.FC<UnlockOwnerDetailsProps> = ({
           <button
             aria-label="Close"
             onClick={onClose}
-            className="absolute p-2 right-2 top-1/2 -translate-y-1/2 rounded-full md:right-4 md:border md:border-gray-200 md:top-4 md:translate-y-0"
+            className="absolute p-2 right-2 top-1/2 -translate-y-1/2 rounded-full border border-gray-200 md:border-0 md:right-4 md:top-4 md:translate-y-0"
           >
             <X size={24} />
           </button>
