@@ -1,11 +1,12 @@
 "use client";
 
 import React, {
+  useCallback,
   useEffect,
+  useId,
   useLayoutEffect,
   useRef,
   useState,
-  useId,
 } from "react";
 import { createPortal } from "react-dom";
 
@@ -17,24 +18,23 @@ type Content =
 
 interface PopoverProps {
   trigger: Trigger;
-  align?: Align; // start | center | end
-  /** Pass false to render just children (no popover), avoids ternaries */
-  enabled?: boolean;
-  /** Gap between trigger and panel */
-  offset?: number;
-  /** Panel content (node or render fn with close()) */
+  align?: Align; // bottom placement only; horizontal align
+  enabled?: boolean; // if false, behaves as plain children
+  offset?: number; // px gap between trigger and panel
   content: Content | null | false | undefined;
-  /** Classes */
+
   className?: string; // wrapper around trigger
   panelClassName?: string; // panel
-  /** Behaviour */
-  portal?: boolean; // render into body (default true)
+
+  portal?: boolean; // render into body
   zIndex?: number; // default 60
-  stopPropagation?: boolean; // default true (helps inside tables)
+  stopPropagation?: boolean; // default true
 }
 
 const clamp = (v: number, min: number, max: number) =>
   Math.max(min, Math.min(max, v));
+
+type NativeMouseEventLike = { stopImmediatePropagation?: () => void };
 
 export default function Popover({
   trigger,
@@ -49,8 +49,7 @@ export default function Popover({
   stopPropagation = true,
   children,
 }: React.PropsWithChildren<PopoverProps>) {
-  // Short-circuit: nothing to show
-  if (!enabled || !content) return <>{children}</>;
+  const isDisabled = !enabled || !content;
 
   const triggerRef = useRef<HTMLSpanElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
@@ -70,7 +69,8 @@ export default function Popover({
     setEffectiveTrigger(isTouch && trigger === "hover" ? "click" : trigger);
   }, [trigger]);
 
-  const computePosition = () => {
+  // Compute bottom placement + horizontal alignment
+  const computePosition = useCallback(() => {
     if (!triggerRef.current || !panelRef.current) return;
     const tr = triggerRef.current.getBoundingClientRect();
     const pr = panelRef.current.getBoundingClientRect();
@@ -80,25 +80,22 @@ export default function Popover({
     const top = Math.min(tr.bottom + offset, vh - pr.height - 8);
 
     let left: number;
-    if (align === "start") {
-      left = tr.left;
-    } else if (align === "center") {
-      left = tr.left + tr.width / 2 - pr.width / 2;
-    } else {
-      // end
-      left = tr.right - pr.width;
-    }
+    if (align === "start") left = tr.left;
+    else if (align === "center") left = tr.left + tr.width / 2 - pr.width / 2;
+    else left = tr.right - pr.width;
     left = clamp(left, 8, vw - pr.width - 8);
 
     setCoords({ top, left });
-  };
+  }, [align, offset]);
 
   const useIsoLayout =
     typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
+  // Recompute on open/scroll/resize
   useIsoLayout(() => {
-    if (!open) return;
+    if (!open || isDisabled) return;
     computePosition();
+
     const onScroll = () => computePosition();
     const onResize = () => computePosition();
     window.addEventListener("scroll", onScroll, true);
@@ -107,13 +104,14 @@ export default function Popover({
       window.removeEventListener("scroll", onScroll, true);
       window.removeEventListener("resize", onResize);
     };
-  }, [open]);
+  }, [open, isDisabled, computePosition]);
 
   useEffect(() => setMounted(true), []);
 
   // Close on ESC + outside click
   useEffect(() => {
-    if (!open) return;
+    if (!open || isDisabled) return;
+
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
     };
@@ -134,9 +132,9 @@ export default function Popover({
       document.removeEventListener("keydown", onKey);
       document.removeEventListener("mousedown", onDown, true);
     };
-  }, [open]);
+  }, [open, isDisabled]);
 
-  // Hover intent (simple)
+  // Hover intent
   const [enterTimer, setEnterTimer] = useState<number | null>(null);
   const [leaveTimer, setLeaveTimer] = useState<number | null>(null);
   const clearTimers = () => {
@@ -147,21 +145,21 @@ export default function Popover({
   };
 
   const onTriggerMouseEnter = () => {
-    if (effectiveTrigger !== "hover") return;
+    if (isDisabled || effectiveTrigger !== "hover") return;
     clearTimers();
     setEnterTimer(window.setTimeout(() => setOpen(true), 60));
   };
   const onTriggerMouseLeave = () => {
-    if (effectiveTrigger !== "hover") return;
+    if (isDisabled || effectiveTrigger !== "hover") return;
     clearTimers();
     setLeaveTimer(window.setTimeout(() => setOpen(false), 120));
   };
   const onPanelMouseEnter = () => {
-    if (effectiveTrigger !== "hover") return;
+    if (isDisabled || effectiveTrigger !== "hover") return;
     clearTimers();
   };
   const onPanelMouseLeave = () => {
-    if (effectiveTrigger !== "hover") return;
+    if (isDisabled || effectiveTrigger !== "hover") return;
     clearTimers();
     setLeaveTimer(window.setTimeout(() => setOpen(false), 120));
   };
@@ -169,33 +167,37 @@ export default function Popover({
   const onTriggerClick = (e: React.MouseEvent) => {
     if (stopPropagation) {
       e.stopPropagation();
-      (e.nativeEvent as any).stopImmediatePropagation?.();
+      (
+        e.nativeEvent as unknown as NativeMouseEventLike
+      ).stopImmediatePropagation?.();
     }
-    if (effectiveTrigger !== "click") return;
+    if (isDisabled || effectiveTrigger !== "click") return;
     setOpen((v) => !v);
   };
   const onTriggerMouseDown = (e: React.MouseEvent) => {
     if (!stopPropagation) return;
     e.stopPropagation();
-    (e.nativeEvent as any).stopImmediatePropagation?.();
+    (
+      e.nativeEvent as unknown as NativeMouseEventLike
+    ).stopImmediatePropagation?.();
   };
 
+  // Reposition if panel size changes after mount (fonts/icons load)
   useEffect(() => {
-    if (!open || !panelRef.current) return;
+    if (!open || isDisabled || !panelRef.current) return;
     const ro = new ResizeObserver(() => computePosition());
     ro.observe(panelRef.current);
     return () => ro.disconnect();
-  }, [open]);
+  }, [open, isDisabled, computePosition]);
 
-  // 1) Render panel when `open` (remove `&& coords`)
+  // Panel (render when open; hide until coords are known)
   const panel = open ? (
     <div
       ref={panelRef}
       id={id}
       role={effectiveTrigger === "hover" ? "tooltip" : "menu"}
-      className={`fixed rounded-md border border-gray-200 bg-white shadow-xl ${panelClassName ?? ""}`}
+      className={`fixed rounded-xl border border-gray-200 bg-white shadow-xl ${panelClassName ?? ""}`}
       style={{
-        // 2) While we don't have coords yet, place at 0,0 but hide it
         top: coords?.top ?? 0,
         left: coords?.left ?? 0,
         zIndex,
@@ -206,16 +208,22 @@ export default function Popover({
       onMouseDown={(e) => {
         if (!stopPropagation) return;
         e.stopPropagation();
-        (e.nativeEvent as any).stopImmediatePropagation?.();
+        (
+          e.nativeEvent as unknown as NativeMouseEventLike
+        ).stopImmediatePropagation?.();
       }}
       onClick={(e) => {
         if (!stopPropagation) return;
         e.stopPropagation();
-        (e.nativeEvent as any).stopImmediatePropagation?.();
+        (
+          e.nativeEvent as unknown as NativeMouseEventLike
+        ).stopImmediatePropagation?.();
       }}
     >
       {typeof content === "function"
-        ? (content as any)({ close: () => setOpen(false) })
+        ? (content as (ctx: { close: () => void }) => React.ReactNode)({
+            close: () => setOpen(false),
+          })
         : content}
     </div>
   ) : null;
@@ -238,6 +246,8 @@ export default function Popover({
         {children}
       </span>
       {portal && mounted ? createPortal(panel, document.body) : panel}
+      {/* When disabled, just render children without behavior */}
+      {isDisabled && null}
     </>
   );
 }

@@ -14,10 +14,10 @@ import { UserDropdown } from "@/components/UserDropdown";
 import { useLogout } from "@/hooks/useLogout";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { initializeToken, setAuthStep } from "@/store/authSlice";
-import { SvgIcon } from "@/utility-components";
+import { ImageWithLoader, SvgIcon } from "@/utility-components";
+import { Popover } from "@/utility-components";
 
 import { RootState } from "../store/store";
-import { Popover } from "@/utility-components";
 
 type User = {
   name: string;
@@ -30,18 +30,47 @@ export interface HeaderClientProps {
 const Coin = CoinSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 export const InfoTipLogin: React.FC = () => (
-  <div className="space-y-1">
-    <div className="font-medium">Login to earn Connects</div>
-    <div className="text-gray-600">Unlock owner details, faster.</div>
+  <div className="flex items-center w-full px-4 py-2 gap-4">
+    <div className="relative w-1/4 aspect-[7/6]">
+      <ImageWithLoader
+        src="/optimizedIcons/medium/login-and-earn.svg"
+        alt="login and earn"
+        fill
+        className="object-center"
+        sizes="100vw"
+        priority
+      />
+    </div>
+    <div className="w-3/4">
+      <h1 className="text-lg">Login & Earn Connects!</h1>
+      <p className="text-gray-500 font-light">
+        Sign up to earn free Connects and unlock exclusive benefits!
+      </p>
+    </div>
   </div>
 );
 
 export const InfoTipZeroBalance: React.FC = () => (
-  <div className="space-y-1">
-    <div className="font-medium text-red-600">Insufficient connects</div>
-    <Link href="/buy-connects" className="underline">
-      Buy Connects
-    </Link>
+  <div className="flex w-full px-4 py-2 gap-4 min-w-72">
+    <div className="relative h-14 aspect-[7/9]">
+      <ImageWithLoader
+        src="/optimizedIcons/medium/insufficient-connects.svg"
+        alt="insufficient connects"
+        fill
+        className="object-center"
+        sizes="100vw"
+        priority
+      />
+    </div>
+    <div className="">
+      <h1 className="text-lg">Insufficient connects!</h1>
+      <p className="text-gray-500 font-light text-nowrap">
+        Purchase more now to continue!
+      </p>
+      <Link href="/buy-connects" className="text-red-500 cursor-pointer">
+        Buy Connects
+      </Link>
+    </div>
   </div>
 );
 
@@ -159,8 +188,9 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
             {/* Coin Counter with hover tip */}
             <Popover
               trigger="hover"
+              align="end"
               enabled={showLoginTip || showZeroTip}
-              panelClassName="min-w-[220px] p-3 text-sm"
+              panelClassName=""
               content={showLoginTip ? <InfoTipLogin /> : <InfoTipZeroBalance />}
             >
               <Link
