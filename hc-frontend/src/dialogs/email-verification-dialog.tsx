@@ -110,33 +110,30 @@ const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
       exitAnimation={isMobile ? "animate-slide-out-bottom" : "animate-fade-out"}
     >
       <DialogHeader>
-        <div
-          className={`${isMobile ? "py-2 px-8" : ""}  flex flex-col justify-between items-center w-full`}
-        >
-          {isMobile && (
-            <h1 className="text-xl py-1.5 text-black">
-              Verify your email address
-            </h1>
-          )}
-          <button className="absolute top-4 right-4 rounded-full">
-            <X onClick={onClose} size={24} />
+        <div className="relative flex h-full w-full items-center justify-center">
+          {/* Title: Centered and only visible on mobile */}
+          <h1 className="text-lg text-center truncate font-medium md:hidden">
+            Verify your email address
+          </h1>
+
+          {/* Close Button: Repositions itself based on screen size */}
+          <button
+            aria-label="Close"
+            onClick={onClose}
+            className="absolute p-2 right-2 top-1/2 -translate-y-1/2 rounded-full md:right-4 md:border md:border-gray-200 md:top-4 md:translate-y-0"
+          >
+            <X size={24} />
           </button>
         </div>
       </DialogHeader>
       <DialogContent>
-        <div
-          className={`w-full flex flex-col align-center justify-center gap-4 p-6 ${isMobile ? "h-full" : ""}`}
-        >
+        <div className="w-full flex flex-col justify-center gap-4 p-6 max-md:h-full">
           {/* Form header */}
-          <div className={isMobile ? "text-center" : ""}>
-            {isMobile ? null : (
-              <h1 className="text-2xl mb-1 text-black ">
-                Verify Your email address
-              </h1>
-            )}
-            <p
-              className={`text-gray-600 ${isMobile ? "text-base" : "text-sm"}`}
-            >
+          <div className="max-md:text-center">
+            <h1 className="text-2xl mb-1 max-md:hidden">
+              Verify Your email address
+            </h1>
+            <p className="text-gray-700 md:text-sm">
               We&apos;ve sent a 4-digit OTP to your email address.
             </p>
             <b>{emailToVerify}</b>
@@ -144,7 +141,7 @@ const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
 
           {/* Form fields */}
           <div className="flex flex-col gap-4">
-            <div className={`flex gap-2 ${isMobile ? "mx-auto" : ""}`}>
+            <div className="flex gap-2 max-md:mx-auto">
               <input
                 id="otp-1"
                 type="text"
@@ -194,7 +191,7 @@ const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
             </div>
 
             {/* Resend option */}
-            <div className={isMobile ? "text-center" : ""}>
+            <div className="max-md:text-center">
               <span className="text-gray-500">Didn&apos;t receive code?</span>
               &nbsp;
               <button className="text-red-500 font-medium underline">
@@ -205,12 +202,10 @@ const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
         </div>
       </DialogContent>
       <DialogFooter>
-        <div
-          className={`pt-4 pb-6 px-4 flex gap-3 w-full ${isMobile ? "justify-between" : "justify-end"}`}
-        >
+        <div className="flex w-full justify-between md:justify-end md:gap-3">
           <button
             type="button"
-            className="border  rounded-lg py-3 px-4"
+            className="border rounded-lg py-3 px-4"
             onClick={onClose}
           >
             Cancel

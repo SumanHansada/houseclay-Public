@@ -27,31 +27,21 @@ const UnlockOwnerDetailsDialog: React.FC<UnlockOwnerDetailsProps> = ({
       exitAnimation={isMobile ? "animate-slide-out-right" : "animate-fade-out"}
     >
       <DialogHeader>
-        {isMobile ? (
-          <div className="relative w-full h-[55px] border-b border-gray-200 bg-white flex items-center">
-            <div className="absolute left-2 w-10 h-10" aria-hidden />
-            <h1 className="mx-auto text-lg font-medium">
-              Unlock Owner Details
-            </h1>
-            <button
-              aria-label="Close"
-              onClick={onClose}
-              className="absolute right-2 rounded-full p-2 border border-gray-200"
-            >
-              <X size={20} />
-            </button>
-          </div>
-        ) : (
-          <div className="relative w-full h-0">
-            <button
-              aria-label="Close"
-              onClick={onClose}
-              className="absolute top-4 right-4 rounded-full p-2 border border-gray-200"
-            >
-              <X size={20} />
-            </button>
-          </div>
-        )}
+        <div className="relative flex h-full w-full items-center justify-center">
+          {/* Title: Centered and only visible on mobile */}
+          <h1 className="text-lg text-center truncate font-medium md:hidden">
+            Unlock Owner Details
+          </h1>
+
+          {/* Close Button: Repositions itself based on screen size */}
+          <button
+            aria-label="Close"
+            onClick={onClose}
+            className="absolute p-2 right-2 top-1/2 -translate-y-1/2 rounded-full md:right-4 md:border md:border-gray-200 md:top-4 md:translate-y-0"
+          >
+            <X size={24} />
+          </button>
+        </div>
       </DialogHeader>
       <DialogContent>
         <UnlockOwnerDetails propertyID={propertyID} onClose={onClose} />
