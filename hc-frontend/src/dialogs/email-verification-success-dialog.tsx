@@ -36,14 +36,19 @@ const EmailVerificationSuccessDialog: React.FC<
       exitAnimation={isMobile ? "animate-slide-out-bottom" : "animate-fade-out"}
     >
       <DialogHeader>
-        <div
-          className={`${isMobile ? "py-2 px-8" : ""}  flex flex-col justify-between items-center w-full`}
-        >
-          {isMobile && (
-            <h1 className="text-xl py-1.5 text-black">Email Verified!</h1>
-          )}
-          <button className="absolute top-4 right-4 rounded-full">
-            <X onClick={onClose} size={24} />
+        <div className="relative flex h-full w-full items-center justify-center">
+          {/* Title: Centered and only visible on mobile */}
+          <h1 className="text-lg text-center truncate font-medium md:hidden">
+            Email Verified!
+          </h1>
+
+          {/* Close Button: Repositions itself based on screen size */}
+          <button
+            aria-label="Close"
+            onClick={onClose}
+            className="absolute p-2 right-2 top-1/2 -translate-y-1/2 rounded-full border border-gray-200 md:border-0 md:right-4 md:top-4 md:translate-y-0"
+          >
+            <X size={24} />
           </button>
         </div>
       </DialogHeader>
@@ -51,9 +56,9 @@ const EmailVerificationSuccessDialog: React.FC<
         <div className="p-6 flex flex-col gap-4 items-center">
           <EmailVerifiedIcon />
           <div className="text-center w-11/12 mb-2">
-            {isMobile ? null : (
-              <h1 className="text-3xl font-medium mb-1">Email Verified!</h1>
-            )}
+            <h1 className="text-3xl font-medium mb-1 max-md:hidden">
+              Email Verified!
+            </h1>
             <p className="text-gray-700 text-lg">
               Great job! Your email is now verified, and you&apos;ve
               earned&nbsp;
@@ -79,10 +84,10 @@ const EmailVerificationSuccessDialog: React.FC<
         </div>
       </DialogContent>
       <DialogFooter>
-        <div className="pt-4 pb-6 px-4 flex gap-3 w-full justify-between md:hidden">
+        <div className="flex w-full justify-between md:hidden">
           <button
             type="button"
-            className="border  rounded-lg py-3 px-4"
+            className="border rounded-lg py-3 px-4"
             onClick={onClose}
           >
             Back

@@ -46,7 +46,7 @@ import BalconyIconSvg from "public/icons/common/balcony.svg";
 import BuildUpAreaIconSvg from "public/icons/common/build-up-area.svg";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { PlacesAutocomplete } from "@/base-components";
 import { PropertyCategory } from "@/common/enums";
@@ -55,8 +55,9 @@ import {
   formatINRCurrency,
   pascalCase,
 } from "@/common/utils";
-import { PhotoGalleryDialog } from "@/dialogs";
+import { ContactOwnerLoginDialog, PhotoGalleryDialog } from "@/dialogs";
 import ReportListingDialog from "@/dialogs/report-listing-dialog";
+import UnlockOwnerDetailsDialog from "@/dialogs/unlock-owner-details-dialog";
 import { MobileFooter } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -66,6 +67,7 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
+import { RootState } from "@/store/store";
 import { PhotoGallery } from "@/utility-components";
 import { GoogleMapsDirection } from "@/utility-components";
 
@@ -174,6 +176,7 @@ export function PropertyDetailsClient({
   const router = useRouter();
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
+  const { token } = useSelector((state: RootState) => state.auth);
   const { isDialogOpen, closeDialog, openDialog } = useDialog();
 
   const handleShare = async () => {
@@ -203,6 +206,17 @@ export function PropertyDetailsClient({
 
   const handleReportListingClick = () => {
     openDialog("report-listing-dialog");
+  };
+
+  const handleContactOwnerClick = () => {
+    openDialog(
+      token ? "unlock-owner-details-dialog" : "contact-owner-login-dialog",
+    );
+  };
+
+  const handleContactLoginSuccess = () => {
+    closeDialog("contact-owner-login-dialog");
+    openDialog("unlock-owner-details-dialog");
   };
 
   // Split description into sentences array
@@ -694,7 +708,10 @@ export function PropertyDetailsClient({
                           : "-"}
                     </div>
                   </div>
-                  <button className="mt-4 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full text-base max-md:text-sm hover:bg-red-600 transition-colors">
+                  <button
+                    className="mt-4 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full text-base max-md:text-sm hover:bg-red-600 transition-colors"
+                    onClick={handleContactOwnerClick}
+                  >
                     Contact Owner
                   </button>
                 </div>
@@ -1205,7 +1222,10 @@ export function PropertyDetailsClient({
                 : "-"}
           </div>
         </div>
-        <button className="px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full hover:bg-red-600 transition-colors">
+        <button
+          className="px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full hover:bg-red-600 transition-colors"
+          onClick={handleContactOwnerClick}
+        >
           Contact Owner
         </button>
       </MobileFooter>
@@ -1226,6 +1246,24 @@ export function PropertyDetailsClient({
             closeDialog("report-listing-dialog");
             dispatch(setHideStickyNavBar(true));
           }}
+        />
+      )}
+
+      {/* Contact owner login dialog */}
+      {isDialogOpen("contact-owner-login-dialog") && (
+        <ContactOwnerLoginDialog
+          id="contact-owner-login-dialog"
+          onSuccess={handleContactLoginSuccess}
+          onClose={() => closeDialog("contact-owner-login-dialog")}
+        />
+      )}
+
+      {/* Unlock owner details dialog */}
+      {isDialogOpen("unlock-owner-details-dialog") && (
+        <UnlockOwnerDetailsDialog
+          id="unlock-owner-details-dialog"
+          propertyID={propertyID}
+          onClose={() => closeDialog("unlock-owner-details-dialog")}
         />
       )}
     </>

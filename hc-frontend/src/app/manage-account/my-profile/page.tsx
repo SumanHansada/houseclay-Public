@@ -5,8 +5,10 @@ import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
-import EmailVerificationDialog from "@/dialogs/email-verification";
-import EmailVerificationSuccessDialog from "@/dialogs/email-verification-success";
+import {
+  EmailVerificationDialog,
+  EmailVerificationSuccessDialog,
+} from "@/dialogs";
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
