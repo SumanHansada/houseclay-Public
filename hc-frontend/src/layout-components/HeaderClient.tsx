@@ -14,7 +14,8 @@ import { UserDropdown } from "@/components/UserDropdown";
 import { useLogout } from "@/hooks/useLogout";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { initializeToken, setAuthStep } from "@/store/authSlice";
-import { SvgIcon } from "@/utility-components";
+import { ImageWithLoader, SvgIcon } from "@/utility-components";
+import { Popover } from "@/utility-components";
 
 import { RootState } from "../store/store";
 
@@ -28,6 +29,51 @@ export interface HeaderClientProps {
 
 const Coin = CoinSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
+export const InfoTipLogin: React.FC = () => (
+  <div className="flex items-center w-full px-4 py-2 gap-4">
+    <div className="relative w-1/4 aspect-[7/6]">
+      <ImageWithLoader
+        src="/optimizedIcons/medium/login-and-earn.svg"
+        alt="login and earn"
+        fill
+        className="object-center"
+        sizes="100vw"
+        priority
+      />
+    </div>
+    <div className="w-3/4">
+      <h1 className="text-lg">Login & Earn Connects!</h1>
+      <p className="text-gray-500 font-light">
+        Sign up to earn free Connects and unlock exclusive benefits!
+      </p>
+    </div>
+  </div>
+);
+
+export const InfoTipZeroBalance: React.FC = () => (
+  <div className="flex w-full px-4 py-2 gap-4 min-w-72">
+    <div className="relative h-14 aspect-[7/9]">
+      <ImageWithLoader
+        src="/optimizedIcons/medium/insufficient-connects.svg"
+        alt="insufficient connects"
+        fill
+        className="object-center"
+        sizes="100vw"
+        priority
+      />
+    </div>
+    <div className="">
+      <h1 className="text-lg">Insufficient connects!</h1>
+      <p className="text-gray-500 font-light text-nowrap">
+        Purchase more now to continue!
+      </p>
+      <Link href="/buy-connects" className="text-red-500 cursor-pointer">
+        Buy Connects
+      </Link>
+    </div>
+  </div>
+);
+
 const HeaderClient: React.FC<HeaderClientProps> = () => {
   const hideHeader = useSelector((state: RootState) => state.app.hideHeader);
   const token = useSelector((state: RootState) => state.auth.token);
@@ -37,6 +83,8 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
   const connectBal = useSelector(
     (state: RootState) => state.user.userDetail.connectBal,
   );
+  const showLoginTip = !token;
+  const showZeroTip = !!token && Number(connectBal) === 0;
 
   const dispatch = useDispatch();
   const { logout } = useLogout();
@@ -137,14 +185,22 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
               </span>
             </Link>
 
-            {/* Coin Counter */}
-            <Link
-              href="/manage-account/connects"
-              className="flex items-center xl:px-4 lg:px-3 md:px-2 px-2 py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100"
+            {/* Coin Counter with hover tip */}
+            <Popover
+              trigger="hover"
+              align="end"
+              enabled={showLoginTip || showZeroTip}
+              panelClassName=""
+              content={showLoginTip ? <InfoTipLogin /> : <InfoTipZeroBalance />}
             >
-              <Coin height={20} width={20} />
-              <span>{connectBal}</span>
-            </Link>
+              <Link
+                href="/manage-account/connects"
+                className="flex items-center xl:px-4 lg:px-3 md:px-2 px-2 py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100"
+              >
+                <Coin height={20} width={20} />
+                <span>{connectBal}</span>
+              </Link>
+            </Popover>
 
             {/* Login Button */}
             {token ? (

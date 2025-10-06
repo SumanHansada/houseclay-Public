@@ -99,6 +99,7 @@ export const apiSlice = createApi({
         url: "/user/logout",
         method: "POST",
       }),
+      invalidatesTags: [USER_DETAIL_TAG],
     }),
     getUserDetail: builder.query<GetUserDetailResponse, void>({
       query: () => "/user/detail",

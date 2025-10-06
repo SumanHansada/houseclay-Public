@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 
 import { useLogoutMutation } from "@/store/apiSlice";
 import { clearAuthStep, clearToken } from "@/store/authSlice";
-import { clearUserDetail } from "@/store/userSlice";
+import { clearAllUserData } from "@/store/userSlice";
 
 export function useLogout() {
   const dispatch = useDispatch();
@@ -19,7 +19,7 @@ export function useLogout() {
     } catch (err) {
       console.error("Logout API failed:", err);
     } finally {
-      dispatch(clearUserDetail());
+      dispatch(clearAllUserData());
       dispatch(clearToken());
       dispatch(clearAuthStep());
       router.push("/");
