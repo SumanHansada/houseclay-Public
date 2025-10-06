@@ -109,18 +109,20 @@ public class PropertyUserService {
         }
         user = userOpt.get();
         Property property = propertyOpt.get();
-        int cost = calculateContactCost(property, user);
-        if (user.getConnectBal() < cost) {
-            throw new APIException("User doesn't have enough connect", HttpStatus.BAD_REQUEST);
+        if (!isOwner(user, property) && !isContactedProperty(user, property)) {
+            int cost = calculateContactCost(property, user);
+            if (user.getConnectBal() < cost) {
+                throw new APIException("User doesn't have enough connect", HttpStatus.BAD_REQUEST);
+            }
+            user.setConnectBal(user.getConnectBal() - cost);
+            PropertyAction propertyAction = new PropertyAction();
+            propertyAction.setProperty(property);
+            propertyAction.setUser(user);
+            propertyAction.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+            propertyAction.setUserActionType(UserActionType.CONTACT);
+            user.getPropertyActions().add(propertyAction);
+            userRepository.save(user);
         }
-        user.setConnectBal(user.getConnectBal() - cost);
-        PropertyAction propertyAction = new PropertyAction();
-        propertyAction.setProperty(property);
-        propertyAction.setUser(user);
-        propertyAction.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        propertyAction.setUserActionType(UserActionType.CONTACT);
-        user.getPropertyActions().add(propertyAction);
-        userRepository.save(user);
         User owner = property.getOwner();
         Map<String, String> contact = new HashMap<>();
         contact.put("phone", owner.getPhoneNo());
@@ -132,5 +134,18 @@ public class PropertyUserService {
 
     public int calculateContactCost(Property property, User user) {
         return 2;
+    }
+
+    public boolean isOwner(User user, Property property) {
+        return property.getOwner().getPhoneNo().equals(user.getPhoneNo());
+    }
+
+    public boolean isContactedProperty(User user, Property property) {
+        return user.getPropertyActions().stream()
+                .anyMatch(action ->
+                        UserActionType.CONTACT.equals(action.getUserActionType())
+                                && action.getProperty() != null
+                                && property.getPropertyID().equals(action.getProperty().getPropertyID())
+                );
     }
 }

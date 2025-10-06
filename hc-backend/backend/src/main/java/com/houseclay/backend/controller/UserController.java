@@ -38,8 +38,7 @@ public class UserController {
     @RequestMapping (method = RequestMethod.POST, value = "/register",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createUser(@Valid @RequestBody UserPayload payload) {
         try {
-            UserLoginResponseDTO userLoginResponseDTO = userService.createUser(payload);
-            return ResponseEntity.ok().body(userLoginResponseDTO);
+            return userService.createUser(payload);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {
@@ -50,8 +49,7 @@ public class UserController {
     @RequestMapping (method = RequestMethod.POST, value = "/login",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> login(@Valid @RequestBody LoginPayload payload) {
         try {
-            UserLoginResponseDTO userLoginResponseDTO = userService.loginUser(payload);
-            return ResponseEntity.ok().body(userLoginResponseDTO);
+           return userService.loginUser(payload);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {
@@ -115,5 +113,11 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
+
+    @PostMapping("/info")
+    public ResponseEntity<?> info(@RequestAttribute("authenticatedUser") User user) {
+        UserLoginResponseDTO userLoginResponseDTO = UserMapper.toUserLoginResponseDTO(user);
+        return ResponseEntity.ok(userLoginResponseDTO);
     }
 }

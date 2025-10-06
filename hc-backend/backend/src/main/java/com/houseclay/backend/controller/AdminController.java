@@ -34,7 +34,8 @@ public class AdminController {
     @PostMapping("/login")
     public ResponseEntity<String> loginAdmin(@Valid @RequestBody AdminLoginDTO adminLoginDTO) {
         try {
-            return ResponseEntity.ok().body(adminService.loginAdmin(adminLoginDTO.getUsername(), adminLoginDTO.getPassword()));
+            String token = adminService.loginAdmin(adminLoginDTO.getUsername(), adminLoginDTO.getPassword());
+            return ResponseEntity.ok().header("token", token).body("Admin logged in successfully");
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {

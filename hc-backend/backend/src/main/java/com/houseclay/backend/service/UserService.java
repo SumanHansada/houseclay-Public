@@ -1,6 +1,5 @@
 package com.houseclay.backend.service;
 
-import com.houseclay.backend.dto.UserLoginResponseDTO;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.mapper.UserMapper;
@@ -10,6 +9,8 @@ import com.houseclay.backend.repository.UserLoginRepository;
 import com.houseclay.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class UserService {
     @Autowired
     private ConnectManagementService connectManagementService;
 
-    public UserLoginResponseDTO createUser(UserPayload userPayload) throws Exception {
+    public ResponseEntity<?> createUser(UserPayload userPayload) throws Exception {
         if(!otpService.validateOtp(userPayload.getPhoneNo(), userPayload.getOtpCode())) {
             throw new APIException("Invalid OTP Code", HttpStatus.BAD_REQUEST);
         }
@@ -46,10 +47,10 @@ public class UserService {
         user.setUserLogins(userLogins);
         userRepository.save(user);
         connectManagementService.addNewUserConnect(user.getPhoneNo());
-        return UserMapper.toUserLoginResponseDTO(user, token);
+        return buildLoginResponse(user, token);
     }
 
-    public UserLoginResponseDTO loginUser(LoginPayload loginPayload) throws Exception {
+    public ResponseEntity<?> loginUser(LoginPayload loginPayload) throws Exception {
         if(!otpService.validateOtp(loginPayload.getPhoneNo(), loginPayload.getOtpCode())) {
             throw new APIException("Invalid OTP Code", HttpStatus.BAD_REQUEST);
         }
@@ -67,7 +68,7 @@ public class UserService {
         userLogins.add(userLogin);
         user.setUserLogins(userLogins);
         userRepository.save(user);
-        return UserMapper.toUserLoginResponseDTO(user, token);
+        return buildLoginResponse(user, token);
     }
 
     public boolean logoutUser(String authToken) throws Exception {
@@ -82,5 +83,18 @@ public class UserService {
     public boolean doesUserExist(String phoneNo) {
         Optional<User> userOpt = userRepository.findById(phoneNo);
         return userOpt.isPresent();
+    }
+
+    public ResponseEntity<?> buildLoginResponse(User user, String token) {
+        ResponseCookie cookie = ResponseCookie.from("token", token)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(60 * 60)
+                .sameSite("Strict")
+                .build();
+        return ResponseEntity.ok()
+                .header("Set-Cookie", cookie.toString())
+                .body(UserMapper.toUserLoginResponseDTO(user));
     }
 }

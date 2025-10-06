@@ -11,13 +11,12 @@ import java.util.stream.Collectors;
 
 public class UserMapper {
 
-    public static UserLoginResponseDTO toUserLoginResponseDTO(User user, String token) {
+    public static UserLoginResponseDTO toUserLoginResponseDTO(User user) {
         UserLoginResponseDTO userLoginResponseDTO = new UserLoginResponseDTO();
         userLoginResponseDTO.setName(user.getName());
         userLoginResponseDTO.setEmailID(user.getEmailID());
         userLoginResponseDTO.setPhoneNo(user.getPhoneNo());
         userLoginResponseDTO.setConnectBal(user.getConnectBal());
-        userLoginResponseDTO.setToken(token);
         return userLoginResponseDTO;
     }
 
