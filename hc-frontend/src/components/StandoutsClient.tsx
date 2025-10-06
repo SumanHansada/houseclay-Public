@@ -9,6 +9,7 @@ import { RootState } from "@/store/store";
 
 import Carousel2D from "./Carousel2D";
 import Properties from "./Properties";
+import Link from "next/link";
 
 interface StandoutsClientProps {
   properties: PropertySearch[];
@@ -63,9 +64,15 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
           </div>
           {/* View All Button */}
           <div className="flex mb-4 max-md:hidden">
-            <button className="border border-red-500 text-red-500 px-4 py-2 rounded-md">
+            {/* <button className="border border-red-500 text-red-500 px-4 py-2 rounded-md"> */}
+            <Link
+              href="/standouts"
+              prefetch
+              className="border border-red-500 text-red-500 px-4 py-2 rounded-md"
+            >
               View All Standouts
-            </button>
+            </Link>
+            {/* </button> */}
           </div>
         </div>
 
