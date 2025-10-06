@@ -15,6 +15,7 @@ public class PropertyCardDTO {
     private PropertyCategory propertyCategory;
     private Double builtUpArea;
     private String bhkType;
+    private Integer bathrooms;
     private String furnishing;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Double rent;

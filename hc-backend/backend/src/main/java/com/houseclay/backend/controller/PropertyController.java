@@ -44,7 +44,7 @@ public class PropertyController {
             @RequestParam PropertyCategory propertyCategory,
             @RequestParam double lat,
             @RequestParam double lon,
-            @RequestParam(defaultValue = "5km") String distance,
+            @RequestParam(defaultValue = "15km") String distance,
             @RequestParam(required = false) String city,
             @RequestParam(required = false) String bhkType,
             @RequestParam(required = false) String furnishing,

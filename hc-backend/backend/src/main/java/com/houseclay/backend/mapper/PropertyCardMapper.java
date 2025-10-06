@@ -50,6 +50,7 @@ public class PropertyCardMapper {
         target.setLandmark(source.getLandmark());
         target.setLatitude(source.getLocation().getLat());
         target.setLongitude(source.getLocation().getLon());
+        target.setBathrooms(source.getBathrooms());
     }
 
     private static void copyBaseFields(Property source, PropertyCardDTO target) {

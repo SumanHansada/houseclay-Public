@@ -92,7 +92,7 @@ public class PropertyUserService {
         reportProperty.setProperty(property);
         reportProperty.setUser(user);
         if (property.getReportedProperties().size() >= 2) {
-            property.setPropertyState(PropertyState.PENDING_VERIFICATION);
+            property.setPropertyState(PropertyState.PENDING_RE_VERIFICATION);
         }
         propertyRepository.save(property);
     }

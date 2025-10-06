@@ -8,14 +8,11 @@ import com.houseclay.backend.payload.LoginPayload;
 import com.houseclay.backend.payload.UserPayload;
 import com.houseclay.backend.repository.UserLoginRepository;
 import com.houseclay.backend.repository.UserRepository;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,6 +31,9 @@ public class UserService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private ConnectManagementService connectManagementService;
+
     public UserLoginResponseDTO createUser(UserPayload userPayload) throws Exception {
         if(!otpService.validateOtp(userPayload.getPhoneNo(), userPayload.getOtpCode())) {
             throw new APIException("Invalid OTP Code", HttpStatus.BAD_REQUEST);
@@ -45,6 +45,7 @@ public class UserService {
         userLogins.add(userLogin);
         user.setUserLogins(userLogins);
         userRepository.save(user);
+        connectManagementService.addNewUserConnect(user.getPhoneNo());
         return UserMapper.toUserLoginResponseDTO(user, token);
     }
 
@@ -75,33 +76,6 @@ public class UserService {
             throw new APIException("Invalid token", HttpStatus.BAD_REQUEST);
         }
         userLoginRepository.delete(userLogins.get(0));
-        return true;
-
-    }
-
-    @Transactional
-    public boolean addConnect(String phoneNo, int connectCount, Admin admin) throws Exception {
-        Optional<User> optionalUser = userRepository.findById(phoneNo);
-        if(optionalUser.isEmpty()) {
-            throw new APIException("Invalid user login", HttpStatus.BAD_REQUEST);
-        }
-        User user = optionalUser.get();
-        for (int i = 0; i < connectCount; i++) {
-            ConnectEvent connectEvent = new ConnectEvent();
-            connectEvent.setEventType(ConnectEventType.CREATED);
-            connectEvent.setActorType(ActorType.ADMIN);
-            connectEvent.setActorId(admin.getUsername());
-            Connect connect = new Connect();
-            connect.setSourceType(ConnectSourceType.ADMIN_GRANT);
-            connect.setSourceId(admin.getUsername());
-            connect.setUser(user);
-            connect.setStatus(ConnectStatus.ACTIVE);
-            connect.getEvents().add(connectEvent);
-            connectEvent.setConnect(connect);
-            user.getConnects().add(connect);
-        }
-        user.setConnectBal(user.getConnectBal() + connectCount);
-        userRepository.save(user);
         return true;
     }
 

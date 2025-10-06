@@ -13,7 +13,6 @@ public class SaleProperty extends Property {
     private Boolean priceNegotiable;
     private Boolean underLoan;
     private Double price;
-    private Integer bathrooms;
     private Integer balcony;
     private String khataCertificate;
     private Boolean saleDeed;

@@ -21,6 +21,7 @@ public class PropertyDocument {
     private String furnishing;
     private String city;
     private String locationOrSocietyName;
+    private Integer bathrooms;
     private String landmark;
     private Long availableFrom;
     private String parking;
