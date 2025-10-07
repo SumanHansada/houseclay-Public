@@ -31,7 +31,7 @@ export default function Loading() {
   return (
     <>
       {/* Mobile header skeleton (matches MobileHeader height) */}
-      <header className="fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white md:hidden">
+      <header className="fixed top-0 inset-x-0 z-50 h-14 border-b border-gray-200 bg-white md:hidden">
         <div className="animate-pulse flex items-center h-full px-4 gap-2">
           <div className="shrink-0 w-10 h-10 grid place-items-center">
             <div className="h-9 w-9 rounded-full bg-neutral-200" />
@@ -57,7 +57,7 @@ export default function Loading() {
 
         <div className="py-8 max-md:mb-16 md:py-12 xl:py-20 xl:px-28 lg:px-14 md:px-14 px-8 animate-pulse">
           {/* Spacer below fixed mobile header */}
-          <div className="md:hidden h-[55px]" />
+          <div className="md:hidden h-14 shadow-sm" />
 
           {/* HERO (matches page: aspect + min/max height guards) */}
           <section

@@ -115,7 +115,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
 
   return (
     <>
-      <header className="flex fixed top-0 left-0 right-0 bg-white z-50 justify-between w-full items-center py-2 shadow-sm xl:gap-32 lg:gap-16 md:gap-5 gap-8 xl:px-24 lg:px-12 md:px-8 px-12 max-md:hidden mx-auto">
+      <header className="fixed top-0 inset-x-0 z-50 h-14 border-b border-gray-200 bg-white flex justify-between items-center w-full py-2 shadow-sm xl:gap-32 lg:gap-16 md:gap-5 gap-8 xl:px-24 lg:px-12 md:px-8 px-12 max-md:hidden mx-auto ">
         {/* Left Section - Logo */}
         <div className="flex items-center">
           <Link href="/" className="flex items-center gap-1 py-1">

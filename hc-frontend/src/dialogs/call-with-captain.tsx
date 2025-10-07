@@ -3,7 +3,12 @@
 import { X } from "lucide-react";
 import React from "react";
 
-import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+} from "@/components/Dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { SvgIcon } from "@/utility-components";
 
@@ -28,22 +33,18 @@ const CallWithCaptainDialog: React.FC<CallWithCaptainDialogProps> = ({
       exitAnimation={isMobile ? "animate-slide-out-bottom" : "animate-fade-out"}
     >
       <DialogHeader>
-        <div
-          className={`${isMobile ? "py-2 px-8" : ""}  flex flex-col justify-between items-center w-full`}
-        >
-          {isMobile && (
-            <>
-              <h1 className="text-xl py-1.5 text-black">Awesome!</h1>
-              <button
-                className="absolute top-4 right-4 border border-gray-200 rounded-full md:border-none"
-                onClick={onClose}
-                tabIndex={0}
-              >
-                <X size={25} />
-              </button>
-            </>
-          )}
-        </div>
+        {isMobile && (
+          <>
+            <h1 className="text-xl py-1.5 text-black">Awesome!</h1>
+            <button
+              className="absolute right-4 top-1/2 -translate-y-1/2 border border-gray-200 rounded-full md:border-none"
+              onClick={onClose}
+              tabIndex={0}
+            >
+              <X size={25} />
+            </button>
+          </>
+        )}
       </DialogHeader>
       <DialogContent>
         <div
@@ -61,17 +62,19 @@ const CallWithCaptainDialog: React.FC<CallWithCaptainDialogProps> = ({
             One of our team members will call you shortly to guide you through
             the property listing process.
           </p>
-          <button
-            key="call-with-captain-button"
-            className={`py-3 px-24 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200 ${isMobile ? "w-full" : ""}`}
-            onClick={onClose}
-            tabIndex={0}
-            autoFocus
-          >
-            Great!
-          </button>
         </div>
       </DialogContent>
+      <DialogFooter>
+        <button
+          key="call-with-captain-button"
+          className={`py-3 px-24 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200 ${isMobile ? "w-full" : ""}`}
+          onClick={onClose}
+          tabIndex={0}
+          autoFocus
+        >
+          Great!
+        </button>
+      </DialogFooter>
     </Dialog>
   );
 };

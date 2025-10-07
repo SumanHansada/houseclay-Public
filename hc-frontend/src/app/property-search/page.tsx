@@ -237,7 +237,7 @@ export default function PropertySearchPage() {
           Filters
         </Button>
       </section>
-      <section className="fixed z-50 flex w-full xl:gap-16 border-b border-t bg-white border-gray-200 lg:gap-8 md:gap-0 gap-0  xl:px-24 md:px-12 px-12 max-md:pt-4 max-md:pb-8 h-16 max-md:hidden">
+      <section className="fixed z-50 flex w-full xl:gap-16 border-b bg-white border-gray-200 lg:gap-8 md:gap-0 gap-0  xl:px-24 md:px-12 px-12 max-md:pt-4 max-md:pb-8 h-16 max-md:hidden">
         <div className="flex justify-between items-center border-gray-200 w-full gap-4">
           <div className="flex-1">
             <PlacesAutocomplete

@@ -155,7 +155,7 @@ export const Dialog: React.FC<DialogProps> = ({
               id="dragArea"
               className="w-full flex justify-center items-center px-4 pt-2"
             >
-              <div className="w-12 h-1.5 rounded-full bg-gray-300"></div>
+              <div className="w-12 h-1 rounded-full bg-gray-300"></div>
             </div>
           )}
           {children}
@@ -168,11 +168,9 @@ export const Dialog: React.FC<DialogProps> = ({
 export const DialogHeader: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { isMobile } = useDeviceContext();
-
   return (
     <div
-      className={`${isMobile ? " h-[55px] " : ""} ${children ? "border-b border-gray-200" : ""} flex items-center justify-between `}
+      className={`relative ${children ? "h-14 border-b border-gray-200" : ""} flex max-md:px-4 max-md:py-2 max-md:items-center max-md:justify-center md:px-6 md:py-4 md:items-start md:justify-start`}
     >
       {children}
     </div>
@@ -191,7 +189,7 @@ export const DialogFooter: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
   <div
-    className={`${children ? "border-t border-t-gray-200" : ""} flex pb-safe-bottom-2 pt-2 md:px-6 px-4`}
+    className={`${children ? "border-t border-t-gray-200" : ""} flex pb-safe-bottom-2 pt-2 md:px-6 px-4 justify-center`}
   >
     {children}
   </div>

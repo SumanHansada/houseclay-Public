@@ -224,7 +224,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
       exitAnimation={isMobile ? "animate-slide-out-bottom" : "animate-fade-out"}
     >
       <DialogHeader>
-        <div className="flex border-gray-200 items-center w-full justify-between py-4 px-6 max-md:py-2 max-md:px-4">
+        <div className="flex border-gray-200 items-center w-full justify-between">
           <span className="text-xl max-md:hidden">More Filters</span>
           <div className="flex justify-center text-xl ml-auto md:hidden">
             <button
