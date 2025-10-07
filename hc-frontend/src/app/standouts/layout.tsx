@@ -1,9 +1,10 @@
 "use client";
 
-import { Footer } from "@/layout-components";
-import { ImageWithLoader, Tab, TabHeader, Tabs } from "@/utility-components";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
+
+import { Footer } from "@/layout-components";
+import { ImageWithLoader, Tab, TabHeader, Tabs } from "@/utility-components";
 
 export default function StandoutsLayout({ children }: { children: ReactNode }) {
   const router = useRouter();

@@ -34,6 +34,7 @@ export const apiSlice = createApi({
           responseHandler: (response) => response.json(), // Convert response to text
         };
       },
+      invalidatesTags: [USER_DETAIL_TAG],
     }),
     register: builder.mutation<
       {
@@ -53,6 +54,7 @@ export const apiSlice = createApi({
           responseHandler: (response) => response.json(),
         };
       },
+      invalidatesTags: [USER_DETAIL_TAG],
     }),
     generateOtp: builder.mutation<
       string, // Response type - plain text

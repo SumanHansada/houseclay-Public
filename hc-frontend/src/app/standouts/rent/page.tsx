@@ -1,9 +1,9 @@
 "use client";
 
-import { BadgeType } from "@/common/enums";
-import Properties from "@/components/Properties";
 import { useRouter } from "next/navigation";
 
+import { BadgeType } from "@/common/enums";
+import Properties from "@/components/Properties";
 import PropertiesData from "@/data/PropertiesData.json";
 
 export default function StandoutsRentPage() {

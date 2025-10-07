@@ -2,9 +2,9 @@
 
 import { useRouter } from "next/navigation";
 
-import PropertiesData from "@/data/PropertiesData.json";
-import Properties from "@/components/Properties";
 import { BadgeType } from "@/common/enums";
+import Properties from "@/components/Properties";
+import PropertiesData from "@/data/PropertiesData.json";
 
 export default function StandoutsResalePage() {
   const router = useRouter();

@@ -25,8 +25,14 @@ export default function ManageProfileLayout({
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
 
-  const { data, isLoading, isFetching, isError, error } =
-    useGetUserDetailQuery();
+  const { data, isLoading, isFetching, isError, error } = useGetUserDetailQuery(
+    undefined,
+    {
+      refetchOnMountOrArgChange: true,
+      refetchOnFocus: true,
+      refetchOnReconnect: true,
+    },
+  );
 
   useEffect(() => {
     dispatch(setUserDetailLoading(isLoading || isFetching));

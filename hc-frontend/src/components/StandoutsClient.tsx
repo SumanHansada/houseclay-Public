@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { useDispatch, useSelector } from "react-redux";
 
 import { PropertyCategory } from "@/common/enums";
@@ -9,7 +11,6 @@ import { RootState } from "@/store/store";
 
 import Carousel2D from "./Carousel2D";
 import Properties from "./Properties";
-import Link from "next/link";
 
 interface StandoutsClientProps {
   properties: PropertySearch[];

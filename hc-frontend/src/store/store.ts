@@ -81,11 +81,11 @@ const authPersistConfig = {
 };
 
 // Configure persistence for user slice (user data)
-const userPersistConfig = {
-  key: "user",
-  storage,
-  whitelist: ["userDetail"],
-};
+// const userPersistConfig = {
+//   key: "user",
+//   storage,
+//   whitelist: ["userDetail"],
+// };
 
 const persistedListPropertyReducer = persistReducer(
   listPropertyPersistConfig,
@@ -108,14 +108,14 @@ const persistedShortlistReducer = persistReducer(
 );
 
 const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
-const persistedUserReducer = persistReducer(userPersistConfig, userReducer);
+// const persistedUserReducer = persistReducer(userPersistConfig, userReducer);
 
 export function makeStore() {
   return configureStore({
     reducer: {
       app: appReducer,
       auth: persistedAuthReducer,
-      user: persistedUserReducer,
+      user: userReducer,
       listProperty: persistedListPropertyReducer,
       editProperty: persistedEditPropertyReducer,
       propertySearch: persistedPropertySearchReducer,

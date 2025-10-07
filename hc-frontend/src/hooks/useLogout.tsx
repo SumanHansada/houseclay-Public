@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 
-import { useLogoutMutation } from "@/store/apiSlice";
+import { apiSlice, useLogoutMutation } from "@/store/apiSlice";
 import { clearAuthStep, clearIsAuthenticated } from "@/store/authSlice";
 import { clearAllUserData } from "@/store/userSlice";
 
@@ -19,6 +19,7 @@ export function useLogout() {
     } catch (err) {
       console.error("Logout API failed:", err);
     } finally {
+      dispatch(apiSlice.util.resetApiState());
       dispatch(clearIsAuthenticated());
       dispatch(clearAllUserData());
       dispatch(clearAuthStep());
