@@ -6,6 +6,7 @@ import com.houseclay.backend.entity.Property;
 import com.houseclay.backend.entity.PropertyAction;
 import com.houseclay.backend.entity.User;
 import com.houseclay.backend.exception.APIException;
+import com.houseclay.backend.mapper.PropertyDetailMapper;
 import com.houseclay.backend.mapper.PropertyMapper;
 import com.houseclay.backend.repository.PropertyActionRepository;
 import com.houseclay.backend.repository.PropertyRepository;
@@ -36,6 +37,7 @@ public class ShortlistPropertyService {
             throw new APIException("Property not found", HttpStatus.BAD_REQUEST);
         }
         Property property = propertyOpt.get();
+        property.setScore(property.getScore() + 1);
         PropertyAction propertyAction = new PropertyAction();
         propertyAction.setProperty(property);
         propertyAction.setUser(user);
@@ -58,7 +60,7 @@ public class ShortlistPropertyService {
 
         return actions.stream()
                 .map(PropertyAction::getProperty)
-                .map(PropertyMapper::toDTO)
+                .map(PropertyMapper::toBasicDTO)
                 .toList();
     }
 }

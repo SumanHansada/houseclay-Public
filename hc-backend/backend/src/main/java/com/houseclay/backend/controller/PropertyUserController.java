@@ -4,7 +4,7 @@ import com.houseclay.backend.entity.Property;
 import com.houseclay.backend.entity.ReportType;
 import com.houseclay.backend.entity.User;
 import com.houseclay.backend.exception.APIException;
-import com.houseclay.backend.mapper.PropertyMapper;
+import com.houseclay.backend.mapper.PropertyDetailMapper;
 import com.houseclay.backend.service.PropertyUserService;
 import com.houseclay.backend.service.ShortlistPropertyService;
 import com.houseclay.backend.service.ViewPropertyService;
@@ -77,7 +77,7 @@ public class PropertyUserController {
     public ResponseEntity<Object> getPropertyById(@PathVariable String id, @RequestAttribute("authenticatedUser") User user) {
         try {
             Property property = propertyUserService.getPropertyForUser(id, user);
-            return ResponseEntity.ok(PropertyMapper.toDTO(property));
+            return ResponseEntity.ok(PropertyDetailMapper.toPropertyDetailDTO(property));
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {
@@ -104,7 +104,7 @@ public class PropertyUserController {
             Property shortlistedProperty = shortlistPropertyService.shortlistProperty(user, propertyId);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Property shortlisted successfully");
-            response.put("shortlistedProperty", PropertyMapper.toDTO(shortlistedProperty));
+            response.put("shortlistedProperty", PropertyDetailMapper.toPropertyDetailDTO(shortlistedProperty));
             return ResponseEntity.ok(response);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
@@ -141,7 +141,7 @@ public class PropertyUserController {
             @RequestAttribute("authenticatedUser") User user) {
         try {
             Property property = viewPropertyService.getProperty(user, propertyId);
-            return ResponseEntity.ok(PropertyMapper.toDTO(property));
+            return ResponseEntity.ok(PropertyDetailMapper.toPropertyDetailDTO(property));
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {

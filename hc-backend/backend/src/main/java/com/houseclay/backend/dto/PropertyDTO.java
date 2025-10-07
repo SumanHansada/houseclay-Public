@@ -38,13 +38,6 @@ public class PropertyDTO {
     private List<String> amenities;
     private List<String> preferredTenants;
     private PropertyCategory propertyCategory;
-    List<PropertyUpdateDTO> propertyUpdates;
-
-    private UserDTO owner;
-    private List<UserDTO> viewUsers;
-    private List<UserDTO> shortlistUsers;
-    private List<UserDTO> contactUsers;
-    private List<ReportUserDTO> reportUsers;
 }
 
 

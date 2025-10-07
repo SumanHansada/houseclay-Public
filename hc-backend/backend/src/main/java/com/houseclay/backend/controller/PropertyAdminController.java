@@ -5,7 +5,7 @@ import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.entity.Property;
 import com.houseclay.backend.entity.PropertyState;
 import com.houseclay.backend.exception.APIException;
-import com.houseclay.backend.mapper.PropertyMapper;
+import com.houseclay.backend.mapper.PropertyDetailMapper;
 import com.houseclay.backend.service.PropertyAdminService;
 import com.houseclay.backend.service.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +77,7 @@ public class PropertyAdminController {
     public ResponseEntity<Object> getPropertyById(@PathVariable String id) {
         try {
             Property property = propertyService.getProperty(id);
-            return ResponseEntity.ok(PropertyMapper.toDTO(property));
+            return ResponseEntity.ok(PropertyDetailMapper.toPropertyDetailDTO(property));
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {
@@ -119,9 +119,10 @@ public class PropertyAdminController {
     @PostMapping("/verify-property")
     public ResponseEntity<?> verifyProperty(@RequestParam String propertyId,
                                             @RequestParam String comment,
+                                            @RequestParam Long score,
                                             @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
-            Property verifiedProperty = propertyAdminService.verifyProperty(propertyId, comment, admin);
+            Property verifiedProperty = propertyAdminService.verifyProperty(propertyId, comment, score, admin);
 
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Property verified successfully");

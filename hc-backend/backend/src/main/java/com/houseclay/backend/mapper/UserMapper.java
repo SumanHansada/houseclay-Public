@@ -99,7 +99,7 @@ public class UserMapper {
 
         dto.setOwnedProperties(
                 user.getOwnedProperties().stream()
-                        .map(PropertyBasicMapper::toBasicEntity)
+                        .map(PropertyMapper::toBasicEntity)
                         .collect(Collectors.toList())
         );
 

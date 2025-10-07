@@ -6,6 +6,7 @@ import com.houseclay.backend.entity.Property;
 import com.houseclay.backend.entity.PropertyAction;
 import com.houseclay.backend.entity.User;
 import com.houseclay.backend.exception.APIException;
+import com.houseclay.backend.mapper.PropertyDetailMapper;
 import com.houseclay.backend.mapper.PropertyMapper;
 import com.houseclay.backend.repository.PropertyActionRepository;
 import com.houseclay.backend.repository.PropertyRepository;
@@ -53,7 +54,7 @@ public class ViewPropertyService {
 
         return actions.stream()
                 .map(PropertyAction::getProperty)
-                .map(PropertyMapper::toDTO)
+                .map(PropertyMapper::toBasicDTO)
                 .toList();
     }
 }

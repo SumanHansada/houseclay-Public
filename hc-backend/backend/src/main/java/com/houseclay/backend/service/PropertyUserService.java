@@ -117,6 +117,7 @@ public class PropertyUserService {
             user.setConnectBal(user.getConnectBal() - cost);
             PropertyAction propertyAction = new PropertyAction();
             propertyAction.setProperty(property);
+            property.setScore(property.getScore()+1);
             propertyAction.setUser(user);
             propertyAction.setCreatedAt(new Timestamp(System.currentTimeMillis()));
             propertyAction.setUserActionType(UserActionType.CONTACT);

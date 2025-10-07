@@ -58,6 +58,7 @@ public class Property {
     private Timestamp availableFrom;
     private PropertyState propertyState;
     private String coverImage;
+    private Long score;
 
     @ElementCollection
     private List<String> images;

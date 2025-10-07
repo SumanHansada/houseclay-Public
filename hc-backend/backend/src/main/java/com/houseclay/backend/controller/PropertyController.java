@@ -5,7 +5,7 @@ import com.houseclay.backend.dto.PropertyCardDTO;
 import com.houseclay.backend.entity.Property;
 import com.houseclay.backend.entity.PropertyCategory;
 import com.houseclay.backend.exception.APIException;
-import com.houseclay.backend.mapper.PropertyBasicMapper;
+import com.houseclay.backend.mapper.PropertySearchMapper;
 import com.houseclay.backend.service.PropertyService;
 import com.houseclay.backend.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +30,22 @@ public class PropertyController {
     public ResponseEntity<Object> getPropertyById(@PathVariable String id) {
         try {
             Property property = propertyService.getProperty(id);
-            return ResponseEntity.ok(PropertyBasicMapper.toBasicDTO(property));
+            return ResponseEntity.ok(PropertySearchMapper.toPropertySearchDTO(property));
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/standout")
+    public ResponseEntity<Object> getStandouts() {
+        return ResponseEntity.ok().body(propertyService.getStandout());
+    }
+
+    @GetMapping("/neighbourhood")
+    public ResponseEntity<Object> getPopularNeighbourhood() {
+        return ResponseEntity.ok().body(propertyService.getPopularNeighbourhood());
     }
 
 

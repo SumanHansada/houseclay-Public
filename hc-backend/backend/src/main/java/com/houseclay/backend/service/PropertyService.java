@@ -1,12 +1,16 @@
 package com.houseclay.backend.service;
 
+import com.houseclay.backend.dto.UserPropertyDTO;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
+import com.houseclay.backend.mapper.UserMapper;
+import com.houseclay.backend.repository.NeighbourhoodRepository;
 import com.houseclay.backend.repository.PropertyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -15,6 +19,11 @@ public class PropertyService {
 
     @Autowired
     private PropertyRepository propertyRepository;
+
+    @Autowired
+    private NeighbourhoodRepository neighbourhoodRepository;
+
+    final static long POPULAR_NEIGHBOURHOOD_THRESHOLD = 10;
 
     @Autowired
     private PhotoService photoService;
@@ -32,5 +41,14 @@ public class PropertyService {
             return property;
         }
         throw new APIException("Invalid property ID", HttpStatus.BAD_REQUEST);
+    }
+
+    public List<UserPropertyDTO> getStandout() {
+        List<Property> propertyList = propertyRepository.findTop10ByPropertyStateOrderByScoreDesc(PropertyState.ACTIVE);
+        return propertyList.stream().map(UserMapper::toUserPropertyDTO).collect(Collectors.toList());
+    }
+
+    public List<Neighbourhood> getPopularNeighbourhood() {
+        return neighbourhoodRepository.findByPropertyCountGreaterThan(POPULAR_NEIGHBOURHOOD_THRESHOLD);
     }
 }
