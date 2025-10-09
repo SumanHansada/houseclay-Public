@@ -116,3 +116,11 @@ export const getInitials = (fullName: string | undefined) => {
     ? parts[0][0].toUpperCase()
     : (parts[0][0] + parts[1][0]).toUpperCase();
 };
+
+/**
+ * Generates a random UUID using the Web Crypto API
+ * @returns A random UUID string (e.g., "550e8400-e29b-41d4-a716-446655440000")
+ */
+export const generateUUID = (): string => {
+  return crypto.randomUUID();
+};

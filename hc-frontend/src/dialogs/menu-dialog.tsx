@@ -39,7 +39,7 @@ interface MenuDialogProps {
 }
 
 const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
-  const { token } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const router = useRouter();
   const { openDialog, closeDialog } = useDialog();
   const { logout } = useLogout();
@@ -73,7 +73,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
 
   const handlePropertyBannerClick = () => {
     closeDialog(id);
-    if (!token) {
+    if (!isAuthenticated) {
       onLogin();
     } else {
       router.push("/list-property");
@@ -108,7 +108,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
             />
           </button>
           <div className="text-sm">
-            {token ? (
+            {isAuthenticated ? (
               <button
                 className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100 text-center"
                 onClick={onLogout}
@@ -129,7 +129,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
       <DialogContent>
         <div className="px-6 py-4 flex flex-col gap-8">
           {/* Profile Section */}
-          {token && (
+          {isAuthenticated && (
             <div className="flex items-center p-4 gap-4 border border-gray-200 rounded-full shadow-lg inset-shadow-xs">
               <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-white">
                 <UserRound size={32} />
@@ -184,7 +184,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
           </div>
 
           {/* Profile Section */}
-          {token && (
+          {isAuthenticated && (
             <AccountNavList
               items={ACCOUNT_NAV}
               iconSize={44}

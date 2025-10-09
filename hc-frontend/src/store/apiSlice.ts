@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import Cookies from "js-cookie";
 
 import { BASE_API_URL } from "@/common/constants";
 import { PropertyCategory } from "@/common/enums";
@@ -15,14 +14,7 @@ export const apiSlice = createApi({
   tagTypes: TAGS,
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_API_URL,
-    prepareHeaders: (headers, { getState }) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const token = Cookies.get("token") || (getState() as any).auth?.token;
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
+    credentials: "include", // Required for HTTP-only cookies
   }),
   endpoints: (builder) => ({
     login: builder.mutation<
@@ -31,7 +23,6 @@ export const apiSlice = createApi({
         emailID: string;
         connectBal: number;
         avatarUrl: string | null;
-        token: string;
         phoneNo: string;
       },
       { phoneNo: string; otpCode: string } // Request body type
@@ -52,7 +43,6 @@ export const apiSlice = createApi({
         emailID: string;
         connectBal: number;
         avatarUrl: string | null;
-        token: string;
         phoneNo: string;
       },
       { phoneNo: string; name: string; emailID: string; otpCode: string } // Request body type

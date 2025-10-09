@@ -74,7 +74,7 @@ const shortlistPersistConfig = {
 const authPersistConfig = {
   key: "auth",
   storage,
-  whitelist: ["token", "authStep", "loginFromAddProperty"],
+  whitelist: ["isAuthenticated", "authStep", "loginFromAddProperty"],
 };
 
 // Configure persistence for user slice (user data)

@@ -37,7 +37,7 @@ import {
 import { RootState } from "@/store/store";
 import { ImageWithLoader } from "@/utility-components";
 
-import ListPropertyStepper from "../components/ListPropertyStepper";
+import ListPropertyStepper from "../../components/ListPropertyStepper";
 
 export default function ListPropertyTypeLayout({
   children,

@@ -16,8 +16,8 @@ import {
 } from "@/store/apiSlice";
 import {
   setAuthStep,
+  setIsAuthenticated,
   setLoginFromAddProperty,
-  setToken,
 } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 import {
@@ -104,8 +104,8 @@ const Login = ({ onClose }: { onClose: () => void }) => {
           otpCode: otpCode.join(""),
         });
         if (registerResponse.data) {
+          dispatch(setIsAuthenticated(true));
           dispatch(setUserDetail(registerResponse.data));
-          dispatch(setToken(registerResponse.data.token));
         }
       } else {
         if (!phoneNo) return;
@@ -115,8 +115,8 @@ const Login = ({ onClose }: { onClose: () => void }) => {
           otpCode: otpCode.join(""),
         });
         if (loginResponse.data) {
+          dispatch(setIsAuthenticated(true));
           dispatch(setUserDetail(loginResponse.data));
-          dispatch(setToken(loginResponse.data.token));
         }
       }
       dispatch(setAuthStep(AuthStep.LOGGED_IN));

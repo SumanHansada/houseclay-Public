@@ -27,7 +27,12 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Allow access to public paths
+  // If user has token and tries to access login/signup, redirect to home
+  if (token && pathname === "/login") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  // Allow access to public paths without token
   if (publicPaths.includes(pathname)) {
     return NextResponse.next();
   }

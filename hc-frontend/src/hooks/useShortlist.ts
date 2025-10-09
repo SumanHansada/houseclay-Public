@@ -15,11 +15,12 @@ import { RootState } from "@/store/store";
 
 export const useShortlist = () => {
   const dispatch = useDispatch();
-  const token = useSelector((state: RootState) => state.auth.token);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated,
+  );
   const shortlistedProperties = useSelector(
     (state: RootState) => state.shortlist.shortlistedProperties,
   );
-  const isLoggedIn = !!token;
 
   const [shortlistProperty] = useShortlistPropertyMutation();
   const [removeShortlistedProperty] = useRemoveShortlistedPropertyMutation();
@@ -27,7 +28,7 @@ export const useShortlist = () => {
 
   // Sync Redux state with API when user logs in
   useEffect(() => {
-    if (isLoggedIn && shortlistedProperties.length > 0) {
+    if (isAuthenticated && shortlistedProperties.length > 0) {
       // Sync local shortlisted properties to API
       const syncToAPI = async () => {
         try {
@@ -42,11 +43,11 @@ export const useShortlist = () => {
       };
       syncToAPI();
     }
-  }, [isLoggedIn, shortlistedProperties, shortlistProperty, dispatch]);
+  }, [isAuthenticated, shortlistedProperties, shortlistProperty, dispatch]);
 
   // Get shortlisted properties from API when logged in
   const fetchShortlistedProperties = useCallback(async () => {
-    if (isLoggedIn) {
+    if (isAuthenticated) {
       try {
         const result = await getShortlistedProperties().unwrap();
         const propertyIds = result.shortlistedProperties.map(
@@ -60,12 +61,17 @@ export const useShortlist = () => {
       }
     }
     return shortlistedProperties;
-  }, [isLoggedIn, getShortlistedProperties, shortlistedProperties, dispatch]);
+  }, [
+    isAuthenticated,
+    getShortlistedProperties,
+    shortlistedProperties,
+    dispatch,
+  ]);
 
   // Toggle shortlist status for a property
   const toggleShortlist = useCallback(
     async (propertyId: string) => {
-      if (isLoggedIn) {
+      if (isAuthenticated) {
         // User is logged in - use API
         try {
           const isCurrentlyShortlisted =
@@ -97,7 +103,7 @@ export const useShortlist = () => {
       }
     },
     [
-      isLoggedIn,
+      isAuthenticated,
       shortlistedProperties,
       shortlistProperty,
       removeShortlistedProperty,
@@ -108,7 +114,7 @@ export const useShortlist = () => {
   // Check if a property is shortlisted
   const isShortlisted = useCallback(
     async (propertyId: string): Promise<boolean> => {
-      if (isLoggedIn) {
+      if (isAuthenticated) {
         try {
           const shortlistedIds = await fetchShortlistedProperties();
           return shortlistedIds.includes(propertyId);
@@ -120,13 +126,13 @@ export const useShortlist = () => {
         return shortlistedProperties.includes(propertyId);
       }
     },
-    [isLoggedIn, shortlistedProperties, fetchShortlistedProperties],
+    [isAuthenticated, shortlistedProperties, fetchShortlistedProperties],
   );
 
   return {
     toggleShortlist,
     isShortlisted,
     fetchShortlistedProperties,
-    isLoggedIn,
+    isAuthenticated,
   };
 };

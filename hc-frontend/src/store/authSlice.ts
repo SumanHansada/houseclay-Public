@@ -1,16 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import Cookies from "js-cookie";
 
 import { AuthStep } from "@/common/enums";
 
 interface AuthState {
-  token: string;
+  isAuthenticated: boolean;
   authStep: AuthStep;
   loginFromAddProperty: boolean;
 }
 
 const initialState: AuthState = {
-  token: "",
+  isAuthenticated: false,
   authStep: AuthStep.NONE,
   loginFromAddProperty: false,
 };
@@ -19,20 +18,11 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setToken: (state, action: PayloadAction<string>) => {
-      state.token = action.payload;
-      // Set cookie with 7 days expiry
-      Cookies.set("token", action.payload, { expires: 7 });
+    setIsAuthenticated: (state, action: PayloadAction<boolean>) => {
+      state.isAuthenticated = action.payload;
     },
-    clearToken: (state) => {
-      state.token = "";
-      Cookies.remove("token");
-    },
-    initializeToken: (state) => {
-      const token = Cookies.get("token");
-      if (token) {
-        state.token = token;
-      }
+    clearIsAuthenticated: (state) => {
+      state.isAuthenticated = false;
     },
     setAuthStep: (state, action: PayloadAction<AuthStep>) => {
       state.authStep = action.payload;
@@ -45,21 +35,19 @@ const authSlice = createSlice({
     },
     // Complete logout - clear all auth state
     logout: (state) => {
-      state.token = "";
+      state.isAuthenticated = false;
       state.authStep = AuthStep.NONE;
       state.loginFromAddProperty = false;
-      Cookies.remove("token");
     },
   },
 });
 
 export const {
-  setToken,
-  clearToken,
-  initializeToken,
   setAuthStep,
   clearAuthStep,
   setLoginFromAddProperty,
+  setIsAuthenticated,
+  clearIsAuthenticated,
   logout,
 } = authSlice.actions;
 

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 
 import { useLogoutMutation } from "@/store/apiSlice";
-import { clearAuthStep, clearToken } from "@/store/authSlice";
+import { clearAuthStep, clearIsAuthenticated } from "@/store/authSlice";
 import { clearAllUserData } from "@/store/userSlice";
 
 export function useLogout() {
@@ -19,8 +19,8 @@ export function useLogout() {
     } catch (err) {
       console.error("Logout API failed:", err);
     } finally {
+      dispatch(clearIsAuthenticated());
       dispatch(clearAllUserData());
-      dispatch(clearToken());
       dispatch(clearAuthStep());
       router.push("/");
     }

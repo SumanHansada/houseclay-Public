@@ -5,7 +5,6 @@ import { Menu, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import CoinSvg from "public/icons/coin.svg";
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { BENGALURU_LOCATION } from "@/common/constants";
@@ -13,7 +12,7 @@ import { AuthStep } from "@/common/enums";
 import { UserDropdown } from "@/components/UserDropdown";
 import { useLogout } from "@/hooks/useLogout";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { initializeToken, setAuthStep } from "@/store/authSlice";
+import { setAuthStep } from "@/store/authSlice";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
 import { Popover } from "@/utility-components";
 
@@ -76,15 +75,17 @@ export const InfoTipZeroBalance: React.FC = () => (
 
 const HeaderClient: React.FC<HeaderClientProps> = () => {
   const hideHeader = useSelector((state: RootState) => state.app.hideHeader);
-  const token = useSelector((state: RootState) => state.auth.token);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated,
+  );
   const userName = useSelector(
     (state: RootState) => state.user.userDetail.name,
   );
   const connectBal = useSelector(
     (state: RootState) => state.user.userDetail.connectBal,
   );
-  const showLoginTip = !token;
-  const showZeroTip = !!token && Number(connectBal) === 0;
+  const showLoginTip = !isAuthenticated;
+  const showZeroTip = !!isAuthenticated && Number(connectBal) === 0;
 
   const dispatch = useDispatch();
   const { logout } = useLogout();
@@ -102,10 +103,6 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
     closeAllDialogs();
     openDialog("menu-dialog");
   };
-
-  useEffect(() => {
-    dispatch(initializeToken());
-  }, [dispatch]);
 
   const onLogout = () => logout();
 
@@ -203,7 +200,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
             </Popover>
 
             {/* Login Button */}
-            {token ? (
+            {isAuthenticated ? (
               <UserDropdown
                 userName={userName}
                 iconSize={40}
@@ -233,7 +230,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
           </Link>
         </div>
         <div className="text-sm">
-          {token ? (
+          {isAuthenticated ? (
             <button
               className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100 text-center"
               onClick={onLogout}

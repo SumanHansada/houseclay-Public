@@ -15,6 +15,7 @@ import {
   ListPropertyMobileStep,
   PropertyListingType,
 } from "@/common/enums";
+import { generateUUID } from "@/common/utils";
 import Carousel2D from "@/components/Carousel2D";
 import CustomerSupportBanner from "@/components/CustomerSupportBanner";
 import GetStarted from "@/components/GetStarted";
@@ -53,7 +54,9 @@ const ListPropertyPage = dynamic(
       const { isDialogOpen, openDialog, closeDialog } = useDialog();
       const { isMobile } = useDeviceContext();
       const router = useRouter();
-      const token = useSelector((state: RootState) => state.auth.token);
+      const isAuthenticated = useSelector(
+        (state: RootState) => state.auth.isAuthenticated,
+      );
       const listingType = useSelector(
         (state: RootState) => state.listProperty.listingType,
       );
@@ -131,7 +134,8 @@ const ListPropertyPage = dynamic(
           console.error("Property type is not selected");
           return;
         }
-        const url = `/list-property/${propertyCategory.toLowerCase()}/property-details`;
+        const uuid = generateUUID();
+        const url = `/list-property/${propertyCategory.toLowerCase()}/${uuid}/property-details`;
         console.log("Navigating to URL:", url);
         router.push(url);
       };
@@ -227,7 +231,7 @@ const ListPropertyPage = dynamic(
               </div>
               <div className="flex w-3/5 justify-end items-start">
                 <div className="max-w-lg xl:max-w-xl lg:w-full my-0 flex flex-col gap-8">
-                  {!token ? (
+                  {!isAuthenticated ? (
                     <>
                       <div className="flex flex-col">
                         <label className="block mb-2 text-base font-medium text-gray-700">

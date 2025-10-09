@@ -3,9 +3,9 @@
 import { useParams } from "next/navigation";
 import { useSelector } from "react-redux";
 
-import FlatmateAdditionalInfoClient from "@/app/list-property/[propertyCategory]/additional-info/FlatmateAdditionalInfoClient";
-import RentAdditionalInfoClient from "@/app/list-property/[propertyCategory]/additional-info/RentAdditionalInfoClient";
-import ResaleAdditionalInfoClient from "@/app/list-property/[propertyCategory]/additional-info/ResaleAdditionalInfoClient";
+import FlatmateAdditionalInfoClient from "@/app/list-property/[propertyCategory]/[propertyID]/additional-info/FlatmateAdditionalInfoClient";
+import RentAdditionalInfoClient from "@/app/list-property/[propertyCategory]/[propertyID]/additional-info/RentAdditionalInfoClient";
+import ResaleAdditionalInfoClient from "@/app/list-property/[propertyCategory]/[propertyID]/additional-info/ResaleAdditionalInfoClient";
 import { PropertyCategory } from "@/common/enums";
 import { RootState } from "@/store/store";
 

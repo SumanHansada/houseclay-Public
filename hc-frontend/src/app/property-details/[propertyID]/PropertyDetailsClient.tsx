@@ -176,7 +176,9 @@ export function PropertyDetailsClient({
   const router = useRouter();
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
-  const { token } = useSelector((state: RootState) => state.auth);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated,
+  );
   const { isDialogOpen, closeDialog, openDialog } = useDialog();
 
   const handleShare = async () => {
@@ -210,7 +212,9 @@ export function PropertyDetailsClient({
 
   const handleContactOwnerClick = () => {
     openDialog(
-      token ? "unlock-owner-details-dialog" : "contact-owner-login-dialog",
+      isAuthenticated
+        ? "unlock-owner-details-dialog"
+        : "contact-owner-login-dialog",
     );
   };
 

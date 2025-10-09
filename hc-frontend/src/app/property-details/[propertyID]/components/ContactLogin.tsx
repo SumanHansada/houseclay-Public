@@ -10,7 +10,7 @@ import {
   useLoginMutation,
   useRegisterMutation,
 } from "@/store/apiSlice";
-import { setAuthStep, setToken } from "@/store/authSlice";
+import { setAuthStep, setIsAuthenticated } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 import {
   setCheckUser,
@@ -94,8 +94,8 @@ export const ContactLogin = ({ onSuccess }: ContactLoginProps) => {
           otpCode: otpCode.join(""),
         });
         if (registerResponse.data) {
+          dispatch(setIsAuthenticated(true));
           dispatch(setUserDetail(registerResponse.data));
-          dispatch(setToken(registerResponse.data.token));
         }
       } else {
         if (!phoneNo) return;
@@ -105,8 +105,8 @@ export const ContactLogin = ({ onSuccess }: ContactLoginProps) => {
           otpCode: otpCode.join(""),
         });
         if (loginResponse.data) {
+          dispatch(setIsAuthenticated(true));
           dispatch(setUserDetail(loginResponse.data));
-          dispatch(setToken(loginResponse.data.token));
         }
       }
       dispatch(setAuthStep(AuthStep.LOGGED_IN));

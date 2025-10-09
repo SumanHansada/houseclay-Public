@@ -16,7 +16,7 @@ import { SvgIcon } from "@/utility-components";
 
 const FooterClient: React.FC = () => {
   const hideFooter = useSelector((state: RootState) => state.app.hideFooter);
-  const { token } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { openDialog, closeAllDialogs } = useDialog();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -143,9 +143,7 @@ const FooterClient: React.FC = () => {
                       Contact Us
                     </Link>
                   </li>
-                  {token ? (
-                    <></>
-                  ) : (
+                  {isAuthenticated ? null : (
                     <>
                       <li>
                         <button
