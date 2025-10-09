@@ -170,7 +170,7 @@ export const DialogHeader: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   return (
     <div
-      className={`relative ${children ? "h-14 border-b border-gray-200" : ""} flex max-md:px-4 max-md:py-2 max-md:items-center max-md:justify-center md:px-6 md:py-4 md:items-start md:justify-start`}
+      className={`relative ${children ? "h-14 border-b border-gray-200 flex max-md:px-4 max-md:py-2 max-md:items-center max-md:justify-center md:px-6 md:py-4 md:items-start md:justify-start" : ""}`}
     >
       {children}
     </div>
@@ -189,7 +189,7 @@ export const DialogFooter: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
   <div
-    className={`${children ? "border-t border-t-gray-200" : ""} flex pb-safe-bottom-2 pt-2 md:px-6 px-4 justify-center`}
+    className={`${children ? "border-t border-t-gray-200 flex pb-safe-bottom-2 pt-2 md:px-6 px-4 justify-center" : ""}`}
   >
     {children}
   </div>
