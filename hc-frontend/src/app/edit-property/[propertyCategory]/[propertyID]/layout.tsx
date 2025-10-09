@@ -63,7 +63,6 @@ export default function EditPropertyTypeLayout({
 
   // Function to derive current step from URL path
   const getCurrentStepFromPath = (): ListPropertyFormStep => {
-    const pathSegments = pathname.split("/");
     const lastSegment = pathSegments[pathSegments.length - 1];
 
     switch (lastSegment) {

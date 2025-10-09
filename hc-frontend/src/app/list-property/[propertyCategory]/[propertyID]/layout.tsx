@@ -48,19 +48,20 @@ export default function ListPropertyTypeLayout({
   const pathname = usePathname();
   const dispatch = useDispatch();
   const uploadFiles = useS3Uploader();
-  const propertyCategory = useSelector(
-    (state: RootState) => state.listProperty.propertyCategory,
-  );
   const router = useRouter();
   const { openDialog, isDialogOpen, closeDialog } = useDialog();
   const { isMobile } = useDeviceContext();
+
+  // Extract propertyCategory and propertyID from URL params
+  const pathSegments = pathname.split("/");
+  const propertyCategory = pathSegments[2]?.toUpperCase() as PropertyCategory;
+  const propertyID = pathSegments[3];
 
   // Get upload state to monitor completion
   const uploadState = useSelector((state: RootState) => state.uploadToS3);
 
   // Function to derive current step from URL path
   const getCurrentStepFromPath = (): ListPropertyFormStep => {
-    const pathSegments = pathname.split("/");
     const lastSegment = pathSegments[pathSegments.length - 1];
 
     switch (lastSegment) {
@@ -112,9 +113,6 @@ export default function ListPropertyTypeLayout({
   const [addProperty, { isLoading: isAddingProperty }] =
     usePropertyAddMutation();
 
-  const propertyID = useSelector(
-    (state: RootState) => state.listProperty.propertyID,
-  );
   const propertyImagesS3Url = useSelector(
     (state: RootState) => state.listProperty.propertyImagesS3Url,
   );
@@ -174,7 +172,7 @@ export default function ListPropertyTypeLayout({
   }, [uploadState.status, isDialogOpen, closeDialog, openDialog]);
 
   const setRoute = (stepSlug: string) => {
-    const route = `/list-property/${propertyCategory.toLowerCase()}/${stepSlug}`;
+    const route = `/list-property/${propertyCategory.toLowerCase()}/${propertyID}/${stepSlug}`;
     router.push(route);
   };
 
