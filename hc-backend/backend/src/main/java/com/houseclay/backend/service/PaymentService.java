@@ -1,6 +1,7 @@
 package com.houseclay.backend.service;
 
 import com.houseclay.backend.entity.*;
+import com.houseclay.backend.payload.CreateOrderRequest;
 import com.razorpay.Utils;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.repository.ConnectTransactionRepository;
@@ -12,6 +13,7 @@ import jakarta.annotation.PostConstruct;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -49,7 +51,10 @@ public class PaymentService {
         this.razorpayClient = new RazorpayClient(keyId, razorpaySecret);
     }
 
-    public JSONObject createOrder(User user, int amount) throws Exception {
+    public JSONObject createOrder(User user, CreateOrderRequest request) throws Exception {
+        Pair<Double, Integer> orderPair = getAmountAndConnect(request);
+        double amount = orderPair.getFirst();
+        int connectQty = orderPair.getSecond();
         Optional<User> userOpt = userRepository.findById(user.getPhoneNo());
         if (userOpt.isEmpty()) {
             throw new APIException("Invalid token", HttpStatus.BAD_REQUEST);
@@ -68,9 +73,10 @@ public class PaymentService {
 
         // Saving order in external payment entity.
         ExternalPayments externalPayments = new ExternalPayments();
-        externalPayments.setAmount(amount);
+        externalPayments.setBundle(request.getBundle());
         externalPayments.setPaymentId(orderID);
         externalPayments.setAmount(amount);
+        externalPayments.setConnectQty(connectQty);
         externalPayments.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         externalPayments.setStatus(ExternalPaymentStatus.IN_PROGRESS);
         externalPayments.setUser(user);
@@ -101,7 +107,6 @@ public class PaymentService {
             String paymentId,
             String orderId,
             String signature,
-            int connects,
             User user
     ) {
         try {
@@ -130,16 +135,9 @@ public class PaymentService {
         payment.setStatus(ExternalPaymentStatus.COMPLETED);
         payment.setCompletedAt(new Timestamp(System.currentTimeMillis()));
 
-        int connectQuantity = connects;
+        int connectQty = payment.getConnectQty();
 
-        // int connectQuantity = (int)payment.getAmount()/CONNECT_RATE;
-        // Loop was running 1000 times
-        // payment amount was in paise.. Ex for this amount 350460. Loop was running 3504 times
-        // Will need to factor the discount rates also otherwise payment from UI will not match actual payment.
-        // double amountFromConnects = (connectQuantity * CONNECT_RATE * 0.18 * 100);
-        // double amountFromPayment = payment.getAmount();
-
-        for (int i = 0; i < connectQuantity; i++) {
+        for (int i = 0; i < connectQty; i++) {
             ConnectEvent connectEvent = new ConnectEvent();
             connectEvent.setEventType(ConnectEventType.CREATED);
             connectEvent.setActorType(ActorType.USER);
@@ -155,12 +153,16 @@ public class PaymentService {
 
             user.getConnects().add(connect);
         }
-        user.setConnectBal(user.getConnectBal() + connectQuantity);
+        user.setConnectBal(user.getConnectBal() + connectQty);
         userRepository.save(user);
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Payment verified and balance updated");
         response.put("connectBal", user.getConnectBal());
         return ResponseEntity.ok(response);
+    }
+
+    public Pair<Double, Integer> getAmountAndConnect(CreateOrderRequest request) {
+        return Pair.of(100.0, 2);
     }
 }
 

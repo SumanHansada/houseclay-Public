@@ -18,7 +18,7 @@ public class PaymentController {
 
     @PostMapping("/create-order")
     public ResponseEntity<String> createOrder(@RequestBody CreateOrderRequest request, @RequestAttribute("authenticatedUser") User user) throws Exception {
-        JSONObject order = paymentService.createOrder(user, request.getAmount());
+        JSONObject order = paymentService.createOrder(user, request);
         return ResponseEntity.ok().body(order.toString());
     }
 
@@ -28,7 +28,6 @@ public class PaymentController {
                 request.getPaymentId(),
                 request.getOrderId(),
                 request.getSignature(),
-                request.getConnects(),
                 user
         );
     }

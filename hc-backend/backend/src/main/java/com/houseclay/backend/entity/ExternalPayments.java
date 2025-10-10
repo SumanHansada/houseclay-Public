@@ -2,8 +2,6 @@ package com.houseclay.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 
 import java.sql.Timestamp;
 
@@ -14,6 +12,8 @@ public class ExternalPayments {
     @Id
     private String paymentId;
     private double amount;
+    private int connectQty;
+    private Bundle bundle;
     private ExternalPaymentStatus status;
     private String signature;
     private String razorPaymentId;

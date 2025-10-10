@@ -85,6 +85,18 @@ public class PropertyAdminController {
         }
     }
 
+    @PostMapping("/exclusive")
+    public ResponseEntity<?> updatePropertyExclusive(@RequestParam String propertyID, @RequestParam boolean isExclusive, @RequestAttribute("authenticatedAdmin") Admin admin) {
+        try {
+            Property property = propertyAdminService.updateExclusiveTag(propertyID, isExclusive, admin);
+            return ResponseEntity.ok(PropertyDetailMapper.toPropertyDetailDTO(property));
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
 
     @GetMapping("/all")
     public ResponseEntity<Page<UserPropertyDTO>> getProperties(

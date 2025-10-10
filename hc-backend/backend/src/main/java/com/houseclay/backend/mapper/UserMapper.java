@@ -155,6 +155,8 @@ public class UserMapper {
         UserExternalPaymentDTO dto = new UserExternalPaymentDTO();
         dto.setPaymentId(payment.getPaymentId());
         dto.setAmount(payment.getAmount());
+        dto.setBundle(payment.getBundle());
+        dto.setConnectQty(payment.getConnectQty());
         dto.setStatus(payment.getStatus());
         dto.setCreatedAt(payment.getCreatedAt());
         dto.setCompletedAt(payment.getCompletedAt());

@@ -107,4 +107,16 @@ public class PropertyAdminService {
         propertyElasticService.indexPropertyInElastic(property);
         return property;
     }
+
+    public Property updateExclusiveTag(String propertyID, boolean tag, Admin admin) throws APIException {
+        Optional<Property> propertyOpt = propertyRepository.findById(propertyID);
+        if (propertyOpt.isEmpty()) {
+            throw new APIException("Property not found", HttpStatus.BAD_REQUEST);
+        }
+
+        Property property = propertyOpt.get();
+        property.setPremium(tag);
+        property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, admin, "exclusive tag updated", PropertyUpdateType.UPDATE));
+        return propertyRepository.save(property);
+    }
 }
