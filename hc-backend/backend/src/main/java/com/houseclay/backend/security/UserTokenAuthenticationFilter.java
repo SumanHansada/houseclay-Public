@@ -49,6 +49,13 @@ public class UserTokenAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String requestURI = request.getRequestURI();
+        String method = request.getMethod();
+
+        // ✅ Skip OPTIONS requests (CORS preflight) immediately
+        if ("OPTIONS".equalsIgnoreCase(method)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         // ✅ Allow public APIs
         if (PUBLIC_URLS.contains(requestURI)) {

@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -73,13 +74,26 @@ public class UserService {
         return buildLoginResponse(user, token);
     }
 
-    public boolean logoutUser(String authToken) throws Exception {
+    public ResponseEntity<?> logoutUser(String authToken) throws Exception {
         List<UserLogin> userLogins = userLoginRepository.findByToken(authToken);
         if (userLogins.isEmpty()) {
             throw new APIException("Invalid token", HttpStatus.BAD_REQUEST);
         }
         userLoginRepository.delete(userLogins.get(0));
-        return true;
+        return buildLogoutResponse();
+    }
+    
+    public ResponseEntity<?> buildLogoutResponse() {
+        // Clear the cookie by setting maxAge to 0
+        ResponseCookie cookie = ResponseCookie.from(TOKEN_KEY, "")
+                .httpOnly(true)
+                .secure(false) // Set to true when using HTTPS
+                .path("/")
+                .maxAge(0) // Clear the cookie
+                .build();
+        return ResponseEntity.ok()
+                .header("Set-Cookie", cookie.toString())
+                .body(Map.of("message", "Logout successful"));
     }
 
     public boolean doesUserExist(String phoneNo) {
@@ -88,13 +102,19 @@ public class UserService {
     }
 
     public ResponseEntity<?> buildLoginResponse(User user, String token) {
+        // ⚠️ For cross-origin HTTP: Don't set sameSite (legacy browser behavior)
+        // ✅ For HTTPS production: Use .secure(true).sameSite("None")
+        // Don't set sameSite for HTTP cross-origin (allows cookies to work)
+        // Uncomment below for HTTPS: .sameSite("None")
+
         ResponseCookie cookie = ResponseCookie.from(TOKEN_KEY, token)
                 .httpOnly(true)
-                .secure(true)
+                .secure(false) // Set to true when using HTTPS
                 .path("/")
                 .maxAge(60 * 60)
-                .sameSite("Strict")
+                .sameSite("None")
                 .build();
+                
         return ResponseEntity.ok()
                 .header("Set-Cookie", cookie.toString())
                 .body(UserMapper.toUserLoginResponseDTO(user));
