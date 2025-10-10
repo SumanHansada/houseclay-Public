@@ -112,7 +112,6 @@ public class UserService {
                 .secure(false) // Set to true when using HTTPS
                 .path("/")
                 .maxAge(60 * 60)
-                .sameSite("None")
                 .build();
                 
         return ResponseEntity.ok()
