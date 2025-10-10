@@ -7,4 +7,5 @@ import java.util.Map;
 @Data
 public class PresignedURLRequest {
     private Map<String, String> fileMap;
+    private String propertyID;
 }

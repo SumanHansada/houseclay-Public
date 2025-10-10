@@ -6,11 +6,9 @@ import java.util.Map;
 
 @Data
 public class PresignedURLResponse {
-    private String propertyID;
     private Map<String, String> fileURLMap;
 
-    public PresignedURLResponse(String propertyID, Map<String, String> fileURLs) {
-        this.propertyID = propertyID;
+    public PresignedURLResponse(Map<String, String> fileURLs) {
         this.fileURLMap = fileURLs;
     }
 }
