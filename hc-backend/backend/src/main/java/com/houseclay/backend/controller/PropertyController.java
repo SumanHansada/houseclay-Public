@@ -49,7 +49,7 @@ public class PropertyController {
 
     @GetMapping("/search")
     public ResponseEntity<PaginatedResponse<PropertyCardDTO>> searchProperty(
-            @RequestParam PropertySearchRequestDTO propertySearchRequestDTO,
+            @ModelAttribute PropertySearchRequestDTO propertySearchRequestDTO,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size) {
 
