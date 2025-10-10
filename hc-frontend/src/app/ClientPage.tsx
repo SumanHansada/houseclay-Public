@@ -18,6 +18,7 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
+import { usePopularNeighbourhoodsQuery } from "@/store/apiSlice";
 
 interface ClientPageProps {
   properties: PropertySearch[];
@@ -32,6 +33,13 @@ export default function ClientPage({
 }: ClientPageProps) {
   const { isDialogOpen } = useDialog();
   const dispatch = useDispatch();
+
+  const { data } = usePopularNeighbourhoodsQuery(undefined, {
+    refetchOnMountOrArgChange: 30,
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+  });
+  console.log(data);
 
   // Initialize app state
   useEffect(() => {
@@ -53,6 +61,7 @@ export default function ClientPage({
       </section>
 
       {/* neighbourhoods Section */}
+
       <section className="min-h-[500px] w-full overflow-hidden">
         <Neighbourhoods neighbourhoods={neighbourhoods} />
       </section>

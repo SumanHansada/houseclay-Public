@@ -285,6 +285,9 @@ export const apiSlice = createApi({
         method: "GET",
       }),
     }),
+    popularNeighbourhoods: builder.query<string[], void>({
+      query: () => "/property/neighbourhood",
+    }),
   }),
 });
 
@@ -313,4 +316,5 @@ export const {
   useCreateOrderMutation,
   useVerifyPaymentMutation,
   useContactOwnerMutation,
+  usePopularNeighbourhoodsQuery,
 } = apiSlice;

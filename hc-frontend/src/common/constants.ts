@@ -11,3 +11,15 @@ export const HOUSECLAY_INSTAGRAM = "https://www.instagram.com/houseclaydotcom";
 export const HOUSECLAY_LINKEDIN = "https://in.linkedin.com/company/houseclay";
 
 export const BENGALURU_LOCATION = { lat: 12.9716, lng: 77.5946 };
+
+// Popular Neighbourhoods
+export const NEIGHBOURHOODS = [
+  "Bellandur",
+  "Sarjapur",
+  "Kadubeesanahalli",
+  "K R Puram",
+  "Whitefield",
+  "Marathahalli",
+  "BTM Layout",
+  "HSR Layout",
+];
