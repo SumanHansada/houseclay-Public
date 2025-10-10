@@ -98,10 +98,9 @@ export const apiSlice = createApi({
 
     presignedUrls: builder.mutation<
       {
-        propertyID: string;
         fileURLMap: Record<string, string>;
       }, // Response type
-      { fileMap: Record<string, string> } // Request body type
+      { propertyID: string; fileMap: Record<string, string> } // Request body type
     >({
       query: (data) => ({
         url: "photo/user/presigned-urls",

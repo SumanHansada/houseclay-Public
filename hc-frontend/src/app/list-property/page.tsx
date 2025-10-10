@@ -41,7 +41,7 @@ import {
   setHideStickyNavBar,
 } from "@/store/appSlice";
 import { setAuthStep, setLoginFromAddProperty } from "@/store/authSlice";
-import { clearFormData } from "@/store/listPropertySlice";
+import { clearFormData, setPropertyID } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 import { setCheckUser, setPhoneNo } from "@/store/userSlice";
 import { ImageWithLoader } from "@/utility-components";
@@ -135,6 +135,7 @@ const ListPropertyPage = dynamic(
           return;
         }
         const uuid = generateUUID();
+        dispatch(setPropertyID(uuid));
         const url = `/list-property/${propertyCategory.toLowerCase()}/${uuid}/property-details`;
         console.log("Navigating to URL:", url);
         router.push(url);

@@ -229,6 +229,7 @@ export default function EditPropertyTypeLayout({
     });
     console.log(fileMap);
     const presignedUrlsResponse = await getPresignedUrls({
+      propertyID,
       fileMap,
     })
       .unwrap()
@@ -239,7 +240,6 @@ export default function EditPropertyTypeLayout({
       console.error("No presigned URLs received");
       return;
     }
-    dispatch(setPropertyID(presignedUrlsResponse.propertyID));
     dispatch(
       setFileURLMap({
         data: presignedUrlsResponse.fileURLMap,

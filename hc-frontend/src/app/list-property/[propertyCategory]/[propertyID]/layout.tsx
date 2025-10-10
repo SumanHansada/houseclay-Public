@@ -29,11 +29,7 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
-import {
-  clearFormData,
-  setFileURLMap,
-  setPropertyID,
-} from "@/store/listPropertySlice";
+import { clearFormData, setFileURLMap } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 import { ImageWithLoader } from "@/utility-components";
 
@@ -207,6 +203,7 @@ export default function ListPropertyTypeLayout({
     console.log(fileMap);
     const presignedUrlsResponse = await getPresignedUrls({
       fileMap,
+      propertyID,
     })
       .unwrap()
       .catch((error: Error) => {
@@ -216,7 +213,6 @@ export default function ListPropertyTypeLayout({
       console.error("No presigned URLs received");
       return;
     }
-    dispatch(setPropertyID(presignedUrlsResponse.propertyID));
     dispatch(
       setFileURLMap({
         data: presignedUrlsResponse.fileURLMap,
