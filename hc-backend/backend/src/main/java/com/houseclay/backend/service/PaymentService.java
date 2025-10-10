@@ -1,7 +1,11 @@
 package com.houseclay.backend.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.houseclay.backend.dto.BundleDTO;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.payload.CreateOrderRequest;
+import com.houseclay.backend.utils.Constants;
 import com.razorpay.Utils;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.repository.ConnectTransactionRepository;
@@ -21,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -55,6 +60,10 @@ public class PaymentService {
         Pair<Double, Integer> orderPair = getAmountAndConnect(request);
         double amount = orderPair.getFirst();
         int connectQty = orderPair.getSecond();
+        if (request.getBundle() == Bundle.CUSTOM_CONNECTS) {
+            connectQty = request.getConnects();
+            amount = amount * connectQty;
+        }
         Optional<User> userOpt = userRepository.findById(user.getPhoneNo());
         if (userOpt.isEmpty()) {
             throw new APIException("Invalid token", HttpStatus.BAD_REQUEST);
@@ -161,8 +170,18 @@ public class PaymentService {
         return ResponseEntity.ok(response);
     }
 
-    public Pair<Double, Integer> getAmountAndConnect(CreateOrderRequest request) {
-        return Pair.of(100.0, 2);
+    public Pair<Double, Integer> getAmountAndConnect(CreateOrderRequest request) throws Exception{
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<BundleDTO> bundles = objectMapper.readValue(
+                Constants.BUNDLE_DATA,
+                new TypeReference<List<BundleDTO>>() {}
+        );
+        for (BundleDTO bundleDTO : bundles) {
+            if(request.getBundle().toString().equals(bundleDTO.getId())) {
+                return Pair.of(bundleDTO.getDiscountedPrice(), bundleDTO.getConnects());
+            }
+        }
+        throw new APIException("Invalid bundle", HttpStatus.BAD_REQUEST);
     }
 }
 
