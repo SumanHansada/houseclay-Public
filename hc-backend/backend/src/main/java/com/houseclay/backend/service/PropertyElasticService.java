@@ -68,6 +68,8 @@ public class PropertyElasticService {
         propertyDocument.setImages(property.getImages());
         propertyDocument.setAmenities(property.getAmenities());
         propertyDocument.setBathrooms(property.getBathrooms());
+        propertyDocument.setExclusive(property.isPremium());
+        propertyDocument.setCreatedOn(System.currentTimeMillis());
         propertyDocument.setLocation(new PropertyDocument.GeoPoint(property.getLatitude(), property.getLongitude()));
     }
 }

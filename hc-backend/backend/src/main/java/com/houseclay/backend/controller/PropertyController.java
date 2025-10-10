@@ -2,8 +2,8 @@ package com.houseclay.backend.controller;
 
 import com.houseclay.backend.dto.PaginatedResponse;
 import com.houseclay.backend.dto.PropertyCardDTO;
+import com.houseclay.backend.dto.PropertySearchRequestDTO;
 import com.houseclay.backend.entity.Property;
-import com.houseclay.backend.entity.PropertyCategory;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.mapper.PropertySearchMapper;
 import com.houseclay.backend.service.PropertyService;
@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @RestController
@@ -51,24 +49,12 @@ public class PropertyController {
 
     @GetMapping("/search")
     public ResponseEntity<PaginatedResponse<PropertyCardDTO>> searchProperty(
-            @RequestParam PropertyCategory propertyCategory,
-            @RequestParam double lat,
-            @RequestParam double lon,
-            @RequestParam(defaultValue = "15km") String distance,
-            @RequestParam(required = false) String city,
-            @RequestParam(required = false) String bhkType,
-            @RequestParam(required = false) String furnishing,
-            @RequestParam(required = false) String propertyType,
-            @RequestParam(required = false) String parking,
-            @RequestParam(required = false) Double minPrice,
-            @RequestParam(required = false) Double maxPrice,
-            @RequestParam(required = false) String preferredTenant,
-            @RequestParam(required = false) List<String> amenities,
+            @RequestParam PropertySearchRequestDTO propertySearchRequestDTO,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size) {
 
         PaginatedResponse<PropertyCardDTO> results = searchService.searchNearbyWithFilters(
-                lat, lon, distance, city, bhkType, minPrice, maxPrice, propertyCategory, furnishing, propertyType, parking, preferredTenant, amenities, page, size
+                propertySearchRequestDTO, page, size
         );
 
         return ResponseEntity.ok(results);

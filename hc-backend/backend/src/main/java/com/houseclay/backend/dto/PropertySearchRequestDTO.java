@@ -1,0 +1,41 @@
+package com.houseclay.backend.dto;
+
+import com.houseclay.backend.entity.PropertyCategory;
+import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
+import lombok.Data;
+
+import java.util.List;
+
+@Builder
+@Data
+public class PropertySearchRequestDTO {
+    @NotNull
+    private PropertyCategory propertyCategory;
+
+    @NotNull
+    private Double lat;
+
+    @NotNull
+    private Double lon;
+
+    @Builder.Default
+    private String distance = "15km";
+
+    private String city;
+    private String bhkType;
+    private String furnishing;
+    private String propertyType;
+    private String parking;
+    @Builder.Default
+    private boolean isExclusive = false;
+
+    private Double minPrice;
+    private Double maxPrice;
+
+    private String preferredTenant;
+    private List<String> amenities;
+
+    private SortFields sortFields;
+    private SortOrder sortOrder;
+}

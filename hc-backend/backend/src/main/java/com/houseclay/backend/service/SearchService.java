@@ -1,9 +1,11 @@
 package com.houseclay.backend.service;
 
+import co.elastic.clients.elasticsearch._types.DistanceUnit;
 import co.elastic.clients.elasticsearch._types.GeoLocation;
+import co.elastic.clients.elasticsearch._types.SortMode;
+import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.json.JsonData;
-import com.houseclay.backend.dto.PaginatedResponse;
-import com.houseclay.backend.dto.PropertyCardDTO;
+import com.houseclay.backend.dto.*;
 import com.houseclay.backend.entity.PropertyCategory;
 import com.houseclay.backend.entity.elastic.FlatmateDocument;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
@@ -32,19 +34,7 @@ public class SearchService {
     private PhotoService photoService;
 
     public PaginatedResponse<PropertyCardDTO> searchNearbyWithFilters(
-            double lat,
-            double lon,
-            String distance,
-            String city,
-            String bhkType,
-            Double minPrice,
-            Double maxPrice,
-            PropertyCategory propertyCategory,
-            String furnishing,
-            String propertyType,
-            String parking,
-            String preferredTenant,
-            List<String> amenities,
+            PropertySearchRequestDTO request,
             int page,
             int size
     ) {
@@ -52,12 +42,12 @@ public class SearchService {
         // Build the list of filters (geo + field filters)
         List<Query> filters = new ArrayList<>();
 
-        List<Double> coordinates = new ArrayList<Double>(Arrays.asList(lon, lat));
+        List<Double> coordinates = new ArrayList<Double>(Arrays.asList(request.getLat(), request.getLon()));
         // Geo filter
         filters.add(Query.of(q -> q
                 .geoDistance(g -> g
                         .field("location")
-                        .distance(distance)
+                        .distance(request.getDistance())
                         .location(
                                 new GeoLocation.Builder()
                                         .coords(coordinates)
@@ -67,45 +57,50 @@ public class SearchService {
         ));
 
         // City filter
-        if (city != null && !city.isEmpty()) {
+        if (request.getCity() != null && !request.getCity().isEmpty()) {
             filters.add(Query.of(q -> q
-                    .term(t -> t.field("city.keyword").value(city))
+                    .term(t -> t.field("city.keyword").value(request.getCity()))
             ));
         }
 
-        // BHK type filter
-        if (bhkType != null && !bhkType.isEmpty()) {
+        if (request.getBhkType() != null && !request.getBhkType().isEmpty()) {
             filters.add(Query.of(q -> q
-                    .term(t -> t.field("bhkType.keyword").value(bhkType))
+                    .term(t -> t.field("bhkType.keyword").value(request.getBhkType()))
             ));
         }
 
-        if (furnishing != null && !furnishing.isEmpty()) {
+        if (request.getFurnishing() != null && !request.getFurnishing().isEmpty()) {
             filters.add(Query.of(q -> q
-                    .term(t -> t.field("furnishing.keyword").value(furnishing))
+                    .term(t -> t.field("furnishing.keyword").value(request.getFurnishing()))
             ));
         }
 
-        if (propertyType != null && !propertyType.isEmpty()) {
+        if (request.getPropertyType() != null && !request.getPropertyType().isEmpty()) {
             filters.add(Query.of(q -> q
-                    .term(t -> t.field("propertyType.keyword").value(propertyType))
+                    .term(t -> t.field("propertyType.keyword").value(request.getPropertyType()))
             ));
         }
 
-        if (preferredTenant != null && !preferredTenant.isEmpty()) {
+        if (request.getPreferredTenant() != null && !request.getPreferredTenant().isEmpty()) {
             filters.add(Query.of(q -> q
-                    .term(t -> t.field("preferredTenant.keyword").value(preferredTenant))
+                    .term(t -> t.field("preferredTenant.keyword").value(request.getPreferredTenant()))
             ));
         }
 
-        if (parking != null && !parking.isEmpty()) {
+        if (request.getParking() != null && !request.getParking().isEmpty()) {
             filters.add(Query.of(q -> q
-                    .term(t -> t.field("parking.keyword").value(parking))
+                    .term(t -> t.field("parking.keyword").value(request.getParking()))
             ));
         }
 
-        if (amenities != null && !amenities.isEmpty()) {
-            List<Query> mustQueries = amenities.stream()
+        if (request.isExclusive()) {
+            filters.add(Query.of(q -> q
+                    .term(t -> t.field("isExclusive").value(true))
+            ));
+        }
+
+        if (request.getAmenities() != null && !request.getAmenities().isEmpty()) {
+            List<Query> mustQueries = request.getAmenities().stream()
                     .map(amenity -> Query.of(q -> q
                             .term(t -> t
                                     .field("amenities.keyword")
@@ -121,7 +116,7 @@ public class SearchService {
             ));
         }
 
-        addRangeFilter(minPrice, maxPrice, filters, propertyCategory);
+        addRangeFilter(request.getMinPrice(), request.getMaxPrice(), filters, request.getPropertyCategory());
 
         // Wrap filters inside a bool query
         Query boolQuery = Query.of(q -> q
@@ -130,14 +125,22 @@ public class SearchService {
 
         Pageable pageable = PageRequest.of(page, size);
 
+        if (request.getSortFields() == null ) {
+            request.setSortFields(SortFields.DISTANCE);
+        }
+        if (request.getSortOrder() == null) {
+            request.setSortOrder(SortOrder.ASC);
+        }
+
         // Build the query
         NativeQuery searchQuery = NativeQuery.builder()
                 .withQuery(boolQuery)
+                .withSort(List.of(buildSortOptions(request.getSortFields(), request.getSortOrder(), request.getPropertyCategory(), request.getLat(), request.getLon())))
                 .withPageable(pageable)
                 .build();
 
 
-        return switch (propertyCategory) {
+        return switch (request.getPropertyCategory()) {
             case RESALE -> mapPage(
                     elasticsearchOperations.search(searchQuery, SaleDocument.class),
                     pageable,
@@ -218,4 +221,46 @@ public class SearchService {
         }
     }
 
+    private SortOptions buildSortOptions(SortFields sortBy, SortOrder sortOrder, PropertyCategory category, double lat, double lon) {
+        co.elastic.clients.elasticsearch._types.SortOrder order = (sortOrder == SortOrder.DESC) ? co.elastic.clients.elasticsearch._types.SortOrder.Desc : co.elastic.clients.elasticsearch._types.SortOrder.Asc;
+
+        switch (sortBy) {
+            case DISTANCE -> {
+                GeoLocation point = GeoLocation.of(g -> g.latlon(l -> l.lat(lat).lon(lon)));
+                return SortOptions.of(s -> s.geoDistance(g -> g
+                        .field("location")
+                        .location(point)
+                        .order(order)
+                        .unit(DistanceUnit.Kilometers)
+                        .mode(SortMode.Min)
+                ));
+            }
+            case PRICE -> {
+                String field = switch (category) {
+                    case RESALE -> "price";
+                    case RENT, FLATMATE -> "monthlyRent";
+                };
+                return SortOptions.of(s -> s.field(f -> f
+                        .field(field)
+                        .order(order)
+                        .missing("_last")
+                ));
+            }
+            case AVAILABLE_FROM -> {
+                return SortOptions.of(s -> s.field(f -> f
+                        .field("availableFrom")
+                        .order(order)
+                        .missing("_last")
+                ));
+            }
+            case POSTED_ON -> {
+                return SortOptions.of(s -> s.field(f -> f
+                        .field("createdOn")
+                        .order(order)
+                        .missing("_last")
+                ));
+            }
+        }
+        return SortOptions.of(s -> s.field(f -> f.field("createdOn").order(co.elastic.clients.elasticsearch._types.SortOrder.Desc)));
+    }
 }

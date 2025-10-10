@@ -6,7 +6,6 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.GeoPointField;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 @Data
@@ -25,6 +24,8 @@ public class PropertyDocument {
     private String landmark;
     private Long availableFrom;
     private String parking;
+    private boolean isExclusive;
+    private Long createdOn;
 
     @Field(type = FieldType.Keyword)
     private List<String> images;
