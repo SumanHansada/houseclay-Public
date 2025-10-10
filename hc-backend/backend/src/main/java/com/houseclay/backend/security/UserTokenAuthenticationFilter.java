@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+import jakarta.servlet.http.Cookie;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,6 +16,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+
+import static com.houseclay.backend.utils.Constants.TOKEN_KEY;
 
 @Component
 public class UserTokenAuthenticationFilter extends OncePerRequestFilter {
@@ -53,43 +56,63 @@ public class UserTokenAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        // ✅ Ensure this filter only applies to `/api/user/**`
-        if (PRIVATE_URL_PREFIXES.stream().noneMatch(requestURI::startsWith) && !PRIVATE_URLS.contains(requestURI)) {
+        // ✅ Apply only to private prefixes/URLs
+        if (PRIVATE_URL_PREFIXES.stream().noneMatch(requestURI::startsWith)
+                && !PRIVATE_URLS.contains(requestURI)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String authHeader = request.getHeader(AUTH_HEADER);
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("{\"error\": \"Missing or invalid token\"}");
+        // ---- Extract token ONLY from cookie ----
+        String token = extractTokenFromCookie(request);
+        if (token == null || token.isBlank()) {
+            unauthorized(response, "Missing authentication cookie");
             return;
         }
 
-        String token = authHeader.substring(7);
+        // ---- Validate against DB ----
         List<UserLogin> userLoginOpt = userLoginRepository.findByToken(token);
-
         if (userLoginOpt.isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("{\"error\": \"Invalid or expired token\"}");
+            unauthorized(response, "Invalid or expired token");
             return;
         }
 
-        // Block blacklisted users
         User user = userLoginOpt.get(0).getUser();
         if (user.isBlacklisted()) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("{\"error\": \"User is blacklisted\"}");
+            forbidden(response, "User is blacklisted");
             return;
         }
 
+        // ---- Attach user & authenticate ----
         request.setAttribute("authenticatedUser", user);
-
-        // ✅ Set authentication in Spring Security's context (Fixes 403 Forbidden)
-        UsernamePasswordAuthenticationToken authentication =
+        request.setAttribute("token", token);
+        UsernamePasswordAuthenticationToken auth =
                 new UsernamePasswordAuthenticationToken(user, null, List.of());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        SecurityContextHolder.getContext().setAuthentication(auth);
 
         filterChain.doFilter(request, response);
     }
+
+    private String extractTokenFromCookie(HttpServletRequest request) {
+        if (request.getCookies() == null) return null;
+        for (Cookie c : request.getCookies()) {
+            if (TOKEN_KEY.equals(c.getName())) {
+                return c.getValue();
+            }
+        }
+        return null;
+    }
+
+    private void unauthorized(HttpServletResponse response, String msg) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"error\":\"" + msg + "\"}");
+    }
+
+    private void forbidden(HttpServletResponse response, String msg) throws IOException {
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"error\":\"" + msg + "\"}");
+    }
+
 }

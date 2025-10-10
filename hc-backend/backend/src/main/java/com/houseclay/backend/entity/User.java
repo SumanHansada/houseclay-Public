@@ -29,6 +29,8 @@ public class User {
         this.userLogins = new LinkedList<>();
         this.ownedProperties = new LinkedList<>();
         this.userUpdateLogs = new LinkedList<>();
+        this.connects = new LinkedList<>();
+        this.leads = new LinkedList<>();
     }
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)

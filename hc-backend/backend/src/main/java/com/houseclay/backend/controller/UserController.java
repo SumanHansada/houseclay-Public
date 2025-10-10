@@ -74,7 +74,7 @@ public class UserController {
     }
 
     @RequestMapping (method = RequestMethod.POST, value = "/logout",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> logout(@RequestHeader("Authorization") String authToken) {
+    public ResponseEntity<?> logout(@RequestAttribute("token") String authToken) {
         try {
             userService.logoutUser(authToken.replace("Bearer ", "")); // Remove "Bearer " prefix
             return ResponseEntity.ok(Map.of("message", "Logout successful"));

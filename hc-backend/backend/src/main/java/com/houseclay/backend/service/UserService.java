@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.houseclay.backend.utils.Constants.TOKEN_KEY;
+
 @Service
 public class UserService {
 
@@ -86,7 +88,7 @@ public class UserService {
     }
 
     public ResponseEntity<?> buildLoginResponse(User user, String token) {
-        ResponseCookie cookie = ResponseCookie.from("token", token)
+        ResponseCookie cookie = ResponseCookie.from(TOKEN_KEY, token)
                 .httpOnly(true)
                 .secure(true)
                 .path("/")

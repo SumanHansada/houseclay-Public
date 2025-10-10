@@ -1,8 +1,10 @@
 package com.houseclay.backend.service;
 
+import com.houseclay.backend.dto.PropertyCardDTO;
 import com.houseclay.backend.dto.UserPropertyDTO;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
+import com.houseclay.backend.mapper.PropertyCardMapper;
 import com.houseclay.backend.mapper.UserMapper;
 import com.houseclay.backend.repository.NeighbourhoodRepository;
 import com.houseclay.backend.repository.PropertyRepository;
@@ -43,9 +45,9 @@ public class PropertyService {
         throw new APIException("Invalid property ID", HttpStatus.BAD_REQUEST);
     }
 
-    public List<UserPropertyDTO> getStandout() {
+    public List<PropertyCardDTO> getStandout() {
         List<Property> propertyList = propertyRepository.findTop10ByPropertyStateOrderByScoreDesc(PropertyState.ACTIVE);
-        return propertyList.stream().map(UserMapper::toUserPropertyDTO).collect(Collectors.toList());
+        return propertyList.stream().map(PropertyCardMapper::toPropertyCardDTO).collect(Collectors.toList());
     }
 
     public List<Neighbourhood> getPopularNeighbourhood() {
