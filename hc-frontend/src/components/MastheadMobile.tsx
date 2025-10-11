@@ -68,8 +68,16 @@ const MastHeadMobile: React.FC = () => {
             }
             className={`px-8 py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.RESALE ? "text-red-500 border-red-500" : "text-gray-700 "}`}
           >
-            Buy
+            Flatmate
           </button>
+          {/* <button
+            onClick={() =>
+              dispatch(setPropertyCategory(PropertyCategory.RESALE))
+            }
+            className={`px-8 py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.RESALE ? "text-red-500 border-red-500" : "text-gray-700 "}`}
+          >
+            Buy
+          </button> */}
         </div>
 
         {/* Search */}

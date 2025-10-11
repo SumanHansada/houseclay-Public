@@ -21,4 +21,7 @@ export interface PropertySearchFilter {
   priceRangeForRent: [number, number];
   priceRangeForBuy: [number, number];
   bhkType: string;
+  exclusive: boolean;
+  sortFields: string;
+  sortOrder: string;
 }

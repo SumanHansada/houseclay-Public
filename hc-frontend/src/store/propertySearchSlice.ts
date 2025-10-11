@@ -23,6 +23,9 @@ const initialState: PropertySearchFilter = {
   priceRangeForRent: [200000, 700000],
   priceRangeForBuy: [5000000, 70000000],
   bhkType: "",
+  exclusive: false,
+  sortFields: "",
+  sortOrder: "",
 };
 
 const propertySearchSlice = createSlice({

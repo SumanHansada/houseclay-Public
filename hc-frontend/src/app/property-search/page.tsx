@@ -198,6 +198,15 @@ export default function PropertySearchPage() {
       // Join array with comma for API
       params.set("amenities", searchState.amenities.join(","));
     }
+    if (searchState.exclusive) {
+      params.set("exclusive", String(searchState.exclusive));
+    }
+    if (searchState.sortFields && searchState.sortFields !== "") {
+      params.set("sortFields", String(searchState.sortFields));
+    }
+    if (searchState.sortOrder && searchState.sortOrder !== "") {
+      params.set("sortOrder", String(searchState.sortOrder));
+    }
 
     // Navigate to new URL with all params
     router.push(`/property-search?${params.toString()}`);

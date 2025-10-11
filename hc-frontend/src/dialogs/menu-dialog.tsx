@@ -214,7 +214,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
               }`}
             >
               <ul>
-                <li>
+                {/* <li>
                   <Link
                     href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=resale`}
                     data-category="resale"
@@ -228,6 +228,26 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
                     className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
                   >
                     <span className="flex items-center gap-2">For Resale</span>
+                    <ChevronRight size={20} />
+                  </Link>
+                </li> */}
+
+                <li>
+                  <Link
+                    href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=flatmate`}
+                    data-category="flatmate"
+                    data-active={
+                      searchParams.get("propertyCategory") === "flatmate"
+                        ? "true"
+                        : "false"
+                    }
+                    prefetch
+                    onClick={onNavClick}
+                    className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
+                  >
+                    <span className="flex items-center gap-2">
+                      For Flatmate
+                    </span>
                     <ChevronRight size={20} />
                   </Link>
                 </li>
