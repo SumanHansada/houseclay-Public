@@ -19,16 +19,14 @@ public class PropertySearchRequestDTO {
     @NotNull
     private Double lon;
 
-    @Builder.Default
-    private String distance = "15km";
+    private String distance;
 
     private String city;
     private String bhkType;
     private String furnishing;
     private String propertyType;
     private String parking;
-    @Builder.Default
-    private boolean isExclusive = false;
+    private Boolean isExclusive;
 
     private Double minPrice;
     private Double maxPrice;

@@ -42,17 +42,15 @@ public class SearchService {
         // Build the list of filters (geo + field filters)
         List<Query> filters = new ArrayList<>();
 
-        List<Double> coordinates = new ArrayList<Double>(Arrays.asList(request.getLat(), request.getLon()));
+        GeoLocation loc = GeoLocation.of(gl -> gl
+                .latlon(ll -> ll.lat(request.getLat()).lon(request.getLon()))
+        );
         // Geo filter
         filters.add(Query.of(q -> q
                 .geoDistance(g -> g
                         .field("location")
                         .distance(request.getDistance())
-                        .location(
-                                new GeoLocation.Builder()
-                                        .coords(coordinates)
-                                        .build()
-                        )
+                        .location(loc)
                 )
         ));
 
@@ -93,7 +91,7 @@ public class SearchService {
             ));
         }
 
-        if (request.isExclusive()) {
+        if (request.getIsExclusive() != null && request.getIsExclusive()) {
             filters.add(Query.of(q -> q
                     .term(t -> t.field("isExclusive").value(true))
             ));

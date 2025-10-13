@@ -24,6 +24,8 @@ public class PropertyController {
     @Autowired
     private PropertyService propertyService;
 
+    public static final String DEFAULT_DISTANCE_LIMIT = "15km";
+
     @GetMapping("/{id}")
     public ResponseEntity<Object> getPropertyById(@PathVariable String id) {
         try {
@@ -52,7 +54,9 @@ public class PropertyController {
             @ModelAttribute PropertySearchRequestDTO propertySearchRequestDTO,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size) {
-
+        if(propertySearchRequestDTO.getDistance() == null || propertySearchRequestDTO.getDistance().isEmpty()) {
+            propertySearchRequestDTO.setDistance(DEFAULT_DISTANCE_LIMIT);
+        }
         PaginatedResponse<PropertyCardDTO> results = searchService.searchNearbyWithFilters(
                 propertySearchRequestDTO, page, size
         );
