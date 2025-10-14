@@ -87,7 +87,8 @@ public class UserService {
         // Clear the cookie by setting maxAge to 0
         ResponseCookie cookie = ResponseCookie.from(TOKEN_KEY, "")
                 .httpOnly(true)
-                .secure(false) // Set to true when using HTTPS
+                .secure(true) // Set to true when using HTTPS
+                .sameSite("None")
                 .path("/")
                 .maxAge(0) // Clear the cookie
                 .build();
@@ -109,7 +110,8 @@ public class UserService {
 
         ResponseCookie cookie = ResponseCookie.from(TOKEN_KEY, token)
                 .httpOnly(true)
-                .secure(false) // Set to true when using HTTPS
+                .secure(true) // Set to true when using HTTPS
+                .sameSite("None")
                 .path("/")
                 .maxAge(60 * 60)
                 .build();

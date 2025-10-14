@@ -18,11 +18,12 @@ public class CorsConfig {
         // ✅ Add all frontend origins that need cookie access
         config.setAllowedOrigins(List.of(
             "http://localhost:3000",
-            "http://localhost:3001", 
+            "http://localhost:3001",
             "http://ec2-52-66-218-187.ap-south-1.compute.amazonaws.com:3000",
             "http://ec2-3-110-206-137.ap-south-1.compute.amazonaws.com:3001",
             "http://ec2-13-201-0-200.ap-south-1.compute.amazonaws.com:3000",
             "https://localhost:3000", // HTTPS variants for production
+            "https://localhost:3001",
             "https://ec2-52-66-218-187.ap-south-1.compute.amazonaws.com:3000",
             "https://ec2-3-110-206-137.ap-south-1.compute.amazonaws.com:3001",
             "https://ec2-13-201-0-200.ap-south-1.compute.amazonaws.com:3000"
