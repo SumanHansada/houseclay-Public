@@ -35,7 +35,10 @@ export function stateToToken(params: {
   sortFields?: string | null;
   sortOrder?: string | null;
 }): SortToken | undefined {
-  const ex = params.exclusive === "true";
+  const ex =
+    params.exclusive === true ||
+    params.exclusive === "true" ||
+    params.exclusive === "1";
 
   if (ex) return "EXCLUSIVE";
   const field = params.sortFields || "";

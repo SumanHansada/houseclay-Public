@@ -146,6 +146,18 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
               Rent
             </Link>
             <Link
+              href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=flatmate`}
+              data-category="flatmate"
+              data-active={
+                searchParams.get("propertyCategory") === "flatmate"
+                  ? "true"
+                  : "false"
+              }
+              className="relative hover:text-red-500 py-2 nav-link"
+            >
+              Flatmate
+            </Link>
+            {/* <Link
               href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=resale`}
               data-category="resale"
               data-active={
@@ -156,7 +168,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
               className="relative hover:text-red-500 py-2 nav-link"
             >
               Buy
-            </Link>
+            </Link> */}
             <Link
               href="/buy-connects"
               data-active={pathname === "/buy-connects" ? "true" : "false"}

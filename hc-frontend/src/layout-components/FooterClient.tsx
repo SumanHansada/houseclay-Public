@@ -105,7 +105,7 @@ const FooterClient: React.FC = () => {
                   Quick Links
                 </h3>
                 <ul className="space-y-2">
-                  <li>
+                  {/* <li>
                     <Link
                       href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=resale`}
                       data-category="resale"
@@ -118,7 +118,7 @@ const FooterClient: React.FC = () => {
                     >
                       For Resale
                     </Link>
-                  </li>
+                  </li> */}
                   <li>
                     <Link
                       href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=rent`}
@@ -133,6 +133,22 @@ const FooterClient: React.FC = () => {
                       className="text-black hover:text-red-500"
                     >
                       For Rent
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=flatmate`}
+                      data-category="flatmate"
+                      data-active={
+                        searchParams.get("propertyCategory") === "flatmate" ||
+                        (pathname === "/property-search" &&
+                          !searchParams.get("propertyCategory"))
+                          ? "true"
+                          : "false"
+                      }
+                      className="text-black hover:text-red-500"
+                    >
+                      For Flatmate
                     </Link>
                   </li>
                   <li>

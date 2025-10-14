@@ -273,21 +273,16 @@ export default function PropertySearchPage() {
         <button className="rounded-full md:border-none items-center justify-center">
           <ChevronLeft onClick={() => router.back()} size={25} />
         </button>
-        <div className="flex items-center h-10 bg-gray-100 w-full px-3 py-2 border-none rounded-full">
-          <PlacesAutocomplete
-            id="location-search-mobile"
-            name="location"
-            value={locationSearch}
-            onChange={handleLocationChange}
-            onLocationSelect={handleLocationSelect}
-            placeholder="Search for a property"
-            containerClassName="w-full relative"
-            inputClassName=""
-          />
-          <button className="p-2">
-            <SearchIcon size={20} />
-          </button>
-        </div>
+        <PlacesAutocomplete
+          id="location-search-mobile"
+          name="location"
+          value={locationSearch}
+          onChange={handleLocationChange}
+          onLocationSelect={handleLocationSelect}
+          placeholder="Search for a property"
+          containerClassName="w-full relative"
+          inputClassName="flex items-center h-10 bg-gray-100 w-full px-3 py-1 border-none rounded-full"
+        />
 
         <Button
           leftIcon={<SlidersHorizontal size={16} />}
@@ -302,7 +297,7 @@ export default function PropertySearchPage() {
       </section>
       <section className="fixed z-50 flex w-full xl:gap-16 border-b bg-white border-gray-200 lg:gap-8 md:gap-0 gap-0  xl:px-24 md:px-12 px-12 max-md:pt-4 max-md:pb-8 h-16 max-md:hidden">
         <div className="flex justify-between items-center border-gray-200 w-full gap-4">
-          <div className="flex-1">
+          <div className="flex-1 flex items-center min-h-[46px] w-full p-1 border border-gray-300 rounded-xl bg-white">
             <PlacesAutocomplete
               id="location-search-desktop"
               name="location"
@@ -310,25 +305,28 @@ export default function PropertySearchPage() {
               onChange={handleLocationChange}
               onLocationSelect={handleLocationSelect}
               placeholder="Search for a property"
-              inputClassName="flex items-center min-h-[46px] w-full px-3 py-2 border border-gray-300 rounded-xl bg-white"
+              inputClassName="w-full outline-none px-3"
               containerClassName="w-full relative"
             />
+            <button className="p-2 rounded-full bg-gray-100">
+              <SearchIcon size={20} />
+            </button>
           </div>
           <div className="flex items-center gap-2 flex-row">
             <SelectDropdown
               options={[
                 {
-                  value: PropertyCategory.FLATMATE,
-                  label: "Flatmate",
-                },
-                {
                   value: PropertyCategory.RENT,
                   label: "Rent",
                 },
                 {
-                  value: PropertyCategory.RESALE,
-                  label: "Buy",
+                  value: PropertyCategory.FLATMATE,
+                  label: "Flatmate",
                 },
+                // {
+                //   value: PropertyCategory.RESALE,
+                //   label: "Buy",
+                // },
               ]}
               name="property-category"
               id="property-category"
@@ -345,10 +343,9 @@ export default function PropertySearchPage() {
             <SelectDropdown
               options={[
                 { value: "Apartment", label: "Apartment" },
-                { value: "Villa", label: "Villa" },
-                { value: "House", label: "House" },
-                { value: "Plot", label: "Plot" },
-                { value: "Commercial", label: "Commercial" },
+                { value: "Independent House/Villa", label: "House" },
+                { value: "Community Villa", label: "Villa" },
+                { value: "Standalone Building", label: "Building" },
               ]}
               name="property-type"
               id="property-type"
@@ -359,7 +356,7 @@ export default function PropertySearchPage() {
               }
               size="sm"
               dropdownWidth="full"
-              containerClassName="relative w-36 md:w-36 xl:w-40 md:hidden lg:block"
+              containerClassName="relative w-36 md:w-36 xl:w-40 max-xl:hidden"
             />
             <SelectDropdown
               options={[
@@ -378,7 +375,7 @@ export default function PropertySearchPage() {
               }
               size="sm"
               dropdownWidth="full"
-              containerClassName="relative w-28 md:w-24 lg:w-28"
+              containerClassName="relative w-28 md:w-24 lg:w-28 max-xl:hidden"
             />
             <SelectDropdown
               options={[
@@ -396,7 +393,7 @@ export default function PropertySearchPage() {
               }
               size="sm"
               dropdownWidth="full"
-              containerClassName="relative w-32"
+              containerClassName="relative w-32 max-xl:hidden"
             />
             <SelectDropdown
               options={SORT_OPTIONS}
@@ -407,7 +404,7 @@ export default function PropertySearchPage() {
               onChange={onSortChange}
               size="sm"
               dropdownWidth="full"
-              containerClassName="relative w-32"
+              containerClassName="relative w-52"
             />
             <Button
               leftIcon={<SlidersHorizontal size={16} />}
@@ -415,7 +412,7 @@ export default function PropertySearchPage() {
               size="md"
               className="min-h-[46px] text-black rounded-xl border text-sm"
               onClick={() => openDialog("property-filters-dialog")}
-              buttonTextClassName="lg:block md:hidden"
+              buttonTextClassName="hidden lg:block"
             >
               Filters
             </Button>
