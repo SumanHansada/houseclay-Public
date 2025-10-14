@@ -93,6 +93,15 @@ const propertySearchSlice = createSlice({
     setBhkType: (state, action: PayloadAction<string>) => {
       state.bhkType = action.payload;
     },
+    setExclusiveFilter: (state, action: PayloadAction<boolean>) => {
+      state.exclusive = action.payload;
+    },
+    setSortFields: (state, action: PayloadAction<string>) => {
+      state.sortFields = action.payload;
+    },
+    setSortOrder: (state, action: PayloadAction<string>) => {
+      state.sortOrder = action.payload;
+    },
     resetPropertySearch: (state) => {
       state.location = null;
       state.propertyType = "";
@@ -112,6 +121,9 @@ const propertySearchSlice = createSlice({
       state.priceRangeForRent = [200000, 700000];
       state.priceRangeForBuy = [5000000, 70000000];
       state.bhkType = "";
+      state.exclusive = false;
+      state.sortFields = "";
+      state.sortOrder = "";
     },
   },
 });
@@ -134,6 +146,9 @@ export const {
   setPriceRangeForRent,
   setPriceRangeForBuy,
   setBhkType,
+  setExclusiveFilter,
+  setSortFields,
+  setSortOrder,
   resetPropertySearch,
 } = propertySearchSlice.actions;
 

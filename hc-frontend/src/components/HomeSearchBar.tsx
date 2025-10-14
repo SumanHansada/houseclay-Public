@@ -97,7 +97,7 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
     dispatch(setLocation(value));
 
     router.push(
-      `/property-search?lat=${value.latitude}&lon=${value.longitude}&propertyCategory=${propertyCategory.toLowerCase()}`,
+      `/property-search?lat=${value.latitude}&lon=${value.longitude}&propertyCategory=${propertyCategory.toLowerCase()}&exclusive=true`,
     );
   };
 

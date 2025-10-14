@@ -22,13 +22,22 @@ import {
   setHideStickyNavBar,
 } from "@/store/appSlice";
 import {
+  setExclusiveFilter,
   setLocation,
   setPropertyBhk,
   setPropertyCategory,
   setPropertyType,
+  setSortFields,
+  setSortOrder,
   setTenantType,
 } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
+import {
+  SORT_OPTIONS,
+  SortToken,
+  stateToToken,
+  tokenToState,
+} from "@/interfaces/PropertySearchSortFilter";
 
 export default function PropertySearchPage() {
   const searchParams = useSearchParams();
@@ -42,6 +51,12 @@ export default function PropertySearchPage() {
 
   const location = searchState.location;
   const locationSearch = location?.name || "";
+
+  const { exclusive, sortFields, sortOrder } = useSelector(
+    (s: RootState) => s.propertySearch,
+  );
+
+  const selectedSortToken = stateToToken({ exclusive, sortFields, sortOrder });
 
   const handleLocationSelect = (selectedLocation: {
     latitude: number;
@@ -118,6 +133,9 @@ export default function PropertySearchPage() {
     const furnishing = searchParams.get("furnishing");
     const parking = searchParams.get("parking");
     const amenities = searchParams.get("amenities");
+    const exclusive = searchParams.get("exclusive");
+    const sortFields = searchParams.get("sortFields");
+    const sortOrder = searchParams.get("sortOrder");
 
     if (propertyType) query.propertyType = propertyType;
     if (bhkType) query.bhkType = bhkType;
@@ -125,6 +143,9 @@ export default function PropertySearchPage() {
     if (furnishing) query.furnishing = furnishing;
     if (parking) query.parking = parking === "true";
     if (amenities) query.amenities = amenities.split(",");
+    if (exclusive) query.exclusive = exclusive === "true" || exclusive === "1";
+    if (sortFields) query.sortFields = sortFields;
+    if (sortOrder) query.sortOrder = sortOrder;
 
     return query;
   };
@@ -163,6 +184,33 @@ export default function PropertySearchPage() {
   }, [dispatch, isMobile]);
 
   const { openDialog, closeDialog, isDialogOpen } = useDialog();
+
+  const onSortChange = (raw: string | number | boolean) => {
+    const token = String(raw) as SortToken;
+    const mapped = tokenToState[token];
+
+    // 1) Update Redux
+    dispatch(setExclusiveFilter(!!mapped.exclusive));
+    dispatch(setSortFields(mapped.sortFields ?? ""));
+    dispatch(setSortOrder(mapped.sortOrder ?? ""));
+
+    // 2) Update URL (keeps lat/lon/category and triggers refetch)
+    const next = new URLSearchParams(searchParams.toString());
+
+    if (mapped.exclusive) {
+      next.set("exclusive", "true");
+      next.delete("sortFields");
+      next.delete("sortOrder");
+    } else {
+      next.delete("exclusive");
+      if (mapped.sortFields) next.set("sortFields", mapped.sortFields);
+      else next.delete("sortFields");
+      if (mapped.sortOrder) next.set("sortOrder", mapped.sortOrder);
+      else next.delete("sortOrder");
+    }
+
+    router.replace(`/property-search?${next.toString()}`);
+  };
 
   const handleSearch = () => {
     // Build URL params from searchState (only supported filters)
@@ -225,16 +273,22 @@ export default function PropertySearchPage() {
         <button className="rounded-full md:border-none items-center justify-center">
           <ChevronLeft onClick={() => router.back()} size={25} />
         </button>
-        <PlacesAutocomplete
-          id="location-search-mobile"
-          name="location"
-          value={locationSearch}
-          onChange={handleLocationChange}
-          onLocationSelect={handleLocationSelect}
-          placeholder="Search for a property"
-          containerClassName="w-full relative"
-          inputClassName="flex items-center h-10 bg-gray-100 w-full px-3 py-2 border-none rounded-full"
-        />
+        <div className="flex items-center h-10 bg-gray-100 w-full px-3 py-2 border-none rounded-full">
+          <PlacesAutocomplete
+            id="location-search-mobile"
+            name="location"
+            value={locationSearch}
+            onChange={handleLocationChange}
+            onLocationSelect={handleLocationSelect}
+            placeholder="Search for a property"
+            containerClassName="w-full relative"
+            inputClassName=""
+          />
+          <button className="p-2">
+            <SearchIcon size={20} />
+          </button>
+        </div>
+
         <Button
           leftIcon={<SlidersHorizontal size={16} />}
           variant="outline"
@@ -344,6 +398,17 @@ export default function PropertySearchPage() {
               dropdownWidth="full"
               containerClassName="relative w-32"
             />
+            <SelectDropdown
+              options={SORT_OPTIONS}
+              name="sort"
+              id="sort"
+              value={selectedSortToken ?? ""}
+              placeholder="Sort"
+              onChange={onSortChange}
+              size="sm"
+              dropdownWidth="full"
+              containerClassName="relative w-32"
+            />
             <Button
               leftIcon={<SlidersHorizontal size={16} />}
               variant="outline"
@@ -354,7 +419,7 @@ export default function PropertySearchPage() {
             >
               Filters
             </Button>
-            <Button
+            {/* <Button
               leftIcon={<SearchIcon size={16} />}
               variant="primary"
               size="md"
@@ -363,7 +428,7 @@ export default function PropertySearchPage() {
               onClick={handleSearch}
             >
               Search
-            </Button>
+            </Button> */}
           </div>
         </div>
       </section>

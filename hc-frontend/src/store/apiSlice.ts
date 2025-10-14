@@ -189,8 +189,8 @@ export const apiSlice = createApi({
         ) {
           searchParams.append("amenities", filters.amenities.join(","));
         }
-        if (filters.exclusive)
-          searchParams.append("exclusive", filters.exclusive.toString());
+        if (filters.exclusive === true)
+          searchParams.append("exclusive", "true");
         if (filters.sortFields)
           searchParams.append("sortFields", filters.sortFields.toString());
         if (filters.sortOrder)
