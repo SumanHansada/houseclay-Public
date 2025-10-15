@@ -1,9 +1,8 @@
-<#-- /connect-transaction.ftl -->
+<#-- /listing-inactive.ftl -->
 <#-- Expected data model:
   subject: string
   userFirstName: string (optional)
-  connectSpent: number
-  connectBalance: number
+  propertyName: string
   redirectUrl
   siteName: string ("Houseclay")
   footerAddress: string (optional)
@@ -141,7 +140,7 @@
     /* Mobile: <768px (base) */
     .heading-xl { font-size:22px; }
     .p          { font-size:14px; }
-    .hero img   { width:280px; height:220px; }
+    .hero img   { width:320px; height:220px; }
     .inner      { padding:20px; }
 
     @media only screen and (max-width:767px) {
@@ -190,7 +189,7 @@
             <!-- Hero -->
             <tr>
               <td class="hero" style="padding-top: 32px;">
-                <img src="https://houseclay-email-img.s3.ap-south-1.amazonaws.com/connect-transaction.png" alt="transaction illustration">
+                <img src="https://houseclay-email-img.s3.ap-south-1.amazonaws.com/listing-inactive.png" alt="listing inactive illustration">
               </td>
             </tr>
 
@@ -198,7 +197,7 @@
             <tr>
               <td class="inner">
 
-                <div class="heading-xl">Connect Transaction</div>
+                <div class="heading-xl">Property listing inactive</div>
 
                 <p class="p">
                   <#if userFirstName?? && (userFirstName?length > 0)>
@@ -208,9 +207,11 @@
                   </#if>
                 </p>
 
-                <p class="p" style="margin-bottom: 24px;">You've used ${connectSpent?html} <#if connectSpent?? && (connectSpent > 1)>connects<#else>connect</#if> for contacting a property owner.
+                <p class="p" style="margin-bottom: 24px;">
+                  Your property ${propertyName?html} has been inactive for 30 days and requires reverification.
                 </p>
-                <p class="p" style="margin-bottom: 24px;">Your remaining connects balance is ${connectBalance?html}.</p>
+
+                <p class="p">Please update the details and resubmit for activation.</p>
                 
                 <!-- Bulletproof CTA button -->
                 <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="margin: 12px 0;">
@@ -219,7 +220,7 @@
                       <!--[if mso]>
                       <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="${(redirectUrl!(baseUrl!'https://houseclay.com'))?html}" style="height:40px;v-text-anchor:middle;width:200px;" arcsize="10%" stroke="f" fillcolor="#ef4444">
                         <w:anchorlock/>
-                        <center style="color:#ffffff;font-family:Public Sans, Arial, sans-serif;font-size:16px;font-weight:600;">Check Connects</center>
+                        <center style="color:#ffffff;font-family:Public Sans, Arial, sans-serif;font-size:16px;font-weight:600;">Update Property</center>
                       </v:roundrect>
                       <![endif]-->
                       <!--[if !mso]><!-->
@@ -227,7 +228,7 @@
                           target="_blank" rel="noopener"
                           class="main-button"
                           style="padding:10px 18px;background-color:#ef4444;color:#ffffff !important;border-radius:6px;display:inline-block;font-weight:600;font-family:'Public Sans', Arial, sans-serif;font-size:16px;">
-                        Check Connects
+                        Update Property
                       </a>
                       <!--<![endif]-->
                     </td>

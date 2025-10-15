@@ -1,9 +1,9 @@
-<#-- /connect-transaction.ftl -->
+<#-- /exclusive-property.ftl -->
 <#-- Expected data model:
   subject: string
   userFirstName: string (optional)
-  connectSpent: number
-  connectBalance: number
+  ownerName: string
+  contactDetails: string
   redirectUrl
   siteName: string ("Houseclay")
   footerAddress: string (optional)
@@ -125,6 +125,11 @@
       line-height: 1.2;
     }
 
+    /* Phone link styling (and neutralize iOS auto-detected link styles) */
+    .phone-link { text-decoration: underline; cursor: pointer; color: #111827 !important; }
+    .phone-link:hover { text-decoration: underline; }
+    a[x-apple-data-detectors] { color: inherit !important; text-decoration: underline !important; }
+
     /* Footer */
     .footer { 
       text-align:left; 
@@ -152,7 +157,7 @@
     @media only screen and (min-width:768px) and (max-width:1023px) {
       .heading-xl { font-size:24px; }
       .p          { font-size:15px; }
-      .hero img   { width:360px; height:260px; }
+      .hero img   { width:300px; height:260px; }
       .inner      { padding:24px 60px; }
       .outer { padding-left:24px !important; padding-right:24px !important; }
     }
@@ -161,7 +166,7 @@
     @media only screen and (min-width:1024px) {
       .heading-xl { font-size:28px; }
       .p          { font-size:16px; }
-      .hero img   { width:420px; height:282px; }
+      .hero img   { width:340px; height:282px; }
       .inner      { padding:24px 100px; }
       .outer { padding-left:0 !important; padding-right:0 !important; }
     }
@@ -190,7 +195,7 @@
             <!-- Hero -->
             <tr>
               <td class="hero" style="padding-top: 32px;">
-                <img src="https://houseclay-email-img.s3.ap-south-1.amazonaws.com/connect-transaction.png" alt="transaction illustration">
+                <img src="https://houseclay-email-img.s3.ap-south-1.amazonaws.com/exclusive-property.png" alt="exclusive property illustration">
               </td>
             </tr>
 
@@ -198,7 +203,7 @@
             <tr>
               <td class="inner">
 
-                <div class="heading-xl">Connect Transaction</div>
+                <div class="heading-xl">Unlocked exclusive property details</div>
 
                 <p class="p">
                   <#if userFirstName?? && (userFirstName?length > 0)>
@@ -208,10 +213,21 @@
                   </#if>
                 </p>
 
-                <p class="p" style="margin-bottom: 24px;">You've used ${connectSpent?html} <#if connectSpent?? && (connectSpent > 1)>connects<#else>connect</#if> for contacting a property owner.
+                <#-- normalise the phone for tel: (keep +, strip other non-digits) -->
+                <#assign phoneRaw  = contactDetails!''>
+                <#assign phoneHref = phoneRaw?replace("[^0-9+]", "", "r")>
+
+                <p class="p" style="margin-bottom: 24px;">
+                  You've unlocked an exclusive property! <br />
+                  Contact ${ownerName?html} at
+                  <a href="tel:${phoneHref?html}"
+                  class="phone-link"
+                  x-apple-data-detectors="true"
+                  style="text-decoration:underline; cursor:pointer; color:#111827 !important;"
+                  title="Call ${ownerName?html}">
+                  ${contactDetails?html}</a> to proceed.
                 </p>
-                <p class="p" style="margin-bottom: 24px;">Your remaining connects balance is ${connectBalance?html}.</p>
-                
+
                 <!-- Bulletproof CTA button -->
                 <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="margin: 12px 0;">
                   <tr>
@@ -219,7 +235,7 @@
                       <!--[if mso]>
                       <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="${(redirectUrl!(baseUrl!'https://houseclay.com'))?html}" style="height:40px;v-text-anchor:middle;width:200px;" arcsize="10%" stroke="f" fillcolor="#ef4444">
                         <w:anchorlock/>
-                        <center style="color:#ffffff;font-family:Public Sans, Arial, sans-serif;font-size:16px;font-weight:600;">Check Connects</center>
+                        <center style="color:#ffffff;font-family:Public Sans, Arial, sans-serif;font-size:16px;font-weight:600;">View Property</center>
                       </v:roundrect>
                       <![endif]-->
                       <!--[if !mso]><!-->
@@ -227,7 +243,7 @@
                           target="_blank" rel="noopener"
                           class="main-button"
                           style="padding:10px 18px;background-color:#ef4444;color:#ffffff !important;border-radius:6px;display:inline-block;font-weight:600;font-family:'Public Sans', Arial, sans-serif;font-size:16px;">
-                        Check Connects
+                        View Property
                       </a>
                       <!--<![endif]-->
                     </td>

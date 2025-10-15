@@ -189,7 +189,7 @@
             <!-- Hero -->
             <tr>
               <td class="hero" style="padding-top: 32px;">
-                <img src="https://houseclay-email-img.s3.ap-south-1.amazonaws.com/listing-detail-updated.png" alt="Welcome illustration">
+                <img src="https://houseclay-email-img.s3.ap-south-1.amazonaws.com/listing-detail-updated.png" alt="detail update illustration">
               </td>
             </tr>
 

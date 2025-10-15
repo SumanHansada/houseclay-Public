@@ -175,7 +175,7 @@
             <!-- Hero -->
             <tr>
               <td class="hero" style="padding-top: 32px;">
-                <img src="https://houseclay-email-img.s3.ap-south-1.amazonaws.com/property-captain.png" alt="Welcome illustration">
+                <img src="https://houseclay-email-img.s3.ap-south-1.amazonaws.com/property-captain.png" alt="property captain illustration">
               </td>
             </tr>
 

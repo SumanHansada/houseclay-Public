@@ -1,9 +1,8 @@
-<#-- /connect-transaction.ftl -->
+<#-- /connects-purchased.ftl -->
 <#-- Expected data model:
   subject: string
   userFirstName: string (optional)
-  connectSpent: number
-  connectBalance: number
+  connectAmount: number
   redirectUrl
   siteName: string ("Houseclay")
   footerAddress: string (optional)
@@ -141,7 +140,7 @@
     /* Mobile: <768px (base) */
     .heading-xl { font-size:22px; }
     .p          { font-size:14px; }
-    .hero img   { width:280px; height:220px; }
+    .hero img   { width:220px; height:220px; }
     .inner      { padding:20px; }
 
     @media only screen and (max-width:767px) {
@@ -152,7 +151,7 @@
     @media only screen and (min-width:768px) and (max-width:1023px) {
       .heading-xl { font-size:24px; }
       .p          { font-size:15px; }
-      .hero img   { width:360px; height:260px; }
+      .hero img   { width:260px; height:260px; }
       .inner      { padding:24px 60px; }
       .outer { padding-left:24px !important; padding-right:24px !important; }
     }
@@ -161,7 +160,7 @@
     @media only screen and (min-width:1024px) {
       .heading-xl { font-size:28px; }
       .p          { font-size:16px; }
-      .hero img   { width:420px; height:282px; }
+      .hero img   { width:282px; height:282px; }
       .inner      { padding:24px 100px; }
       .outer { padding-left:0 !important; padding-right:0 !important; }
     }
@@ -190,7 +189,7 @@
             <!-- Hero -->
             <tr>
               <td class="hero" style="padding-top: 32px;">
-                <img src="https://houseclay-email-img.s3.ap-south-1.amazonaws.com/connect-transaction.png" alt="transaction illustration">
+                <img src="https://houseclay-email-img.s3.ap-south-1.amazonaws.com/connects-purchased.png" alt="purchased illustration">
               </td>
             </tr>
 
@@ -198,7 +197,7 @@
             <tr>
               <td class="inner">
 
-                <div class="heading-xl">Connect Transaction</div>
+                <div class="heading-xl">Your connects have been added</div>
 
                 <p class="p">
                   <#if userFirstName?? && (userFirstName?length > 0)>
@@ -208,9 +207,9 @@
                   </#if>
                 </p>
 
-                <p class="p" style="margin-bottom: 24px;">You've used ${connectSpent?html} <#if connectSpent?? && (connectSpent > 1)>connects<#else>connect</#if> for contacting a property owner.
+                <p class="p" style="margin-bottom: 24px;">
+                  Your purchase of ${connectAmount?html} connects is successful. Please find the attached GST invoice for your records.
                 </p>
-                <p class="p" style="margin-bottom: 24px;">Your remaining connects balance is ${connectBalance?html}.</p>
                 
                 <!-- Bulletproof CTA button -->
                 <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="margin: 12px 0;">
@@ -219,7 +218,7 @@
                       <!--[if mso]>
                       <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="${(redirectUrl!(baseUrl!'https://houseclay.com'))?html}" style="height:40px;v-text-anchor:middle;width:200px;" arcsize="10%" stroke="f" fillcolor="#ef4444">
                         <w:anchorlock/>
-                        <center style="color:#ffffff;font-family:Public Sans, Arial, sans-serif;font-size:16px;font-weight:600;">Check Connects</center>
+                        <center style="color:#ffffff;font-family:Public Sans, Arial, sans-serif;font-size:16px;font-weight:600;">Download Invoice</center>
                       </v:roundrect>
                       <![endif]-->
                       <!--[if !mso]><!-->
@@ -227,7 +226,7 @@
                           target="_blank" rel="noopener"
                           class="main-button"
                           style="padding:10px 18px;background-color:#ef4444;color:#ffffff !important;border-radius:6px;display:inline-block;font-weight:600;font-family:'Public Sans', Arial, sans-serif;font-size:16px;">
-                        Check Connects
+                        Download Invoice
                       </a>
                       <!--<![endif]-->
                     </td>
