@@ -1,4 +1,4 @@
-<#-- /email/email-verification.ftl -->
+<#-- /email-verification.ftl -->
 <#-- Expected data model:
   subject: string
   userFirstName: string (optional)
@@ -144,7 +144,6 @@
     /* Mobile: <768px (base) */
     .heading-xl { font-size:22px; }
     .p          { font-size:14px; }
-    .ul li      { font-size: 14px; }
     .hero img   { width:220px; height:220px; }
     .inner      { padding:20px; }
 
@@ -156,7 +155,6 @@
     @media only screen and (min-width:768px) and (max-width:1023px) {
       .heading-xl { font-size:24px; }
       .p          { font-size:15px; }
-      .ul li      { font-size: 15px; }
       .hero img   { width:260px; height:260px; }
       .inner      { padding:24px 60px; }
       .outer { padding-left:24px !important; padding-right:24px !important; }
@@ -166,7 +164,6 @@
     @media only screen and (min-width:1024px) {
       .heading-xl { font-size:28px; }
       .p          { font-size:16px; }
-      .ul li      { font-size: 16px; }
       .hero img   { width:282px; height:282px; }
       .inner      { padding:24px 100px; }
       .outer { padding-left:0 !important; padding-right:0 !important; }

@@ -1,4 +1,4 @@
-<#-- /property-details-submitted.ftl -->
+<#-- /property-captain.ftl -->
 <#-- Expected data model:
   subject: string
   userFirstName: string (optional)
@@ -110,20 +110,6 @@
       line-height:1.6; 
     }
 
-    /* Button */
-    .main-button { 
-      padding: 10px 18px;
-      background-color: #ef4444;
-      color: #ffffff !important;
-      border: 0;
-      border-radius: 6px;
-      font-family:"Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
-      font-weight:600;
-      text-align: center;
-      display: inline-block;
-      line-height: 1.2;
-    }
-
     /* Footer */
     .footer { 
       text-align:left; 
@@ -140,7 +126,7 @@
     /* Mobile: <768px (base) */
     .heading-xl { font-size:22px; }
     .p          { font-size:14px; }
-    .hero img   { width:220px; height:220px; }
+    .hero img   { width:250px; height:300px; }
     .inner      { padding:20px; }
 
     @media only screen and (max-width:767px) {
@@ -151,7 +137,7 @@
     @media only screen and (min-width:768px) and (max-width:1023px) {
       .heading-xl { font-size:24px; }
       .p          { font-size:15px; }
-      .hero img   { width:260px; height:260px; }
+      .hero img   { width:270px; height:320px; }
       .inner      { padding:24px 60px; }
       .outer { padding-left:24px !important; padding-right:24px !important; }
     }
@@ -160,7 +146,7 @@
     @media only screen and (min-width:1024px) {
       .heading-xl { font-size:28px; }
       .p          { font-size:16px; }
-      .hero img   { width:282px; height:282px; }
+      .hero img   { width:282px; height:340px; }
       .inner      { padding:24px 100px; }
       .outer { padding-left:0 !important; padding-right:0 !important; }
     }
@@ -189,7 +175,7 @@
             <!-- Hero -->
             <tr>
               <td class="hero" style="padding-top: 32px;">
-                <img src="https://houseclay-email-img.s3.ap-south-1.amazonaws.com/property-details-submitted.png" alt="Welcome illustration">
+                <img src="https://houseclay-email-img.s3.ap-south-1.amazonaws.com/property-captain.png" alt="Welcome illustration">
               </td>
             </tr>
 
@@ -197,7 +183,7 @@
             <tr>
               <td class="inner">
 
-                <div class="heading-xl">Your property has been submitted for review</div>
+                <div class="heading-xl">${(siteName!'Houseclay')?html} captain will assist you soon</div>
 
                 <p class="p">
                   <#if userFirstName?? && (userFirstName?length > 0)>
@@ -207,29 +193,9 @@
                   </#if>
                 </p>
 
-                <p class="p" style="margin-bottom: 24px;">Thank you for listing your property ${propertyName?html}. <br /> Our team will review the details, and once verified, your property will go live.</p>
-                
-                <!-- Bulletproof CTA button -->
-                <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="margin: 12px 0;">
-                  <tr>
-                    <td align="center">
-                      <!--[if mso]>
-                      <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="${(redirectUrl!(baseUrl!'https://houseclay.com'))?html}" style="height:40px;v-text-anchor:middle;width:200px;" arcsize="10%" stroke="f" fillcolor="#ef4444">
-                        <w:anchorlock/>
-                        <center style="color:#ffffff;font-family:Public Sans, Arial, sans-serif;font-size:16px;font-weight:600;">Track Listing</center>
-                      </v:roundrect>
-                      <![endif]-->
-                      <!--[if !mso]><!-->
-                      <a href="${(redirectUrl!(baseUrl!'https://houseclay.com'))?html}"
-                          target="_blank" rel="noopener"
-                          class="main-button"
-                          style="padding:10px 18px;background-color:#ef4444;color:#ffffff !important;border-radius:6px;display:inline-block;font-weight:600;font-family:'Public Sans', Arial, sans-serif;font-size:16px;">
-                        Track Listing
-                      </a>
-                      <!--<![endif]-->
-                    </td>
-                  </tr>
-                </table>
+                <p class="p" style="margin-bottom: 24px;">
+                  One of our Captains will get in touch with you shortly to assist with your property ${propertyName?html}.
+                </p>
 
                 <p class="p" style="margin:36px 0 12px 0;">
                   Best regards,<br>

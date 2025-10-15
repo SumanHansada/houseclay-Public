@@ -1,8 +1,9 @@
-<#-- /property-details-submitted.ftl -->
+<#-- /payment-confirmation.ftl -->
 <#-- Expected data model:
   subject: string
   userFirstName: string (optional)
-  propertyName: string
+  paymentAmount: string
+  connectBalance: number
   redirectUrl
   siteName: string ("Houseclay")
   footerAddress: string (optional)
@@ -110,20 +111,6 @@
       line-height:1.6; 
     }
 
-    /* Button */
-    .main-button { 
-      padding: 10px 18px;
-      background-color: #ef4444;
-      color: #ffffff !important;
-      border: 0;
-      border-radius: 6px;
-      font-family:"Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
-      font-weight:600;
-      text-align: center;
-      display: inline-block;
-      line-height: 1.2;
-    }
-
     /* Footer */
     .footer { 
       text-align:left; 
@@ -189,7 +176,7 @@
             <!-- Hero -->
             <tr>
               <td class="hero" style="padding-top: 32px;">
-                <img src="https://houseclay-email-img.s3.ap-south-1.amazonaws.com/property-details-submitted.png" alt="Welcome illustration">
+                <img src="https://houseclay-email-img.s3.ap-south-1.amazonaws.com/payment-confirmation.png" alt="Welcome illustration">
               </td>
             </tr>
 
@@ -197,7 +184,7 @@
             <tr>
               <td class="inner">
 
-                <div class="heading-xl">Your property has been submitted for review</div>
+                <div class="heading-xl">Payment Confirmation</div>
 
                 <p class="p">
                   <#if userFirstName?? && (userFirstName?length > 0)>
@@ -207,29 +194,10 @@
                   </#if>
                 </p>
 
-                <p class="p" style="margin-bottom: 24px;">Thank you for listing your property ${propertyName?html}. <br /> Our team will review the details, and once verified, your property will go live.</p>
-                
-                <!-- Bulletproof CTA button -->
-                <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="margin: 12px 0;">
-                  <tr>
-                    <td align="center">
-                      <!--[if mso]>
-                      <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="${(redirectUrl!(baseUrl!'https://houseclay.com'))?html}" style="height:40px;v-text-anchor:middle;width:200px;" arcsize="10%" stroke="f" fillcolor="#ef4444">
-                        <w:anchorlock/>
-                        <center style="color:#ffffff;font-family:Public Sans, Arial, sans-serif;font-size:16px;font-weight:600;">Track Listing</center>
-                      </v:roundrect>
-                      <![endif]-->
-                      <!--[if !mso]><!-->
-                      <a href="${(redirectUrl!(baseUrl!'https://houseclay.com'))?html}"
-                          target="_blank" rel="noopener"
-                          class="main-button"
-                          style="padding:10px 18px;background-color:#ef4444;color:#ffffff !important;border-radius:6px;display:inline-block;font-weight:600;font-family:'Public Sans', Arial, sans-serif;font-size:16px;">
-                        Track Listing
-                      </a>
-                      <!--<![endif]-->
-                    </td>
-                  </tr>
-                </table>
+                <p class="p" style="margin-bottom: 24px;">We've received your payment of ${paymentAmount?html} successfully. <br /> Thank you for choosing ${(siteName!'Houseclay')?html}.
+                </p>
+
+                <p class="p">Your updated connects balance is ${connectBalance?html}.</p>
 
                 <p class="p" style="margin:36px 0 12px 0;">
                   Best regards,<br>

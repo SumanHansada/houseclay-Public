@@ -1,4 +1,4 @@
-<#-- /property-details-submitted.ftl -->
+<#-- /property-live.ftl -->
 <#-- Expected data model:
   subject: string
   userFirstName: string (optional)
@@ -189,7 +189,7 @@
             <!-- Hero -->
             <tr>
               <td class="hero" style="padding-top: 32px;">
-                <img src="https://houseclay-email-img.s3.ap-south-1.amazonaws.com/property-details-submitted.png" alt="Welcome illustration">
+                <img src="https://houseclay-email-img.s3.ap-south-1.amazonaws.com/property-live.png" alt="Welcome illustration">
               </td>
             </tr>
 
@@ -197,7 +197,7 @@
             <tr>
               <td class="inner">
 
-                <div class="heading-xl">Your property has been submitted for review</div>
+                <div class="heading-xl">Your property is now live</div>
 
                 <p class="p">
                   <#if userFirstName?? && (userFirstName?length > 0)>
@@ -207,7 +207,9 @@
                   </#if>
                 </p>
 
-                <p class="p" style="margin-bottom: 24px;">Thank you for listing your property ${propertyName?html}. <br /> Our team will review the details, and once verified, your property will go live.</p>
+                <p class="p" style="margin-bottom: 24px;">Good news! Your property ${propertyName?html} has been verified and is now live on Houseclay.</p>
+                
+                <p class="p" style="margin-bottom: 24px;">Start receiving inquiries today.</p>
                 
                 <!-- Bulletproof CTA button -->
                 <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="margin: 12px 0;">
@@ -216,7 +218,7 @@
                       <!--[if mso]>
                       <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="${(redirectUrl!(baseUrl!'https://houseclay.com'))?html}" style="height:40px;v-text-anchor:middle;width:200px;" arcsize="10%" stroke="f" fillcolor="#ef4444">
                         <w:anchorlock/>
-                        <center style="color:#ffffff;font-family:Public Sans, Arial, sans-serif;font-size:16px;font-weight:600;">Track Listing</center>
+                        <center style="color:#ffffff;font-family:Public Sans, Arial, sans-serif;font-size:16px;font-weight:600;">View Property</center>
                       </v:roundrect>
                       <![endif]-->
                       <!--[if !mso]><!-->
@@ -224,7 +226,7 @@
                           target="_blank" rel="noopener"
                           class="main-button"
                           style="padding:10px 18px;background-color:#ef4444;color:#ffffff !important;border-radius:6px;display:inline-block;font-weight:600;font-family:'Public Sans', Arial, sans-serif;font-size:16px;">
-                        Track Listing
+                        View Property
                       </a>
                       <!--<![endif]-->
                     </td>
