@@ -1,7 +1,11 @@
 "use client";
 
 import { ChevronLeft, SearchIcon, SlidersHorizontal } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import {
+  ReadonlyURLSearchParams,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,6 +26,7 @@ import {
   setHideStickyNavBar,
 } from "@/store/appSlice";
 import {
+  setAvailability,
   setExclusiveFilter,
   setLocation,
   setPropertyBhk,
@@ -39,6 +44,15 @@ import {
   tokenToState,
 } from "@/interfaces/PropertySearchSortFilter";
 
+// normalize & validate category from URL
+function getUrlCategory(sp: ReadonlyURLSearchParams): PropertyCategory {
+  const raw = (sp.get("propertyCategory") || "").toUpperCase();
+  const values = Object.values(PropertyCategory) as string[];
+  return values.includes(raw)
+    ? (raw as PropertyCategory)
+    : PropertyCategory.RENT;
+}
+
 export default function PropertySearchPage() {
   const searchParams = useSearchParams();
   const lat = searchParams.get("lat");
@@ -46,8 +60,12 @@ export default function PropertySearchPage() {
   const propertyCategory = searchParams
     .get("propertyCategory")
     ?.toUpperCase() as PropertyCategory;
+
+  const urlCategory = getUrlCategory(searchParams);
   const searchState = useSelector((state: RootState) => state.propertySearch);
   const router = useRouter();
+  const { isMobile } = useDeviceContext();
+  const dispatch = useDispatch();
 
   const location = searchState.location;
   const locationSearch = location?.name || "";
@@ -57,6 +75,100 @@ export default function PropertySearchPage() {
   );
 
   const selectedSortToken = stateToToken({ exclusive, sortFields, sortOrder });
+
+  // Hydrate category from URL on first load / URL change
+  useEffect(() => {
+    if (urlCategory !== searchState.propertyCategory) {
+      dispatch(setPropertyCategory(urlCategory));
+    }
+  }, [dispatch, urlCategory, searchState.propertyCategory]);
+
+  // small helper: mutate & replace URL
+  const replaceQuery = (mutate: (q: URLSearchParams) => void) => {
+    const next = new URLSearchParams(searchParams.toString());
+    mutate(next);
+    router.replace(`/property-search?${next.toString()}`);
+  };
+
+  // QUICK FILTER handlers (all auto-search via URL updates)
+  const onCategoryChange = (raw: string | number | boolean) => {
+    const cat = String(raw).toUpperCase() as PropertyCategory;
+    dispatch(setPropertyCategory(cat));
+
+    // when switching category, drop irrelevant filter from URL/state
+    replaceQuery((q) => {
+      q.set("propertyCategory", cat.toLowerCase());
+      if (cat === PropertyCategory.RENT) {
+        q.delete("preferredTenant");
+        dispatch(setTenantType(""));
+      } else if (cat === PropertyCategory.FLATMATE) {
+        q.delete("bhkType");
+        dispatch(setPropertyBhk(""));
+      }
+    });
+  };
+
+  const onTypeChange = (raw: string | number | boolean) => {
+    const val = String(raw);
+    dispatch(setPropertyType(val));
+    replaceQuery((q) => {
+      val ? q.set("propertyType", val) : q.delete("propertyType");
+    });
+  };
+
+  const onBhkChange = (raw: string | number | boolean) => {
+    const val = String(raw);
+    dispatch(setPropertyBhk(val));
+    replaceQuery((q) => {
+      val ? q.set("bhkType", val) : q.delete("bhkType");
+    });
+  };
+
+  const onPreferredTenantChange = (raw: string | number | boolean) => {
+    const val = String(raw);
+    dispatch(setTenantType(val));
+    replaceQuery((q) => {
+      val ? q.set("preferredTenant", val) : q.delete("preferredTenant");
+    });
+  };
+
+  const onAvailabilityChange = (raw: string | number | boolean) => {
+    const val = String(raw);
+    dispatch(setAvailability(val));
+    replaceQuery((q) => {
+      // treat "Any" as no constraint => drop param
+      val && val !== "Any"
+        ? q.set("availability", val)
+        : q.delete("availability");
+    });
+  };
+
+  const onSortChange = (raw: string | number | boolean) => {
+    const token = String(raw) as SortToken;
+    const mapped = tokenToState[token];
+
+    // Update Redux
+    dispatch(setExclusiveFilter(!!mapped.exclusive));
+    dispatch(setSortFields(mapped.sortFields ?? ""));
+    dispatch(setSortOrder(mapped.sortOrder ?? ""));
+
+    // Update URL (keeps lat/lon/category and triggers refetch)
+    replaceQuery((next) => {
+      if (mapped.exclusive) {
+        next.set("exclusive", "true");
+        next.delete("sortFields");
+        next.delete("sortOrder");
+      } else {
+        next.delete("exclusive");
+        mapped.sortFields
+          ? next.set("sortFields", mapped.sortFields)
+          : next.delete("sortFields");
+        mapped.sortOrder
+          ? next.set("sortOrder", mapped.sortOrder)
+          : next.delete("sortOrder");
+      }
+    });
+  };
 
   const handleLocationSelect = (selectedLocation: {
     latitude: number;
@@ -130,6 +242,7 @@ export default function PropertySearchPage() {
     const propertyType = searchParams.get("propertyType");
     const bhkType = searchParams.get("bhkType");
     const preferredTenant = searchParams.get("preferredTenant");
+    const availability = searchParams.get("availability");
     const furnishing = searchParams.get("furnishing");
     const parking = searchParams.get("parking");
     const amenities = searchParams.get("amenities");
@@ -140,6 +253,8 @@ export default function PropertySearchPage() {
     if (propertyType) query.propertyType = propertyType;
     if (bhkType) query.bhkType = bhkType;
     if (preferredTenant) query.preferredTenant = preferredTenant;
+    if (availability && availability !== "Any")
+      query.availability = availability;
     if (furnishing) query.furnishing = furnishing;
     if (parking) query.parking = parking === "true";
     if (amenities) query.amenities = amenities.split(",");
@@ -154,7 +269,10 @@ export default function PropertySearchPage() {
     shouldFetch
       ? buildQueryParams()
       : { latitude: 0, longitude: 0, propertyCategory: PropertyCategory.RENT },
-    { skip: !shouldFetch },
+    {
+      skip: !shouldFetch,
+      refetchOnMountOrArgChange: true,
+    },
   );
 
   // Memoize property list
@@ -169,8 +287,6 @@ export default function PropertySearchPage() {
       images: property.image ? [property.image] : [],
     })) as PropertySearch[];
   }, [data, error]);
-  const { isMobile } = useDeviceContext();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (isMobile) {
@@ -184,33 +300,6 @@ export default function PropertySearchPage() {
   }, [dispatch, isMobile]);
 
   const { openDialog, closeDialog, isDialogOpen } = useDialog();
-
-  const onSortChange = (raw: string | number | boolean) => {
-    const token = String(raw) as SortToken;
-    const mapped = tokenToState[token];
-
-    // 1) Update Redux
-    dispatch(setExclusiveFilter(!!mapped.exclusive));
-    dispatch(setSortFields(mapped.sortFields ?? ""));
-    dispatch(setSortOrder(mapped.sortOrder ?? ""));
-
-    // 2) Update URL (keeps lat/lon/category and triggers refetch)
-    const next = new URLSearchParams(searchParams.toString());
-
-    if (mapped.exclusive) {
-      next.set("exclusive", "true");
-      next.delete("sortFields");
-      next.delete("sortOrder");
-    } else {
-      next.delete("exclusive");
-      if (mapped.sortFields) next.set("sortFields", mapped.sortFields);
-      else next.delete("sortFields");
-      if (mapped.sortOrder) next.set("sortOrder", mapped.sortOrder);
-      else next.delete("sortOrder");
-    }
-
-    router.replace(`/property-search?${next.toString()}`);
-  };
 
   const handleSearch = () => {
     // Build URL params from searchState (only supported filters)
@@ -235,6 +324,9 @@ export default function PropertySearchPage() {
     }
     if (searchState.tenantType && searchState.tenantType !== "") {
       params.set("preferredTenant", String(searchState.tenantType));
+    }
+    if (searchState.availability && searchState.availability !== "Any") {
+      params.set("availability", searchState.availability);
     }
     if (searchState.furnishing && searchState.furnishing !== "") {
       params.set("furnishing", searchState.furnishing);
@@ -267,6 +359,7 @@ export default function PropertySearchPage() {
 
   return (
     <>
+      {/* Mobile */}
       <section
         className={`py-2 px-4 fixed top-0 left-0 right-0 z-50 h-[55px] border-b border-gray-200 bg-white flex gap-2 justify-center items-center w-full md:hidden`}
       >
@@ -295,6 +388,8 @@ export default function PropertySearchPage() {
           Filters
         </Button>
       </section>
+
+      {/* Desktop */}
       <section className="fixed z-50 flex w-full xl:gap-16 border-b bg-white border-gray-200 lg:gap-8 md:gap-0 gap-0  xl:px-24 md:px-12 px-12 max-md:pt-4 max-md:pb-8 h-16 max-md:hidden">
         <div className="flex justify-between items-center border-gray-200 w-full gap-4">
           <div className="flex-1 flex items-center min-h-[46px] w-full p-1 border border-gray-300 rounded-xl bg-white">
@@ -313,6 +408,7 @@ export default function PropertySearchPage() {
             </button>
           </div>
           <div className="flex items-center gap-2 flex-row">
+            {/* Category */}
             <SelectDropdown
               options={[
                 {
@@ -331,15 +427,15 @@ export default function PropertySearchPage() {
               name="property-category"
               id="property-category"
               value={searchState.propertyCategory}
-              onChange={(value: string | number | boolean) =>
-                dispatch(setPropertyCategory(value as PropertyCategory))
-              }
+              onChange={onCategoryChange}
               size="sm"
               dropdownWidth="auto"
               containerClassName="relative w-20"
               buttonClassName="flex justify-between items-center w-full p-3 border rounded-xl text-left border-red-500 text-red-500 hover:border-red-500 hover:text-red-500"
               displayTextClassName="text-red-500"
             />
+
+            {/* Property Type (common) */}
             <SelectDropdown
               options={[
                 { value: "Apartment", label: "Apartment" },
@@ -351,50 +447,68 @@ export default function PropertySearchPage() {
               id="property-type"
               value={searchState.propertyType}
               placeholder="Property type"
-              onChange={(value: string | number | boolean) =>
-                dispatch(setPropertyType(value))
-              }
+              onChange={onTypeChange}
               size="sm"
               dropdownWidth="full"
-              containerClassName="relative w-36 md:w-36 xl:w-40 max-xl:hidden"
+              containerClassName="relative w-36 max-xl:hidden"
             />
+
+            {/* Rent: BHK | Flatmate: Preferred Tenant */}
+            {searchState.propertyCategory === PropertyCategory.RENT ? (
+              <SelectDropdown
+                options={[
+                  { value: "1BHK", label: "1 BHK" },
+                  { value: "2BHK", label: "2 BHK" },
+                  { value: "3BHK", label: "3 BHK" },
+                  { value: "4BHK", label: "4 BHK" },
+                  { value: "5+BHK", label: "5+ BHK" },
+                ]}
+                name="property-bhk"
+                id="property-bhk"
+                value={searchState.propertyBhk}
+                placeholder="Beds"
+                onChange={onBhkChange}
+                size="sm"
+                dropdownWidth="full"
+                containerClassName="relative w-28 md:w-24 lg:w-28 max-xl:hidden"
+              />
+            ) : (
+              <SelectDropdown
+                options={[
+                  { value: "Female", label: "Female" },
+                  { value: "Male", label: "Male" },
+                ]}
+                name="preferred-tenant"
+                id="preferred-tenant"
+                value={searchState.tenantType}
+                placeholder="Preferred tenant"
+                onChange={onPreferredTenantChange}
+                size="sm"
+                dropdownWidth="full"
+                containerClassName="relative w-40 max-xl:hidden"
+              />
+            )}
+
+            {/* Availability (common) */}
             <SelectDropdown
               options={[
-                { value: "1BHK", label: "1 BHK" },
-                { value: "2BHK", label: "2 BHK" },
-                { value: "3BHK", label: "3 BHK" },
-                { value: "4BHK", label: "4 BHK" },
-                { value: "5+BHK", label: "5+ BHK" },
+                { label: "Any", value: "Any" },
+                { label: "Immediate", value: "Immediate" },
+                { label: "Within 15 Days", value: "Within 15 Days" },
+                { label: "Within 30 Days", value: "Within 30 Days" },
+                { label: "After 45 Days", value: "After 45 Days" },
               ]}
-              name="property-bhk"
-              id="property-bhk"
-              value={searchState.propertyBhk}
-              placeholder="Beds"
-              onChange={(value: string | number | boolean) =>
-                dispatch(setPropertyBhk(value))
-              }
+              name="availability"
+              id="availability"
+              value={searchState.availability}
+              placeholder="Availability"
+              onChange={onAvailabilityChange}
               size="sm"
               dropdownWidth="full"
-              containerClassName="relative w-28 md:w-24 lg:w-28 max-xl:hidden"
+              containerClassName="relative w-36 max-xl:hidden"
             />
-            <SelectDropdown
-              options={[
-                { value: "Couple", label: "Couple" },
-                { value: "Family", label: "Family" },
-                { value: "Bachelor", label: "Bachelor" },
-                { value: "Company", label: "Company" },
-              ]}
-              name="tenant-type"
-              id="tenant-type"
-              value={searchState.tenantType}
-              placeholder="Tenant type"
-              onChange={(value: string | number | boolean) =>
-                dispatch(setTenantType(value))
-              }
-              size="sm"
-              dropdownWidth="full"
-              containerClassName="relative w-32 max-xl:hidden"
-            />
+
+            {/* Sort */}
             <SelectDropdown
               options={SORT_OPTIONS}
               name="sort"
@@ -416,16 +530,6 @@ export default function PropertySearchPage() {
             >
               Filters
             </Button>
-            {/* <Button
-              leftIcon={<SearchIcon size={16} />}
-              variant="primary"
-              size="md"
-              className="min-h-[46px] rounded-xl text-sm"
-              buttonTextClassName="lg:block md:hidden"
-              onClick={handleSearch}
-            >
-              Search
-            </Button> */}
           </div>
         </div>
       </section>
