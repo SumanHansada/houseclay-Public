@@ -17,6 +17,7 @@ public class CorsConfig {
         
         // ✅ Add all frontend origins that need cookie access
         config.setAllowedOrigins(List.of(
+            "https://mb6faf.houseclay.com",
             "http://localhost:3000",
             "http://localhost:3001",
             "http://ec2-52-66-218-187.ap-south-1.compute.amazonaws.com:3000",
@@ -33,7 +34,7 @@ public class CorsConfig {
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true); // ✅ Required for HTTP-only cookies
-        config.setMaxAge(3600L); // Cache preflight requests for 1 hour
+        config.setMaxAge(86400L); // Cache preflight requests for 1 day
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
