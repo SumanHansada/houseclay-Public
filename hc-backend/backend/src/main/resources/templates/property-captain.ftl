@@ -1,8 +1,9 @@
-<#-- /email/welcome.ftl -->
+<#-- /property-captain.ftl -->
 <#-- Expected data model:
   subject: string
   userFirstName: string (optional)
-  connectsCount: number (default 2)
+  propertyName: string
+  redirectUrl
   siteName: string ("Houseclay")
   footerAddress: string (optional)
   baseUrl: string (optional, defaults to https://houseclay.com)
@@ -108,23 +109,6 @@
       margin:12px 0 2px 0; 
       line-height:1.6; 
     }
-    .h4         { 
-      font-family:"Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
-      font-weight:600; 
-      color:#111827; 
-      margin:24px 0 4px 0; 
-    }
-
-    /* Lists */
-    .ul { 
-      margin:2px 0 16px 0; 
-      padding-left:20px; 
-    }
-    .ul li {  
-      margin:3px 0; 
-      color: #374151; 
-      font-family:"Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif; 
-    }
 
     /* Footer */
     .footer { 
@@ -140,10 +124,9 @@
 
     /* --- Breakpoints (only these three) --- */
     /* Mobile: <768px (base) */
-    .heading-xl { font-size:20px; }
+    .heading-xl { font-size:22px; }
     .p          { font-size:14px; }
-    .ul li      { font-size: 14px; }
-    .hero img   { width:220px; height:220px; }
+    .hero img   { width:250px; height:300px; }
     .inner      { padding:20px; }
 
     @media only screen and (max-width:767px) {
@@ -152,20 +135,18 @@
 
     /* Tablet: 768px–1023px */
     @media only screen and (min-width:768px) and (max-width:1023px) {
-      .heading-xl { font-size:22px; }
+      .heading-xl { font-size:24px; }
       .p          { font-size:15px; }
-      .ul li      { font-size: 15px; }
-      .hero img   { width:260px; height:260px; }
+      .hero img   { width:270px; height:320px; }
       .inner      { padding:24px 60px; }
       .outer { padding-left:24px !important; padding-right:24px !important; }
     }
 
     /* Desktop: ≥1024px */
     @media only screen and (min-width:1024px) {
-      .heading-xl { font-size:24px; }
-      .p          { font-size:15px; }
-      .ul li      { font-size: 15px; }
-      .hero img   { width:282px; height:282px; }
+      .heading-xl { font-size:28px; }
+      .p          { font-size:16px; }
+      .hero img   { width:282px; height:340px; }
       .inner      { padding:24px 100px; }
       .outer { padding-left:0 !important; padding-right:0 !important; }
     }
@@ -193,8 +174,8 @@
           <table role="presentation" class="container" width="100%" style="max-width:900px; margin:0 auto;">
             <!-- Hero -->
             <tr>
-              <td class="hero">
-                <img src="https://houseclay-email-img.s3.ap-south-1.amazonaws.com/welcome.png" alt="Welcome illustration">
+              <td class="hero" style="padding-top: 32px;">
+                <img src="https://houseclay-email-img.s3.ap-south-1.amazonaws.com/property-captain.png" alt="property captain illustration">
               </td>
             </tr>
 
@@ -202,10 +183,7 @@
             <tr>
               <td class="inner">
 
-                <div class="heading-xl">
-                  <div>Welcome to ${(siteName!'Houseclay')?html}</div>
-                  <div>You've got ${(connectsCount!2)?c} free connects!</div>
-                </div>
+                <div class="heading-xl">${(siteName!'Houseclay')?html} captain will assist you soon</div>
 
                 <p class="p">
                   <#if userFirstName?? && (userFirstName?length > 0)>
@@ -213,23 +191,13 @@
                   <#else>
                     Hi,
                   </#if>
-                  your account has been created successfully. To get you started, we've added ${(connectsCount!2)?c} free connects to your account.
                 </p>
 
-                <div class="h4">What are Connects?</div>
-                <p class="p" style="margin:2px 0;">Connects are tokens used across the website to unlock key features.</p>
-                <p class="p" style="margin:2px 0;">Use Connects to:</p>
-                <ul class="ul">
-                  <li>View verified owner contact details</li>
-                  <li>Connect directly with no middlemen</li>
-                  <li>Access genuine opportunities, faster</li>
-                </ul>
-
-                <p class="p" style="margin-bottom:28px;">
-                  We're excited to have you on board. Your journey to finding the right property just got easier!
+                <p class="p" style="margin-bottom: 24px;">
+                  One of our Captains will get in touch with you shortly to assist with your property ${propertyName?html}.
                 </p>
 
-                <p class="p" style="margin-bottom:8px;">
+                <p class="p" style="margin:36px 0 12px 0;">
                   Best regards,<br>
                   ${(siteName!'Houseclay')?html} Team
                 </p>
