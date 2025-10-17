@@ -89,6 +89,7 @@ public class UserService {
                 .httpOnly(true)
                 .secure(true) // Set to true when using HTTPS
                 .sameSite("None")
+                .domain(".houseclay.com")
                 .path("/")
                 .maxAge(0) // Clear the cookie
                 .build();
@@ -112,6 +113,7 @@ public class UserService {
                 .httpOnly(true)
                 .secure(true) // Set to true when using HTTPS
                 .sameSite("None")
+                .domain(".houseclay.com")
                 .path("/")
                 .maxAge(60 * 60)
                 .build();
