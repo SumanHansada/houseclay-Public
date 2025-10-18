@@ -2,9 +2,9 @@
 
 import { useMemo } from "react";
 
+import { formatDate, getDateKey } from "@/common/utils";
 import { UserExternalPayment } from "@/interfaces/User";
 
-import { formatDate, getDateKey } from "../utils";
 import { TransactionCard } from "./TransactionCard";
 
 interface GroupedTransactions {

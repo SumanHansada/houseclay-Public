@@ -95,9 +95,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
       exitAnimation="animate-slide-out-left"
     >
       <DialogHeader>
-        <div
-          className={`py-2 px-4 flex justify-between items-center w-full shadow-sm`}
-        >
+        <div className={`flex justify-between items-center w-full shadow-sm`}>
           <button className="rounded-full items-center justify-center">
             <X
               onClick={() => {

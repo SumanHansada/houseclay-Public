@@ -4,27 +4,16 @@ import { NextResponse } from "next/server";
 // List of paths that don't require authentication
 const publicPaths = ["/", "/login", "/signup"];
 
-// Valid property categories
-const validPropertyCategories = ["rent", "resale", "flatmate"];
-
 export function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
   const { pathname } = request.nextUrl;
 
-  // Handle property category redirects
-  const propertyCategoryMatch = pathname.match(/^\/list-property\/([^\/]+)$/);
-  if (propertyCategoryMatch) {
-    const category = propertyCategoryMatch[1].toLowerCase();
-
-    if (validPropertyCategories.includes(category)) {
-      // Redirect to property-details step
-      return NextResponse.redirect(
-        new URL(`/list-property/${category}/property-details`, request.url),
-      );
-    } else {
-      // Redirect to home for invalid category
-      return NextResponse.redirect(new URL("/", request.url));
-    }
+  // Redirect /manage-account to /manage-account/my-profile
+  const manageAccountMatch = pathname.match(/^\/manage-account$/);
+  if (manageAccountMatch) {
+    return NextResponse.redirect(
+      new URL("/manage-account/my-profile", request.url),
+    );
   }
 
   // If user has token and tries to access login/signup, redirect to home
@@ -54,10 +43,10 @@ export const config = {
     "/list-property/flatmate/:path*",
 
     // Protected routes that require authentication
-    "/profile/:path*",
     "/edit-property/:path*",
     "/my-property-details/:path*",
     "/buy-connects",
+    "/manage-account",
     // Add other protected routes here
   ],
 };

@@ -2,9 +2,9 @@
 
 import { useMemo } from "react";
 
+import { formatDate, getDateKey } from "@/common/utils";
 import { UserOwnedProperties } from "@/interfaces/User";
 
-import { formatDate, getDateKey } from "../utils";
 import { PropertyCard } from "./PropertyCard";
 
 interface GroupedProperties {

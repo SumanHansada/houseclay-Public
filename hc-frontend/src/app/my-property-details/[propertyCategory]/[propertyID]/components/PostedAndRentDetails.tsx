@@ -6,11 +6,11 @@ import { PropertyUpdate } from "@/interfaces/PropertyUpdate";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function PostedAndRentDetails(props: any) {
-  const { property } = props;
+  const { property, propertyUpdates } = props;
   if (!property) return null;
   const lastPropertyUpdate: PropertyUpdate | null =
-    property && property.propertyUpdates.length > 0
-      ? property.propertyUpdates[property.propertyUpdates.length - 1]
+    propertyUpdates && propertyUpdates.length > 0
+      ? propertyUpdates[propertyUpdates.length - 1]
       : null;
   return (
     <section className="grid grid-flow-row 2xl:grid-cols-2 max-md:grid-cols-2 gap-2 w-full py-6 max-md:py-3">

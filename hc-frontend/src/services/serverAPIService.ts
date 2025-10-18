@@ -10,12 +10,14 @@ export class ServerAPIService {
       const response = await serverAxiosInstance({
         url: endpoint,
         method: options.method || "GET",
+        withCredentials: true,
         ...options,
       });
 
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
+        console.error("error", error);
         throw new Error(
           `API call failed: ${error.response?.statusText || error.message}`,
         );
@@ -35,6 +37,7 @@ export class ServerAPIService {
       const response = await serverAxiosInstance({
         url: `/property/${propertyID}`,
         method: "GET",
+        withCredentials: true,
       });
 
       return response.data;

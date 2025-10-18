@@ -31,7 +31,7 @@ async function MyPropertyDetails({
       />
     );
   } catch (error) {
-    throw new Error("Failed to fetch property data", { cause: error });
+    console.error("Error fetching property data", error);
   }
 }
 

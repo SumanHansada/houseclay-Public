@@ -168,10 +168,11 @@ export function MyPropertyDetailsClient({
 }: MyPropertyDetailsClientProps): React.ReactElement {
   const dispatch = useDispatch();
   const { isMobile } = useDeviceContext();
-  const { data: property = initialData, isLoading: _isPropertyLoading } =
+  const { data: propertyData = initialData, isLoading: _isPropertyLoading } =
     useGetMyPropertyByIdQuery(propertyID, {
       skip: !!initialData, // Skip the query if we have initial data
     });
+  const { property, propertyUpdates } = propertyData;
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
@@ -295,7 +296,10 @@ export function MyPropertyDetailsClient({
                 <TabContent value="details">
                   <section className="py-3 md:hidden">
                     <UpgradePropertyBanner onUpgrade={handleUpgrade} />
-                    <PostedAndRentDetails property={property} />
+                    <PostedAndRentDetails
+                      property={property}
+                      propertyUpdates={propertyUpdates}
+                    />
                   </section>
                   {/* Description Section */}
                   <section className="py-6 max-md:py-3">
@@ -339,7 +343,7 @@ export function MyPropertyDetailsClient({
                             No. of Bedroom
                           </div>
                           <div className="text-gray-900 font-bold font-nunito">
-                            {property?.bhkType.split("BHK")[0] || "-"} Bedroom
+                            {property?.bhkType?.split("BHK")[0] || "-"} Bedroom
                           </div>
                         </div>
                       </div>
@@ -897,7 +901,10 @@ export function MyPropertyDetailsClient({
               </button>
             </div>
             <div className="pt-4">
-              <PostedAndRentDetails property={property} />
+              <PostedAndRentDetails
+                property={property}
+                propertyUpdates={propertyUpdates}
+              />
             </div>
             <UpgradePropertyBanner onUpgrade={handleUpgrade} />
           </section>

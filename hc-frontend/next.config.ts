@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["lucide-react", "react-loading-skeleton"],
   },
+  allowedDevOrigins: ["localhost.houseclay.com"],
   // Enable compression
   compress: true,
   // Enable static generation where possible
