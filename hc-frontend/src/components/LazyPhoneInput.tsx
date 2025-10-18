@@ -32,6 +32,7 @@ interface LazyPhoneInputProps {
   disabled?: boolean;
   name?: string;
   disableFormatting?: boolean;
+  selectedCountry?: string;
 }
 
 export const LazyPhoneInput: React.FC<LazyPhoneInputProps> = (props) => {

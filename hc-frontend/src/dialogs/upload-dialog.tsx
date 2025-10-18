@@ -71,22 +71,18 @@ const UploadDialog: React.FC<UploadDialogProps> = ({ id }) => {
       exitAnimation={isMobile ? "animate-slide-out-bottom" : "animate-fade-out"}
     >
       <DialogHeader>
-        <div
-          className={`${isMobile ? "py-2 px-8" : ""} flex flex-col justify-between items-center w-full`}
-        >
-          {isMobile && (
-            <>
-              <h1 className="text-xl py-1.5 text-black">Uploading Photos</h1>
-              <button
-                className="absolute top-4 right-4 rounded-full"
-                onClick={handleClose}
-                disabled={status === "uploading"}
-              >
-                <X size={25} />
-              </button>
-            </>
-          )}
-        </div>
+        {isMobile && (
+          <div className="flex flex-col justify-between items-center w-full py-2 px-8">
+            <h1 className="text-xl py-1.5 text-black">Uploading Photos</h1>
+            <button
+              className="absolute top-4 right-4 rounded-full"
+              onClick={handleClose}
+              disabled={status === "uploading"}
+            >
+              <X size={25} />
+            </button>
+          </div>
+        )}
       </DialogHeader>
       <DialogContent>
         <div className="flex flex-col items-center justify-center text-center p-6 gap-6">

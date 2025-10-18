@@ -3,10 +3,11 @@
 import { useParams } from "next/navigation";
 import { useSelector } from "react-redux";
 
-import FlatmateDetailsClient from "@/app/list-property/[propertyCategory]/[propertyID]/rental-details/FlatmateDetailsClient";
-import RentalDetailsClient from "@/app/list-property/[propertyCategory]/[propertyID]/rental-details/RentalDetailsClient";
 import { PropertyCategory } from "@/common/enums";
 import { RootState } from "@/store/store";
+
+import FlatmateDetailsClient from "./FlatmateDetailsClient";
+import RentalDetailsClient from "./RentalDetailsClient";
 
 export const RentalDetailsWrapper: React.FC = () => {
   const params = useParams();

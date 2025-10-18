@@ -21,6 +21,7 @@ const getInitialData = (
     builtUpArea: 2500,
     facing: "East",
     bhkType: "3BHK",
+    bathrooms: 3,
     ownershipType: "Self Owned",
     propertyAge: "More than 10 year",
     floor: 0,

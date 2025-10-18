@@ -7,7 +7,9 @@ export interface FlatmateForm {
   // Property details (simplified for FLATMATE)
   propertyType: string;
   builtUpArea: number;
+  facing: string;
   bhkType: string;
+  bathrooms: number;
   floor: number;
   totalFloors: number;
   description: string;

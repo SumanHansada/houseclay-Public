@@ -31,6 +31,7 @@ const getInitialData = (
     builtUpArea: 0,
     facing: "",
     bhkType: "",
+    bathrooms: 0,
     ownershipType: "",
     propertyAge: "",
     floor: 0,

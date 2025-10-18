@@ -81,8 +81,8 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
   const userName = useSelector(
     (state: RootState) => state.user.userDetail.name,
   );
-  const connectBal = useSelector(
-    (state: RootState) => state.user.userDetail.connectBal,
+  const connectBal = useSelector((state: RootState) =>
+    isAuthenticated ? state.user.userDetail.connectBal : 0,
   );
   const showLoginTip = !isAuthenticated;
   const showZeroTip = !!isAuthenticated && Number(connectBal) === 0;

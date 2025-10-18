@@ -24,9 +24,11 @@ const propertySchema = Yup.object({
     builtUpArea: Yup.number()
       .required("Built up area is required")
       .positive("Area must be positive"),
+    facing: Yup.string().required("Facing is required"),
     bhkType: Yup.string().required("BHK type is required"),
     floor: Yup.number().required("Floor is required"),
     totalFloors: Yup.number().required("Total floors is required"),
+    bathrooms: Yup.number().required("Bathrooms is required"),
   }),
 });
 
@@ -130,8 +132,8 @@ const FlatmatePropertyDetailsClient: React.FC = () => {
           }
         />
 
-        {/* BUILT UP AREA + BHK TYPE */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* BUILT UP AREA + FACING + BHK TYPE */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           <FormTextField
             name="propertyDetails.builtUpArea"
             id="propertyDetails.builtUpArea"
@@ -140,6 +142,29 @@ const FlatmatePropertyDetailsClient: React.FC = () => {
             placeholder="Enter built up area"
             suffix="Sq.ft"
             required
+          />
+
+          <FormSelectDropdown
+            label="Facing"
+            name="propertyDetails.facing"
+            id="propertyDetails.facing"
+            options={[
+              { value: "East", label: "East" },
+              { value: "West", label: "West" },
+              { value: "North", label: "North" },
+              { value: "South", label: "South" },
+              { value: "North-East", label: "North-East" },
+              { value: "North-West", label: "North-West" },
+              { value: "South-East", label: "South-East" },
+              { value: "South-West", label: "South-West" },
+            ]}
+            required
+            placeholder="Select facing direction"
+            aria-describedby={
+              propertyDetailsErrors?.facing && propertyDetailsTouched?.facing
+                ? "propertyDetails.facing-error"
+                : undefined
+            }
           />
 
           <FormSelectDropdown
@@ -163,8 +188,30 @@ const FlatmatePropertyDetailsClient: React.FC = () => {
           />
         </div>
 
-        {/* FLOOR, TOTAL FLOOR */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* BATHROOMS, FLOOR, TOTAL FLOOR */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <FormSelectDropdown
+            label="Bathrooms"
+            name="propertyDetails.bathrooms"
+            id="propertyDetails.bathrooms"
+            options={[
+              { value: 1, label: "1" },
+              { value: 2, label: "2" },
+              { value: 3, label: "3" },
+              { value: 4, label: "4" },
+              { value: 5, label: "5" },
+              { value: 6, label: "6" },
+            ]}
+            required
+            placeholder="Select Bathrooms"
+            aria-describedby={
+              propertyDetailsErrors?.bathrooms &&
+              propertyDetailsTouched?.bathrooms
+                ? "propertyDetails.bathrooms-error"
+                : undefined
+            }
+          />
+
           <FormSelectDropdown
             label="Total Floor"
             name="propertyDetails.totalFloors"

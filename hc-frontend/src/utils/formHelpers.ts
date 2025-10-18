@@ -61,6 +61,7 @@ export const getPropertyDetailsErrors = (errors: FormikErrors<FormValues>) =>
         totalFloors?: string;
         floorType?: string;
         description?: string;
+        bathrooms?: string;
       }
     | undefined;
 
@@ -77,6 +78,7 @@ export const getPropertyDetailsTouched = (touched: FormikTouched<FormValues>) =>
         totalFloors?: boolean;
         floorType?: boolean;
         description?: boolean;
+        bathrooms?: boolean;
       }
     | undefined;
 

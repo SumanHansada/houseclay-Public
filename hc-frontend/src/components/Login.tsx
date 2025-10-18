@@ -258,6 +258,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
                   <LazyPhoneInput
                     name="phone"
                     defaultCountry="in"
+                    selectedCountry="in"
                     value={phoneNo}
                     disableFormatting={true}
                     placeholder={"Enter phone number"}

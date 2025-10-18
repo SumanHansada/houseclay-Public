@@ -66,6 +66,7 @@ export const transformToRentForm = (
     builtUpArea: propertyDetails.builtUpArea,
     facing: propertyDetails.facing,
     bhkType: propertyDetails.bhkType,
+    bathrooms: propertyDetails.bathrooms,
     ownershipType: propertyDetails.ownershipType,
     propertyAge: propertyDetails.propertyAge,
     floor: propertyDetails.floor,
@@ -231,7 +232,9 @@ export const transformToFlatmateForm = (
     // Property details (simplified)
     propertyType: propertyDetails.propertyType,
     builtUpArea: propertyDetails.builtUpArea,
+    facing: propertyDetails.facing,
     bhkType: propertyDetails.bhkType,
+    bathrooms: propertyDetails.bathrooms,
     floor: propertyDetails.floor,
     totalFloors: propertyDetails.totalFloors,
     description: propertyDetails.description,
