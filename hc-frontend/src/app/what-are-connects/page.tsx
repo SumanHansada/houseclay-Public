@@ -1,9 +1,11 @@
 "use client";
 
+import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
+import { Button } from "@/base-components";
 import { Footer, MobileFooter, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import {
@@ -36,7 +38,19 @@ export default function WhatAreConnectsPage() {
 
   return (
     <>
-      <MobileHeader title="What are Connects?" />
+      <MobileHeader>
+        <MobileHeader.LeftAction>
+          <Button
+            variant="secondary"
+            size="custom"
+            className="rounded-full p-1"
+            onClick={() => router.back()}
+          >
+            <ChevronLeft size={24} />
+          </Button>
+        </MobileHeader.LeftAction>
+        <MobileHeader.Title>What are Connects?</MobileHeader.Title>
+      </MobileHeader>
 
       <div className="w-full">
         {/* Hero Section */}

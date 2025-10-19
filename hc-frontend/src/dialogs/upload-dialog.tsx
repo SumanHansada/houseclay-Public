@@ -4,7 +4,9 @@ import { X } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useSelector } from "react-redux";
 
+import { Button } from "@/base-components";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
+import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { RootState } from "@/store/store";
@@ -70,18 +72,22 @@ const UploadDialog: React.FC<UploadDialogProps> = ({ id }) => {
       entryAnimation={isMobile ? "animate-slide-in-bottom" : "animate-fade-in"}
       exitAnimation={isMobile ? "animate-slide-out-bottom" : "animate-fade-out"}
     >
-      <DialogHeader>
+      <DialogHeader className="-mx-4">
         {isMobile && (
-          <div className="flex flex-col justify-between items-center w-full py-2 px-8">
-            <h1 className="text-xl py-1.5 text-black">Uploading Photos</h1>
-            <button
-              className="absolute top-4 right-4 rounded-full"
-              onClick={handleClose}
-              disabled={status === "uploading"}
-            >
-              <X size={25} />
-            </button>
-          </div>
+          <MobileHeader className="relative">
+            <MobileHeader.Title>Uploading Photos</MobileHeader.Title>
+            <MobileHeader.RightAction>
+              <Button
+                variant="secondary"
+                size="custom"
+                className="rounded-full p-1"
+                onClick={handleClose}
+                disabled={status === "uploading"}
+              >
+                <X size={24} />
+              </Button>
+            </MobileHeader.RightAction>
+          </MobileHeader>
         )}
       </DialogHeader>
       <DialogContent>

@@ -1,10 +1,11 @@
 "use client";
 
-import { Check } from "lucide-react";
+import { Check, ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 
+import { Button } from "@/base-components";
 import { BadgeType, PropertyCategory, PropertyStatus } from "@/common/enums";
 import Properties from "@/components/Properties";
 import { PropertyCardWithImages } from "@/interfaces/User";
@@ -132,7 +133,20 @@ export default function OwnersContactedPage() {
       {/* Mobile */}
       <section className="md:hidden">
         {/* Header */}
-        <MobileHeader title="Owners you contacted" />
+
+        <MobileHeader>
+          <MobileHeader.LeftAction>
+            <Button
+              variant="secondary"
+              size="custom"
+              className="rounded-full p-1"
+              onClick={() => router.back()}
+            >
+              <ChevronLeft size={24} />
+            </Button>
+          </MobileHeader.LeftAction>
+          <MobileHeader.Title>Properties Contacted</MobileHeader.Title>
+        </MobileHeader>
 
         {/* Filter buttons */}
         <div className="flex justify-between text-lg m-3 border p-1.5 sm:p-2 rounded-xl mx-8">

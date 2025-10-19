@@ -143,7 +143,7 @@ export function DesktopClient({
                       )
                     }
                   >
-                    <X size={14} className="" />
+                    <X size={14} />
                   </button>
                 )}
               </span>

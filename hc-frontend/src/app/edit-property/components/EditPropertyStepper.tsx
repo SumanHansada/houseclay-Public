@@ -2,7 +2,9 @@ import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import { FileImage, FileText, Home, IndianRupee, MapPin } from "lucide-react";
 
+import { Button } from "@/base-components";
 import { ListPropertyFormStep, PropertyCategory } from "@/common/enums";
+import { MobileHeader } from "@/layout-components";
 
 import StepNavigationButton from "./StepNavigationButton";
 
@@ -11,7 +13,7 @@ interface EditPropertyStepperProps {
   completedSteps: Set<ListPropertyFormStep>;
   propertyCategory: PropertyCategory;
   isMobile: boolean;
-  onGoToHome: () => void;
+  onClose: () => void;
 }
 
 const EditPropertyStepper: React.FC<EditPropertyStepperProps> = ({
@@ -19,7 +21,7 @@ const EditPropertyStepper: React.FC<EditPropertyStepperProps> = ({
   completedSteps,
   propertyCategory,
   isMobile,
-  onGoToHome,
+  onClose,
 }) => {
   const getSteps = () => {
     const baseSteps = [
@@ -90,16 +92,19 @@ const EditPropertyStepper: React.FC<EditPropertyStepperProps> = ({
 
     return (
       <>
-        <section className="py-2 px-4 fixed top-0 left-0 right-0 z-50 h-[55px] border-gray-200 bg-white flex flex-col justify-center items-center w-full md:hidden">
-          <div className="flex justify-center items-center align-middle w-full md:hidden">
-            <h1 className="text-lg my-auto text-black ml-auto">
-              {displayStep}
-            </h1>
-            <button className="border border-gray-200 rounded-full md:border-none ml-auto">
-              <X onClick={onGoToHome} size={25} />
-            </button>
-          </div>
-        </section>
+        <MobileHeader>
+          <MobileHeader.Title>{displayStep}</MobileHeader.Title>
+          <MobileHeader.RightAction>
+            <Button
+              variant="secondary"
+              size="custom"
+              className="rounded-full p-1"
+              onClick={onClose}
+            >
+              <X size={24} />
+            </Button>
+          </MobileHeader.RightAction>
+        </MobileHeader>
         <div className="h-[2px] fixed w-full bg-gray-200 mt-auto z-50">
           <div
             className="h-[2px] bg-red-500 absolute top-0 left-0 transition-all duration-300"

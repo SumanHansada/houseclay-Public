@@ -292,10 +292,16 @@ export function PropertyDetailsClient({
       <section className="overflow-x-hidden flex-grow max-md:pb-16">
         {/* Photo Gallery Section Mobile */}
         <section className="h-60 w-full md:hidden">
-          <PhotoGallery
-            images={property?.images}
-            className="md:h-[60vh] h-60 rounded-none"
-          />
+          {property?.images?.length > 0 ? (
+            <PhotoGallery
+              images={property?.images}
+              className="md:h-[60vh] h-60 rounded-none"
+            />
+          ) : (
+            <div className="h-60 w-full flex items-center justify-center">
+              <p className="text-gray-500">No images available</p>
+            </div>
+          )}
         </section>
 
         <section className="flex-col w-full xl:gap-16 lg:gap-8 md:gap-0 gap-0 xl:px-28 lg:px-14 md:px-8 px-6 max-md:pt-4">
@@ -372,12 +378,18 @@ export function PropertyDetailsClient({
 
           {/* Photo Gallery Section Desktop */}
           <section className="mb-8 max-md:hidden">
-            <PhotoGallery
-              images={property?.images}
-              maxDisplayImages={5}
-              className="md:h-[60vh] h-96 rounded-xl"
-              thumbnailPosition="bottom"
-            />
+            {property?.images?.length > 0 ? (
+              <PhotoGallery
+                images={property?.images}
+                maxDisplayImages={5}
+                className="md:h-[60vh] h-96 rounded-xl"
+                thumbnailPosition="bottom"
+              />
+            ) : (
+              <div className="h-96 w-full flex items-center justify-center">
+                <p className="text-gray-500">No images available</p>
+              </div>
+            )}
           </section>
 
           {/* Main Content Section Desktop*/}

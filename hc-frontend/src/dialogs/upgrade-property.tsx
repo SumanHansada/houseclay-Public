@@ -3,7 +3,9 @@
 import { X } from "lucide-react";
 import React from "react";
 
+import { Button } from "@/base-components";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
+import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { SvgIcon } from "@/utility-components";
 
@@ -27,22 +29,22 @@ const UpgradePropertyDialog: React.FC<UpgradePropertyDialogProps> = ({
       entryAnimation={isMobile ? "animate-slide-in-bottom" : "animate-fade-in"}
       exitAnimation={isMobile ? "animate-slide-out-bottom" : "animate-fade-out"}
     >
-      <DialogHeader>
-        <div
-          className={`${isMobile ? "py-2 px-8" : ""}  flex flex-col justify-between items-center w-full`}
-        >
-          {isMobile && (
-            <>
-              <h1 className="text-xl py-1.5 text-black">Awesome!</h1>
-              <button
-                className="absolute top-4 right-4 border border-gray-200 rounded-full md:border-none"
-                tabIndex={0}
+      <DialogHeader className="-mx-4">
+        {isMobile && (
+          <MobileHeader className="relative">
+            <MobileHeader.Title>Awesome!</MobileHeader.Title>
+            <MobileHeader.RightAction>
+              <Button
+                variant="secondary"
+                size="custom"
+                className="rounded-full p-1"
+                onClick={onClose}
               >
-                <X size={25} onClick={onClose} />
-              </button>
-            </>
-          )}
-        </div>
+                <X size={24} />
+              </Button>
+            </MobileHeader.RightAction>
+          </MobileHeader>
+        )}
       </DialogHeader>
       <DialogContent>
         <div

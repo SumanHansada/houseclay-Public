@@ -4,7 +4,9 @@ import { X } from "lucide-react";
 import { useState } from "react";
 import { ColumnsPhotoAlbum } from "react-photo-album";
 
+import { Button } from "@/base-components";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
+import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 
 interface PhotoGalleryDialogProps {
@@ -41,15 +43,20 @@ const PhotoGalleryDialog: React.FC<PhotoGalleryDialogProps> = ({
       entryAnimation={isMobile ? "animate-slide-in-bottom" : "animate-fade-in"}
       exitAnimation={isMobile ? "animate-slide-out-bottom" : "animate-fade-out"}
     >
-      <DialogHeader>
-        <div className="flex border-b border-gray-200 h-[55px] items-center w-full justify-between py-4 px-6 max-md:py-2 max-md:px-4">
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 rounded-full hover:bg-gray-100 ml-auto max-md:border max-md:border-gray-200"
-          >
-            <X size={25} />
-          </button>
-        </div>
+      <DialogHeader className="-mx-4">
+        <MobileHeader className="relative">
+          <MobileHeader.Title>Photo Gallery</MobileHeader.Title>
+          <MobileHeader.RightAction>
+            <Button
+              variant="secondary"
+              size="custom"
+              className="rounded-full p-1"
+              onClick={onClose}
+            >
+              <X size={24} />
+            </Button>
+          </MobileHeader.RightAction>
+        </MobileHeader>
       </DialogHeader>
       <DialogContent>
         <div className="px-6 py-4 max-md:px-4 max-md:py-2">

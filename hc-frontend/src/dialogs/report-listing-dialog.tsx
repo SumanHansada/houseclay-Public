@@ -4,14 +4,14 @@ import { useFormik } from "formik";
 import { X } from "lucide-react";
 import * as Yup from "yup";
 
-import { RadioGroup, TextArea } from "@/base-components";
+import { Button, RadioGroup, TextArea } from "@/base-components";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
 } from "@/components/Dialog";
-import { MobileFooter } from "@/layout-components";
+import { MobileFooter, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 interface ReportListingDialogProps {
   id: string;
@@ -78,19 +78,33 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
       entryAnimation={isMobile ? "animate-slide-in-right" : "animate-fade-in"}
       exitAnimation={isMobile ? "animate-slide-out-right" : "animate-fade-out"}
     >
-      <DialogHeader>
-        <div
-          className={`${isMobile ? "py-2 px-8 justify-between items-center" : "py-2 px-6 justify-start items-start"} flex flex-col w-full`}
-        >
-          {
-            <h1 className="text-xl md:text-2xl py-1.5 text-black">
-              Report This Listing
-            </h1>
-          }
-          <button className="absolute top-4 right-4 rounded-full">
-            <X onClick={onClose} size={24} />
-          </button>
-        </div>
+      <DialogHeader className="-mx-4">
+        {isMobile ? (
+          <MobileHeader className="relative">
+            <MobileHeader.Title>Report This Listing</MobileHeader.Title>
+            <MobileHeader.RightAction>
+              <Button
+                variant="secondary"
+                size="custom"
+                className="rounded-full p-1"
+                onClick={onClose}
+              >
+                <X size={24} />
+              </Button>
+            </MobileHeader.RightAction>
+          </MobileHeader>
+        ) : (
+          <div className="relative w-full mx-4 flex justify-between items-center">
+            {
+              <h1 className="text-xl md:text-2xl text-black">
+                Report This Listing
+              </h1>
+            }
+            <button className="relative rounded-full">
+              <X onClick={onClose} size={24} />
+            </button>
+          </div>
+        )}
       </DialogHeader>
       <DialogContent>
         <div className={`${isMobile ? "px-8 py-6" : "p-6"}`}>
@@ -161,7 +175,7 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
             </button>
           </div>
         </MobileFooter>
-        <div className="flex border-gray-200 w-full px-6 py-3 md:py-3 justify-end max-md:px-4 gap-4 max-md:hidden">
+        <div className="flex border-gray-200 w-full justify-end gap-4 max-md:hidden">
           <button
             type="button"
             onClick={onClose}

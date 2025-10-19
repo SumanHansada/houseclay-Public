@@ -2,12 +2,14 @@ import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import EmailVerifiedIconSvg from "public/icons/email-verified.svg";
 
+import { Button } from "@/base-components";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
 } from "@/components/Dialog";
+import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { SvgIcon } from "@/utility-components";
 
@@ -36,21 +38,21 @@ const EmailVerificationSuccessDialog: React.FC<
       exitAnimation={isMobile ? "animate-slide-out-bottom" : "animate-fade-out"}
     >
       <DialogHeader>
-        <div className="relative flex h-full w-full items-center justify-center">
-          {/* Title: Centered and only visible on mobile */}
-          <h1 className="text-lg text-center truncate font-medium md:hidden">
-            Email Verified!
-          </h1>
-
-          {/* Close Button: Repositions itself based on screen size */}
-          <button
-            aria-label="Close"
-            onClick={onClose}
-            className="absolute p-2 right-2 top-1/2 -translate-y-1/2 rounded-full border border-gray-200 md:border-0 md:right-4 md:top-4 md:translate-y-0"
-          >
-            <X size={24} />
-          </button>
-        </div>
+        {isMobile && (
+          <MobileHeader className="relative">
+            <MobileHeader.Title>Email Verified!</MobileHeader.Title>
+            <MobileHeader.RightAction>
+              <Button
+                variant="secondary"
+                size="custom"
+                className="rounded-full p-1"
+                onClick={onClose}
+              >
+                <X size={24} />
+              </Button>
+            </MobileHeader.RightAction>
+          </MobileHeader>
+        )}
       </DialogHeader>
       <DialogContent>
         <div className="p-6 flex flex-col gap-4 items-center">

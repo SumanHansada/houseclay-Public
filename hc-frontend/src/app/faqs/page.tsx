@@ -1,8 +1,11 @@
 "use client";
 
+import { ChevronLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
+import { Button } from "@/base-components";
 import { default as ACCORDION_DATA } from "@/data/SupportAccordionData.json";
 import { Footer, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
@@ -16,6 +19,7 @@ import { Accordion } from "../manage-account/components/Accordion";
 
 export default function FrequentlyAskedQuestionPage() {
   const [openKey, setOpenKey] = useState<string | null>(null);
+  const router = useRouter();
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
 
@@ -33,8 +37,19 @@ export default function FrequentlyAskedQuestionPage() {
 
   return (
     <>
-      <MobileHeader title="Frequently Asked Questions" />
-
+      <MobileHeader>
+        <MobileHeader.LeftAction>
+          <Button
+            variant="secondary"
+            size="custom"
+            className="rounded-full p-1"
+            onClick={() => router.back()}
+          >
+            <ChevronLeft size={24} />
+          </Button>
+        </MobileHeader.LeftAction>
+        <MobileHeader.Title>Frequently Asked Questions</MobileHeader.Title>
+      </MobileHeader>
       <section
         aria-labelledby="faq-title faq-title-mobile"
         className="space-y-12 md:space-y-24 xl:w-1/2 lg:w-2/3 md:w-3/4 md:py-20 max-md:px-8 pb-16 pt-12"

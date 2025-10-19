@@ -1,10 +1,11 @@
 "use client";
-import { Info, X } from "lucide-react";
+import { ChevronLeft, Info, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { Button } from "@/base-components";
 import NumberField from "@/base-components/NumberField";
 import RadioGroup from "@/base-components/RadioGroup";
 import { PaymentVerificationStatus } from "@/common/enums";
@@ -81,6 +82,10 @@ export default function BuyConnectsPage() {
   const expiryDate = new Date();
   expiryDate.setDate(expiryDate.getDate() + 60);
 
+  const handleCloseDialog = () => {
+    closeDialog("connects-price-breakdown-dialog");
+  };
+
   useEffect(() => {
     if (isMobile) {
       dispatch(setHideHeader(true));
@@ -130,7 +135,7 @@ export default function BuyConnectsPage() {
     if (!agreedToTerms) return;
 
     if (isDialogOpen("connects-price-breakdown-dialog")) {
-      closeDialog("connects-price-breakdown-dialog");
+      handleCloseDialog();
     }
 
     try {
@@ -401,8 +406,21 @@ export default function BuyConnectsPage() {
       {/* Mobile */}
       <section className="w-full md:hidden">
         {/* Mobile Header */}
-        <MobileHeader title="Buy Connects" onBack={() => router.back()} />
-        <div className="px-6 pb-16 pt-4">
+        <MobileHeader>
+          <MobileHeader.LeftAction>
+            <Button
+              variant="secondary"
+              size="custom"
+              className="rounded-full p-1"
+              onClick={() => router.back()}
+            >
+              <ChevronLeft size={24} />
+            </Button>
+          </MobileHeader.LeftAction>
+          <MobileHeader.Title>Buy Connects</MobileHeader.Title>
+        </MobileHeader>
+        {/* Mobile Content */}
+        <div className="px-6 pt-4 pb-16 ">
           <div className="flex justify-between items-start w-full py-4 rounded-lg mb-4">
             {/* Available Connects */}
             <div className="flex gap-2 items-center w-2/3 justify-between">
@@ -519,26 +537,27 @@ export default function BuyConnectsPage() {
             </label>
           </div>
         </div>
-      </section>
-      <MobileFooter>
-        <div className="flex flex-col justify-around items-start w-full">
-          <div className="text-gray-600 text-xs">Total Amount</div>
-          <div className="text-sm font-bold flex gap-2 items-center">
-            {totalAmount.toFixed(2)} <Info size={16} />
+        {/* Mobile Footer */}
+        <MobileFooter>
+          <div className="flex flex-col justify-around items-start w-full">
+            <div className="text-gray-600 text-xs">Total Amount</div>
+            <div className="text-sm font-bold flex gap-2 items-center">
+              {totalAmount.toFixed(2)} <Info size={16} />
+            </div>
           </div>
-        </div>
-        <button
-          className={`text-center px-6 py-3 border rounded-xl w-full transition duration-200 ${
-            agreedToTerms && connectsToBuy >= 5
-              ? "bg-red-500 border-red-500 text-white hover:bg-red-600"
-              : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
-          }`}
-          onClick={() => openDialog("connects-price-breakdown-dialog")}
-          disabled={!agreedToTerms && connectsToBuy < 5}
-        >
-          Proceed to Pay
-        </button>
-      </MobileFooter>
+          <button
+            className={`text-center px-6 py-3 border rounded-xl w-full transition duration-200 ${
+              agreedToTerms && connectsToBuy >= 5
+                ? "bg-red-500 border-red-500 text-white hover:bg-red-600"
+                : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
+            onClick={() => openDialog("connects-price-breakdown-dialog")}
+            disabled={!agreedToTerms && connectsToBuy < 5}
+          >
+            Proceed to Pay
+          </button>
+        </MobileFooter>
+      </section>
 
       {/* Connects Price Dialog */}
       {isDialogOpen("connects-price-breakdown-dialog") && (
@@ -555,14 +574,14 @@ export default function BuyConnectsPage() {
             <div className="py-2 px-8 flex flex-col justify-between items-center w-full">
               <h1 className="text-xl mt-1 mb-2 text-black">Price Breakdown</h1>
             </div>
-            <button className="absolute top-4 right-4">
-              <X
-                onClick={() => {
-                  closeDialog("connects-price-breakdown-dialog");
-                }}
-                size={25}
-              />
-            </button>
+            <Button
+              variant="secondary"
+              size="custom"
+              className="rounded-full p-1"
+              onClick={handleCloseDialog}
+            >
+              <X size={24} />
+            </Button>
           </DialogHeader>
           <DialogContent>
             <div className="space-y-4 my-6 px-6 text-sm">

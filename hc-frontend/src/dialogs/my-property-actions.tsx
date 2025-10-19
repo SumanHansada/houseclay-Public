@@ -1,6 +1,8 @@
 import { X } from "lucide-react";
 
+import { Button } from "@/base-components";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
+import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 
 interface MyPropertyActionsDialogProps {
@@ -41,13 +43,20 @@ const MyPropertyActionsDialog: React.FC<MyPropertyActionsDialogProps> = ({
       entryAnimation="animate-slide-in-bottom"
       exitAnimation="animate-slide-out-bottom"
     >
-      <DialogHeader>
-        <div className="py-2 px-8 flex flex-col justify-between items-center w-full">
-          <h1 className="text-xl py-1.5 text-black">Options</h1>
-          <button className="absolute top-4 right-4 rounded-full">
-            <X onClick={onClose} size={24} />
-          </button>
-        </div>
+      <DialogHeader className="-mx-4">
+        <MobileHeader className="relative">
+          <MobileHeader.Title>Options</MobileHeader.Title>
+          <MobileHeader.RightAction>
+            <Button
+              variant="secondary"
+              size="custom"
+              className="rounded-full p-1"
+              onClick={onClose}
+            >
+              <X size={24} />
+            </Button>
+          </MobileHeader.RightAction>
+        </MobileHeader>
       </DialogHeader>
       <DialogContent>
         <div className="flex flex-col items-center">

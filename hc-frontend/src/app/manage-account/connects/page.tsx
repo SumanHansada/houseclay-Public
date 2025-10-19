@@ -1,30 +1,19 @@
 "use client";
 
+import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
+import { Button } from "@/base-components";
 import { MobileFooter, MobileHeader } from "@/layout-components";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { setHideStickyNavBar } from "@/store/appSlice";
 import { RootState } from "@/store/store";
 import { SvgIcon } from "@/utility-components";
 
 export default function ConnectsPage() {
   const router = useRouter();
-  const dispatch = useDispatch();
-  const { isMobile } = useDeviceContext();
   const connectBalance = useSelector(
     (state: RootState) => state.user.userDetail.connectBal,
   );
-
-  useEffect(() => {
-    if (isMobile) {
-      dispatch(setHideStickyNavBar(true));
-    } else {
-      dispatch(setHideStickyNavBar(false));
-    }
-  }, [dispatch, isMobile]);
 
   return (
     <>
@@ -131,8 +120,20 @@ export default function ConnectsPage() {
       {/* Mobile */}
       <section className="md:hidden">
         {/* Mobile Header */}
-        <MobileHeader title="Connects" />
-
+        <MobileHeader>
+          <MobileHeader.LeftAction>
+            <Button
+              variant="secondary"
+              size="custom"
+              className="rounded-full p-1"
+              onClick={() => router.back()}
+            >
+              <ChevronLeft size={24} />
+            </Button>
+          </MobileHeader.LeftAction>
+          <MobileHeader.Title>Connects</MobileHeader.Title>
+        </MobileHeader>
+        {/* Mobile Content */}
         <div className="px-6 pt-4 pb-16">
           <div className="flex justify-between items-start w-full py-4 rounded-lg mb-4">
             {/* Available Connects */}
@@ -211,22 +212,22 @@ export default function ConnectsPage() {
             </div>
           </div>
         </div>
+        {/* Mobile Footer */}
+        <MobileFooter>
+          <button
+            className="text-center border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 rounded-xl transition duration-200"
+            onClick={() => router.push("/what-are-connects")}
+          >
+            Know more
+          </button>
+          <button
+            className="text-center border border-red-500 bg-red-500  hover:bg-red-600 text-white px-6 py-3 rounded-xl transition duration-200"
+            onClick={() => router.push("/buy-connects")}
+          >
+            Buy Connects
+          </button>
+        </MobileFooter>
       </section>
-
-      <MobileFooter>
-        <button
-          className="text-center border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 rounded-xl transition duration-200"
-          onClick={() => router.push("/what-are-connects")}
-        >
-          Know more
-        </button>
-        <button
-          className="text-center border border-red-500 bg-red-500  hover:bg-red-600 text-white px-6 py-3 rounded-xl transition duration-200"
-          onClick={() => router.push("/buy-connects")}
-        >
-          Buy Connects
-        </button>
-      </MobileFooter>
     </>
   );
 }

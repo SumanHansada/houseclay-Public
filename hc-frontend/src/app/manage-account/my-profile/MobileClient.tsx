@@ -1,10 +1,12 @@
 "use client";
 
 import { Form, useFormikContext } from "formik";
-import { CircleAlert, CircleCheck, SquarePen } from "lucide-react";
+import { ChevronLeft, CircleAlert, CircleCheck, SquarePen } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
+import { Button } from "@/base-components";
 import { getInitials } from "@/common/utils";
 import { FormPhoneField, FormTextField } from "@/form-components";
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
@@ -63,6 +65,7 @@ export function MobileClient({
   setEditMode,
   onVerifyEmail,
 }: MobileClientProps) {
+  const router = useRouter();
   const { values, setFieldValue, resetForm, initialValues } =
     useFormikContext<MyProfileFormValues>();
   const dispatch = useDispatch();
@@ -81,19 +84,31 @@ export function MobileClient({
 
   return (
     <>
-      <MobileHeader
-        title="My Profile"
-        rightAction={
-          <button
-            type="button"
-            onClick={() => setEditMode(true)}
-            disabled={editMode}
-            className="justify-self-end size-10 flex items-center justify-center"
+      <MobileHeader>
+        <MobileHeader.LeftAction>
+          <Button
+            variant="secondary"
+            size="custom"
+            className="rounded-full p-1"
+            onClick={() => (editMode ? setEditMode(false) : router.back())}
           >
-            <SquarePen size={20} />
-          </button>
-        }
-      />
+            <ChevronLeft size={24} />
+          </Button>
+        </MobileHeader.LeftAction>
+        <MobileHeader.Title>My Profile</MobileHeader.Title>
+        {!editMode ? (
+          <MobileHeader.RightAction>
+            <Button
+              variant="secondary"
+              size="custom"
+              className="rounded-full p-1"
+              onClick={() => setEditMode(true)}
+            >
+              <SquarePen size={24} className="p-0.5" />
+            </Button>
+          </MobileHeader.RightAction>
+        ) : null}
+      </MobileHeader>
 
       <div className="md:hidden">
         <div className="flex flex-col items-center py-6">

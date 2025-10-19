@@ -14,6 +14,7 @@ import ZeroPercentRedSvg from "public/icons/zero-percent-red.svg";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { Button } from "@/base-components";
 import { BENGALURU_LOCATION } from "@/common/constants";
 import { ACCOUNT_NAV } from "@/common/dataConstants";
 import { AuthStep } from "@/common/enums";
@@ -54,9 +55,10 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
     (state: RootState) => state.user.userDetail,
   );
 
-  const handleClose = useCallback(() => {
+  const handleCloseDialog = useCallback(() => {
     closeDialog(id);
-  }, [closeDialog, id]);
+    dispatch(setHideStickyNavBar(false));
+  }, [dispatch, closeDialog, id]);
 
   const onLogin = () => {
     dispatch(setLoginFromAddProperty(true));
@@ -68,7 +70,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
   const onLogout = () => logout();
 
   const onNavClick = () => {
-    handleClose();
+    handleCloseDialog();
   };
 
   const handlePropertyBannerClick = () => {
@@ -82,29 +84,28 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
 
   useEffect(() => {
     if (pathname !== initialPathRef.current) {
-      handleClose();
+      handleCloseDialog();
     }
-  }, [pathname, handleClose]);
+  }, [pathname, handleCloseDialog]);
 
   return (
     <Dialog
       id={id}
       type="fullscreen"
-      onClose={handleClose}
+      onClose={handleCloseDialog}
       entryAnimation="animate-slide-in-left"
       exitAnimation="animate-slide-out-left"
     >
       <DialogHeader>
-        <div className={`flex justify-between items-center w-full shadow-sm`}>
-          <button className="rounded-full items-center justify-center">
-            <X
-              onClick={() => {
-                handleClose();
-                dispatch(setHideStickyNavBar(false));
-              }}
-              size={25}
-            />
-          </button>
+        <div className={`flex justify-between items-center w-full`}>
+          <Button
+            variant="secondary"
+            size="custom"
+            className="rounded-full p-1"
+            onClick={handleCloseDialog}
+          >
+            <X size={24} />
+          </Button>
           <div className="text-sm">
             {isAuthenticated ? (
               <button
@@ -269,6 +270,18 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
                     className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
                   >
                     <span className="flex items-center gap-2">Contact Us</span>
+                    <ChevronRight size={20} />
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    href="/about-us"
+                    prefetch
+                    onClick={onNavClick}
+                    className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
+                  >
+                    <span className="flex items-center gap-2">About Us</span>
                     <ChevronRight size={20} />
                   </Link>
                 </li>

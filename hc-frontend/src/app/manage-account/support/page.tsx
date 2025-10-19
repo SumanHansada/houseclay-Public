@@ -1,8 +1,10 @@
 "use client";
 
-import { Mail, PhoneCall } from "lucide-react";
+import { ChevronLeft, Mail, PhoneCall } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { Button } from "@/base-components";
 import { SUPPORT_CONTACT, SUPPORT_EMAIL } from "@/common/constants";
 import { default as ACCORDION_DATA } from "@/data/SupportAccordionData.json";
 import { MobileHeader } from "@/layout-components";
@@ -11,6 +13,7 @@ import { SvgIcon } from "@/utility-components";
 import { Accordion } from "../components/Accordion";
 
 export default function SupportPage() {
+  const router = useRouter();
   const [openKey, setOpenKey] = useState<string | null>(null);
 
   return (
@@ -98,7 +101,19 @@ export default function SupportPage() {
 
       {/* Mobile */}
       <section className="md:hidden mb-16">
-        <MobileHeader title="Support" />
+        <MobileHeader>
+          <MobileHeader.LeftAction>
+            <Button
+              variant="secondary"
+              size="custom"
+              className="rounded-full p-1"
+              onClick={() => router.back()}
+            >
+              <ChevronLeft size={24} />
+            </Button>
+          </MobileHeader.LeftAction>
+          <MobileHeader.Title>Support</MobileHeader.Title>
+        </MobileHeader>
 
         <div className="px-8 space-y-6">
           {/* Support */}

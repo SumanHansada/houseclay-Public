@@ -1,8 +1,11 @@
 "use client";
 
+import { ChevronLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
+import { Button } from "@/base-components";
 import Carousel2D from "@/components/Carousel2D";
 // data
 import TESTIMONIALS_DATA from "@/data/TestimonialsData.json";
@@ -18,6 +21,7 @@ import { ImageWithLoader } from "@/utility-components";
 import { TestimonialCard } from "./components/TestimonialCard";
 
 export default function TestimonialsPage() {
+  const router = useRouter();
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
 
@@ -35,7 +39,19 @@ export default function TestimonialsPage() {
 
   return (
     <>
-      <MobileHeader title="Success Stories & Testimonials" />
+      <MobileHeader>
+        <MobileHeader.LeftAction>
+          <Button
+            variant="secondary"
+            size="custom"
+            className="rounded-full p-1"
+            onClick={() => router.back()}
+          >
+            <ChevronLeft size={24} />
+          </Button>
+        </MobileHeader.LeftAction>
+        <MobileHeader.Title>Success Stories & Testimonials</MobileHeader.Title>
+      </MobileHeader>
       {/* Desktop */}
       <section className="w-full h-full max-md:hidden">
         <section

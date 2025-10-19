@@ -5,6 +5,7 @@ import { Button } from "@/base-components";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import Standouts from "@/components/Standouts";
 import { PropertySearch } from "@/interfaces/PropertySearch";
+import { MobileHeader } from "@/layout-components";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
 
@@ -36,18 +37,20 @@ const StandoutsDialog: React.FC<StandoutsDialogProps> = ({
       entryAnimation="animate-slide-in-bottom"
       exitAnimation="animate-slide-out-bottom"
     >
-      <DialogHeader>
-        <div className="py-2 px-8 flex flex-col justify-between items-center w-full">
-          <h1 className="text-xl mt-1 mb-2 text-black">Standouts</h1>
-        </div>
-        <Button
-          variant="secondary"
-          size="custom"
-          className="rounded-full p-1"
-          onClick={handleCloseDialog}
-        >
-          <X size={24} />
-        </Button>
+      <DialogHeader className="-mx-4">
+        <MobileHeader className="relative">
+          <MobileHeader.Title>Standouts</MobileHeader.Title>
+          <MobileHeader.RightAction>
+            <Button
+              variant="secondary"
+              size="custom"
+              className="rounded-full p-1"
+              onClick={handleCloseDialog}
+            >
+              <X size={24} />
+            </Button>
+          </MobileHeader.RightAction>
+        </MobileHeader>
       </DialogHeader>
       <DialogContent>
         <Standouts

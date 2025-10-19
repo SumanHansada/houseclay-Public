@@ -353,7 +353,7 @@ export default function ListPropertyTypeLayout({
         completedSteps={completedSteps}
         propertyCategory={propertyCategory}
         isMobile={isMobile}
-        onGoToHome={goToHomePage}
+        onClose={goToHomePage}
       />
     );
   };

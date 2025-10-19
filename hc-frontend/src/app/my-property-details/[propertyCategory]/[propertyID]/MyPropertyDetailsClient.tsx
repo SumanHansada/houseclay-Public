@@ -52,6 +52,7 @@ import { useEffect, useState } from "react";
 import React from "react";
 import { useDispatch } from "react-redux";
 
+import { Button } from "@/base-components";
 import { LeadCategory, PropertyCategory } from "@/common/enums";
 import {
   formatDateToReadable,
@@ -62,7 +63,7 @@ import {
 } from "@/common/utils";
 import Carousel2D from "@/components/Carousel2D";
 import { UpgradePropertyDialog } from "@/dialogs";
-import { Footer } from "@/layout-components";
+import { Footer, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -228,17 +229,23 @@ export function MyPropertyDetailsClient({
   return (
     <>
       {/* Mobile Header Section */}
-      <section
-        className={`py-2 px-4 fixed top-0 left-0 right-0 z-50 h-[55px] border-b border-gray-200 bg-white flex gap-2 justify-center items-center w-full md:hidden`}
-      >
-        <button className="border border-gray-200 rounded-full md:border-none items-center justify-center">
-          <ChevronLeft onClick={() => router.back()} size={25} />
-        </button>
-        <h1 className="text-base text-gray-900 flex-1 items-center gap-2 truncate w-[calc(100%-2rem)]">
+      <MobileHeader>
+        <MobileHeader.LeftAction>
+          <Button
+            variant="secondary"
+            size="custom"
+            className="rounded-full p-1"
+            onClick={() => router.back()}
+          >
+            <ChevronLeft size={24} />
+          </Button>
+        </MobileHeader.LeftAction>
+        <MobileHeader.Title>
           {property?.bhkType} in {property?.locationOrSocietyName} for{" "}
           {pascalCase(property?.propertyCategory)} in {property?.city}
-        </h1>
-      </section>
+        </MobileHeader.Title>
+      </MobileHeader>
+
       {/* Desktop Section */}
       <section className="flex w-full xl:gap-16 lg:gap-8 md:gap-0 gap-0 xl:px-28 lg:px-14 md:px-8 px-8 max-md:pt-4 max-md:pb-12">
         <section className="w-3/4 max-md:w-full">

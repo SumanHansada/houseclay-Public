@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { Button } from "@/base-components";
 import {
   AuthStep,
   ErrorStatus,
@@ -27,7 +28,7 @@ import PropertyTypeOptions from "@/components/PropertyTypeOptions";
 import { TestimonialCard } from "@/components/Testimonials";
 import PropertiesData from "@/data/PropertiesData.json";
 import { CallWithCaptainDialog } from "@/dialogs";
-import { Footer } from "@/layout-components";
+import { Footer, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -188,19 +189,19 @@ const ListPropertyPage = dynamic(
       return (
         <>
           {/* Mobile Section */}
-          <section
-            className={`py-2 px-4 fixed top-0 left-0 right-0 z-50 border-b h-[55px] border-gray-200 bg-white flex flex-col justify-center items-center w-full md:hidden`}
-          >
-            <div className="flex justify-center items-center align-middle w-full md:hidden">
-              <h1 className="text-lg my-auto text-black ml-auto">
-                {GetMobileHeader()}
-              </h1>
-
-              <button className="border border-gray-200 rounded-full md:border-none ml-auto">
-                <X onClick={goToHomePage} size={25} />
-              </button>
-            </div>
-          </section>
+          <MobileHeader>
+            <MobileHeader.Title>{GetMobileHeader()}</MobileHeader.Title>
+            <MobileHeader.RightAction>
+              <Button
+                variant="secondary"
+                size="custom"
+                className="rounded-full p-1"
+                onClick={goToHomePage}
+              >
+                <X size={24} />
+              </Button>
+            </MobileHeader.RightAction>
+          </MobileHeader>
           {/* Mobile Content */}
           <section className="w-full my-0 flex-col container pt-4 pb-2 px-6 mx-auto flex justify-between gap-16 md:hidden">
             {mobileStep === ListPropertyMobileStep.GET_STARTED && (

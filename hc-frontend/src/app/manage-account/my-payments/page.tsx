@@ -1,8 +1,11 @@
 "use client";
 
+import { ChevronLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 
+import { Button } from "@/base-components";
 import { PaymentFilterStatus } from "@/common/enums";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
@@ -20,9 +23,9 @@ const filterOptions = [
 ];
 
 export default function MyPaymentsPage() {
+  const router = useRouter();
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
-
   const [selectedFilter, setSelectedFilter] = useState<PaymentFilterStatus>(
     PaymentFilterStatus.ALL,
   );
@@ -99,7 +102,19 @@ export default function MyPaymentsPage() {
       {/* Mobile */}
       <section className="md:hidden">
         {/* Header */}
-        <MobileHeader title="Your payments" />
+        <MobileHeader>
+          <MobileHeader.LeftAction>
+            <Button
+              variant="secondary"
+              size="custom"
+              className="rounded-full p-1"
+              onClick={() => router.back()}
+            >
+              <ChevronLeft size={24} />
+            </Button>
+          </MobileHeader.LeftAction>
+          <MobileHeader.Title>Your payments</MobileHeader.Title>
+        </MobileHeader>
 
         {/* Filter buttons */}
         <div className="flex justify-between text-lg m-3 border p-1.5 sm:p-2 rounded-xl mx-8">

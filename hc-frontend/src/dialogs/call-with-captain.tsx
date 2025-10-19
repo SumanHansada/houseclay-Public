@@ -3,12 +3,14 @@
 import { X } from "lucide-react";
 import React from "react";
 
+import { Button } from "@/base-components";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
 } from "@/components/Dialog";
+import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { SvgIcon } from "@/utility-components";
 
@@ -32,18 +34,21 @@ const CallWithCaptainDialog: React.FC<CallWithCaptainDialogProps> = ({
       entryAnimation={isMobile ? "animate-slide-in-bottom" : "animate-fade-in"}
       exitAnimation={isMobile ? "animate-slide-out-bottom" : "animate-fade-out"}
     >
-      <DialogHeader>
+      <DialogHeader className="-mx-4">
         {isMobile && (
-          <>
-            <h1 className="text-xl py-1.5 text-black">Awesome!</h1>
-            <button
-              className="absolute right-4 top-1/2 -translate-y-1/2 border border-gray-200 rounded-full md:border-none"
-              onClick={onClose}
-              tabIndex={0}
-            >
-              <X size={25} />
-            </button>
-          </>
+          <MobileHeader className="relative">
+            <MobileHeader.Title>Awesome!</MobileHeader.Title>
+            <MobileHeader.RightAction>
+              <Button
+                variant="secondary"
+                size="custom"
+                className="rounded-full p-1"
+                onClick={onClose}
+              >
+                <X size={24} />
+              </Button>
+            </MobileHeader.RightAction>
+          </MobileHeader>
         )}
       </DialogHeader>
       <DialogContent>

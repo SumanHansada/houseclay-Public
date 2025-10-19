@@ -1,8 +1,11 @@
 "use client";
 
+import { ChevronLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
+import { Button } from "@/base-components";
 import { Footer, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import {
@@ -12,6 +15,7 @@ import {
 } from "@/store/appSlice";
 
 export default function TermsAndConditionsPage() {
+  const router = useRouter();
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
 
@@ -29,7 +33,19 @@ export default function TermsAndConditionsPage() {
 
   return (
     <>
-      <MobileHeader title="Terms and Conditions" />
+      <MobileHeader>
+        <MobileHeader.LeftAction>
+          <Button
+            variant="secondary"
+            size="custom"
+            className="rounded-full p-1"
+            onClick={() => router.back()}
+          >
+            <ChevronLeft size={24} />
+          </Button>
+        </MobileHeader.LeftAction>
+        <MobileHeader.Title>Terms and Conditions</MobileHeader.Title>
+      </MobileHeader>
 
       <section
         className="w-full"

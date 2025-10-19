@@ -1,9 +1,11 @@
 "use client";
 
-import { Check } from "lucide-react";
+import { Check, ChevronLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 
+import { Button } from "@/base-components";
 import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import MyPropertyActionsDialog from "@/dialogs/my-property-actions";
 import { MobileHeader } from "@/layout-components";
@@ -26,6 +28,7 @@ const filterOptions = [
 const PROPERTY_ACTIONS_DIALOG_ID = "property-actions-dialog";
 
 export default function MyPropertiesPage() {
+  const router = useRouter();
   const { isMobile } = useDeviceContext();
   const [selectedCategory, setSelectedCategory] = useState<PropertyCategory>(
     PropertyCategory.NONE,
@@ -146,7 +149,19 @@ export default function MyPropertiesPage() {
 
       <section className="md:hidden">
         {/* Header */}
-        <MobileHeader title="My Properties" />
+        <MobileHeader>
+          <MobileHeader.LeftAction>
+            <Button
+              variant="secondary"
+              size="custom"
+              className="rounded-full p-1"
+              onClick={() => router.back()}
+            >
+              <ChevronLeft size={24} />
+            </Button>
+          </MobileHeader.LeftAction>
+          <MobileHeader.Title>My Properties</MobileHeader.Title>
+        </MobileHeader>
 
         {/* Filter buttons */}
         <div className="flex justify-between text-lg m-3 border p-1.5 sm:p-2 rounded-xl mx-8">

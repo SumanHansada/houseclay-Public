@@ -381,7 +381,7 @@ export default function EditPropertyTypeLayout({
         completedSteps={completedSteps}
         propertyCategory={propertyCategory}
         isMobile={isMobile}
-        onGoToHome={goToHomePage}
+        onClose={goToHomePage}
       />
     );
   };

@@ -244,12 +244,14 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
               Buy
             </button>
           </div>
-          <button
+          <Button
+            variant="secondary"
+            size="custom"
+            className="rounded-full p-1 ml-auto"
             onClick={onClose}
-            className="rounded-full hover:bg-gray-100 ml-auto max-md:border max-md:border-gray-200"
           >
             <X size={24} />
-          </button>
+          </Button>
         </div>
       </DialogHeader>
       <DialogContent>

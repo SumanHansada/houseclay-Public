@@ -1,11 +1,13 @@
 "use client";
 
 import { Form, Formik } from "formik";
-import { Mail, PhoneCall } from "lucide-react";
+import { ChevronLeft, Mail, PhoneCall } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 
+import { Button } from "@/base-components";
 import { SUPPORT_CONTACT, SUPPORT_EMAIL } from "@/common/constants";
 import { FormPhoneField, FormTextArea, FormTextField } from "@/form-components";
 import { Footer, MobileHeader } from "@/layout-components";
@@ -44,6 +46,7 @@ const initialValues: ContactUsFormValues = {
 export default function ContactUsPage() {
   const [savedValues, setSavedValues] =
     useState<ContactUsFormValues>(initialValues);
+  const router = useRouter();
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
 
@@ -61,8 +64,19 @@ export default function ContactUsPage() {
 
   return (
     <>
-      <MobileHeader title="Contact Us" />
-
+      <MobileHeader>
+        <MobileHeader.LeftAction>
+          <Button
+            variant="secondary"
+            size="custom"
+            className="rounded-full p-1"
+            onClick={() => router.back()}
+          >
+            <ChevronLeft size={24} />
+          </Button>
+        </MobileHeader.LeftAction>
+        <MobileHeader.Title>Contact Us</MobileHeader.Title>
+      </MobileHeader>
       <section className="relative w-full">
         {/* --- UNIFIED UPPER Section --- */}
         <section

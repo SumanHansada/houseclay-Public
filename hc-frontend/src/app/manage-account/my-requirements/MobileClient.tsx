@@ -1,11 +1,13 @@
 "use client";
 
 import { Form, useFormikContext } from "formik";
-import { SquarePen, X } from "lucide-react";
+import { ChevronLeft, SquarePen, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 
+import { Button } from "@/base-components";
 import {
   FormCheckbox,
   FormPlacesAutocomplete,
@@ -41,6 +43,7 @@ export function MobileClient({
   savedValues,
   DEFAULT_VALUES,
 }: MobileProps) {
+  const router = useRouter();
   const { values, setFieldValue, resetForm } =
     useFormikContext<MyRequirementsFormValues>();
   const isTenant = values.userType === "tenant";
@@ -86,19 +89,31 @@ export function MobileClient({
 
   return (
     <>
-      <MobileHeader
-        title="My Requirements"
-        rightAction={
-          <button
-            type="button"
-            onClick={() => setEditMode(true)}
-            disabled={editMode}
-            className="justify-self-end size-10 flex items-center justify-center"
+      <MobileHeader>
+        <MobileHeader.LeftAction>
+          <Button
+            variant="secondary"
+            size="custom"
+            className="rounded-full p-1"
+            onClick={() => (editMode ? setEditMode(false) : router.back())}
           >
-            <SquarePen size={20} />
-          </button>
-        }
-      />
+            <ChevronLeft size={24} />
+          </Button>
+        </MobileHeader.LeftAction>
+        <MobileHeader.Title>My Requirements</MobileHeader.Title>
+        {!editMode ? (
+          <MobileHeader.RightAction>
+            <Button
+              variant="secondary"
+              size="custom"
+              className="rounded-full p-1"
+              onClick={() => setEditMode(true)}
+            >
+              <SquarePen size={24} className="p-0.5" />
+            </Button>
+          </MobileHeader.RightAction>
+        ) : null}
+      </MobileHeader>
 
       <Form className="flex-1 space-y-6 px-6 pt-4 pb-16">
         {/* Who am I */}
@@ -140,7 +155,7 @@ export function MobileClient({
                         )
                       }
                     >
-                      <X size={14} className="" />
+                      <X size={14} />
                     </button>
                   )}
                 </span>

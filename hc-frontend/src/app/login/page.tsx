@@ -27,7 +27,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     dispatch(setAuthStep(AuthStep.PHONE));
-  }, []);
+  }, [dispatch]);
 
   const handleLoginClick = async () => {
     if (acceptTerms && phoneNo.substring(2)) {
