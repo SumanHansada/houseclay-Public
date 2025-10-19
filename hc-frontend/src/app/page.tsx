@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 
-import Advantages from "@/components/Advantages";
 import MastheadDesktopClient from "@/components/MastheadDesktopClient";
 import MastHeadMobileClient from "@/components/MastheadMobileClient";
 import PropertiesData from "@/data/PropertiesData.json";
@@ -22,11 +21,6 @@ export default async function Home() {
       {/* Masthead Mobile Section */}
       <section className={"min-h-[500px] w-full overflow-hidden md:hidden"}>
         <MastHeadMobileClient />
-      </section>
-
-      {/* Advantages Section */}
-      <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
-        <Advantages />
       </section>
 
       {/* Client-side interactive components */}

@@ -9,7 +9,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
   // Style variants
   variant?: "primary" | "secondary" | "outline" | "ghost" | "danger";
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "custom";
 
   // State props
   isLoading?: boolean;
@@ -47,17 +47,18 @@ const Button: React.FC<ButtonProps> = ({
     sm: "px-3 py-1.5 text-sm",
     md: "px-4 py-2 text-base",
     lg: "px-6 py-3 text-lg",
+    custom: "text-base",
   };
 
   // Variant styles
   const variantStyles = {
-    primary: "bg-red-500 text-white hover:bg-red-600 focus:ring-red-500",
+    primary: "bg-red-500 hover:bg-red-600 focus:ring-red-500 text-white",
     secondary:
-      "bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-500",
+      "bg-gray-100 hover:bg-gray-200 focus:ring-gray-500 text-gray-900",
     outline:
-      "border border-gray-300 text-gray-600 hover:bg-gray-50 focus:ring-gray-500",
-    ghost: "text-gray-600 hover:bg-gray-100 focus:ring-gray-500",
-    danger: "bg-red-600 text-white hover:bg-red-600 focus:ring-red-500",
+      "border border-gray-300  hover:bg-gray-50 focus:ring-gray-500 text-gray-600",
+    ghost: " hover:bg-gray-100 focus:ring-gray-500 text-gray-600",
+    danger: "bg-red-600  hover:bg-red-600 focus:ring-red-500 text-white",
   };
 
   // Width styles

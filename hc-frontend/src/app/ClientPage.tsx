@@ -1,14 +1,14 @@
 "use client";
 
-import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
+import Advantages from "@/components/Advantages";
 import Neighbourhoods from "@/components/Neighborhoods";
 import PropertyOwners from "@/components/PropertyOwners";
 import Standouts from "@/components/Standouts";
 import { Testimonials } from "@/components/Testimonials";
+import { LoginDialog, MenuDialog, StandoutsDialog } from "@/dialogs";
 import { Neighbourhood } from "@/interfaces/Neighbourhood";
 import { PropertySearch } from "@/interfaces/PropertySearch";
 import { Testimonial } from "@/interfaces/Testimonial";
@@ -30,9 +30,9 @@ export default function ClientPage({
   neighbourhoods,
   testimonials,
 }: ClientPageProps) {
-  const [activeTab, setActiveTab] = useState("rent");
-  const { isDialogOpen, closeDialog } = useDialog();
+  const { isDialogOpen } = useDialog();
   const dispatch = useDispatch();
+  const [activeTab, setActiveTab] = useState("rent");
 
   // Initialize app state
   useEffect(() => {
@@ -43,6 +43,11 @@ export default function ClientPage({
 
   return (
     <>
+      {/* Advantages Section */}
+      <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
+        <Advantages />
+      </section>
+
       {/* Standouts Section */}
       <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
         <Standouts
@@ -72,39 +77,19 @@ export default function ClientPage({
 
       {/* Standouts Dialog */}
       {isDialogOpen("standouts-dialog") && (
-        <Dialog
+        <StandoutsDialog
           id="standouts-dialog"
-          type="bottom-sheet"
-          onClose={() => {
-            closeDialog("standouts-dialog");
-            dispatch(setHideStickyNavBar(false));
-          }}
-          entryAnimation="animate-slide-in-bottom"
-          exitAnimation="animate-slide-out-bottom"
-        >
-          <DialogHeader>
-            <div className="py-2 px-8 flex flex-col justify-between items-center w-full">
-              <h1 className="text-xl mt-1 mb-2 text-black">Standouts</h1>
-            </div>
-            <button className="absolute top-4 right-4 border border-gray-200 rounded-full">
-              <X
-                onClick={() => {
-                  closeDialog("standouts-dialog");
-                  dispatch(setHideStickyNavBar(false));
-                }}
-                size={25}
-              />
-            </button>
-          </DialogHeader>
-          <DialogContent>
-            <Standouts
-              listingType={activeTab}
-              properties={properties}
-              setActiveTab={setActiveTab}
-            />
-          </DialogContent>
-        </Dialog>
+          activeTab={activeTab}
+          properties={properties}
+          setActiveTab={setActiveTab}
+        />
       )}
+
+      {/* Login Dialog */}
+      {isDialogOpen("login-dialog") && <LoginDialog id="login-dialog" />}
+
+      {/* Menu Dialog */}
+      {isDialogOpen("menu-dialog") && <MenuDialog id="menu-dialog" />}
     </>
   );
 }

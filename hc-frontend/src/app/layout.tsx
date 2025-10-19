@@ -5,7 +5,7 @@ import { Inter } from "next/font/google";
 import { Nunito } from "next/font/google";
 import Script from "next/script";
 
-import { Layout } from "@/layout-components";
+import { Header, StickyNavbar } from "@/layout-components";
 import Providers from "@/providers/Providers";
 
 // const geistSans = Geist({
@@ -285,7 +285,13 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${nutino.variable}`}>
         <Providers>
-          <Layout>{children}</Layout>
+          <div className="min-h-screen">
+            <Header />
+            <main className="mx-auto my-0 pt-14 max-md:pb-16 flex-1 flex flex-wrap justify-center">
+              {children}
+            </main>
+            <StickyNavbar />
+          </div>
         </Providers>
         {/* Razorpay checkout script */}
         <Script
