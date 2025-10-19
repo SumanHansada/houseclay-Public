@@ -37,7 +37,7 @@ const EmailVerificationSuccessDialog: React.FC<
       entryAnimation={isMobile ? "animate-slide-in-bottom" : "animate-fade-in"}
       exitAnimation={isMobile ? "animate-slide-out-bottom" : "animate-fade-out"}
     >
-      <DialogHeader>
+      <DialogHeader className="-mx-4">
         {isMobile && (
           <MobileHeader className="relative">
             <MobileHeader.Title>Email Verified!</MobileHeader.Title>
