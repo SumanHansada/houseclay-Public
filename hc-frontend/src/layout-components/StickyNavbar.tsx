@@ -23,6 +23,7 @@ interface StickyNavbarProps {
 const StickyNavbar: React.FC<StickyNavbarProps> = ({
   defaultActive = "home",
 }) => {
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const hideStickyNavbar = useSelector(
     (state: RootState) => state.app.hideStickyNavBar,
   );
@@ -30,8 +31,8 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
   const HouseClayHome = HouseClayHomeSvg as React.FC<
     React.SVGProps<SVGSVGElement>
   >;
-  const connectBal = useSelector(
-    (state: RootState) => state.user.userDetail.connectBal,
+  const connectBal = useSelector((state: RootState) =>
+    isAuthenticated ? state.user.userDetail.connectBal : 0,
   );
 
   const navItems: NavItem[] = [

@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -46,7 +46,7 @@ export const useShortlist = () => {
   }, [isAuthenticated, shortlistedProperties, shortlistProperty, dispatch]);
 
   // Get shortlisted properties from API when logged in
-  const fetchShortlistedProperties = useCallback(async () => {
+  const fetchShortlistedProperties = async () => {
     if (isAuthenticated) {
       try {
         const result = await getShortlistedProperties().unwrap();
@@ -61,73 +61,55 @@ export const useShortlist = () => {
       }
     }
     return shortlistedProperties;
-  }, [
-    isAuthenticated,
-    getShortlistedProperties,
-    shortlistedProperties,
-    dispatch,
-  ]);
+  };
 
   // Toggle shortlist status for a property
-  const toggleShortlist = useCallback(
-    async (propertyId: string) => {
-      if (isAuthenticated) {
-        // User is logged in - use API
-        try {
-          const isCurrentlyShortlisted =
-            shortlistedProperties.includes(propertyId);
-
-          if (isCurrentlyShortlisted) {
-            await removeShortlistedProperty({ propertyId }).unwrap();
-            dispatch(removeFromShortlist(propertyId));
-          } else {
-            await shortlistProperty({ propertyId }).unwrap();
-            dispatch(addToShortlist(propertyId));
-          }
-          return !isCurrentlyShortlisted;
-        } catch (error) {
-          console.error("Error toggling shortlist:", error);
-          throw error;
-        }
-      } else {
-        // User is not logged in - use Redux state (persisted)
+  const toggleShortlist = async (propertyId: string) => {
+    if (isAuthenticated) {
+      // User is logged in - use API
+      try {
         const isCurrentlyShortlisted =
           shortlistedProperties.includes(propertyId);
 
         if (isCurrentlyShortlisted) {
+          await removeShortlistedProperty({ propertyId }).unwrap();
           dispatch(removeFromShortlist(propertyId));
         } else {
+          await shortlistProperty({ propertyId }).unwrap();
           dispatch(addToShortlist(propertyId));
         }
         return !isCurrentlyShortlisted;
+      } catch (error) {
+        console.error("Error toggling shortlist:", error);
+        throw error;
       }
-    },
-    [
-      isAuthenticated,
-      shortlistedProperties,
-      shortlistProperty,
-      removeShortlistedProperty,
-      dispatch,
-    ],
-  );
+    } else {
+      // User is not logged in - use Redux state (persisted)
+      const isCurrentlyShortlisted = shortlistedProperties.includes(propertyId);
+
+      if (isCurrentlyShortlisted) {
+        dispatch(removeFromShortlist(propertyId));
+      } else {
+        dispatch(addToShortlist(propertyId));
+      }
+      return !isCurrentlyShortlisted;
+    }
+  };
 
   // Check if a property is shortlisted
-  const isShortlisted = useCallback(
-    async (propertyId: string): Promise<boolean> => {
-      if (isAuthenticated) {
-        try {
-          const shortlistedIds = await fetchShortlistedProperties();
-          return shortlistedIds.includes(propertyId);
-        } catch (error) {
-          console.error("Error checking shortlist status:", error);
-          return false;
-        }
-      } else {
-        return shortlistedProperties.includes(propertyId);
+  const isShortlisted = async (propertyId: string): Promise<boolean> => {
+    if (isAuthenticated) {
+      try {
+        const shortlistedIds = await fetchShortlistedProperties();
+        return shortlistedIds.includes(propertyId);
+      } catch (error) {
+        console.error("Error checking shortlist status:", error);
+        return false;
       }
-    },
-    [isAuthenticated, shortlistedProperties, fetchShortlistedProperties],
-  );
+    } else {
+      return shortlistedProperties.includes(propertyId);
+    }
+  };
 
   return {
     toggleShortlist,

@@ -1,22 +1,24 @@
 "use client";
 
+import { useDispatch, useSelector } from "react-redux";
+
 import { PropertyCategory } from "@/common/enums";
 import { PropertySearch } from "@/interfaces/PropertySearch";
+import { setPropertyCategory } from "@/store/propertySearchSlice";
+import { RootState } from "@/store/store";
 
 import Carousel2D from "./Carousel2D";
 import Properties from "./Properties";
 
 interface StandoutsClientProps {
   properties: PropertySearch[];
-  listingType: string;
-  setActiveTab: (tab: PropertyCategory) => void;
 }
 
-const StandoutsClient: React.FC<StandoutsClientProps> = ({
-  properties,
-  listingType,
-  setActiveTab,
-}) => {
+const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
+  const { propertyCategory } = useSelector(
+    (state: RootState) => state.propertySearch,
+  );
+  const dispatch = useDispatch();
   return (
     <>
       <div className="bg-white bg-center bg-cover flex-col items-center md:py-20 xl:px-28 lg:px-14 md:px-14 max-md:pt-4 max-md:pb-0 px-6 pt-4 pb-0">
@@ -36,21 +38,25 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({
           <div className="max-w-4xl mb-4 flex">
             <button
               className={`px-6 py-2 border-b-2 font-medium ${
-                listingType === PropertyCategory.RENT
+                propertyCategory === PropertyCategory.RENT
                   ? "text-red-500 border-red-500"
                   : "text-gray-700"
               }`}
-              onClick={() => setActiveTab(PropertyCategory.RENT)}
+              onClick={() =>
+                dispatch(setPropertyCategory(PropertyCategory.RENT))
+              }
             >
               For Rent
             </button>
             <button
               className={`px-6 py-2 border-b-2 font-medium ${
-                listingType === PropertyCategory.RESALE
+                propertyCategory === PropertyCategory.RESALE
                   ? "text-red-500 border-red-500"
                   : "text-gray-700"
               }`}
-              onClick={() => setActiveTab(PropertyCategory.RESALE)}
+              onClick={() =>
+                dispatch(setPropertyCategory(PropertyCategory.RESALE))
+              }
             >
               For Sale
             </button>

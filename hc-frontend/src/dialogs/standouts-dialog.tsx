@@ -11,15 +11,11 @@ import { setHideStickyNavBar } from "@/store/appSlice";
 
 interface StandoutsDialogProps {
   id: string;
-  activeTab: string;
   properties: PropertySearch[];
-  setActiveTab: (tab: string) => void;
 }
 const StandoutsDialog: React.FC<StandoutsDialogProps> = ({
   id,
-  activeTab,
   properties,
-  setActiveTab,
 }) => {
   const { closeDialog } = useDialog();
   const dispatch = useDispatch();
@@ -53,11 +49,7 @@ const StandoutsDialog: React.FC<StandoutsDialogProps> = ({
         </MobileHeader>
       </DialogHeader>
       <DialogContent>
-        <Standouts
-          listingType={activeTab}
-          properties={properties}
-          setActiveTab={setActiveTab}
-        />
+        <Standouts properties={properties} />
       </DialogContent>
     </Dialog>
   );

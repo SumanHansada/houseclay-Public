@@ -58,6 +58,7 @@ import {
 import { ContactOwnerLoginDialog, PhotoGalleryDialog } from "@/dialogs";
 import ReportListingDialog from "@/dialogs/report-listing-dialog";
 import UnlockOwnerDetailsDialog from "@/dialogs/unlock-owner-details-dialog";
+import { useShortlist } from "@/hooks/useShortlist";
 import { MobileFooter } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -164,15 +165,19 @@ export function PropertyDetailsClient({
   propertyID,
   initialData,
 }: PropertyDetailsClientProps) {
-  const { data: property = initialData, isLoading: _isPropertyLoading } =
+  const { data: propertyData = initialData, isLoading: _isPropertyLoading } =
     useGetPublicPropertyByIdQuery(propertyID, {
       skip: !!initialData, // Skip the query if we have initial data
     });
 
+  const { property, contactUserCount, shortlistUserCount, viewUserCount } =
+    propertyData;
+  const { toggleShortlist, isShortlisted } = useShortlist();
+  const [isShortlistedProperty, setIsShortlistedProperty] = useState(false);
+
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [origin, setOrigin] = useState<string>("");
   const [showDirections, setShowDirections] = useState(false);
-  const [isShortlisted, setIsShortlisted] = useState(false);
   const router = useRouter();
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
@@ -180,6 +185,15 @@ export function PropertyDetailsClient({
     (state: RootState) => state.auth.isAuthenticated,
   );
   const { isDialogOpen, closeDialog, openDialog } = useDialog();
+
+  // Check if property is shortlisted
+  useEffect(() => {
+    const checkShortlistStatus = async () => {
+      const shortlistStatus = await isShortlisted(propertyID);
+      setIsShortlistedProperty(shortlistStatus);
+    };
+    checkShortlistStatus();
+  }, [propertyID]);
 
   const handleShare = async () => {
     try {
@@ -268,22 +282,25 @@ export function PropertyDetailsClient({
             <Share onClick={handleShare} size={18} />
           </button>
           <motion.button
-            onClick={() => setIsShortlisted(!isShortlisted)}
+            onClick={async () => {
+              const newStatus = await toggleShortlist(propertyID);
+              setIsShortlistedProperty(newStatus);
+            }}
             className={`rounded-full border md:border-none items-center justify-center p-2 relative overflow-hidden ${
-              isShortlisted ? "text-pink-500" : "text-gray-600"
+              isShortlistedProperty ? "text-pink-500" : "text-gray-600"
             }`}
             whileTap={{ scale: 0.95 }}
           >
             {/* Heart icon with scale animation */}
             <motion.div
               animate={{
-                scale: isShortlisted ? [1, 1.3, 1] : 1,
+                scale: isShortlistedProperty ? [1, 1.3, 1] : 1,
               }}
               transition={{ duration: 0.3 }}
             >
               <Heart
                 size={18}
-                className={isShortlisted ? "fill-current" : ""}
+                className={isShortlistedProperty ? "fill-current" : ""}
               />
             </motion.div>
           </motion.button>
@@ -333,18 +350,23 @@ export function PropertyDetailsClient({
                   <span>Share</span>
                 </button>
                 <button
-                  onClick={() => setIsShortlisted(!isShortlisted)}
+                  onClick={async () => {
+                    const newStatus = await toggleShortlist(propertyID);
+                    setIsShortlistedProperty(newStatus);
+                  }}
                   className={`flex items-center gap-2 transition-colors underline hover:bg-gray-100 rounded-md px-2 py-1 ${
-                    isShortlisted
+                    isShortlistedProperty
                       ? "text-pink-600 hover:text-pink-700"
                       : "text-gray-600 hover:text-gray-800"
                   }`}
                 >
                   <Heart
                     size={16}
-                    className={isShortlisted ? "fill-current" : ""}
+                    className={isShortlistedProperty ? "fill-current" : ""}
                   />
-                  <span>{isShortlisted ? "Sortlisted" : "Sortlist"}</span>
+                  <span>
+                    {isShortlistedProperty ? "Sortlisted" : "Sortlist"}
+                  </span>
                 </button>
               </div>
             </div>
@@ -740,7 +762,7 @@ export function PropertyDetailsClient({
                     <Eye size={24} className="text-red-500" />
                     <div className="text-start">
                       <div className="font-semibold text-gray-900 mb-1">
-                        161
+                        {viewUserCount ?? "-"}
                       </div>
                       <div className="text-sm text-gray-500">Unique Views</div>
                     </div>
@@ -748,14 +770,18 @@ export function PropertyDetailsClient({
                   <div className="flex flex-col items-start gap-3 pl-4">
                     <Heart size={24} className="text-red-500" />
                     <div className="text-start">
-                      <div className="font-semibold text-gray-900 mb-1">2</div>
+                      <div className="font-semibold text-gray-900 mb-1">
+                        {shortlistUserCount ?? "-"}
+                      </div>
                       <div className="text-sm text-gray-500">Shortlists</div>
                     </div>
                   </div>
                   <div className="flex flex-col items-start gap-3 pl-4">
                     <Phone size={24} className="text-red-500" />
                     <div className="text-start">
-                      <div className="font-semibold text-gray-900 mb-1">10</div>
+                      <div className="font-semibold text-gray-900 mb-1">
+                        {contactUserCount ?? "-"}
+                      </div>
                       <div className="text-sm text-gray-500">Contacted</div>
                     </div>
                   </div>
@@ -1164,7 +1190,7 @@ export function PropertyDetailsClient({
                   <div className="flex items-center gap-2">
                     <Eye size={20} className="text-red-500" />
                     <span className="text-base font-semibold text-gray-900 mb-1">
-                      161
+                      {viewUserCount ?? "-"}
                     </span>
                   </div>
                   <div className="text-start">
@@ -1175,7 +1201,7 @@ export function PropertyDetailsClient({
                   <div className="flex items-center gap-2">
                     <Heart size={20} className="text-red-500" />
                     <span className="text-base font-semibold text-gray-900 mb-1">
-                      2
+                      {shortlistUserCount ?? "-"}
                     </span>
                   </div>
                   <div className="text-start">
@@ -1186,7 +1212,7 @@ export function PropertyDetailsClient({
                   <div className="flex items-center gap-2">
                     <Phone size={20} className="text-red-500" />
                     <span className="text-base font-semibold text-gray-900 mb-1">
-                      10
+                      {contactUserCount ?? "-"}
                     </span>
                   </div>
                   <div className="text-start">

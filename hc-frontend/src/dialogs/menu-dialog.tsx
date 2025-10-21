@@ -51,8 +51,12 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
 
   const [quickLinksExpanded, setQuickLinksExpanded] = useState(true);
   const toggleQuickLinks = () => setQuickLinksExpanded(!quickLinksExpanded);
-  const { name, phoneNo, connectBal } = useSelector(
+  const { name, phoneNo } = useSelector(
     (state: RootState) => state.user.userDetail,
+  );
+
+  const connectBal = useSelector((state: RootState) =>
+    isAuthenticated ? state.user.userDetail.connectBal : 0,
   );
 
   const handleCloseDialog = useCallback(() => {

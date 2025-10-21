@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import Advantages from "@/components/Advantages";
@@ -32,7 +32,6 @@ export default function ClientPage({
 }: ClientPageProps) {
   const { isDialogOpen } = useDialog();
   const dispatch = useDispatch();
-  const [activeTab, setActiveTab] = useState("rent");
 
   // Initialize app state
   useEffect(() => {
@@ -50,19 +49,12 @@ export default function ClientPage({
 
       {/* Standouts Section */}
       <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
-        <Standouts
-          listingType={activeTab}
-          properties={properties}
-          setActiveTab={setActiveTab}
-        />
+        <Standouts properties={properties} />
       </section>
 
       {/* neighbourhoods Section */}
       <section className="min-h-[500px] w-full overflow-hidden">
-        <Neighbourhoods
-          listingType={activeTab}
-          neighbourhoods={neighbourhoods}
-        />
+        <Neighbourhoods neighbourhoods={neighbourhoods} />
       </section>
 
       {/* Testimonials Section */}
@@ -77,12 +69,7 @@ export default function ClientPage({
 
       {/* Standouts Dialog */}
       {isDialogOpen("standouts-dialog") && (
-        <StandoutsDialog
-          id="standouts-dialog"
-          activeTab={activeTab}
-          properties={properties}
-          setActiveTab={setActiveTab}
-        />
+        <StandoutsDialog id="standouts-dialog" properties={properties} />
       )}
 
       {/* Login Dialog */}

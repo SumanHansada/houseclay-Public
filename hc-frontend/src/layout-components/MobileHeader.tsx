@@ -32,7 +32,9 @@ function LeftAction({ children }: MobileHeaderSubComponentProps) {
 function Title({ children }: MobileHeaderSubComponentProps) {
   return (
     <div className="absolute flex-1 inset-x-12">
-      <h1 className="text-lg text-center truncate">{children}</h1>
+      <h1 className="text-lg font-medium font-nunito text-center truncate">
+        {children}
+      </h1>
     </div>
   );
 }
