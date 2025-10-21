@@ -2,7 +2,7 @@
 
 import { X } from "lucide-react";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
@@ -11,6 +11,7 @@ import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
+import { RootState } from "@/store/store";
 
 interface LoginDialogProps {
   id: string;
@@ -20,17 +21,17 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ id }) => {
   const { closeDialog } = useDialog();
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
+  const { loginFromBuyConnects } = useSelector(
+    (state: RootState) => state.auth,
+  );
 
   useEffect(() => {
     dispatch(setHideStickyNavBar(true));
-    return () => {
-      dispatch(setHideStickyNavBar(false));
-    };
   }, [dispatch]);
 
   const handleCloseDialog = () => {
     closeDialog(id);
-    dispatch(setHideStickyNavBar(false));
+    if (!loginFromBuyConnects) dispatch(setHideStickyNavBar(false));
   };
 
   return (

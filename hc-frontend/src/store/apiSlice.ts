@@ -260,7 +260,8 @@ export const apiSlice = createApi({
         attempts: number;
         status: string;
       },
-      { amount: number }
+      // { amount: number }
+      { bundle: string; connects: number }
     >({
       query: (data) => ({
         url: "/payment/create-order",

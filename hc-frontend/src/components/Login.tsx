@@ -20,6 +20,7 @@ import {
   setAuthStep,
   setIsAuthenticated,
   setLoginFromAddProperty,
+  setLoginFromBuyConnects,
 } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 import {
@@ -38,12 +39,11 @@ const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const Login = ({ onClose }: { onClose: () => void }) => {
   const { closeDialog } = useDialog();
-  const authStep = useSelector((state: RootState) => state.auth.authStep);
+  const { authStep, loginFromAddProperty, loginFromBuyConnects } = useSelector(
+    (state: RootState) => state.auth,
+  );
   const { name, emailID, phoneNo } = useSelector(
     (state: RootState) => state.user.userDetail,
-  );
-  const loginFromAddProperty = useSelector(
-    (state: RootState) => state.auth.loginFromAddProperty,
   );
   const checkUser = useSelector((state: RootState) => state.user.checkUser);
   const [login] = useLoginMutation();
@@ -126,7 +126,10 @@ const Login = ({ onClose }: { onClose: () => void }) => {
       }
       dispatch(setAuthStep(AuthStep.LOGGED_IN));
       closeDialog("login-dialog");
-      if (loginFromAddProperty) {
+      if (loginFromBuyConnects) {
+        router.push("/buy-connects");
+        dispatch(setLoginFromBuyConnects(false));
+      } else if (loginFromAddProperty) {
         router.push("/list-property");
         dispatch(setLoginFromAddProperty(false));
       } else {

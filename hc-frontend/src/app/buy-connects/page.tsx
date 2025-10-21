@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/base-components";
 import NumberField from "@/base-components/NumberField";
 import RadioGroup from "@/base-components/RadioGroup";
-import { PaymentVerificationStatus } from "@/common/enums";
+import { AuthStep, PaymentVerificationStatus } from "@/common/enums";
 import Carousel3D from "@/components/Carousel3D";
 import ConnectsBundleCard from "@/components/ConnectsBundleCard";
 import {
@@ -35,17 +35,41 @@ import { RootState } from "@/store/store";
 import { setConnectBal } from "@/store/userSlice";
 import { ImageWithLoader } from "@/utility-components";
 import { Tab, TabContent, TabHeader, Tabs } from "@/utility-components/Tabs";
+import Link from "next/link";
+import { setAuthStep, setLoginFromBuyConnects } from "@/store/authSlice";
+
+export type BundleId = "basic" | "premium" | "elite" | "custom";
+
+export enum BundleCode {
+  BASIC_BLUE_BUNDLE = "BASIC_BLUE_BUNDLE",
+  PREMIUM_GOLD_BUNDLE = "PREMIUM_GOLD_BUNDLE",
+  ELITE_PURPLE_BUNDLE = "ELITE_PURPLE_BUNDLE",
+  CUSTOM_CONNECTS = "CUSTOM_CONNECTS",
+}
+
+const ID_TO_CODE: Record<Exclude<BundleId, "custom">, BundleCode> = {
+  basic: BundleCode.BASIC_BLUE_BUNDLE,
+  premium: BundleCode.PREMIUM_GOLD_BUNDLE,
+  elite: BundleCode.ELITE_PURPLE_BUNDLE,
+};
+
+export const resolveBundleCode = (id: BundleId): BundleCode =>
+  id === "custom" ? BundleCode.CUSTOM_CONNECTS : ID_TO_CODE[id];
+
+const minimumCustomConnects = 1;
 
 export default function BuyConnectsPage() {
   const router = useRouter();
-  const [selectedBundle, setSelectedBundle] = useState("premium");
+  const [selectedBundle, setSelectedBundle] = useState("custom");
   const [agreedToTerms, setAgreedToTerms] = useState(true);
-  const [customConnects, setCustomConnects] = useState(5);
+  const [customConnects, setCustomConnects] = useState(minimumCustomConnects);
   const dispatch = useDispatch();
   const [createOrder] = useCreateOrderMutation();
   const [verifyPayment] = useVerifyPaymentMutation();
   const { isMobile } = useDeviceContext();
-  const { isDialogOpen, closeDialog, openDialog } = useDialog();
+  const { isDialogOpen, closeDialog, openDialog, closeAllDialogs } =
+    useDialog();
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const [paymentStatus, setPaymentStatus] = useState<PaymentVerificationStatus>(
     PaymentVerificationStatus.VERIFYING,
   );
@@ -109,6 +133,13 @@ export default function BuyConnectsPage() {
     }
   };
 
+  const onLogin = () => {
+    closeAllDialogs();
+    dispatch(setAuthStep(AuthStep.NONE));
+    dispatch(setLoginFromBuyConnects(true));
+    openDialog("login-dialog");
+  };
+
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handlePaymentSuccess = async (response: any) => {
     console.log("Payment success response:", response);
@@ -132,20 +163,28 @@ export default function BuyConnectsPage() {
   };
 
   const handleProceedToPay = async () => {
-    if (!agreedToTerms) return;
+    if (!agreedToTerms || connectsToBuy < minimumCustomConnects) return;
 
     if (isDialogOpen("connects-price-breakdown-dialog")) {
       handleCloseDialog();
     }
 
     try {
+      const bundleCode = resolveBundleCode(selectedBundle as BundleId);
+
       const response = await createOrder({
-        amount: totalAmount * 100,
+        connects: connectsToBuy,
+        bundle: bundleCode,
       });
+
+      // const response = await createOrder({
+      //   amount: totalAmount * 100,
+      // });
 
       console.log("Payment order created successfully:", response);
       //eslint-disable-next-line @typescript-eslint/no-explicit-any
       const options = Object.assign({}, response.data) as any;
+      // totalAmount = response.data?.amount;
       options.key = "REDACTED_RAZORPAY_KEY_ID";
       options.handler = handlePaymentSuccess;
       // options.callback_url = `${window.location.origin}/payment-success`;
@@ -204,7 +243,7 @@ export default function BuyConnectsPage() {
               {/* Left Column - Bundle Selection */}
               <div className="lg:col-span-2">
                 <Tabs
-                  defaultActive="bundles"
+                  defaultActive="custom"
                   className="mb-8"
                   onTabChange={handleTabChange}
                 >
@@ -213,20 +252,46 @@ export default function BuyConnectsPage() {
                     tabsClassName="flex"
                   >
                     <Tab
-                      label="Buy Connects in Bundles"
-                      value="bundles"
-                      containerClassName="px-6 py-3 font-medium"
-                      activeClassName="text-red-500 border-b-2 border-red-500"
-                      inactiveClassName="text-gray-500 hover:text-gray-700"
-                    />
-                    <Tab
                       label="Buy Custom Connects"
                       value="custom"
                       containerClassName="px-6 py-3 font-medium"
                       activeClassName="text-red-500 border-b-2 border-red-500"
                       inactiveClassName="text-gray-500 hover:text-gray-700"
                     />
+                    <Tab
+                      label="Buy Connects in Bundles"
+                      value="bundles"
+                      containerClassName="px-6 py-3 font-medium"
+                      activeClassName="text-red-500 border-b-2 border-red-500"
+                      inactiveClassName="text-gray-500 hover:text-gray-700"
+                    />
                   </TabHeader>
+
+                  <TabContent value="custom">
+                    <div className="py-4">
+                      {/* Connects Input Section */}
+                      <NumberField
+                        name="customConnects"
+                        label="Enter Connects to buy"
+                        value={customConnects}
+                        onChange={setCustomConnects}
+                        min={0}
+                        required
+                        className="mb-3"
+                      />
+
+                      {/* Error Message */}
+                      {customConnects < minimumCustomConnects && (
+                        <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                          <p className="text-sm">
+                            A minimum of{" "}
+                            <strong>{minimumCustomConnects} Connect</strong> is
+                            required to proceed.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </TabContent>
 
                   <TabContent value="bundles">
                     <h2 className="text-2xl mb-6">
@@ -248,31 +313,6 @@ export default function BuyConnectsPage() {
                       radioTextClassName="hidden"
                       containerClassName="my-4 container mx-auto"
                     />
-                  </TabContent>
-
-                  <TabContent value="custom">
-                    <div className="py-4">
-                      {/* Connects Input Section */}
-                      <NumberField
-                        name="customConnects"
-                        label="Enter Connects to buy"
-                        value={customConnects}
-                        onChange={setCustomConnects}
-                        min={0}
-                        required
-                        className="mb-3"
-                      />
-
-                      {/* Error Message */}
-                      {customConnects < 5 && (
-                        <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-                          <p className="text-sm">
-                            A minimum of <strong>5 Connects</strong> is required
-                            to proceed.
-                          </p>
-                        </div>
-                      )}
-                    </div>
                   </TabContent>
                 </Tabs>
               </div>
@@ -336,12 +376,6 @@ export default function BuyConnectsPage() {
                       This bundle of Connects will expire in 60 Days from today.
                       Unused Connects rollover to the next month.
                     </p>
-                    <a
-                      href="#"
-                      className="text-red-500 text-sm hover:underline"
-                    >
-                      Learn more
-                    </a>
                   </div>
 
                   <div className="mb-6">
@@ -358,9 +392,12 @@ export default function BuyConnectsPage() {
                       />
                       <span className="text-sm text-gray-600">
                         I agree to{" "}
-                        <button className="text-red-500 hover:underline">
+                        <Link
+                          href="/terms-and-conditions"
+                          className="text-red-500 hover:underline"
+                        >
                           Terms & Conditions
-                        </button>
+                        </Link>
                       </span>
                     </label>
                   </div>
@@ -374,17 +411,31 @@ export default function BuyConnectsPage() {
                     >
                       Cancel
                     </button>
-                    <button
-                      onClick={handleProceedToPay}
-                      className={`flex px-8 py-3 rounded-xl ${
-                        agreedToTerms && connectsToBuy >= 5
-                          ? "bg-red-500 text-white hover:bg-red-600"
-                          : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      }`}
-                      disabled={!agreedToTerms && connectsToBuy < 5}
-                    >
-                      Proceed to Pay
-                    </button>
+
+                    {isAuthenticated ? (
+                      <button
+                        onClick={handleProceedToPay}
+                        className={`flex px-8 py-3 rounded-xl ${
+                          agreedToTerms &&
+                          connectsToBuy >= minimumCustomConnects
+                            ? "bg-red-500 text-white hover:bg-red-600"
+                            : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        }`}
+                        disabled={
+                          !agreedToTerms ||
+                          connectsToBuy < minimumCustomConnects
+                        }
+                      >
+                        Proceed to Pay
+                      </button>
+                    ) : (
+                      <button
+                        className="xl:px-8 lg:px-6 md:px-4 px-4  py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100 text-center"
+                        onClick={onLogin}
+                      >
+                        Login
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -440,15 +491,8 @@ export default function BuyConnectsPage() {
           </div>
 
           {/* Tabs */}
-          <Tabs defaultActive="bundles" onTabChange={handleTabChange}>
+          <Tabs defaultActive="custom" onTabChange={handleTabChange}>
             <TabHeader tabsClassName="justify-between border rounded-xl p-2 w-full flex gap-2">
-              <Tab
-                label="Bundles"
-                value="bundles"
-                containerClassName="w-1/2 p-2 md:p-3 text-base font-medium max-md:font-normal rounded-lg border transition-colors duration-300"
-                activeClassName="text-red-600 border-red-500"
-                inactiveClassName="text-gray-700 border-transparent"
-              />
               <Tab
                 label="Custom"
                 value="custom"
@@ -456,8 +500,40 @@ export default function BuyConnectsPage() {
                 activeClassName="text-red-600 border-red-500"
                 inactiveClassName="text-gray-700 border-transparent"
               />
+              <Tab
+                label="Bundles"
+                value="bundles"
+                containerClassName="w-1/2 p-2 md:p-3 text-base font-medium max-md:font-normal rounded-lg border transition-colors duration-300"
+                activeClassName="text-red-600 border-red-500"
+                inactiveClassName="text-gray-700 border-transparent"
+              />
             </TabHeader>
 
+            <TabContent value="custom">
+              {/* Connects Input Section */}
+              <div className="py-4">
+                <NumberField
+                  name="customConnects"
+                  label="Enter Connects to buy"
+                  value={customConnects}
+                  onChange={setCustomConnects}
+                  min={0}
+                  required
+                  className="mb-3 w-full"
+                />
+
+                {/* Error Message */}
+                {customConnects < minimumCustomConnects && (
+                  <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-sm">
+                      A minimum of{" "}
+                      <strong>{minimumCustomConnects} Connect</strong> is
+                      required to proceed.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </TabContent>
             <TabContent value="bundles" className="-mx-6">
               <Carousel3D
                 items={ConnectsBundleData.bundles.map((bundle) => (
@@ -478,41 +554,13 @@ export default function BuyConnectsPage() {
                 initialIndex={1}
               />
             </TabContent>
-
-            <TabContent value="custom">
-              {/* Connects Input Section */}
-              <div className="py-4">
-                <NumberField
-                  name="customConnects"
-                  label="Enter Connects to buy"
-                  value={customConnects}
-                  onChange={setCustomConnects}
-                  min={0}
-                  required
-                  className="mb-3 w-full"
-                />
-
-                {/* Error Message */}
-                {customConnects < 5 && (
-                  <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-                    <p className="text-sm">
-                      A minimum of <strong>5 Connects</strong> is required to
-                      proceed.
-                    </p>
-                  </div>
-                )}
-              </div>
-            </TabContent>
           </Tabs>
 
           {/* Mobile Purchase Summary */}
           <div className="mt-2 mb-6">
             <p className="text-xs text-gray-600 mb-2">
               This bundle of Connects will expire in 60 Days from today. Unused
-              Connects rollover to the next month.{" "}
-              <a href="#" className="text-red-500 text-xs hover:underline">
-                Learn more
-              </a>
+              Connects rollover to the next month.
             </p>
           </div>
 
@@ -530,13 +578,17 @@ export default function BuyConnectsPage() {
               />
               <span className="text-xs text-gray-600">
                 I agree to{" "}
-                <button className="text-red-500 hover:underline">
+                <Link
+                  href="/terms-and-conditions"
+                  className="text-red-500 hover:underline"
+                >
                   Terms & Conditions
-                </button>
+                </Link>
               </span>
             </label>
           </div>
         </div>
+
         {/* Mobile Footer */}
         <MobileFooter>
           <div className="flex flex-col justify-around items-start w-full">
@@ -635,12 +687,12 @@ export default function BuyConnectsPage() {
             </div>
             <button
               className={`text-center px-6 py-3 border rounded-xl w-full transition duration-200 ${
-                agreedToTerms && connectsToBuy >= 5
+                agreedToTerms && connectsToBuy >= minimumCustomConnects
                   ? "bg-red-500 border-red-500 text-white hover:bg-red-600"
                   : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
               }`}
               onClick={handleProceedToPay}
-              disabled={!agreedToTerms && connectsToBuy < 5}
+              disabled={!agreedToTerms || connectsToBuy < minimumCustomConnects}
             >
               Proceed to Pay
             </button>
