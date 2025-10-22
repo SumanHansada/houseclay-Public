@@ -64,7 +64,7 @@ export default function ImageWithLoader({
 
       {/* Error state */}
       {hasError && (
-        <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
+        <div className="absolute inset-0 bg-gray-200 rounded-xl flex items-center justify-center">
           <div className="text-gray-500 text-sm">Failed to load image</div>
         </div>
       )}

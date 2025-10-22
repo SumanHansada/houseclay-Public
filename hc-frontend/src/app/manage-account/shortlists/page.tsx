@@ -8,16 +8,12 @@ import { useDispatch } from "react-redux";
 import { Button } from "@/base-components";
 import { BadgeType, PropertyCategory, PropertyStatus } from "@/common/enums";
 import Properties from "@/components/Properties";
-import { PropertyCardWithImages } from "@/interfaces/User";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useGetUserDetailQuery } from "@/store/apiSlice";
 import { setHideStickyNavBar } from "@/store/appSlice";
 
 import Loading from "./loading";
-
-// 1x1 transparent GIF — tiny, inline, no network
-const FALLBACK_IMG = "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
 
 const filterOptions = [
   { label: "All", value: PropertyCategory.NONE },
@@ -29,12 +25,12 @@ const filterOptions = [
 export default function ShortlistsPage() {
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const [selectedCategory, setSelectedCategory] = useState<PropertyCategory>(
     PropertyCategory.NONE,
   );
   const [onlyAvailable, setOnlyAvailable] = useState(false);
-  const router = useRouter();
 
   const { data, isLoading, error } = useGetUserDetailQuery();
 
@@ -43,15 +39,8 @@ export default function ShortlistsPage() {
     [data],
   );
 
-  const propertyCards: PropertyCardWithImages[] = useMemo(() => {
-    return shortlistedProperties.map((prop: PropertyCardWithImages) => ({
-      ...prop,
-      images: prop.image ? [prop.image] : [FALLBACK_IMG],
-    }));
-  }, [shortlistedProperties]);
-
-  const filteredProperties: PropertyCardWithImages[] = useMemo(() => {
-    return propertyCards.filter((prop) => {
+  const filteredProperties = useMemo(() => {
+    return shortlistedProperties.filter((prop) => {
       if (
         selectedCategory !== PropertyCategory.NONE &&
         prop.propertyCategory !== selectedCategory
@@ -61,7 +50,7 @@ export default function ShortlistsPage() {
         return false;
       return true;
     });
-  }, [propertyCards, selectedCategory, onlyAvailable]);
+  }, [shortlistedProperties, selectedCategory, onlyAvailable]);
 
   useEffect(() => {
     if (isMobile) {

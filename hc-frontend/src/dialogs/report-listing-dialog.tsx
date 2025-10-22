@@ -78,7 +78,7 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
       entryAnimation={isMobile ? "animate-slide-in-right" : "animate-fade-in"}
       exitAnimation={isMobile ? "animate-slide-out-right" : "animate-fade-out"}
     >
-      <DialogHeader className="-mx-4">
+      <DialogHeader className="max-md:-mx-4">
         {isMobile ? (
           <MobileHeader className="relative">
             <MobileHeader.Title>Report This Listing</MobileHeader.Title>
@@ -94,7 +94,7 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
             </MobileHeader.RightAction>
           </MobileHeader>
         ) : (
-          <div className="relative w-full mx-4 flex justify-between items-center">
+          <div className="relative w-full flex justify-between items-center">
             {
               <h1 className="text-xl md:text-2xl text-black">
                 Report This Listing

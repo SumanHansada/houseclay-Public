@@ -46,7 +46,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
       id: "shortlists",
       icon: <Heart size={25} />,
       label: "Shortlists",
-      href: "/shortlists",
+      href: "/manage-account/shortlists",
     },
     {
       id: "home",

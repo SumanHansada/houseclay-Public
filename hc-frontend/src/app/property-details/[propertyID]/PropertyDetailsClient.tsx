@@ -48,7 +48,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
-import { PlacesAutocomplete } from "@/base-components";
+import { Button, PlacesAutocomplete } from "@/base-components";
 import { PropertyCategory } from "@/common/enums";
 import {
   formatDateToReadable,
@@ -173,7 +173,9 @@ export function PropertyDetailsClient({
   const { property, contactUserCount, shortlistUserCount, viewUserCount } =
     propertyData;
   const { toggleShortlist, isShortlisted } = useShortlist();
-  const [isShortlistedProperty, setIsShortlistedProperty] = useState(false);
+  const shortlistStatus = isShortlisted(propertyID);
+  const [isShortlistedProperty, setIsShortlistedProperty] =
+    useState(shortlistStatus);
 
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [origin, setOrigin] = useState<string>("");
@@ -185,15 +187,6 @@ export function PropertyDetailsClient({
     (state: RootState) => state.auth.isAuthenticated,
   );
   const { isDialogOpen, closeDialog, openDialog } = useDialog();
-
-  // Check if property is shortlisted
-  useEffect(() => {
-    const checkShortlistStatus = async () => {
-      const shortlistStatus = await isShortlisted(propertyID);
-      setIsShortlistedProperty(shortlistStatus);
-    };
-    checkShortlistStatus();
-  }, [propertyID]);
 
   const handleShare = async () => {
     try {
@@ -261,20 +254,25 @@ export function PropertyDetailsClient({
       <section
         className={`py-2 px-4 fixed top-0 left-0 right-0 z-50 h-[55px] border-b border-gray-200 bg-white flex gap-2 justify-between items-center w-full md:hidden`}
       >
-        <button className="rounded-full md:border-none items-center justify-center">
-          <ChevronLeft onClick={() => router.back()} size={25} />
-        </button>
+        <Button
+          variant="secondary"
+          size="custom"
+          className="rounded-full p-1"
+          onClick={() => router.back}
+        >
+          <ChevronLeft size={24} />
+        </Button>
         <div className="flex gap-2 items-center">
           {property.managed && (
             <button className="rounded-full border md:border-none items-center justify-center p-2 bg-gradient-to-br from-yellow-400 via-yellow-500 to-orange-500 fill-current">
-              <Crown onClick={() => console.log("Crown Clicked")} size={18} />
+              <Crown onClick={() => console.log("Crown Clicked")} size={20} />
             </button>
           )}
           {property.featured && (
             <button className="rounded-full border md:border-none items-center justify-center p-2 bg-gradient-to-br from-red-400 via-red-400 to-red-500 fill-current">
               <SquareStar
                 onClick={() => console.log("Crown Clicked")}
-                size={18}
+                size={20}
               />
             </button>
           )}
@@ -282,7 +280,8 @@ export function PropertyDetailsClient({
             <Share onClick={handleShare} size={18} />
           </button>
           <motion.button
-            onClick={async () => {
+            onClick={async (e) => {
+              e.stopPropagation();
               const newStatus = await toggleShortlist(propertyID);
               setIsShortlistedProperty(newStatus);
             }}
@@ -299,7 +298,7 @@ export function PropertyDetailsClient({
               transition={{ duration: 0.3 }}
             >
               <Heart
-                size={18}
+                size={20}
                 className={isShortlistedProperty ? "fill-current" : ""}
               />
             </motion.div>
@@ -346,7 +345,7 @@ export function PropertyDetailsClient({
                   onClick={handleShare}
                   className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors underline hover:bg-gray-100 rounded-md px-2 py-1"
                 >
-                  <Share size={16} />
+                  <Share size={20} />
                   <span>Share</span>
                 </button>
                 <button
@@ -361,11 +360,11 @@ export function PropertyDetailsClient({
                   }`}
                 >
                   <Heart
-                    size={16}
+                    size={20}
                     className={isShortlistedProperty ? "fill-current" : ""}
                   />
                   <span>
-                    {isShortlistedProperty ? "Sortlisted" : "Sortlist"}
+                    {isShortlistedProperty ? "Shortlisted" : "Shortlist"}
                   </span>
                 </button>
               </div>
@@ -788,7 +787,7 @@ export function PropertyDetailsClient({
                 </div>
               </section>
               {/* Exclusive listing */}
-              {property.managed && (
+              {property.managed ? (
                 <section className="flex flex-col justify-between items-center gap-4 mb-6">
                   <button className="px-8 py-3 flex justify-around border rounded-xl w-full text-base max-md:text-sm hover:bg-gray-50 transition-colors">
                     <div className="flex items-center gap-4">
@@ -797,7 +796,7 @@ export function PropertyDetailsClient({
                     </div>
                   </button>
                 </section>
-              )}
+              ) : null}
               {/* Featured Property */}
               {property.featured && (
                 <section className="flex flex-col justify-between items-center gap-4 mb-6">

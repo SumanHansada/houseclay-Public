@@ -1,9 +1,11 @@
 // pages/index.js
+import { motion } from "framer-motion";
 import { Crown, Heart, MapPin, Star } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
 import { BadgeType } from "@/common/enums";
 import { formatBhkType, formatINRCurrency } from "@/common/utils";
+import { useShortlist } from "@/hooks/useShortlist";
 import { PropertySearch } from "@/interfaces/PropertySearch";
 import { ImageWithLoader } from "@/utility-components";
 
@@ -26,7 +28,10 @@ const Properties: React.FC<PropertiesProps> = ({
   onClick,
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { toggleShortlist, isShortlisted } = useShortlist();
+  const shortlistStatus = isShortlisted(property.propertyID);
+  const [isShortlistedProperty, setIsShortlistedProperty] =
+    useState(shortlistStatus);
 
   const nextImage = useCallback(() => {
     setCurrentImageIndex((prev) => (prev + 1) % property.images.length);
@@ -47,8 +52,8 @@ const Properties: React.FC<PropertiesProps> = ({
 
   return (
     <div
-      onClick={(e) => onClick?.(e)}
-      className="flex-col gap-8 bg-white border border-gray-100 rounded-lg drop-shadow relative p-3 cursor-pointer"
+      onClick={onClick}
+      className="flex-col gap-8 bg-white border border-gray-100 rounded-xl drop-shadow relative p-3 cursor-pointer"
     >
       {/* Image Carousel */}
       <div className="relative h-72 max-md:h-60">
@@ -56,7 +61,7 @@ const Properties: React.FC<PropertiesProps> = ({
           src={property?.images[currentImageIndex]}
           alt={`Property ${property?.propertyID}`}
           fill
-          className="rounded-lg"
+          className="rounded-xl"
           loading="lazy"
         />
 
@@ -90,19 +95,28 @@ const Properties: React.FC<PropertiesProps> = ({
         )}
 
         {/* Favorite Button */}
-        <button
-          className="absolute top-3 right-3 bg-gray-50/30 rounded-full p-2 shadow-md"
-          onClick={(e) => {
+        <motion.button
+          className={`absolute top-2 right-2 bg-gray-50/30 rounded-full p-2 shadow-md ${isShortlistedProperty ? "text-pink-500" : "text-gray-500"}`}
+          onClick={async (e) => {
             e.stopPropagation();
-            setIsFavorite(!isFavorite);
+            const newStatus = await toggleShortlist(property.propertyID);
+            setIsShortlistedProperty(newStatus);
           }}
+          whileTap={{ scale: 0.95 }}
         >
-          {isFavorite ? (
-            <Heart size={16} className="text-red-500 fill-red-500" />
-          ) : (
-            <Heart size={16} className="text-white" />
-          )}
-        </button>
+          {/* Heart icon with scale animation */}
+          <motion.div
+            animate={{
+              scale: isShortlistedProperty ? [1, 1.3, 1] : 1,
+            }}
+            transition={{ duration: 0.3 }}
+          >
+            <Heart
+              size={16}
+              className={isShortlistedProperty ? "fill-current" : ""}
+            />
+          </motion.div>
+        </motion.button>
 
         {/* Carousel Dots */}
         {showCarouselDots && (
