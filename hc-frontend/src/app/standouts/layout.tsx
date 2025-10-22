@@ -1,16 +1,14 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 
 import { Footer } from "@/layout-components";
 import { ImageWithLoader, Tab, TabHeader, Tabs } from "@/utility-components";
 
 export default function StandoutsLayout({ children }: { children: ReactNode }) {
-  const router = useRouter();
-  const handleTabChange = (tab: string) => {
-    router.push(`/standouts/${tab}`);
-  };
+  // const handleTabChange = (tab: string) => {
+  //   router.push(`/standouts/${tab}`);
+  // };
 
   return (
     <>
@@ -41,7 +39,8 @@ export default function StandoutsLayout({ children }: { children: ReactNode }) {
         </section>
 
         <section className="flex-1 my-12">
-          <div className="w-1/5 mx-auto">
+          {/* Commented Resale logic */}
+          {/* <div className="w-1/5 mx-auto">
             <Tabs
               defaultActive="rent"
               onTabChange={handleTabChange}
@@ -67,7 +66,7 @@ export default function StandoutsLayout({ children }: { children: ReactNode }) {
                 />
               </TabHeader>
             </Tabs>
-          </div>
+          </div> */}
           <div className="xl:px-28 lg:px-14 md:px-14 px-6">{children}</div>
         </section>
       </section>

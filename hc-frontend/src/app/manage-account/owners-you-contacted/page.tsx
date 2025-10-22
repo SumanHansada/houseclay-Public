@@ -15,6 +15,7 @@ import { useGetUserDetailQuery } from "@/store/apiSlice";
 import { setHideStickyNavBar } from "@/store/appSlice";
 
 import Loading from "./loading";
+import { FALLBACK_IMG } from "@/common/constants";
 
 const filterOptions = [
   { label: "All", value: PropertyCategory.NONE },
@@ -22,9 +23,6 @@ const filterOptions = [
   { label: "Rent", value: PropertyCategory.RENT },
   { label: "Flatmate", value: PropertyCategory.FLATMATE },
 ];
-
-// 1x1 transparent GIF — tiny, inline, no network
-const FALLBACK_IMG = "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
 
 export default function OwnersContactedPage() {
   const { isMobile } = useDeviceContext();

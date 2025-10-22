@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch } from "react-redux";
 
 import Advantages from "@/components/Advantages";
@@ -10,7 +10,6 @@ import Standouts from "@/components/Standouts";
 import { Testimonials } from "@/components/Testimonials";
 import { LoginDialog, MenuDialog, StandoutsDialog } from "@/dialogs";
 import { Neighbourhood } from "@/interfaces/Neighbourhood";
-import { PropertySearch } from "@/interfaces/PropertySearch";
 import { Testimonial } from "@/interfaces/Testimonial";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -18,28 +17,54 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
-import { usePopularNeighbourhoodsQuery } from "@/store/apiSlice";
+import {
+  usePopularNeighbourhoodsQuery,
+  useStandoutsQuery,
+} from "@/store/apiSlice";
+import { PropertyCardWithImages } from "@/interfaces/User";
+import { FALLBACK_IMG } from "@/common/constants";
 
 interface ClientPageProps {
-  properties: PropertySearch[];
+  // properties: PropertySearch[];
   neighbourhoods: Neighbourhood[];
   testimonials: Testimonial[];
 }
 
 export default function ClientPage({
-  properties,
+  // properties,
   neighbourhoods,
   testimonials,
 }: ClientPageProps) {
   const { isDialogOpen } = useDialog();
   const dispatch = useDispatch();
 
-  const { data } = usePopularNeighbourhoodsQuery(undefined, {
+  const { data: neighbourhoodData } = usePopularNeighbourhoodsQuery(undefined, {
     refetchOnMountOrArgChange: 30,
     refetchOnFocus: true,
     refetchOnReconnect: true,
   });
-  console.log(data);
+  console.log(neighbourhoodData);
+
+  const { data: standoutsData } = useStandoutsQuery(undefined, {
+    refetchOnMountOrArgChange: 30,
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+  });
+  console.log("standoutsData", standoutsData);
+
+  const standoutProperties = useMemo(
+    () => standoutsData ?? [],
+    [standoutsData],
+  );
+
+  const standoutPropertyCards: PropertyCardWithImages[] = useMemo(() => {
+    return standoutProperties.map((prop: PropertyCardWithImages) => ({
+      ...prop,
+      images: prop.image ? [prop.image] : [FALLBACK_IMG],
+    }));
+  }, [standoutProperties]);
+
+  console.log("Standout Property cards: ", standoutPropertyCards);
 
   // Initialize app state
   useEffect(() => {
@@ -56,12 +81,14 @@ export default function ClientPage({
       </section>
 
       {/* Standouts Section */}
-      <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
-        <Standouts properties={properties} />
-      </section>
+      {standoutPropertyCards.length > 0 ? (
+        <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
+          <Standouts properties={standoutPropertyCards} />
+        </section>
+      ) : null}
 
       {/* neighbourhoods Section */}
-
+      {/* TODO: only show this section if there are 4 or more than 4 popular neighbourhood present */}
       <section className="min-h-[500px] w-full overflow-hidden">
         <Neighbourhoods neighbourhoods={neighbourhoods} />
       </section>
@@ -77,8 +104,12 @@ export default function ClientPage({
       </section>
 
       {/* Standouts Dialog */}
-      {isDialogOpen("standouts-dialog") && (
-        <StandoutsDialog id="standouts-dialog" properties={properties} />
+      {/* TODO - need a toast message if there are no standout properties */}
+      {isDialogOpen("standouts-dialog") && standoutPropertyCards.length > 0 && (
+        <StandoutsDialog
+          id="standouts-dialog"
+          properties={standoutPropertyCards}
+        />
       )}
 
       {/* Login Dialog */}

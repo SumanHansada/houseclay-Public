@@ -3,7 +3,10 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BASE_API_URL } from "@/common/constants";
 import { PropertyCategory } from "@/common/enums";
 import { PropertyForm } from "@/interfaces/PropertyForm";
-import { GetUserDetailResponse } from "@/interfaces/User";
+import {
+  GetUserDetailResponse,
+  PropertyCardWithImages,
+} from "@/interfaces/User";
 
 export const USER_DETAIL_TAG = { type: "User", id: "DETAIL" } as const;
 export const TAGS = [USER_DETAIL_TAG.type] as const;
@@ -285,6 +288,9 @@ export const apiSlice = createApi({
         method: "GET",
       }),
     }),
+    standouts: builder.query<PropertyCardWithImages[], void>({
+      query: () => "/property/standout",
+    }),
     popularNeighbourhoods: builder.query<string[], void>({
       query: () => "/property/neighbourhood",
     }),
@@ -316,5 +322,6 @@ export const {
   useCreateOrderMutation,
   useVerifyPaymentMutation,
   useContactOwnerMutation,
+  useStandoutsQuery,
   usePopularNeighbourhoodsQuery,
 } = apiSlice;

@@ -2,33 +2,46 @@
 
 import Link from "next/link";
 
-import { useDispatch, useSelector } from "react-redux";
-
-import { PropertyCategory } from "@/common/enums";
-import { PropertySearch } from "@/interfaces/PropertySearch";
-import { setPropertyCategory } from "@/store/propertySearchSlice";
-import { RootState } from "@/store/store";
-
 import Carousel2D from "./Carousel2D";
 import Properties from "./Properties";
+import { useRouter } from "next/navigation";
+import React from "react";
+import { PropertyCardWithImages } from "@/interfaces/User";
 
 interface StandoutsClientProps {
-  properties: PropertySearch[];
+  properties: PropertyCardWithImages[];
 }
 
 const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
-  const { propertyCategory } = useSelector(
-    (state: RootState) => state.propertySearch,
-  );
-  const dispatch = useDispatch();
+  // const { propertyCategory } = useSelector(
+  //   (state: RootState) => state.propertySearch,
+  // );
+  // const dispatch = useDispatch();
+
+  const router = useRouter();
+
+  const handleCardClick = (e: React.MouseEvent, propertyID: string) => {
+    e.stopPropagation();
+    router.push(`/property-details/${propertyID}`);
+  };
+
   return (
     <>
       <div className="bg-white bg-center bg-cover flex-col items-center md:py-20 xl:px-28 lg:px-14 md:px-14 max-md:pt-4 max-md:pb-0 px-6 pt-4 pb-0">
         {/* Header Section */}
-        <div className="flex items-center mb-8 max-md:hidden">
+        <div className="flex items-center justify-between mb-8 max-md:hidden">
           <h1 className="text-3xl font-bold text-gray-800">
             Standouts of the Day
           </h1>
+          <div className="flex items-center max-md:hidden">
+            <Link
+              href="/standouts"
+              prefetch
+              className="border border-red-500 text-red-500 px-4 py-2 rounded-md"
+            >
+              View All Standouts
+            </Link>
+          </div>
         </div>
 
         <div className="font-nunito flex items-center justify-around mb-4 md:hidden">
@@ -36,8 +49,9 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
         </div>
 
         {/* Tabs */}
+        {/* Commented Resale Logic */}
         <div className="flex w-full justify-between max-md:justify-around">
-          <div className="max-w-4xl mb-4 flex">
+          {/* <div className="max-w-4xl mb-4 flex">
             <button
               className={`px-6 py-2 border-b-2 font-medium ${
                 propertyCategory === PropertyCategory.RENT
@@ -62,10 +76,9 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
             >
               For Sale
             </button>
-          </div>
+          </div> */}
           {/* View All Button */}
-          <div className="flex mb-4 max-md:hidden">
-            {/* <button className="border border-red-500 text-red-500 px-4 py-2 rounded-md"> */}
+          {/* <div className="flex mb-4 max-md:hidden">
             <Link
               href="/standouts"
               prefetch
@@ -73,8 +86,7 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
             >
               View All Standouts
             </Link>
-            {/* </button> */}
-          </div>
+          </div> */}
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
@@ -92,6 +104,9 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
               key={property.propertyID}
               property={property}
               badgeType={property.badges}
+              onClick={(e: React.MouseEvent) =>
+                handleCardClick(e, property.propertyID)
+              }
             />
           ))}
         </Carousel2D>
@@ -110,6 +125,9 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
               key={property.propertyID}
               property={property}
               badgeType={property.badges}
+              onClick={(e: React.MouseEvent) =>
+                handleCardClick(e, property.propertyID)
+              }
             />
           ))}
         </Carousel2D>
