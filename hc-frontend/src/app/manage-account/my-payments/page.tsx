@@ -3,18 +3,18 @@
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
 import { PaymentFilterStatus } from "@/common/enums";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { useGetUserDetailQuery } from "@/store/apiSlice";
 import { setHideStickyNavBar } from "@/store/appSlice";
 
 import { TransactionCardList } from "../components/TransactionCardList";
 import { TransactionTable } from "../components/TransactionTable";
 import Loading from "./loading";
+import { RootState } from "@/store/store";
 
 const filterOptions = [
   { label: "All", value: PaymentFilterStatus.ALL },
@@ -29,11 +29,13 @@ export default function MyPaymentsPage() {
   const [selectedFilter, setSelectedFilter] = useState<PaymentFilterStatus>(
     PaymentFilterStatus.ALL,
   );
-  const { data, isLoading, error } = useGetUserDetailQuery();
+  const { userDetail, userDetailLoading, userDetailError } = useSelector(
+    (state: RootState) => state.user,
+  );
 
   const externalPayments = useMemo(
-    () => data?.user?.externalPayments ?? [],
-    [data],
+    () => userDetail.externalPayments,
+    [userDetail.externalPayments],
   );
 
   const filteredPayments = useMemo(() => {
@@ -62,12 +64,12 @@ export default function MyPaymentsPage() {
   console.log("externalPayments: " + externalPayments);
   console.log("filteredPayments: " + filteredPayments);
 
-  if (isLoading) {
+  if (userDetailLoading) {
     return <Loading />;
   }
 
-  if (error) {
-    return <div>Error loading payments</div>;
+  if (userDetailError) {
+    return <div>Error loading payments: {userDetailError}</div>;
   }
 
   return (

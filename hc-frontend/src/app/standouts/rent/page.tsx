@@ -9,7 +9,6 @@ import { useMemo } from "react";
 import { PropertyCardWithImages } from "@/interfaces/User";
 import { FALLBACK_IMG } from "@/common/constants";
 import GridSkeleton from "../GridSkeleton";
-// import { Loading } from "../loading";
 
 export default function StandoutsRentPage() {
   const router = useRouter();
@@ -24,7 +23,7 @@ export default function StandoutsRentPage() {
     refetchOnFocus: true,
     refetchOnReconnect: true,
   });
-  console.log("standoutsData", standoutsData);
+  // console.log("standoutsData", standoutsData);
 
   const standoutProperties = useMemo(
     () => standoutsData ?? [],

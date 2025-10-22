@@ -8,12 +8,8 @@ import {
   PropertyCardWithImages,
 } from "@/interfaces/User";
 
-export const USER_DETAIL_TAG = { type: "User", id: "DETAIL" } as const;
-export const TAGS = [USER_DETAIL_TAG.type] as const;
-
 export const apiSlice = createApi({
   reducerPath: "api",
-  tagTypes: TAGS,
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_API_URL,
     credentials: "include", // Required for HTTP-only cookies
@@ -37,7 +33,6 @@ export const apiSlice = createApi({
           responseHandler: (response) => response.json(), // Convert response to text
         };
       },
-      invalidatesTags: [USER_DETAIL_TAG],
     }),
     register: builder.mutation<
       {
@@ -57,7 +52,6 @@ export const apiSlice = createApi({
           responseHandler: (response) => response.json(),
         };
       },
-      invalidatesTags: [USER_DETAIL_TAG],
     }),
     generateOtp: builder.mutation<
       string, // Response type - plain text
@@ -90,11 +84,9 @@ export const apiSlice = createApi({
         url: "/user/logout",
         method: "POST",
       }),
-      invalidatesTags: [USER_DETAIL_TAG],
     }),
     getUserDetail: builder.query<GetUserDetailResponse, void>({
       query: () => "/user/detail",
-      providesTags: [USER_DETAIL_TAG],
     }),
 
     presignedUrls: builder.mutation<
@@ -127,7 +119,6 @@ export const apiSlice = createApi({
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: [USER_DETAIL_TAG],
     }),
     propertyUpdate: builder.mutation<
       { message: string; propertyID: number },
@@ -141,7 +132,6 @@ export const apiSlice = createApi({
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: [USER_DETAIL_TAG],
     }),
 
     getMyPropertyById: builder.query<unknown, string>({
@@ -277,7 +267,6 @@ export const apiSlice = createApi({
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: [USER_DETAIL_TAG],
     }),
     contactOwner: builder.mutation<
       { phone: string; name: string; email: string; connectBal: number },

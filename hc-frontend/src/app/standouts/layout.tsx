@@ -3,7 +3,7 @@
 import { ReactNode } from "react";
 
 import { Footer } from "@/layout-components";
-import { ImageWithLoader, Tab, TabHeader, Tabs } from "@/utility-components";
+import { ImageWithLoader } from "@/utility-components";
 
 export default function StandoutsLayout({ children }: { children: ReactNode }) {
   // const handleTabChange = (tab: string) => {

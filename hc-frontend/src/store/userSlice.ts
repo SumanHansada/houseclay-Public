@@ -1,3 +1,8 @@
+import {
+  PropertyCardWithImages,
+  UserExternalPayment,
+  UserOwnedProperties,
+} from "@/interfaces/User";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface UserDetail {
@@ -8,6 +13,10 @@ export interface UserDetail {
   avatarUrl: string | null;
   onWhatsApp: boolean;
   emailVerified: boolean;
+
+  ownedProperties: UserOwnedProperties[];
+  externalPayments: UserExternalPayment[];
+  contactedProperties: PropertyCardWithImages[];
 }
 
 export interface CheckUser {
@@ -25,8 +34,6 @@ interface UserState {
 
   // Check user state
   checkUser: CheckUser | undefined;
-  checkUserLoading: boolean;
-  checkUserError: string | undefined;
 }
 
 const initialState: UserState = {
@@ -38,12 +45,14 @@ const initialState: UserState = {
     avatarUrl: null,
     onWhatsApp: false,
     emailVerified: false,
+
+    ownedProperties: [],
+    externalPayments: [],
+    contactedProperties: [],
   },
   userDetailLoading: false,
   userDetailError: undefined,
   checkUser: undefined,
-  checkUserLoading: false,
-  checkUserError: undefined,
 };
 
 const userSlice = createSlice({
@@ -103,6 +112,27 @@ const userSlice = createSlice({
       }
     },
 
+    setOwnedProperties(state, action: PayloadAction<UserOwnedProperties[]>) {
+      if (state.userDetail) {
+        state.userDetail.ownedProperties = action.payload;
+      }
+    },
+
+    setExternalPayments(state, action: PayloadAction<UserExternalPayment[]>) {
+      if (state.userDetail) {
+        state.userDetail.externalPayments = action.payload;
+      }
+    },
+
+    setContactedProperties(
+      state,
+      action: PayloadAction<PropertyCardWithImages[]>,
+    ) {
+      if (state.userDetail) {
+        state.userDetail.contactedProperties = action.payload;
+      }
+    },
+
     // Clear user data (reset to initial values)
     clearUserDetail(state) {
       state.userDetail = initialState.userDetail;
@@ -126,33 +156,15 @@ const userSlice = createSlice({
     // CheckUser management
     setCheckUser(state, action: PayloadAction<CheckUser>) {
       state.checkUser = action.payload;
-      state.checkUserLoading = false;
-      state.checkUserError = undefined;
-    },
-
-    setCheckUserLoading(state, action: PayloadAction<boolean>) {
-      state.checkUserLoading = action.payload;
-    },
-
-    setCheckUserError(state, action: PayloadAction<string | undefined>) {
-      state.checkUserError = action.payload;
-      state.checkUserLoading = false;
     },
 
     clearCheckUser(state) {
       state.checkUser = undefined;
-      state.checkUserLoading = false;
-      state.checkUserError = undefined;
     },
 
     // Complete user data cleanup (for logout)
-    clearAllUserData(state) {
-      state.userDetail = initialState.userDetail;
-      state.userDetailLoading = false;
-      state.userDetailError = undefined;
-      state.checkUser = undefined;
-      state.checkUserLoading = false;
-      state.checkUserError = undefined;
+    clearAllUserData() {
+      return initialState;
     },
   },
 });
@@ -167,13 +179,14 @@ export const {
   setAvatarUrl,
   setEmailVerified,
   setOnWhatsApp,
+  setContactedProperties,
+  setExternalPayments,
+  setOwnedProperties,
   clearUserDetail,
   setUserDetailLoading,
   setUserDetailError,
   clearUserDetailError,
   setCheckUser,
-  setCheckUserLoading,
-  setCheckUserError,
   clearCheckUser,
   clearAllUserData,
 } = userSlice.actions;

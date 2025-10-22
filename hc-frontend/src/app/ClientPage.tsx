@@ -43,14 +43,14 @@ export default function ClientPage({
     refetchOnFocus: true,
     refetchOnReconnect: true,
   });
-  console.log(neighbourhoodData);
+  // console.log("neighbourhoodData", neighbourhoodData);
 
   const { data: standoutsData } = useStandoutsQuery(undefined, {
     refetchOnMountOrArgChange: 30,
     refetchOnFocus: true,
     refetchOnReconnect: true,
   });
-  console.log("standoutsData", standoutsData);
+  // console.log("standoutsData", standoutsData);
 
   const standoutProperties = useMemo(
     () => standoutsData ?? [],
@@ -63,8 +63,7 @@ export default function ClientPage({
       images: prop.image ? [prop.image] : [FALLBACK_IMG],
     }));
   }, [standoutProperties]);
-
-  console.log("Standout Property cards: ", standoutPropertyCards);
+  // console.log("Standout Property cards: ", standoutPropertyCards);
 
   // Initialize app state
   useEffect(() => {
@@ -88,7 +87,7 @@ export default function ClientPage({
       ) : null}
 
       {/* neighbourhoods Section */}
-      {/* TODO: only show this section if there are 4 or more than 4 popular neighbourhood present */}
+      {/* TODO: only show this section if there are 4 or more than 4 popular neighbourhoods present */}
       <section className="min-h-[500px] w-full overflow-hidden">
         <Neighbourhoods neighbourhoods={neighbourhoods} />
       </section>

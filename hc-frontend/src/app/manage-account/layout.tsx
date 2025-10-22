@@ -12,6 +12,7 @@ import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useGetUserDetailQuery } from "@/store/apiSlice";
 import { setHideFooter, setHideHeader } from "@/store/appSlice";
 import {
+  clearUserDetailError,
   setUserDetail,
   setUserDetailError,
   setUserDetailLoading,
@@ -39,17 +40,29 @@ export default function ManageProfileLayout({
   }, [dispatch, isLoading, isFetching]);
 
   useEffect(() => {
-    if (!isError) return;
-    const msg = extractErrorMessage(error);
-    dispatch(setUserDetailError(msg));
-  }, [dispatch, isError, error]);
+    if (isError) {
+      const msg = extractErrorMessage(error);
+      dispatch(setUserDetailError(msg));
+    } else if (data?.user) {
+      // Clear error on successful fetch
+      dispatch(clearUserDetailError());
 
-  useEffect(() => {
-    const userDetail = data?.user;
-    if (!userDetail) return;
-
-    dispatch(setUserDetail(userDetail));
-  }, [dispatch, data]);
+      const userDetailData = data?.user;
+      dispatch(
+        setUserDetail({
+          name: userDetailData.name,
+          emailID: userDetailData.email,
+          phoneNo: userDetailData.phoneNo,
+          connectBal: userDetailData.connectBal,
+          onWhatsApp: userDetailData.onWhatsApp,
+          emailVerified: userDetailData.emailVerified,
+          ownedProperties: userDetailData.ownedProperties,
+          externalPayments: userDetailData.externalPayments,
+          contactedProperties: userDetailData.contactedProperties,
+        }),
+      );
+    }
+  }, [dispatch, isError, error, data]);
 
   useEffect(() => {
     if (isMobile) {
