@@ -15,7 +15,6 @@ public class PropertyMapper {
             dto.setPriceNegotiable(sale.getPriceNegotiable());
             dto.setUnderLoan(sale.getUnderLoan());
             dto.setPrice(sale.getPrice());
-            dto.setBathrooms(sale.getBathrooms());
             dto.setBalcony(sale.getBalcony());
             dto.setKhataCertificate(sale.getKhataCertificate());
             dto.setSaleDeed(sale.getSaleDeed());
@@ -84,6 +83,7 @@ public class PropertyMapper {
         target.setPremium(source.isPremium());
         target.setBuiltUpArea(source.getBuiltUpArea());
         target.setFacing(source.getFacing());
+        target.setBathrooms(source.getBathrooms());
         target.setBhkType(source.getBhkType());
         target.setFloor(source.getFloor());
         target.setTotalFloors(source.getTotalFloors());
