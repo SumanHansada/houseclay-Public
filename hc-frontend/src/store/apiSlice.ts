@@ -245,6 +245,9 @@ export const apiSlice = createApi({
     >({
       query: () => `/property/user/shortlisted-properties`,
     }),
+    bundleInfo: builder.query<undefined, void>({
+      query: () => "/bundle/info",
+    }),
     createOrder: builder.mutation<
       {
         amount: number;
@@ -335,6 +338,7 @@ export const {
   useRemoveShortlistedPropertyMutation,
   useGetShortlistedPropertiesQuery,
   useLazyGetShortlistedPropertiesQuery,
+  useBundleInfoQuery,
   useCreateOrderMutation,
   useVerifyPaymentMutation,
   useContactOwnerMutation,

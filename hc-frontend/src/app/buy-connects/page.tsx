@@ -23,6 +23,7 @@ import { MobileFooter, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
+  useBundleInfoQuery,
   useCreateOrderMutation,
   useVerifyPaymentMutation,
 } from "@/store/apiSlice";
@@ -90,6 +91,9 @@ export default function BuyConnectsPage() {
     : customConnectsPrice + gstAmount;
   const connectsToBuy = currentBundle ? currentBundle.connects : customConnects;
   const newConnectsBalance = connectBalance + connectsToBuy;
+
+  const { data: bundleData } = useBundleInfoQuery();
+  console.log("Bundle Info: ", bundleData);
 
   const bundleOptions = ConnectsBundleData.bundles.map((bundle) => ({
     value: bundle.id,
