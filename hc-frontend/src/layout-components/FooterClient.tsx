@@ -213,7 +213,7 @@ const FooterClient: React.FC = () => {
         {/* Bottom footer with logo and copyright */}
         <div className="py-4 flex flex-row justify-between items-center">
           <div className="text-gray-400 text-sm">
-            © 2025 HouseClay. All right reserved.
+            © 2025 Elevensquare Technologies Pvt Ltd. All right reserved.
           </div>
           <div className="flex">
             <ul className="flex space-x-6">
