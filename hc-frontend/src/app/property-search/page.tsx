@@ -10,7 +10,12 @@ import { useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Button, PlacesAutocomplete, SelectDropdown } from "@/base-components";
+import {
+  Button,
+  MultiSelectDropdown,
+  PlacesAutocomplete,
+  SelectDropdown,
+} from "@/base-components";
 import { BadgeType, PropertyCategory } from "@/common/enums";
 import { pascalCase } from "@/common/utils";
 import Properties from "@/components/Properties";
@@ -83,6 +88,13 @@ export default function PropertySearchPage() {
     }
   }, [dispatch, urlCategory, searchState.propertyCategory]);
 
+  // Parse BHK selections from comma-separated Redux string
+  const bhkSelectedValues = useMemo<string[]>(
+    () =>
+      searchState.propertyBhk ? String(searchState.propertyBhk).split(",") : [],
+    [searchState.propertyBhk],
+  );
+
   // small helper: mutate & replace URL
   const replaceQuery = (mutate: (q: URLSearchParams) => void) => {
     const next = new URLSearchParams(searchParams.toString());
@@ -116,11 +128,20 @@ export default function PropertySearchPage() {
     });
   };
 
-  const onBhkChange = (raw: string | number | boolean) => {
-    const val = String(raw);
-    dispatch(setPropertyBhk(val));
+  // const onBhkChange = (raw: string | number | boolean) => {
+  //   const val = String(raw);
+  //   dispatch(setPropertyBhk(val));
+  //   replaceQuery((q) => {
+  //     val ? q.set("bhkType", val) : q.delete("bhkType");
+  //   });
+  // };
+
+  // New multi-select handler (keeps Redux as comma-separated string; updates URL)
+  const onBhkMultiChange = (vals: (string | number | boolean)[]) => {
+    const asStr = vals.map(String);
+    dispatch(setPropertyBhk(asStr.join(",")));
     replaceQuery((q) => {
-      val ? q.set("bhkType", val) : q.delete("bhkType");
+      asStr.length ? q.set("bhkType", asStr.join(",")) : q.delete("bhkType");
     });
   };
 
@@ -455,7 +476,7 @@ export default function PropertySearchPage() {
 
             {/* Rent: BHK | Flatmate: Preferred Tenant */}
             {searchState.propertyCategory === PropertyCategory.RENT ? (
-              <SelectDropdown
+              <MultiSelectDropdown
                 options={[
                   { value: "1BHK", label: "1 BHK" },
                   { value: "2BHK", label: "2 BHK" },
@@ -465,12 +486,14 @@ export default function PropertySearchPage() {
                 ]}
                 name="property-bhk"
                 id="property-bhk"
-                value={searchState.propertyBhk}
+                value={bhkSelectedValues}
                 placeholder="Beds"
-                onChange={onBhkChange}
+                onChange={onBhkMultiChange}
                 size="sm"
                 dropdownWidth="full"
-                containerClassName="relative w-28 md:w-24 lg:w-28 max-xl:hidden"
+                displayMode="first+count"
+                showSelectAll
+                containerClassName="relative w-32 max-xl:hidden"
               />
             ) : (
               <SelectDropdown

@@ -10,5 +10,6 @@ export { default as PlacesAutocomplete } from "./PlacesAutocomplete";
 export { default as RadioGroup } from "./RadioGroup";
 export { default as RangeSlider } from "./RangeSlider";
 export { default as SelectDropdown } from "./SelectDropdown";
+export { default as MultiSelectDropdown } from "./MultiSelectDropdown";
 export { default as TextArea } from "./TextArea";
 export { default as TextField } from "./TextField";
