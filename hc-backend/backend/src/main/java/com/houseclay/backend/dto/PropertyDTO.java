@@ -18,6 +18,7 @@ public class PropertyDTO {
     private Double builtUpArea;
     private String facing;
     private String bhkType;
+    private Integer bathrooms;
     private Integer floor;
     private Integer totalFloors;
     private String floorType;
