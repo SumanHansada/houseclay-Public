@@ -11,6 +11,7 @@ export const SORT_OPTIONS = [
   { value: "PRICE_DESC", label: "Price (Higher First)" },
   { value: "DIST_ASC", label: "Distance (Closest First)" },
   { value: "DIST_DESC", label: "Distance (Farthest First)" },
+  { value: "NONE", label: "None" },
 ];
 
 export type SortToken = (typeof SORT_OPTIONS)[number]["value"];
@@ -28,6 +29,7 @@ export const tokenToState: Record<
   PRICE_DESC: { sortFields: "PRICE", sortOrder: "DESC" },
   DIST_ASC: { sortFields: "DISTANCE", sortOrder: "ASC" },
   DIST_DESC: { sortFields: "DISTANCE", sortOrder: "DESC" },
+  NONE: {},
 };
 
 export function stateToToken(params: {

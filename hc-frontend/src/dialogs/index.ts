@@ -10,3 +10,4 @@ export { default as SearchFiltersDialog } from "./search-filters-dialog";
 export { default as StandoutsDialog } from "./standouts-dialog";
 export { default as UpgradePropertyDialog } from "./upgrade-property";
 export { default as UploadDialog } from "./upload-dialog";
+export { default as SortFiltersDialog } from "./sort-filters-dialog";

@@ -247,7 +247,7 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
                 {showSelectAll ? (
                   <button
                     type="button"
-                    className="text-sm disabled:text-gray-400 py-1"
+                    className="text-sm disabled:text-gray-400 py-2 hover:underline"
                     onClick={() =>
                       onChange(allSelected ? [] : options.map((o) => o.value))
                     }
@@ -261,7 +261,7 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
                 {showClear && (
                   <button
                     type="button"
-                    className="inline-flex items-center gap-1 text-sm disabled:text-gray-400 py-1"
+                    className="inline-flex items-center gap-1 text-sm disabled:text-gray-400 py-2"
                     onClick={() => onChange([])}
                     disabled={value.length === 0}
                   >

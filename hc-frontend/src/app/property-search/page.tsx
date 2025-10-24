@@ -1,6 +1,11 @@
 "use client";
 
-import { ChevronLeft, SearchIcon, SlidersHorizontal } from "lucide-react";
+import {
+  ArrowDownWideNarrow,
+  ChevronLeft,
+  SearchIcon,
+  SlidersHorizontal,
+} from "lucide-react";
 import {
   ReadonlyURLSearchParams,
   useRouter,
@@ -19,7 +24,7 @@ import {
 import { BadgeType, PropertyCategory } from "@/common/enums";
 import { pascalCase } from "@/common/utils";
 import Properties from "@/components/Properties";
-import { SearchFiltersDialog } from "@/dialogs";
+import { SearchFiltersDialog, SortFiltersDialog } from "@/dialogs";
 import { PropertySearch } from "@/interfaces/PropertySearch";
 import { Footer } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
@@ -57,6 +62,9 @@ function getUrlCategory(sp: ReadonlyURLSearchParams): PropertyCategory {
     ? (raw as PropertyCategory)
     : PropertyCategory.RENT;
 }
+
+const PROPERTY_FILTERS_DIALOG_ID = "property-filters-dialog";
+const SORT_FILTERS_DIALOG_ID = "sort-filters-dialog";
 
 export default function PropertySearchPage() {
   const searchParams = useSearchParams();
@@ -128,14 +136,6 @@ export default function PropertySearchPage() {
     });
   };
 
-  // const onBhkChange = (raw: string | number | boolean) => {
-  //   const val = String(raw);
-  //   dispatch(setPropertyBhk(val));
-  //   replaceQuery((q) => {
-  //     val ? q.set("bhkType", val) : q.delete("bhkType");
-  //   });
-  // };
-
   // New multi-select handler (keeps Redux as comma-separated string; updates URL)
   const onBhkMultiChange = (vals: (string | number | boolean)[]) => {
     const asStr = vals.map(String);
@@ -166,6 +166,20 @@ export default function PropertySearchPage() {
 
   const onSortChange = (raw: string | number | boolean) => {
     const token = String(raw) as SortToken;
+
+    // Explicit clear path for "None"
+    if (token === "NONE") {
+      dispatch(setExclusiveFilter(false));
+      dispatch(setSortFields(""));
+      dispatch(setSortOrder(""));
+      replaceQuery((next) => {
+        next.delete("exclusive");
+        next.delete("sortFields");
+        next.delete("sortOrder");
+      });
+      return;
+    }
+
     const mapped = tokenToState[token];
 
     // Update Redux
@@ -403,10 +417,21 @@ export default function PropertySearchPage() {
           variant="outline"
           size="sm"
           className="h-10 text-black text-sm bg-gray-100 rounded-full p-2 border-none"
-          onClick={() => openDialog("property-filters-dialog")}
+          onClick={() => openDialog(PROPERTY_FILTERS_DIALOG_ID)}
           buttonTextClassName="hidden"
         >
           Filters
+        </Button>
+
+        <Button
+          leftIcon={<ArrowDownWideNarrow size={20} />}
+          variant="outline"
+          size="sm"
+          className="h-10 text-black text-sm bg-gray-100 rounded-full p-1 border-none"
+          onClick={() => openDialog(SORT_FILTERS_DIALOG_ID)}
+          buttonTextClassName="hidden"
+        >
+          Sort
         </Button>
       </section>
 
@@ -493,7 +518,7 @@ export default function PropertySearchPage() {
                 dropdownWidth="full"
                 displayMode="first+count"
                 showSelectAll
-                containerClassName="relative w-32 max-xl:hidden"
+                containerClassName="relative w-28 max-xl:hidden"
               />
             ) : (
               <SelectDropdown
@@ -548,7 +573,7 @@ export default function PropertySearchPage() {
               variant="outline"
               size="md"
               className="min-h-[46px] text-black rounded-xl border text-sm"
-              onClick={() => openDialog("property-filters-dialog")}
+              onClick={() => openDialog(PROPERTY_FILTERS_DIALOG_ID)}
               buttonTextClassName="hidden lg:block"
             >
               Filters
@@ -606,18 +631,31 @@ export default function PropertySearchPage() {
         </div>
       </section>
       <Footer />
-      {isDialogOpen("property-filters-dialog") && (
+      {isDialogOpen(PROPERTY_FILTERS_DIALOG_ID) && (
         <SearchFiltersDialog
-          id="property-filters-dialog"
+          id={PROPERTY_FILTERS_DIALOG_ID}
           onClose={() => {
-            closeDialog("property-filters-dialog");
+            closeDialog(PROPERTY_FILTERS_DIALOG_ID);
             dispatch(setHideStickyNavBar(false));
           }}
           onReset={() => {}}
           onApply={() => {
-            closeDialog("property-filters-dialog");
+            closeDialog(PROPERTY_FILTERS_DIALOG_ID);
             dispatch(setHideStickyNavBar(false));
             handleSearch();
+          }}
+        />
+      )}
+
+      {isDialogOpen(SORT_FILTERS_DIALOG_ID) && isMobile && (
+        <SortFiltersDialog
+          id={SORT_FILTERS_DIALOG_ID}
+          options={SORT_OPTIONS as { value: SortToken; label: string }[]}
+          selectedToken={selectedSortToken ?? ""}
+          onSelect={(token) => onSortChange(token)}
+          onClose={() => {
+            closeDialog(SORT_FILTERS_DIALOG_ID);
+            dispatch(setHideStickyNavBar(false));
           }}
         />
       )}
