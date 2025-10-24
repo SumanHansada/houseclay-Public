@@ -7,9 +7,11 @@ import Properties from "./Properties";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { PropertyCardWithImages } from "@/interfaces/User";
+import { PropertySearch } from "@/interfaces/PropertySearch";
 
 interface StandoutsClientProps {
-  properties: PropertyCardWithImages[];
+  properties: PropertySearch[];
+  // properties: PropertyCardWithImages[];
 }
 
 const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
@@ -104,6 +106,7 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
               key={property.propertyID}
               property={property}
               badgeType={property.badges}
+              showCarouselDots={false}
               onClick={(e: React.MouseEvent) =>
                 handleCardClick(e, property.propertyID)
               }

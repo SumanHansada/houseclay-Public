@@ -19,6 +19,7 @@ interface PropertiesProps {
 }
 
 // Properties Component
+// TODO: Add arrow to move left and right
 const Properties: React.FC<PropertiesProps> = ({
   property,
   badgeType,

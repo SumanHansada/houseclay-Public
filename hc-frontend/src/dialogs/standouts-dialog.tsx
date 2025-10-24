@@ -8,10 +8,11 @@ import { PropertySearch } from "@/interfaces/PropertySearch";
 import { MobileHeader } from "@/layout-components";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
+import { PropertyCardWithImages } from "@/interfaces/User";
 
 interface StandoutsDialogProps {
   id: string;
-  properties: PropertySearch[];
+  properties: PropertyCardWithImages[];
 }
 const StandoutsDialog: React.FC<StandoutsDialogProps> = ({
   id,

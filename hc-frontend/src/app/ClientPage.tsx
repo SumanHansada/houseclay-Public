@@ -23,15 +23,16 @@ import {
 } from "@/store/apiSlice";
 import { PropertyCardWithImages } from "@/interfaces/User";
 import { FALLBACK_IMG } from "@/common/constants";
+import { PropertySearch } from "@/interfaces/PropertySearch";
 
 interface ClientPageProps {
-  // properties: PropertySearch[];
+  properties: PropertySearch[];
   // neighbourhoods: Neighbourhood[];
   testimonials: Testimonial[];
 }
 
 export default function ClientPage({
-  // properties,
+  properties,
   // neighbourhoods,
   testimonials,
 }: ClientPageProps) {
@@ -80,11 +81,12 @@ export default function ClientPage({
       </section>
 
       {/* Standouts Section */}
-      {standoutPropertyCards.length > 0 ? (
-        <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
-          <Standouts properties={standoutPropertyCards} />
-        </section>
-      ) : null}
+      {/* {standoutPropertyCards.length > 0 ? ( */}
+      <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
+        <Standouts properties={properties} />
+        {/* <Standouts properties={standoutPropertyCards} /> */}
+      </section>
+      {/* ) : null} */}
 
       {/* neighbourhoods Section */}
       {/* TODO: only show this section if there are 4 or more than 4 popular neighbourhoods present */}
