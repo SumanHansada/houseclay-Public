@@ -26,13 +26,13 @@ import { FALLBACK_IMG } from "@/common/constants";
 
 interface ClientPageProps {
   // properties: PropertySearch[];
-  neighbourhoods: Neighbourhood[];
+  // neighbourhoods: Neighbourhood[];
   testimonials: Testimonial[];
 }
 
 export default function ClientPage({
   // properties,
-  neighbourhoods,
+  // neighbourhoods,
   testimonials,
 }: ClientPageProps) {
   const { isDialogOpen } = useDialog();
@@ -88,9 +88,11 @@ export default function ClientPage({
 
       {/* neighbourhoods Section */}
       {/* TODO: only show this section if there are 4 or more than 4 popular neighbourhoods present */}
-      <section className="min-h-[500px] w-full overflow-hidden">
-        <Neighbourhoods neighbourhoods={neighbourhoods} />
-      </section>
+      {neighbourhoodData && neighbourhoodData.length > 3 ? (
+        <section className="min-h-[500px] w-full overflow-hidden">
+          <Neighbourhoods neighbourhoods={neighbourhoodData} />
+        </section>
+      ) : null}
 
       {/* Testimonials Section */}
       <section className="min-h-[500px] w-full overflow-hidden">

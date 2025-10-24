@@ -280,7 +280,10 @@ export const apiSlice = createApi({
     standouts: builder.query<PropertyCardWithImages[], void>({
       query: () => "/property/standout",
     }),
-    popularNeighbourhoods: builder.query<string[], void>({
+    popularNeighbourhoods: builder.query<
+      { name: string; imgURL: string }[],
+      void
+    >({
       query: () => "/property/neighbourhood",
     }),
   }),

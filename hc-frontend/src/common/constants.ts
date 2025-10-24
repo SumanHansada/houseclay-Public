@@ -17,12 +17,12 @@ export const FALLBACK_IMG = "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
 
 // Popular Neighbourhoods
 export const NEIGHBOURHOODS = [
-  "Bellandur",
-  "Sarjapur",
-  "Kadubeesanahalli",
-  "K R Puram",
-  "Whitefield",
-  "Marathahalli",
-  "BTM Layout",
-  "HSR Layout",
+  { name: "Bellandur", imgURL: "" },
+  { name: "Sarjapur", imgURL: "" },
+  { name: "Kadubeesanahalli", imgURL: "" },
+  { name: "K R Puram", imgURL: "" },
+  { name: "Whitefield", imgURL: "" },
+  { name: "Marathahalli", imgURL: "" },
+  { name: "BTM Layout", imgURL: "" },
+  { name: "HSR Layout", imgURL: "" },
 ];

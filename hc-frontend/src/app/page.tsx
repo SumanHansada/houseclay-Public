@@ -27,7 +27,7 @@ export default async function Home() {
       <Suspense fallback={<div>Loading...</div>}>
         <ClientPage
           // properties={properties}
-          neighbourhoods={neighbourhoods}
+          // neighbourhoods={neighbourhoods}
           testimonials={testimonials}
         />
       </Suspense>
