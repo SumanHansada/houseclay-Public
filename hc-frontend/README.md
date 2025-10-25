@@ -119,7 +119,9 @@ Examples:
 Examples:
 
 ```html
-<section class="container mx-auto xl:px-28 lg:px-14 md:px-14 px-6 py-8"></section>
+<section
+  class="container mx-auto xl:px-28 lg:px-14 md:px-14 px-6 py-8"
+></section>
 ```
 
 ### Sectioning and structure
@@ -172,6 +174,7 @@ const Example = () => {
 - Header/footer offsets are already handled; you don’t need extra CSS for margins/paddings. Use the shared main wrapper:
 
 ```html
-<main class="mx-auto my-0 pt-14 max-md:pb-16 flex-1 flex flex-wrap justify-center"></main>
+<main
+  class="mx-auto my-0 pt-14 max-md:pb-16 flex-1 flex flex-wrap justify-center"
+></main>
 ```
-

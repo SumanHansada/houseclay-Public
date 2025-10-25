@@ -58,7 +58,7 @@ import {
   setPriceRangeForBuy,
   setPriceRangeForRent,
   setPropertyCategory,
-  setPropertyTypeFilter,
+  setPropertyType,
   setTenant,
 } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
@@ -170,7 +170,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
   // Redux state selectors
   const {
     propertyCategory,
-    propertyTypeFilter,
+    propertyType,
     tenant,
     foodPref,
     bathroomType,
@@ -350,9 +350,9 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                         },
                       ]}
                       withIcons={true}
-                      value={propertyTypeFilter}
+                      value={propertyType as string}
                       onChange={(value) =>
-                        dispatch(setPropertyTypeFilter(value as string))
+                        dispatch(setPropertyType(value as string))
                       }
                     />
                   </div>
@@ -601,9 +601,9 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                         },
                       ]}
                       withIcons={true}
-                      value={propertyTypeFilter}
+                      value={propertyType as string}
                       onChange={(value) =>
-                        dispatch(setPropertyTypeFilter(value as string))
+                        dispatch(setPropertyType(value as string))
                       }
                     />
                   </div>
@@ -883,9 +883,9 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                     },
                   ]}
                   withIcons={true}
-                  value={propertyTypeFilter}
+                  value={propertyType as string}
                   onChange={(value) =>
-                    dispatch(setPropertyTypeFilter(value as string))
+                    dispatch(setPropertyType(value as string))
                   }
                 />
               </div>

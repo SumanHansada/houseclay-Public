@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, Check, X } from "lucide-react";
+import { Check, ChevronDown, X } from "lucide-react";
 import { useMemo, useState } from "react";
 
 interface DropdownOption {

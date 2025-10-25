@@ -1,7 +1,8 @@
-import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
-import { SortToken } from "@/interfaces/PropertySearchSortFilter";
 import { Check, X } from "lucide-react";
 import { useMemo } from "react";
+
+import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
+import { SortToken } from "@/interfaces/PropertySearchSortFilter";
 
 interface SortOption {
   value: SortToken;

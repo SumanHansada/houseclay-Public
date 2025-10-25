@@ -6,6 +6,7 @@ import {
   SearchIcon,
   SlidersHorizontal,
 } from "lucide-react";
+import Link from "next/link";
 import {
   ReadonlyURLSearchParams,
   useRouter,
@@ -26,6 +27,12 @@ import { pascalCase } from "@/common/utils";
 import Properties from "@/components/Properties";
 import { SearchFiltersDialog, SortFiltersDialog } from "@/dialogs";
 import { PropertySearch } from "@/interfaces/PropertySearch";
+import {
+  SORT_OPTIONS,
+  SortToken,
+  stateToToken,
+  tokenToState,
+} from "@/interfaces/PropertySearchSortFilter";
 import { Footer } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -47,12 +54,7 @@ import {
   setTenantType,
 } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
-import {
-  SORT_OPTIONS,
-  SortToken,
-  stateToToken,
-  tokenToState,
-} from "@/interfaces/PropertySearchSortFilter";
+import { ImageWithLoader } from "@/utility-components";
 
 // normalize & validate category from URL
 function getUrlCategory(sp: ReadonlyURLSearchParams): PropertyCategory {
@@ -132,7 +134,11 @@ export default function PropertySearchPage() {
     const val = String(raw);
     dispatch(setPropertyType(val));
     replaceQuery((q) => {
-      val ? q.set("propertyType", val) : q.delete("propertyType");
+      if (val) {
+        q.set("propertyType", val);
+      } else {
+        q.delete("propertyType");
+      }
     });
   };
 
@@ -141,7 +147,11 @@ export default function PropertySearchPage() {
     const asStr = vals.map(String);
     dispatch(setPropertyBhk(asStr.join(",")));
     replaceQuery((q) => {
-      asStr.length ? q.set("bhkType", asStr.join(",")) : q.delete("bhkType");
+      if (asStr.length) {
+        q.set("bhkType", asStr.join(","));
+      } else {
+        q.delete("bhkType");
+      }
     });
   };
 
@@ -149,7 +159,11 @@ export default function PropertySearchPage() {
     const val = String(raw);
     dispatch(setTenantType(val));
     replaceQuery((q) => {
-      val ? q.set("preferredTenant", val) : q.delete("preferredTenant");
+      if (val) {
+        q.set("preferredTenant", val);
+      } else {
+        q.delete("preferredTenant");
+      }
     });
   };
 
@@ -158,9 +172,11 @@ export default function PropertySearchPage() {
     dispatch(setAvailability(val));
     replaceQuery((q) => {
       // treat "Any" as no constraint => drop param
-      val && val !== "Any"
-        ? q.set("availability", val)
-        : q.delete("availability");
+      if (val && val !== "Any") {
+        q.set("availability", val);
+      } else {
+        q.delete("availability");
+      }
     });
   };
 
@@ -195,12 +211,17 @@ export default function PropertySearchPage() {
         next.delete("sortOrder");
       } else {
         next.delete("exclusive");
-        mapped.sortFields
-          ? next.set("sortFields", mapped.sortFields)
-          : next.delete("sortFields");
-        mapped.sortOrder
-          ? next.set("sortOrder", mapped.sortOrder)
-          : next.delete("sortOrder");
+
+        if (mapped.sortFields) {
+          next.set("sortFields", mapped.sortFields);
+        } else {
+          next.delete("sortFields");
+        }
+        if (mapped.sortOrder) {
+          next.set("sortOrder", mapped.sortOrder);
+        } else {
+          next.delete("sortOrder");
+        }
       }
     });
   };
@@ -590,8 +611,11 @@ export default function PropertySearchPage() {
 
               <div>
                 <p className="text-gray-500 text-sm">
-                  {properties.length} Rooms for{" "}
-                  {pascalCase(propertyCategory || "")}
+                  {properties.length}{" "}
+                  {searchState.propertyCategory === PropertyCategory.FLATMATE
+                    ? "Rooms"
+                    : "Properties"}{" "}
+                  for {pascalCase(propertyCategory || "")}
                 </p>
               </div>
             </div>
@@ -606,8 +630,29 @@ export default function PropertySearchPage() {
                 ))} */}
               </div>
             ) : properties.length === 0 ? (
-              <div className="text-center text-gray-500 py-12">
-                No properties found.
+              <div className="flex flex-col items-center justify-center w-11/12 md:w-2/3 lg:w-1/2 mx-auto gap-3">
+                <div className="relative w-11/12 md:w-3/4 lg:w-2/3 aspect-[295/230]">
+                  <ImageWithLoader
+                    src="/optimizedIcons/large/no-results-found.svg"
+                    alt="no results found"
+                    fill
+                  />
+                </div>
+                <div className="text-center md:px-4">
+                  <h1 className="text-xl md:text-2xl font-semibold">
+                    No Results Found
+                  </h1>
+                  <p className="md:text-lg text-balance text-gray-600">
+                    Don&apos;t worry, we can still get you the dream house fill
+                    up the requirements below and we will get back to you.
+                  </p>
+                </div>
+                <Link
+                  href="/manage-account/my-requirements"
+                  className="px-6 py-2 rounded-md border border-red-500 md:text-lg hover:bg-red-50"
+                >
+                  Fill Requirements
+                </Link>
               </div>
             ) : (
               <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
