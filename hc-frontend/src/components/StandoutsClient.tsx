@@ -7,11 +7,9 @@ import Properties from "./Properties";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { PropertyCardWithImages } from "@/interfaces/User";
-import { PropertySearch } from "@/interfaces/PropertySearch";
 
 interface StandoutsClientProps {
-  properties: PropertySearch[];
-  // properties: PropertyCardWithImages[];
+  properties: PropertyCardWithImages[];
 }
 
 const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
@@ -35,15 +33,17 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
           <h1 className="text-3xl font-bold text-gray-800">
             Standouts of the Day
           </h1>
-          <div className="flex items-center max-md:hidden">
-            <Link
-              href="/standouts"
-              prefetch
-              className="border border-red-500 text-red-500 px-4 py-2 rounded-md"
-            >
-              View All Standouts
-            </Link>
-          </div>
+          {properties.length > 3 ? (
+            <div className="flex items-center max-md:hidden">
+              <Link
+                href="/standouts"
+                prefetch
+                className="border border-red-500 text-red-500 px-4 py-2 rounded-md"
+              >
+                View All Standouts
+              </Link>
+            </div>
+          ) : null}
         </div>
 
         <div className="font-nunito flex items-center justify-around mb-4 md:hidden">

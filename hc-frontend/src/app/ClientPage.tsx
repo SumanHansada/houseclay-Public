@@ -9,7 +9,6 @@ import PropertyOwners from "@/components/PropertyOwners";
 import Standouts from "@/components/Standouts";
 import { Testimonials } from "@/components/Testimonials";
 import { LoginDialog, MenuDialog, StandoutsDialog } from "@/dialogs";
-import { Neighbourhood } from "@/interfaces/Neighbourhood";
 import { Testimonial } from "@/interfaces/Testimonial";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -23,20 +22,20 @@ import {
 } from "@/store/apiSlice";
 import { PropertyCardWithImages } from "@/interfaces/User";
 import { FALLBACK_IMG } from "@/common/constants";
-import { PropertySearch } from "@/interfaces/PropertySearch";
+import toast from "react-hot-toast";
 
 interface ClientPageProps {
-  properties: PropertySearch[];
+  // properties: PropertySearch[];
   // neighbourhoods: Neighbourhood[];
   testimonials: Testimonial[];
 }
 
 export default function ClientPage({
-  properties,
+  // properties,
   // neighbourhoods,
   testimonials,
 }: ClientPageProps) {
-  const { isDialogOpen } = useDialog();
+  const { isDialogOpen, closeDialog } = useDialog();
   const dispatch = useDispatch();
 
   const { data: neighbourhoodData } = usePopularNeighbourhoodsQuery(undefined, {
@@ -66,6 +65,17 @@ export default function ClientPage({
   }, [standoutProperties]);
   // console.log("Standout Property cards: ", standoutPropertyCards);
 
+  const standoutsOpen = isDialogOpen("standouts-dialog");
+  useEffect(() => {
+    if (standoutsOpen && standoutPropertyCards.length === 0) {
+      closeDialog("standouts-dialog");
+      toast.error(
+        "Currently there are no Standouts Properties. Please check again later!",
+        { id: "standouts-empty" },
+      );
+    }
+  }, [standoutsOpen, standoutPropertyCards.length, closeDialog]);
+
   // Initialize app state
   useEffect(() => {
     dispatch(setHideHeader(false));
@@ -81,15 +91,13 @@ export default function ClientPage({
       </section>
 
       {/* Standouts Section */}
-      {/* {standoutPropertyCards.length > 0 ? ( */}
-      <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
-        <Standouts properties={properties} />
-        {/* <Standouts properties={standoutPropertyCards} /> */}
-      </section>
-      {/* ) : null} */}
+      {standoutPropertyCards.length > 0 ? (
+        <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
+          <Standouts properties={standoutPropertyCards} />
+        </section>
+      ) : null}
 
       {/* neighbourhoods Section */}
-      {/* TODO: only show this section if there are 4 or more than 4 popular neighbourhoods present */}
       {neighbourhoodData && neighbourhoodData.length > 3 ? (
         <section className="min-h-[500px] w-full overflow-hidden">
           <Neighbourhoods neighbourhoods={neighbourhoodData} />
@@ -107,7 +115,6 @@ export default function ClientPage({
       </section>
 
       {/* Standouts Dialog */}
-      {/* TODO - need a toast message if there are no standout properties */}
       {isDialogOpen("standouts-dialog") && standoutPropertyCards.length > 0 && (
         <StandoutsDialog
           id="standouts-dialog"

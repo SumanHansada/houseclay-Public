@@ -94,10 +94,10 @@ export const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
       <Carousel2D
         slideWidth={300}
         gap={4}
-        showDots={true}
+        showDots={false}
+        showArrows={true}
         containerClassName="md:hidden"
         className="md:hidden"
-        showArrows={true}
       >
         {testimonials.map((testimonial) => (
           <TestimonialCard key={testimonial.id} testimonial={testimonial} />
@@ -106,10 +106,10 @@ export const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
       <Carousel2D
         slideWidth={400}
         gap={4}
-        showDots={true}
+        showDots={false}
+        showArrows={true}
         containerClassName="max-md:hidden"
         className="max-md:hidden"
-        showArrows={true}
       >
         {testimonials.map((testimonial) => (
           <TestimonialCard key={testimonial.id} testimonial={testimonial} />
