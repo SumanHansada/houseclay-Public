@@ -33,10 +33,10 @@ import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
 import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 import WifiIconSvg from "public/icons/amenities/wifi.svg";
-import React from "react";
+import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Button, RadioGroup, RangeSlider } from "@/base-components";
+import { Button, Checkbox, RadioGroup, RangeSlider } from "@/base-components";
 import { PropertyCategory } from "@/common/enums";
 import {
   Dialog,
@@ -58,7 +58,7 @@ import {
   setPriceRangeForBuy,
   setPriceRangeForRent,
   setPropertyCategory,
-  setPropertyTypeFilter,
+  setPropertyType,
   setTenant,
 } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
@@ -170,7 +170,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
   // Redux state selectors
   const {
     propertyCategory,
-    propertyTypeFilter,
+    propertyType,
     tenant,
     foodPref,
     bathroomType,
@@ -182,6 +182,12 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
     priceRangeForBuy,
     bhkType,
   } = useSelector((state: RootState) => state.propertySearch);
+
+  // Parse BHK selections from comma-separated Redux string
+  const bhkSelectedValues = useMemo<string[]>(
+    () => (bhkType ? String(bhkType).split(",") : []),
+    [bhkType],
+  );
 
   console.log("propertyCategory", propertyCategory);
 
@@ -226,7 +232,8 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
       <DialogHeader>
         <div className="flex border-gray-200 items-center w-full justify-between">
           <span className="text-xl max-md:hidden">More Filters</span>
-          <div className="flex justify-center text-xl ml-auto md:hidden">
+          {/* Commented Resale Logic */}
+          {/* <div className="flex justify-center text-xl ml-auto md:hidden">
             <button
               onClick={() =>
                 dispatch(setPropertyCategory(PropertyCategory.RENT))
@@ -243,7 +250,8 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
             >
               Buy
             </button>
-          </div>
+          </div> */}
+
           <Button
             variant="secondary"
             size="custom"
@@ -342,9 +350,9 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                         },
                       ]}
                       withIcons={true}
-                      value={propertyTypeFilter}
+                      value={propertyType as string}
                       onChange={(value) =>
-                        dispatch(setPropertyTypeFilter(value as string))
+                        dispatch(setPropertyType(value as string))
                       }
                     />
                   </div>
@@ -355,13 +363,13 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       <BedSingle size={20} /> BHK Type
                     </div>
                     <div>
-                      <RadioGroup
+                      <Checkbox
                         name="bhkType"
                         columns={4}
                         options={bhkTypes}
-                        value={bhkType}
+                        value={bhkSelectedValues}
                         onChange={(value) => {
-                          dispatch(setBhkType(value as string));
+                          dispatch(setBhkType(value.join(",")));
                         }}
                       />
                     </div>
@@ -593,9 +601,9 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                         },
                       ]}
                       withIcons={true}
-                      value={propertyTypeFilter}
+                      value={propertyType as string}
                       onChange={(value) =>
-                        dispatch(setPropertyTypeFilter(value as string))
+                        dispatch(setPropertyType(value as string))
                       }
                     />
                   </div>
@@ -875,9 +883,9 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                     },
                   ]}
                   withIcons={true}
-                  value={propertyTypeFilter}
+                  value={propertyType as string}
                   onChange={(value) =>
-                    dispatch(setPropertyTypeFilter(value as string))
+                    dispatch(setPropertyType(value as string))
                   }
                 />
               </div>

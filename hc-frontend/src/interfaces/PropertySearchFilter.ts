@@ -8,6 +8,7 @@ export interface PropertySearchFilter {
   propertyCategory: PropertyCategory;
   propertyBhk: string | number | boolean;
   tenantType: string | number | boolean;
+  availability: string;
   // New filter states
   lookingFor: string;
   propertyTypeFilter: string;
@@ -15,10 +16,12 @@ export interface PropertySearchFilter {
   foodPref: string;
   bathroomType: string;
   furnishing: string;
-  availability: string;
   amenities: string[];
   parking: string;
   priceRangeForRent: [number, number];
   priceRangeForBuy: [number, number];
   bhkType: string;
+  exclusive: boolean;
+  sortFields: string;
+  sortOrder: string;
 }

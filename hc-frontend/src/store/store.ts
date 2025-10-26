@@ -60,6 +60,9 @@ const propertySearchPersistConfig = {
     "parking",
     "priceRangeForRent",
     "priceRangeForBuy",
+    "exclusive",
+    "sortFields",
+    "sortOrder",
   ], // Persist all fields
 };
 

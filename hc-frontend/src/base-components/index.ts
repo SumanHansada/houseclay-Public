@@ -3,6 +3,7 @@ export { default as Button } from "./Button";
 export { default as CalendarField } from "./CalendarField";
 export { default as Checkbox } from "./Checkbox";
 export { default as CurrencyField } from "./CurrencyField";
+export { default as MultiSelectDropdown } from "./MultiSelectDropdown";
 export { default as NumberField } from "./NumberField";
 export { default as PhoneField } from "./PhoneField";
 export { default as PhotoUpload } from "./PhotoUpload";
