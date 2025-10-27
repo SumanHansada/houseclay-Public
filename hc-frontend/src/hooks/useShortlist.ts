@@ -13,6 +13,7 @@ import {
   setShortlistedProperties,
 } from "@/store/shortlistPropertySlice";
 import { RootState } from "@/store/store";
+import { PropertyCardWithImages } from "@/interfaces/User";
 
 export const useShortlist = () => {
   const dispatch = useDispatch();
@@ -20,8 +21,8 @@ export const useShortlist = () => {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated,
   );
-  const shortlistedProperties = useSelector(
-    (state: RootState) => state.shortlist.shortlistedProperties,
+  const { shortlistedProperties } = useSelector(
+    (state: RootState) => state.shortlist,
   );
 
   const [shortlistProperty] = useShortlistPropertyMutation();
@@ -33,11 +34,9 @@ export const useShortlist = () => {
     if (isAuthenticated) {
       try {
         const result = await getShortlistedProperties().unwrap();
-        const propertyIds = result.shortlistedProperties.map(
-          (p) => p.propertyId,
-        );
-        dispatch(setShortlistedProperties(propertyIds));
-        return propertyIds;
+        const items = result.shortlistedProperties ?? [];
+        dispatch(setShortlistedProperties(items));
+        return items;
       } catch (error) {
         console.error("Error fetching shortlisted properties:", error);
         return [];
@@ -53,23 +52,24 @@ export const useShortlist = () => {
 
   // Toggle shortlist status for a property
   const toggleShortlist = useCallback(
-    async (propertyId: string) => {
+    async (property: PropertyCardWithImages) => {
       if (!isAuthenticated) {
         openDialog("login-dialog");
         return false;
       }
 
-      // User is logged in - use API
-      try {
-        const isCurrentlyShortlisted =
-          shortlistedProperties.includes(propertyId);
+      const propertyId = property.propertyID;
+      const isCurrentlyShortlisted = shortlistedProperties.some(
+        (prop) => prop.propertyID === propertyId,
+      );
 
+      try {
         if (isCurrentlyShortlisted) {
           await removeShortlistedProperty({ propertyId }).unwrap();
           dispatch(removeFromShortlist(propertyId));
         } else {
           await shortlistProperty({ propertyId }).unwrap();
-          dispatch(addToShortlist(propertyId));
+          dispatch(addToShortlist(property));
         }
         return !isCurrentlyShortlisted;
       } catch (error) {
@@ -90,7 +90,9 @@ export const useShortlist = () => {
   // Check if a property is shortlisted
   const isShortlisted = useCallback(
     (propertyId: string): boolean => {
-      return shortlistedProperties.includes(propertyId);
+      return shortlistedProperties.some(
+        (prop) => prop.propertyID === propertyId,
+      );
     },
     [shortlistedProperties],
   );

@@ -17,6 +17,7 @@ import {
   setUserDetailError,
   setUserDetailLoading,
 } from "@/store/userSlice";
+import { setShortlistedProperties } from "@/store/shortlistPropertySlice";
 
 export default function ManageProfileLayout({
   children,
@@ -43,25 +44,33 @@ export default function ManageProfileLayout({
     if (isError) {
       const msg = extractErrorMessage(error);
       dispatch(setUserDetailError(msg));
-    } else if (data?.user) {
-      // Clear error on successful fetch
-      dispatch(clearUserDetailError());
-
-      const userDetailData = data?.user;
-      dispatch(
-        setUserDetail({
-          name: userDetailData.name,
-          emailID: userDetailData.email,
-          phoneNo: userDetailData.phoneNo,
-          connectBal: userDetailData.connectBal,
-          onWhatsApp: userDetailData.onWhatsApp,
-          emailVerified: userDetailData.emailVerified,
-          ownedProperties: userDetailData.ownedProperties,
-          externalPayments: userDetailData.externalPayments,
-          contactedProperties: userDetailData.contactedProperties,
-        }),
-      );
     }
+    const user = data?.user;
+    if (!user) return;
+
+    // Clear error on successful fetch
+    dispatch(clearUserDetailError());
+
+    // Update user slice
+    dispatch(
+      setUserDetail({
+        name: user.name,
+        emailID: user.email,
+        phoneNo: user.phoneNo,
+        connectBal: user.connectBal,
+        onWhatsApp: user.onWhatsApp,
+        emailVerified: user.emailVerified,
+        ownedProperties: user.ownedProperties,
+        externalPayments: user.externalPayments,
+        contactedProperties: user.contactedProperties,
+      }),
+    );
+
+    // Update shortlist slice
+    const shortlist = Array.isArray(user.shortlistedProperties)
+      ? user.shortlistedProperties
+      : [];
+    dispatch(setShortlistedProperties(shortlist));
   }, [dispatch, isError, error, data]);
 
   useEffect(() => {

@@ -1,7 +1,8 @@
+import { PropertyCardWithImages } from "@/interfaces/User";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface ShortlistState {
-  shortlistedProperties: string[];
+  shortlistedProperties: PropertyCardWithImages[];
 }
 
 const initialState: ShortlistState = {
@@ -12,21 +13,30 @@ const shortlistSlice = createSlice({
   name: "shortlist",
   initialState,
   reducers: {
-    addToShortlist: (state, action: PayloadAction<string>) => {
-      const propertyId = action.payload;
-      if (!state.shortlistedProperties.includes(propertyId)) {
-        state.shortlistedProperties.push(propertyId);
+    addToShortlist: (state, action: PayloadAction<PropertyCardWithImages>) => {
+      if (
+        !state.shortlistedProperties.some(
+          (p) => p.propertyID === action.payload.propertyID,
+        )
+      ) {
+        state.shortlistedProperties.push(action.payload);
       }
     },
+
     removeFromShortlist: (state, action: PayloadAction<string>) => {
       const propertyId = action.payload;
       state.shortlistedProperties = state.shortlistedProperties.filter(
-        (id: string) => id !== propertyId,
+        (p) => p.propertyID !== propertyId,
       );
     },
-    setShortlistedProperties: (state, action: PayloadAction<string[]>) => {
+
+    setShortlistedProperties: (
+      state,
+      action: PayloadAction<PropertyCardWithImages[]>,
+    ) => {
       state.shortlistedProperties = action.payload;
     },
+
     clearShortlist: (state) => {
       state.shortlistedProperties = [];
     },

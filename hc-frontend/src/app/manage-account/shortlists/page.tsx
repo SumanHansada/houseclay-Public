@@ -3,17 +3,15 @@
 import { Check, ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
 import { BadgeType, PropertyCategory, PropertyStatus } from "@/common/enums";
 import Properties from "@/components/Properties";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { useGetUserDetailQuery } from "@/store/apiSlice";
 import { setHideStickyNavBar } from "@/store/appSlice";
-
-import Loading from "./loading";
+import { RootState } from "@/store/store";
 
 const filterOptions = [
   { label: "All", value: PropertyCategory.NONE },
@@ -32,11 +30,8 @@ export default function ShortlistsPage() {
   );
   const [onlyAvailable, setOnlyAvailable] = useState(false);
 
-  const { data, isLoading, error } = useGetUserDetailQuery();
-
-  const shortlistedProperties = useMemo(
-    () => data?.user?.shortlistedProperties ?? [],
-    [data],
+  const { shortlistedProperties } = useSelector(
+    (state: RootState) => state.shortlist,
   );
 
   const filteredProperties = useMemo(() => {
@@ -64,14 +59,6 @@ export default function ShortlistsPage() {
     e.stopPropagation();
     router.push(`/property-details/${propertyID}`);
   };
-
-  if (isLoading) {
-    return <Loading />;
-  }
-
-  if (error) {
-    return <div>Error loading properties</div>;
-  }
 
   return (
     <section>

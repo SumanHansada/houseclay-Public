@@ -218,7 +218,7 @@ export const apiSlice = createApi({
       }),
     }),
     getShortlistedProperties: builder.query<
-      { shortlistedProperties: Array<{ propertyId: string }> },
+      { shortlistedProperties: PropertyCardWithImages[] },
       void
     >({
       query: () => `/property/user/shortlisted-properties`,
