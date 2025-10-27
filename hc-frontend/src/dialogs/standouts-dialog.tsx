@@ -4,10 +4,10 @@ import { useDispatch } from "react-redux";
 import { Button } from "@/base-components";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import Standouts from "@/components/Standouts";
+import { PropertyCardWithImages } from "@/interfaces/User";
 import { MobileHeader } from "@/layout-components";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
-import { PropertyCardWithImages } from "@/interfaces/User";
 
 interface StandoutsDialogProps {
   id: string;

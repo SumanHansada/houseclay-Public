@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React from "react";
+
+import { PropertyCardWithImages } from "@/interfaces/User";
 
 import Carousel2D from "./Carousel2D";
 import Properties from "./Properties";
-import { useRouter } from "next/navigation";
-import React from "react";
-import { PropertyCardWithImages } from "@/interfaces/User";
 
 interface StandoutsClientProps {
   properties: PropertyCardWithImages[];

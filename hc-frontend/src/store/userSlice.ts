@@ -1,9 +1,10 @@
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
 import {
   PropertyCardWithImages,
   UserExternalPayment,
   UserOwnedProperties,
 } from "@/interfaces/User";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface UserDetail {
   name: string;

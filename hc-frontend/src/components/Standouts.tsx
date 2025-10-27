@@ -1,5 +1,6 @@
-import StandoutsClient from "./StandoutsClient";
 import { PropertyCardWithImages } from "@/interfaces/User";
+
+import StandoutsClient from "./StandoutsClient";
 
 interface StandoutsProps {
   properties: PropertyCardWithImages[];

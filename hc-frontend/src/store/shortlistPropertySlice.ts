@@ -1,5 +1,6 @@
-import { PropertyCardWithImages } from "@/interfaces/User";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+import { PropertyCardWithImages } from "@/interfaces/User";
 
 interface ShortlistState {
   shortlistedProperties: PropertyCardWithImages[];

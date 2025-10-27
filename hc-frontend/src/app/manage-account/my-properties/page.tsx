@@ -12,11 +12,11 @@ import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
+import { RootState } from "@/store/store";
 
 import { PropertyTable } from "../components/PropertiesTable";
 import { PropertyCardList } from "../components/PropertyCardList";
 import Loading from "./loading";
-import { RootState } from "@/store/store";
 
 const filterOptions = [
   { label: "All", value: PropertyCategory.NONE },

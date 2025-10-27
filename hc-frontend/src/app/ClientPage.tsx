@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
+import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 
+import { FALLBACK_IMG } from "@/common/constants";
 import Advantages from "@/components/Advantages";
 import Neighbourhoods from "@/components/Neighborhoods";
 import PropertyOwners from "@/components/PropertyOwners";
@@ -10,19 +12,17 @@ import Standouts from "@/components/Standouts";
 import { Testimonials } from "@/components/Testimonials";
 import { LoginDialog, MenuDialog, StandoutsDialog } from "@/dialogs";
 import { Testimonial } from "@/interfaces/Testimonial";
+import { PropertyCardWithImages } from "@/interfaces/User";
 import { useDialog } from "@/providers/DialogContextProvider";
+import {
+  usePopularNeighbourhoodsQuery,
+  useStandoutsQuery,
+} from "@/store/apiSlice";
 import {
   setHideFooter,
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
-import {
-  usePopularNeighbourhoodsQuery,
-  useStandoutsQuery,
-} from "@/store/apiSlice";
-import { PropertyCardWithImages } from "@/interfaces/User";
-import { FALLBACK_IMG } from "@/common/constants";
-import toast from "react-hot-toast";
 
 interface ClientPageProps {
   // properties: PropertySearch[];

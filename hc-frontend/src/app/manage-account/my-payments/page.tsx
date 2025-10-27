@@ -10,11 +10,11 @@ import { PaymentFilterStatus } from "@/common/enums";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
+import { RootState } from "@/store/store";
 
 import { TransactionCardList } from "../components/TransactionCardList";
 import { TransactionTable } from "../components/TransactionTable";
 import Loading from "./loading";
-import { RootState } from "@/store/store";
 
 const filterOptions = [
   { label: "All", value: PaymentFilterStatus.ALL },

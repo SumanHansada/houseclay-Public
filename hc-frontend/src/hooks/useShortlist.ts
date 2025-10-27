@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { PropertyCardWithImages } from "@/interfaces/User";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useLazyGetShortlistedPropertiesQuery,
@@ -13,7 +14,6 @@ import {
   setShortlistedProperties,
 } from "@/store/shortlistPropertySlice";
 import { RootState } from "@/store/store";
-import { PropertyCardWithImages } from "@/interfaces/User";
 
 export const useShortlist = () => {
   const dispatch = useDispatch();

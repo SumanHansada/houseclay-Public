@@ -1,6 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,7 +31,6 @@ import {
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
 
 import LazyPhoneInput from "./LazyPhoneInput";
-import Link from "next/link";
 
 const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 

@@ -11,13 +11,13 @@ import { Footer } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useGetUserDetailQuery } from "@/store/apiSlice";
 import { setHideFooter, setHideHeader } from "@/store/appSlice";
+import { setShortlistedProperties } from "@/store/shortlistPropertySlice";
 import {
   clearUserDetailError,
   setUserDetail,
   setUserDetailError,
   setUserDetailLoading,
 } from "@/store/userSlice";
-import { setShortlistedProperties } from "@/store/shortlistPropertySlice";
 
 export default function ManageProfileLayout({
   children,

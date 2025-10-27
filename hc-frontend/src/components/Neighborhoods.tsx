@@ -1,9 +1,6 @@
 import React from "react";
-import { useSelector } from "react-redux";
 
-import { PropertyCategory } from "@/common/enums";
 import { Neighbourhood } from "@/interfaces/Neighbourhood";
-import { RootState } from "@/store/store";
 import { ImageWithLoader } from "@/utility-components";
 
 import Carousel2D from "./Carousel2D";
@@ -11,7 +8,6 @@ import Carousel2D from "./Carousel2D";
 interface NeighbourhoodCardProps {
   name: string;
   imgURL: string;
-  // propertyCategory: PropertyCategory;
 }
 
 interface NeighbourhoodsProps {
@@ -37,7 +33,7 @@ const NeighbourhoodCard: React.FC<NeighbourhoodCardProps> = ({
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent max-md:from-transparent max-md:to-black/60">
         <div className="absolute bottom-0 max-md:top-0 left-0 p-6">
           <p className="mb-1 font-light text-gray-50 opacity-90 font-nunito">
-            Flats for {"Rent"} in
+            Flats for Rent in
           </p>
           <p className="text-3xl text-white font-nunito">{name}</p>
         </div>
@@ -47,9 +43,6 @@ const NeighbourhoodCard: React.FC<NeighbourhoodCardProps> = ({
 };
 
 const Neighbourhoods: React.FC<NeighbourhoodsProps> = ({ neighbourhoods }) => {
-  const { propertyCategory } = useSelector(
-    (state: RootState) => state.propertySearch,
-  );
   return (
     <div className="mx-auto xl:px-28 lg:px-14 md:px-14 py-20 max-md:py-10 bg-gray-100">
       <h1 className="mb-6 max-md:px-6 text-3xl max-md:text-2xl font-bold text-gray-800">
@@ -73,7 +66,6 @@ const Neighbourhoods: React.FC<NeighbourhoodsProps> = ({ neighbourhoods }) => {
               <NeighbourhoodCard
                 name={neighbourhood.name}
                 imgURL={neighbourhood.imgURL}
-                // propertyCategory={propertyCategory}
               />
             </div>
           ))}
@@ -87,7 +79,6 @@ const Neighbourhoods: React.FC<NeighbourhoodsProps> = ({ neighbourhoods }) => {
             key={index}
             name={neighbourhood.name}
             imgURL={neighbourhood.imgURL}
-            // propertyCategory={propertyCategory}
           />
         ))}
       </div>

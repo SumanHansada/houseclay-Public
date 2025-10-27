@@ -1,13 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 
+import { FALLBACK_IMG } from "@/common/constants";
 import { BadgeType } from "@/common/enums";
 import Properties from "@/components/Properties";
-import { useStandoutsQuery } from "@/store/apiSlice";
-import { useMemo } from "react";
 import { PropertyCardWithImages } from "@/interfaces/User";
-import { FALLBACK_IMG } from "@/common/constants";
+import { useStandoutsQuery } from "@/store/apiSlice";
+
 import GridSkeleton from "../GridSkeleton";
 
 export default function StandoutsRentPage() {
