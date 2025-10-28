@@ -23,6 +23,7 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
+import { Neighbourhood } from "@/interfaces/Neighbourhood";
 
 interface ClientPageProps {
   // properties: PropertySearch[];

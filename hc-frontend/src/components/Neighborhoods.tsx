@@ -4,10 +4,14 @@ import { Neighbourhood } from "@/interfaces/Neighbourhood";
 import { ImageWithLoader } from "@/utility-components";
 
 import Carousel2D from "./Carousel2D";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { PropertyCategory } from "@/common/enums";
 
 interface NeighbourhoodCardProps {
   name: string;
   imgURL: string;
+  propertyCategory: PropertyCategory;
 }
 
 interface NeighbourhoodsProps {
@@ -17,7 +21,21 @@ interface NeighbourhoodsProps {
 const NeighbourhoodCard: React.FC<NeighbourhoodCardProps> = ({
   name,
   imgURL,
+  propertyCategory,
 }) => {
+  const renderCategory = () => {
+    switch (propertyCategory) {
+      case PropertyCategory.FLATMATE:
+        return "Rooms for rent in";
+
+      case PropertyCategory.RESALE:
+        return "Properties for sale in";
+
+      case PropertyCategory.RENT:
+      default:
+        return "Flats for rent in";
+    }
+  };
   return (
     <div
       role="listitem"
@@ -33,7 +51,7 @@ const NeighbourhoodCard: React.FC<NeighbourhoodCardProps> = ({
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent max-md:from-transparent max-md:to-black/60">
         <div className="absolute bottom-0 max-md:top-0 left-0 p-6">
           <p className="mb-1 font-light text-gray-50 opacity-90 font-nunito">
-            Flats for Rent in
+            {renderCategory()}
           </p>
           <p className="text-3xl text-white font-nunito">{name}</p>
         </div>
@@ -43,6 +61,9 @@ const NeighbourhoodCard: React.FC<NeighbourhoodCardProps> = ({
 };
 
 const Neighbourhoods: React.FC<NeighbourhoodsProps> = ({ neighbourhoods }) => {
+  const { propertyCategory } = useSelector(
+    (state: RootState) => state.propertySearch,
+  );
   return (
     <div className="mx-auto xl:px-28 lg:px-14 md:px-14 py-20 max-md:py-10 bg-gray-100">
       <h1 className="mb-6 max-md:px-6 text-3xl max-md:text-2xl font-bold text-gray-800">
@@ -66,6 +87,7 @@ const Neighbourhoods: React.FC<NeighbourhoodsProps> = ({ neighbourhoods }) => {
               <NeighbourhoodCard
                 name={neighbourhood.name}
                 imgURL={neighbourhood.imgURL}
+                propertyCategory={propertyCategory}
               />
             </div>
           ))}
@@ -79,6 +101,7 @@ const Neighbourhoods: React.FC<NeighbourhoodsProps> = ({ neighbourhoods }) => {
             key={index}
             name={neighbourhood.name}
             imgURL={neighbourhood.imgURL}
+            propertyCategory={propertyCategory}
           />
         ))}
       </div>
