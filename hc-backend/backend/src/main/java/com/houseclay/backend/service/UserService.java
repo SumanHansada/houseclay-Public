@@ -30,7 +30,7 @@ public class UserService {
     UserLoginRepository userLoginRepository;
 
     @Autowired
-    private OtpService otpService;
+    private OTPService otpService;
 
     @Autowired
     private EmailService emailService;
@@ -39,7 +39,7 @@ public class UserService {
     private ConnectManagementService connectManagementService;
 
     public ResponseEntity<?> createUser(UserPayload userPayload) throws Exception {
-        if(!otpService.validateOtp(userPayload.getPhoneNo(), userPayload.getOtpCode())) {
+        if(!otpService.validateOTP(userPayload.getPhoneNo(), userPayload.getOtpCode())) {
             throw new APIException("Invalid OTP Code", HttpStatus.BAD_REQUEST);
         }
         User user = new User(userPayload.getPhoneNo(), userPayload.getName(), userPayload.getEmailID());
@@ -49,12 +49,12 @@ public class UserService {
         userLogins.add(userLogin);
         user.setUserLogins(userLogins);
         userRepository.save(user);
-        connectManagementService.addNewUserConnect(user.getPhoneNo());
+        user = connectManagementService.addNewUserConnect(user.getPhoneNo());
         return buildLoginResponse(user, token);
     }
 
     public ResponseEntity<?> loginUser(LoginPayload loginPayload) throws Exception {
-        if(!otpService.validateOtp(loginPayload.getPhoneNo(), loginPayload.getOtpCode())) {
+        if(!otpService.validateOTP(loginPayload.getPhoneNo(), loginPayload.getOtpCode())) {
             throw new APIException("Invalid OTP Code", HttpStatus.BAD_REQUEST);
         }
         Optional<User> optionalUser = userRepository.findById(loginPayload.getPhoneNo());

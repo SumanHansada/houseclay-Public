@@ -21,7 +21,7 @@ public class ConnectManagementService {
     final static String SYSTEM_ACTOR = "SYSTEM";
 
     @Transactional
-    public boolean addNewUserConnect(String phoneNo) throws Exception {
+    public User addNewUserConnect(String phoneNo) throws Exception {
         Optional<User> optionalUser = userRepository.findById(phoneNo);
         if(optionalUser.isEmpty()) {
             throw new APIException("Invalid user login", HttpStatus.BAD_REQUEST);
@@ -43,7 +43,7 @@ public class ConnectManagementService {
         }
         user.setConnectBal(user.getConnectBal() + NEW_USER_CONNECT_GRANT);
         userRepository.save(user);
-        return true;
+        return user;
     }
 
     @Transactional

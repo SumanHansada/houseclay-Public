@@ -9,7 +9,10 @@ import lombok.Data;
 public class UserPayload {
 
     @NotBlank(message = "PhoneNo cannot be empty")
-    @Pattern(regexp = "^[6-9]\\d{9}$", message = "Invalid phone number")
+    @Pattern(
+            regexp = "^\\+?[1-9]\\d{1,14}$",
+            message = "Invalid phone number format"
+    )
     private String phoneNo;
 
     @NotBlank(message = "Name cannot be empty")
