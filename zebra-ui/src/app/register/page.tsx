@@ -8,9 +8,8 @@ import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 
 import FormInputField from "@/components/common/FormInputField";
-import { loginSuccess } from "@/store/adminSlice";
+import { authFailure, authSuccess } from "@/store/adminAuthSlice";
 import { useRegisterMutation } from "@/store/apiSlice";
-import { useLoginMutation } from "@/store/apiSlice";
 
 const registerSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -37,8 +36,6 @@ export default function AdminRegister() {
   const dispatch = useDispatch();
   const [registerUser, { isLoading, isError }] = useRegisterMutation();
 
-  const [loginUser] = useLoginMutation();
-
   const initialValues: RegisterFormValues = {
     name: "",
     username: "",
@@ -57,17 +54,13 @@ export default function AdminRegister() {
         name: values.name,
       }).unwrap();
 
-      const returnedToken = await loginUser({
-        username: values.username,
-        password: values.password,
-      }).unwrap();
-
       console.log(message);
-      dispatch(loginSuccess(returnedToken));
+      dispatch(authSuccess());
 
       router.push("/admin/dashboard");
     } catch (err) {
       console.error("Registration failed:", err);
+      dispatch(authFailure(`Registration failed: ${err}`));
       formikHelpers.setSubmitting(false);
     }
   };

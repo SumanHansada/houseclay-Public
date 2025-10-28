@@ -7,7 +7,10 @@ import HouseClaySvg from "public/icons/houseclay.svg";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { initializeToken, logout as logoutAction } from "@/store/adminSlice";
+import {
+  initializeToken,
+  logout as logoutAction,
+} from "@/store/adminAuthSlice";
 import { useLogoutMutation } from "@/store/apiSlice";
 import { RootState } from "@/store/store";
 
