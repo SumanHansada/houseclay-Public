@@ -59,6 +59,7 @@ import { ContactOwnerLoginDialog, PhotoGalleryDialog } from "@/dialogs";
 import ReportListingDialog from "@/dialogs/report-listing-dialog";
 import UnlockOwnerDetailsDialog from "@/dialogs/unlock-owner-details-dialog";
 import { useShortlist } from "@/hooks/useShortlist";
+import { PropertyCardWithImages } from "@/interfaces/User";
 import { MobileFooter } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -282,7 +283,9 @@ export function PropertyDetailsClient({
           <motion.button
             onClick={async (e) => {
               e.stopPropagation();
-              const newStatus = await toggleShortlist(propertyID);
+              const newStatus = await toggleShortlist(
+                property as PropertyCardWithImages,
+              );
               setIsShortlistedProperty(newStatus);
             }}
             className={`rounded-full border md:border-none items-center justify-center p-2 relative overflow-hidden ${
@@ -350,7 +353,9 @@ export function PropertyDetailsClient({
                 </button>
                 <button
                   onClick={async () => {
-                    const newStatus = await toggleShortlist(propertyID);
+                    const newStatus = await toggleShortlist(
+                      property as PropertyCardWithImages,
+                    );
                     setIsShortlistedProperty(newStatus);
                   }}
                   className={`flex items-center gap-2 transition-colors underline hover:bg-gray-100 rounded-md px-2 py-1 ${
