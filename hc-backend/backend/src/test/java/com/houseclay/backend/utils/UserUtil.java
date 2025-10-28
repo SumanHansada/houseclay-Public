@@ -7,6 +7,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -17,6 +18,7 @@ public class UserUtil {
     MockMvc mockMvc;
 
     private static final String PHONE_NUMBER = "9876543210";
+    private static final String NAME = "Rohit";
 
     public void generateOTP() throws Exception {
         MvcResult result = mockMvc.perform(post("/api/auth/generate-otp")
@@ -28,6 +30,19 @@ public class UserUtil {
         if (response.getStatus() != HttpStatus.OK.value()) {
             throw new RuntimeException("Expected 200 OK but got " + response.getStatus() + ": " + response.getContentAsString());
         }
+    }
+
+    public String registerUser(String userPayload) throws Exception {
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/user/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userPayload))
+                .andReturn();
+        MockHttpServletResponse response = result.getResponse();
+
+        if (response.getStatus() != HttpStatus.OK.value()) {
+            throw new RuntimeException("Expected 200 OK but got " + response.getStatus() + ": " + response.getContentAsString());
+        }
+        return response.getHeader("Set-Cookie");
     }
 
 

@@ -3,6 +3,7 @@ package com.houseclay.backend.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.houseclay.backend.dto.BundleDTO;
+import com.houseclay.backend.dto.CreateOrderResponseDTO;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.payload.CreateOrderRequest;
 import com.houseclay.backend.utils.Constants;
@@ -56,7 +57,7 @@ public class PaymentService {
         this.razorpayClient = new RazorpayClient(keyId, razorpaySecret);
     }
 
-    public JSONObject createOrder(User user, CreateOrderRequest request) throws Exception {
+    public CreateOrderResponseDTO createOrder(User user, CreateOrderRequest request) throws Exception {
         Pair<Double, Integer> orderPair = getAmountAndConnect(request);
         double amount = orderPair.getFirst();
         int connectQty = orderPair.getSecond();
@@ -91,7 +92,11 @@ public class PaymentService {
         externalPayments.setUser(user);
         externalPaymentsRepository.save(externalPayments);
 
-        return order.toJson();
+        CreateOrderResponseDTO responseDTO = new CreateOrderResponseDTO();
+        responseDTO.setOrderId(orderID);
+        responseDTO.setDisplayAmount(amount);
+        responseDTO.setRazorPayAmount(amount*100);
+        return responseDTO;
     }
 
     private boolean verifySignature(String orderId, String paymentId, String signature) throws Exception {

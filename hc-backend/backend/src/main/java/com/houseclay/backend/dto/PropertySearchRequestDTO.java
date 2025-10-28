@@ -22,7 +22,7 @@ public class PropertySearchRequestDTO {
     private String distance;
 
     private String city;
-    private String bhkType;
+    private List<String> bhkType;
     private String furnishing;
     private String propertyType;
     private String parking;

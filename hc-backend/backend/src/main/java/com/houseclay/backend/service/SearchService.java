@@ -1,11 +1,9 @@
 package com.houseclay.backend.service;
 
-import co.elastic.clients.elasticsearch._types.DistanceUnit;
-import co.elastic.clients.elasticsearch._types.GeoLocation;
-import co.elastic.clients.elasticsearch._types.SortMode;
-import co.elastic.clients.elasticsearch._types.SortOptions;
+import co.elastic.clients.elasticsearch._types.*;
 import co.elastic.clients.json.JsonData;
 import com.houseclay.backend.dto.*;
+import com.houseclay.backend.dto.SortOrder;
 import com.houseclay.backend.entity.PropertyCategory;
 import com.houseclay.backend.entity.elastic.FlatmateDocument;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
@@ -63,7 +61,14 @@ public class SearchService {
 
         if (request.getBhkType() != null && !request.getBhkType().isEmpty()) {
             filters.add(Query.of(q -> q
-                    .term(t -> t.field("bhkType.keyword").value(request.getBhkType()))
+                    .terms(t -> t
+                            .field("bhkType.keyword")
+                            .terms(ts -> ts.value(
+                                    request.getBhkType().stream()
+                                            .map(FieldValue::of)
+                                            .toList()
+                            ))
+                    )
             ));
         }
 

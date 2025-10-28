@@ -2,7 +2,9 @@ package com.houseclay.backend.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.houseclay.backend.entity.Property;
 import com.houseclay.backend.payload.UserPayload;
+import com.houseclay.backend.utils.PropertyConstants;
 import com.houseclay.backend.utils.UserUtil;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -38,70 +40,38 @@ public class PropertyUserControllerIntegrationTest {
     @Autowired
     private UserUtil userUtil;
 
+    private String setCookieHeader;
+
     @BeforeAll
     public void init() throws Exception {
         userUtil.generateOTP();
+        UserPayload userPayload = new UserPayload("9876543210", "Rohit", "rohit@example.com", "0000");
+        setCookieHeader = userUtil.registerUser(objectMapper.writeValueAsString(userPayload));
     }
 
-    public record UserRegisterTestCase(
-            UserPayload userPayload,
-            int expectedStatus,
-            String expectedResponseMessage
+    public record AddPropertyTestCase(
+            Property property,
+            int expectedStatus
     ) {}
 
-    private static Stream<Arguments> provideUserRegisterTestCases() {
+    private static Stream<Arguments> provideAddPropertyTestCases() {
+
         return Stream.of(
-                Arguments.of(new UserRegisterTestCase(
-                        new UserPayload(null, "Rohit", "rohit@example.com", "123456"), 400, "{\"phoneNo\":\"PhoneNo cannot be empty\"}")
-                ),
-
-                Arguments.of(new UserRegisterTestCase(
-                        new UserPayload("9876543210", "", "rohit@example.com", "123456"), 400, "{\"name\":\"Name cannot be empty\"}")
-                ),
-
-                Arguments.of(new UserRegisterTestCase(
-                        new UserPayload("9876543210", "Rohit", "rohit@example.com", ""), 400, "{\"otpCode\":\"OTP Code cannot be empty\"}")
-                ),
-
-                // Valid phone & name, invalid email
-                Arguments.of(new UserRegisterTestCase(
-                        new UserPayload("9876543210", "Rohit", "invalid-email", "123456"),
-                        400, "{\"emailID\":\"Invalid email format\"}")
-                ),
-
-                // Invalid phone number
-                Arguments.of(new UserRegisterTestCase(
-                        new UserPayload("12345", "Rohit", "rohit@example.com", "123456"),
-                        400, "{\"phoneNo\":\"Invalid phone number\"}")
-                ),
-
-                Arguments.of(new UserRegisterTestCase(
-                        new UserPayload("9876543210", "Rohit", "rohit@example.com", "123456"),
-                        400, "Invalid OTP Code")
-                ),
-
-                Arguments.of(new UserRegisterTestCase(
-                        new UserPayload("9876543210", "Rohit", "rohit@example.com", "0000"),
-                        200, "OK")
-                )
-
+                Arguments.of(new AddPropertyTestCase(PropertyConstants.getValidSaleProperty(), 200))
         );
     }
 
 
     @Order(1)
     @ParameterizedTest
-    @MethodSource("provideUserRegisterTestCases")
-    public void testUserRegistration(UserRegisterTestCase testCase) throws Exception {
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/user/register")
+    @MethodSource("provideAddPropertyTestCases")
+    public void testAddProperty(AddPropertyTestCase testCase) throws Exception {
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/property/user/add")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testCase.userPayload)))
+                        .header("Cookie", setCookieHeader)
+                        .content(objectMapper.writeValueAsString(testCase.property)))
                 .andReturn();
-        assertEquals(result.getResponse().getStatus(), testCase.expectedStatus);
-        if (testCase.expectedStatus != 200) {
-            assertEquals(testCase.expectedResponseMessage, result.getResponse().getContentAsString());
-        }
-
+        assertEquals(testCase.expectedStatus, result.getResponse().getStatus());
     }
 
 }

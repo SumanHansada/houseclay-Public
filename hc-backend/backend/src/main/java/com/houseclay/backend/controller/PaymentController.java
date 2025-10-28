@@ -1,5 +1,6 @@
 package com.houseclay.backend.controller;
 
+import com.houseclay.backend.dto.CreateOrderResponseDTO;
 import com.houseclay.backend.entity.User;
 import com.houseclay.backend.payload.CreateOrderRequest;
 import com.houseclay.backend.payload.VerifyPaymentRequest;
@@ -17,9 +18,9 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @PostMapping("/create-order")
-    public ResponseEntity<String> createOrder(@RequestBody CreateOrderRequest request, @RequestAttribute("authenticatedUser") User user) throws Exception {
-        JSONObject order = paymentService.createOrder(user, request);
-        return ResponseEntity.ok().body(order.toString());
+    public ResponseEntity<?> createOrder(@RequestBody CreateOrderRequest request, @RequestAttribute("authenticatedUser") User user) throws Exception {
+        CreateOrderResponseDTO order = paymentService.createOrder(user, request);
+        return ResponseEntity.ok().body(order);
     }
 
     @PostMapping("/verify")
