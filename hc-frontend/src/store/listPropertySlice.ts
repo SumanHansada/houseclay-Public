@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { PropertyCategory, PropertyListingType } from "@/common/enums";
-import { sanitizePhoneNumber } from "@/common/utils";
 import { AdditionalInfo } from "@/interfaces/AdditionalInfo";
 import { FlatmateDetails } from "@/interfaces/FlatmatesDetails";
 import { FormValues } from "@/interfaces/FormValues";
@@ -249,14 +248,7 @@ const listPropertySlice = createSlice({
     ) => {
       const { additionalInfo } = action.payload;
       if (state.form.data) {
-        // Sanitize phone number before storing
-        const sanitizedAdditionalInfo = {
-          ...additionalInfo,
-          secondaryPhoneNumber: additionalInfo.secondaryPhoneNumber
-            ? sanitizePhoneNumber(additionalInfo.secondaryPhoneNumber)
-            : additionalInfo.secondaryPhoneNumber,
-        };
-        state.form.data.additionalInfo = sanitizedAdditionalInfo;
+        state.form.data.additionalInfo = additionalInfo;
       }
     },
     clearFormData: (state) => {

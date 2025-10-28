@@ -486,11 +486,9 @@ export function PropertyDetailsClient({
                         <KeyRound size={24} className="text-gray-600" />
                       </div>
                       <div>
-                        <div className="text-sm text-gray-500">
-                          Ownership Type
-                        </div>
+                        <div className="text-sm text-gray-500">Bathrooms</div>
                         <div className="font-medium text-gray-900">
-                          {property?.ownershipType || "NA"}
+                          {property?.bathrooms || "NA"}
                         </div>
                       </div>
                     </div>
@@ -1032,10 +1030,10 @@ export function PropertyDetailsClient({
                   </div>
                   <div className="flex-col">
                     <div className="flex gap-2 items-center font-nunito text-xs">
-                      Ownership Type
+                      Bathrooms
                     </div>
                     <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {property?.ownershipType || "NA"}
+                      {property?.bathrooms || "NA"}
                     </div>
                   </div>
                 </div>

@@ -416,10 +416,10 @@ export function MyPropertyDetailsClient({
                           </div>
                           <div className="flex-col">
                             <div className="flex gap-2 items-center font-nunito">
-                              Ownership Type
+                              Bathrooms
                             </div>
                             <div className="text-gray-900 font-bold font-nunito">
-                              {property?.ownershipType || "NA"}
+                              {property?.bathrooms || "NA"}
                             </div>
                           </div>
                         </div>

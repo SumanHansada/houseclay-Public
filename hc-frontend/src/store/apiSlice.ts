@@ -2,7 +2,6 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { BASE_API_URL } from "@/common/constants";
 import { PropertyCategory } from "@/common/enums";
-import { sanitizePhoneNumber } from "@/common/utils";
 import { PropertyForm } from "@/interfaces/PropertyForm";
 import { GetUserDetailResponse } from "@/interfaces/User";
 
@@ -28,11 +27,10 @@ export const apiSlice = createApi({
       { phoneNo: string; otpCode: string } // Request body type
     >({
       query: (data) => {
-        const phoneNoWithoutCountryCode = sanitizePhoneNumber(data.phoneNo);
         return {
           url: "/user/login",
           method: "POST",
-          body: { ...data, phoneNo: phoneNoWithoutCountryCode },
+          body: data,
           responseHandler: (response) => response.json(), // Convert response to text
         };
       },
@@ -48,24 +46,23 @@ export const apiSlice = createApi({
       { phoneNo: string; name: string; emailID: string; otpCode: string } // Request body type
     >({
       query: (data) => {
-        const phoneNoWithoutCountryCode = sanitizePhoneNumber(data.phoneNo);
         return {
           url: "/user/register",
           method: "POST",
-          body: { ...data, phoneNo: phoneNoWithoutCountryCode },
+          body: data,
           responseHandler: (response) => response.json(),
         };
       },
     }),
     generateOtp: builder.mutation<
-      { otpSent: boolean }, // Response type
+      string, // Response type - plain text
       { phoneNo: string } // Request body type
     >({
       query: ({ phoneNo }) => {
-        const phoneNoWithoutCountryCode = sanitizePhoneNumber(phoneNo);
         return {
-          url: `/auth/generate-otp?phoneNo=${phoneNoWithoutCountryCode}`,
+          url: `/auth/generate-otp?phoneNo=${phoneNo}`,
           method: "POST",
+          responseHandler: (response) => response.text(), // Handle plain text response
         };
       },
     }),
@@ -74,9 +71,8 @@ export const apiSlice = createApi({
       { phoneNo: string } // Query parameter type
     >({
       query: ({ phoneNo }) => {
-        const phoneNoWithoutCountryCode = sanitizePhoneNumber(phoneNo);
         return {
-          url: `/user/check-user?phoneNo=${phoneNoWithoutCountryCode}`,
+          url: `/user/check-user?phoneNo=${phoneNo}`,
           method: "GET",
         };
       },
