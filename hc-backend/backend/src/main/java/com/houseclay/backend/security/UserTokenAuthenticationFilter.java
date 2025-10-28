@@ -3,12 +3,12 @@ package com.houseclay.backend.security;
 import com.houseclay.backend.entity.User;
 import com.houseclay.backend.entity.UserLogin;
 import com.houseclay.backend.repository.UserLoginRepository;
+import com.houseclay.backend.utils.CookieUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-import jakarta.servlet.http.Cookie;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,8 +16,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-
-import static com.houseclay.backend.utils.Constants.TOKEN_KEY;
 
 @Component
 public class UserTokenAuthenticationFilter extends OncePerRequestFilter {
@@ -71,16 +69,16 @@ public class UserTokenAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // ---- Extract token ONLY from cookie ----
-        String token = extractTokenFromCookie(request);
+        String token = CookieUtils.extractTokenFromCookie(request);
         if (token == null || token.isBlank()) {
-            unauthorized(response, "Missing authentication cookie");
+            CookieUtils.unauthorized(response, "Missing authentication cookie");
             return;
         }
 
         // ---- Validate against DB ----
         List<UserLogin> userLoginOpt = userLoginRepository.findByToken(token);
         if (userLoginOpt.isEmpty()) {
-            unauthorized(response, "Invalid or expired token");
+            CookieUtils.unauthorized(response, "Invalid or expired token");
             return;
         }
 
@@ -98,22 +96,6 @@ public class UserTokenAuthenticationFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         filterChain.doFilter(request, response);
-    }
-
-    private String extractTokenFromCookie(HttpServletRequest request) {
-        if (request.getCookies() == null) return null;
-        for (Cookie c : request.getCookies()) {
-            if (TOKEN_KEY.equals(c.getName())) {
-                return c.getValue();
-            }
-        }
-        return null;
-    }
-
-    private void unauthorized(HttpServletResponse response, String msg) throws IOException {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setContentType("application/json");
-        response.getWriter().write("{\"error\":\"" + msg + "\"}");
     }
 
     private void forbidden(HttpServletResponse response, String msg) throws IOException {

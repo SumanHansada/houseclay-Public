@@ -44,6 +44,10 @@ public class SearchService {
                 .latlon(ll -> ll.lat(request.getLat()).lon(request.getLon()))
         );
         // Geo filter
+        if(request.getDistance() == null) {
+            request.setDistance("15km");
+        }
+
         filters.add(Query.of(q -> q
                 .geoDistance(g -> g
                         .field("location")

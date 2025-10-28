@@ -1,8 +1,11 @@
 package com.houseclay.backend.controller;
 
+import com.houseclay.backend.dto.AdminInfoDTO;
 import com.houseclay.backend.dto.AdminLoginDTO;
 import com.houseclay.backend.dto.AdminRegisterDTO;
+import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.exception.APIException;
+import com.houseclay.backend.mapper.AdminMapper;
 import com.houseclay.backend.service.AdminService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +35,9 @@ public class AdminController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginAdmin(@Valid @RequestBody AdminLoginDTO adminLoginDTO) {
+    public ResponseEntity<?> loginAdmin(@Valid @RequestBody AdminLoginDTO adminLoginDTO) {
         try {
-            String token = adminService.loginAdmin(adminLoginDTO.getUsername(), adminLoginDTO.getPassword());
-            return ResponseEntity.ok().header("token", token).body("Admin logged in successfully");
+            return adminService.loginAdmin(adminLoginDTO.getUsername(), adminLoginDTO.getPassword());
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {
@@ -44,15 +46,20 @@ public class AdminController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logoutAdmin(@RequestHeader("Authorization") String authToken) {
+    public ResponseEntity<?> logoutAdmin(@RequestAttribute("token") String authToken) {
         try {
-            adminService.logoutAdmin(authToken.replace("Bearer ", ""));
-            return ResponseEntity.ok(Map.of("message", "Logout successful"));
+            return adminService.logoutAdmin(authToken);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity<?> info(@RequestAttribute("authenticatedAdmin") Admin admin) {
+        AdminInfoDTO adminInfoDTO = AdminMapper.toAdminInfoDTO(admin);
+        return ResponseEntity.ok(adminInfoDTO);
     }
 
 }

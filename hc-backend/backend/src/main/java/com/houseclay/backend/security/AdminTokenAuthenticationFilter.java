@@ -3,6 +3,7 @@ package com.houseclay.backend.security;
 import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.entity.AdminLogin;
 import com.houseclay.backend.repository.AdminLoginRepository;
+import com.houseclay.backend.utils.CookieUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -55,26 +56,22 @@ public class AdminTokenAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String authHeader = request.getHeader(AUTH_HEADER);
-
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("{\"error\": \"Missing or invalid token\"}");
+        String token = CookieUtils.extractTokenFromCookie(request);
+        if (token == null || token.isBlank()) {
+            CookieUtils.unauthorized(response, "Missing authentication cookie");
             return;
         }
 
-        String token = authHeader.substring(7); // Remove "Bearer " prefix
         Optional<AdminLogin> adminLoginOpt = adminLoginRepository.findByAuthToken(token);
-
         if (adminLoginOpt.isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("{\"error\": \"Invalid or expired token\"}");
+            CookieUtils.unauthorized(response, "Invalid or expired token");
             return;
         }
 
         // Store the admin in request attribute to access in controllers
         Admin admin = adminLoginOpt.get().getAdmin();
         request.setAttribute("authenticatedAdmin", admin);
+        request.setAttribute("token", token);
 
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(admin, null, List.of());
