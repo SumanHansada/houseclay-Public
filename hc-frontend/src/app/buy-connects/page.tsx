@@ -1,5 +1,5 @@
 "use client";
-import { ChevronLeft, Info, X } from "lucide-react";
+import { ChevronLeft, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -38,6 +38,7 @@ import { ImageWithLoader } from "@/utility-components";
 import { Tab, TabContent, TabHeader, Tabs } from "@/utility-components/Tabs";
 import Link from "next/link";
 import { setAuthStep, setLoginFromBuyConnects } from "@/store/authSlice";
+import { LoginDialog } from "@/dialogs";
 
 export type BundleId = "basic" | "premium" | "elite" | "custom";
 
@@ -90,7 +91,9 @@ export default function BuyConnectsPage() {
     ? currentBundle.originalPrice + gstAmount
     : customConnectsPrice + gstAmount;
   const connectsToBuy = currentBundle ? currentBundle.connects : customConnects;
-  const newConnectsBalance = connectBalance + connectsToBuy;
+  const newConnectsBalance = isAuthenticated
+    ? connectBalance + connectsToBuy
+    : connectsToBuy;
 
   const { data: bundleData } = useBundleInfoQuery();
   console.log("Bundle Info: ", bundleData);
@@ -232,15 +235,19 @@ export default function BuyConnectsPage() {
             </div>
             <div className="flex items-center gap-2 justify-between mb-6">
               <span className="font-medium">Your available Connects</span>
-              <div className="flex items-center gap-1 px-3 py-1 rounded-full">
-                <ImageWithLoader
-                  src="/icons/coin.svg"
-                  alt="coin"
-                  width={25}
-                  height={25}
-                />
-                <span className="font-medium">{connectBalance} Connects</span>
-              </div>
+              {isAuthenticated ? (
+                <div className="flex items-center gap-1 px-3 py-1 rounded-full">
+                  <ImageWithLoader
+                    src="/icons/coin.svg"
+                    alt="coin"
+                    width={25}
+                    height={25}
+                  />
+                  <span className="font-medium">{connectBalance} Connects</span>
+                </div>
+              ) : (
+                "Login to check balance!"
+              )}
             </div>
 
             <div className="flex flex-col gap-2">
@@ -378,7 +385,6 @@ export default function BuyConnectsPage() {
                   <div className=" mb-6">
                     <p className="text-sm text-gray-600 mb-2">
                       This bundle of Connects will expire in 60 Days from today.
-                      Unused Connects rollover to the next month.
                     </p>
                   </div>
 
@@ -478,19 +484,23 @@ export default function BuyConnectsPage() {
         <div className="px-6 pt-4 pb-16 ">
           <div className="flex justify-between items-start w-full py-4 rounded-lg mb-4">
             {/* Available Connects */}
-            <div className="flex gap-2 items-center w-2/3 justify-between">
+            <div className="flex items-center w-full justify-between">
               <span className="font-medium text-xl">Your Connects</span>
-              <div className="text-lg flex items-center">
-                <ImageWithLoader
-                  src="/icons/coin.svg"
-                  alt="coin icon"
-                  width={32}
-                  height={32}
-                />
-                <span className="text-gray-700 text-2xl font-medium">
-                  {connectBalance}
-                </span>
-              </div>
+              {isAuthenticated ? (
+                <div className="text-lg flex items-center">
+                  <ImageWithLoader
+                    src="/icons/coin.svg"
+                    alt="coin"
+                    width={25}
+                    height={25}
+                  />
+                  <span className="text-gray-700 text-xl font-medium">
+                    {connectBalance} Connects
+                  </span>
+                </div>
+              ) : (
+                "Login to check balance!"
+              )}
             </div>
           </div>
 
@@ -563,8 +573,7 @@ export default function BuyConnectsPage() {
           {/* Mobile Purchase Summary */}
           <div className="mt-2 mb-6">
             <p className="text-xs text-gray-600 mb-2">
-              This bundle of Connects will expire in 60 Days from today. Unused
-              Connects rollover to the next month.
+              This bundle of Connects will expire in 60 Days from today.
             </p>
           </div>
 
@@ -598,19 +607,19 @@ export default function BuyConnectsPage() {
           <div className="flex flex-col justify-around items-start w-full">
             <div className="text-gray-600 text-xs">Total Amount</div>
             <div className="text-sm font-bold flex gap-2 items-center">
-              {totalAmount.toFixed(2)} <Info size={16} />
+              {totalAmount.toFixed(2)}
             </div>
           </div>
           <button
             className={`text-center px-6 py-3 border rounded-xl w-full transition duration-200 ${
-              agreedToTerms && connectsToBuy >= 5
+              agreedToTerms && connectsToBuy >= minimumCustomConnects
                 ? "bg-red-500 border-red-500 text-white hover:bg-red-600"
                 : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
             }`}
             onClick={() => openDialog("connects-price-breakdown-dialog")}
-            disabled={!agreedToTerms && connectsToBuy < 5}
+            disabled={!agreedToTerms || connectsToBuy < minimumCustomConnects}
           >
-            Proceed to Pay
+            Price Breakdown
           </button>
         </MobileFooter>
       </section>
@@ -686,20 +695,31 @@ export default function BuyConnectsPage() {
             <div className="flex flex-col justify-around items-start w-full">
               <div className="text-gray-600 text-xs">Total Amount</div>
               <div className="text-sm font-bold flex gap-2 items-center">
-                {totalAmount.toFixed(2)} <Info size={16} />
+                {totalAmount.toFixed(2)}
               </div>
             </div>
-            <button
-              className={`text-center px-6 py-3 border rounded-xl w-full transition duration-200 ${
-                agreedToTerms && connectsToBuy >= minimumCustomConnects
-                  ? "bg-red-500 border-red-500 text-white hover:bg-red-600"
-                  : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
-              }`}
-              onClick={handleProceedToPay}
-              disabled={!agreedToTerms || connectsToBuy < minimumCustomConnects}
-            >
-              Proceed to Pay
-            </button>
+            {isAuthenticated ? (
+              <button
+                className={`text-center px-6 py-3 border rounded-xl w-full transition duration-200 ${
+                  agreedToTerms && connectsToBuy >= minimumCustomConnects
+                    ? "bg-red-500 border-red-500 text-white hover:bg-red-600"
+                    : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
+                onClick={handleProceedToPay}
+                disabled={
+                  !agreedToTerms || connectsToBuy < minimumCustomConnects
+                }
+              >
+                Proceed to Pay
+              </button>
+            ) : (
+              <button
+                className="px-6 py-3 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100 text-center"
+                onClick={onLogin}
+              >
+                Login
+              </button>
+            )}
           </DialogFooter>
         </Dialog>
       )}
@@ -713,6 +733,9 @@ export default function BuyConnectsPage() {
           onClose={handleVerifyConnectsDialogClose}
         />
       )}
+
+      {/* Login Dialog */}
+      {isDialogOpen("login-dialog") && <LoginDialog id="login-dialog" />}
     </>
   );
 }
