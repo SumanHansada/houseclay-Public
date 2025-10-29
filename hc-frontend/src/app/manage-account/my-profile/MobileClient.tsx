@@ -233,7 +233,7 @@ export function MobileClient({
             <DisplayRow label="Name" value={values.name} />
             <DisplayRow
               label="Phone Number"
-              value={`+${values.phoneNumber}`}
+              value={`${values.phoneNumber}`}
               verificationStatus={
                 <VerifiedBadge isVerified={values.phoneVerified} />
               }

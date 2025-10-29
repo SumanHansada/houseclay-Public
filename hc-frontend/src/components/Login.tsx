@@ -258,6 +258,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
                     defaultCountry="in"
                     selectedCountry="in"
                     value={phoneNo}
+                    forceDialCode={true}
                     disableFormatting={true}
                     placeholder={"Enter phone number"}
                     onChange={(value) => dispatch(setPhoneNo(value))}
@@ -313,6 +314,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
                   <LazyPhoneInput
                     defaultCountry="in"
                     value={phoneNo}
+                    forceDialCode={true}
                     disableFormatting={true}
                     placeholder={"Enter phone number"}
                     onChange={(value) => dispatch(setPhoneNo(value))}

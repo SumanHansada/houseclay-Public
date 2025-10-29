@@ -139,7 +139,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
               </div>
               <div className="flex-1">
                 <p className="font-semibold">{name}</p>
-                <p className="text-sm text-gray-500">+{phoneNo}</p>
+                <p className="text-sm text-gray-500">{phoneNo}</p>
               </div>
               <div>
                 <ChevronRight size={20} />

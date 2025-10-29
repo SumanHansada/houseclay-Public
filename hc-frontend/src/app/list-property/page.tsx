@@ -242,6 +242,7 @@ const ListPropertyPage = dynamic(
                         <LazyPhoneInput
                           defaultCountry="in"
                           value={phoneNo}
+                          forceDialCode={true}
                           disableFormatting={true}
                           placeholder={"Enter phone number"}
                           onChange={(value) => dispatch(setPhoneNo(value))}

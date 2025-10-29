@@ -23,7 +23,7 @@ const PhoneField: React.FC<PhoneFieldProps> = ({
   id,
   label,
   required = false,
-  defaultCountry = "us",
+  defaultCountry = "in",
   placeholder = "Enter phone number",
   className = "",
   disabled = false,
@@ -54,6 +54,7 @@ const PhoneField: React.FC<PhoneFieldProps> = ({
           name={id || name}
           defaultCountry={defaultCountry}
           value={value}
+          forceDialCode={true}
           placeholder={placeholder}
           onChange={(phoneValue) => handlePhoneChange(phoneValue)}
           onBlur={onBlur}
