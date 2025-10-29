@@ -72,7 +72,7 @@ export const apiSlice = createApi({
     >({
       query: ({ phoneNo }) => {
         return {
-          url: `/user/check-user?phoneNo=${phoneNo}`,
+          url: `/user/check-user?phoneNo=${encodeURIComponent(phoneNo)}`,
           method: "GET",
         };
       },

@@ -1,6 +1,6 @@
 "use client";
 import Image, { ImageProps } from "next/image";
-import { useState } from "react";
+import { memo, useState } from "react";
 
 interface ImageWithLoaderProps extends Omit<ImageProps, "src" | "alt"> {
   src: string;
@@ -12,7 +12,7 @@ interface ImageWithLoaderProps extends Omit<ImageProps, "src" | "alt"> {
   priority?: boolean;
 }
 
-export default function ImageWithLoader({
+const ImageWithLoader = memo(function ImageWithLoader({
   src,
   alt,
   className = "",
@@ -70,4 +70,6 @@ export default function ImageWithLoader({
       )}
     </div>
   );
-}
+});
+
+export default ImageWithLoader;

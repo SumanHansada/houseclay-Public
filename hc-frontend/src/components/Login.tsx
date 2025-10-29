@@ -217,17 +217,15 @@ const Login = ({ onClose }: { onClose: () => void }) => {
         </div>
       )}
       <div className="flex items-center justify-center h-full bg-white rounded-xl">
-        {!isMobile && (
-          <div className="w-5/12 min-h-[400px] xl:min-h-[500px] 3xl:min-h-[800px]">
-            <ImageWithLoader
-              src="/images/login.webp"
-              alt="Login"
-              fill
-              className="rounded-l-xl object-cover w-full min-h-[400px] xl:min-h-[500px] 3xl:min-h-[800px]"
-              priority
-            />
-          </div>
-        )}
+        <div className="w-5/12 min-h-[400px] xl:min-h-[500px] 3xl:min-h-[800px] max-md:hidden">
+          <ImageWithLoader
+            src="/images/login.webp"
+            alt="Login"
+            fill
+            className="rounded-l-xl object-cover w-full min-h-[400px] xl:min-h-[500px] 3xl:min-h-[800px]"
+            priority
+          />
+        </div>
         {/* Right pane (form) - takes remaining width */}
         <div className="flex flex-1 h-full px-8 mx-auto relative">
           {authStep === AuthStep.PHONE && (
@@ -378,6 +376,29 @@ const Login = ({ onClose }: { onClose: () => void }) => {
 
               {/* Form fields */}
               <div className="flex flex-col gap-5">
+                {/* Hidden input for Android & iOS OTP autofill */}
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  style={{
+                    position: "absolute",
+                    left: "-9999px",
+                    opacity: 0,
+                    pointerEvents: "none",
+                  }}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, "").slice(0, 4);
+                    if (value.length === 4) {
+                      const digits = value.split("");
+                      setOtpCode(digits);
+                      // Focus the last input
+                      if (inputRefs[3].current) {
+                        inputRefs[3].current.focus();
+                      }
+                    }
+                  }}
+                />
                 <div className="flex gap-2">
                   <input
                     id="otp-1"
@@ -396,6 +417,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
                     id="otp-2"
                     type="text"
                     inputMode="numeric"
+                    autoComplete="one-time-code"
                     ref={inputRefs[1]}
                     value={otpCode[1]}
                     onChange={(e) => handleChange(1, e.target.value)}
@@ -407,6 +429,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
                     id="otp-3"
                     type="text"
                     inputMode="numeric"
+                    autoComplete="one-time-code"
                     ref={inputRefs[2]}
                     value={otpCode[2]}
                     onChange={(e) => handleChange(2, e.target.value)}
@@ -418,6 +441,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
                     id="otp-4"
                     type="text"
                     inputMode="numeric"
+                    autoComplete="one-time-code"
                     ref={inputRefs[3]}
                     value={otpCode[3]}
                     onChange={(e) => handleChange(3, e.target.value)}
