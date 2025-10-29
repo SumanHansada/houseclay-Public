@@ -4,7 +4,7 @@ import {
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
 
-import { logout } from "@/store/adminAuthSlice";
+import { logout as logoutAction } from "@/store/adminAuthSlice";
 
 export const BASE_API_URL =
   process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL ||
@@ -43,7 +43,7 @@ export const baseQueryWithAuth: BaseQueryFn<
   const res = await rawBaseQuery(args, api, extra);
 
   if (res.error && (res.error.status === 401 || res.error.status === 403)) {
-    api.dispatch(logout());
+    api.dispatch(logoutAction());
     if (typeof window !== "undefined") window.location.assign("/login");
   }
 

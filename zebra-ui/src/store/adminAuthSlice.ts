@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import Cookies from "js-cookie";
 
 interface AdminAuthState {
   isAuthenticated: boolean;
@@ -17,12 +16,6 @@ const adminAuthSlice = createSlice({
   name: "adminAuth",
   initialState,
   reducers: {
-    setIsAuthenticated: (state, action: PayloadAction<boolean>) => {
-      state.isAuthenticated = action.payload;
-    },
-    clearIsAuthenticated: (state) => {
-      state.isAuthenticated = false;
-    },
     authStarted: (state) => {
       state.isAuthLoading = true;
       state.authError = null;
@@ -41,6 +34,12 @@ const adminAuthSlice = createSlice({
       state.isAuthenticated = false;
       state.isAuthLoading = false;
       state.authError = null;
+    },
+    setIsAuthenticated: (state, action: PayloadAction<boolean>) => {
+      state.isAuthenticated = action.payload;
+    },
+    clearIsAuthenticated: (state) => {
+      state.isAuthenticated = false;
     },
   },
 });

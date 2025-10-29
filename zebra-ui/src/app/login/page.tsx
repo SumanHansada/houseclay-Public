@@ -11,6 +11,7 @@ import FormInputField from "@/components/common/FormInputField";
 import { authFailure, authStarted, authSuccess } from "@/store/adminAuthSlice";
 import { useLoginMutation } from "@/store/apiSlice";
 import { RootState } from "@/store/store";
+import { toErrorMessage } from "@/utils/rtkError";
 
 const loginSchema = Yup.object().shape({
   username: Yup.string().required("Username is required"),
@@ -32,6 +33,7 @@ export default function AdminLogin() {
   const { isAuthenticated, authError } = useSelector(
     (state: RootState) => state.adminAuth,
   );
+  console.log("isAuthenticated: ", isAuthenticated);
 
   const [loginUser, { isLoading, isError }] = useLoginMutation();
 
@@ -45,20 +47,17 @@ export default function AdminLogin() {
     values: LoginFormValues,
     formikHelpers: FormikHelpers<LoginFormValues>,
   ) => {
+    dispatch(authStarted());
     try {
-      dispatch(authStarted());
-
       await loginUser({
         username: values.username,
         password: values.password,
-      });
+      }).unwrap();
 
       dispatch(authSuccess());
-
-      router.push("/admin/dashboard");
     } catch (err) {
       console.error("Login failed:", err);
-      dispatch(authFailure(`Login failed: ${err}`));
+      dispatch(authFailure(toErrorMessage(err)));
       formikHelpers.setSubmitting(false);
     }
   };
