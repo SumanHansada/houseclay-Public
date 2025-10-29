@@ -33,7 +33,6 @@ export default function AdminLogin() {
   const { isAuthenticated, authError } = useSelector(
     (state: RootState) => state.adminAuth,
   );
-  console.log("isAuthenticated: ", isAuthenticated);
 
   const [loginUser, { isLoading, isError }] = useLoginMutation();
 
@@ -139,7 +138,7 @@ export default function AdminLogin() {
 
                   {(isError || authError) && (
                     <div className="text-red-500 text-sm text-center">
-                      {authError}
+                      {authError ?? "Error with login. Please try again later!"}
                     </div>
                   )}
                   <button
