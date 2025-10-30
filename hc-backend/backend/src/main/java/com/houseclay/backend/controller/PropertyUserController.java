@@ -115,7 +115,7 @@ public class PropertyUserController {
 
     @DeleteMapping("/remove-shortlisted-property/{propertyId}")
     public ResponseEntity<?> removeShortlistedProperty(
-            @RequestParam String propertyId,
+            @PathVariable String propertyId,
             @RequestAttribute("authenticatedUser") User user) {
         try {
             shortlistPropertyService.removeShortlistedProperty(user, propertyId);
