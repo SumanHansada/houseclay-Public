@@ -3,7 +3,7 @@ import { persistReducer, persistStore } from "redux-persist";
 import type { WebStorage } from "redux-persist/es/types";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 
-import { default as adminReducer } from "./adminSlice";
+import { default as adminAuthReducer } from "./adminAuthSlice";
 import { apiSlice } from "./apiSlice";
 import { default as appReducer } from "./appSlice";
 import { default as listPropertyReducer } from "./listPropertySlice";
@@ -67,6 +67,17 @@ const propertySearchPersistConfig = {
   ], // Persist all fields
 };
 
+const adminAuthPersistConfig = {
+  key: "adminAuth",
+  storage,
+  whitelist: ["isAuthenticated"],
+};
+
+const persistedAdminAuthReducer = persistReducer(
+  adminAuthPersistConfig,
+  adminAuthReducer,
+);
+
 const persistedListPropertyReducer = persistReducer(
   listPropertyPersistConfig,
   listPropertyReducer,
@@ -81,7 +92,7 @@ export function makeStore() {
   return configureStore({
     reducer: {
       app: appReducer,
-      admin: adminReducer,
+      adminAuth: persistedAdminAuthReducer,
       listProperty: persistedListPropertyReducer,
       propertyDetails: propertyDetailsReducer,
       propertySearch: persistedPropertySearchReducer,

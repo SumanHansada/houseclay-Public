@@ -8,9 +8,10 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import FormInputField from "@/components/common/FormInputField";
-import { loginFailure, loginStart, loginSuccess } from "@/store/adminSlice";
+import { authFailure, authStarted, authSuccess } from "@/store/adminAuthSlice";
 import { useLoginMutation } from "@/store/apiSlice";
 import { RootState } from "@/store/store";
+import { toErrorMessage } from "@/utils/rtkError";
 
 const loginSchema = Yup.object().shape({
   username: Yup.string().required("Username is required"),
@@ -29,37 +30,33 @@ export default function AdminLogin() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const { token, error: reduxError } = useSelector(
-    (state: RootState) => state.admin,
+  const { isAuthenticated, authError } = useSelector(
+    (state: RootState) => state.adminAuth,
   );
 
-  const [loginUser, { isLoading: loginLoading, isError: loginError }] =
-    useLoginMutation();
+  const [loginUser, { isLoading, isError }] = useLoginMutation();
 
   useEffect(() => {
-    if (token) {
+    if (isAuthenticated) {
       router.push("/admin/dashboard");
     }
-  }, [token, router]);
+  }, [isAuthenticated, router]);
 
   const handleSubmit = async (
     values: LoginFormValues,
     formikHelpers: FormikHelpers<LoginFormValues>,
   ) => {
+    dispatch(authStarted());
     try {
-      dispatch(loginStart());
-
-      const returnedToken = await loginUser({
+      await loginUser({
         username: values.username,
         password: values.password,
       }).unwrap();
 
-      dispatch(loginSuccess(returnedToken));
-
-      router.push("/admin/dashboard");
+      dispatch(authSuccess());
     } catch (err) {
       console.error("Login failed:", err);
-      dispatch(loginFailure("Invalid username or password"));
+      dispatch(authFailure(toErrorMessage(err)));
       formikHelpers.setSubmitting(false);
     }
   };
@@ -139,19 +136,19 @@ export default function AdminLogin() {
                     </a>
                   </div>
 
-                  {(reduxError || loginError) && (
+                  {(isError || authError) && (
                     <div className="text-red-500 text-sm text-center">
-                      {reduxError || "Invalid username or password"}
+                      {authError ?? "Error with login. Please try again later!"}
                     </div>
                   )}
                   <button
                     data-testid="login-submit-button"
                     aria-label="sign-in"
                     type="submit"
-                    disabled={isSubmitting || loginLoading}
+                    disabled={isSubmitting || isLoading}
                     className="w-full text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {loginLoading ? "Signing in…" : "Sign in"}
+                    {isLoading ? "Signing in…" : "Sign in"}
                   </button>
 
                   <p className="text-sm font-light text-gray-500 dark:text-gray-400">
