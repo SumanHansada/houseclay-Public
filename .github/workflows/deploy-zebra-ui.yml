@@ -5,8 +5,8 @@ on:
     branches:
       - main
     paths:
-      - 'zebra-ui/**'
-      - '.github/workflows/deploy-zebra-ui.yml'
+      - "zebra-ui/**"
+      - ".github/workflows/deploy-zebra-ui.yml"
 
 jobs:
   deploy-zebra-ui:
@@ -37,12 +37,12 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.ZEBRA_HOST }} << EOF
           cd /home/ec2-user/zebra-ui
           rm -f .env.local
-          echo "NEXT_PUBLIC_HOUSECLAY_API_BASE_URL=$NEXT_PUBLIC_HOUSECLAY_API_BASE_URL" >> .env.local
+          echo "NEXT_PUBLIC_HOUSECLAY_API_BASE_URL=$EC2_HOST" >> .env.local
           echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY" >> .env.local
           npm install
           npm run build:prod
           EOF
-          
+
       - name: Start zebra-ui on Zebra Host
         run: |
           ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.ZEBRA_HOST }} << EOF
