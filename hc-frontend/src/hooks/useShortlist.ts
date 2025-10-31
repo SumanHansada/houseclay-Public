@@ -1,5 +1,4 @@
 import { useCallback } from "react";
-import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -74,7 +73,6 @@ export const useShortlist = () => {
         }
         return !isCurrentlyShortlisted;
       } catch (error) {
-        toast.error("Login to Shortlist Properties");
         console.error("Error toggling shortlist:", error);
         throw error;
       }
