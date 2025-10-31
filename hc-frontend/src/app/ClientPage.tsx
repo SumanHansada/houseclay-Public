@@ -23,19 +23,12 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
-import { Neighbourhood } from "@/interfaces/Neighbourhood";
 
 interface ClientPageProps {
-  // properties: PropertySearch[];
-  // neighbourhoods: Neighbourhood[];
   testimonials: Testimonial[];
 }
 
-export default function ClientPage({
-  // properties,
-  // neighbourhoods,
-  testimonials,
-}: ClientPageProps) {
+export default function ClientPage({ testimonials }: ClientPageProps) {
   const { isDialogOpen, closeDialog } = useDialog();
   const dispatch = useDispatch();
 
@@ -92,7 +85,7 @@ export default function ClientPage({
       </section>
 
       {/* Standouts Section */}
-      {standoutPropertyCards.length > 0 ? (
+      {standoutPropertyCards.length > 3 ? (
         <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
           <Standouts properties={standoutPropertyCards} />
         </section>

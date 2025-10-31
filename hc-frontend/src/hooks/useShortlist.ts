@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { useCallback } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -48,8 +49,7 @@ export const useShortlist = () => {
   const toggleShortlist = useCallback(
     async (property: PropertyCardWithImages) => {
       if (!isAuthenticated) {
-        openDialog("login-dialog");
-        return false;
+        redirect("/login");
       }
 
       try {

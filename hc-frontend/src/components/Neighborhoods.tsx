@@ -1,12 +1,12 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
+import { PropertyCategory } from "@/common/enums";
 import { Neighbourhood } from "@/interfaces/Neighbourhood";
+import { RootState } from "@/store/store";
 import { ImageWithLoader } from "@/utility-components";
 
 import Carousel2D from "./Carousel2D";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { PropertyCategory } from "@/common/enums";
 
 interface NeighbourhoodCardProps {
   name: string;
