@@ -4,14 +4,14 @@ import { useDispatch } from "react-redux";
 import { Button } from "@/base-components";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import Standouts from "@/components/Standouts";
-import { PropertySearch } from "@/interfaces/PropertySearch";
+import { PropertyCardWithImages } from "@/interfaces/User";
 import { MobileHeader } from "@/layout-components";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
 
 interface StandoutsDialogProps {
   id: string;
-  properties: PropertySearch[];
+  properties: PropertyCardWithImages[];
 }
 const StandoutsDialog: React.FC<StandoutsDialogProps> = ({
   id,
@@ -25,6 +25,9 @@ const StandoutsDialog: React.FC<StandoutsDialogProps> = ({
       dispatch(setHideStickyNavBar(false));
     }, 300);
   };
+
+  if (properties.length > 0) return null;
+
   return (
     <Dialog
       id={id}

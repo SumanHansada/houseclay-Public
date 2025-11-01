@@ -11,3 +11,18 @@ export const HOUSECLAY_INSTAGRAM = "https://www.instagram.com/houseclaydotcom";
 export const HOUSECLAY_LINKEDIN = "https://in.linkedin.com/company/houseclay";
 
 export const BENGALURU_LOCATION = { lat: 12.9716, lng: 77.5946 };
+
+// 1x1 transparent GIF — tiny, inline, no network
+export const FALLBACK_IMG = "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
+
+// Popular Neighbourhoods
+export const NEIGHBOURHOODS = [
+  { name: "Bellandur", imgURL: "" },
+  { name: "Sarjapur", imgURL: "" },
+  { name: "Kadubeesanahalli", imgURL: "" },
+  { name: "K R Puram", imgURL: "" },
+  { name: "Whitefield", imgURL: "" },
+  { name: "Marathahalli", imgURL: "" },
+  { name: "BTM Layout", imgURL: "" },
+  { name: "HSR Layout", imgURL: "" },
+];

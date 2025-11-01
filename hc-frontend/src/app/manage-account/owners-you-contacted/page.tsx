@@ -3,16 +3,17 @@
 import { Check, ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
+import { FALLBACK_IMG } from "@/common/constants";
 import { BadgeType, PropertyCategory, PropertyStatus } from "@/common/enums";
 import Properties from "@/components/Properties";
 import { PropertyCardWithImages } from "@/interfaces/User";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { useGetUserDetailQuery } from "@/store/apiSlice";
 import { setHideStickyNavBar } from "@/store/appSlice";
+import { RootState } from "@/store/store";
 
 import Loading from "./loading";
 
@@ -23,9 +24,6 @@ const filterOptions = [
   { label: "Flatmate", value: PropertyCategory.FLATMATE },
 ];
 
-// 1x1 transparent GIF — tiny, inline, no network
-const FALLBACK_IMG = "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
-
 export default function OwnersContactedPage() {
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
@@ -35,11 +33,13 @@ export default function OwnersContactedPage() {
   const [onlyAvailable, setOnlyAvailable] = useState(false);
   const router = useRouter();
 
-  const { data, isLoading, error } = useGetUserDetailQuery();
+  const { userDetail, userDetailLoading, userDetailError } = useSelector(
+    (state: RootState) => state.user,
+  );
 
   const contactedProperties = useMemo(
-    () => data?.user?.contactedProperties ?? [],
-    [data],
+    () => userDetail.contactedProperties,
+    [userDetail.contactedProperties],
   );
 
   const propertyCards: PropertyCardWithImages[] = useMemo(() => {
@@ -75,12 +75,12 @@ export default function OwnersContactedPage() {
     router.push(`/property-details/${propertyID}`);
   };
 
-  if (isLoading) {
+  if (userDetailLoading) {
     return <Loading />;
   }
 
-  if (error) {
-    return <div>Error loading properties</div>;
+  if (userDetailError) {
+    return <div>Error loading properties: {userDetailError}</div>;
   }
 
   return (

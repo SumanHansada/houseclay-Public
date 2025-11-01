@@ -17,8 +17,8 @@ export interface UserOwnedProperties {
 
 export interface PropertyCardWithImages {
   propertyID: string;
-  propertyCategory: PropertyCategory; // pending
-  propertyState: PropertyStatus; // pending
+  propertyCategory: PropertyCategory;
+  propertyState: PropertyStatus;
   propertyType: string;
   builtUpArea: number;
   bhkType: string;
@@ -58,7 +58,7 @@ export interface UserDetailsDTO {
   email: string;
   onWhatsApp: boolean;
   emailVerified: boolean;
-  connectBal: number; // pending
+  connectBal: number;
 
   ownedProperties: UserOwnedProperties[];
   externalPayments: UserExternalPayment[];

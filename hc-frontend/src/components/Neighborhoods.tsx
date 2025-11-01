@@ -9,8 +9,8 @@ import { ImageWithLoader } from "@/utility-components";
 import Carousel2D from "./Carousel2D";
 
 interface NeighbourhoodCardProps {
-  image: string;
   name: string;
+  imgURL: string;
   propertyCategory: PropertyCategory;
 }
 
@@ -19,17 +19,30 @@ interface NeighbourhoodsProps {
 }
 
 const NeighbourhoodCard: React.FC<NeighbourhoodCardProps> = ({
-  image,
   name,
+  imgURL,
   propertyCategory,
 }) => {
+  const renderCategory = () => {
+    switch (propertyCategory) {
+      case PropertyCategory.FLATMATE:
+        return "Rooms for rent in";
+
+      case PropertyCategory.RESALE:
+        return "Properties for sale in";
+
+      case PropertyCategory.RENT:
+      default:
+        return "Flats for rent in";
+    }
+  };
   return (
     <div
       role="listitem"
       className="relative max-md:h-96 md:aspect-square max-w-[280px] max-md:min-w-[245px] overflow-hidden rounded-lg shadow-md transition-transform duration-300 md:hover:scale-105"
     >
       <ImageWithLoader
-        src={image}
+        src={imgURL}
         alt={`${name} neighbourhood`}
         className="object-cover"
         fill
@@ -38,7 +51,7 @@ const NeighbourhoodCard: React.FC<NeighbourhoodCardProps> = ({
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent max-md:from-transparent max-md:to-black/60">
         <div className="absolute bottom-0 max-md:top-0 left-0 p-6">
           <p className="mb-1 font-light text-gray-50 opacity-90 font-nunito">
-            Flats for {propertyCategory} in
+            {renderCategory()}
           </p>
           <p className="text-3xl text-white font-nunito">{name}</p>
         </div>
@@ -72,8 +85,8 @@ const Neighbourhoods: React.FC<NeighbourhoodsProps> = ({ neighbourhoods }) => {
           {neighbourhoods.map((neighbourhood, index) => (
             <div key={index}>
               <NeighbourhoodCard
-                image={neighbourhood.image}
                 name={neighbourhood.name}
+                imgURL={neighbourhood.imgURL}
                 propertyCategory={propertyCategory}
               />
             </div>
@@ -86,8 +99,8 @@ const Neighbourhoods: React.FC<NeighbourhoodsProps> = ({ neighbourhoods }) => {
         {neighbourhoods.map((neighbourhood, index) => (
           <NeighbourhoodCard
             key={index}
-            image={neighbourhood.image}
             name={neighbourhood.name}
+            imgURL={neighbourhood.imgURL}
             propertyCategory={propertyCategory}
           />
         ))}

@@ -8,8 +8,6 @@ import { Footer } from "@/layout-components";
 import ClientPage from "./ClientPage";
 
 export default async function Home() {
-  const properties = PropertiesData.properties;
-  const neighbourhoods = PropertiesData.neighbourhoods;
   const testimonials = PropertiesData.testimonials;
 
   return (
@@ -25,11 +23,7 @@ export default async function Home() {
 
       {/* Client-side interactive components */}
       <Suspense fallback={<div>Loading...</div>}>
-        <ClientPage
-          properties={properties}
-          neighbourhoods={neighbourhoods}
-          testimonials={testimonials}
-        />
+        <ClientPage testimonials={testimonials} />
       </Suspense>
 
       <Footer />

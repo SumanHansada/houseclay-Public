@@ -3,14 +3,13 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BASE_API_URL } from "@/common/constants";
 import { PropertyCategory } from "@/common/enums";
 import { PropertyForm } from "@/interfaces/PropertyForm";
-import { GetUserDetailResponse } from "@/interfaces/User";
-
-export const USER_DETAIL_TAG = { type: "User", id: "DETAIL" } as const;
-export const TAGS = [USER_DETAIL_TAG.type] as const;
+import {
+  GetUserDetailResponse,
+  PropertyCardWithImages,
+} from "@/interfaces/User";
 
 export const apiSlice = createApi({
   reducerPath: "api",
-  tagTypes: TAGS,
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_API_URL,
     credentials: "include", // Required for HTTP-only cookies
@@ -85,11 +84,9 @@ export const apiSlice = createApi({
         url: "/user/logout",
         method: "POST",
       }),
-      invalidatesTags: [USER_DETAIL_TAG],
     }),
     getUserDetail: builder.query<GetUserDetailResponse, void>({
       query: () => "/user/detail",
-      providesTags: [USER_DETAIL_TAG],
     }),
 
     presignedUrls: builder.mutation<
@@ -122,7 +119,6 @@ export const apiSlice = createApi({
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: [USER_DETAIL_TAG],
     }),
     propertyUpdate: builder.mutation<
       { message: string; propertyID: number },
@@ -136,7 +132,6 @@ export const apiSlice = createApi({
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: [USER_DETAIL_TAG],
     }),
 
     getMyPropertyById: builder.query<unknown, string>({
@@ -223,7 +218,7 @@ export const apiSlice = createApi({
       }),
     }),
     getShortlistedProperties: builder.query<
-      { shortlistedProperties: Array<{ propertyId: string }> },
+      { shortlistedProperties: PropertyCardWithImages[] },
       void
     >({
       query: () => `/property/user/shortlisted-properties`,
@@ -272,7 +267,6 @@ export const apiSlice = createApi({
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: [USER_DETAIL_TAG],
     }),
     contactOwner: builder.mutation<
       { phone: string; name: string; email: string; connectBal: number },
@@ -282,6 +276,15 @@ export const apiSlice = createApi({
         url: `/property/user/contact/${propertyID}`,
         method: "GET",
       }),
+    }),
+    standouts: builder.query<PropertyCardWithImages[], void>({
+      query: () => "/property/standout",
+    }),
+    popularNeighbourhoods: builder.query<
+      { name: string; imgURL: string }[],
+      void
+    >({
+      query: () => "/property/neighbourhood",
     }),
   }),
 });
@@ -311,4 +314,6 @@ export const {
   useCreateOrderMutation,
   useVerifyPaymentMutation,
   useContactOwnerMutation,
+  useStandoutsQuery,
+  usePopularNeighbourhoodsQuery,
 } = apiSlice;

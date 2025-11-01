@@ -1,9 +1,9 @@
-import { PropertySearch } from "@/interfaces/PropertySearch";
+import { PropertyCardWithImages } from "@/interfaces/User";
 
 import StandoutsClient from "./StandoutsClient";
 
 interface StandoutsProps {
-  properties: PropertySearch[];
+  properties: PropertyCardWithImages[];
 }
 
 const Standouts = (props: StandoutsProps) => {

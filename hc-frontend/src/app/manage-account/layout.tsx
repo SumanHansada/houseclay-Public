@@ -11,7 +11,9 @@ import { Footer } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useGetUserDetailQuery } from "@/store/apiSlice";
 import { setHideFooter, setHideHeader } from "@/store/appSlice";
+import { setShortlistedProperties } from "@/store/shortlistPropertySlice";
 import {
+  clearUserDetailError,
   setUserDetail,
   setUserDetailError,
   setUserDetailLoading,
@@ -25,25 +27,51 @@ export default function ManageProfileLayout({
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
 
-  const { data, isLoading, isFetching, isError, error } =
-    useGetUserDetailQuery();
+  const { data, isLoading, isFetching, isError, error } = useGetUserDetailQuery(
+    undefined,
+    {
+      refetchOnMountOrArgChange: true,
+      refetchOnFocus: true,
+      refetchOnReconnect: true,
+    },
+  );
 
   useEffect(() => {
     dispatch(setUserDetailLoading(isLoading || isFetching));
   }, [dispatch, isLoading, isFetching]);
 
   useEffect(() => {
-    if (!isError) return;
-    const msg = extractErrorMessage(error);
-    dispatch(setUserDetailError(msg));
-  }, [dispatch, isError, error]);
+    if (isError) {
+      const msg = extractErrorMessage(error);
+      dispatch(setUserDetailError(msg));
+    }
+    const user = data?.user;
+    if (!user) return;
 
-  useEffect(() => {
-    const userDetail = data?.user;
-    if (!userDetail) return;
+    // Clear error on successful fetch
+    dispatch(clearUserDetailError());
 
-    dispatch(setUserDetail(userDetail));
-  }, [dispatch, data]);
+    // Update user slice
+    dispatch(
+      setUserDetail({
+        name: user.name,
+        emailID: user.email,
+        phoneNo: user.phoneNo,
+        connectBal: user.connectBal,
+        onWhatsApp: user.onWhatsApp,
+        emailVerified: user.emailVerified,
+        ownedProperties: user.ownedProperties,
+        externalPayments: user.externalPayments,
+        contactedProperties: user.contactedProperties,
+      }),
+    );
+
+    // Update shortlist slice
+    const shortlist = Array.isArray(user.shortlistedProperties)
+      ? user.shortlistedProperties
+      : [];
+    dispatch(setShortlistedProperties(shortlist));
+  }, [dispatch, isError, error, data]);
 
   useEffect(() => {
     if (isMobile) {

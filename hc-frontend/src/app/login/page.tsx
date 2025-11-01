@@ -2,11 +2,13 @@
 
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { ShieldCheck } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { AuthStep, ErrorStatus } from "@/common/enums";
 import LazyPhoneInput from "@/components/LazyPhoneInput";
+import { LoginDialog } from "@/dialogs";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useGenerateOtpMutation,
@@ -23,7 +25,7 @@ export default function LoginPage() {
   const dispatch = useDispatch();
   const [triggerCheckUser] = useLazyCheckUserQuery();
   const [generateOtp] = useGenerateOtpMutation();
-  const { openDialog } = useDialog();
+  const { openDialog, isDialogOpen } = useDialog();
 
   useEffect(() => {
     dispatch(setAuthStep(AuthStep.PHONE));
@@ -93,13 +95,19 @@ export default function LoginPage() {
                 />
                 <label htmlFor="terms" className="ml-2 text-sm text-gray-700">
                   I accept the{" "}
-                  <a href="#" className="text-gray-700 underline">
-                    Terms & Conditions
-                  </a>{" "}
-                  &{" "}
-                  <a href="#" className="text-gray-700 underline">
+                  <Link
+                    href="/terms-and-conditions"
+                    className="text-gray-700 underline font-bold"
+                  >
+                    Terms of Service
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    href="/privacy-policy"
+                    className="text-gray-700 underline font-bold"
+                  >
                     Privacy Policy
-                  </a>
+                  </Link>
                 </label>
               </div>
 
@@ -128,6 +136,9 @@ export default function LoginPage() {
           </>
         </div>
       </div>
+
+      {/* Login Dialog */}
+      {isDialogOpen("login-dialog") && <LoginDialog id="login-dialog" />}
     </>
   );
 }

@@ -100,7 +100,7 @@ const Carousel2DClient: React.FC<Carousel2DProps> = ({
         <button
           onClick={() => handleScroll("left")}
           className={`absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white bg-opacity-70 hover:bg-opacity-90 rounded-full p-2 shadow-md transition-opacity duration-300 flex items-center justify-center ${
-            canScrollLeft ? "opacity-100" : "opacity-0 pointer-events-none"
+            canScrollLeft ? "opacity-100" : "opacity-40"
           }`}
           aria-label="Scroll left"
         >
@@ -141,7 +141,7 @@ const Carousel2DClient: React.FC<Carousel2DProps> = ({
         <button
           onClick={() => handleScroll("right")}
           className={`absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white bg-opacity-70 hover:bg-opacity-90 rounded-full p-2 shadow-md transition-opacity duration-300 flex items-center justify-center ${
-            canScrollRight ? "opacity-100" : "opacity-0 pointer-events-none"
+            canScrollRight ? "opacity-100" : "opacity-40"
           }`}
           aria-label="Scroll right"
         >

@@ -1,18 +1,23 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 
+import { FALLBACK_IMG } from "@/common/constants";
 import Advantages from "@/components/Advantages";
 import Neighbourhoods from "@/components/Neighborhoods";
 import PropertyOwners from "@/components/PropertyOwners";
 import Standouts from "@/components/Standouts";
 import { Testimonials } from "@/components/Testimonials";
 import { LoginDialog, MenuDialog, StandoutsDialog } from "@/dialogs";
-import { Neighbourhood } from "@/interfaces/Neighbourhood";
-import { PropertySearch } from "@/interfaces/PropertySearch";
 import { Testimonial } from "@/interfaces/Testimonial";
+import { PropertyCardWithImages } from "@/interfaces/User";
 import { useDialog } from "@/providers/DialogContextProvider";
+import {
+  usePopularNeighbourhoodsQuery,
+  useStandoutsQuery,
+} from "@/store/apiSlice";
 import {
   setHideFooter,
   setHideHeader,
@@ -20,18 +25,50 @@ import {
 } from "@/store/appSlice";
 
 interface ClientPageProps {
-  properties: PropertySearch[];
-  neighbourhoods: Neighbourhood[];
   testimonials: Testimonial[];
 }
 
-export default function ClientPage({
-  properties,
-  neighbourhoods,
-  testimonials,
-}: ClientPageProps) {
-  const { isDialogOpen } = useDialog();
+export default function ClientPage({ testimonials }: ClientPageProps) {
+  const { isDialogOpen, closeDialog } = useDialog();
   const dispatch = useDispatch();
+
+  const { data: neighbourhoodData } = usePopularNeighbourhoodsQuery(undefined, {
+    refetchOnMountOrArgChange: 30,
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+  });
+  // console.log("neighbourhoodData", neighbourhoodData);
+
+  const { data: standoutsData } = useStandoutsQuery(undefined, {
+    refetchOnMountOrArgChange: 30,
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+  });
+  // console.log("standoutsData", standoutsData);
+
+  const standoutProperties = useMemo(
+    () => standoutsData ?? [],
+    [standoutsData],
+  );
+
+  const standoutPropertyCards: PropertyCardWithImages[] = useMemo(() => {
+    return standoutProperties.map((prop: PropertyCardWithImages) => ({
+      ...prop,
+      images: prop.image ? [prop.image] : [FALLBACK_IMG],
+    }));
+  }, [standoutProperties]);
+  // console.log("Standout Property cards: ", standoutPropertyCards);
+
+  const standoutsOpen = isDialogOpen("standouts-dialog");
+  useEffect(() => {
+    if (standoutsOpen && standoutPropertyCards.length === 0) {
+      closeDialog("standouts-dialog");
+      toast.error(
+        "Currently there are no Standouts Properties. Please check again later!",
+        { id: "standouts-empty" },
+      );
+    }
+  }, [standoutsOpen, standoutPropertyCards.length, closeDialog]);
 
   // Initialize app state
   useEffect(() => {
@@ -48,14 +85,18 @@ export default function ClientPage({
       </section>
 
       {/* Standouts Section */}
-      <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
-        <Standouts properties={properties} />
-      </section>
+      {standoutPropertyCards.length > 3 ? (
+        <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
+          <Standouts properties={standoutPropertyCards} />
+        </section>
+      ) : null}
 
       {/* neighbourhoods Section */}
-      <section className="min-h-[500px] w-full overflow-hidden">
-        <Neighbourhoods neighbourhoods={neighbourhoods} />
-      </section>
+      {neighbourhoodData && neighbourhoodData.length > 3 ? (
+        <section className="min-h-[500px] w-full overflow-hidden">
+          <Neighbourhoods neighbourhoods={neighbourhoodData} />
+        </section>
+      ) : null}
 
       {/* Testimonials Section */}
       <section className="min-h-[500px] w-full overflow-hidden">
@@ -68,8 +109,11 @@ export default function ClientPage({
       </section>
 
       {/* Standouts Dialog */}
-      {isDialogOpen("standouts-dialog") && (
-        <StandoutsDialog id="standouts-dialog" properties={properties} />
+      {isDialogOpen("standouts-dialog") && standoutPropertyCards.length > 0 && (
+        <StandoutsDialog
+          id="standouts-dialog"
+          properties={standoutPropertyCards}
+        />
       )}
 
       {/* Login Dialog */}

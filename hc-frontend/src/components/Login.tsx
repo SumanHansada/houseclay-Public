@@ -1,6 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -284,13 +285,19 @@ const Login = ({ onClose }: { onClose: () => void }) => {
                 {/* Privacy policy */}
                 <div className="md:hidden text-gray-500 text-sm">
                   By continuing to use this service, you agree to our{" "}
-                  <span className="text-gray-700 underline font-bold">
+                  <Link
+                    href="/terms-and-conditions"
+                    className="text-gray-700 underline font-bold"
+                  >
                     Terms of Service
-                  </span>{" "}
+                  </Link>{" "}
                   and{" "}
-                  <span className="text-gray-700 underline font-bold">
+                  <Link
+                    href="/privacy-policy"
+                    className="text-gray-700 underline font-bold"
+                  >
                     Privacy Policy
-                  </span>
+                  </Link>
                 </div>
               </div>
             </div>

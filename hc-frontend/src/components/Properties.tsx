@@ -7,6 +7,7 @@ import { BadgeType } from "@/common/enums";
 import { formatBhkType, formatINRCurrency } from "@/common/utils";
 import { useShortlist } from "@/hooks/useShortlist";
 import { PropertySearch } from "@/interfaces/PropertySearch";
+import { PropertyCardWithImages } from "@/interfaces/User";
 import { ImageWithLoader } from "@/utility-components";
 
 interface PropertiesProps {
@@ -19,6 +20,7 @@ interface PropertiesProps {
 }
 
 // Properties Component
+// TODO: Add arrow to move left and right
 const Properties: React.FC<PropertiesProps> = ({
   property,
   badgeType,
@@ -99,7 +101,9 @@ const Properties: React.FC<PropertiesProps> = ({
           className={`absolute top-2 right-2 bg-gray-50/30 rounded-full p-2 shadow-md ${isShortlistedProperty ? "text-pink-500" : "text-gray-500"}`}
           onClick={async (e) => {
             e.stopPropagation();
-            const newStatus = await toggleShortlist(property.propertyID);
+            const newStatus = await toggleShortlist(
+              property as PropertyCardWithImages,
+            );
             setIsShortlistedProperty(newStatus);
           }}
           whileTap={{ scale: 0.95 }}

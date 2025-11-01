@@ -31,7 +31,7 @@ const EMAIL_VERIFICATION_SUCCESS_DIALOG_ID =
 export default function MyProfilePage() {
   const { isDialogOpen, openDialog, closeDialog } = useDialog();
   const dispatch = useDispatch();
-  const { userDetail, userDetailLoading } = useSelector(
+  const { userDetail, userDetailLoading, userDetailError } = useSelector(
     (state: RootState) => state.user,
   );
 
@@ -43,12 +43,12 @@ export default function MyProfilePage() {
 
   const initialValues: MyProfileFormValues = useMemo(
     () => ({
-      name: userDetail?.name || "",
-      phoneNumber: userDetail?.phoneNo || "",
-      email: userDetail?.emailID || "",
+      name: userDetail.name,
+      phoneNumber: userDetail.phoneNo,
+      email: userDetail.emailID,
       phoneVerified: true, //Already verified when a new user register, so always true
-      onWhatsapp: userDetail?.onWhatsApp || false,
-      emailVerified: userDetail?.emailVerified || false,
+      onWhatsapp: userDetail.onWhatsApp,
+      emailVerified: userDetail.emailVerified,
     }),
     [userDetail],
   );
@@ -116,8 +116,12 @@ export default function MyProfilePage() {
     }
   };
 
-  if (userDetailLoading || !userDetail) {
+  if (userDetailLoading) {
     return <Loading />;
+  }
+
+  if (userDetailError) {
+    return <div>Error loading profile: {userDetailError}</div>;
   }
 
   return (
