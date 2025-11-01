@@ -16,13 +16,14 @@ export const apiSlice = createApi({
   }),
   endpoints: (builder) => ({
     login: builder.mutation<
-      {
-        name: string;
-        emailID: string;
-        connectBal: number;
-        avatarUrl: string | null;
-        phoneNo: string;
-      },
+      | {
+          name: string;
+          emailID: string;
+          connectBal: number;
+          avatarUrl: string | null;
+          phoneNo: string;
+        }
+      | string,
       { phoneNo: string; otpCode: string } // Request body type
     >({
       query: (data) => {
@@ -30,7 +31,14 @@ export const apiSlice = createApi({
           url: "/user/login",
           method: "POST",
           body: data,
-          responseHandler: (response) => response.json(), // Convert response to text
+          responseHandler: async (response) => {
+            const contentType = response.headers.get("content-type");
+            if (contentType?.includes("application/json")) {
+              return response.json();
+            } else {
+              return response.text();
+            }
+          },
         };
       },
     }),

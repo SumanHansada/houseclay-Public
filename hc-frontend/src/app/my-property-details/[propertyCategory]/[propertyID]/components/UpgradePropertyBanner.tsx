@@ -62,7 +62,7 @@ export default function UpgradePropertyBanner({
           </div>
         </div>
         <button
-          className="mt-2 px-8 py-3 border border-red-500 text-red-500 rounded-xl w-full text-base max-md:text-sm hover:bg-red-50 transition-colors"
+          className="mt-2 px-4 py-3 border border-red-500 text-red-500 rounded-xl w-full text-base max-md:text-sm hover:bg-red-50 transition-colors"
           onClick={onUpgrade}
         >
           Upgrade Now

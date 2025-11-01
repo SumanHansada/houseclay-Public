@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { Button } from "@/base-components";
 import { AuthStep } from "@/common/enums";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -27,6 +28,7 @@ import {
   setName,
   setPhoneNo,
   setUserDetail,
+  UserDetail,
 } from "@/store/userSlice";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
 
@@ -117,7 +119,9 @@ const Login = ({ onClose }: { onClose: () => void }) => {
         });
         if (loginResponse.data) {
           dispatch(setIsAuthenticated(true));
-          dispatch(setUserDetail(loginResponse.data));
+          dispatch(setUserDetail(loginResponse?.data as UserDetail));
+        } else {
+          throw new Error("Login failed");
         }
       }
       dispatch(setAuthStep(AuthStep.LOGGED_IN));
@@ -208,13 +212,14 @@ const Login = ({ onClose }: { onClose: () => void }) => {
     <>
       {!isMobile && (
         <div className="relative w-full h-0">
-          <button
-            aria-label="Close"
+          <Button
+            variant="secondary"
+            size="custom"
+            className="absolute top-4 right-4 rounded-full p-1"
             onClick={onClose}
-            className="absolute top-4 right-4 rounded-full p-2 border border-gray-200"
           >
-            <X size={20} />
-          </button>
+            <X size={24} />
+          </Button>
         </div>
       )}
       <div className="flex items-center justify-center h-full bg-white rounded-xl">

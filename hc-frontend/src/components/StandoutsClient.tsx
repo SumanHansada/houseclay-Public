@@ -121,7 +121,7 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
           gap={4}
           showDots={false}
           showArrows={true}
-          containerClassName="md:hidden"
+          containerClassName="md:hidden px-6"
           className="md:hidden"
         >
           {properties.map((property) => (

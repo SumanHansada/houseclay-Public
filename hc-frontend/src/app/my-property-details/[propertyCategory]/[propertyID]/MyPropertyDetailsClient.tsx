@@ -247,7 +247,7 @@ export function MyPropertyDetailsClient({
       </MobileHeader>
 
       {/* Desktop Section */}
-      <section className="flex w-full xl:gap-16 lg:gap-8 md:gap-0 gap-0 xl:px-28 lg:px-14 md:px-8 px-8 max-md:pt-4 max-md:pb-12">
+      <section className="flex w-full xl:gap-16 lg:gap-8 md:gap-8 gap-8 xl:px-28 lg:px-14 md:px-8 px-8 max-md:pt-4 max-md:pb-4">
         <section className="w-3/4 max-md:w-full">
           <section className="max-md:min-h-[fit-content] w-full overflow-hidden max-md:hidden">
             <div className="py-12 mx-auto">
@@ -837,7 +837,10 @@ export function MyPropertyDetailsClient({
                         slideWidth={300}
                         gap={4}
                         showDots={false}
+                        showArrows={true}
                         autoScroll={false}
+                        className=""
+                        containerClassName=""
                       >
                         {property?.images?.map(
                           (imgUrl: string, idx: number) => (

@@ -17,6 +17,7 @@ import {
   setEmailID,
   setName,
   setUserDetail,
+  UserDetail,
 } from "@/store/userSlice";
 import { ImageWithLoader } from "@/utility-components";
 
@@ -106,7 +107,7 @@ export const ContactLogin = ({ onSuccess }: ContactLoginProps) => {
         });
         if (loginResponse.data) {
           dispatch(setIsAuthenticated(true));
-          dispatch(setUserDetail(loginResponse.data));
+          dispatch(setUserDetail(loginResponse?.data as UserDetail));
         }
       }
       dispatch(setAuthStep(AuthStep.LOGGED_IN));

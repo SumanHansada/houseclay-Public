@@ -136,7 +136,6 @@ export default function LoginPage() {
           </>
         </div>
       </div>
-
       {/* Login Dialog */}
       {isDialogOpen("login-dialog") && <LoginDialog id="login-dialog" />}
     </>
