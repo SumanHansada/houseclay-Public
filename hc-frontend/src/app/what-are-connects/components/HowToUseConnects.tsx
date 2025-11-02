@@ -81,10 +81,10 @@ const HowToUseConnects = () => {
         className="relative scrollbar-hide flex overflow-x-auto w-full lg:hidden"
       >
         <Carousel2D
-          slideWidth={320}
           gap={4}
           showDots
           showArrows
+          responsiveSlidesPerView
           containerClassName="px-6"
         >
           {/* Slide 1 */}

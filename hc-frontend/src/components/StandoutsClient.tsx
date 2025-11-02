@@ -95,10 +95,10 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         {/* Property Grid */}
         <Carousel2D
-          slideWidth={370}
           gap={4}
           showDots={false}
-          showArrows={true}
+          showArrows
+          responsiveSlidesPerView
           containerClassName="px-2 max-md:hidden"
           className="max-md:hidden"
         >
@@ -117,10 +117,10 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
       </div>
       <div className="md:hidden pb-4">
         <Carousel2D
-          slideWidth={320}
           gap={4}
           showDots={false}
-          showArrows={true}
+          showArrows
+          responsiveSlidesPerView
           containerClassName="md:hidden px-6"
           className="md:hidden"
         >

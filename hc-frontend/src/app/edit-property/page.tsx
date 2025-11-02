@@ -220,10 +220,10 @@ const EditPropertyPage = dynamic(
 
                 <div className="flex w-1/2">
                   <Carousel2D
-                    slideWidth={400}
                     gap={4}
-                    showDots={true}
-                    showArrows={true}
+                    showDots
+                    showArrows
+                    responsiveSlidesPerView
                   >
                     {testimonials.map((testimonial) => (
                       <TestimonialCard

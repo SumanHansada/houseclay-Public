@@ -92,10 +92,10 @@ export const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
 
       {/* Testimonials grid */}
       <Carousel2D
-        slideWidth={300}
         gap={4}
         showDots={false}
-        showArrows={true}
+        showArrows
+        responsiveSlidesPerView
         containerClassName="md:hidden"
         className="md:hidden"
       >
@@ -104,10 +104,10 @@ export const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
         ))}
       </Carousel2D>
       <Carousel2D
-        slideWidth={400}
         gap={4}
         showDots={false}
-        showArrows={true}
+        showArrows
+        responsiveSlidesPerView
         containerClassName="max-md:hidden"
         className="max-md:hidden"
       >

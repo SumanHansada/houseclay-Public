@@ -1,35 +1,68 @@
 "use client";
 
+import { Pause, Play } from "lucide-react";
 import React, { ReactNode, useEffect, useRef, useState } from "react";
 
 interface Carousel2DProps {
   children: ReactNode;
   className?: string;
-  slideWidth?: number;
   gap?: number;
   showArrows?: boolean;
   showDots?: boolean;
   autoScroll?: boolean;
   autoScrollInterval?: number;
   containerClassName?: string;
+  slidesPerView?: number;
+  responsiveSlidesPerView?: boolean;
 }
+
+const getGapClass = (gap: number): string => {
+  const gapMap: Record<number, string> = {
+    0: "gap-0",
+    1: "gap-1",
+    2: "gap-2",
+    3: "gap-3",
+    4: "gap-4",
+    6: "gap-6",
+    8: "gap-8",
+    12: "gap-12",
+    16: "gap-16",
+    20: "gap-20",
+    24: "gap-24",
+  };
+  return gapMap[gap] || "";
+};
+
+const getGapInPixels = (gap: number): number => {
+  // Tailwind spacing: each unit is 0.25rem (4px)
+  return gap * 4;
+};
 
 const Carousel2DClient: React.FC<Carousel2DProps> = ({
   children,
   className = "",
-  slideWidth = 200,
   gap = 16,
   showArrows = false,
   showDots = false,
   autoScroll = false,
   autoScrollInterval = 3000,
   containerClassName = "",
+  slidesPerView = 1,
+  responsiveSlidesPerView = false,
 }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(autoScroll);
+  const [responsiveSlidesPerViewState, setResponsiveSlidesPerViewState] =
+    useState(1);
   const slidesCount = React.Children.count(children);
+
+  // Determine actual slides per view (responsive or fixed)
+  const actualSlidesPerView = responsiveSlidesPerView
+    ? responsiveSlidesPerViewState
+    : slidesPerView;
 
   const checkScrollButtons = () => {
     const container = scrollContainerRef.current;
@@ -43,9 +76,8 @@ const Carousel2DClient: React.FC<Carousel2DProps> = ({
   const handleScroll = (direction: "left" | "right") => {
     const container = scrollContainerRef.current;
     if (!container) return;
-    const scrollAmount = slideWidth
-      ? slideWidth + gap
-      : container.clientWidth / 2;
+    const singleSlideWidth = container.clientWidth / actualSlidesPerView;
+    const scrollAmount = singleSlideWidth * actualSlidesPerView;
     const targetScrollLeft =
       direction === "left"
         ? container.scrollLeft - scrollAmount
@@ -59,12 +91,17 @@ const Carousel2DClient: React.FC<Carousel2DProps> = ({
   const handleScrollUpdate = () => {
     const container = scrollContainerRef.current;
     if (!container) return;
-    const slideIndex = Math.round(container.scrollLeft / (slideWidth + gap));
+    const singleSlideWidth = container.clientWidth / actualSlidesPerView;
+    const slideIndex = Math.round(container.scrollLeft / singleSlideWidth);
     setCurrentSlideIndex(slideIndex);
   };
 
+  const toggleAutoPlay = () => {
+    setIsAutoPlaying(!isAutoPlaying);
+  };
+
   useEffect(() => {
-    if (!autoScroll) return;
+    if (!isAutoPlaying) return;
     const interval = setInterval(() => {
       const container = scrollContainerRef.current;
       if (!container) return;
@@ -78,7 +115,32 @@ const Carousel2DClient: React.FC<Carousel2DProps> = ({
       }
     }, autoScrollInterval);
     return () => clearInterval(interval);
-  }, [autoScroll, autoScrollInterval]);
+  }, [isAutoPlaying, autoScrollInterval]);
+
+  useEffect(() => {
+    if (!responsiveSlidesPerView) return;
+
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width <= 640) {
+        setResponsiveSlidesPerViewState(1);
+      } else if (width < 768) {
+        setResponsiveSlidesPerViewState(2);
+      } else if (width < 1024) {
+        setResponsiveSlidesPerViewState(2);
+      } else if (width < 1280) {
+        setResponsiveSlidesPerViewState(3);
+      } else if (width < 1536) {
+        setResponsiveSlidesPerViewState(4);
+      } else {
+        setResponsiveSlidesPerViewState(5);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [responsiveSlidesPerView]);
 
   useEffect(() => {
     const container = scrollContainerRef.current;
@@ -92,7 +154,7 @@ const Carousel2DClient: React.FC<Carousel2DProps> = ({
       container.removeEventListener("scroll", handleScrollUpdate);
       window.removeEventListener("resize", checkScrollButtons);
     };
-  }, [slideWidth, gap]);
+  }, [gap, actualSlidesPerView]);
 
   return (
     <div className={`relative w-full ${className}`}>
@@ -123,13 +185,14 @@ const Carousel2DClient: React.FC<Carousel2DProps> = ({
 
       <div
         ref={scrollContainerRef}
-        className={`grid grid-flow-col auto-cols-max ${gap ? `gap-${gap}` : ""} py-2 overflow-x-scroll scrollbar-hide scroll-smooth ${containerClassName}`}
+        className={`flex w-full py-2 overflow-x-scroll scrollbar-hide scroll-smooth ${containerClassName} ${getGapClass(gap)}`}
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {React.Children.map(children, (child) => (
           <div
             style={{
-              width: slideWidth ? `${slideWidth}px` : "auto",
+              width: `calc(${100 / actualSlidesPerView}% - ${((actualSlidesPerView - 1) * getGapInPixels(gap)) / actualSlidesPerView}px)`,
+              flexShrink: 0,
             }}
           >
             {child}
@@ -162,6 +225,16 @@ const Carousel2DClient: React.FC<Carousel2DProps> = ({
         </button>
       )}
 
+      {autoScroll && (
+        <button
+          onClick={toggleAutoPlay}
+          className="absolute bottom-4 right-4 z-10 bg-white bg-opacity-70 hover:bg-opacity-90 rounded-full p-2 shadow-md transition-opacity duration-300 flex items-center justify-center"
+          aria-label={isAutoPlaying ? "Pause autoplay" : "Play autoplay"}
+        >
+          {isAutoPlaying ? <Pause size={20} /> : <Play size={20} />}
+        </button>
+      )}
+
       {showDots && (
         <div className="py-4 bottom-2 left-0 right-0 flex justify-center gap-1">
           {Array.from({ length: slidesCount }).map((_, index) => (
@@ -175,7 +248,9 @@ const Carousel2DClient: React.FC<Carousel2DProps> = ({
               onClick={() => {
                 const container = scrollContainerRef.current;
                 if (!container) return;
-                const targetScrollLeft = index * (slideWidth + gap);
+                const singleSlideWidth =
+                  container.clientWidth / actualSlidesPerView;
+                const targetScrollLeft = index * singleSlideWidth;
                 container.scrollTo({
                   left: targetScrollLeft,
                   behavior: "smooth",

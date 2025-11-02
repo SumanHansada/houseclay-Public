@@ -4,7 +4,6 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
 import { PropertyCardWithImages } from "@/interfaces/User";
-import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useLazyGetShortlistedPropertiesQuery,
   useRemoveShortlistedPropertyMutation,
@@ -19,7 +18,6 @@ import { RootState } from "@/store/store";
 
 export const useShortlist = () => {
   const dispatch = useDispatch();
-  const { openDialog } = useDialog();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { shortlistedProperties } = useSelector(
     (state: RootState) => state.shortlist,
@@ -79,7 +77,6 @@ export const useShortlist = () => {
       removeShortlistedProperty,
       shortlistProperty,
       dispatch,
-      openDialog,
     ],
   );
 

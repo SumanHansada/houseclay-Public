@@ -1,6 +1,7 @@
 "use client";
 
 import { CircleCheck, Ellipsis } from "lucide-react";
+import Link from "next/link";
 
 import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { formatINRCurrency, pascalCase } from "@/common/utils";
@@ -22,14 +23,15 @@ export function PropertyTable({
       key: "propertyName",
       label: "Property",
       render: (prop) => {
+        const propertyLink = `/my-property-details/${prop.propertyCategory?.toLowerCase()}/${prop.propertyID}`;
         const propertyTitle = `${prop.bhkType} in ${prop.locationOrSocietyName} for ${pascalCase(prop.propertyCategory)}`;
         return (
-          <span
-            title={propertyTitle}
+          <Link
+            href={propertyLink}
             className="inline-block max-w-xs truncate align-middle font-medium text-gray-800"
           >
             {propertyTitle}
-          </span>
+          </Link>
         );
       },
     },

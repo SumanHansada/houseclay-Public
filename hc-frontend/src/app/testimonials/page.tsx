@@ -108,12 +108,12 @@ export default function TestimonialsPage() {
               Testimonials carousel
             </h3>
             <Carousel2D
-              slideWidth={400}
               gap={4}
               showDots={false}
               containerClassName=""
               className=""
-              showArrows={true}
+              showArrows
+              responsiveSlidesPerView
             >
               {TESTIMONIALS_DATA.map((testimonial) => (
                 <article
@@ -168,12 +168,12 @@ export default function TestimonialsPage() {
 
         <section className="mb-16 py-5">
           <Carousel2D
-            slideWidth={380}
             gap={2}
             showDots
+            showArrows
+            responsiveSlidesPerView
             containerClassName="md:hidden"
             className="md:hidden"
-            showArrows
           >
             {TESTIMONIALS_DATA.map((testimonial) => (
               <TestimonialCard key={testimonial.id} testimonial={testimonial} />
