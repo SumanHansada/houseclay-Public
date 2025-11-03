@@ -12,7 +12,7 @@ import RentalDetailsClient from "./RentalDetailsClient";
 export const RentalDetailsWrapper: React.FC = () => {
   const params = useParams();
   const propertyCategory = useSelector(
-    (state: RootState) => state.listProperty.propertyCategory,
+    (state: RootState) => state.editProperty.propertyCategory,
   );
 
   // Determine which component to render based on property category

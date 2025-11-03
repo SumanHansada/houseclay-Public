@@ -12,7 +12,6 @@ import { Button } from "@/base-components";
 import {
   ListPropertyDesktopStep,
   ListPropertyMobileStep,
-  PropertyListingType,
 } from "@/common/enums";
 import Carousel2D from "@/components/Carousel2D";
 import CustomerSupportBanner from "@/components/CustomerSupportBanner";
@@ -30,7 +29,7 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
-import { clearFormData } from "@/store/listPropertySlice";
+import { clearFormData } from "@/store/editPropertySlice";
 import { RootState } from "@/store/store";
 import { ImageWithLoader } from "@/utility-components";
 
@@ -41,11 +40,8 @@ const EditPropertyPage = dynamic(
     Promise.resolve(() => {
       const { isMobile } = useDeviceContext();
       const router = useRouter();
-      const listingType = useSelector(
-        (state: RootState) => state.listProperty.listingType,
-      );
       const propertyCategory = useSelector(
-        (state: RootState) => state.listProperty.propertyCategory,
+        (state: RootState) => state.editProperty.propertyCategory,
       );
       const dispatch = useDispatch();
       const [mobileStep, setMobileStep] = useState<ListPropertyMobileStep>(
@@ -85,15 +81,11 @@ const EditPropertyPage = dynamic(
       };
 
       const handleListingTypeClick = async () => {
-        if (listingType === PropertyListingType.CALL) {
-          // For edit flow, we'll redirect to call flow if needed
-          router.push("/");
-        } else if (listingType === PropertyListingType.DIY) {
-          if (isMobile) {
-            setMobileStep(ListPropertyMobileStep.PROPERTY_TYPE);
-          } else {
-            setDesktopStep(ListPropertyDesktopStep.PROPERTY_TYPE);
-          }
+        // For edit flow, always go to property type selection
+        if (isMobile) {
+          setMobileStep(ListPropertyMobileStep.PROPERTY_TYPE);
+        } else {
+          setDesktopStep(ListPropertyDesktopStep.PROPERTY_TYPE);
         }
       };
 

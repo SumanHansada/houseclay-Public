@@ -146,3 +146,25 @@ export const formatDate = (isoString: string): string => {
 export const getDateKey = (isoString: string): string => {
   return new Date(isoString).toISOString().split("T")[0];
 };
+
+/**
+ * Extracts a FileData object from an image/file URL.
+ *
+ * @remarks
+ * - Deduces file name from the URL path.
+ * - Infers MIME type from common image extensions (png, webp, jpeg).
+ *
+ * @example
+ * fileDataFromUrl("https://.../img.jpg");
+ * // → { name: "img.jpg", type: "image/jpeg", webkitRelativePath: "" }
+ */
+export const fileDataFromUrl = (url: string) => {
+  const pathname = new URL(url).pathname;
+  const name = pathname.split("/").pop()!;
+  const ext = name.split(".").pop()!.toLowerCase();
+
+  const mime =
+    ext === "png" ? "image/png" : ext === "webp" ? "image/webp" : "image/jpeg";
+
+  return { name, type: mime, webkitRelativePath: "" };
+};

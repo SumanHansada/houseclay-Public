@@ -832,7 +832,7 @@ export function MyPropertyDetailsClient({
                   {/* Images Section */}
                   {property?.images?.length > 0 && (
                     <section className="py-6 my-6 max-md:py-3 max-md:my-3">
-                      <h2 className="text-lg mb-4">Images</h2>
+                      <h2 className="text-xl mb-4">Images</h2>
                       <div className="min-w-full">
                         <Carousel2D
                           gap={4}

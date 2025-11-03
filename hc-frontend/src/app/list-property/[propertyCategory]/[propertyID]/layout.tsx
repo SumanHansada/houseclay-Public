@@ -174,23 +174,24 @@ export default function ListPropertyTypeLayout({
 
   const uploadFilesToS3 = async () => {
     const photos = propertyImages || [];
-    if (photos.length > 0) {
-      // create a map of file names to their corresponding Blob URLs
-      const photosToUpload = photos.map((photo: PropertyImage) => {
-        return {
-          name: photo.file.name,
-          url: photo.url,
-          type: photo.file.type,
-          S3Url: propertyImagesS3Url[photo.file.name],
-        };
-      });
-
-      // Open upload dialog before starting upload
-      openDialog("upload-photos-dialog");
-
-      // Start the upload process
-      uploadFiles(photosToUpload);
+    if (photos.length === 0) {
+      return;
     }
+    // create a map of file names to their corresponding Blob URLs
+    const photosToUpload = photos.map((photo: PropertyImage) => {
+      return {
+        name: photo.file.name,
+        url: photo.url,
+        type: photo.file.type,
+        S3Url: propertyImagesS3Url[photo.file.name],
+      };
+    });
+
+    // Open upload dialog before starting upload
+    openDialog("upload-photos-dialog");
+
+    // Start the upload process
+    uploadFiles(photosToUpload);
   };
 
   const getPresignedPhotoUrls = async () => {

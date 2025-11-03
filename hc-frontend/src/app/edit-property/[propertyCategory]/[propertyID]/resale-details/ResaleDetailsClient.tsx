@@ -32,7 +32,7 @@ import {
   FormSelectDropdown,
 } from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
-import { setFormValidity, setResaleDetails } from "@/store/listPropertySlice";
+import { setFormValidity, setResaleDetails } from "@/store/editPropertySlice";
 import { RootState } from "@/store/store";
 import {
   getResaleDetailsErrors,
@@ -98,7 +98,7 @@ const resaleSchema = Yup.object().shape({
 const ResaleDetailsClient: React.FC = () => {
   const { values, errors, touched, setFieldError, setErrors } =
     useFormikContext<FormValues>();
-  const formState = useSelector((state: RootState) => state.listProperty.form);
+  const formState = useSelector((state: RootState) => state.editProperty.form);
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
 

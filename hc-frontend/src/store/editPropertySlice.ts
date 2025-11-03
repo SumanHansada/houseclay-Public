@@ -14,6 +14,8 @@ export interface EditPropertyState {
   propertyID: string;
   propertyImagesS3Url: Record<string, string>;
   propertyImages: PropertyImage[];
+  deletedImages: PropertyImage[];
+  deletedImagesS3Url: Record<string, string>;
   propertyCategory: PropertyCategory;
   form: {
     isValid: boolean;
@@ -140,6 +142,8 @@ const initialState: EditPropertyState = {
   propertyID: "",
   propertyImagesS3Url: {},
   propertyImages: [],
+  deletedImages: [],
+  deletedImagesS3Url: {},
   propertyCategory: PropertyCategory.NONE,
   form: {
     isValid: false,
@@ -181,6 +185,15 @@ const editPropertySlice = createSlice({
     ) => {
       const { data } = action.payload;
       state.propertyImagesS3Url = data;
+    },
+    setDeleteFileURLMap: (
+      state,
+      action: PayloadAction<{
+        data: Record<string, string>;
+      }>,
+    ) => {
+      const { data } = action.payload;
+      state.deletedImagesS3Url = data;
     },
     setPropertyID: (state, action: PayloadAction<string>) => {
       state.propertyID = action.payload;
@@ -247,6 +260,13 @@ const editPropertySlice = createSlice({
       const { propertyImages } = action.payload;
       state.propertyImages = propertyImages;
     },
+    setDeletedImages: (
+      state,
+      action: PayloadAction<{ deletedImages: PropertyImage[] }>,
+    ) => {
+      const { deletedImages } = action.payload;
+      state.deletedImages = deletedImages;
+    },
     setAdditionalInfo: (
       state,
       action: PayloadAction<{ additionalInfo: AdditionalInfo }>,
@@ -265,6 +285,8 @@ const editPropertySlice = createSlice({
       state.propertyID = "";
       state.propertyImagesS3Url = {};
       state.propertyImages = [];
+      state.deletedImages = [];
+      state.deletedImagesS3Url = {};
     },
   },
 });
@@ -274,6 +296,7 @@ export const {
   setFormValidity,
   setFormData,
   setFileURLMap,
+  setDeleteFileURLMap,
   setPropertyID,
   setPropertyDetails,
   setLocalityDetails,
@@ -282,6 +305,7 @@ export const {
   setFlatmateDetails,
   setImages,
   setPropertyImages,
+  setDeletedImages,
   setAdditionalInfo,
   clearFormData,
 } = editPropertySlice.actions;

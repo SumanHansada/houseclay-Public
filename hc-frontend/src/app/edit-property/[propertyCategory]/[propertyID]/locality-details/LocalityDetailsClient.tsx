@@ -13,7 +13,7 @@ import {
   FormTextField,
 } from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
-import { setFormValidity, setLocalityDetails } from "@/store/listPropertySlice";
+import { setFormValidity, setLocalityDetails } from "@/store/editPropertySlice";
 import { RootState } from "@/store/store";
 import { GoogleMaps } from "@/utility-components";
 import {
@@ -39,7 +39,7 @@ const localitySchema = Yup.object().shape({
 const LocalityDetailsClient: React.FC = () => {
   const { values, errors, touched, setFieldError, setErrors, setFieldValue } =
     useFormikContext<FormValues>();
-  const formState = useSelector((state: RootState) => state.listProperty.form);
+  const formState = useSelector((state: RootState) => state.editProperty.form);
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
 

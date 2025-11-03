@@ -12,15 +12,24 @@ import {
 } from "@/common/enums";
 import { extractS3KeyFromUrl } from "@/common/utils";
 import Spinner from "@/components/Spinner";
-import { ListPropertySuccessDialog, UploadDialog } from "@/dialogs";
+import {
+  DeleteDialog,
+  ListPropertySuccessDialog,
+  UploadDialog,
+} from "@/dialogs";
+import { useS3Deleter } from "@/hooks/useS3Deleter";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
-import { transformFormValuesToPropertyForm } from "@/interfaces/FormTransformers";
+import {
+  transformFormValuesToPropertyForm,
+  transformPropertyFormToFormValues,
+} from "@/interfaces/FormTransformers";
 import { FormValues } from "@/interfaces/FormValues";
 import { PropertyImage } from "@/interfaces/PropertyImage";
 import { MobileFooter } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
+  useDeletePresignedUrlsMutation,
   useGetMyPropertyByIdQuery,
   usePresignedUrlsMutation,
   usePropertyUpdateMutation,
@@ -32,9 +41,13 @@ import {
 } from "@/store/appSlice";
 import {
   clearFormData,
+  setDeleteFileURLMap,
   setFileURLMap,
+  setFormData,
+  setPropertyCategory,
   setPropertyID,
-} from "@/store/listPropertySlice";
+  setPropertyImages,
+} from "@/store/editPropertySlice";
 import { RootState } from "@/store/store";
 import { ImageWithLoader } from "@/utility-components";
 
@@ -46,9 +59,11 @@ export default function EditPropertyTypeLayout({
   children: React.ReactNode;
 }) {
   const [getPresignedUrls] = usePresignedUrlsMutation();
+  const [getDeletePresignedUrls] = useDeletePresignedUrlsMutation();
   const pathname = usePathname();
   const dispatch = useDispatch();
   const uploadFiles = useS3Uploader();
+  const deleteFiles = useS3Deleter();
   const router = useRouter();
   const { openDialog, isDialogOpen, closeDialog } = useDialog();
   const { isMobile } = useDeviceContext();
@@ -60,6 +75,7 @@ export default function EditPropertyTypeLayout({
 
   // Get upload state to monitor completion
   const uploadState = useSelector((state: RootState) => state.uploadToS3);
+  const deleteState = useSelector((state: RootState) => state.deleteFromS3);
 
   // Function to derive current step from URL path
   const getCurrentStepFromPath = (): ListPropertyFormStep => {
@@ -121,12 +137,18 @@ export default function EditPropertyTypeLayout({
     });
 
   const propertyImagesS3Url = useSelector(
-    (state: RootState) => state.listProperty.propertyImagesS3Url,
+    (state: RootState) => state.editProperty.propertyImagesS3Url,
   );
   const propertyImages = useSelector(
-    (state: RootState) => state.listProperty.propertyImages,
+    (state: RootState) => state.editProperty.propertyImages,
   );
-  const formState = useSelector((state: RootState) => state.listProperty.form);
+  const deletedImages = useSelector(
+    (state: RootState) => state.editProperty.deletedImages,
+  );
+  const deletedImagesS3Url = useSelector(
+    (state: RootState) => state.editProperty.deletedImagesS3Url,
+  );
+  const formState = useSelector((state: RootState) => state.editProperty.form);
 
   const isFormValid = formState?.isValid;
 
@@ -170,12 +192,41 @@ export default function EditPropertyTypeLayout({
   // Populate form data when existing property data is loaded
   useEffect(() => {
     if (existingPropertyData && !isLoadingProperty) {
-      // TODO: Transform existing property data to form values and populate the form
-      console.log("Existing property data loaded:", existingPropertyData);
-      // This would involve transforming the API response to FormValues format
-      // and dispatching actions to populate the form state
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const propertyData = existingPropertyData as any;
+        console.log("Existing Property Data:", propertyData);
+        const apiPropertyData = propertyData.property;
+
+        if (apiPropertyData) {
+          // Transform API response to FormValues
+          const formValues = transformPropertyFormToFormValues(apiPropertyData);
+
+          // Set property category
+          dispatch(setPropertyCategory(apiPropertyData.propertyCategory));
+
+          // Set form data
+          dispatch(setFormData({ data: formValues }));
+
+          // Set property images
+          if (formValues.images && formValues.images.length > 0) {
+            const decodedImages = formValues.images.map((image) => {
+              return {
+                ...image,
+                url: decodeURIComponent(image.url),
+              };
+            });
+            dispatch(setPropertyImages({ propertyImages: decodedImages }));
+          }
+        }
+      } catch (error) {
+        console.error(
+          "Error transforming property data to form values:",
+          error,
+        );
+      }
     }
-  }, [existingPropertyData, isLoadingProperty]);
+  }, [existingPropertyData, isLoadingProperty, dispatch]);
 
   // Effect to handle upload completion and dialog transitions
   useEffect(() => {
@@ -194,6 +245,17 @@ export default function EditPropertyTypeLayout({
     }
   }, [uploadState.status, isDialogOpen, closeDialog, openDialog]);
 
+  // Effect to handle delete completion and dialog transitions
+  useEffect(() => {
+    if (
+      deleteState.status === "success" &&
+      isDialogOpen("delete-photos-dialog")
+    ) {
+      // Close delete dialog (no success dialog for deletes)
+      closeDialog("delete-photos-dialog");
+    }
+  }, [deleteState.status, isDialogOpen, closeDialog]);
+
   const setRoute = (stepSlug: string) => {
     const route = `/edit-property/${propertyCategory.toLowerCase()}/${propertyID}/${stepSlug}`;
     router.push(route);
@@ -201,9 +263,12 @@ export default function EditPropertyTypeLayout({
 
   const uploadFilesToS3 = async () => {
     const photos = propertyImages || [];
-    if (photos.length > 0) {
-      // create a map of file names to their corresponding Blob URLs
-      const photosToUpload = photos.map((photo: PropertyImage) => {
+    if (photos.length === 0) {
+      return;
+    }
+    const photosToUpload = photos
+      .filter((photo: PropertyImage) => photo.url.startsWith("blob:"))
+      .map((photo: PropertyImage) => {
         return {
           name: photo.file.name,
           url: photo.url,
@@ -212,22 +277,106 @@ export default function EditPropertyTypeLayout({
         };
       });
 
-      // Open upload dialog before starting upload
-      openDialog("upload-photos-dialog");
+    // Only upload if there are new photos
+    // Open upload dialog before starting upload
+    openDialog("upload-photos-dialog");
 
-      // Start the upload process
-      uploadFiles(photosToUpload);
-    }
+    // Start the upload process
+    await uploadFiles(photosToUpload);
+
+    // Close upload dialog
+    closeDialog("upload-photos-dialog");
   };
 
-  const getPresignedPhotoUrls = async () => {
-    // Step 1: Request pre-signed URLs
+  const getDeletePresignedPhotoUrls = async () => {
+    // Request delete pre-signed URLs for deleted images
+    const deletedPhotos = deletedImages || [];
+    if (deletedPhotos.length === 0) {
+      return;
+    }
+
     const fileMap: Record<string, string> = {};
-    propertyImages.forEach((propertyImage: PropertyImage) => {
+    deletedPhotos.forEach((propertyImage: PropertyImage) => {
       fileMap[encodeURIComponent(propertyImage.file.name)] =
         propertyImage.file.type;
     });
-    console.log(fileMap);
+
+    if (Object.keys(fileMap).length === 0) {
+      console.log("No files to delete");
+      return;
+    }
+
+    console.log("Requesting delete presigned URLs for:", fileMap);
+
+    const presignedUrlsResponse = await getDeletePresignedUrls({
+      propertyID,
+      fileMap,
+    })
+      .unwrap()
+      .catch((error: Error) => {
+        console.error("Error fetching delete presigned URLs:", error);
+      });
+
+    if (!presignedUrlsResponse) {
+      console.error("No delete presigned URLs received");
+      return;
+    }
+
+    if (!presignedUrlsResponse) {
+      console.error("No delete presigned URLs received");
+      return;
+    }
+    dispatch(
+      setDeleteFileURLMap({
+        data: presignedUrlsResponse.fileURLMap,
+      }),
+    );
+  };
+
+  const deleteFilesFromS3 = async () => {
+    const deletedPhotos = deletedImages || [];
+    if (deletedPhotos.length === 0) {
+      return;
+    }
+
+    // Create array of images with their delete URLs from Redux
+    const photosToDelete = deletedPhotos.map((photo: PropertyImage) => {
+      return {
+        name: photo.file.name,
+        S3Url: deletedImagesS3Url[photo.file.name],
+      };
+    });
+
+    if (photosToDelete.length === 0) {
+      console.log("No delete URLs found");
+      return;
+    }
+
+    // Open delete dialog before starting delete
+    openDialog("delete-photos-dialog");
+
+    // Start the delete process
+    await deleteFiles(photosToDelete);
+
+    // Close delete dialog
+    closeDialog("delete-photos-dialog");
+  };
+
+  const getPresignedPhotoUrls = async () => {
+    // Only request pre-signed URLs for new images (blob URLs)
+    const newImages = propertyImages.filter((propertyImage: PropertyImage) =>
+      propertyImage.url.startsWith("blob:"),
+    );
+
+    if (newImages.length === 0) {
+      return;
+    }
+
+    const fileMap: Record<string, string> = {};
+    newImages.forEach((propertyImage: PropertyImage) => {
+      fileMap[encodeURIComponent(propertyImage.file.name)] =
+        propertyImage.file.type;
+    });
     const presignedUrlsResponse = await getPresignedUrls({
       propertyID,
       fileMap,
@@ -240,9 +389,16 @@ export default function EditPropertyTypeLayout({
       console.error("No presigned URLs received");
       return;
     }
+
+    // Decode all URLs in the fileURLMap
+    const decodedFileURLMap: Record<string, string> = {};
+    Object.entries(presignedUrlsResponse.fileURLMap).forEach(([key, value]) => {
+      decodedFileURLMap[key] = decodeURIComponent(value);
+    });
+
     dispatch(
       setFileURLMap({
-        data: presignedUrlsResponse.fileURLMap,
+        data: decodedFileURLMap,
       }),
     );
   };
@@ -309,11 +465,17 @@ export default function EditPropertyTypeLayout({
     ) {
       setRoute(ListPropertyRouteStep.GALLERY);
     } else if (currentStep === ListPropertyFormStep.GALLERY) {
-      // Make API call to get presigned-urls
+      // Make API call to get presigned-urls for new uploads
       await getPresignedPhotoUrls();
+      if (deletedImages.length > 0) {
+        await getDeletePresignedPhotoUrls();
+      }
       setRoute(ListPropertyRouteStep.ADDITIONAL_INFO);
     } else if (currentStep === ListPropertyFormStep.ADDITIONAL_INFO) {
-      uploadFilesToS3();
+      // Delete images first if any
+      await deleteFilesFromS3();
+
+      await uploadFilesToS3();
       // Don't navigate to a route for DONE step, just handle the API call
       // Make API call to update property
       await handleUpdateProperty();
@@ -336,21 +498,41 @@ export default function EditPropertyTypeLayout({
         propertyCategory,
       );
 
-      // Extract S3 image keys
-      const imagesS3Keys =
-        Object.values(propertyImagesS3Url).length > 0
-          ? Object.values(propertyImagesS3Url).map(
-              (url) => extractS3KeyFromUrl(url) || "",
-            )
-          : [];
+      // Extract S3 image keys from propertyForm.images
+      // For new images (blob URLs), they should have been uploaded and the S3 URL should be in propertyImagesS3Url
+      // For existing images (S3 URLs), extract the key directly from the URL
+      const imagesS3Keys = propertyForm.images
+        .map((url) => {
+          // If it's an existing S3 URL, extract the key
+          if (url.startsWith("https://")) {
+            return extractS3KeyFromUrl(url) || "";
+          }
+          // If it's a blob URL, find the S3 URL from propertyImagesS3Url
+          const matchingPhoto = propertyImages.find((img) => img.url === url);
+          if (matchingPhoto) {
+            const s3Url =
+              propertyImagesS3Url[encodeURIComponent(matchingPhoto.file.name)];
+            return s3Url ? extractS3KeyFromUrl(s3Url) || "" : "";
+          }
+          return "";
+        })
+        .filter((key) => key !== ""); // Remove empty keys
 
       // Add cover image information if needed
       const coverImage = propertyImages.filter((image) => image.isCover);
-      const coverImageName =
-        coverImage.length > 0 ? coverImage[0].file.name : "";
-      const coverImageS3Key = imagesS3Keys.find((key) =>
-        key.endsWith(coverImageName),
-      );
+
+      // Find the cover image S3 key
+      let coverImageS3Key = "";
+      if (coverImage.length > 0) {
+        const coverImageUrl = coverImage[0].url;
+        if (coverImageUrl.startsWith("https://")) {
+          coverImageS3Key = extractS3KeyFromUrl(coverImageUrl) || "";
+        } else if (coverImageUrl.startsWith("blob:")) {
+          const s3Url =
+            propertyImagesS3Url[encodeURIComponent(coverImage[0].file.name)];
+          coverImageS3Key = s3Url ? extractS3KeyFromUrl(s3Url) || "" : "";
+        }
+      }
 
       // Create the final API payload
       const apiPayload = {
@@ -421,6 +603,7 @@ export default function EditPropertyTypeLayout({
               }}
               validateOnChange={false}
               validateOnBlur={false}
+              enableReinitialize={true}
             >
               {(formik) => (
                 <Form>
@@ -488,6 +671,11 @@ export default function EditPropertyTypeLayout({
         {/* Upload Dialog */}
         {isDialogOpen("upload-photos-dialog") && (
           <UploadDialog id="upload-photos-dialog" />
+        )}
+
+        {/* Delete Dialog */}
+        {isDialogOpen("delete-photos-dialog") && (
+          <DeleteDialog id="delete-photos-dialog" />
         )}
 
         {/* Success Dialog */}

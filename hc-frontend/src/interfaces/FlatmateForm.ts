@@ -37,6 +37,7 @@ export interface FlatmateForm {
   drinkingPreference: string;
   // Images
   images: string[];
+  coverImage?: string;
   // Additional info (FLATMATE specific)
   whoWillShowProperty?: string;
   secondaryPhoneNumber?: string;

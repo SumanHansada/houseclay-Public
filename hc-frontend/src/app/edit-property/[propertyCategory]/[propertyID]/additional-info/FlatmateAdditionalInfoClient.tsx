@@ -7,7 +7,7 @@ import * as Yup from "yup";
 
 import { FormPhoneField, FormSelectDropdown } from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
-import { setAdditionalInfo, setFormValidity } from "@/store/listPropertySlice";
+import { setAdditionalInfo, setFormValidity } from "@/store/editPropertySlice";
 import { RootState } from "@/store/store";
 import {
   getAdditionalInfoErrors,
@@ -25,9 +25,9 @@ const FlatmateAdditionalInfoClient = () => {
   const { values, errors, touched, setFieldError, setErrors } =
     useFormikContext<FormValues>();
   const propertyCategory = useSelector(
-    (state: RootState) => state.listProperty.propertyCategory,
+    (state: RootState) => state.editProperty.propertyCategory,
   );
-  const formState = useSelector((state: RootState) => state.listProperty.form);
+  const formState = useSelector((state: RootState) => state.editProperty.form);
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
 

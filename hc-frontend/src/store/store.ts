@@ -6,6 +6,7 @@ import storage from "redux-persist/lib/storage";
 import { apiSlice } from "./apiSlice";
 import appReducer from "./appSlice";
 import authReducer from "./authSlice";
+import deleteFromS3SliceReducer from "./deleteFromS3Slice";
 import editPropertyReducer from "./editPropertySlice";
 import listPropertyReducer from "./listPropertySlice";
 import propertySearchReducer from "./propertySearchSlice";
@@ -121,6 +122,7 @@ export function makeStore() {
       propertySearch: persistedPropertySearchReducer,
       shortlist: persistedShortlistReducer,
       uploadToS3: uploadToS3SliceReducer,
+      deleteFromS3: deleteFromS3SliceReducer,
       [apiSlice.reducerPath]: apiSlice.reducer,
     },
     middleware: (getDefaultMiddleware) =>

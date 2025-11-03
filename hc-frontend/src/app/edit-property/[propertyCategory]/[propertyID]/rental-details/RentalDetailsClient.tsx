@@ -31,7 +31,7 @@ import {
   FormSelectDropdown,
 } from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
-import { setFormValidity, setRentalDetails } from "@/store/listPropertySlice";
+import { setFormValidity, setRentalDetails } from "@/store/editPropertySlice";
 import { RootState } from "@/store/store";
 import { SvgIcon } from "@/utility-components";
 import {
@@ -112,9 +112,9 @@ export const RentalDetailsClient: React.FC = () => {
   const { values, errors, touched, setFieldError, setErrors } =
     useFormikContext<FormValues>();
   const propertyCategory = useSelector(
-    (state: RootState) => state.listProperty.propertyCategory,
+    (state: RootState) => state.editProperty.propertyCategory,
   );
-  const formState = useSelector((state: RootState) => state.listProperty.form);
+  const formState = useSelector((state: RootState) => state.editProperty.form);
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
 

@@ -1,13 +1,17 @@
 "use client";
 
 import { useFormikContext } from "formik";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import { FormPhotoUpload } from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
-import { setFormValidity, setPropertyImages } from "@/store/listPropertySlice";
+import {
+  setDeletedImages,
+  setFormValidity,
+  setPropertyImages,
+} from "@/store/editPropertySlice";
 import { RootState } from "@/store/store";
 
 const gallerySchema = Yup.object().shape({
@@ -34,12 +38,48 @@ const gallerySchema = Yup.object().shape({
 
 const GalleryClient: React.FC = () => {
   const { values, setFieldError, setErrors } = useFormikContext<FormValues>();
-  const formState = useSelector((state: RootState) => state.listProperty.form);
+  const formState = useSelector((state: RootState) => state.editProperty.form);
+  const previousImages = useSelector(
+    (state: RootState) => state.editProperty.propertyImages,
+  );
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
+  const previousImagesRef = useRef(previousImages);
 
   const imagesString = JSON.stringify(values.images);
   const noPhotosString = JSON.stringify(values.noPhotos);
+
+  // Initialize ref when images are first loaded
+  useEffect(() => {
+    if (values.images.length > 0 && previousImagesRef.current.length === 0) {
+      previousImagesRef.current = values.images;
+    }
+  }, [imagesString]);
+
+  // Track deleted images
+  useEffect(() => {
+    const currentImages = values.images;
+    const prevImages = previousImagesRef.current;
+
+    // Only track deletions if ref is initialized (not the first render)
+    if (prevImages.length === 0) {
+      return;
+    }
+
+    // Find images that were deleted
+    const deleted = prevImages.filter(
+      (prevImage) =>
+        !currentImages.some((currImage) => currImage.id === prevImage.id),
+    );
+
+    // Only dispatch if there are deleted images
+    if (deleted.length > 0) {
+      dispatch(setDeletedImages({ deletedImages: deleted }));
+    }
+
+    // Update the ref
+    previousImagesRef.current = currentImages;
+  }, [imagesString, dispatch]);
 
   useEffect(() => {
     const validateAndDispatch = async () => {
@@ -47,6 +87,8 @@ const GalleryClient: React.FC = () => {
         await gallerySchema.validate(values, { abortEarly: false });
         // Clear any previous errors
         setErrors({});
+
+        console.log("Images", values.images);
         // Set form data in the store
         dispatch(setPropertyImages({ propertyImages: values.images }));
         // Form is valid

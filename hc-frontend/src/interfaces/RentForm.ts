@@ -37,6 +37,7 @@ export interface RentForm {
   amenities: string[];
   // Images
   images: string[];
+  coverImage?: string;
   // Additional info (RENT specific)
   whoWillShowProperty?: string;
   secondaryPhoneNumber?: string;

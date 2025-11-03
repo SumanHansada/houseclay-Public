@@ -308,8 +308,9 @@ const PhotoUpload: React.FC<PhotoUploadProps> = ({
                   <Image
                     src={photo.url}
                     alt={photo.file.name || "Property"}
-                    width={100}
-                    height={100}
+                    width={300}
+                    height={300}
+                    quality={95}
                     className={`aspect-square w-full object-cover transition-all duration-300 ${hoveredPhotoId === photo.id ? "blur-sm" : ""}`}
                   />
                 </motion.div>

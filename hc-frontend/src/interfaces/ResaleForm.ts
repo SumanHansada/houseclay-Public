@@ -35,6 +35,7 @@ export interface ResaleForm {
   amenities: string[];
   // Images
   images: string[];
+  coverImage?: string;
   // Additional info (RESALE specific)
   khataCertificate: string;
   saleDeed: boolean;

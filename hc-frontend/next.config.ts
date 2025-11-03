@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: "houseclay.s3.ap-southeast-2.amazonaws.com",
+        hostname: "houseclay.s3.ap-south-1.amazonaws.com",
       },
     ],
     formats: ["image/webp", "image/avif"],

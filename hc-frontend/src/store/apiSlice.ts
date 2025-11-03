@@ -96,7 +96,6 @@ export const apiSlice = createApi({
     getUserDetail: builder.query<GetUserDetailResponse, void>({
       query: () => "/user/detail",
     }),
-
     presignedUrls: builder.mutation<
       {
         fileURLMap: Record<string, string>;
@@ -105,6 +104,21 @@ export const apiSlice = createApi({
     >({
       query: (data) => ({
         url: "photo/user/presigned-urls",
+        method: "POST",
+        body: data,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+    deletePresignedUrls: builder.mutation<
+      {
+        fileURLMap: Record<string, string>;
+      }, // Response type
+      { propertyID: string; fileMap: Record<string, string> } // Request body type
+    >({
+      query: (data) => ({
+        url: "photo/user/delete-presigned-urls",
         method: "POST",
         body: data,
         headers: {
@@ -306,6 +320,7 @@ export const {
   useLogoutMutation,
   useGetUserDetailQuery,
   usePresignedUrlsMutation,
+  useDeletePresignedUrlsMutation,
   usePropertyAddMutation,
   usePropertyUpdateMutation,
   useGetMyPropertyByIdQuery,
