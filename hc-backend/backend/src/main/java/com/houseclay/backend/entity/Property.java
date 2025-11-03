@@ -77,7 +77,7 @@ public class Property {
     private List<PropertyAction> propertyActions = new ArrayList<>();
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ReportProperty> reportedProperties;
+    private List<ReportProperty> reportedProperties = new ArrayList<>();
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PropertyUpdateLog> propertyUpdateLogs = new ArrayList<>();
