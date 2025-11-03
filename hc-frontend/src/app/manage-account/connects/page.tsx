@@ -28,8 +28,8 @@ export default function ConnectsPage() {
           <div className="flex items-center gap-4">
             <span className="text-lg lg:text-xl">Available Connects</span>
             <div className="flex gap-1 items-center">
-              <SvgIcon iconSize="medium" name="coin" size={34} />
-              <span className="text-gray-700 text-2xl font-medium">
+              <SvgIcon iconSize="medium" name="coin" size={28} />
+              <span className="text-gray-700 text-lg lg:text-2xl font-medium">
                 {connectBalance}
               </span>
             </div>
