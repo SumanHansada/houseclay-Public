@@ -1,8 +1,10 @@
 package com.houseclay.backend.service;
 
+import com.houseclay.backend.dto.PropertyDTO;
 import com.houseclay.backend.dto.UserPropertyDTO;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
+import com.houseclay.backend.mapper.PropertyMapper;
 import com.houseclay.backend.mapper.UserMapper;
 import com.houseclay.backend.repository.PropertyRepository;
 import com.houseclay.backend.repository.UserRepository;
@@ -27,10 +29,12 @@ public class PropertyAdminService {
     @Autowired
     private PropertyElasticService propertyElasticService;
 
-    public Property addProperty(Property property, String phoneNo, Admin admin) throws APIException {
+    public Property addProperty(PropertyDTO propertyDTO, String phoneNo, Admin admin) throws APIException {
         Optional<User> userOpt = userRepository.findById(phoneNo);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
+            Property property = PropertyUtils.getPropertyObj(propertyDTO);
+            PropertyMapper.toBasicEntity(propertyDTO, property);
             property.setPropertyState(PropertyState.PENDING_VERIFICATION);
             property.setOwner(user);
             property.setTitle(PropertyUtils.getTitle(property));
@@ -42,14 +46,16 @@ public class PropertyAdminService {
         throw new APIException("Invalid user", HttpStatus.BAD_REQUEST);
     }
 
-    public Property updateProperty(Admin admin, Property property, String phoneNo) throws APIException {
-        Optional<Property> propertyOpt = propertyRepository.findById(property.getPropertyID());
+    public Property updateProperty(Admin admin, PropertyDTO propertyDTO, String phoneNo) throws APIException {
+        Optional<Property> propertyOpt = propertyRepository.findById(propertyDTO.getPropertyID());
         if (propertyOpt.isEmpty()) {
             throw new APIException("Invalid property", HttpStatus.BAD_REQUEST);
         }
         if (!propertyOpt.get().getOwner().getPhoneNo().equals(phoneNo)) {
             throw new APIException("user not allowed", HttpStatus.FORBIDDEN);
         }
+        Property property = propertyOpt.get();
+        PropertyMapper.toBasicEntity(propertyDTO, property);
         property.setPropertyState(PropertyState.PENDING_VERIFICATION);
         property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, admin, "updated by admin", PropertyUpdateType.UPDATE));
         return propertyRepository.save(property);

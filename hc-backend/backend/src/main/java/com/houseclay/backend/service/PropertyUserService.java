@@ -1,7 +1,9 @@
 package com.houseclay.backend.service;
 
+import com.houseclay.backend.dto.PropertyDTO;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
+import com.houseclay.backend.mapper.PropertyMapper;
 import com.houseclay.backend.repository.PropertyRepository;
 import com.houseclay.backend.repository.UserRepository;
 import com.houseclay.backend.utils.PropertyUtils;
@@ -30,10 +32,12 @@ public class PropertyUserService {
     @Autowired
     private PropertyElasticService propertyElasticService;
 
-    public Property addProperty(User user, Property property) throws APIException {
+    public Property addProperty(User user, PropertyDTO propertyDTO) throws APIException {
         Optional<User> userOpt = userRepository.findById(user.getPhoneNo());
         if (userOpt.isPresent()) {
             user = userOpt.get();
+            Property property = PropertyUtils.getPropertyObj(propertyDTO);
+            PropertyMapper.toBasicEntity(propertyDTO, property);
             property.setOwner(user);
             property.setTitle(PropertyUtils.getTitle(property));
             property.setPropertyState(PropertyState.PENDING_VERIFICATION);
@@ -45,14 +49,16 @@ public class PropertyUserService {
         throw new APIException("Invalid token", HttpStatus.BAD_REQUEST);
     }
 
-    public Property updateProperty(User user, Property property) throws APIException {
-        Optional<Property> propertyOpt = propertyRepository.findById(property.getPropertyID());
+    public Property updateProperty(User user, PropertyDTO propertyDTO) throws APIException {
+        Optional<Property> propertyOpt = propertyRepository.findById(propertyDTO.getPropertyID());
         if (propertyOpt.isEmpty()) {
             throw new APIException("Invalid property", HttpStatus.BAD_REQUEST);
         }
         if (!propertyOpt.get().getOwner().getPhoneNo().equals(user.getPhoneNo())) {
             throw new APIException("user not allowed", HttpStatus.FORBIDDEN);
         }
+        Property property = propertyOpt.get();
+        PropertyMapper.toBasicEntity(propertyDTO, property);
         property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, user,"updated by user", PropertyUpdateType.UPDATE));
         return propertyRepository.save(property);
     }

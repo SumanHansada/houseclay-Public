@@ -1,5 +1,6 @@
 package com.houseclay.backend.controller;
 
+import com.houseclay.backend.dto.PropertyDTO;
 import com.houseclay.backend.entity.Property;
 import com.houseclay.backend.entity.ReportType;
 import com.houseclay.backend.entity.User;
@@ -30,7 +31,7 @@ public class PropertyUserController {
     private ViewPropertyService viewPropertyService;
 
     @PostMapping("/add")
-    public ResponseEntity<?> addProperty(@RequestBody Property property, @RequestAttribute("authenticatedUser") User user) {
+    public ResponseEntity<?> addProperty(@RequestBody PropertyDTO property, @RequestAttribute("authenticatedUser") User user) {
         try {
             Property savedProperty = propertyUserService.addProperty(user, property);
             Map<String, Object> response = new HashMap<>();
@@ -45,9 +46,9 @@ public class PropertyUserController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateProperty(@RequestBody Property property, @RequestAttribute("authenticatedUser") User user) {
+    public ResponseEntity<?> updateProperty(@RequestBody PropertyDTO propertyDTO, @RequestAttribute("authenticatedUser") User user) {
         try {
-            Property savedProperty = propertyUserService.updateProperty(user, property);
+            Property savedProperty = propertyUserService.updateProperty(user, propertyDTO);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Property updated successfully");
             response.put("propertyId", savedProperty.getPropertyID());

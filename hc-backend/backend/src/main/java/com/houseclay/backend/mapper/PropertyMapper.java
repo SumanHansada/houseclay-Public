@@ -50,6 +50,42 @@ public class PropertyMapper {
         }
     }
 
+    public static void toBasicEntity(PropertyDTO dto, Property target) {
+        if (dto instanceof SalePropertyDTO saleDTO && target instanceof SaleProperty sale) {
+            copyBaseFields(saleDTO, sale);
+            sale.setOwnershipType(saleDTO.getOwnershipType());
+            sale.setPriceNegotiable(saleDTO.getPriceNegotiable());
+            sale.setUnderLoan(saleDTO.getUnderLoan());
+            sale.setPrice(saleDTO.getPrice());
+            sale.setBalcony(saleDTO.getBalcony());
+            sale.setKhataCertificate(saleDTO.getKhataCertificate());
+            sale.setSaleDeed(saleDTO.getSaleDeed());
+            sale.setPropertyTax(saleDTO.getPropertyTax());
+        } else if (dto instanceof RentPropertyDTO rentDTO && target instanceof RentProperty rent) {
+            copyBaseFields(rentDTO, rent);
+            rent.setRent(rentDTO.getRent());
+            rent.setDeposit(rentDTO.getDeposit());
+            rent.setMaintenanceCharges(rentDTO.getMaintenanceCharges());
+            rent.setRentNegotiable(rentDTO.getRentNegotiable());
+            rent.setPreferredTenant(rentDTO.getPreferredTenant());
+            rent.setPetsAllowed(rentDTO.getPetsAllowed());
+            rent.setNonVegAllowed(rentDTO.getNonVegAllowed());
+        } else if (dto instanceof FlatmatePropertyDTO flatmateDTO && target instanceof FlatmateProperty flatmate) {
+            copyBaseFields(flatmateDTO, flatmate);
+            flatmate.setRent(flatmateDTO.getRent());
+            flatmate.setMaintenanceCharges(flatmateDTO.getMaintenanceCharges());
+            flatmate.setDepositCharges(flatmateDTO.getDepositCharges());
+            flatmate.setTenantType(flatmateDTO.getTenantType());
+            flatmate.setAttachedBathroom(flatmateDTO.getAttachedBathroom());
+            flatmate.setAttachedBalcony(flatmateDTO.getAttachedBalcony());
+            flatmate.setSmokingPreference(flatmateDTO.getSmokingPreference());
+            flatmate.setDrinkingPreference(flatmateDTO.getDrinkingPreference());
+        } else {
+            // Base case (for generic PropertyDTO or mismatched types)
+            copyBaseFields(dto, target);
+        }
+    }
+
     public static OwnedPropertyDTO toBasicEntity(Property property) {
         OwnedPropertyDTO dto = new OwnedPropertyDTO();
         copyBaseFields(property, dto);
@@ -107,4 +143,37 @@ public class PropertyMapper {
         target.setPreferredTenants(source.getPreferredTenants());
         target.setPropertyCategory(PropertyUtils.getPropertyCategory(source));
     }
+
+    private static void copyBaseFields(PropertyDTO source, Property target) {
+        target.setPropertyID(source.getPropertyID());
+        target.setTitle(source.getTitle());
+        target.setPropertyType(source.getPropertyType());
+        target.setManaged(source.isManaged());
+        target.setPremium(source.isPremium());
+        target.setBuiltUpArea(source.getBuiltUpArea());
+        target.setFacing(source.getFacing());
+        target.setBathrooms(source.getBathrooms());
+        target.setBhkType(source.getBhkType());
+        target.setFloor(source.getFloor());
+        target.setTotalFloors(source.getTotalFloors());
+        target.setFloorType(source.getFloorType());
+        target.setDescription(source.getDescription());
+        target.setCity(source.getCity());
+        target.setLocationOrSocietyName(source.getLocationOrSocietyName());
+        target.setLandmark(source.getLandmark());
+        target.setLatitude(source.getLatitude());
+        target.setLongitude(source.getLongitude());
+        target.setFurnishing(source.getFurnishing());
+        target.setPropertyAge(source.getPropertyAge());
+        target.setWaterSupply(source.getWaterSupply());
+        target.setPowerBackup(source.getPowerBackup());
+        target.setParking(source.getParking());
+        target.setAvailableFrom(source.getAvailableFrom());
+        target.setPropertyState(source.getPropertyState());
+        target.setImages(source.getImages());
+        target.setCoverImage(source.getCoverImage());
+        target.setAmenities(source.getAmenities());
+        target.setPreferredTenants(source.getPreferredTenants());
+    }
+
 }

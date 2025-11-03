@@ -1,5 +1,6 @@
 package com.houseclay.backend.controller;
 
+import com.houseclay.backend.dto.PropertyDTO;
 import com.houseclay.backend.dto.UserPropertyDTO;
 import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.entity.Property;
@@ -30,9 +31,9 @@ public class PropertyAdminController {
     private PropertyService propertyService;
 
     @PostMapping("/add")
-    public ResponseEntity<?> addProperty(@RequestBody Property property, String phoneNo, @RequestAttribute("authenticatedAdmin") Admin admin) {
+    public ResponseEntity<?> addProperty(@RequestBody PropertyDTO propertyDTO, String phoneNo, @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
-            Property savedProperty = propertyAdminService.addProperty(property, phoneNo, admin);
+            Property savedProperty = propertyAdminService.addProperty(propertyDTO, phoneNo, admin);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Property added successfully");
             response.put("propertyId", savedProperty.getPropertyID());
@@ -45,9 +46,9 @@ public class PropertyAdminController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateProperty(@RequestBody Property property, String phoneNo, @RequestAttribute("authenticatedAdmin") Admin admin) {
+    public ResponseEntity<?> updateProperty(@RequestBody PropertyDTO propertyDTO, String phoneNo, @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
-            Property savedProperty = propertyAdminService.updateProperty(admin, property, phoneNo);
+            Property savedProperty = propertyAdminService.updateProperty(admin, propertyDTO, phoneNo);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Property updated successfully");
             response.put("propertyId", savedProperty.getPropertyID());

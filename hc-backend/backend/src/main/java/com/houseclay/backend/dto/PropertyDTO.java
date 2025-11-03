@@ -1,12 +1,24 @@
 package com.houseclay.backend.dto;
 
-import com.houseclay.backend.entity.PropertyCategory;
-import com.houseclay.backend.entity.PropertyState;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.houseclay.backend.entity.*;
 import lombok.Data;
 
 import java.sql.Timestamp;
 import java.util.List;
 
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "propertyCategory", // this field tells Jackson what subclass to use
+        visible = true
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = SalePropertyDTO.class, name = "RESALE"),
+        @JsonSubTypes.Type(value = RentPropertyDTO.class, name = "RENT"),
+        @JsonSubTypes.Type(value = FlatmatePropertyDTO.class, name = "FLATMATE")
+})
 @Data
 public class PropertyDTO {
     private String propertyID;
