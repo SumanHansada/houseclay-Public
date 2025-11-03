@@ -27,6 +27,6 @@ public class PhotoController {
 
     @PostMapping("/user/delete-presigned-urls")
     public ResponseEntity<PresignedURLResponse> getDeletePresignedUrlForUser(@RequestBody PresignedURLRequest request) {
-        return ResponseEntity.ok(photoService.getURLs(request));
+        return ResponseEntity.ok(photoService.getDeleteURLs(request));
     }
 }
