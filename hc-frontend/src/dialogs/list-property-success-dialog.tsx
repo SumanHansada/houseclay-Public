@@ -41,11 +41,19 @@ const ListPropertySuccessDialog: React.FC<ListPropertySuccessDialogProps> = ({
     );
   };
 
+  const handleEditProperty = async () => {
+    closeDialog(id);
+    router.push(
+      `/edit-property/${propertyCategory.toLowerCase()}/${propertyID}`,
+    );
+  };
+
   return (
     <Dialog
       id={id}
       type={isMobile ? "bottom-sheet" : "card"}
       onClose={handleClose}
+      disableOverlayClick={true}
       entryAnimation={isMobile ? "animate-slide-in-bottom" : "animate-fade-in"}
       exitAnimation={isMobile ? "animate-slide-out-bottom" : "animate-fade-out"}
     >
@@ -94,7 +102,7 @@ const ListPropertySuccessDialog: React.FC<ListPropertySuccessDialogProps> = ({
           {/* Action buttons */}
           <div className="flex gap-4 w-full">
             <button
-              onClick={handleClose}
+              onClick={handleEditProperty}
               className="w-full py-3 text-black border font-medium rounded-lg hover:bg-red-600 hover:text-white transition duration-200"
             >
               Edit

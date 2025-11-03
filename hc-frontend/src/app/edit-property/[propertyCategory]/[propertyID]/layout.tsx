@@ -13,9 +13,9 @@ import {
 import { extractS3KeyFromUrl } from "@/common/utils";
 import Spinner from "@/components/Spinner";
 import {
-  DeleteDialog,
+  DeletePhotosDialog,
   ListPropertySuccessDialog,
-  UploadDialog,
+  UploadPhotosDialog,
 } from "@/dialogs";
 import { useS3Deleter } from "@/hooks/useS3Deleter";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
@@ -670,12 +670,12 @@ export default function EditPropertyTypeLayout({
 
         {/* Upload Dialog */}
         {isDialogOpen("upload-photos-dialog") && (
-          <UploadDialog id="upload-photos-dialog" />
+          <UploadPhotosDialog id="upload-photos-dialog" />
         )}
 
         {/* Delete Dialog */}
         {isDialogOpen("delete-photos-dialog") && (
-          <DeleteDialog id="delete-photos-dialog" />
+          <DeletePhotosDialog id="delete-photos-dialog" />
         )}
 
         {/* Success Dialog */}

@@ -27,7 +27,7 @@ import ListWithUs from "@/components/ListWithUs";
 import PropertyTypeOptions from "@/components/PropertyTypeOptions";
 import { TestimonialCard } from "@/components/Testimonials";
 import PropertiesData from "@/data/PropertiesData.json";
-import { CallWithCaptainDialog } from "@/dialogs";
+import { CallWithCaptainDialog, LoginDialog } from "@/dialogs";
 import { Footer, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -380,6 +380,9 @@ const ListPropertyPage = dynamic(
               }}
             />
           )}
+
+          {/* Login Dialog */}
+          {isDialogOpen("login-dialog") && <LoginDialog id="login-dialog" />}
         </>
       );
     }),

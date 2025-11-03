@@ -12,7 +12,7 @@ import {
 } from "@/common/enums";
 import { extractS3KeyFromUrl } from "@/common/utils";
 import Spinner from "@/components/Spinner";
-import { ListPropertySuccessDialog, UploadDialog } from "@/dialogs";
+import { ListPropertySuccessDialog, UploadPhotosDialog } from "@/dialogs";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
 import { transformFormValuesToPropertyForm } from "@/interfaces/FormTransformers";
 import { FormValues } from "@/interfaces/FormValues";
@@ -460,7 +460,7 @@ export default function ListPropertyTypeLayout({
 
         {/* Upload Dialog */}
         {isDialogOpen("upload-photos-dialog") && (
-          <UploadDialog id="upload-photos-dialog" />
+          <UploadPhotosDialog id="upload-photos-dialog" />
         )}
 
         {/* Success Dialog */}

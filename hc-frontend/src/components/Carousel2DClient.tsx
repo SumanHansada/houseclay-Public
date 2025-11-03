@@ -132,6 +132,8 @@ const Carousel2DClient: React.FC<Carousel2DProps> = ({
         setResponsiveSlidesPerViewState(3);
       } else if (width < 1536) {
         setResponsiveSlidesPerViewState(4);
+      } else if (width < 1920) {
+        setResponsiveSlidesPerViewState(4);
       } else {
         setResponsiveSlidesPerViewState(5);
       }

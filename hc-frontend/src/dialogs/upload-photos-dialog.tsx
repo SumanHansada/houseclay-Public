@@ -25,20 +25,20 @@ const DotLottieReact = dynamic(
   },
 );
 
-interface DeleteDialogProps {
+interface UploadPhotosDialogProps {
   id: string;
 }
 
-const DeleteDialog: React.FC<DeleteDialogProps> = ({ id }) => {
+const UploadPhotosDialog: React.FC<UploadPhotosDialogProps> = ({ id }) => {
   const { closeDialog } = useDialog();
   const { isMobile } = useDeviceContext();
 
-  const deleteState = useSelector((state: RootState) => state.deleteFromS3);
-  const { status, progress, totalFiles, fileProgress } = deleteState;
+  const uploadState = useSelector((state: RootState) => state.uploadToS3);
+  const { status, progress, totalFiles, fileProgress } = uploadState;
 
   const handleClose = () => {
     if (status === "uploading") {
-      // Don't allow closing during delete
+      // Don't allow closing during upload
       return;
     }
     closeDialog(id);
@@ -49,15 +49,15 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({ id }) => {
       const completedFiles = fileProgress.filter(
         (file) => file.status === "completed",
       ).length;
-      return `Deleting photos (${completedFiles} of ${totalFiles} completed)`;
+      return `Uploading photos (${completedFiles} of ${totalFiles} completed)`;
     }
     if (status === "success") {
-      return "Delete completed successfully!";
+      return "Upload completed successfully!";
     }
     if (status === "error") {
-      return "Delete failed. Please try again.";
+      return "Upload failed. Please try again.";
     }
-    return "Preparing delete...";
+    return "Preparing upload...";
   };
 
   const getProgressPercentage = () => {
@@ -75,7 +75,7 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({ id }) => {
       <DialogHeader className="-mx-4">
         {isMobile && (
           <MobileHeader className="relative">
-            <MobileHeader.Title>Deleting Photos</MobileHeader.Title>
+            <MobileHeader.Title>Uploading Photos</MobileHeader.Title>
             <MobileHeader.RightAction>
               <Button
                 variant="secondary"
@@ -106,7 +106,7 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({ id }) => {
           {/* Status Text */}
           {!isMobile && (
             <h2 className="text-2xl text-gray-800 font-semibold">
-              Deleting Photos
+              Uploading Photos
             </h2>
           )}
 
@@ -158,4 +158,4 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({ id }) => {
   );
 };
 
-export default DeleteDialog;
+export default UploadPhotosDialog;
