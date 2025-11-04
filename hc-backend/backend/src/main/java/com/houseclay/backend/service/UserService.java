@@ -40,7 +40,7 @@ public class UserService {
 
     public ResponseEntity<?> createUser(UserPayload userPayload) throws Exception {
         if(!otpService.validateOTP(userPayload.getPhoneNo(), userPayload.getOtpCode())) {
-            throw new APIException("Invalid OTP Code", HttpStatus.BAD_REQUEST);
+            throw new APIException("Invalid OTP Code", HttpStatus.UNAUTHORIZED);
         }
         User user = new User(userPayload.getPhoneNo(), userPayload.getName(), userPayload.getEmailID());
         String token = UUID.randomUUID().toString();
@@ -55,7 +55,7 @@ public class UserService {
 
     public ResponseEntity<?> loginUser(LoginPayload loginPayload) throws Exception {
         if(!otpService.validateOTP(loginPayload.getPhoneNo(), loginPayload.getOtpCode())) {
-            throw new APIException("Invalid OTP Code", HttpStatus.BAD_REQUEST);
+            throw new APIException("Invalid OTP Code", HttpStatus.UNAUTHORIZED);
         }
         Optional<User> optionalUser = userRepository.findById(loginPayload.getPhoneNo());
         if(optionalUser.isEmpty()) {
