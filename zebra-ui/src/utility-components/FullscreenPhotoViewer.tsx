@@ -2,7 +2,8 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import { useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
+import React from "react";
 
 import ImageWithLoader from "./ImageWithLoader";
 
@@ -16,7 +17,7 @@ interface FullscreenPhotoViewerProps {
   showThumbnails?: boolean;
 }
 
-export default function FullscreenPhotoViewer({
+function FullscreenPhotoViewer({
   images,
   currentIndex,
   isOpen,
@@ -25,9 +26,24 @@ export default function FullscreenPhotoViewer({
   thumbnailPosition = "bottom",
   showThumbnails = true,
 }: FullscreenPhotoViewerProps) {
-  const currentImage = images[currentIndex];
+  const currentImage = useMemo(
+    () => images[currentIndex],
+    [images, currentIndex],
+  );
   const hasPrevious = currentIndex > 0;
   const hasNext = currentIndex < images.length - 1;
+
+  const handlePrevious = useCallback(() => {
+    if (hasPrevious) {
+      onNavigate(currentIndex - 1);
+    }
+  }, [hasPrevious, currentIndex, onNavigate]);
+
+  const handleNext = useCallback(() => {
+    if (hasNext) {
+      onNavigate(currentIndex + 1);
+    }
+  }, [hasNext, currentIndex, onNavigate]);
 
   // Handle keyboard navigation
   useEffect(() => {
@@ -53,7 +69,7 @@ export default function FullscreenPhotoViewer({
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, currentIndex, hasPrevious, hasNext, onClose, onNavigate]);
+  }, [isOpen, hasPrevious, hasNext, currentIndex, onNavigate, onClose]);
 
   // Handle body scroll
   useEffect(() => {
@@ -68,23 +84,21 @@ export default function FullscreenPhotoViewer({
     };
   }, [isOpen]);
 
-  const handlePrevious = () => {
-    if (hasPrevious) {
-      onNavigate(currentIndex - 1);
-    }
-  };
+  const handleBackdropClick = useCallback(
+    (event: React.MouseEvent) => {
+      if (event.target === event.currentTarget) {
+        onClose();
+      }
+    },
+    [onClose],
+  );
 
-  const handleNext = () => {
-    if (hasNext) {
-      onNavigate(currentIndex + 1);
-    }
-  };
-
-  const handleBackdropClick = (event: React.MouseEvent) => {
-    if (event.target === event.currentTarget) {
-      onClose();
-    }
-  };
+  const handleThumbnailClick = useCallback(
+    (index: number) => {
+      onNavigate(index);
+    },
+    [onNavigate],
+  );
 
   if (!isOpen || !currentImage) return null;
 
@@ -208,7 +222,7 @@ export default function FullscreenPhotoViewer({
                 {images.map((image, index) => (
                   <button
                     key={index}
-                    onClick={() => onNavigate(index)}
+                    onClick={() => handleThumbnailClick(index)}
                     className={`relative w-24 h-24 rounded-md overflow-hidden border-2 transition-all flex-shrink-0 ${
                       currentIndex === index
                         ? "border-red-500 scale-110"
@@ -233,3 +247,5 @@ export default function FullscreenPhotoViewer({
     </AnimatePresence>
   );
 }
+
+export default React.memo(FullscreenPhotoViewer);
