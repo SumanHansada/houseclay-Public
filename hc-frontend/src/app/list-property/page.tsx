@@ -346,12 +346,7 @@ const ListPropertyPage = dynamic(
                 </div>
 
                 <div className="flex w-1/2">
-                  <Carousel2D
-                    gap={4}
-                    showDots
-                    showArrows
-                    responsiveSlidesPerView
-                  >
+                  <Carousel2D gap={4} showArrows slidesPerView={2}>
                     {testimonials.map((testimonial) => (
                       <TestimonialCard
                         key={testimonial.id}

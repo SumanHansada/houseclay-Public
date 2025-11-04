@@ -4,7 +4,7 @@ import { ChevronLeft, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
@@ -72,15 +72,12 @@ export default function BuyConnectsPage() {
     PaymentVerificationStatus.VERIFYING,
   );
   const [newConnectBalanceFromAPI, setNewConnectBalanceFromAPI] = useState(0);
-  // State to store the paise amount
-  const razorpayAmountRef = useRef(0);
 
   const connectBalance = useSelector(
     (state: RootState) => state.user.userDetail.connectBal,
   );
 
   const { data: bundleData } = useBundleInfoQuery();
-  console.log("Bundle Info: ", bundleData);
 
   const displayBundles = useMemo(() => {
     return (
@@ -189,8 +186,6 @@ export default function BuyConnectsPage() {
         paymentId: response.razorpay_payment_id,
         orderId: response.razorpay_order_id,
         signature: response.razorpay_signature,
-        amount: razorpayAmountRef.current,
-        connects: connectsToBuy,
       }).unwrap();
       console.log("Payment verification response:", result);
       setPaymentStatus(PaymentVerificationStatus.SUCCESS);
@@ -213,10 +208,6 @@ export default function BuyConnectsPage() {
         connects: connectsToBuy,
         bundle: selectedBundle,
       }).unwrap();
-
-      console.log("Payment order created successfully:", response);
-      // Store the final amount (in paise) from the backend response
-      razorpayAmountRef.current = response.razorPayAmount;
 
       const options = {
         key: RAZORPAY_KEY,
@@ -459,30 +450,21 @@ export default function BuyConnectsPage() {
                       Cancel
                     </button>
 
-                    {isAuthenticated ? (
-                      <button
-                        onClick={handleProceedToPay}
-                        className={`flex px-8 py-3 rounded-xl ${
-                          agreedToTerms &&
-                          connectsToBuy >= MINIMUM_CUSTOM_CONNECTS
-                            ? "bg-red-500 text-white hover:bg-red-600"
-                            : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                        }`}
-                        disabled={
-                          !agreedToTerms ||
-                          connectsToBuy < MINIMUM_CUSTOM_CONNECTS
-                        }
-                      >
-                        Proceed to Pay
-                      </button>
-                    ) : (
-                      <button
-                        className="xl:px-8 lg:px-6 md:px-4 px-4  py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100 text-center"
-                        onClick={onLogin}
-                      >
-                        Login
-                      </button>
-                    )}
+                    <button
+                      onClick={isAuthenticated ? handleProceedToPay : onLogin}
+                      className={`flex px-8 py-3 rounded-xl ${
+                        agreedToTerms &&
+                        connectsToBuy >= MINIMUM_CUSTOM_CONNECTS
+                          ? "bg-red-500 text-white hover:bg-red-600"
+                          : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      }`}
+                      disabled={
+                        !agreedToTerms ||
+                        connectsToBuy < MINIMUM_CUSTOM_CONNECTS
+                      }
+                    >
+                      Proceed to Pay
+                    </button>
                   </div>
                 </div>
               </div>
@@ -730,28 +712,19 @@ export default function BuyConnectsPage() {
                 ₹{fmt2(totalRupees)}
               </div>
             </div>
-            {isAuthenticated ? (
-              <button
-                className={`text-center px-6 py-3 border rounded-xl w-full transition duration-200 ${
-                  agreedToTerms && connectsToBuy >= MINIMUM_CUSTOM_CONNECTS
-                    ? "bg-red-500 border-red-500 text-white hover:bg-red-600"
-                    : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
-                }`}
-                onClick={handleProceedToPay}
-                disabled={
-                  !agreedToTerms || connectsToBuy < MINIMUM_CUSTOM_CONNECTS
-                }
-              >
-                Proceed to Pay
-              </button>
-            ) : (
-              <button
-                className="px-6 py-3 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100 text-center"
-                onClick={onLogin}
-              >
-                Login
-              </button>
-            )}
+            <button
+              className={`text-center px-6 py-3 border rounded-xl w-full transition duration-200 ${
+                agreedToTerms && connectsToBuy >= MINIMUM_CUSTOM_CONNECTS
+                  ? "bg-red-500 border-red-500 text-white hover:bg-red-600"
+                  : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
+              }`}
+              onClick={isAuthenticated ? handleProceedToPay : onLogin}
+              disabled={
+                !agreedToTerms || connectsToBuy < MINIMUM_CUSTOM_CONNECTS
+              }
+            >
+              Proceed to Pay
+            </button>
           </DialogFooter>
         </Dialog>
       )}

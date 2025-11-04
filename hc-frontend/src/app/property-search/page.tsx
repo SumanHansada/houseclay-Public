@@ -6,7 +6,6 @@ import {
   SearchIcon,
   SlidersHorizontal,
 } from "lucide-react";
-import Link from "next/link";
 import {
   ReadonlyURLSearchParams,
   useRouter,
@@ -25,7 +24,7 @@ import {
 import { BadgeType, PropertyCategory } from "@/common/enums";
 import { pascalCase } from "@/common/utils";
 import Properties from "@/components/Properties";
-import { SearchFiltersDialog, SortFiltersDialog } from "@/dialogs";
+import { LoginDialog, SearchFiltersDialog, SortFiltersDialog } from "@/dialogs";
 import { PropertySearch } from "@/interfaces/PropertySearch";
 import {
   SORT_OPTIONS,
@@ -642,17 +641,18 @@ export default function PropertySearchPage() {
                   <h1 className="text-xl md:text-2xl font-semibold">
                     No Results Found
                   </h1>
-                  <p className="md:text-lg text-balance text-gray-600">
+                  {/* Commented my-requirements code for now */}
+                  {/* <p className="md:text-lg text-balance text-gray-600">
                     Don&apos;t worry, we can still get you the dream house fill
                     up the requirements below and we will get back to you.
-                  </p>
+                  </p> */}
                 </div>
-                <Link
+                {/* <Link
                   href="/manage-account/my-requirements"
                   className="px-6 py-2 rounded-md border border-red-500 md:text-lg hover:bg-red-50"
                 >
                   Fill Requirements
-                </Link>
+                </Link> */}
               </div>
             ) : (
               <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
@@ -704,6 +704,9 @@ export default function PropertySearchPage() {
           }}
         />
       )}
+
+      {/* Login Dialog */}
+      {isDialogOpen("login-dialog") && <LoginDialog id="login-dialog" />}
     </>
   );
 }

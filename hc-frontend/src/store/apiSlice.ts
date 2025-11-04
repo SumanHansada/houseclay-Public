@@ -272,8 +272,6 @@ export const apiSlice = createApi({
         paymentId: string;
         orderId: string;
         signature: string;
-        amount: number;
-        connects: number;
       }
     >({
       query: (data) => ({
