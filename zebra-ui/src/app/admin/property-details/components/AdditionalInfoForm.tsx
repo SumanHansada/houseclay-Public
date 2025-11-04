@@ -2,10 +2,10 @@
 
 import { useSelector } from "react-redux";
 
-import { PropertyCategoryEnum } from "@/common/enums";
-import FormPhoneInput from "@/components/common/FormPhoneInput";
+import { PropertyCategory } from "@/common/enums";
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 import { selectPropertyCategory } from "@/store/propertyDetailsSlice";
+import { FormPhoneField } from "@/form-components";
 
 interface AdditionalInfoFormProps {
   disabled: boolean;
@@ -26,8 +26,8 @@ const AdditionalInfoForm: React.FC<AdditionalInfoFormProps> = ({
         </h1>
       </div>
       <div>
-        {(propertyCategory === PropertyCategoryEnum.RENT ||
-          propertyCategory === PropertyCategoryEnum.FLATMATE) && (
+        {(propertyCategory === PropertyCategory.RENT ||
+          propertyCategory === PropertyCategory.FLATMATE) && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <div className="col-span-1">
               <FormSelectDropdown
@@ -52,19 +52,19 @@ const AdditionalInfoForm: React.FC<AdditionalInfoFormProps> = ({
               />
             </div>
             <div className="col-span-1">
-              <FormPhoneInput
+              <FormPhoneField
                 label="Secondary Phone Number"
                 name="additionalInfo.secondaryPhoneNumber"
                 id="additionalInfo.secondaryPhoneNumber"
                 defaultCountry="in"
                 placeholder="Enter phone number"
-                // disabled={disabled}
+                disabled={disabled}
                 className="border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-red-500 focus:border-red-500"
               />
             </div>
           </div>
         )}
-        {propertyCategory === PropertyCategoryEnum.RESALE && (
+        {propertyCategory === PropertyCategory.RESALE && (
           <>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
               <div className="col-span-1">
@@ -149,13 +149,13 @@ const AdditionalInfoForm: React.FC<AdditionalInfoFormProps> = ({
                 />
               </div>
               <div className="col-span-1">
-                <FormPhoneInput
+                <FormPhoneField
                   label="Secondary Phone Number"
                   name="additionalInfo.secondaryPhoneNumber"
                   id="additionalInfo.secondaryPhoneNumber"
                   defaultCountry="in"
                   placeholder="Enter phone number"
-                  //   disabled={disabled}
+                  disabled={disabled}
                   className="border border-gray-300 rounded-lg px-3 py-1.5 focus:ring-red-500 focus:border-red-500"
                 />
               </div>

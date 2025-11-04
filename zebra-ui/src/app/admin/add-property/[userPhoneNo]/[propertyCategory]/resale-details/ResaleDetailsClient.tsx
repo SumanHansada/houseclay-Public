@@ -23,15 +23,21 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
-import FormCalendarField from "@/components/common/FormCalendarField";
-import FormCurrencyField from "@/components/common/FormCurrencyField";
-import FormFormNumberField from "@/components/common/FormNumberField";
-import FormCheckbox from "@/form-components/FormCheckbox";
-import FormRadioGroup from "@/form-components/FormRadioGroup";
-import FormSelectDropdown from "@/form-components/FormSelectDropdown";
+import {
+  FormCalendarField,
+  FormCheckbox,
+  FormCurrencyField,
+  FormNumberField,
+  FormRadioGroup,
+  FormSelectDropdown,
+} from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
 import { setFormValidity, setResaleDetails } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
+import {
+  getResaleDetailsErrors,
+  getResaleDetailsTouched,
+} from "@/utils/formHelpers";
 
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ClubhouseIcon = ClubhouseIconSvg as React.FC<
@@ -96,6 +102,10 @@ const ResaleDetailsClient: React.FC = () => {
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
 
+  // Helper function to safely access optional fields
+  const resaleDetailsErrors = getResaleDetailsErrors(errors);
+  const resaleDetailsTouched = getResaleDetailsTouched(touched);
+
   const resaleDetailsString = JSON.stringify(values.resaleDetails);
 
   useEffect(() => {
@@ -105,11 +115,13 @@ const ResaleDetailsClient: React.FC = () => {
         // Clear any previous errors
         setErrors({});
         // Set form data in the store
-        dispatch(
-          setResaleDetails({
-            resaleDetails: values.resaleDetails,
-          }),
-        );
+        if (values.resaleDetails) {
+          dispatch(
+            setResaleDetails({
+              resaleDetails: values.resaleDetails,
+            }),
+          );
+        }
         // Form is valid
         if (!isFormValid) {
           dispatch(setFormValidity({ isValid: true }));
@@ -172,7 +184,7 @@ const ResaleDetailsClient: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
-            <FormFormNumberField
+            <FormNumberField
               name="resaleDetails.bathrooms"
               id="resaleDetails.bathrooms"
               label="Bathroom(s)"
@@ -180,7 +192,7 @@ const ResaleDetailsClient: React.FC = () => {
             />
           </div>
           <div className="col-span-1">
-            <FormFormNumberField
+            <FormNumberField
               name="resaleDetails.balcony"
               id="resaleDetails.balcony"
               label="Balcony"
@@ -233,8 +245,8 @@ const ResaleDetailsClient: React.FC = () => {
               ]}
               placeholder="Select Water supply"
               aria-describedby={
-                errors?.resaleDetails?.waterSupply &&
-                touched.resaleDetails?.waterSupply
+                resaleDetailsErrors?.waterSupply &&
+                resaleDetailsTouched?.waterSupply
                   ? "resaleDetails.waterSupply-error"
                   : undefined
               }
@@ -258,8 +270,8 @@ const ResaleDetailsClient: React.FC = () => {
               ]}
               placeholder="Select Power backup"
               aria-describedby={
-                errors?.resaleDetails?.powerBackup &&
-                touched?.resaleDetails?.powerBackup
+                resaleDetailsErrors?.powerBackup &&
+                resaleDetailsTouched?.powerBackup
                   ? "resaleDetails.powerBackup-error"
                   : undefined
               }
@@ -286,8 +298,8 @@ const ResaleDetailsClient: React.FC = () => {
               required={true}
               placeholder="Select furnishing"
               aria-describedby={
-                errors?.resaleDetails?.furnishing &&
-                touched?.resaleDetails?.furnishing
+                resaleDetailsErrors?.furnishing &&
+                resaleDetailsTouched?.furnishing
                   ? "resaleDetails.furnishing-error"
                   : undefined
               }
@@ -307,8 +319,7 @@ const ResaleDetailsClient: React.FC = () => {
               required={true}
               placeholder="Select Parking"
               aria-describedby={
-                errors?.resaleDetails?.parking &&
-                touched?.resaleDetails?.parking
+                resaleDetailsErrors?.parking && resaleDetailsTouched?.parking
                   ? "resaleDetails.parking-error"
                   : undefined
               }

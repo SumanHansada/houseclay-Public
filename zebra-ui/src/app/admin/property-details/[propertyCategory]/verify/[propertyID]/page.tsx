@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { use } from "react";
 
-import { PropertyCategoryEnum, VerifyPropertyTabEnum } from "@/common/enums";
+import { PropertyCategory, VerifyPropertyTabEnum } from "@/common/enums";
 
 export const dynamicParams = true;
 
@@ -11,9 +11,9 @@ interface TParams {
 
 export async function generateStaticParams() {
   return [
-    { propertyCategory: PropertyCategoryEnum.RENT.toLowerCase() },
-    { propertyCategory: PropertyCategoryEnum.RESALE.toLowerCase() },
-    { propertyCategory: PropertyCategoryEnum.FLATMATE.toLowerCase() },
+    { propertyCategory: PropertyCategory.RENT.toLowerCase() },
+    { propertyCategory: PropertyCategory.RESALE.toLowerCase() },
+    { propertyCategory: PropertyCategory.FLATMATE.toLowerCase() },
   ];
 }
 

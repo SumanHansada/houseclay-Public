@@ -1,4 +1,4 @@
-import { PropertyCategoryEnum } from "@/common/enums";
+import { PropertyCategory } from "@/common/enums";
 import { PropertyInfo, PropertyUpdate } from "@/interfaces/Property";
 
 import { AdditionalInfo } from "../AdditionalInfo";
@@ -13,7 +13,7 @@ interface PropertyCore {
   propertyID: string;
   images: string[];
   coverImage?: string;
-  propertyCategory: PropertyCategoryEnum;
+  propertyCategory: PropertyCategory;
 }
 
 export type FlattenedRentForm = Partial<

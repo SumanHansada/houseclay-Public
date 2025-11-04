@@ -4,16 +4,21 @@ import { Form, Formik, FormikProvider } from "formik";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
-import { PropertyCategoryEnum } from "@/common/enums";
+import { PropertyCategory } from "@/common/enums";
 import { PropertyResponseFormValues } from "@/interfaces/Property";
 import { selectFormData } from "@/store/propertyDetailsSlice";
 
-import AdditionalInfoForm from "../../../components/AdditionalInfoForm";
+// import AdditionalInfoForm from "../../../components/AdditionalInfoForm";
 import GalleryForm from "../../../components/GalleryForm";
-import LocalityDetailsForm from "../../../components/LocalityDetailsForm";
-import PropertyDetailsForm from "../../../components/PropertyDetailsForm";
-import RentalDetailsForm from "../../../components/RentalDetailsForm";
-import ResaleDetailsForm from "../../../components/ResaleDetailsForm";
+import {
+  PropertyDetailsFlatmateForm,
+  PropertyDetailsRentForm,
+  PropertyDetailsResaleForm,
+} from "@/components/forms";
+// import LocalityDetailsForm from "../../../components/LocalityDetailsForm";
+// import PropertyDetailsForm from "../../../components/PropertyDetailsForm";
+// import RentalDetailsForm from "../../../components/RentalDetailsForm";
+// import ResaleDetailsForm from "../../../components/ResaleDetailsForm";
 
 export default function DetailsPage() {
   const [editMode, setEditMode] = useState(false);
@@ -76,24 +81,30 @@ export default function DetailsPage() {
 
                 <div className="flex flex-col gap-8">
                   <div className="bg-white rounded-xl p-6 shadow-sm">
-                    <PropertyDetailsForm disabled={!editMode} />
+                    {propertyCategory === PropertyCategory.RESALE ? (
+                      <PropertyDetailsResaleForm disabled={!editMode} />
+                    ) : propertyCategory === PropertyCategory.RENT ? (
+                      <PropertyDetailsRentForm disabled={!editMode} />
+                    ) : (
+                      <PropertyDetailsFlatmateForm disabled={!editMode} />
+                    )}
                   </div>
 
                   <div className="bg-white rounded-xl p-6 shadow-sm">
-                    <LocalityDetailsForm disabled={!editMode} />
+                    {/* <LocalityDetailsForm disabled={!editMode} /> */}
                   </div>
-                  <div className="bg-white rounded-xl p-6 shadow-sm">
-                    {propertyCategory === PropertyCategoryEnum.RESALE ? (
+                  {/* <div className="bg-white rounded-xl p-6 shadow-sm">
+                    {propertyCategory === PropertyCategory.RESALE ? (
                       <ResaleDetailsForm disabled={!editMode} />
                     ) : (
                       <RentalDetailsForm disabled={!editMode} />
                     )}
-                  </div>
+                  </div> */}
                   <div className="bg-white rounded-xl p-6 shadow-sm">
                     <GalleryForm disabled={!editMode} />
                   </div>
                   <div className="bg-white rounded-xl p-6 shadow-sm">
-                    <AdditionalInfoForm disabled={!editMode} />
+                    {/* <AdditionalInfoForm disabled={!editMode} /> */}
                   </div>
                 </div>
               </div>

@@ -1,25 +1,23 @@
 import { redirect } from "next/navigation";
-import { use } from "react";
 
-import { PropertyCategoryEnum } from "@/common/enums";
+import { PropertyCategory } from "@/common/enums";
 
-export const dynamicParams = true;
-
-interface TParams {
+interface AddPropertyRootPageProps {
   params: Promise<{ userPhoneNo: string; propertyCategory: string }>;
 }
 
-export async function generateStaticParams() {
-  return [
-    { propertyCategory: PropertyCategoryEnum.RENT.toLowerCase() },
-    { propertyCategory: PropertyCategoryEnum.RESALE.toLowerCase() },
-    { propertyCategory: PropertyCategoryEnum.FLATMATE.toLowerCase() },
-  ];
-}
+export default async function AddPropertyRootPage({
+  params,
+}: AddPropertyRootPageProps) {
+  const { propertyCategory, userPhoneNo } = await params;
+  const category = propertyCategory.toUpperCase();
 
-export default function AddPropertyTypeRootPage({ params }: TParams) {
-  const { propertyCategory, userPhoneNo } = use(params);
-  redirect(
-    `/admin/add-property/${userPhoneNo}/${propertyCategory}/property-details`,
-  );
+  if (
+    category &&
+    Object.values(PropertyCategory).includes(category as PropertyCategory)
+  ) {
+    redirect(`/admin/add-property/${userPhoneNo}/${category}/property-details`);
+  } else {
+    redirect("/");
+  }
 }

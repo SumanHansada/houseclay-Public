@@ -9,7 +9,7 @@ import {
 
 import {
   ListPropertyFormStep as AddPropertyFormStep,
-  PropertyCategoryEnum,
+  PropertyCategory,
 } from "@/common/enums";
 
 import StepNavigationButton from "./StepNavigationButton";
@@ -17,7 +17,7 @@ import StepNavigationButton from "./StepNavigationButton";
 interface DesktopStepperProps {
   currentStep: AddPropertyFormStep;
   completedSteps: Set<AddPropertyFormStep>;
-  propertyCategory: PropertyCategoryEnum;
+  propertyCategory: PropertyCategory;
   isMobile: boolean;
   onGoToHome: () => void;
 }
@@ -38,7 +38,7 @@ const DesktopStepper: React.FC<DesktopStepperProps> = ({
     ];
     const middleStep = {
       step:
-        propertyCategory === PropertyCategoryEnum.RESALE
+        propertyCategory === PropertyCategory.RESALE
           ? AddPropertyFormStep.RESALE_DETAILS
           : AddPropertyFormStep.RENTAL_DETAILS,
       Icon: IndianRupee,
@@ -56,15 +56,15 @@ const DesktopStepper: React.FC<DesktopStepperProps> = ({
     ];
 
     if (
-      propertyCategory === PropertyCategoryEnum.RENT ||
-      propertyCategory === PropertyCategoryEnum.FLATMATE
+      propertyCategory === PropertyCategory.RENT ||
+      propertyCategory === PropertyCategory.FLATMATE
     ) {
       return [
         ...baseSteps.slice(0, 2),
         AddPropertyFormStep.RENTAL_DETAILS,
         ...baseSteps.slice(2),
       ];
-    } else if (propertyCategory === PropertyCategoryEnum.RESALE) {
+    } else if (propertyCategory === PropertyCategory.RESALE) {
       return [
         ...baseSteps.slice(0, 2),
         AddPropertyFormStep.RESALE_DETAILS,

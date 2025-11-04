@@ -1,15 +1,26 @@
-import { PropertyCategoryEnum } from "@/common/enums";
+import { Suspense } from "react";
 
+import LocalityDetailsLoading from "./loading";
 import LocalityDetailsClient from "./LocalityDetailsClient";
 
-export async function generateStaticParams() {
-  return [
-    { propertyCategory: PropertyCategoryEnum.RENT.toLowerCase() },
-    { propertyCategory: PropertyCategoryEnum.RESALE.toLowerCase() },
-    { propertyCategory: PropertyCategoryEnum.FLATMATE.toLowerCase() },
-  ];
+// Force dynamic rendering to avoid server component issues
+export const dynamic = "force-dynamic";
+
+// Error boundary component
+function LocalityDetailsErrorBoundary({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <div className="w-full">{children}</div>;
 }
 
 export default function LocalityDetailsPage() {
-  return <LocalityDetailsClient />;
+  return (
+    <LocalityDetailsErrorBoundary>
+      <Suspense fallback={<LocalityDetailsLoading />}>
+        <LocalityDetailsClient />
+      </Suspense>
+    </LocalityDetailsErrorBoundary>
+  );
 }

@@ -1,4 +1,4 @@
-import { PropertyCategoryEnum } from "@/common/enums";
+import { PropertyCategory } from "@/common/enums";
 import {
   FlattenedFlatmateForm,
   FlattenedRentForm,
@@ -9,14 +9,14 @@ import {
 export const isRent = (
   p: PropertyResponse,
 ): p is PropertyResponse & FlattenedRentForm =>
-  p.propertyCategory === PropertyCategoryEnum.RENT;
+  p.propertyCategory === PropertyCategory.RENT;
 
 export const isFlatmate = (
   p: PropertyResponse,
 ): p is PropertyResponse & FlattenedFlatmateForm =>
-  p.propertyCategory === PropertyCategoryEnum.FLATMATE;
+  p.propertyCategory === PropertyCategory.FLATMATE;
 
 export const isResale = (
   p: PropertyResponse,
 ): p is PropertyResponse & FlattenedResaleForm =>
-  p.propertyCategory === PropertyCategoryEnum.RESALE;
+  p.propertyCategory === PropertyCategory.RESALE;

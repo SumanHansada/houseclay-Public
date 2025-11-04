@@ -109,8 +109,8 @@ interface EnsureEnumValueParams<E extends StringEnum> {
  * Used as a type guard for validating string enum values at runtime.
  *
  * @example
- * isEnumValue(PropertyCategoryEnum, "RENT"); // true
- * isEnumValue(PropertyCategoryEnum, "xyz");  // false
+ * isEnumValue(PropertyCategory, "RENT"); // true
+ * isEnumValue(PropertyCategory, "xyz");  // false
  */
 export function isEnumValue<E extends StringEnum>(
   enumObj: E,

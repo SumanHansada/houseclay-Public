@@ -1,15 +1,26 @@
-import { PropertyCategoryEnum } from "@/common/enums";
+import { Suspense } from "react";
 
+import PropertyDetailsLoading from "./loading";
 import PropertyDetailsClient from "./PropertyDetailsClient";
 
-export async function generateStaticParams() {
-  return [
-    { propertyCategory: PropertyCategoryEnum.RENT.toLowerCase() },
-    { propertyCategory: PropertyCategoryEnum.RESALE.toLowerCase() },
-    { propertyCategory: PropertyCategoryEnum.FLATMATE.toLowerCase() },
-  ];
+// Enable static generation with revalidation
+export const revalidate = 3600; // Revalidate every hour
+
+// Error boundary component
+function PropertyDetailsErrorBoundary({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <div className="w-full">{children}</div>;
 }
 
 export default function PropertyDetailsPage() {
-  return <PropertyDetailsClient />;
+  return (
+    <PropertyDetailsErrorBoundary>
+      <Suspense fallback={<PropertyDetailsLoading />}>
+        <PropertyDetailsClient />
+      </Suspense>
+    </PropertyDetailsErrorBoundary>
+  );
 }

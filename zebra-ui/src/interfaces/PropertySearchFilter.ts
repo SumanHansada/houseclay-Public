@@ -1,9 +1,9 @@
-import { PropertyCategoryEnum } from "@/common/enums";
+import { PropertyCategory } from "@/common/enums";
 
 export interface PropertySearchFilter {
   // Basic Filters
   propertyType: string | number | boolean;
-  propertyCategory: PropertyCategoryEnum;
+  propertyCategory: PropertyCategory;
   propertyBhk: string | number | boolean;
   tenantType: string | number | boolean;
   // New filter states
@@ -18,4 +18,5 @@ export interface PropertySearchFilter {
   parking: string;
   priceRangeForRent: [number, number];
   priceRangeForBuy: [number, number];
+  bhkType: string;
 }

@@ -34,3 +34,13 @@ export const extractS3KeyFromUrl = (s3Url: string) => {
 export const pascalCase = (str: string) => {
   return str ? str.charAt(0).toUpperCase() + str.slice(1) : "-";
 };
+
+/**
+ * Sanitizes a phone number by removing country code (+91) and non-digit characters
+ * @param phoneNumber - The phone number to sanitize
+ * @returns The sanitized phone number (digits only)
+ */
+export const sanitizePhoneNumber = (phoneNumber: string): string => {
+  if (!phoneNumber) return phoneNumber;
+  return phoneNumber.replace(/^\+91/, "").replace(/\D/g, "");
+};

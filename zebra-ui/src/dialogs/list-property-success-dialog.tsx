@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import ListPropertySuccessSvg from "public/icons/list-property-success.svg";
 import { useDispatch } from "react-redux";
 
-import { PropertyCategoryEnum } from "@/common/enums";
+import { PropertyCategory } from "@/common/enums";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -18,7 +18,7 @@ const ListPropertySuccess = ListPropertySuccessSvg as React.FC<
 interface ListPropertySuccessDialogProps {
   id: string;
   propertyID: string;
-  propertyCategory: PropertyCategoryEnum;
+  propertyCategory: PropertyCategory;
 }
 
 export const ListPropertySuccessDialog: React.FC<

@@ -7,11 +7,11 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
-import FormInputField from "@/components/common/FormInputField";
-import { authFailure, authStarted, authSuccess } from "@/store/adminAuthSlice";
+import { loginFailure, loginStart, loginSuccess } from "@/store/adminSlice";
 import { useLoginMutation } from "@/store/apiSlice";
 import { RootState } from "@/store/store";
-import { toErrorMessage } from "@/utils/rtkError";
+import { FormTextField } from "@/form-components";
+import FormPasswordField from "@/form-components/FormPasswordField";
 
 const loginSchema = Yup.object().shape({
   username: Yup.string().required("Username is required"),
@@ -30,33 +30,37 @@ export default function AdminLogin() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const { isAuthenticated, authError } = useSelector(
-    (state: RootState) => state.adminAuth,
+  const { token, error: reduxError } = useSelector(
+    (state: RootState) => state.admin,
   );
 
-  const [loginUser, { isLoading, isError }] = useLoginMutation();
+  const [loginUser, { isLoading: loginLoading, isError: loginError }] =
+    useLoginMutation();
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (token) {
       router.push("/admin/dashboard");
     }
-  }, [isAuthenticated, router]);
+  }, [token, router]);
 
   const handleSubmit = async (
     values: LoginFormValues,
     formikHelpers: FormikHelpers<LoginFormValues>,
   ) => {
-    dispatch(authStarted());
     try {
-      await loginUser({
+      dispatch(loginStart());
+
+      const returnedToken = await loginUser({
         username: values.username,
         password: values.password,
       }).unwrap();
 
-      dispatch(authSuccess());
+      dispatch(loginSuccess(returnedToken));
+
+      router.push("/admin/dashboard");
     } catch (err) {
       console.error("Login failed:", err);
-      dispatch(authFailure(toErrorMessage(err)));
+      dispatch(loginFailure("Invalid username or password"));
       formikHelpers.setSubmitting(false);
     }
   };
@@ -91,7 +95,7 @@ export default function AdminLogin() {
             >
               {({ isSubmitting }) => (
                 <Form className="space-y-4 md:space-y-6">
-                  <FormInputField
+                  {/* <FormInputField
                     name="username"
                     label="Username"
                     placeholder="Enter your username"
@@ -100,7 +104,6 @@ export default function AdminLogin() {
                     testId="login-username"
                     autoComplete="username"
                   />
-
                   <FormInputField
                     name="password"
                     label="Password"
@@ -109,8 +112,25 @@ export default function AdminLogin() {
                     required
                     testId="login-password"
                     autoComplete="current-password"
+                  /> */}
+
+                  <FormTextField
+                    name="username"
+                    label="Username"
+                    placeholder="Enter your username"
+                    // testId="login-username"
+                    // autoComplete="username"
+                    required
                   />
 
+                  <FormPasswordField
+                    name="password"
+                    label="Password"
+                    placeholder="••••••••"
+                    // testId="login-password"
+                    // autoComplete="current-password"
+                    required
+                  />
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
                       <input
@@ -135,22 +155,20 @@ export default function AdminLogin() {
                       Forgot password?
                     </a>
                   </div>
-
-                  {(isError || authError) && (
+                  {(reduxError || loginError) && (
                     <div className="text-red-500 text-sm text-center">
-                      {authError ?? "Error with login. Please try again later!"}
+                      {reduxError || "Invalid username or password"}
                     </div>
                   )}
                   <button
                     data-testid="login-submit-button"
                     aria-label="sign-in"
                     type="submit"
-                    disabled={isSubmitting || isLoading}
+                    disabled={isSubmitting || loginLoading}
                     className="w-full text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isLoading ? "Signing in…" : "Sign in"}
+                    {loginLoading ? "Signing in…" : "Sign in"}
                   </button>
-
                   <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                     Don&apos;t have an account yet?{" "}
                     <a

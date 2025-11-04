@@ -1,15 +1,22 @@
-import { PropertyCategoryEnum } from "@/common/enums";
+import { Suspense } from "react";
 
 import GalleryClient from "./GalleryClient";
+import GalleryPageLoading from "./loading";
 
-export async function generateStaticParams() {
-  return [
-    { propertyCategory: PropertyCategoryEnum.RENT.toLowerCase() },
-    { propertyCategory: PropertyCategoryEnum.RESALE.toLowerCase() },
-    { propertyCategory: PropertyCategoryEnum.FLATMATE.toLowerCase() },
-  ];
+// Force dynamic rendering to avoid server component issues
+export const dynamic = "force-dynamic";
+
+// Error boundary component
+function GalleryErrorBoundary({ children }: { children: React.ReactNode }) {
+  return <div className="w-full">{children}</div>;
 }
 
 export default function GalleryPage() {
-  return <GalleryClient />;
+  return (
+    <GalleryErrorBoundary>
+      <Suspense fallback={<GalleryPageLoading />}>
+        <GalleryClient />
+      </Suspense>
+    </GalleryErrorBoundary>
+  );
 }

@@ -3,7 +3,7 @@ import RentSvg from "public/icons/rent.svg";
 import ResaleSvg from "public/icons/resale.svg";
 import { useDispatch, useSelector } from "react-redux";
 
-import { PropertyCategoryEnum } from "@/common/enums";
+import { PropertyCategory } from "@/common/enums";
 import { setPropertyCategory } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
@@ -36,19 +36,19 @@ const PropertyTypeOptions = ({
       id: "rent",
       label: "Rent",
       icon: <Rent />,
-      type: PropertyCategoryEnum.RENT,
+      type: PropertyCategory.RENT,
     },
     {
       id: "resale",
       label: "Resale",
       icon: <Resale />,
-      type: PropertyCategoryEnum.RESALE,
+      type: PropertyCategory.RESALE,
     },
     {
       id: "flatmates",
       label: "Flatmates",
       icon: <Flatmates />,
-      type: PropertyCategoryEnum.FLATMATE,
+      type: PropertyCategory.FLATMATE,
     },
   ];
 

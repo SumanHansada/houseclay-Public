@@ -64,14 +64,14 @@ export default propertyDetailsSlice.reducer;
 
 // import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-// import { PropertyCategoryEnum } from "@/common/enums";
+// import { PropertyCategory } from "@/common/enums";
 // import { GetPropertyByIdResponse } from "@/interfaces/api";
 
 // type Status = "idle" | "loading" | "succeeded" | "failed";
 
 // interface PropertyDetailsState {
 //   data: GetPropertyByIdResponse | null;
-//   propertyCategory: PropertyCategoryEnum;
+//   propertyCategory: PropertyCategory;
 //   status: Status;
 //   error: string | null;
 // }
@@ -79,7 +79,7 @@ export default propertyDetailsSlice.reducer;
 // const initialState: PropertyDetailsState = {
 //   data: null,
 //   status: "idle",
-//   propertyCategory: PropertyCategoryEnum.NONE,
+//   propertyCategory: PropertyCategory.NONE,
 //   error: null,
 // };
 
@@ -89,7 +89,7 @@ export default propertyDetailsSlice.reducer;
 //   reducers: {
 //     setPropertyCategory: (
 //       state,
-//       action: PayloadAction<PropertyCategoryEnum>,
+//       action: PayloadAction<PropertyCategory>,
 //     ) => {
 //       state.propertyCategory = action.payload;
 //     },

@@ -8,16 +8,13 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   ListPropertyFormStep as AddPropertyFormStep,
   ListPropertyRouteStep as AddPropertyRouteStep,
-  PropertyCategoryEnum,
+  PropertyCategory,
 } from "@/common/enums";
 import { extractS3KeyFromUrl } from "@/common/utils";
 import { ListPropertySuccessDialog } from "@/dialogs/list-property-success-dialog";
 import { UploadDialog } from "@/dialogs/upload-dialog";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
-import { FlatmateForm } from "@/interfaces/FlatmateForm";
 import { PropertyImage } from "@/interfaces/PropertyImage";
-import { RentForm } from "@/interfaces/RentForm";
-import { ResaleForm } from "@/interfaces/ResaleForm";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -37,8 +34,8 @@ import {
 import { RootState } from "@/store/store";
 
 import DesktopStepper from "../components/DesktopStepper";
-
-export const dynamicParams = true;
+import { FormValues } from "@/interfaces/FormValues";
+import { transformFormValuesToPropertyForm } from "@/interfaces/FormTransformers";
 
 export default function AddPropertyTypeLayout({
   children,
@@ -91,7 +88,7 @@ export default function AddPropertyTypeLayout({
     const allSteps = [
       AddPropertyFormStep.PROPERTY_DETAILS,
       AddPropertyFormStep.LOCALITY_DETAILS,
-      propertyCategory === PropertyCategoryEnum.RESALE
+      propertyCategory === PropertyCategory.RESALE
         ? AddPropertyFormStep.RESALE_DETAILS
         : AddPropertyFormStep.RENTAL_DETAILS,
       AddPropertyFormStep.GALLERY,
@@ -125,7 +122,23 @@ export default function AddPropertyTypeLayout({
   const formState = useSelector((state: RootState) => state.listProperty.form);
 
   const isFormValid = formState?.isValid;
-  const initialValues = formState?.data || {};
+
+  const getInitialValues = (): FormValues => {
+    const data = formState?.data || {};
+
+    // Ensure all required fields are present
+    return {
+      localityDetails: data.localityDetails,
+      images: data.images || [],
+      propertyDetails: data.propertyDetails,
+      rentalDetails: data.rentalDetails,
+      resaleDetails: data.resaleDetails,
+      flatmateDetails: data.flatmateDetails,
+      additionalInfo: data.additionalInfo,
+    };
+  };
+
+  const initialValues = getInitialValues();
 
   useEffect(() => {
     if (isMobile) {
@@ -232,11 +245,11 @@ export default function AddPropertyTypeLayout({
       },
       [AddPropertyFormStep.GALLERY]: {
         prevStep:
-          propertyCategory === PropertyCategoryEnum.RESALE
+          propertyCategory === PropertyCategory.RESALE
             ? AddPropertyFormStep.RESALE_DETAILS
             : AddPropertyFormStep.RENTAL_DETAILS,
         route:
-          propertyCategory === PropertyCategoryEnum.RESALE
+          propertyCategory === PropertyCategory.RESALE
             ? AddPropertyRouteStep.RESALE_DETAILS
             : AddPropertyRouteStep.RENTAL_DETAILS,
       },
@@ -261,7 +274,7 @@ export default function AddPropertyTypeLayout({
     if (currentStep === AddPropertyFormStep.PROPERTY_DETAILS) {
       setRoute(AddPropertyRouteStep.LOCALITY_DETAILS);
     } else if (currentStep === AddPropertyFormStep.LOCALITY_DETAILS) {
-      if (propertyCategory === PropertyCategoryEnum.RESALE) {
+      if (propertyCategory === PropertyCategory.RESALE) {
         setRoute(AddPropertyRouteStep.RESALE_DETAILS);
       } else {
         setRoute(AddPropertyRouteStep.RENTAL_DETAILS);
@@ -285,18 +298,29 @@ export default function AddPropertyTypeLayout({
 
   const handlePostProperty = async () => {
     try {
-      const propertyDetails = formState.data?.propertyDetails;
-      const localityDetails = formState.data?.localityDetails;
-      const additionalInfo = formState.data?.additionalInfo;
-      const rentalDetails = (formState.data as RentForm)?.rentalDetails;
-      const resaleDetails = (formState.data as ResaleForm)?.resaleDetails;
-      const flatmateDetails = (formState.data as FlatmateForm).flatmateDetails;
+      // Transform FormValues to PropertyForm using the type-safe transformer
+      const formValues = formState.data as FormValues;
+
+      if (!formValues) {
+        throw new Error("Form data is not available");
+      }
+
+      // Transform to the appropriate PropertyForm type
+      const propertyForm = transformFormValuesToPropertyForm(
+        formValues,
+        propertyID,
+        propertyCategory,
+      );
+
+      // Extract S3 image keys
       const imagesS3Keys =
         Object.values(propertyImagesS3Url).length > 0
           ? Object.values(propertyImagesS3Url).map(
               (url) => extractS3KeyFromUrl(url) || "",
             )
           : [];
+
+      // Add cover image information if needed
       const coverImage = propertyImages.filter((image) => image.isCover);
       const coverImageName =
         coverImage.length > 0 ? coverImage[0].file.name : "";
@@ -304,26 +328,15 @@ export default function AddPropertyTypeLayout({
         key.endsWith(coverImageName),
       );
 
-      let propertyData = {
-        propertyID,
-        propertyCategory,
-        images: imagesS3Keys,
+      // Create the final API payload
+      const apiPayload = {
+        ...propertyForm,
         coverImage: coverImageS3Key,
-        ...propertyDetails,
-        ...localityDetails,
-        ...additionalInfo,
+        images: imagesS3Keys,
       };
 
-      if (propertyCategory === PropertyCategoryEnum.RESALE) {
-        propertyData = { ...propertyData, ...resaleDetails };
-      } else if (propertyCategory === PropertyCategoryEnum.RENT) {
-        propertyData = { ...propertyData, ...rentalDetails };
-      } else if (propertyCategory === PropertyCategoryEnum.FLATMATE) {
-        propertyData = { ...propertyData, ...flatmateDetails };
-      }
-
       await addProperty({
-        payload: propertyData,
+        payload: apiPayload,
         phoneNo: userPhoneNo,
       });
 
@@ -362,7 +375,7 @@ export default function AddPropertyTypeLayout({
           {/* Steps navigation */}
           {!isMobile && renderStepper()}
         </div>
-        <div className="container right-0 max-md:ml-auto pt-4 md:pt-12 pb-20 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
+        <div className="container right-0 max-md:ml-auto pt-4 md:pt-12 pb-20 mx-auto xl:px-28 lg:px-14 md:px-8 px-6">
           <div className="flex flex-col">
             <Formik
               initialValues={initialValues}

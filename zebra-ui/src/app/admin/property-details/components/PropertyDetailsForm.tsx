@@ -2,11 +2,10 @@
 
 import { useSelector } from "react-redux";
 
-import { PropertyCategoryEnum } from "@/common/enums";
-import FormInputField from "@/components/common/FormInputField";
-import FormTextArea from "@/components/common/FormTextArea";
+import { PropertyCategory } from "@/common/enums";
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 import { selectPropertyCategory } from "@/store/propertyDetailsSlice";
+import { FormTextArea, FormTextField } from "@/form-components";
 
 interface PropertyDetailsFormProps {
   disabled: boolean;
@@ -53,10 +52,10 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
       />
 
       {/* BUILT UP AREA + FACING */}
-      {(propertyCategory === PropertyCategoryEnum.RENT ||
-        propertyCategory === PropertyCategoryEnum.RESALE) && (
+      {(propertyCategory === PropertyCategory.RENT ||
+        propertyCategory === PropertyCategory.RESALE) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormInputField
+          <FormTextField
             name="propertyDetails.builtUpArea"
             id="propertyDetails.builtUpArea"
             label="Built Up Area"
@@ -94,8 +93,8 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
       )}
 
       {/* BHK TYPE, OWNERSHIP, AGE */}
-      {(propertyCategory === PropertyCategoryEnum.RENT ||
-        propertyCategory === PropertyCategoryEnum.RESALE) && (
+      {(propertyCategory === PropertyCategory.RENT ||
+        propertyCategory === PropertyCategory.RESALE) && (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           <FormSelectDropdown
             label="BHK Type"
@@ -167,9 +166,9 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
         </div>
       )}
 
-      {propertyCategory === PropertyCategoryEnum.FLATMATE && (
+      {propertyCategory === PropertyCategory.FLATMATE && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormInputField
+          <FormTextField
             name="propertyDetails.builtUpArea"
             id="propertyDetails.builtUpArea"
             label="Built Up Area"
@@ -205,7 +204,7 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
 
       {/* FLOOR, TOTAL FLOOR, FLOOR TYPE */}
       <div
-        className={`grid grid-cols-1 md:grid-cols-2 ${propertyCategory === PropertyCategoryEnum.RENT || propertyCategory === PropertyCategoryEnum.RESALE ? "xl:grid-cols-3" : ""} gap-6`}
+        className={`grid grid-cols-1 md:grid-cols-2 ${propertyCategory === PropertyCategory.RENT || propertyCategory === PropertyCategory.RESALE ? "xl:grid-cols-3" : ""} gap-6`}
       >
         <FormSelectDropdown
           label="Total Floor"
@@ -247,8 +246,8 @@ const PropertyDetailsForm: React.FC<PropertyDetailsFormProps> = ({
           // }
         />
 
-        {(propertyCategory === PropertyCategoryEnum.RENT ||
-          propertyCategory === PropertyCategoryEnum.RESALE) && (
+        {(propertyCategory === PropertyCategory.RENT ||
+          propertyCategory === PropertyCategory.RESALE) && (
           <FormSelectDropdown
             label="Floor Type"
             name="propertyDetails.floorType"

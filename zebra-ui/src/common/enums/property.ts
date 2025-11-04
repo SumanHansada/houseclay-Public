@@ -24,7 +24,7 @@ export enum PropertyListingType {
   CALL = "CALL",
 }
 
-export enum PropertyCategoryEnum {
+export enum PropertyCategory {
   NONE = "",
   RENT = "RENT",
   RESALE = "RESALE",

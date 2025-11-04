@@ -4,7 +4,14 @@ export default {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/dialogs/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/base-components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/form-components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/utility-components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/layout-components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/utils/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/data/**/*.json",
     "./.storybook/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {

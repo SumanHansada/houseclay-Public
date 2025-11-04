@@ -1,4 +1,4 @@
-import PlacesAutocomplete from "@/components/common/PlacesAutocomplete";
+import { PlacesAutocomplete } from "@/base-components";
 import withFormikField from "@/hoc/withFormikField";
 
 const FormPlacesAutocomplete = withFormikField(PlacesAutocomplete);

@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { PropertyCategoryEnum } from "@/common/enums";
+import { PropertyCategory } from "@/common/enums";
 import { PropertySearchFilter } from "@/interfaces/PropertySearchFilter";
 
 const initialState: PropertySearchFilter = {
   propertyType: "",
-  propertyCategory: PropertyCategoryEnum.RENT,
+  propertyCategory: PropertyCategory.RENT,
   propertyBhk: "",
   tenantType: "",
   // New filter initial states
@@ -20,6 +20,7 @@ const initialState: PropertySearchFilter = {
   parking: "",
   priceRangeForRent: [200000, 700000],
   priceRangeForBuy: [5000000, 70000000],
+  bhkType: "",
 };
 
 const propertySearchSlice = createSlice({
@@ -32,10 +33,7 @@ const propertySearchSlice = createSlice({
     ) => {
       state.propertyType = action.payload;
     },
-    setPropertyCategory: (
-      state,
-      action: PayloadAction<PropertyCategoryEnum>,
-    ) => {
+    setPropertyCategory: (state, action: PayloadAction<PropertyCategory>) => {
       state.propertyCategory = action.payload;
     },
     setPropertyBhk: (
@@ -84,9 +82,12 @@ const propertySearchSlice = createSlice({
     setPriceRangeForBuy: (state, action: PayloadAction<[number, number]>) => {
       state.priceRangeForBuy = action.payload;
     },
+    setBhkType: (state, action: PayloadAction<string>) => {
+      state.bhkType = action.payload;
+    },
     resetPropertySearch: (state) => {
       state.propertyType = "";
-      state.propertyCategory = PropertyCategoryEnum.RENT;
+      state.propertyCategory = PropertyCategory.RENT;
       state.propertyBhk = "";
       state.tenantType = "";
       // Reset filter states to initial values
@@ -101,6 +102,7 @@ const propertySearchSlice = createSlice({
       state.parking = "";
       state.priceRangeForRent = [200000, 700000];
       state.priceRangeForBuy = [5000000, 70000000];
+      state.bhkType = "";
     },
   },
 });
@@ -121,6 +123,7 @@ export const {
   setParking,
   setPriceRangeForRent,
   setPriceRangeForBuy,
+  setBhkType,
   resetPropertySearch,
 } = propertySearchSlice.actions;
 

@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 
 import { LeadQueryParamEnum } from "@/common/enums";
 import {
@@ -13,19 +13,16 @@ import {
   GetUserByPhoneNoResponse,
 } from "@/interfaces/api";
 import {
-  BASE_API_URL,
+  baseQueryWithAuth,
   invalidateAllTags,
   listTag,
   TAGS,
 } from "@/utils/rtkQueryHelpers";
+import { PropertyForm } from "@/interfaces/PropertyForm";
 
 export const apiSlice = createApi({
   reducerPath: "api",
-  // baseQuery: baseQueryWithAuth,
-  baseQuery: fetchBaseQuery({
-    baseUrl: BASE_API_URL,
-    credentials: "include",
-  }),
+  baseQuery: baseQueryWithAuth,
   tagTypes: TAGS,
 
   endpoints: (builder) => ({
@@ -58,10 +55,6 @@ export const apiSlice = createApi({
     }),
 
     // ──────────────── USERS ────────────────
-    getUsersAuthCheck: builder.query<undefined, void>({
-      query: () => "/admin/users",
-    }),
-
     getUsers: builder.query<
       GetAllUsersResponse,
       { page: number; size: number }
@@ -226,7 +219,7 @@ export const apiSlice = createApi({
         propertyID: number;
       },
       {
-        payload: AddPropertyRequest;
+        payload: PropertyForm;
         phoneNo: string;
       }
     >({
@@ -363,7 +356,6 @@ export const {
   useLoginMutation,
   useRegisterMutation,
   useLogoutMutation,
-  useGetUsersAuthCheckQuery,
   useGetUsersQuery,
   useGetUserByPhoneNoQuery,
   useBlacklistUserMutation,

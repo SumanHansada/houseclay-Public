@@ -1,49 +1,53 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-// --- CONFIGURATION ---
-const publicPaths = ["/", "/login", "/register"];
-const adminRoot = "/admin/dashboard";
-const loginPath = "/login";
+// ──── ONLY ENABLE THIS FALLBACK WHEN RUNNING ON LOCALHOST && SERVER IS DOWN ────
+const serverDownFlag = false;
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  const token = request.cookies.get("token")?.value;
+  const { pathname, hostname } = request.nextUrl;
 
-  // Handle the root path "/"
-  if (pathname === "/") {
-    const url = request.nextUrl.clone();
-    // If logged in, go to dashboard. If not, go to login.
-    url.pathname = token ? adminRoot : loginPath;
-    return NextResponse.redirect(url);
-  }
+  if (pathname === "/" || pathname.startsWith("/admin")) {
+    const loginURL = new URL("/login", request.url);
+    const dashURL = new URL("/admin/dashboard", request.url);
+    const fallbackToken = "FALLBACK_DEV_ADMIN_TOKEN";
+    const tokenName = "adminToken";
 
-  // Handle public paths (login/register)
-  if (publicPaths.includes(pathname)) {
-    // If logged in, redirect away from public paths to the dashboard
-    if (token) {
-      const url = request.nextUrl.clone();
-      url.pathname = adminRoot;
-      return NextResponse.redirect(url);
+    const existingToken = request.cookies.get(tokenName)?.value;
+    const isLocalhost =
+      hostname === "localhost" ||
+      hostname === "127.0.0.1" ||
+      hostname === "[::1]";
+
+    // ──── Activate fallback only on localhost when serverDownFlag === true ────
+    const serverDown = isLocalhost && serverDownFlag;
+
+    // ──── If fallback is active (serverDown = true) and no token exists, set it & redirect ────
+    if (serverDown && !existingToken) {
+      const response = NextResponse.redirect(dashURL);
+      response.cookies.set({
+        name: tokenName,
+        value: fallbackToken,
+        httpOnly: false,
+        path: "/",
+        sameSite: "lax",
+        secure: false,
+        maxAge: 60 * 60 * 24,
+      });
+      return response;
     }
-    // If not logged in, allow access to public paths
+
+    if (!existingToken) {
+      return NextResponse.redirect(loginURL);
+    }
+    if (pathname === "/") {
+      return NextResponse.redirect(dashURL);
+    }
     return NextResponse.next();
   }
-
-  // Handle protected admin paths (everything else)
-  // If no token and not a public path, redirect to login
-  if (!token) {
-    const url = request.nextUrl.clone();
-    url.pathname = loginPath;
-    url.searchParams.set("from", pathname);
-    return NextResponse.redirect(url);
-  }
-
-  // If token exists, allow access to the protected path
   return NextResponse.next();
 }
 
 export const config = {
-  // Match all paths except for static assets and API routes
-  matcher: ["/admin/:path*"],
+  matcher: ["/", "/admin/:path*"],
 };

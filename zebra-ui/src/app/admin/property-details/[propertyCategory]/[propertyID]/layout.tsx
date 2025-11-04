@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { PropertyDetailsTabEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
-import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
 import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 import {
   selectFormData,
@@ -19,6 +18,7 @@ import {
 } from "@/store/propertyDetailsSlice";
 import { ensureEnumValue } from "@/utils/core";
 import { apiToForm } from "@/utils/transform/propertyToFormValues";
+import { Tab, TabHeader, Tabs } from "@/utility-components";
 
 const tabs: { label: string; value: PropertyDetailsTabEnum }[] = [
   { label: "Details", value: PropertyDetailsTabEnum.DETAILS },

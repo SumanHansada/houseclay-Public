@@ -1,4 +1,4 @@
-import { PropertyCategoryEnum, PropertyStatusEnum } from "@/common/enums";
+import { PropertyCategory, PropertyStatusEnum } from "@/common/enums";
 
 import { AdditionalInfo } from "./AdditionalInfo";
 import { FlatmateDetails } from "./FlatmateDetails";
@@ -10,7 +10,7 @@ import { ResaleDetails } from "./ResaleDetails";
 
 export interface PropertyInfo {
   propertyID: string;
-  propertyCategory: PropertyCategoryEnum;
+  propertyCategory: PropertyCategory;
   price: string | null;
   location: string;
   bhkType: string;
@@ -28,7 +28,7 @@ export interface PropertyUpdate {
 }
 
 export interface PropertyResponseFormValues {
-  propertyCategory: PropertyCategoryEnum;
+  propertyCategory: PropertyCategory;
   propertyDetails: PropertyDetails;
   localityDetails: LocalityDetails;
   additionalInfo: AdditionalInfo;

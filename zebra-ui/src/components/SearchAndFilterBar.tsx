@@ -5,11 +5,8 @@ import { SearchIcon, SlidersHorizontal } from "lucide-react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { PropertyCategoryEnum } from "@/common/enums";
-import Autocomplete from "@/components/common/Autocomplete";
-import Button from "@/components/common/Button";
-import SelectDropdown from "@/components/common/SelectDropdown";
-import SearchFilterDialog from "@/dialogs/search-filters";
+import { PropertyCategory } from "@/common/enums";
+import SearchFilterDialog from "@/dialogs/search-filters-dialog";
 // import { PropertySearch } from "@/interfaces/PropertySearch";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -26,6 +23,7 @@ import {
   setTenantType,
 } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
+import { Autocomplete, Button, SelectDropdown } from "@/base-components";
 
 export const SearchAndFilterBar: React.FC = () => {
   // const searchParams = useSearchParams();
@@ -33,7 +31,7 @@ export const SearchAndFilterBar: React.FC = () => {
   // const lon = searchParams.get("lon");
   // const propertyCategory = searchParams
   //   .get("propertyCategory")
-  //   ?.toUpperCase() as PropertyCategoryEnum;
+  //   ?.toUpperCase() as PropertyCategory;
   const searchState = useSelector((state: RootState) => state.propertySearch);
 
   // Only fetch if lat/lon are present and valid
@@ -43,11 +41,11 @@ export const SearchAndFilterBar: React.FC = () => {
   // const buildQueryParams = () => {
   //   const query: Record<
   //     string,
-  //     string | number | boolean | string[] | PropertyCategoryEnum
+  //     string | number | boolean | string[] | PropertyCategory
   //   > = {
   //     latitude: Number(lat),
   //     longitude: Number(lon),
-  //     propertyCategory: propertyCategory || PropertyCategoryEnum.RENT,
+  //     propertyCategory: propertyCategory || PropertyCategory.RENT,
   //   };
 
   //   // Add optional filters from URL params
@@ -74,7 +72,7 @@ export const SearchAndFilterBar: React.FC = () => {
   //     : {
   //         latitude: 0,
   //         longitude: 0,
-  //         propertyCategory: PropertyCategoryEnum.RENT,
+  //         propertyCategory: PropertyCategory.RENT,
   //       },
   //   { skip: !shouldFetch },
   // );
@@ -185,13 +183,17 @@ export const SearchAndFilterBar: React.FC = () => {
         <div className="flex justify-between items-center border-gray-200 w-full gap-4">
           <div className="flex-1">
             <Autocomplete
+              name="location"
+              selectedItems={["Bengaluru"]}
               items={[
                 "The Godfather",
                 "12 Angry Men",
                 "The Shawshank Redemption",
                 "Schindler's List",
                 "Pulp Fiction",
+                "Bengaluru",
               ]}
+              disabled={true}
               inputClassName="flex items-center min-h-[46px] w-full px-3 py-2 border border-gray-300 rounded-xl bg-white"
               placeholder="Search for a property"
             />
@@ -200,15 +202,15 @@ export const SearchAndFilterBar: React.FC = () => {
             <SelectDropdown
               options={[
                 {
-                  value: PropertyCategoryEnum.FLATMATE,
+                  value: PropertyCategory.FLATMATE,
                   label: "Flatmate",
                 },
                 {
-                  value: PropertyCategoryEnum.RENT,
+                  value: PropertyCategory.RENT,
                   label: "Rent",
                 },
                 {
-                  value: PropertyCategoryEnum.RESALE,
+                  value: PropertyCategory.RESALE,
                   label: "Buy",
                 },
               ]}
@@ -216,7 +218,7 @@ export const SearchAndFilterBar: React.FC = () => {
               id="property-category"
               value={searchState.propertyCategory}
               onChange={(value: string | number | boolean) =>
-                dispatch(setPropertyCategory(value as PropertyCategoryEnum))
+                dispatch(setPropertyCategory(value as PropertyCategory))
               }
               size="sm"
               dropdownWidth="auto"

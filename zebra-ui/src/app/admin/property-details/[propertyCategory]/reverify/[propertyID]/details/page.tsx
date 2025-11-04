@@ -13,7 +13,7 @@ import PropertyDetailsForm from "@/app/admin/property-details/components/Propert
 import RentalDetailsForm from "@/app/admin/property-details/components/RentalDetailsForm";
 import ResaleDetailsForm from "@/app/admin/property-details/components/ResaleDetailsForm";
 import { VerificationPanel } from "@/app/admin/property-details/components/VerificationPanel";
-import { PropertyCategoryEnum } from "@/common/enums";
+import { PropertyCategory } from "@/common/enums";
 import { PropertyResponseFormValues } from "@/interfaces/Property";
 import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 import { selectFormData } from "@/store/propertyDetailsSlice";
@@ -95,7 +95,7 @@ export default function ReverifyPropertyDetailsPage() {
                 <div className="bg-white rounded-xl p-6 shadow-sm flex flex-col gap-6">
                   <PropertyDetailsForm disabled={!editMode} />
                   <LocalityDetailsForm disabled={!editMode} />
-                  {propertyCategory === PropertyCategoryEnum.RESALE ? (
+                  {propertyCategory === PropertyCategory.RESALE ? (
                     <ResaleDetailsForm disabled={!editMode} />
                   ) : (
                     <RentalDetailsForm disabled={!editMode} />
