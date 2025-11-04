@@ -43,10 +43,6 @@ public class SearchService {
         GeoLocation loc = GeoLocation.of(gl -> gl
                 .latlon(ll -> ll.lat(request.getLat()).lon(request.getLon()))
         );
-        // Geo filter
-        if(request.getDistance() == null) {
-            request.setDistance("15km");
-        }
 
         filters.add(Query.of(q -> q
                 .geoDistance(g -> g
@@ -245,7 +241,7 @@ public class SearchService {
             case PRICE -> {
                 String field = switch (category) {
                     case RESALE -> "price";
-                    case RENT, FLATMATE -> "monthlyRent";
+                    case RENT, FLATMATE -> "rent";
                 };
                 return SortOptions.of(s -> s.field(f -> f
                         .field(field)
