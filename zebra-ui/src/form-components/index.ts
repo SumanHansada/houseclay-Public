@@ -7,6 +7,7 @@ export { default as FormCheckbox } from "./FormCheckbox";
 export { default as FormCurrencyField } from "./FormCurrencyField";
 export { default as FormNumberField } from "./FormNumberField";
 export { default as FormPhoneField } from "./FormPhoneField";
+export { default as FormPhotoUpload } from "./FormPhotoUpload";
 export { default as FormPlacesAutocomplete } from "./FormPlacesAutocomplete";
 export { default as FormRadioGroup } from "./FormRadioGroup";
 export { default as FormRangeSlider } from "./FormRangeSlider";

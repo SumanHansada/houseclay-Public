@@ -17,16 +17,16 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className="bg-slate-500 text-slate-800 w-72 lg:w-80 min-h-screen py-20 px-4 flex flex-col gap-2 fixed left-0 top-0 z-40 shadow-lg">
+    <aside className="bg-slate-200 w-72 lg:w-80 min-h-screen py-20 px-4 flex flex-col gap-2 fixed left-0 top-0 z-40 shadow-lg">
       <div className="flex flex-col gap-2">
         {sidebarItems.map((item) => (
           <div key={item.label}>
             <div
-              className={`flex items-center justify-between px-4 py-3 rounded-lg hover:bg-slate-400 cursor-pointer transition-colors`}
+              className={`flex items-center justify-between px-4 py-3 rounded-lg hover:bg-slate-300 cursor-pointer transition-colors`}
               onClick={() => item.children.length && toggleSection(item.label)}
               data-testid={`sidebar-section-${toSlug(item.label)}`} // Zebra-UI: test id
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 text-slate-900">
                 {item.icon}
                 <Link
                   href={item.href}
@@ -50,7 +50,7 @@ const Sidebar = () => {
                     key={child.label}
                     href={child.href}
                     data-testid={`sidebar-link-${toSlug(child.label)}`} // Zebra-UI: test id
-                    className="py-1 text-lg text-slate-300 hover:text-white cursor-pointer block"
+                    className="py-1 text-lg text-slate-800 hover:text-slate-500 cursor-pointer block"
                   >
                     {child.label}
                   </Link>
