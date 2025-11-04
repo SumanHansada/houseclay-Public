@@ -73,7 +73,7 @@ public class PaymentService {
 
         // Creating razor pay object
         JSONObject orderRequest = new JSONObject();
-        orderRequest.put("amount", amount);
+        orderRequest.put("amount", amount*100);
         orderRequest.put("currency", "INR");
         orderRequest.put("receipt", "received_100");
 
