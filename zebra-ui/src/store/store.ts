@@ -3,7 +3,7 @@ import { persistReducer, persistStore } from "redux-persist";
 import type { WebStorage } from "redux-persist/es/types";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 
-import { default as adminReducer } from "./adminSlice";
+import { default as adminAuthReducer } from "./adminAuthSlice";
 import { apiSlice } from "./apiSlice";
 import { default as appReducer } from "./appSlice";
 import { default as listPropertyReducer } from "./listPropertySlice";
@@ -11,7 +11,6 @@ import { default as propertyDetailsReducer } from "./propertyDetailsSlice";
 import { default as propertySearchReducer } from "./propertySearchSlice";
 import { default as uploadToS3SliceReducer } from "./uploadToS3Slice";
 import { default as userReducer } from "./userSlice";
-import { default as editPropertyReducer } from "./editPropertySlice";
 
 function createNoopStorage(): WebStorage {
   return {
@@ -45,19 +44,6 @@ const listPropertyPersistConfig = {
   ], // Only persist these fields
 };
 
-// Configure persistence for editProperty slice
-const editPropertyPersistConfig = {
-  key: "editProperty",
-  storage,
-  whitelist: [
-    "form",
-    "propertyCategory",
-    "propertyID",
-    "propertyImagesS3Url",
-    "propertyImages",
-  ],
-};
-
 // Configure persistence for propertySearch slice
 const propertySearchPersistConfig = {
   key: "propertySearch",
@@ -81,14 +67,20 @@ const propertySearchPersistConfig = {
   ], // Persist all fields
 };
 
+const adminAuthPersistConfig = {
+  key: "adminAuth",
+  storage,
+  whitelist: ["isAuthenticated"],
+};
+
+const persistedAdminAuthReducer = persistReducer(
+  adminAuthPersistConfig,
+  adminAuthReducer,
+);
+
 const persistedListPropertyReducer = persistReducer(
   listPropertyPersistConfig,
   listPropertyReducer,
-);
-
-const persistedEditPropertyReducer = persistReducer(
-  editPropertyPersistConfig,
-  editPropertyReducer,
 );
 
 const persistedPropertySearchReducer = persistReducer(
@@ -100,9 +92,8 @@ export function makeStore() {
   return configureStore({
     reducer: {
       app: appReducer,
-      admin: adminReducer,
+      adminAuth: persistedAdminAuthReducer,
       listProperty: persistedListPropertyReducer,
-      editProperty: persistedEditPropertyReducer,
       propertyDetails: propertyDetailsReducer,
       propertySearch: persistedPropertySearchReducer,
       user: userReducer,
@@ -124,6 +115,5 @@ export const store = makeStore();
 // Create persistor
 export const persistor = persistStore(store);
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

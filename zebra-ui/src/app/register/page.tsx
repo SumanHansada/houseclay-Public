@@ -3,14 +3,15 @@
 import { Form, Formik, FormikHelpers } from "formik";
 import { useRouter } from "next/navigation";
 import HouseClaySvg from "public/icons/houseclay.svg";
-import React from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
-import FormInputField from "@/components/common/FormInputField";
-import { loginSuccess } from "@/store/adminSlice";
-import { useRegisterMutation } from "@/store/apiSlice";
-import { useLoginMutation } from "@/store/apiSlice";
+import { authFailure, authSuccess } from "@/store/adminAuthSlice";
+import { useLoginMutation, useRegisterMutation } from "@/store/apiSlice";
+import { RootState } from "@/store/store";
+import { toErrorMessage } from "@/utils/rtkError";
+import { FormTextField } from "@/form-components";
 
 const registerSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
@@ -35,9 +36,12 @@ const HouseClay = HouseClaySvg as React.FC<React.SVGProps<SVGSVGElement>>;
 export default function AdminRegister() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [registerUser, { isLoading, isError }] = useRegisterMutation();
-
-  const [loginUser] = useLoginMutation();
+  const { isAuthenticated, authError } = useSelector(
+    (state: RootState) => state.adminAuth,
+  );
+  const [registerUser, { isLoading: isRegisterLoading }] =
+    useRegisterMutation();
+  const [loginUser, { isLoading: isLoginLoading }] = useLoginMutation();
 
   const initialValues: RegisterFormValues = {
     name: "",
@@ -46,28 +50,32 @@ export default function AdminRegister() {
     confirmPassword: "",
   };
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/admin/dashboard");
+    }
+  }, [isAuthenticated, router]);
+
   const handleSubmit = async (
     values: RegisterFormValues,
     formikHelpers: FormikHelpers<RegisterFormValues>,
   ) => {
     try {
-      const message = await registerUser({
+      await registerUser({
         username: values.username,
         password: values.password,
         name: values.name,
       }).unwrap();
-
-      const returnedToken = await loginUser({
+      await loginUser({
         username: values.username,
         password: values.password,
       }).unwrap();
 
-      console.log(message);
-      dispatch(loginSuccess(returnedToken));
-
+      dispatch(authSuccess());
       router.push("/admin/dashboard");
     } catch (err) {
       console.error("Registration failed:", err);
+      dispatch(authFailure(toErrorMessage(err)));
       formikHelpers.setSubmitting(false);
     }
   };
@@ -95,7 +103,7 @@ export default function AdminRegister() {
             >
               {({ isSubmitting }) => (
                 <Form className="space-y-4 md:space-y-6">
-                  <FormInputField
+                  <FormTextField
                     name="name"
                     label="Name"
                     placeholder="Enter your full name"
@@ -103,7 +111,7 @@ export default function AdminRegister() {
                     required
                   />
 
-                  <FormInputField
+                  <FormTextField
                     name="username"
                     label="Username"
                     placeholder="Choose a username"
@@ -111,35 +119,41 @@ export default function AdminRegister() {
                     required
                   />
 
-                  <FormInputField
+                  <FormTextField
                     name="password"
                     label="Password"
                     placeholder="••••••••"
-                    dataType="password"
+                    type="password"
+                    dataType="text"
                     required
                   />
 
-                  <FormInputField
+                  <FormTextField
                     name="confirmPassword"
                     label="Confirm Password"
                     placeholder="••••••••"
-                    dataType="password"
+                    type="password"
+                    dataType="text"
                     required
                   />
 
-                  {isError && (
+                  {authError && (
                     <div className="text-red-500 text-sm text-center">
-                      Registration failed. Please verify your inputs and try
-                      again.
+                      {authError ??
+                        "Error with registration. Please try again later!"}
                     </div>
                   )}
 
                   <button
                     type="submit"
-                    disabled={isSubmitting || isLoading}
+                    disabled={
+                      isSubmitting || isRegisterLoading || isLoginLoading
+                    }
                     className="w-full text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isLoading ? "Registering…" : "Register"}
+                    {isRegisterLoading || isLoginLoading
+                      ? "Authenticating..."
+                      : "Register"}
                   </button>
 
                   <p className="text-sm font-light text-gray-500 dark:text-gray-400 text-center">

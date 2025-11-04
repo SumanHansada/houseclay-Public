@@ -6,7 +6,6 @@ import { Toaster } from "react-hot-toast";
 
 import { DeviceContextProvider } from "./DeviceContextProvider";
 import { DialogContextProvider } from "./DialogContextProvider";
-import { InitializeAuthToken } from "./InitializeAuthToken";
 import QueryProvider from "./QueryProvider";
 import ReduxProvider from "./ReduxProvider";
 
@@ -36,19 +35,17 @@ const Providers: React.FC<ProvidersProps> = ({ children }) => {
 
   return (
     <ReduxProvider>
-      <InitializeAuthToken>
-        <QueryProvider>
-          <DeviceContextProvider>
-            <DialogContextProvider>
-              <AnimatePresence mode="wait">{children}</AnimatePresence>
-              <Toaster
-                position={toasterPosition}
-                containerClassName="toaster-container"
-              />
-            </DialogContextProvider>
-          </DeviceContextProvider>
-        </QueryProvider>
-      </InitializeAuthToken>
+      <QueryProvider>
+        <DeviceContextProvider>
+          <DialogContextProvider>
+            <AnimatePresence mode="wait">{children}</AnimatePresence>
+            <Toaster
+              position={toasterPosition}
+              containerClassName="toaster-container"
+            />
+          </DialogContextProvider>
+        </DeviceContextProvider>
+      </QueryProvider>
     </ReduxProvider>
   );
 };

@@ -1,4 +1,4 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { LeadQueryParamEnum } from "@/common/enums";
 import {
@@ -12,17 +12,16 @@ import {
   GetPropertyByIdResponse,
   GetUserByPhoneNoResponse,
 } from "@/interfaces/api";
-import {
-  baseQueryWithAuth,
-  invalidateAllTags,
-  listTag,
-  TAGS,
-} from "@/utils/rtkQueryHelpers";
-import { PropertyForm } from "@/interfaces/PropertyForm";
+import { invalidateAllTags, listTag, TAGS } from "@/utils/rtkQueryHelpers";
+import { BASE_API_URL } from "@/common/constants";
 
 export const apiSlice = createApi({
   reducerPath: "api",
-  baseQuery: baseQueryWithAuth,
+  // baseQuery: baseQueryWithAuth,
+  baseQuery: fetchBaseQuery({
+    baseUrl: BASE_API_URL,
+    credentials: "include",
+  }),
   tagTypes: TAGS,
 
   endpoints: (builder) => ({
@@ -55,6 +54,10 @@ export const apiSlice = createApi({
     }),
 
     // ──────────────── USERS ────────────────
+    getUsersAuthCheck: builder.query<undefined, void>({
+      query: () => "/admin/users",
+    }),
+
     getUsers: builder.query<
       GetAllUsersResponse,
       { page: number; size: number }
@@ -219,7 +222,7 @@ export const apiSlice = createApi({
         propertyID: number;
       },
       {
-        payload: PropertyForm;
+        payload: AddPropertyRequest;
         phoneNo: string;
       }
     >({
@@ -356,6 +359,7 @@ export const {
   useLoginMutation,
   useRegisterMutation,
   useLogoutMutation,
+  useGetUsersAuthCheckQuery,
   useGetUsersQuery,
   useGetUserByPhoneNoQuery,
   useBlacklistUserMutation,

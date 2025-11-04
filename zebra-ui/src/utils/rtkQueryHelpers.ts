@@ -4,8 +4,8 @@ import {
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
 
-import { logout } from "@/store/adminSlice";
-import { RootState } from "@/store/store";
+import { logout as logoutAction } from "@/store/adminAuthSlice";
+import { BASE_API_URL } from "@/common/constants";
 
 /**
  * A thin wrapper around RTK Query’s `fetchBaseQuery`.
@@ -18,12 +18,8 @@ import { RootState } from "@/store/store";
  * bespoke base queries); otherwise prefer `baseQueryWithAuth`.
  */
 export const rawBaseQuery = fetchBaseQuery({
-  baseUrl: process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL!,
-  prepareHeaders: (headers, { getState }) => {
-    const token = (getState() as RootState).admin.token;
-    if (token) headers.set("Authorization", `Bearer ${token}`);
-    return headers;
-  },
+  baseUrl: BASE_API_URL,
+  credentials: "include",
 });
 
 /**
@@ -44,7 +40,7 @@ export const baseQueryWithAuth: BaseQueryFn<
   const res = await rawBaseQuery(args, api, extra);
 
   if (res.error && (res.error.status === 401 || res.error.status === 403)) {
-    api.dispatch(logout());
+    api.dispatch(logoutAction());
     if (typeof window !== "undefined") window.location.assign("/login");
   }
 
