@@ -119,4 +119,26 @@ public class UserController {
         UserLoginResponseDTO userLoginResponseDTO = UserMapper.toUserLoginResponseDTO(user);
         return ResponseEntity.ok(userLoginResponseDTO);
     }
+
+    @PostMapping("/generate-otp-email")
+    public ResponseEntity<?> generateOTPForEmail(@RequestAttribute("authenticatedUser")User user) {
+        try {
+            return ResponseEntity.ok().body(userService.generateOTPForEmail(user));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/verifyEmail")
+    public ResponseEntity<?> verifyEmail(@RequestAttribute("authenticatedUser") User user, @RequestParam String otp, @RequestParam String token) {
+        try {
+            userService.verifyEmail(user, otp, token);
+            return ResponseEntity.ok().body(Map.of("message", "Email verified successfully"));
+        } catch (APIException e) {
+            throw new RuntimeException(e);
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }

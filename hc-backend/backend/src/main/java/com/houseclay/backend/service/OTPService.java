@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.houseclay.backend.config.Msg91Config;
 import com.houseclay.backend.exception.APIException;
+import com.houseclay.backend.utils.Msg91Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class OTPService {
         body.put("mobile", phoneNo); // e.g. +919876543210
         body.put("otp_expiry", OTP_EXPIRY_MINUTES);
 
-        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, getOtpHeaders());
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, Msg91Utils.getOtpHeaders(config.getAuthKey()));
         ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
         JsonNode jsonNode = objectMapper.readTree(response.getBody());
         String type = jsonNode.path("type").asText();
@@ -51,7 +52,7 @@ public class OTPService {
         body.put("mobile", phoneNo);
         body.put("otp", otp);
 
-        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, getOtpHeaders());
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, Msg91Utils.getOtpHeaders(config.getAuthKey()));
         ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
 
         JsonNode jsonNode = null;
@@ -72,7 +73,7 @@ public class OTPService {
         body.put("mobile", phoneNo);
         body.put("retrytype", "TEXT");
 
-        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, getOtpHeaders());
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, Msg91Utils.getOtpHeaders(config.getAuthKey()));
         ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
         JsonNode jsonNode = objectMapper.readTree(response.getBody());
         String type = jsonNode.path("type").asText();
@@ -84,11 +85,6 @@ public class OTPService {
         }
     }
 
-    public HttpHeaders getOtpHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("authkey", config.getAuthKey());
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        return headers;
-    }
+
 
 }

@@ -1,170 +1,72 @@
 package com.houseclay.backend.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import org.springframework.beans.factory.annotation.Value;
+import com.houseclay.backend.config.Msg91Config;
+import com.houseclay.backend.exception.APIException;
+import com.houseclay.backend.utils.Msg91Utils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.core.SdkBytes;
-import software.amazon.awssdk.services.ses.SesClient;
-import software.amazon.awssdk.services.ses.model.*;
+import org.springframework.web.client.RestTemplate;
 
-import javax.activation.DataHandler;
-import javax.mail.Message;
-import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.util.ByteArrayDataSource;
-import java.io.ByteArrayOutputStream;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 @Service
 public class EmailService {
 
-    private final Configuration fm;
-    private final SesClient ses;
-    private final ObjectMapper om = new ObjectMapper();
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Value("${ses.from}")
-    private String from;
+    @Autowired
+    private Msg91Config msg91Config;
 
-    public EmailService(SesClient ses, Configuration fm) {
-        this.ses = ses;
-        this.fm = fm;
-    }
+    private static final String EMAIL_SEND_URL = "https://control.msg91.com/api/v5/email/send";
+    private static final String OTP_TEMPLATE_ID = "email_otp_verification_6";
 
-    public void sendEmail(
-            String freemarkerTemplate,      // e.g., "welcome.ftl"
-            Map<String, Object> model,      // placeholders for the template
-            List<String> toAddresses,
-            String subject
-    ) {
-        try {
-            // 1) Render FreeMarker template
-            Template tpl = fm.getTemplate(freemarkerTemplate);
-            StringWriter writer = new StringWriter();
-            tpl.process(model, writer);
-            String htmlBody = writer.toString();
+    public void sendOTPEmail(String email, String name, String otp) throws Exception {
+        Map<String, String> variables = new HashMap<>();
+        variables.put("otp", otp);
 
-            // Optional plain text fallback
-            String textBody = stripHtml(htmlBody);
+        Map<String, Object> body = getEmailBodyMap(email, name, variables, OTP_TEMPLATE_ID);
 
-            // 2) Build SES request
-            SendEmailRequest req = SendEmailRequest.builder()
-                    .source(from) // must be a verified sender
-                    .destination(Destination.builder()
-                            .toAddresses(toAddresses)
-                            .build())
-                    .message(software.amazon.awssdk.services.ses.model.Message.builder()
-                            .subject(Content.builder()
-                                    .data(subject)
-                                    .charset("UTF-8")
-                                    .build())
-                            .body(Body.builder()
-                                    .html(Content.builder()
-                                            .data(htmlBody)
-                                            .charset("UTF-8")
-                                            .build())
-                                    .text(Content.builder()
-                                            .data(textBody)
-                                            .charset("UTF-8")
-                                            .build())
-                                    .build())
-                            .build())
-                    .build();
+        JsonNode jsonNode = sendEmail(body);
+        String type = jsonNode.path("status").asText();
 
-            // 3) Send
-            ses.sendEmail(req);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to send FreeMarker-based email via SES", e);
+        if (!"success".equalsIgnoreCase(type)) {
+            String message = jsonNode.path("message").asText();
+            System.err.println("❌ Email OTP send failed: " + message);
+            throw new APIException("Email OTP send failed", HttpStatus.INTERNAL_SERVER_ERROR);
+        } else {
+            System.out.println("✅ Email OTP sent successfully to " + email);
         }
     }
 
-
-    public void sendWithAttachment(
-            String freemarkerTemplate,        // e.g., "invoice.ftl"
-            Map<String, Object> model,        // placeholders for the template
-            List<String> toAddresses,
-            String subject,
-            String attachmentFilename,
-            byte[] attachmentBytes,
-            String attachmentMimeType         // e.g., "application/pdf"
-    ) {
-        try {
-            // 1) Render HTML body with FreeMarker
-            Template tpl = fm.getTemplate(freemarkerTemplate);
-            StringWriter sw = new StringWriter();
-            tpl.process(model, sw);
-            String html = sw.toString();
-
-            // (Optional) plain-text fallback
-            String text = stripHtml(html);
-
-            // 2) Build MIME message
-            Properties props = new Properties();
-            Session session = Session.getInstance(props);
-            MimeMessage mimeMessage = new MimeMessage(session);
-
-            mimeMessage.setFrom(new InternetAddress(from));
-            for (String to : toAddresses) {
-                mimeMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-            }
-            mimeMessage.setSubject(subject, StandardCharsets.UTF_8.name());
-
-            // mixed -> (alternative -> text/html) + attachment
-            MimeMultipart mixed = new MimeMultipart("mixed");
-            mimeMessage.setContent(mixed);
-
-            // Body part: alternative (text + html)
-            MimeBodyPart bodyPart = new MimeBodyPart();
-            MimeMultipart alternative = new MimeMultipart("alternative");
-
-            // text
-            MimeBodyPart textPart = new MimeBodyPart();
-            textPart.setText(text, StandardCharsets.UTF_8.name());
-            alternative.addBodyPart(textPart);
-
-            // html
-            MimeBodyPart htmlPart = new MimeBodyPart();
-            htmlPart.setContent(html, "text/html; charset=UTF-8");
-            alternative.addBodyPart(htmlPart);
-
-            bodyPart.setContent(alternative);
-            mixed.addBodyPart(bodyPart);
-
-            // Attachment (optional)
-            if (attachmentBytes != null && attachmentBytes.length > 0) {
-                MimeBodyPart attachment = new MimeBodyPart();
-                attachment.setFileName(attachmentFilename);
-                attachment.setDataHandler(new DataHandler(new ByteArrayDataSource(attachmentBytes, attachmentMimeType)));
-                mixed.addBodyPart(attachment);
-            }
-
-            // 3) Convert to raw bytes and send via SES (Raw)
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            mimeMessage.writeTo(baos);
-
-            SendRawEmailRequest rawReq = SendRawEmailRequest.builder()
-                    .source(from)
-                    .destinations(toAddresses)
-                    .rawMessage(RawMessage.builder()
-                            .data(SdkBytes.fromByteArray(baos.toByteArray()))
-                            .build())
-                    .build();
-
-            ses.sendRawEmail(rawReq);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to send email with attachment via SES Raw", e);
-        }
+    private JsonNode sendEmail(Map<String, Object> body) throws Exception {
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, Msg91Utils.getOtpHeaders(msg91Config.getAuthKey()));
+        ResponseEntity<String> response = restTemplate.postForEntity(EMAIL_SEND_URL, request, String.class);
+        return objectMapper.readTree(response.getBody());
     }
 
-    private String stripHtml(String html) {
-        return html.replaceAll("<[^>]*>", " ").replaceAll("\\s+", " ").trim();
+    private Map<String, Object> getEmailBodyMap(String email, String name, Map<String, String> variables, String templateID) {
+        Map<String, Object> recipient = new HashMap<>();
+        Map<String, String> toEmail = new HashMap<>();
+        toEmail.put("email", email);
+        toEmail.put("name", name);
+
+        recipient.put("to", List.of(toEmail));
+        recipient.put("variables", variables);
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("recipients", List.of(recipient));
+        body.put("from", Map.of("email", "no-reply@mail.houseclay.com"));
+        body.put("domain", "mail.houseclay.com");
+        body.put("template_id", "global_otp");
+        return body;
     }
+
 }

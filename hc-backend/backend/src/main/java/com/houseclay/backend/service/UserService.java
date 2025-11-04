@@ -7,6 +7,7 @@ import com.houseclay.backend.payload.LoginPayload;
 import com.houseclay.backend.payload.UserPayload;
 import com.houseclay.backend.repository.UserLoginRepository;
 import com.houseclay.backend.repository.UserRepository;
+import com.houseclay.backend.utils.EmailOTPUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -81,6 +82,26 @@ public class UserService {
         }
         userLoginRepository.delete(userLogins.get(0));
         return buildLogoutResponse();
+    }
+
+    public String generateOTPForEmail(User user) throws Exception {
+        Map<String, String> otpMap = EmailOTPUtils.generateOTP(user.getEmailID());
+        String otp = otpMap.get(EmailOTPUtils.OTP_MAP_KEY);
+        emailService.sendOTPEmail(user.getEmailID(), user.getName(), otp);
+        return otpMap.get(EmailOTPUtils.TOKEN_MAP_KEY);
+    }
+
+    public void verifyEmail(User user, String otp, String token) throws Exception {
+        if(!EmailOTPUtils.verifyOTP(token, otp)) {
+            throw new APIException("Invalid OTP Code", HttpStatus.UNAUTHORIZED);
+        }
+        Optional<User> optionalUser = userRepository.findById(user.getPhoneNo());
+        if(optionalUser.isEmpty()) {
+            throw new APIException("Invalid user token", HttpStatus.BAD_REQUEST);
+        }
+        user = optionalUser.get();
+        user.setEmailVerified(true);
+        userRepository.save(user);
     }
     
     public ResponseEntity<?> buildLogoutResponse() {

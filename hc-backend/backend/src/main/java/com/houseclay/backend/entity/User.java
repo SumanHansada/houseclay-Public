@@ -16,6 +16,7 @@ public class User {
     private String phoneNo;
     private String name;
     private String emailID;
+    private boolean emailVerified;
     private int connectBal;
     private boolean isBlacklisted;
     private boolean isBroker;

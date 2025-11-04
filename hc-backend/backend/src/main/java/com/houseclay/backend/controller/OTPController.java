@@ -27,7 +27,7 @@ public class OTPController {
     }
 
     @PostMapping("/regenerate-otp")
-    public ResponseEntity<?> regenerateOTP(@ RequestParam String phoneNo) {
+    public ResponseEntity<?> regenerateOTP(@RequestParam String phoneNo) {
         try {
             otpService.regenerateOTP(phoneNo);
             return ResponseEntity.ok("OTP generated successfully");
