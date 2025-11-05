@@ -96,6 +96,7 @@ public class UserMapper {
         dto.setEmail(user.getEmailID());
         dto.setPhoneNo(user.getPhoneNo());
         dto.setConnectBal(user.getConnectBal());
+        dto.setEmailVerified(user.isEmailVerified());
 
         dto.setOwnedProperties(
                 user.getOwnedProperties().stream()

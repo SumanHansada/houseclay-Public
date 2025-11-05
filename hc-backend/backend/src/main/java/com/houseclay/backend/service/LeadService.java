@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 @Service
@@ -25,6 +26,7 @@ public class LeadService {
         lead.setLeadCategory(leadCategory);
         lead.setStatus(LeadStatus.NEW);
         lead.setUser(user);
+        lead.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         leadRepository.save(lead);
     }
 
