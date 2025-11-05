@@ -1,14 +1,16 @@
 "use client";
-import { ChevronLeft, Info, X } from "lucide-react";
+
+import { ChevronLeft, X } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
 import NumberField from "@/base-components/NumberField";
 import RadioGroup from "@/base-components/RadioGroup";
-import { PaymentVerificationStatus } from "@/common/enums";
+import { AuthStep, PaymentVerificationStatus } from "@/common/enums";
 import Carousel3D from "@/components/Carousel3D";
 import ConnectsBundleCard from "@/components/ConnectsBundleCard";
 import {
@@ -17,12 +19,14 @@ import {
   DialogFooter,
   DialogHeader,
 } from "@/components/Dialog";
-import ConnectsBundleData from "@/data/ConnectsBundleData.json";
+import { LoginDialog } from "@/dialogs";
 import VerifyConnectsDialog from "@/dialogs/verify-connects-dialog";
+import { ConnectBundleID } from "@/interfaces/ConnectsBundle";
 import { MobileFooter, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
+  useBundleInfoQuery,
   useCreateOrderMutation,
   useVerifyPaymentMutation,
 } from "@/store/apiSlice";
@@ -31,21 +35,39 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
+import { setAuthStep, setLoginFromBuyConnects } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 import { setConnectBal } from "@/store/userSlice";
-import { ImageWithLoader } from "@/utility-components";
+import { SvgIcon } from "@/utility-components";
 import { Tab, TabContent, TabHeader, Tabs } from "@/utility-components/Tabs";
+
+const MINIMUM_CUSTOM_CONNECTS = 1;
+const CUSTOM_CONNECT_PRICE = 99;
+const GST_RATE = 0.18;
+const BUNDLE_VALIDITY_DAYS = 60;
+const RAZORPAY_KEY = "REDACTED_RAZORPAY_KEY_ID";
+
+const toPaise = (rupees: number) => Math.round(rupees * 100);
+const fromPaise = (paise: number) => paise / 100;
+const fmt2 = (rupees: number) =>
+  rupees.toLocaleString("en-IN", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
 export default function BuyConnectsPage() {
   const router = useRouter();
-  const [selectedBundle, setSelectedBundle] = useState("premium");
+  const [selectedBundle, setSelectedBundle] =
+    useState<ConnectBundleID>("CUSTOM_CONNECTS");
   const [agreedToTerms, setAgreedToTerms] = useState(true);
-  const [customConnects, setCustomConnects] = useState(5);
+  const [customConnects, setCustomConnects] = useState(MINIMUM_CUSTOM_CONNECTS);
   const dispatch = useDispatch();
   const [createOrder] = useCreateOrderMutation();
   const [verifyPayment] = useVerifyPaymentMutation();
   const { isMobile } = useDeviceContext();
-  const { isDialogOpen, closeDialog, openDialog } = useDialog();
+  const { isDialogOpen, closeDialog, openDialog, closeAllDialogs } =
+    useDialog();
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const [paymentStatus, setPaymentStatus] = useState<PaymentVerificationStatus>(
     PaymentVerificationStatus.VERIFYING,
   );
@@ -54,20 +76,55 @@ export default function BuyConnectsPage() {
   const connectBalance = useSelector(
     (state: RootState) => state.user.userDetail.connectBal,
   );
-  const currentBundle = ConnectsBundleData.bundles.find(
+
+  const { data: bundleData } = useBundleInfoQuery();
+
+  const displayBundles = useMemo(() => {
+    return (
+      bundleData?.filter((bundle) => bundle.id !== "CUSTOM_CONNECTS") || []
+    );
+  }, [bundleData]);
+
+  const customBundleInfo = useMemo(() => {
+    return bundleData?.find((b) => b.id === "CUSTOM_CONNECTS");
+  }, [bundleData]);
+
+  // Find the currently selected bundle object from the full API list
+  const currentBundle = bundleData?.find(
     (bundle) => bundle.id === selectedBundle,
   );
-  const customConnectsPrice = customConnects * 99;
-  const gstAmount = currentBundle
-    ? currentBundle.originalPrice * 0.18
-    : customConnectsPrice * 0.18;
-  const totalAmount = currentBundle
-    ? currentBundle.originalPrice + gstAmount
-    : customConnectsPrice + gstAmount;
-  const connectsToBuy = currentBundle ? currentBundle.connects : customConnects;
-  const newConnectsBalance = connectBalance + connectsToBuy;
 
-  const bundleOptions = ConnectsBundleData.bundles.map((bundle) => ({
+  // Price calculations
+  const customConnectPricePerUnit =
+    customBundleInfo?.discountedPrice || CUSTOM_CONNECT_PRICE;
+  const customConnectsPrice = customConnects * customConnectPricePerUnit;
+
+  // This basePrice is for display purposes, using the same logic as before
+  // (discounted price for bundles, calculated price for custom)
+  const baseRupees =
+    selectedBundle === "CUSTOM_CONNECTS"
+      ? customConnectsPrice
+      : currentBundle?.discountedPrice || 0;
+
+  // computing in paise to prevent floating-point drift
+  const basePaise = toPaise(baseRupees);
+  const gstPaise = Math.round(basePaise * GST_RATE);
+  const totalPaise = basePaise + gstPaise;
+
+  const gstRupees = fromPaise(gstPaise);
+  const totalRupees = fromPaise(totalPaise);
+
+  // Calculate the total connects to be purchased
+  const connectsToBuy =
+    selectedBundle === "CUSTOM_CONNECTS"
+      ? customConnects
+      : currentBundle?.connects || 0;
+
+  const newConnectsBalance = isAuthenticated
+    ? connectBalance + connectsToBuy
+    : connectsToBuy;
+
+  const bundleOptions = displayBundles.map((bundle) => ({
     value: bundle.id,
     label: bundle.title,
     icon: (
@@ -80,7 +137,7 @@ export default function BuyConnectsPage() {
   }));
 
   const expiryDate = new Date();
-  expiryDate.setDate(expiryDate.getDate() + 60);
+  expiryDate.setDate(expiryDate.getDate() + BUNDLE_VALIDITY_DAYS);
 
   const handleCloseDialog = () => {
     closeDialog("connects-price-breakdown-dialog");
@@ -103,10 +160,20 @@ export default function BuyConnectsPage() {
 
   const handleTabChange = (value: string) => {
     if (value === "bundles") {
-      setSelectedBundle("premium");
+      const recommendedBundle = displayBundles.find((b) => b.recommended);
+      const defaultBundleId =
+        recommendedBundle?.id || displayBundles[0]?.id || "PREMIUM_GOLD_BUNDLE";
+      setSelectedBundle(defaultBundleId as ConnectBundleID);
     } else {
-      setSelectedBundle(value);
+      setSelectedBundle("CUSTOM_CONNECTS");
     }
+  };
+
+  const onLogin = () => {
+    closeAllDialogs();
+    dispatch(setAuthStep(AuthStep.NONE));
+    dispatch(setLoginFromBuyConnects(true));
+    openDialog("login-dialog");
   };
 
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -119,8 +186,6 @@ export default function BuyConnectsPage() {
         paymentId: response.razorpay_payment_id,
         orderId: response.razorpay_order_id,
         signature: response.razorpay_signature,
-        amount: totalAmount * 100,
-        connects: currentBundle?.connects || 0,
       }).unwrap();
       console.log("Payment verification response:", result);
       setPaymentStatus(PaymentVerificationStatus.SUCCESS);
@@ -132,7 +197,7 @@ export default function BuyConnectsPage() {
   };
 
   const handleProceedToPay = async () => {
-    if (!agreedToTerms) return;
+    if (!agreedToTerms || connectsToBuy < MINIMUM_CUSTOM_CONNECTS) return;
 
     if (isDialogOpen("connects-price-breakdown-dialog")) {
       handleCloseDialog();
@@ -140,20 +205,27 @@ export default function BuyConnectsPage() {
 
     try {
       const response = await createOrder({
-        amount: totalAmount * 100,
-      });
+        connects: connectsToBuy,
+        bundle: selectedBundle,
+      }).unwrap();
 
-      console.log("Payment order created successfully:", response);
-      //eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const options = Object.assign({}, response.data) as any;
-      options.key = "REDACTED_RAZORPAY_KEY_ID";
-      options.handler = handlePaymentSuccess;
-      // options.callback_url = `${window.location.origin}/payment-success`;
-      options.order_id = options.id;
+      const options = {
+        key: RAZORPAY_KEY,
+        currency: "INR",
+        name: "Houseclay",
+        description: `Purchase of ${connectsToBuy} Connects`,
+        order_id: response.orderId,
+        handler: handlePaymentSuccess,
+        // prefill: {
+        //   name: "User Name",
+        //   email: "user.email@example.com",
+        // },
+      };
+
       const rzp = new Razorpay(options);
       //eslint-disable-next-line @typescript-eslint/no-explicit-any
       rzp.on("payment.failed", function (response: any) {
-        console.log(response);
+        console.log("Payment failed:", response);
       });
       rzp.open();
     } catch (error) {
@@ -187,25 +259,24 @@ export default function BuyConnectsPage() {
                 </h1>
               </div>
             </div>
-            <div className="flex items-center gap-2 justify-between mb-6">
-              <span className="font-medium">Your available Connects</span>
-              <div className="flex items-center gap-1 px-3 py-1 rounded-full">
-                <ImageWithLoader
-                  src="/icons/coin.svg"
-                  alt="coin"
-                  width={25}
-                  height={25}
-                />
-                <span className="font-medium">{connectBalance} Connects</span>
+            <div className="flex items-center justify-between mb-6">
+              <span className="font-medium text-lg">
+                Your available Connects
+              </span>
+              <div className="flex items-center">
+                <SvgIcon iconSize="medium" name="coin" size={28} />
+                <span className="font-medium text-lg">
+                  {connectBalance} Connects
+                </span>
               </div>
             </div>
 
             <div className="flex flex-col gap-2">
-              {/* Left Column - Bundle Selection */}
+              {/* Bundle Selection */}
               <div className="lg:col-span-2">
                 <Tabs
-                  defaultActive="bundles"
-                  className="mb-8"
+                  defaultActive="custom"
+                  className="mb-6"
                   onTabChange={handleTabChange}
                 >
                   <TabHeader
@@ -213,42 +284,20 @@ export default function BuyConnectsPage() {
                     tabsClassName="flex"
                   >
                     <Tab
-                      label="Buy Connects in Bundles"
-                      value="bundles"
-                      containerClassName="px-6 py-3 font-medium"
-                      activeClassName="text-red-500 border-b-2 border-red-500"
-                      inactiveClassName="text-gray-500 hover:text-gray-700"
-                    />
-                    <Tab
                       label="Buy Custom Connects"
                       value="custom"
                       containerClassName="px-6 py-3 font-medium"
                       activeClassName="text-red-500 border-b-2 border-red-500"
                       inactiveClassName="text-gray-500 hover:text-gray-700"
                     />
-                  </TabHeader>
-
-                  <TabContent value="bundles">
-                    <h2 className="text-2xl mb-6">
-                      Select the connects bundle to buy
-                    </h2>
-
-                    <RadioGroup
-                      name="bundle-selection"
-                      options={bundleOptions}
-                      value={selectedBundle}
-                      onChange={(value) => setSelectedBundle(value as string)}
-                      columns={3}
-                      horizontal={true}
-                      withIcons={true}
-                      selectedColor="shadow-2xl"
-                      radioOptionClassName="rounded-xl relative transition-all"
-                      radioGroupClassName="gap-8 md:gap-10 xl:gap-12 !grid-cols-3"
-                      radioLabelClassName="block p-0 w-full h-full"
-                      radioTextClassName="hidden"
-                      containerClassName="my-4 container mx-auto"
+                    <Tab
+                      label="Buy Connects in Bundles"
+                      value="bundles"
+                      containerClassName="px-6 py-3 font-medium"
+                      activeClassName="text-red-500 border-b-2 border-red-500"
+                      inactiveClassName="text-gray-500 hover:text-gray-700"
                     />
-                  </TabContent>
+                  </TabHeader>
 
                   <TabContent value="custom">
                     <div className="py-4">
@@ -264,55 +313,71 @@ export default function BuyConnectsPage() {
                       />
 
                       {/* Error Message */}
-                      {customConnects < 5 && (
+                      {customConnects < MINIMUM_CUSTOM_CONNECTS && (
                         <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
                           <p className="text-sm">
-                            A minimum of <strong>5 Connects</strong> is required
-                            to proceed.
+                            A minimum of{" "}
+                            <strong>{MINIMUM_CUSTOM_CONNECTS} Connect</strong>{" "}
+                            is required to proceed.
                           </p>
                         </div>
                       )}
                     </div>
                   </TabContent>
+
+                  <TabContent value="bundles">
+                    <h2 className="text-2xl mb-6">
+                      Select the connects bundle to buy
+                    </h2>
+
+                    <RadioGroup
+                      name="bundle-selection"
+                      options={bundleOptions}
+                      value={selectedBundle}
+                      onChange={(value) =>
+                        setSelectedBundle(value as ConnectBundleID)
+                      }
+                      columns={3}
+                      horizontal={true}
+                      withIcons={true}
+                      selectedColor="shadow-2xl"
+                      radioOptionClassName="rounded-xl relative transition-all"
+                      radioGroupClassName="gap-8 md:gap-10 xl:gap-12 !grid-cols-3"
+                      radioLabelClassName="block p-0 w-full h-full"
+                      radioTextClassName="hidden"
+                      containerClassName="my-4 container mx-auto"
+                    />
+                  </TabContent>
                 </Tabs>
               </div>
 
-              {/* Right Column - Purchase Summary */}
+              {/* Purchase Summary */}
               <div className="lg:col-span-1">
                 <div className="bg-white rounded-lg sticky">
                   <div className="space-y-4 mb-6">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">
-                        Your account will be charged
-                      </span>
-                      <span className="font-medium">
-                        ₹
-                        {currentBundle?.originalPrice.toLocaleString() ||
-                          customConnectsPrice.toLocaleString()}{" "}
-                        + 18% GST
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">
-                        Your new Connects balance will be
-                      </span>
+                      <span className="text-gray-600">Connects to buy</span>
                       <div className="flex items-center gap-1">
-                        <ImageWithLoader
-                          src="/icons/coin.svg"
-                          alt="coin"
-                          width={24}
-                          height={24}
-                        />
+                        <SvgIcon iconSize="medium" name="coin" size={24} />
                         <span className="font-medium">
-                          {newConnectsBalance} Connects
+                          {connectsToBuy} Connects
                         </span>
                       </div>
                     </div>
 
                     <div className="flex justify-between">
+                      <span className="text-gray-600">Discounted Price</span>
+                      <span className="font-medium">₹{fmt2(baseRupees)}</span>
+                    </div>
+
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Tax (18% GST)</span>
+                      <span className="font-medium">₹{fmt2(gstRupees)}</span>
+                    </div>
+
+                    <div className="flex justify-between">
                       <span className="text-gray-600">
-                        These Connects will expire on
+                        These New Connects will expire on
                       </span>
                       <span className="font-medium">
                         {expiryDate.toLocaleDateString("en-US", {
@@ -323,10 +388,24 @@ export default function BuyConnectsPage() {
                       </span>
                     </div>
 
+                    {isAuthenticated ? (
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">
+                          Your new Connects balance will be
+                        </span>
+                        <div className="flex items-center gap-1">
+                          <SvgIcon iconSize="medium" name="coin" size={24} />
+                          <span className="font-medium">
+                            {newConnectsBalance} Connects
+                          </span>
+                        </div>
+                      </div>
+                    ) : null}
+
                     <div className="border-t pt-4">
                       <div className="flex justify-between text-lg font-semibold">
                         <span>Total Amount</span>
-                        <span>₹{totalAmount.toFixed(2)}</span>
+                        <span>₹{fmt2(totalRupees)}</span>
                       </div>
                     </div>
                   </div>
@@ -334,19 +413,12 @@ export default function BuyConnectsPage() {
                   <div className=" mb-6">
                     <p className="text-sm text-gray-600 mb-2">
                       This bundle of Connects will expire in 60 Days from today.
-                      Unused Connects rollover to the next month.
                     </p>
-                    <a
-                      href="#"
-                      className="text-red-500 text-sm hover:underline"
-                    >
-                      Learn more
-                    </a>
                   </div>
 
                   <div className="mb-6">
                     <p className="text-sm text-gray-600 mb-4">
-                      You&apos;re authorizing HouseClay to charge your account.
+                      You&apos;re authorizing Houseclay to charge your account.
                     </p>
 
                     <label className="flex items-center gap-2 cursor-pointer">
@@ -354,13 +426,16 @@ export default function BuyConnectsPage() {
                         type="checkbox"
                         checked={agreedToTerms}
                         onChange={(e) => setAgreedToTerms(e.target.checked)}
-                        className="h-5 w-5 accent-red-500"
+                        className="h-5 w-5 accent-red-500 cursor-pointer"
                       />
                       <span className="text-sm text-gray-600">
                         I agree to{" "}
-                        <button className="text-red-500 hover:underline">
+                        <Link
+                          href="/terms-and-conditions"
+                          className="text-red-500 hover:underline"
+                        >
                           Terms & Conditions
-                        </button>
+                        </Link>
                       </span>
                     </label>
                   </div>
@@ -374,14 +449,19 @@ export default function BuyConnectsPage() {
                     >
                       Cancel
                     </button>
+
                     <button
-                      onClick={handleProceedToPay}
+                      onClick={isAuthenticated ? handleProceedToPay : onLogin}
                       className={`flex px-8 py-3 rounded-xl ${
-                        agreedToTerms && connectsToBuy >= 5
+                        agreedToTerms &&
+                        connectsToBuy >= MINIMUM_CUSTOM_CONNECTS
                           ? "bg-red-500 text-white hover:bg-red-600"
                           : "bg-gray-300 text-gray-500 cursor-not-allowed"
                       }`}
-                      disabled={!agreedToTerms && connectsToBuy < 5}
+                      disabled={
+                        !agreedToTerms ||
+                        connectsToBuy < MINIMUM_CUSTOM_CONNECTS
+                      }
                     >
                       Proceed to Pay
                     </button>
@@ -423,32 +503,20 @@ export default function BuyConnectsPage() {
         <div className="px-6 pt-4 pb-16 ">
           <div className="flex justify-between items-start w-full py-4 rounded-lg mb-4">
             {/* Available Connects */}
-            <div className="flex gap-2 items-center w-2/3 justify-between">
+            <div className="flex items-center w-full justify-between">
               <span className="font-medium text-xl">Your Connects</span>
-              <div className="text-lg flex items-center">
-                <ImageWithLoader
-                  src="/icons/coin.svg"
-                  alt="coin icon"
-                  width={32}
-                  height={32}
-                />
-                <span className="text-gray-700 text-2xl font-medium">
-                  {connectBalance}
+              <div className="flex items-center">
+                <SvgIcon iconSize="medium" name="coin" size={28} />
+                <span className="text-gray-700 text-xl font-medium">
+                  {connectBalance} Connects
                 </span>
               </div>
             </div>
           </div>
 
           {/* Tabs */}
-          <Tabs defaultActive="bundles" onTabChange={handleTabChange}>
+          <Tabs defaultActive="custom" onTabChange={handleTabChange}>
             <TabHeader tabsClassName="justify-between border rounded-xl p-2 w-full flex gap-2">
-              <Tab
-                label="Bundles"
-                value="bundles"
-                containerClassName="w-1/2 p-2 md:p-3 text-base font-medium max-md:font-normal rounded-lg border transition-colors duration-300"
-                activeClassName="text-red-600 border-red-500"
-                inactiveClassName="text-gray-700 border-transparent"
-              />
               <Tab
                 label="Custom"
                 value="custom"
@@ -456,28 +524,14 @@ export default function BuyConnectsPage() {
                 activeClassName="text-red-600 border-red-500"
                 inactiveClassName="text-gray-700 border-transparent"
               />
-            </TabHeader>
-
-            <TabContent value="bundles" className="-mx-6">
-              <Carousel3D
-                items={ConnectsBundleData.bundles.map((bundle) => (
-                  <ConnectsBundleCard
-                    bundle={bundle}
-                    key={bundle.id}
-                    selectedBundle={selectedBundle}
-                  />
-                ))}
-                onChange={(currentIndex) => {
-                  const currentBundle =
-                    ConnectsBundleData.bundles[currentIndex];
-                  setSelectedBundle(currentBundle.id);
-                }}
-                width={275}
-                height={450}
-                gap={5}
-                initialIndex={1}
+              <Tab
+                label="Bundles"
+                value="bundles"
+                containerClassName="w-1/2 p-2 md:p-3 text-base font-medium max-md:font-normal rounded-lg border transition-colors duration-300"
+                activeClassName="text-red-600 border-red-500"
+                inactiveClassName="text-gray-700 border-transparent"
               />
-            </TabContent>
+            </TabHeader>
 
             <TabContent value="custom">
               {/* Connects Input Section */}
@@ -493,32 +547,48 @@ export default function BuyConnectsPage() {
                 />
 
                 {/* Error Message */}
-                {customConnects < 5 && (
+                {customConnects < MINIMUM_CUSTOM_CONNECTS && (
                   <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
                     <p className="text-sm">
-                      A minimum of <strong>5 Connects</strong> is required to
-                      proceed.
+                      A minimum of{" "}
+                      <strong>{MINIMUM_CUSTOM_CONNECTS} Connect</strong> is
+                      required to proceed.
                     </p>
                   </div>
                 )}
               </div>
+            </TabContent>
+            <TabContent value="bundles" className="-mx-6">
+              <Carousel3D
+                items={displayBundles.map((bundle) => (
+                  <ConnectsBundleCard
+                    bundle={bundle}
+                    key={bundle.id}
+                    selectedBundle={selectedBundle}
+                  />
+                ))}
+                onChange={(currentIndex) => {
+                  const currentBundle = displayBundles[currentIndex];
+                  setSelectedBundle(currentBundle.id as ConnectBundleID);
+                }}
+                width={275}
+                height={450}
+                gap={5}
+                initialIndex={1}
+              />
             </TabContent>
           </Tabs>
 
           {/* Mobile Purchase Summary */}
           <div className="mt-2 mb-6">
             <p className="text-xs text-gray-600 mb-2">
-              This bundle of Connects will expire in 60 Days from today. Unused
-              Connects rollover to the next month.{" "}
-              <a href="#" className="text-red-500 text-xs hover:underline">
-                Learn more
-              </a>
+              This bundle of Connects will expire in 60 Days from today.
             </p>
           </div>
 
           <div className="mb-6">
             <p className="text-xs text-gray-600 mb-4">
-              You&apos;re authorizing HouseClay to charge your account.
+              You&apos;re authorizing Houseclay to charge your account.
             </p>
 
             <label className="flex items-center gap-2 cursor-pointer">
@@ -526,35 +596,39 @@ export default function BuyConnectsPage() {
                 type="checkbox"
                 checked={agreedToTerms}
                 onChange={(e) => setAgreedToTerms(e.target.checked)}
-                className="h-5 w-5 accent-red-500"
+                className="h-5 w-5 accent-red-500 cursor-pointer"
               />
               <span className="text-xs text-gray-600">
                 I agree to{" "}
-                <button className="text-red-500 hover:underline">
+                <Link
+                  href="/terms-and-conditions"
+                  className="text-red-500 hover:underline"
+                >
                   Terms & Conditions
-                </button>
+                </Link>
               </span>
             </label>
           </div>
         </div>
+
         {/* Mobile Footer */}
         <MobileFooter>
           <div className="flex flex-col justify-around items-start w-full">
             <div className="text-gray-600 text-xs">Total Amount</div>
             <div className="text-sm font-bold flex gap-2 items-center">
-              {totalAmount.toFixed(2)} <Info size={16} />
+              ₹{fmt2(totalRupees)}
             </div>
           </div>
           <button
             className={`text-center px-6 py-3 border rounded-xl w-full transition duration-200 ${
-              agreedToTerms && connectsToBuy >= 5
+              agreedToTerms && connectsToBuy >= MINIMUM_CUSTOM_CONNECTS
                 ? "bg-red-500 border-red-500 text-white hover:bg-red-600"
                 : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
             }`}
             onClick={() => openDialog("connects-price-breakdown-dialog")}
-            disabled={!agreedToTerms && connectsToBuy < 5}
+            disabled={!agreedToTerms || connectsToBuy < MINIMUM_CUSTOM_CONNECTS}
           >
-            Proceed to Pay
+            Price Breakdown
           </button>
         </MobileFooter>
       </section>
@@ -586,35 +660,26 @@ export default function BuyConnectsPage() {
           <DialogContent>
             <div className="space-y-4 my-6 px-6 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">
-                  Your account will be charged
-                </span>
-                <span className="font-medium">
-                  ₹
-                  {currentBundle?.originalPrice.toLocaleString() ||
-                    customConnectsPrice.toLocaleString()}{" "}
-                  + <span className="text-xs">18% GST</span>
-                </span>
-              </div>
-
-              <div className="flex justify-between">
-                <span className="text-gray-600">
-                  Your new Connects balance will be
-                </span>
+                <span className="text-gray-600">Connects to buy</span>
                 <div className="flex items-center gap-1">
-                  <ImageWithLoader
-                    src="/icons/coin.svg"
-                    alt="coin"
-                    width={24}
-                    height={24}
-                  />
-                  <span className="font-medium">{newConnectsBalance}</span>
+                  <SvgIcon iconSize="medium" name="coin" size={24} />
+                  <span className="font-medium">{connectsToBuy} Connects</span>
                 </div>
               </div>
 
               <div className="flex justify-between">
+                <span className="text-gray-600">Discounted Price</span>
+                <span className="font-medium">₹{fmt2(baseRupees)}</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span className="text-gray-600">Tax (18% GST)</span>
+                <span className="font-medium">₹{fmt2(gstRupees)}</span>
+              </div>
+
+              <div className="flex justify-between">
                 <span className="text-gray-600">
-                  These Connects will expire on
+                  These New Connects will expire on
                 </span>
                 <span className="font-medium">
                   {expiryDate.toLocaleDateString("en-US", {
@@ -624,23 +689,39 @@ export default function BuyConnectsPage() {
                   })}
                 </span>
               </div>
+
+              {isAuthenticated ? (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">
+                    Your new Connects balance will be
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <SvgIcon iconSize="medium" name="coin" size={24} />
+                    <span className="font-medium">
+                      {newConnectsBalance} Connects
+                    </span>
+                  </div>
+                </div>
+              ) : null}
             </div>
           </DialogContent>
           <DialogFooter>
             <div className="flex flex-col justify-around items-start w-full">
               <div className="text-gray-600 text-xs">Total Amount</div>
               <div className="text-sm font-bold flex gap-2 items-center">
-                {totalAmount.toFixed(2)} <Info size={16} />
+                ₹{fmt2(totalRupees)}
               </div>
             </div>
             <button
               className={`text-center px-6 py-3 border rounded-xl w-full transition duration-200 ${
-                agreedToTerms && connectsToBuy >= 5
+                agreedToTerms && connectsToBuy >= MINIMUM_CUSTOM_CONNECTS
                   ? "bg-red-500 border-red-500 text-white hover:bg-red-600"
                   : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
               }`}
-              onClick={handleProceedToPay}
-              disabled={!agreedToTerms && connectsToBuy < 5}
+              onClick={isAuthenticated ? handleProceedToPay : onLogin}
+              disabled={
+                !agreedToTerms || connectsToBuy < MINIMUM_CUSTOM_CONNECTS
+              }
             >
               Proceed to Pay
             </button>
@@ -653,10 +734,13 @@ export default function BuyConnectsPage() {
         <VerifyConnectsDialog
           id="verify-connects-dialog"
           status={paymentStatus}
-          connects={currentBundle ? currentBundle.connects : customConnects}
+          connects={connectsToBuy}
           onClose={handleVerifyConnectsDialogClose}
         />
       )}
+
+      {/* Login Dialog */}
+      {isDialogOpen("login-dialog") && <LoginDialog id="login-dialog" />}
     </>
   );
 }

@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { BASE_API_URL } from "@/common/constants";
 import { PropertyCategory } from "@/common/enums";
+import { ConnectsBundle } from "@/interfaces/ConnectsBundle";
 import { PropertyForm } from "@/interfaces/PropertyForm";
 import {
   GetUserDetailResponse,
@@ -245,22 +246,16 @@ export const apiSlice = createApi({
     >({
       query: () => `/property/user/shortlisted-properties`,
     }),
+    bundleInfo: builder.query<ConnectsBundle[], void>({
+      query: () => "/bundle/info",
+    }),
     createOrder: builder.mutation<
       {
-        amount: number;
-        amount_paid: number;
-        notes: string[];
-        created_at: number;
-        amount_due: number;
-        currency: string;
-        receipt: string;
-        id: string;
-        entity: string;
-        offer_id: string | null;
-        attempts: number;
-        status: string;
+        orderId: string;
+        displayAmount: number;
+        razorPayAmount: number;
       },
-      { amount: number }
+      { bundle: string; connects: number }
     >({
       query: (data) => ({
         url: "/payment/create-order",
@@ -277,8 +272,6 @@ export const apiSlice = createApi({
         paymentId: string;
         orderId: string;
         signature: string;
-        amount: number;
-        connects: number;
       }
     >({
       query: (data) => ({
@@ -334,6 +327,7 @@ export const {
   useRemoveShortlistedPropertyMutation,
   useGetShortlistedPropertiesQuery,
   useLazyGetShortlistedPropertiesQuery,
+  useBundleInfoQuery,
   useCreateOrderMutation,
   useVerifyPaymentMutation,
   useContactOwnerMutation,

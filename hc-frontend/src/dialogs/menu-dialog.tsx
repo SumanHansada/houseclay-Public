@@ -133,7 +133,10 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
         <div className="px-6 py-4 flex flex-col gap-8">
           {/* Profile Section */}
           {isAuthenticated && (
-            <div className="flex items-center p-4 gap-4 border border-gray-200 rounded-full shadow-lg inset-shadow-xs">
+            <Link
+              href="/manage-account/my-profile"
+              className="flex items-center p-4 gap-4 border border-gray-200 rounded-full shadow-lg inset-shadow-xs"
+            >
               <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-white">
                 <UserRound size={32} />
               </div>
@@ -144,7 +147,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
               <div>
                 <ChevronRight size={20} />
               </div>
-            </div>
+            </Link>
           )}
           {/* Property Banner */}
           <div
@@ -214,6 +217,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
               }`}
             >
               <ul>
+                {/* Commented Resale logic */}
                 {/* <li>
                   <Link
                     href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=resale`}

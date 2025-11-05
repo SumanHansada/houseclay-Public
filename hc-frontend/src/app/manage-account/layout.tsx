@@ -3,7 +3,7 @@
 import type { SerializedError } from "@reduxjs/toolkit";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { type ReactNode, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { ACCOUNT_NAV } from "@/common/dataConstants";
 import { AccountNavList } from "@/components/AccountNavList";
@@ -12,6 +12,7 @@ import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useGetUserDetailQuery } from "@/store/apiSlice";
 import { setHideFooter, setHideHeader } from "@/store/appSlice";
 import { setShortlistedProperties } from "@/store/shortlistPropertySlice";
+import { RootState } from "@/store/store";
 import {
   clearUserDetailError,
   setUserDetail,
@@ -26,6 +27,7 @@ export default function ManageProfileLayout({
 }) {
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   const { data, isLoading, isFetching, isError, error } = useGetUserDetailQuery(
     undefined,
@@ -33,6 +35,7 @@ export default function ManageProfileLayout({
       refetchOnMountOrArgChange: true,
       refetchOnFocus: true,
       refetchOnReconnect: true,
+      skip: !isAuthenticated,
     },
   );
 

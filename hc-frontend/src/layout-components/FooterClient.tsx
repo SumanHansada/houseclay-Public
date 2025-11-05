@@ -160,24 +160,14 @@ const FooterClient: React.FC = () => {
                     </Link>
                   </li>
                   {isAuthenticated ? null : (
-                    <>
-                      <li>
-                        <button
-                          className="text-gray-700 hover:text-red-500"
-                          onClick={onLogin}
-                        >
-                          Login
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          className="text-gray-700 hover:text-red-500"
-                          onClick={onLogin}
-                        >
-                          Signup
-                        </button>
-                      </li>
-                    </>
+                    <li>
+                      <button
+                        className="text-gray-700 hover:text-red-500"
+                        onClick={onLogin}
+                      >
+                        Login
+                      </button>
+                    </li>
                   )}
                 </ul>
               </div>

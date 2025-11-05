@@ -1,6 +1,5 @@
 "use client";
 
-import { default as RequirementsIcon } from "public/optimizedIcons/medium/my-requirements.svg";
 import { default as OwnersIcon } from "public/optimizedIcons/medium/owners-contacted.svg";
 import { default as ConnectsIcon } from "public/optimizedIcons/small/connects.svg";
 import { default as LogoutIcon } from "public/optimizedIcons/small/logout.svg";
@@ -27,11 +26,12 @@ export const ACCOUNT_NAV: AccountNavItem[] = [
     href: "/manage-account/my-profile",
     NavIcon: ProfileIcon,
   },
-  {
-    label: "My Requirements",
-    href: "/manage-account/my-requirements",
-    NavIcon: RequirementsIcon,
-  },
+  // Removed my-requirements
+  // {
+  //   label: "My Requirements",
+  //   href: "/manage-account/my-requirements",
+  //   NavIcon: RequirementsIcon,
+  // },
   {
     label: "Shortlists",
     href: "/manage-account/shortlists",
