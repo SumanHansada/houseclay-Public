@@ -150,7 +150,7 @@ public class SearchService {
                     hit -> {
                         SaleDocument d = hit.getContent();
                         String img = safeFirstImageUrl(d.getImages());
-                        return PropertyCardMapper.toPropertyCardDTO(d, img);
+                        return PropertyCardMapper.toPropertyCardDTO(d);
                     }
             );
             case RENT -> mapPage(
@@ -159,7 +159,7 @@ public class SearchService {
                     hit -> {
                         RentDocument d = hit.getContent();
                         String img = safeFirstImageUrl(d.getImages());
-                        return PropertyCardMapper.toPropertyCardDTO(d, img);
+                        return PropertyCardMapper.toPropertyCardDTO(d);
                     }
             );
             case FLATMATE -> mapPage(
@@ -168,7 +168,7 @@ public class SearchService {
                     hit -> {
                         FlatmateDocument d = hit.getContent();
                         String img = safeFirstImageUrl(d.getImages());
-                        return PropertyCardMapper.toPropertyCardDTO(d, img);
+                        return PropertyCardMapper.toPropertyCardDTO(d);
                     }
             );
         };

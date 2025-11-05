@@ -9,9 +9,8 @@ import com.houseclay.backend.entity.elastic.SaleDocument;
 
 public class PropertyCardMapper {
 
-    public static PropertyCardDTO toPropertyCardDTO(PropertyDocument propertyDocument, String imageURL) {
+    public static PropertyCardDTO toPropertyCardDTO(PropertyDocument propertyDocument) {
         PropertyCardDTO dto = new PropertyCardDTO();
-        dto.setImage(imageURL);
         copyBaseFields(propertyDocument, dto);
         if (propertyDocument instanceof SaleDocument sale) {
             dto.setPrice(sale.getPrice());
@@ -51,6 +50,7 @@ public class PropertyCardMapper {
         target.setLatitude(source.getLocation().getLat());
         target.setLongitude(source.getLocation().getLon());
         target.setBathrooms(source.getBathrooms());
+        target.setImages(source.getImages());
     }
 
     private static void copyBaseFields(Property source, PropertyCardDTO target) {

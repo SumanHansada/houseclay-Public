@@ -26,7 +26,7 @@ public class PropertyCardDTO {
     private String landmark;
     private double latitude;
     private double longitude;
-    private String image;
+    private List<String> images;
     private List<String> badges;
 }
 
