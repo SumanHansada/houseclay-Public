@@ -24,7 +24,7 @@ import {
 import { BadgeType, PropertyCategory } from "@/common/enums";
 import { pascalCase } from "@/common/utils";
 import Properties from "@/components/Properties";
-import { LoginDialog, SearchFiltersDialog, SortFiltersDialog } from "@/dialogs";
+import { SearchFiltersDialog, SortFiltersDialog } from "@/dialogs";
 import { PropertySearch } from "@/interfaces/PropertySearch";
 import {
   SORT_OPTIONS,
@@ -704,9 +704,6 @@ export default function PropertySearchPage() {
           }}
         />
       )}
-
-      {/* Login Dialog */}
-      {isDialogOpen("login-dialog") && <LoginDialog id="login-dialog" />}
     </>
   );
 }

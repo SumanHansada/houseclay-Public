@@ -10,7 +10,7 @@ import Neighbourhoods from "@/components/Neighborhoods";
 import PropertyOwners from "@/components/PropertyOwners";
 import Standouts from "@/components/Standouts";
 import { Testimonials } from "@/components/Testimonials";
-import { LoginDialog, MenuDialog, StandoutsDialog } from "@/dialogs";
+import { MenuDialog, StandoutsDialog } from "@/dialogs";
 import { Testimonial } from "@/interfaces/Testimonial";
 import { PropertyCardWithImages } from "@/interfaces/User";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -115,9 +115,6 @@ export default function ClientPage({ testimonials }: ClientPageProps) {
           properties={standoutPropertyCards}
         />
       )}
-
-      {/* Login Dialog */}
-      {isDialogOpen("login-dialog") && <LoginDialog id="login-dialog" />}
 
       {/* Menu Dialog */}
       {isDialogOpen("menu-dialog") && <MenuDialog id="menu-dialog" />}

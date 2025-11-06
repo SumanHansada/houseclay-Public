@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { AuthStep, ErrorStatus } from "@/common/enums";
 import LazyPhoneInput from "@/components/LazyPhoneInput";
-import { LoginDialog } from "@/dialogs";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useGenerateOtpMutation,
@@ -25,7 +24,7 @@ export default function LoginPage() {
   const dispatch = useDispatch();
   const [triggerCheckUser] = useLazyCheckUserQuery();
   const [generateOtp] = useGenerateOtpMutation();
-  const { openDialog, isDialogOpen } = useDialog();
+  const { openDialog } = useDialog();
 
   useEffect(() => {
     dispatch(setAuthStep(AuthStep.PHONE));
@@ -136,8 +135,6 @@ export default function LoginPage() {
           </>
         </div>
       </div>
-      {/* Login Dialog */}
-      {isDialogOpen("login-dialog") && <LoginDialog id="login-dialog" />}
     </>
   );
 }

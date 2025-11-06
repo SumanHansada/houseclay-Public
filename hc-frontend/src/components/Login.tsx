@@ -150,6 +150,12 @@ const Login = ({ onClose }: { onClose: () => void }) => {
     }
   }, [inputRefs, authStep, dispatch]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(setAuthStep(AuthStep.NONE));
+    };
+  }, [dispatch]);
+
   const handleChange = (index: number, value: string): void => {
     // Only allow single digit numbers
     if (value && !/^\d*$/.test(value)) return;

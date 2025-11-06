@@ -54,7 +54,7 @@ const GalleryClient: React.FC = () => {
     if (values.images.length > 0 && previousImagesRef.current.length === 0) {
       previousImagesRef.current = values.images;
     }
-  }, [imagesString]);
+  }, [imagesString, values.images]);
 
   // Track deleted images
   useEffect(() => {

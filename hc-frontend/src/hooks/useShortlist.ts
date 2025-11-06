@@ -78,6 +78,7 @@ export const useShortlist = () => {
       removeShortlistedProperty,
       shortlistProperty,
       dispatch,
+      openDialog,
     ],
   );
 

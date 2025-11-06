@@ -19,7 +19,6 @@ import {
   DialogFooter,
   DialogHeader,
 } from "@/components/Dialog";
-import { LoginDialog } from "@/dialogs";
 import VerifyConnectsDialog from "@/dialogs/verify-connects-dialog";
 import { ConnectBundleID } from "@/interfaces/ConnectsBundle";
 import { MobileFooter, MobileHeader } from "@/layout-components";
@@ -738,9 +737,6 @@ export default function BuyConnectsPage() {
           onClose={handleVerifyConnectsDialogClose}
         />
       )}
-
-      {/* Login Dialog */}
-      {isDialogOpen("login-dialog") && <LoginDialog id="login-dialog" />}
     </>
   );
 }
