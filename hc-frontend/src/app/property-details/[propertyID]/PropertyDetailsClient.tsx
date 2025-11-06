@@ -70,7 +70,7 @@ import {
   setHideStickyNavBar,
 } from "@/store/appSlice";
 import { RootState } from "@/store/store";
-import { PhotoGallery } from "@/utility-components";
+import { ImageWithLoader, PhotoGallery, SvgIcon } from "@/utility-components";
 import { GoogleMapsDirection } from "@/utility-components";
 
 const BalconyIcon = BalconyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -317,7 +317,12 @@ export function PropertyDetailsClient({
               className="md:h-[60vh] h-60 rounded-none"
             />
           ) : (
-            <div className="h-60 w-full flex items-center justify-center">
+            <div className="w-full h-60 flex flex-col items-center justify-center bg-gray-100">
+              <SvgIcon
+                iconSize="medium"
+                name="property-placeholder-icon"
+                size={80}
+              />
               <p className="text-gray-500">No images available</p>
             </div>
           )}
@@ -412,8 +417,13 @@ export function PropertyDetailsClient({
                 thumbnailPosition="bottom"
               />
             ) : (
-              <div className="h-96 w-full flex items-center justify-center">
-                <p className="text-gray-500">No images available</p>
+              <div className="w-full h-96 flex flex-col items-center justify-center bg-gray-100">
+                <SvgIcon
+                  iconSize="medium"
+                  name="property-placeholder-icon"
+                  size={120}
+                />
+                <p className="text-gray-500 text-xl">No images available</p>
               </div>
             )}
           </section>

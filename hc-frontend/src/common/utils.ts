@@ -1,4 +1,5 @@
 import { format, parseISO } from "date-fns";
+import { CDN_BASE_URL, PLACEHOLDER_IMAGE } from "./constants";
 
 const formatter = new Intl.NumberFormat("en-IN", {
   style: "currency",
@@ -168,3 +169,25 @@ export const fileDataFromUrl = (url: string) => {
 
   return { name, type: mime, webkitRelativePath: "" };
 };
+
+/**
+ * Processes property images by adding CDN prefix and fallback
+ * @param images - Array of image paths from API
+ * @returns Array of full image URLs with at least one placeholder
+ */
+export function processPropertyImages(
+  images: string[] | null | undefined,
+): string[] {
+  // If no images or empty array, return placeholder
+  if (!images || images.length === 0) {
+    return [PLACEHOLDER_IMAGE];
+  }
+
+  // Filter out any null/undefined/empty strings and add CDN prefix
+  const processedImages = images
+    .filter((img) => img && img.trim() !== "")
+    .map((img) => `${CDN_BASE_URL}/${img}`);
+
+  // If all images were invalid, return placeholder
+  return processedImages.length > 0 ? processedImages : [PLACEHOLDER_IMAGE];
+}

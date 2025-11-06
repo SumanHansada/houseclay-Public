@@ -22,7 +22,7 @@ import {
   SelectDropdown,
 } from "@/base-components";
 import { BadgeType, PropertyCategory } from "@/common/enums";
-import { pascalCase } from "@/common/utils";
+import { pascalCase, processPropertyImages } from "@/common/utils";
 import Properties from "@/components/Properties";
 import { SearchFiltersDialog, SortFiltersDialog } from "@/dialogs";
 import { PropertySearch } from "@/interfaces/PropertySearch";
