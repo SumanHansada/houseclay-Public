@@ -1,9 +1,9 @@
-import { redirect } from "next/navigation";
 import { useCallback } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
 import { PropertyCardWithImages } from "@/interfaces/User";
+import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useLazyGetShortlistedPropertiesQuery,
   useRemoveShortlistedPropertyMutation,
@@ -22,6 +22,7 @@ export const useShortlist = () => {
   const { shortlistedProperties } = useSelector(
     (state: RootState) => state.shortlist,
   );
+  const { openDialog } = useDialog();
 
   const [shortlistProperty] = useShortlistPropertyMutation();
   const [removeShortlistedProperty] = useRemoveShortlistedPropertyMutation();
@@ -47,14 +48,14 @@ export const useShortlist = () => {
   const toggleShortlist = useCallback(
     async (property: PropertyCardWithImages) => {
       if (!isAuthenticated) {
-        redirect("/login");
+        openDialog("login-dialog");
+        return false;
       }
-
+      const propertyId = property.propertyID;
+      const isCurrentlyShortlisted = shortlistedProperties.some(
+        (prop) => prop.propertyID === propertyId,
+      );
       try {
-        const propertyId = property.propertyID;
-        const isCurrentlyShortlisted = shortlistedProperties.some(
-          (prop) => prop.propertyID === propertyId,
-        );
         if (isCurrentlyShortlisted) {
           await removeShortlistedProperty({ propertyId }).unwrap();
           dispatch(removeFromShortlist(propertyId));
@@ -68,7 +69,7 @@ export const useShortlist = () => {
       } catch (error) {
         toast.error("Failed to update Shortlist");
         console.error("Error toggling shortlist:", error);
-        throw error;
+        return isCurrentlyShortlisted;
       }
     },
     [
