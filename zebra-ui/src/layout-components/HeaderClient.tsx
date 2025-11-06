@@ -8,6 +8,8 @@ import { useSelector } from "react-redux";
 import { useAdminLogout } from "@/hooks/useAdminLogout";
 import { RootState } from "@/store/store";
 import ActionMenu from "@/components/ActionMenu";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const HouseClay = HouseClaySvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
@@ -15,7 +17,14 @@ const Header: React.FC = () => {
   const { isAuthenticated } = useSelector(
     (state: RootState) => state.adminAuth,
   );
+  const router = useRouter();
   const { logout: onLogout, isLoading: isLoggingOut } = useAdminLogout();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.replace("/login");
+    }
+  }, [isAuthenticated]);
 
   return (
     <header className="flex fixed top-0 left-0 right-0 bg-white z-50 justify-between w-full items-center py-2 shadow-sm px-8 h-16">
@@ -55,9 +64,7 @@ const Header: React.FC = () => {
             </button>
           </ActionMenu>
         </div>
-      ) : (
-        <></>
-      )}
+      ) : null}
     </header>
   );
 };

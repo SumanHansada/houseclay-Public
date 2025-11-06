@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { PropertyCategory, PropertyListingType } from "@/common/enums";
-import { sanitizePhoneNumber } from "@/common/utils";
 import { AdditionalInfo } from "@/interfaces/AdditionalInfo";
 import { FlatmateDetails } from "@/interfaces/FlatmateDetails";
 import { FormValues } from "@/interfaces/FormValues";
@@ -21,6 +20,7 @@ const getInitialData = (
     builtUpArea: 2500,
     facing: "East",
     bhkType: "3BHK",
+    bathrooms: 3,
     ownershipType: "Self Owned",
     propertyAge: "More than 10 year",
     floor: 0,
@@ -248,14 +248,7 @@ const listPropertySlice = createSlice({
     ) => {
       const { additionalInfo } = action.payload;
       if (state.form.data) {
-        // Sanitize phone number before storing
-        const sanitizedAdditionalInfo = {
-          ...additionalInfo,
-          secondaryPhoneNumber: additionalInfo.secondaryPhoneNumber
-            ? sanitizePhoneNumber(additionalInfo.secondaryPhoneNumber)
-            : additionalInfo.secondaryPhoneNumber,
-        };
-        state.form.data.additionalInfo = sanitizedAdditionalInfo;
+        state.form.data.additionalInfo = additionalInfo;
       }
     },
     clearFormData: (state) => {

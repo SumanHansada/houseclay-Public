@@ -26,7 +26,7 @@ const Sidebar = () => {
               onClick={() => item.children.length && toggleSection(item.label)}
               data-testid={`sidebar-section-${toSlug(item.label)}`} // Zebra-UI: test id
             >
-              <div className="flex items-center gap-3 text-gray-900">
+              <div className="flex items-center gap-3 text-gray-950">
                 {item.icon}
                 <Link
                   href={item.href}
@@ -50,7 +50,7 @@ const Sidebar = () => {
                     key={child.label}
                     href={child.href}
                     data-testid={`sidebar-link-${toSlug(child.label)}`} // Zebra-UI: test id
-                    className="py-1 text-lg text-gray-600 hover:text-gray-900 cursor-pointer block"
+                    className="py-1 text-lg text-gray-700 hover:text-gray-950 cursor-pointer block"
                   >
                     {child.label}
                   </Link>

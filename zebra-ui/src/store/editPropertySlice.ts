@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { PropertyCategory } from "@/common/enums";
-import { sanitizePhoneNumber } from "@/common/utils";
 import { AdditionalInfo } from "@/interfaces/AdditionalInfo";
 import { FlatmateDetails } from "@/interfaces/FlatmateDetails";
 import { FormValues } from "@/interfaces/FormValues";
@@ -15,6 +14,8 @@ export interface EditPropertyState {
   propertyID: string;
   propertyImagesS3Url: Record<string, string>;
   propertyImages: PropertyImage[];
+  deletedImages: PropertyImage[];
+  deletedImagesS3Url: Record<string, string>;
   propertyCategory: PropertyCategory;
   form: {
     isValid: boolean;
@@ -31,6 +32,7 @@ const getInitialData = (
     builtUpArea: 0,
     facing: "",
     bhkType: "",
+    bathrooms: 0,
     ownershipType: "",
     propertyAge: "",
     floor: 0,
@@ -140,6 +142,8 @@ const initialState: EditPropertyState = {
   propertyID: "",
   propertyImagesS3Url: {},
   propertyImages: [],
+  deletedImages: [],
+  deletedImagesS3Url: {},
   propertyCategory: PropertyCategory.NONE,
   form: {
     isValid: false,
@@ -181,6 +185,15 @@ const editPropertySlice = createSlice({
     ) => {
       const { data } = action.payload;
       state.propertyImagesS3Url = data;
+    },
+    setDeleteFileURLMap: (
+      state,
+      action: PayloadAction<{
+        data: Record<string, string>;
+      }>,
+    ) => {
+      const { data } = action.payload;
+      state.deletedImagesS3Url = data;
     },
     setPropertyID: (state, action: PayloadAction<string>) => {
       state.propertyID = action.payload;
@@ -247,20 +260,20 @@ const editPropertySlice = createSlice({
       const { propertyImages } = action.payload;
       state.propertyImages = propertyImages;
     },
+    setDeletedImages: (
+      state,
+      action: PayloadAction<{ deletedImages: PropertyImage[] }>,
+    ) => {
+      const { deletedImages } = action.payload;
+      state.deletedImages = deletedImages;
+    },
     setAdditionalInfo: (
       state,
       action: PayloadAction<{ additionalInfo: AdditionalInfo }>,
     ) => {
       const { additionalInfo } = action.payload;
       if (state.form.data) {
-        // Sanitize phone number before storing
-        const sanitizedAdditionalInfo = {
-          ...additionalInfo,
-          secondaryPhoneNumber: additionalInfo.secondaryPhoneNumber
-            ? sanitizePhoneNumber(additionalInfo.secondaryPhoneNumber)
-            : additionalInfo.secondaryPhoneNumber,
-        };
-        state.form.data.additionalInfo = sanitizedAdditionalInfo;
+        state.form.data.additionalInfo = additionalInfo;
       }
     },
     clearFormData: (state) => {
@@ -272,6 +285,8 @@ const editPropertySlice = createSlice({
       state.propertyID = "";
       state.propertyImagesS3Url = {};
       state.propertyImages = [];
+      state.deletedImages = [];
+      state.deletedImagesS3Url = {};
     },
   },
 });
@@ -281,6 +296,7 @@ export const {
   setFormValidity,
   setFormData,
   setFileURLMap,
+  setDeleteFileURLMap,
   setPropertyID,
   setPropertyDetails,
   setLocalityDetails,
@@ -289,6 +305,7 @@ export const {
   setFlatmateDetails,
   setImages,
   setPropertyImages,
+  setDeletedImages,
   setAdditionalInfo,
   clearFormData,
 } = editPropertySlice.actions;

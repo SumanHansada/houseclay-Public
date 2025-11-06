@@ -7,9 +7,11 @@ import { default as adminAuthReducer } from "./adminAuthSlice";
 import { apiSlice } from "./apiSlice";
 import { default as appReducer } from "./appSlice";
 import { default as listPropertyReducer } from "./listPropertySlice";
+import { default as editPropertyReducer } from "./editPropertySlice";
 import { default as propertyDetailsReducer } from "./propertyDetailsSlice";
 import { default as propertySearchReducer } from "./propertySearchSlice";
 import { default as uploadToS3SliceReducer } from "./uploadToS3Slice";
+import { default as deleteFromS3SliceReducer } from "./deleteFromS3Slice";
 import { default as userReducer } from "./userSlice";
 
 function createNoopStorage(): WebStorage {
@@ -44,11 +46,25 @@ const listPropertyPersistConfig = {
   ], // Only persist these fields
 };
 
+// Configure persistence for editProperty slice
+const editPropertyPersistConfig = {
+  key: "editProperty",
+  storage,
+  whitelist: [
+    "form",
+    "propertyCategory",
+    "propertyID",
+    "propertyImagesS3Url",
+    "propertyImages",
+  ],
+};
+
 // Configure persistence for propertySearch slice
 const propertySearchPersistConfig = {
   key: "propertySearch",
   storage,
   whitelist: [
+    "location",
     "propertyType",
     "propertyCategory",
     "propertyBhk",
@@ -64,6 +80,9 @@ const propertySearchPersistConfig = {
     "parking",
     "priceRangeForRent",
     "priceRangeForBuy",
+    "exclusive",
+    "sortFields",
+    "sortOrder",
   ], // Persist all fields
 };
 
@@ -83,6 +102,11 @@ const persistedListPropertyReducer = persistReducer(
   listPropertyReducer,
 );
 
+const persistedEditPropertyReducer = persistReducer(
+  editPropertyPersistConfig,
+  editPropertyReducer,
+);
+
 const persistedPropertySearchReducer = persistReducer(
   propertySearchPersistConfig,
   propertySearchReducer,
@@ -94,10 +118,12 @@ export function makeStore() {
       app: appReducer,
       adminAuth: persistedAdminAuthReducer,
       listProperty: persistedListPropertyReducer,
+      editProperty: persistedEditPropertyReducer,
       propertyDetails: propertyDetailsReducer,
       propertySearch: persistedPropertySearchReducer,
       user: userReducer,
       uploadToS3: uploadToS3SliceReducer,
+      deleteFromS3: deleteFromS3SliceReducer,
       [apiSlice.reducerPath]: apiSlice.reducer,
     },
     middleware: (getDefaultMiddleware) =>

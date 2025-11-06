@@ -1,6 +1,6 @@
 import FlatmatesSvg from "public/icons/flatmates.svg";
 import RentSvg from "public/icons/rent.svg";
-import ResaleSvg from "public/icons/resale.svg";
+// import ResaleSvg from "public/icons/resale.svg";
 import { useDispatch, useSelector } from "react-redux";
 
 import { PropertyCategory } from "@/common/enums";
@@ -10,7 +10,7 @@ import { RootState } from "@/store/store";
 import PropertyTypeOption from "./PropertyTypeOption";
 
 const Rent = RentSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const Resale = ResaleSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+// const Resale = ResaleSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const Flatmates = FlatmatesSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 interface PropertyTypeOptionsProps {
@@ -38,12 +38,13 @@ const PropertyTypeOptions = ({
       icon: <Rent />,
       type: PropertyCategory.RENT,
     },
-    {
-      id: "resale",
-      label: "Resale",
-      icon: <Resale />,
-      type: PropertyCategory.RESALE,
-    },
+    // Commenting Resale logic
+    // {
+    //   id: "resale",
+    //   label: "Resale",
+    //   icon: <Resale />,
+    //   type: PropertyCategory.RESALE,
+    // },
     {
       id: "flatmates",
       label: "Flatmates",

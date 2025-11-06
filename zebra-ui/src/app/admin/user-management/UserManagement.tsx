@@ -36,6 +36,8 @@ export const UsersManagement = () => {
     },
     {
       refetchOnMountOrArgChange: true,
+      refetchOnFocus: true,
+      refetchOnReconnect: true,
     },
   );
 
@@ -101,11 +103,7 @@ export const UsersManagement = () => {
 
   const handleSearchClick = () => {
     setCurrentPage(1);
-    if (searchText) {
-      setSearchValue(searchText.trim());
-    } else {
-      setSearchValue("");
-    }
+    setSearchValue(searchText.trim());
   };
 
   const handleClearSearch = () => {

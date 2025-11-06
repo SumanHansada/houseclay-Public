@@ -41,10 +41,4 @@ export const sidebarItems: SidebarItem[] = [
       { label: "Add new Zebra user", href: "/admin/add-zebra-user" },
     ],
   },
-  {
-    label: "UI - Testing",
-    icon: <Archive size={20} />,
-    href: "#",
-    children: [{ label: "current task", href: "#" }],
-  },
 ];

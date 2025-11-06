@@ -12,16 +12,25 @@ import {
   GetPropertyByIdResponse,
   GetUserByPhoneNoResponse,
 } from "@/interfaces/api";
-import { invalidateAllTags, listTag, TAGS } from "@/utils/rtkQueryHelpers";
+import {
+  baseQueryWithAuth,
+  invalidateAllTags,
+  listTag,
+  TAGS,
+} from "@/utils/rtkQueryHelpers";
 import { BASE_API_URL } from "@/common/constants";
+
+const safeDecode = (s: string) => {
+  try {
+    return decodeURIComponent(s);
+  } catch {
+    return s;
+  }
+};
 
 export const apiSlice = createApi({
   reducerPath: "api",
-  // baseQuery: baseQueryWithAuth,
-  baseQuery: fetchBaseQuery({
-    baseUrl: BASE_API_URL,
-    credentials: "include",
-  }),
+  baseQuery: baseQueryWithAuth,
   tagTypes: TAGS,
 
   endpoints: (builder) => ({
@@ -73,10 +82,14 @@ export const apiSlice = createApi({
       GetUserByPhoneNoResponse,
       { phoneNo: string }
     >({
-      query: ({ phoneNo }) => ({
-        url: `/admin/search-user?phoneNo=${phoneNo}`,
-        method: "GET",
-      }),
+      query: ({ phoneNo }) => {
+        const raw = safeDecode(phoneNo).trim();
+        return {
+          url: "/admin/search-user",
+          params: { phoneNo: raw },
+          method: "GET",
+        };
+      },
       providesTags: (_r, _e, { phoneNo }) =>
         [{ type: "UserDetail", id: phoneNo }] as const,
     }),

@@ -4,12 +4,11 @@ import { ErrorMessage, Form, Formik, FormikHelpers } from "formik";
 import React from "react";
 import * as Yup from "yup";
 
-import FormCalendarField from "@/components/common/FormCalendarField";
-import FormInputField from "@/components/common/FormInputField";
 import FormRadioGroup from "@/form-components/FormRadioGroup";
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 
 import { DocumentUpload } from "./components/DocumentUpload";
+import { FormCalendarField, FormTextField } from "@/form-components";
 
 export interface AddAdminFormValues {
   name: string;
@@ -20,7 +19,7 @@ export interface AddAdminFormValues {
   address: string;
   role: string;
   dateOfBirth: string;
-  documents: { pan?: File | null; aadhar?: File | null };
+  documents: { pan?: File | null; aadhaar?: File | null };
   joiningDate: string;
   active: boolean;
 }
@@ -55,11 +54,11 @@ const schema: Yup.Schema<AddAdminFormValues> = Yup.object({
   documents: Yup.object()
     .shape({
       pan: Yup.mixed<File>().nullable(),
-      aadhar: Yup.mixed<File>().nullable(),
+      aadhaar: Yup.mixed<File>().nullable(),
     })
-    .test("pan-or-aadhar", "Either PAN or Aadhaar must be provided", (docs) =>
+    .test("pan-or-aadhaar", "Either PAN or Aadhaar must be provided", (docs) =>
       docs
-        ? Boolean(docs.pan instanceof File || docs.aadhar instanceof File)
+        ? Boolean(docs.pan instanceof File || docs.aadhaar instanceof File)
         : false,
     ),
   active: Yup.boolean().required(),
@@ -75,7 +74,7 @@ const AddAdminPage: React.FC = () => {
     address: "",
     role: "",
     dateOfBirth: "",
-    documents: { pan: null, aadhar: null },
+    documents: { pan: null, aadhaar: null },
     joiningDate: "",
     active: true,
   };
@@ -105,7 +104,7 @@ const AddAdminPage: React.FC = () => {
         {({ isSubmitting }) => (
           <Form className="flex flex-col gap-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormInputField
+              <FormTextField
                 name="name"
                 id="name"
                 label="Name"
@@ -125,25 +124,27 @@ const AddAdminPage: React.FC = () => {
                 id="secondaryContact"
                 defaultCountry="in"
               /> */}
-              <FormInputField
+              <FormTextField
                 name="email"
                 id="email"
                 label="Email"
+                type="email"
                 placeholder="username"
                 suffix="@houseclay.com"
                 required
               />
-              <FormInputField
+              <FormTextField
                 name="personalEmail"
                 id="personalEmail"
                 label="Personal Email"
+                type="email"
                 placeholder="Enter your personal email"
                 required
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormInputField
+              <FormTextField
                 name="address"
                 id="address"
                 label="Address"
@@ -186,7 +187,7 @@ const AddAdminPage: React.FC = () => {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <DocumentUpload label="PAN" fieldName="pan" />
-                <DocumentUpload label="Aadhaar" fieldName="aadhar" />
+                <DocumentUpload label="Aadhaar" fieldName="aadhaar" />
               </div>
               <ErrorMessage
                 name="documents"
