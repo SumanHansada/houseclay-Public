@@ -157,7 +157,7 @@ const EditPropertyPage = dynamic(
 
           {/* Desktop Section */}
           <section className="xl:min-h-[500px] min-h-[400px] max-md:min-h-[fit-content] w-full overflow-hidden max-md:hidden">
-            <div className="container py-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 flex justify-between gap-16">
+            <div className="container pt-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 flex justify-between gap-16">
               <div className="flex w-2/5 justify-around items-start">
                 <ImageWithLoader
                   src={"/images/list-your-property.webp"}
@@ -198,7 +198,7 @@ const EditPropertyPage = dynamic(
           </section>
 
           <section className="w-full overflow-hidden max-md:hidden">
-            <div className="container py-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
+            <div className="container pt-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
               <div className="flex justify-around items-center gap-16">
                 <div className="flex flex-col w-1/2">
                   <h2 className="text-3xl font-bold text-gray-800">

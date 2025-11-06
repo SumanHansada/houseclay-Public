@@ -2,29 +2,37 @@
 
 import { X } from "lucide-react";
 import React from "react";
+import { useDispatch } from "react-redux";
 
 import { Button } from "@/base-components";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
+import { useDialog } from "@/providers/DialogContextProvider";
+import { setHideStickyNavBar } from "@/store/appSlice";
 import { SvgIcon } from "@/utility-components";
 
 interface UpgradePropertyDialogProps {
   id: string;
-  onClose: () => void;
 }
 
 const UpgradePropertyDialog: React.FC<UpgradePropertyDialogProps> = ({
   id,
-  onClose,
 }) => {
   const { isMobile } = useDeviceContext();
+  const dispatch = useDispatch();
+  const { closeDialog } = useDialog();
+
+  const handleClose = () => {
+    closeDialog("upgrade-property-dialog");
+    dispatch(setHideStickyNavBar(false));
+  };
 
   return (
     <Dialog
       id={id}
       type={isMobile ? "bottom-sheet" : "card"}
-      onClose={onClose}
+      onClose={handleClose}
       width={isMobile ? 100 : 40}
       entryAnimation={isMobile ? "animate-slide-in-bottom" : "animate-fade-in"}
       exitAnimation={isMobile ? "animate-slide-out-bottom" : "animate-fade-out"}
@@ -38,7 +46,7 @@ const UpgradePropertyDialog: React.FC<UpgradePropertyDialogProps> = ({
                 variant="secondary"
                 size="custom"
                 className="rounded-full p-1"
-                onClick={onClose}
+                onClick={handleClose}
               >
                 <X size={24} />
               </Button>
@@ -65,7 +73,9 @@ const UpgradePropertyDialog: React.FC<UpgradePropertyDialogProps> = ({
           <button
             key="upgrade-property-button"
             className={`py-3 px-24 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200 ${isMobile ? "w-full" : ""}`}
-            onClick={onClose}
+            onClick={() => {
+              // TODO: Add API Integration
+            }}
             tabIndex={0}
             autoFocus
           >

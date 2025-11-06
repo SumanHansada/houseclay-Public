@@ -47,20 +47,22 @@ const ImageWithLoader = memo(function ImageWithLoader({
       )}
 
       {/* Image */}
-      <Image
-        src={src}
-        alt={alt}
-        fill={fill}
-        width={fill ? undefined : rest.width}
-        height={fill ? undefined : rest.height}
-        loading={loading}
-        priority={priority}
-        className={`object-cover ${className ?? ""} ${isLoading ? "opacity-0" : "opacity-100"} transition-opacity duration-300`}
-        onLoad={handleLoad}
-        onError={handleError}
-        unoptimized
-        {...rest}
-      />
+      {src && (
+        <Image
+          src={src}
+          alt={alt}
+          fill={fill}
+          width={fill ? undefined : rest.width}
+          height={fill ? undefined : rest.height}
+          loading={loading}
+          priority={priority}
+          className={`object-cover ${className ?? ""} ${isLoading ? "opacity-0" : "opacity-100"} transition-opacity duration-300`}
+          onLoad={handleLoad}
+          onError={handleError}
+          unoptimized
+          {...rest}
+        />
+      )}
 
       {/* Error state */}
       {hasError && (

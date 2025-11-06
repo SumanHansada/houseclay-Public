@@ -6,7 +6,7 @@ import { Nunito } from "next/font/google";
 import Script from "next/script";
 
 import { Header, StickyNavbar } from "@/layout-components";
-import LoginWrapper from "@/layout-components/LoginWrapper";
+import CommonDialogs from "@/layout-components/CommonDialogs";
 import Providers from "@/providers/Providers";
 
 // const geistSans = Geist({
@@ -291,7 +291,7 @@ export default function RootLayout({
             <main className="mx-auto my-0 pt-14 max-md:pb-16 flex-1 flex flex-wrap justify-center">
               <>
                 {children}
-                <LoginWrapper />
+                <CommonDialogs />
               </>
             </main>
             <StickyNavbar />

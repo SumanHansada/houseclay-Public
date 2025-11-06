@@ -12,11 +12,7 @@ import {
 } from "@/common/enums";
 import { extractS3KeyFromUrl } from "@/common/utils";
 import Spinner from "@/components/Spinner";
-import {
-  DeletePhotosDialog,
-  ListPropertySuccessDialog,
-  UploadPhotosDialog,
-} from "@/dialogs";
+import { ListPropertySuccessDialog } from "@/dialogs";
 import { useS3Deleter } from "@/hooks/useS3Deleter";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
 import {
@@ -667,16 +663,6 @@ export default function EditPropertyTypeLayout({
             </div>
           </MobileFooter>
         </div>
-
-        {/* Upload Dialog */}
-        {isDialogOpen("upload-photos-dialog") && (
-          <UploadPhotosDialog id="upload-photos-dialog" />
-        )}
-
-        {/* Delete Dialog */}
-        {isDialogOpen("delete-photos-dialog") && (
-          <DeletePhotosDialog id="delete-photos-dialog" />
-        )}
 
         {/* Success Dialog */}
         {isDialogOpen("list-property-success-dialog") && (

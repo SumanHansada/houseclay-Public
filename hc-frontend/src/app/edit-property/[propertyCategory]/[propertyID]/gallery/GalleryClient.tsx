@@ -79,7 +79,7 @@ const GalleryClient: React.FC = () => {
 
     // Update the ref
     previousImagesRef.current = currentImages;
-  }, [imagesString, dispatch]);
+  }, [imagesString, values.images, dispatch]);
 
   useEffect(() => {
     const validateAndDispatch = async () => {

@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
 import { PropertyCategory, PropertyStatus } from "@/common/enums";
-import MyPropertyActionsDialog from "@/dialogs/my-property-actions";
+import { MyPropertyActionsDialog } from "@/dialogs";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";

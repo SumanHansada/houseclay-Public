@@ -2,6 +2,7 @@
 
 import { X } from "lucide-react";
 import React from "react";
+import { useDispatch } from "react-redux";
 
 import { Button } from "@/base-components";
 import {
@@ -12,24 +13,31 @@ import {
 } from "@/components/Dialog";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
+import { useDialog } from "@/providers/DialogContextProvider";
+import { setHideStickyNavBar } from "@/store/appSlice";
 import { SvgIcon } from "@/utility-components";
 
 interface CallWithCaptainDialogProps {
   id: string;
-  onClose: () => void;
 }
 
 const CallWithCaptainDialog: React.FC<CallWithCaptainDialogProps> = ({
   id,
-  onClose,
 }) => {
   const { isMobile } = useDeviceContext();
+  const { closeDialog } = useDialog();
+  const dispatch = useDispatch();
+
+  const handleClose = () => {
+    closeDialog("call-with-captain-dialog");
+    dispatch(setHideStickyNavBar(true));
+  };
 
   return (
     <Dialog
       id={id}
       type={isMobile ? "bottom-sheet" : "card"}
-      onClose={onClose}
+      onClose={handleClose}
       width={isMobile ? 100 : 40}
       entryAnimation={isMobile ? "animate-slide-in-bottom" : "animate-fade-in"}
       exitAnimation={isMobile ? "animate-slide-out-bottom" : "animate-fade-out"}
@@ -43,7 +51,7 @@ const CallWithCaptainDialog: React.FC<CallWithCaptainDialogProps> = ({
                 variant="secondary"
                 size="custom"
                 className="rounded-full p-1"
-                onClick={onClose}
+                onClick={handleClose}
               >
                 <X size={24} />
               </Button>
@@ -73,7 +81,9 @@ const CallWithCaptainDialog: React.FC<CallWithCaptainDialogProps> = ({
         <button
           key="call-with-captain-button"
           className={`py-3 px-24 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200 ${isMobile ? "w-full" : ""}`}
-          onClick={onClose}
+          onClick={() => {
+            // TODO: Add API Integration
+          }}
           tabIndex={0}
           autoFocus
         >

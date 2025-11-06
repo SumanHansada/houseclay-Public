@@ -27,7 +27,7 @@ export default function ListPropertyLoading() {
         </div>
       </section>
       <section className="xl:min-h-[500px] min-h-[400px] w-full overflow-hidden max-md:hidden">
-        <div className="container py-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 flex justify-between gap-16">
+        <div className="container pt-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 flex justify-between gap-16">
           <div className="flex xl:hidden w-2/5 justify-around items-start ">
             <Skeleton height={250} width={275} />
           </div>
@@ -45,7 +45,7 @@ export default function ListPropertyLoading() {
       </section>
 
       <section className="w-full overflow-hidden">
-        <div className="container py-8 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
+        <div className="container py-0 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
           <div className="flex justify-around items-center gap-6">
             {[1, 2, 3].map((i) => (
               <div key={i} className="flex items-center gap-4">
@@ -58,7 +58,7 @@ export default function ListPropertyLoading() {
       </section>
 
       <section className="w-full overflow-hidden">
-        <div className="container py-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
+        <div className="container pt-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
           <div className="p-8 bg-gray-50 border border-gray-200 rounded-2xl shadow-sm flex items-center w-full justify-between gap-16">
             <Skeleton width={150} height={150} />
             <div className="flex flex-col w-1/2 gap-4">
@@ -71,7 +71,7 @@ export default function ListPropertyLoading() {
       </section>
 
       <section className="w-full overflow-hidden">
-        <div className="container py-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
+        <div className="container pt-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
           <div className="flex justify-around items-center gap-16">
             <div className="flex flex-col w-1/2 gap-4">
               <Skeleton height={32} width="80%" />

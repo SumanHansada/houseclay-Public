@@ -8,7 +8,7 @@ const CustomerSupportBanner: React.FC = () => {
   };
 
   return (
-    <div className="container py-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
+    <div className="container pt-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
       <div className="p-8 bg-gray-50 border border-gray-200 rounded-2xl shadow-sm flex items-center w-full justify-between gap-16">
         <div className="relative overflow-hidden rounded-lg">
           <div className="absolute inset-0 shadow-[inset_0_0_80px_40px_rgba(255,255,255,0.8)] z-20"></div>

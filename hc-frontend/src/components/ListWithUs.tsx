@@ -2,7 +2,7 @@ import { SvgIcon } from "@/utility-components";
 
 const ListWithUs: React.FC = () => {
   return (
-    <div className="container py-8 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
+    <div className="container py-0 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
       <div className="flex justify-around items-center">
         <div className="flex items-center gap-4">
           <div className="flex items-center p-1 bg-green-50 rounded-full">

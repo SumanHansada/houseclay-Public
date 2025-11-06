@@ -19,7 +19,7 @@ import {
   DialogFooter,
   DialogHeader,
 } from "@/components/Dialog";
-import VerifyConnectsDialog from "@/dialogs/verify-connects-dialog";
+import { VerifyConnectsDialog } from "@/dialogs";
 import { ConnectBundleID } from "@/interfaces/ConnectsBundle";
 import { MobileFooter, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";

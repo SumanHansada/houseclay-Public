@@ -62,7 +62,6 @@ import {
   toBase64,
 } from "@/common/utils";
 import Carousel2D from "@/components/Carousel2D";
-import { UpgradePropertyDialog } from "@/dialogs";
 import { Footer, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -180,7 +179,7 @@ export function MyPropertyDetailsClient({
   const [generateLead, { isLoading: _isGeneratingLead }] =
     useGenerateLeadMutation();
 
-  const { isDialogOpen, openDialog, closeDialog } = useDialog();
+  const { openDialog } = useDialog();
 
   const handleEdit = async () => {
     router.push(
@@ -943,16 +942,6 @@ export function MyPropertyDetailsClient({
         </section>
       </section>
       <Footer />
-      {/* Upgrade Property Dialog */}
-      {isDialogOpen("upgrade-property-dialog") && (
-        <UpgradePropertyDialog
-          id="upgrade-property-dialog"
-          onClose={() => {
-            closeDialog("upgrade-property-dialog");
-            dispatch(setHideStickyNavBar(false));
-          }}
-        />
-      )}
 
       {/* Fullscreen Photo Viewer */}
       <FullscreenPhotoViewer

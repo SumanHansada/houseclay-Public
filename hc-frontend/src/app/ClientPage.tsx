@@ -10,7 +10,7 @@ import Neighbourhoods from "@/components/Neighborhoods";
 import PropertyOwners from "@/components/PropertyOwners";
 import Standouts from "@/components/Standouts";
 import { Testimonials } from "@/components/Testimonials";
-import { MenuDialog, StandoutsDialog } from "@/dialogs";
+import { StandoutsDialog } from "@/dialogs";
 import { Testimonial } from "@/interfaces/Testimonial";
 import { PropertyCardWithImages } from "@/interfaces/User";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -57,18 +57,19 @@ export default function ClientPage({ testimonials }: ClientPageProps) {
       images: prop.image ? [prop.image] : [FALLBACK_IMG],
     }));
   }, [standoutProperties]);
-  // console.log("Standout Property cards: ", standoutPropertyCards);
 
-  const standoutsOpen = isDialogOpen("standouts-dialog");
   useEffect(() => {
-    if (standoutsOpen && standoutPropertyCards.length === 0) {
+    if (
+      isDialogOpen("standouts-dialog") &&
+      standoutPropertyCards.length === 0
+    ) {
       closeDialog("standouts-dialog");
       toast.error(
         "Currently there are no Standouts Properties. Please check again later!",
         { id: "standouts-empty" },
       );
     }
-  }, [standoutsOpen, standoutPropertyCards.length, closeDialog]);
+  }, [standoutPropertyCards.length, isDialogOpen, closeDialog]);
 
   // Initialize app state
   useEffect(() => {
@@ -115,9 +116,6 @@ export default function ClientPage({ testimonials }: ClientPageProps) {
           properties={standoutPropertyCards}
         />
       )}
-
-      {/* Menu Dialog */}
-      {isDialogOpen("menu-dialog") && <MenuDialog id="menu-dialog" />}
     </>
   );
 }

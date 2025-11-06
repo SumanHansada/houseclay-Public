@@ -27,7 +27,6 @@ import ListWithUs from "@/components/ListWithUs";
 import PropertyTypeOptions from "@/components/PropertyTypeOptions";
 import { TestimonialCard } from "@/components/Testimonials";
 import PropertiesData from "@/data/PropertiesData.json";
-import { CallWithCaptainDialog } from "@/dialogs";
 import { Footer, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -52,7 +51,7 @@ import ListPropertyLoading from "./loading";
 const ListPropertyPage = dynamic(
   () =>
     Promise.resolve(() => {
-      const { isDialogOpen, openDialog, closeDialog } = useDialog();
+      const { openDialog } = useDialog();
       const { isMobile } = useDeviceContext();
       const router = useRouter();
       const isAuthenticated = useSelector(
@@ -221,7 +220,7 @@ const ListPropertyPage = dynamic(
 
           {/* Desktop Section */}
           <section className="xl:min-h-[500px] min-h-[400px] max-md:min-h-[fit-content] w-full overflow-hidden max-md:hidden">
-            <div className="container py-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 flex justify-between gap-16">
+            <div className="container pt-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 flex justify-between gap-16">
               <div className="flex w-2/5 justify-around items-start">
                 <ImageWithLoader
                   src={"/images/list-your-property.webp"}
@@ -333,7 +332,7 @@ const ListPropertyPage = dynamic(
           </section>
 
           <section className="w-full overflow-hidden max-md:hidden">
-            <div className="container py-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
+            <div className="container pt-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
               <div className="flex justify-around items-center gap-16">
                 <div className="flex flex-col w-1/2">
                   <h2 className="text-3xl font-bold text-gray-800">
@@ -364,17 +363,6 @@ const ListPropertyPage = dynamic(
           </section>
 
           <Footer />
-
-          {/* Call with Captain Dialog */}
-          {isDialogOpen("call-with-captain-dialog") && (
-            <CallWithCaptainDialog
-              id="call-with-captain-dialog"
-              onClose={() => {
-                closeDialog("call-with-captain-dialog");
-                dispatch(setHideStickyNavBar(true));
-              }}
-            />
-          )}
         </>
       );
     }),

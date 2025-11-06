@@ -1282,17 +1282,6 @@ export function PropertyDetailsClient({
         />
       )}
 
-      {/* Report this listing dialog */}
-      {isDialogOpen("report-listing-dialog") && (
-        <ReportListingDialog
-          id="report-listing-dialog"
-          onClose={() => {
-            closeDialog("report-listing-dialog");
-            dispatch(setHideStickyNavBar(true));
-          }}
-        />
-      )}
-
       {/* Contact owner login dialog */}
       {isDialogOpen("contact-owner-login-dialog") && (
         <ContactOwnerLoginDialog
@@ -1302,12 +1291,19 @@ export function PropertyDetailsClient({
         />
       )}
 
+      {/* Report this listing dialog */}
+      {isDialogOpen("report-listing-dialog") && (
+        <ReportListingDialog
+          id="report-listing-dialog"
+          propertyId={propertyID}
+        />
+      )}
+
       {/* Unlock owner details dialog */}
       {isDialogOpen("unlock-owner-details-dialog") && (
         <UnlockOwnerDetailsDialog
           id="unlock-owner-details-dialog"
           propertyID={propertyID}
-          onClose={() => closeDialog("unlock-owner-details-dialog")}
         />
       )}
     </>
