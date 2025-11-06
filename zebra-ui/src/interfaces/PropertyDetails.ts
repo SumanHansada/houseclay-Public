@@ -2,7 +2,9 @@
 export interface BasePropertyDetails {
   propertyType: string;
   builtUpArea: number;
+  facing: string;
   bhkType: string;
+  bathrooms: number;
   floor: number;
   totalFloors: number;
   description: string;
@@ -10,15 +12,15 @@ export interface BasePropertyDetails {
 
 // Extended property details for RENT
 export interface RentPropertyDetails extends BasePropertyDetails {
-  facing: string;
   ownershipType: string;
   propertyAge: string;
   floorType: string;
 }
 
 // Extended property details for RESALE
-export interface ResalePropertyDetails extends BasePropertyDetails {
-  facing: string;
+export interface ResalePropertyDetails
+  extends BasePropertyDetails,
+    Omit<BasePropertyDetails, "bathrooms"> {
   ownershipType: string;
   propertyAge: string;
   floorType: string;
@@ -37,24 +39,24 @@ export type PropertyDetails =
 export const isFlatmatePropertyDetails = (
   details: PropertyDetails,
 ): details is FlatmatePropertyDetails => {
-  return !("facing" in details);
+  return !("ownershipType" in details);
 };
 
 export const isRentPropertyDetails = (
   details: PropertyDetails,
 ): details is RentPropertyDetails => {
-  return "facing" in details;
+  return "ownershipType" in details;
 };
 
 export const isResalePropertyDetails = (
   details: PropertyDetails,
 ): details is ResalePropertyDetails => {
-  return "facing" in details;
+  return "ownershipType" in details;
 };
 
 // Legacy type guard for backward compatibility
 export const isRentResalePropertyDetails = (
   details: PropertyDetails,
 ): details is RentPropertyDetails | ResalePropertyDetails => {
-  return "facing" in details;
+  return "ownershipType" in details;
 };

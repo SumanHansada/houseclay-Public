@@ -13,6 +13,7 @@ export interface FormValues {
   // Common fields across all property categories
   localityDetails?: LocalityDetails;
   images: PropertyImage[];
+  noPhotos?: boolean;
 
   // Category-specific details (only one will be populated based on propertyCategory)
   propertyDetails?: PropertyDetails;

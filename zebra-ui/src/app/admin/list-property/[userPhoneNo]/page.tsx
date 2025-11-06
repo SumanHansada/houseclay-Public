@@ -5,10 +5,11 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import PropertyTypeOptions from "@/components/PropertyTypeOptions";
-import { clearFormData } from "@/store/listPropertySlice";
+import { clearFormData, setPropertyID } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
+import { generateUUID } from "@/common/utils";
 
-const AddPropertyPage = () => {
+const ListPropertyPage = () => {
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
   const dispatch = useDispatch();
   const { propertyCategory } = useSelector(
@@ -24,7 +25,14 @@ const AddPropertyPage = () => {
   }, [dispatch]);
 
   const handlePostListingClick = () => {
-    const url = `/admin/add-property/${userPhoneNo}/${propertyCategory.toLowerCase()}`;
+    if (!propertyCategory) {
+      console.error("Property type is not selected");
+      return;
+    }
+    const uuid = generateUUID();
+    dispatch(setPropertyID(uuid));
+    const url = `/admin/list-property/${userPhoneNo}/${propertyCategory.toLowerCase()}/${uuid}/property-details`;
+    console.log("Navigating to URL:", url);
     router.push(url);
   };
 
@@ -41,4 +49,4 @@ const AddPropertyPage = () => {
   );
 };
 
-export default AddPropertyPage;
+export default ListPropertyPage;

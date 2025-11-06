@@ -44,3 +44,33 @@ export const sanitizePhoneNumber = (phoneNumber: string): string => {
   if (!phoneNumber) return phoneNumber;
   return phoneNumber.replace(/^\+91/, "").replace(/\D/g, "");
 };
+
+/**
+ * Generates a random UUID using the Web Crypto API
+ * @returns A random UUID string (e.g., "550e8400-e29b-41d4-a716-446655440000")
+ */
+export const generateUUID = (): string => {
+  return crypto.randomUUID();
+};
+
+/**
+ * Extracts a FileData object from an image/file URL.
+ *
+ * @remarks
+ * - Deduces file name from the URL path.
+ * - Infers MIME type from common image extensions (png, webp, jpeg).
+ *
+ * @example
+ * fileDataFromUrl("https://.../img.jpg");
+ * // → { name: "img.jpg", type: "image/jpeg", webkitRelativePath: "" }
+ */
+export const fileDataFromUrl = (url: string) => {
+  const pathname = new URL(url).pathname;
+  const name = pathname.split("/").pop()!;
+  const ext = name.split(".").pop()!.toLowerCase();
+
+  const mime =
+    ext === "png" ? "image/png" : ext === "webp" ? "image/webp" : "image/jpeg";
+
+  return { name, type: mime, webkitRelativePath: "" };
+};

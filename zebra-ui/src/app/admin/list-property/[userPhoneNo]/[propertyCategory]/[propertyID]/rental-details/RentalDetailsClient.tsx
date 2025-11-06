@@ -19,10 +19,6 @@ import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
 import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 import WifiIconSvg from "public/icons/amenities/wifi.svg";
-import NonVegIconSvg from "public/icons/food-preferences/non-veg.svg";
-import VegIconSvg from "public/icons/food-preferences/veg.svg";
-import FemaleIconSvg from "public/icons/preferred-tenants/female.svg";
-import MaleIconSvg from "public/icons/preferred-tenants/male.svg";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
@@ -35,17 +31,14 @@ import {
   FormSelectDropdown,
 } from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
-import { setFlatmateDetails, setFormValidity } from "@/store/listPropertySlice";
+import { setFormValidity, setRentalDetails } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
+import { SvgIcon } from "@/utility-components";
 import {
-  getFlatmateDetailsErrors,
-  getFlatmateDetailsTouched,
+  getRentalDetailsErrors,
+  getRentalDetailsTouched,
 } from "@/utils/formHelpers";
 
-const FemaleIcon = FemaleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const MaleIcon = MaleIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const VegIcon = VegIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const NonVegIcon = NonVegIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ClubhouseIcon = ClubhouseIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
@@ -86,8 +79,8 @@ const FirstAidKitIcon = FirstAidKitIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
 
-const flatmateSchema = Yup.object().shape({
-  flatmateDetails: Yup.object().shape({
+const rentalSchema = Yup.object().shape({
+  rentalDetails: Yup.object().shape({
     rent: Yup.string()
       .required("Rent is required")
       .test(
@@ -95,14 +88,7 @@ const flatmateSchema = Yup.object().shape({
         "Rent must be greater than zero",
         (value) => parseFloat(value || "0") > 0,
       ),
-    maintenanceCharges: Yup.string()
-      .required("Maintenance charges is required")
-      .test(
-        "is-greater-than-zero",
-        "Maintenance charges must be greater than zero",
-        (value) => parseFloat(value || "0") > 0,
-      ),
-    depositCharges: Yup.string()
+    deposit: Yup.string()
       .required("Deposit is required")
       .test(
         "is-greater-than-zero",
@@ -111,22 +97,18 @@ const flatmateSchema = Yup.object().shape({
       ),
     availableFrom: Yup.string().required("Available from is required"),
     furnishing: Yup.string().required("Furnishing is required"),
+    preferredTenants: Yup.array()
+      .of(Yup.string())
+      .required("Preferred tenant is required")
+      .min(1, "Select at least one preferred tenant"),
     waterSupply: Yup.string().required("Water supply is required"),
     powerBackup: Yup.string().required("Power backup is required"),
     parking: Yup.string().required("Parking is required"),
     nonVegAllowed: Yup.boolean().required("Non veg allowed is required"),
-    tenantType: Yup.string().required("Preferred tenant is required"),
-    attachedBathroom: Yup.boolean().required("Attached bathroom is required"),
-    attachedBalcony: Yup.boolean().required("Attached balcony is required"),
-    smokingPreference: Yup.string().required("Smoking preference is required"),
-    drinkingPreference: Yup.string().required(
-      "Drinking preference is required",
-    ),
-    amenities: Yup.array().of(Yup.string()).required("Amenities are required"),
   }),
 });
 
-export const FlatmateDetailsClient: React.FC = () => {
+export const RentalDetailsClient: React.FC = () => {
   const { values, errors, touched, setFieldError, setErrors } =
     useFormikContext<FormValues>();
   const propertyCategory = useSelector(
@@ -137,25 +119,25 @@ export const FlatmateDetailsClient: React.FC = () => {
   const dispatch = useDispatch();
 
   // Helper function to safely access optional fields
-  const flatmateDetailsErrors = getFlatmateDetailsErrors(errors);
-  const flatmateDetailsTouched = getFlatmateDetailsTouched(touched);
+  const rentalDetailsErrors = getRentalDetailsErrors(errors);
+  const rentalDetailsTouched = getRentalDetailsTouched(touched);
 
-  const flatmateDetailsString = JSON.stringify(values.flatmateDetails);
+  const rentalDetailsString = JSON.stringify(values.rentalDetails);
 
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {
-        await flatmateSchema.validate(values, {
+        await rentalSchema.validate(values, {
           abortEarly: false,
           context: { propertyCategory },
         });
         // Clear any previous errors
         setErrors({});
         // Set form data in the store
-        if (values.flatmateDetails) {
+        if (values.rentalDetails) {
           dispatch(
-            setFlatmateDetails({
-              flatmateDetails: values.flatmateDetails,
+            setRentalDetails({
+              rentalDetails: values.rentalDetails,
             }),
           );
         }
@@ -183,7 +165,7 @@ export const FlatmateDetailsClient: React.FC = () => {
 
     validateAndDispatch();
   }, [
-    flatmateDetailsString,
+    rentalDetailsString,
     dispatch,
     propertyCategory,
     setErrors,
@@ -196,15 +178,15 @@ export const FlatmateDetailsClient: React.FC = () => {
     <>
       <div className="mb-8">
         <h1 className="text-2xl md:text-3xl text-gray-800">
-          Provide flatmate details about your property
+          Provide rental details about your property
         </h1>
       </div>
       <div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <FormCurrencyField
-              name="flatmateDetails.rent"
-              id="flatmateDetails.rent"
+              name="rentalDetails.rent"
+              id="rentalDetails.rent"
               label="Rent"
               prefix={<IndianRupee size={20} />}
               suffix="/month"
@@ -212,32 +194,23 @@ export const FlatmateDetailsClient: React.FC = () => {
             />
           </div>
           <div className="col-span-1">
-            <FormSelectDropdown
-              label="Parking"
-              name="flatmateDetails.parking"
-              id="flatmateDetails.parking"
+            <FormRadioGroup
+              name="rentalDetails.rentNegotiable"
+              label="Rent Negotiable"
+              columns={2}
               options={[
-                { value: "Both", label: "Both" },
-                { value: "2 Wheeler", label: "2 Wheeler" },
-                { value: "4 Wheeler", label: "4 Wheeler" },
-                { value: "None", label: "None" },
+                { value: true, label: "Yes" },
+                { value: false, label: "No" },
               ]}
-              required={true}
-              placeholder="Select Parking"
-              aria-describedby={
-                flatmateDetailsErrors?.parking &&
-                flatmateDetailsTouched?.parking
-                  ? "flatmateDetails.parking-error"
-                  : undefined
-              }
+              horizontal
             />
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <FormCurrencyField
-              name="flatmateDetails.maintenanceCharges"
-              id="flatmateDetails.maintenanceCharges"
+              name="rentalDetails.maintenanceCharges"
+              id="rentalDetails.maintenanceCharges"
               label="Maintenance Charges"
               prefix={<IndianRupee size={20} />}
               suffix="/month"
@@ -245,8 +218,8 @@ export const FlatmateDetailsClient: React.FC = () => {
           </div>
           <div className="col-span-1">
             <FormCurrencyField
-              name="flatmateDetails.depositCharges"
-              id="flatmateDetails.depositCharges"
+              name="rentalDetails.deposit"
+              id="rentalDetails.deposit"
               label="Deposit"
               prefix={<IndianRupee size={20} />}
               required
@@ -256,7 +229,7 @@ export const FlatmateDetailsClient: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <FormCalendarField
-              name="flatmateDetails.availableFrom"
+              name="rentalDetails.availableFrom"
               label="Available From"
               dateFormat="yyyy-MM-dd"
               className="w-full"
@@ -266,8 +239,8 @@ export const FlatmateDetailsClient: React.FC = () => {
           <div className="col-span-1">
             <FormSelectDropdown
               label="Furnishing"
-              name="flatmateDetails.furnishing"
-              id="flatmateDetails.furnishing"
+              name="rentalDetails.furnishing"
+              id="rentalDetails.furnishing"
               options={[
                 {
                   value: "Fully-furnished",
@@ -282,61 +255,51 @@ export const FlatmateDetailsClient: React.FC = () => {
               required={true}
               placeholder="Select furnishing"
               aria-describedby={
-                flatmateDetailsErrors?.furnishing &&
-                flatmateDetailsTouched?.furnishing
-                  ? "flatmateDetails.furnishing-error"
+                rentalDetailsErrors?.furnishing &&
+                rentalDetailsTouched?.furnishing
+                  ? "rentalDetails.furnishing-error"
                   : undefined
               }
             />
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <FormRadioGroup
-            name="flatmateDetails.tenantType"
+        <div className="mb-6">
+          <FormCheckbox
+            name="rentalDetails.preferredTenants"
             label="Preferred Tenant"
-            columns={2}
+            columns={4}
             options={[
               {
-                value: "Female",
-                label: "Female",
-                icon: <FemaleIcon />,
+                value: "Family",
+                label: "Family",
+                icon: <SvgIcon iconSize="large" name="family" size={68} />,
               },
               {
-                value: "Male",
-                label: "Male",
-                icon: <MaleIcon />,
+                value: "Company",
+                label: "Company",
+                icon: <SvgIcon iconSize="large" name="company" size={68} />,
+              },
+              {
+                value: "Bachelor",
+                label: "Bachelor",
+                icon: <SvgIcon iconSize="large" name="bachelor" size={68} />,
+              },
+              {
+                value: "Couple",
+                label: "Couple",
+                icon: <SvgIcon iconSize="large" name="couple" size={68} />,
               },
             ]}
             withIcons={true}
             required
-            horizontal
-          />
-          <FormRadioGroup
-            name="flatmateDetails.nonVegAllowed"
-            label="Food Preferences"
-            columns={2}
-            options={[
-              {
-                value: false,
-                label: "Veg",
-                icon: <VegIcon />,
-              },
-              {
-                value: true,
-                label: "Non-Veg",
-                icon: <NonVegIcon />,
-              },
-            ]}
-            withIcons={true}
-            horizontal
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <FormSelectDropdown
               label="Water Supply"
-              name="flatmateDetails.waterSupply"
-              id="flatmateDetails.waterSupply"
+              name="rentalDetails.waterSupply"
+              id="rentalDetails.waterSupply"
               options={[
                 { value: "borewell", label: "Borewell" },
                 {
@@ -351,9 +314,9 @@ export const FlatmateDetailsClient: React.FC = () => {
               required={true}
               placeholder="Select Water supply"
               aria-describedby={
-                flatmateDetailsErrors?.waterSupply &&
-                flatmateDetailsTouched?.waterSupply
-                  ? "flatmateDetails.waterSupply-error"
+                rentalDetailsErrors?.waterSupply &&
+                rentalDetailsTouched?.waterSupply
+                  ? "rentalDetails.waterSupply-error"
                   : undefined
               }
             />
@@ -361,8 +324,8 @@ export const FlatmateDetailsClient: React.FC = () => {
           <div className="col-span-1">
             <FormSelectDropdown
               label="Power Backup"
-              name="flatmateDetails.powerBackup"
-              id="flatmateDetails.powerBackup"
+              name="rentalDetails.powerBackup"
+              id="rentalDetails.powerBackup"
               options={[
                 { value: "full", label: "Full" },
                 {
@@ -377,9 +340,9 @@ export const FlatmateDetailsClient: React.FC = () => {
               required={true}
               placeholder="Select Power backup"
               aria-describedby={
-                flatmateDetailsErrors?.powerBackup &&
-                flatmateDetailsTouched?.powerBackup
-                  ? "flatmateDetails.powerBackup-error"
+                rentalDetailsErrors?.powerBackup &&
+                rentalDetailsTouched?.powerBackup
+                  ? "rentalDetails.powerBackup-error"
                   : undefined
               }
             />
@@ -387,54 +350,33 @@ export const FlatmateDetailsClient: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
+            <FormSelectDropdown
+              label="Parking"
+              name="rentalDetails.parking"
+              id="rentalDetails.parking"
+              options={[
+                { value: "Both", label: "Both" },
+                { value: "2 Wheeler", label: "2 Wheeler" },
+                { value: "4 Wheeler", label: "4 Wheeler" },
+                { value: "None", label: "None" },
+              ]}
+              required={true}
+              placeholder="Select Parking"
+              aria-describedby={
+                rentalDetailsErrors?.parking && rentalDetailsTouched?.parking
+                  ? "rentalDetails.parking-error"
+                  : undefined
+              }
+            />
+          </div>
+          <div className="col-span-1">
             <FormRadioGroup
-              name="flatmateDetails.attachedBathroom"
-              label="Attached Bathroom"
+              name="rentalDetails.nonVegAllowed"
+              label="Non Veg Allowed"
               columns={2}
               options={[
                 { value: true, label: "Yes" },
                 { value: false, label: "No" },
-              ]}
-              required
-              horizontal
-            />
-          </div>
-          <div className="col-span-1">
-            <FormRadioGroup
-              name="flatmateDetails.attachedBalcony"
-              label="Attached Balcony"
-              columns={2}
-              options={[
-                { value: true, label: "Yes" },
-                { value: false, label: "No" },
-              ]}
-              required
-              horizontal
-            />
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="col-span-1">
-            <FormRadioGroup
-              name="flatmateDetails.smokingPreference"
-              label="Smoking Allowed"
-              columns={2}
-              options={[
-                { value: "Not Allowed", label: "Not Allowed" },
-                { value: "Allowed", label: "Allowed" },
-              ]}
-              required
-              horizontal
-            />
-          </div>
-          <div className="col-span-1">
-            <FormRadioGroup
-              name="flatmateDetails.drinkingPreference"
-              label="Drinking Allowed"
-              columns={2}
-              options={[
-                { value: "No", label: "No" },
-                { value: "Occasionally", label: "Occasionally" },
               ]}
               required
               horizontal
@@ -447,7 +389,7 @@ export const FlatmateDetailsClient: React.FC = () => {
           Select the available amenities
         </h1>
         <FormCheckbox
-          name="flatmateDetails.amenities"
+          name="rentalDetails.amenities"
           columns={4}
           options={[
             { value: "Lift", label: "Lift", icon: <LiftIcon /> },
@@ -529,4 +471,4 @@ export const FlatmateDetailsClient: React.FC = () => {
   );
 };
 
-export default FlatmateDetailsClient;
+export default RentalDetailsClient;

@@ -1,4 +1,5 @@
 import { PropertyCategory } from "@/common/enums";
+import { fileDataFromUrl } from "@/common/utils";
 
 import {
   isFlatmateAdditionalInfo,
@@ -18,8 +19,16 @@ import {
 import {
   isRentPropertyDetails,
   isResalePropertyDetails,
+  RentPropertyDetails,
+  ResalePropertyDetails,
 } from "./PropertyDetails";
-import { PropertyForm } from "./PropertyForm";
+import {
+  isFlatmateForm,
+  isRentForm,
+  isResaleForm,
+  PropertyForm,
+} from "./PropertyForm";
+import { PropertyImage } from "./PropertyImage";
 import { RentForm } from "./RentForm";
 import { ResaleForm } from "./ResaleForm";
 
@@ -66,6 +75,7 @@ export const transformToRentForm = (
     builtUpArea: propertyDetails.builtUpArea,
     facing: propertyDetails.facing,
     bhkType: propertyDetails.bhkType,
+    bathrooms: propertyDetails.bathrooms,
     ownershipType: propertyDetails.ownershipType,
     propertyAge: propertyDetails.propertyAge,
     floor: propertyDetails.floor,
@@ -231,7 +241,9 @@ export const transformToFlatmateForm = (
     // Property details (simplified)
     propertyType: propertyDetails.propertyType,
     builtUpArea: propertyDetails.builtUpArea,
+    facing: propertyDetails.facing,
     bhkType: propertyDetails.bhkType,
+    bathrooms: propertyDetails.bathrooms,
     floor: propertyDetails.floor,
     totalFloors: propertyDetails.totalFloors,
     description: propertyDetails.description,
@@ -286,4 +298,138 @@ export const transformFormValuesToPropertyForm = (
     default:
       throw new Error(`Unsupported property category: ${propertyCategory}`);
   }
+};
+
+// ============================================================================
+// Reverse Transformers: PropertyForm (API response) -> FormValues
+// ============================================================================
+
+/**
+ * Transform PropertyForm (API response) to FormValues
+ * This is the reverse of transformFormValuesToPropertyForm
+ */
+export const transformPropertyFormToFormValues = (
+  apiData: PropertyForm,
+): FormValues => {
+  // Determine the property category from the form
+  // const propertyCategory = apiData.propertyCategory;
+
+  // Extract property details based on category
+  const propertyDetails = isFlatmateForm(apiData)
+    ? {
+        propertyType: apiData.propertyType,
+        builtUpArea: apiData.builtUpArea,
+        facing: apiData.facing,
+        bhkType: apiData.bhkType,
+        bathrooms: apiData.bathrooms,
+        floor: apiData.floor,
+        totalFloors: apiData.totalFloors,
+        description: apiData.description,
+      }
+    : ({
+        propertyType: apiData.propertyType,
+        builtUpArea: apiData.builtUpArea,
+        facing: apiData.facing,
+        bhkType: apiData.bhkType,
+        bathrooms: apiData.bathrooms,
+        floor: apiData.floor,
+        totalFloors: apiData.totalFloors,
+        description: apiData.description,
+        ownershipType: (apiData as RentForm | ResaleForm).ownershipType,
+        propertyAge: (apiData as RentForm | ResaleForm).propertyAge,
+        floorType: (apiData as RentForm | ResaleForm).floorType,
+      } as RentPropertyDetails | ResalePropertyDetails);
+
+  // Extract locality details
+  const localityDetails = {
+    city: apiData.city,
+    locationOrSocietyName: apiData.locationOrSocietyName,
+    landmark: apiData.landmark,
+    latitude: apiData.latitude,
+    longitude: apiData.longitude,
+  };
+
+  // Extract images with cover flag
+  const images: PropertyImage[] = apiData.images.map((url: string) => ({
+    id: `photo-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+    file: fileDataFromUrl(url),
+    url,
+    isCover: url === apiData.coverImage,
+  }));
+
+  // Extract category-specific details
+  let rentalDetails, resaleDetails, flatmateDetails, additionalInfo;
+
+  if (isRentForm(apiData)) {
+    rentalDetails = {
+      rent: apiData.rent,
+      deposit: apiData.deposit,
+      maintenanceCharges: apiData.maintenanceCharges,
+      rentNegotiable: apiData.rentNegotiable,
+      availableFrom: apiData.availableFrom,
+      preferredTenants: apiData.preferredTenants,
+      waterSupply: apiData.waterSupply,
+      powerBackup: apiData.powerBackup,
+      furnishing: apiData.furnishing,
+      parking: apiData.parking,
+      nonVegAllowed: apiData.nonVegAllowed,
+      amenities: apiData.amenities,
+    };
+    additionalInfo = {
+      whoWillShowProperty: apiData.whoWillShowProperty,
+      secondaryPhoneNumber: apiData.secondaryPhoneNumber,
+    };
+  } else if (isFlatmateForm(apiData)) {
+    flatmateDetails = {
+      rent: apiData.rent,
+      maintenanceCharges: apiData.maintenanceCharges,
+      depositCharges: apiData.depositCharges,
+      availableFrom: apiData.availableFrom,
+      furnishing: apiData.furnishing,
+      waterSupply: apiData.waterSupply,
+      powerBackup: apiData.powerBackup,
+      parking: apiData.parking,
+      nonVegAllowed: apiData.nonVegAllowed,
+      amenities: apiData.amenities,
+      tenantType: apiData.tenantType,
+      attachedBathroom: apiData.attachedBathroom,
+      attachedBalcony: apiData.attachedBalcony,
+      smokingPreference: apiData.smokingPreference,
+      drinkingPreference: apiData.drinkingPreference,
+    };
+    additionalInfo = {
+      whoWillShowProperty: apiData.whoWillShowProperty,
+      secondaryPhoneNumber: apiData.secondaryPhoneNumber,
+    };
+  } else if (isResaleForm(apiData)) {
+    resaleDetails = {
+      price: apiData.price,
+      availableFrom: apiData.availableFrom,
+      bathrooms: apiData.bathrooms,
+      balcony: apiData.balcony,
+      priceNegotiable: apiData.priceNegotiable,
+      underLoan: apiData.underLoan,
+      waterSupply: apiData.waterSupply,
+      powerBackup: apiData.powerBackup,
+      furnishing: apiData.furnishing,
+      parking: apiData.parking,
+      amenities: apiData.amenities,
+    };
+    additionalInfo = {
+      khataCertificate: apiData.khataCertificate,
+      saleDeed: apiData.saleDeed,
+      propertyTax: apiData.propertyTax,
+      secondaryPhoneNumber: apiData.secondaryPhoneNumber,
+    };
+  }
+
+  return {
+    propertyDetails,
+    localityDetails,
+    images,
+    rentalDetails,
+    resaleDetails,
+    flatmateDetails,
+    additionalInfo,
+  };
 };

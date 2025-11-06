@@ -1,13 +1,13 @@
 "use client";
 
 import { Form, Formik, FormikProvider } from "formik";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
-  ListPropertyFormStep as AddPropertyFormStep,
-  ListPropertyRouteStep as AddPropertyRouteStep,
+  ListPropertyFormStep,
+  ListPropertyRouteStep,
   PropertyCategory,
 } from "@/common/enums";
 import { extractS3KeyFromUrl } from "@/common/utils";
@@ -26,18 +26,15 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
-import {
-  clearFormData,
-  setFileURLMap,
-  setPropertyID,
-} from "@/store/listPropertySlice";
+import { clearFormData, setFileURLMap } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
-import DesktopStepper from "../components/DesktopStepper";
 import { FormValues } from "@/interfaces/FormValues";
 import { transformFormValuesToPropertyForm } from "@/interfaces/FormTransformers";
+import DesktopStepper from "../../components/DesktopStepper";
+import Spinner from "@/components/Spinner";
 
-export default function AddPropertyTypeLayout({
+export default function ListPropertyTypeLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -46,53 +43,54 @@ export default function AddPropertyTypeLayout({
   const pathname = usePathname();
   const dispatch = useDispatch();
   const uploadFiles = useS3Uploader();
-  const { userPhoneNo } = useParams() as { userPhoneNo: string };
-  const propertyCategory = useSelector(
-    (state: RootState) => state.listProperty.propertyCategory,
-  );
   const router = useRouter();
   const { openDialog, isDialogOpen, closeDialog } = useDialog();
   const { isMobile } = useDeviceContext();
+
+  // Extract propertyCategory and propertyID from URL params
+  const pathSegments = pathname.split("/");
+  const userPhoneNo = pathSegments[3];
+  const propertyCategory = pathSegments[4]?.toUpperCase() as PropertyCategory;
+  const propertyID = pathSegments[5];
 
   // Get upload state to monitor completion
   const uploadState = useSelector((state: RootState) => state.uploadToS3);
 
   // Function to derive current step from URL path
-  const getCurrentStepFromPath = (): AddPropertyFormStep => {
-    const pathSegments = pathname.split("/");
+  const getCurrentStepFromPath = (): ListPropertyFormStep => {
     const lastSegment = pathSegments[pathSegments.length - 1];
 
     switch (lastSegment) {
-      case AddPropertyRouteStep.PROPERTY_DETAILS:
-        return AddPropertyFormStep.PROPERTY_DETAILS;
-      case AddPropertyRouteStep.LOCALITY_DETAILS:
-        return AddPropertyFormStep.LOCALITY_DETAILS;
-      case AddPropertyRouteStep.RENTAL_DETAILS:
-        return AddPropertyFormStep.RENTAL_DETAILS;
-      case AddPropertyRouteStep.RESALE_DETAILS:
-        return AddPropertyFormStep.RESALE_DETAILS;
-      case AddPropertyRouteStep.GALLERY:
-        return AddPropertyFormStep.GALLERY;
-      case AddPropertyRouteStep.ADDITIONAL_INFO:
-        return AddPropertyFormStep.ADDITIONAL_INFO;
+      case ListPropertyRouteStep.PROPERTY_DETAILS:
+        return ListPropertyFormStep.PROPERTY_DETAILS;
+      case ListPropertyRouteStep.LOCALITY_DETAILS:
+        return ListPropertyFormStep.LOCALITY_DETAILS;
+      case ListPropertyRouteStep.RENTAL_DETAILS:
+        return ListPropertyFormStep.RENTAL_DETAILS;
+      case ListPropertyRouteStep.RESALE_DETAILS:
+        return ListPropertyFormStep.RESALE_DETAILS;
+      case ListPropertyRouteStep.GALLERY:
+        return ListPropertyFormStep.GALLERY;
+      case ListPropertyRouteStep.ADDITIONAL_INFO:
+        return ListPropertyFormStep.ADDITIONAL_INFO;
       default:
-        return AddPropertyFormStep.PROPERTY_DETAILS;
+        return ListPropertyFormStep.PROPERTY_DETAILS;
     }
   };
 
   // Function to get completed steps based on current step
-  const getCompletedSteps = (): Set<AddPropertyFormStep> => {
+  const getCompletedSteps = (): Set<ListPropertyFormStep> => {
     const currentStep = getCurrentStepFromPath();
-    const completedSteps = new Set<AddPropertyFormStep>();
+    const completedSteps = new Set<ListPropertyFormStep>();
 
     const allSteps = [
-      AddPropertyFormStep.PROPERTY_DETAILS,
-      AddPropertyFormStep.LOCALITY_DETAILS,
+      ListPropertyFormStep.PROPERTY_DETAILS,
+      ListPropertyFormStep.LOCALITY_DETAILS,
       propertyCategory === PropertyCategory.RESALE
-        ? AddPropertyFormStep.RESALE_DETAILS
-        : AddPropertyFormStep.RENTAL_DETAILS,
-      AddPropertyFormStep.GALLERY,
-      AddPropertyFormStep.ADDITIONAL_INFO,
+        ? ListPropertyFormStep.RESALE_DETAILS
+        : ListPropertyFormStep.RENTAL_DETAILS,
+      ListPropertyFormStep.GALLERY,
+      ListPropertyFormStep.ADDITIONAL_INFO,
     ];
 
     const currentIndex = allSteps.indexOf(currentStep);
@@ -108,11 +106,9 @@ export default function AddPropertyTypeLayout({
   const currentStep = getCurrentStepFromPath();
   const completedSteps = getCompletedSteps();
 
-  const [addProperty] = usePropertyAddMutation();
+  const [addProperty, { isLoading: isAddingProperty }] =
+    usePropertyAddMutation();
 
-  const propertyID = useSelector(
-    (state: RootState) => state.listProperty.propertyID,
-  );
   const propertyImagesS3Url = useSelector(
     (state: RootState) => state.listProperty.propertyImagesS3Url,
   );
@@ -123,6 +119,7 @@ export default function AddPropertyTypeLayout({
 
   const isFormValid = formState?.isValid;
 
+  // Ensure proper form initialization with all required fields
   const getInitialValues = (): FormValues => {
     const data = formState?.data || {};
 
@@ -130,6 +127,7 @@ export default function AddPropertyTypeLayout({
     return {
       localityDetails: data.localityDetails,
       images: data.images || [],
+      noPhotos: data.noPhotos || false,
       propertyDetails: data.propertyDetails,
       rentalDetails: data.rentalDetails,
       resaleDetails: data.resaleDetails,
@@ -154,7 +152,6 @@ export default function AddPropertyTypeLayout({
 
   // Effect to handle upload completion and dialog transitions
   useEffect(() => {
-    console.log("uploadState.status: ", uploadState.status);
     if (
       uploadState.status === "success" &&
       isDialogOpen("upload-photos-dialog")
@@ -171,29 +168,30 @@ export default function AddPropertyTypeLayout({
   }, [uploadState.status, isDialogOpen, closeDialog, openDialog]);
 
   const setRoute = (stepSlug: string) => {
-    const route = `/admin/add-property//${userPhoneNo}/${propertyCategory.toLowerCase()}/${stepSlug}`;
+    const route = `/admin/list-property/${userPhoneNo}/${propertyCategory.toLowerCase()}/${propertyID}/${stepSlug}`;
     router.push(route);
   };
 
   const uploadFilesToS3 = async () => {
     const photos = propertyImages || [];
-    if (photos.length > 0) {
-      // create a map of file names to their corresponding Blob URLs
-      const photosToUpload = photos.map((photo: PropertyImage) => {
-        return {
-          name: photo.file.name,
-          url: photo.url,
-          type: photo.file.type,
-          S3Url: propertyImagesS3Url[photo.file.name],
-        };
-      });
-
-      // Open upload dialog before starting upload
-      openDialog("upload-photos-dialog");
-
-      // Start the upload process
-      uploadFiles(photosToUpload);
+    if (photos.length === 0) {
+      return;
     }
+    // create a map of file names to their corresponding Blob URLs
+    const photosToUpload = photos.map((photo: PropertyImage) => {
+      return {
+        name: photo.file.name,
+        url: photo.url,
+        type: photo.file.type,
+        S3Url: propertyImagesS3Url[photo.file.name],
+      };
+    });
+
+    // Open upload dialog before starting upload
+    openDialog("upload-photos-dialog");
+
+    // Start the upload process
+    uploadFiles(photosToUpload);
   };
 
   const getPresignedPhotoUrls = async () => {
@@ -203,9 +201,10 @@ export default function AddPropertyTypeLayout({
       fileMap[encodeURIComponent(propertyImage.file.name)] =
         propertyImage.file.type;
     });
-    // console.log(fileMap);
+    console.log(fileMap);
     const presignedUrlsResponse = await getPresignedUrls({
       fileMap,
+      propertyID,
     })
       .unwrap()
       .catch((error: Error) => {
@@ -215,7 +214,6 @@ export default function AddPropertyTypeLayout({
       console.error("No presigned URLs received");
       return;
     }
-    dispatch(setPropertyID(presignedUrlsResponse.propertyID));
     dispatch(
       setFileURLMap({
         data: presignedUrlsResponse.fileURLMap,
@@ -225,41 +223,41 @@ export default function AddPropertyTypeLayout({
 
   // Update the handleBack function to remove the previous step from completedSteps
   const handleBack = () => {
-    if (currentStep === AddPropertyFormStep.PROPERTY_DETAILS) {
+    if (currentStep === ListPropertyFormStep.PROPERTY_DETAILS) {
       router.back();
       return;
     }
 
     const stepMap = {
-      [AddPropertyFormStep.LOCALITY_DETAILS]: {
-        prevStep: AddPropertyFormStep.PROPERTY_DETAILS,
-        route: AddPropertyRouteStep.PROPERTY_DETAILS,
+      [ListPropertyFormStep.LOCALITY_DETAILS]: {
+        prevStep: ListPropertyFormStep.PROPERTY_DETAILS,
+        route: ListPropertyRouteStep.PROPERTY_DETAILS,
       },
-      [AddPropertyFormStep.RENTAL_DETAILS]: {
-        prevStep: AddPropertyFormStep.LOCALITY_DETAILS,
-        route: AddPropertyRouteStep.LOCALITY_DETAILS,
+      [ListPropertyFormStep.RENTAL_DETAILS]: {
+        prevStep: ListPropertyFormStep.LOCALITY_DETAILS,
+        route: ListPropertyRouteStep.LOCALITY_DETAILS,
       },
-      [AddPropertyFormStep.RESALE_DETAILS]: {
-        prevStep: AddPropertyFormStep.LOCALITY_DETAILS,
-        route: AddPropertyRouteStep.LOCALITY_DETAILS,
+      [ListPropertyFormStep.RESALE_DETAILS]: {
+        prevStep: ListPropertyFormStep.LOCALITY_DETAILS,
+        route: ListPropertyRouteStep.LOCALITY_DETAILS,
       },
-      [AddPropertyFormStep.GALLERY]: {
+      [ListPropertyFormStep.GALLERY]: {
         prevStep:
           propertyCategory === PropertyCategory.RESALE
-            ? AddPropertyFormStep.RESALE_DETAILS
-            : AddPropertyFormStep.RENTAL_DETAILS,
+            ? ListPropertyFormStep.RESALE_DETAILS
+            : ListPropertyFormStep.RENTAL_DETAILS,
         route:
           propertyCategory === PropertyCategory.RESALE
-            ? AddPropertyRouteStep.RESALE_DETAILS
-            : AddPropertyRouteStep.RENTAL_DETAILS,
+            ? ListPropertyRouteStep.RESALE_DETAILS
+            : ListPropertyRouteStep.RENTAL_DETAILS,
       },
-      [AddPropertyFormStep.ADDITIONAL_INFO]: {
-        prevStep: AddPropertyFormStep.GALLERY,
-        route: AddPropertyRouteStep.GALLERY,
+      [ListPropertyFormStep.ADDITIONAL_INFO]: {
+        prevStep: ListPropertyFormStep.GALLERY,
+        route: ListPropertyRouteStep.GALLERY,
       },
-      [AddPropertyFormStep.DONE]: {
-        prevStep: AddPropertyFormStep.ADDITIONAL_INFO,
-        route: AddPropertyRouteStep.ADDITIONAL_INFO,
+      [ListPropertyFormStep.DONE]: {
+        prevStep: ListPropertyFormStep.ADDITIONAL_INFO,
+        route: ListPropertyRouteStep.ADDITIONAL_INFO,
       },
     };
 
@@ -271,24 +269,24 @@ export default function AddPropertyTypeLayout({
   };
 
   const handleSaveAndNext = async () => {
-    if (currentStep === AddPropertyFormStep.PROPERTY_DETAILS) {
-      setRoute(AddPropertyRouteStep.LOCALITY_DETAILS);
-    } else if (currentStep === AddPropertyFormStep.LOCALITY_DETAILS) {
+    if (currentStep === ListPropertyFormStep.PROPERTY_DETAILS) {
+      setRoute(ListPropertyRouteStep.LOCALITY_DETAILS);
+    } else if (currentStep === ListPropertyFormStep.LOCALITY_DETAILS) {
       if (propertyCategory === PropertyCategory.RESALE) {
-        setRoute(AddPropertyRouteStep.RESALE_DETAILS);
+        setRoute(ListPropertyRouteStep.RESALE_DETAILS);
       } else {
-        setRoute(AddPropertyRouteStep.RENTAL_DETAILS);
+        setRoute(ListPropertyRouteStep.RENTAL_DETAILS);
       }
     } else if (
-      currentStep === AddPropertyFormStep.RENTAL_DETAILS ||
-      currentStep === AddPropertyFormStep.RESALE_DETAILS
+      currentStep === ListPropertyFormStep.RENTAL_DETAILS ||
+      currentStep === ListPropertyFormStep.RESALE_DETAILS
     ) {
-      setRoute(AddPropertyRouteStep.GALLERY);
-    } else if (currentStep === AddPropertyFormStep.GALLERY) {
+      setRoute(ListPropertyRouteStep.GALLERY);
+    } else if (currentStep === ListPropertyFormStep.GALLERY) {
       // Make API call to get presigned-urls
       await getPresignedPhotoUrls();
-      setRoute(AddPropertyRouteStep.ADDITIONAL_INFO);
-    } else if (currentStep === AddPropertyFormStep.ADDITIONAL_INFO) {
+      setRoute(ListPropertyRouteStep.ADDITIONAL_INFO);
+    } else if (currentStep === ListPropertyFormStep.ADDITIONAL_INFO) {
       uploadFilesToS3();
       // Don't navigate to a route for DONE step, just handle the API call
       // Make API call to post property
@@ -340,10 +338,14 @@ export default function AddPropertyTypeLayout({
         phoneNo: userPhoneNo,
       });
 
+      // In case of no images, open list-property-success-dialog
+      if (imagesS3Keys.length === 0) {
+        openDialog("list-property-success-dialog");
+      }
+
       // Don't open success dialog here anymore - it will be opened automatically after upload completes
     } catch (error) {
-      // openDialog("list-property-success-dialog");
-      setRoute(AddPropertyRouteStep.ADDITIONAL_INFO);
+      setRoute(ListPropertyRouteStep.ADDITIONAL_INFO);
       console.error("Error posting property:", error);
     }
   };
@@ -369,7 +371,6 @@ export default function AddPropertyTypeLayout({
   return (
     <>
       {/* Mobile stepper is now handled inside ListPropertyStepper */}
-      {/* {isMobile && renderStepper()} */}
       <div className="flex flex-col w-full h-full top-14">
         <div className="p-3 sticky top-16 z-40 bg-white border-b border-b-gray-100 shadow-md xl:px-28 lg:px-14 md:px-8 px-8">
           {/* Steps navigation */}
@@ -404,13 +405,19 @@ export default function AddPropertyTypeLayout({
 
             <button
               type="submit"
-              className="px-6 py-3 border border-red-500 bg-red-500 text-white rounded-xl hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300"
-              disabled={!isFormValid}
+              className="text-center px-6 py-3 border border-red-500 bg-red-500 text-white rounded-xl hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300 transition duration-200"
+              disabled={!isFormValid || isAddingProperty}
               onClick={handleSaveAndNext}
             >
-              {currentStep === AddPropertyFormStep.ADDITIONAL_INFO
-                ? "Add Property"
-                : "Save & Continue"}
+              {currentStep === ListPropertyFormStep.ADDITIONAL_INFO ? (
+                isAddingProperty ? (
+                  <Spinner size="sm" />
+                ) : (
+                  "List Property"
+                )
+              ) : (
+                "Save & Continue"
+              )}
             </button>
           </div>
         </div>

@@ -9,6 +9,7 @@ export interface RentForm {
   builtUpArea: number;
   facing: string;
   bhkType: string;
+  bathrooms: number;
   ownershipType: string;
   propertyAge: string;
   floor: number;
@@ -36,6 +37,7 @@ export interface RentForm {
   amenities: string[];
   // Images
   images: string[];
+  coverImage?: string;
   // Additional info (RENT specific)
   whoWillShowProperty?: string;
   secondaryPhoneNumber?: string;

@@ -36,12 +36,6 @@ export default function AdminLogin() {
 
   const [loginUser, { isLoading, isError }] = useLoginMutation();
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/admin/dashboard");
-    }
-  }, [isAuthenticated, router]);
-
   const handleSubmit = async (
     values: LoginFormValues,
     formikHelpers: FormikHelpers<LoginFormValues>,
@@ -54,6 +48,8 @@ export default function AdminLogin() {
       }).unwrap();
 
       dispatch(authSuccess());
+      const from = new URLSearchParams(window.location.search).get("from");
+      window.location.replace(from || "/admin/dashboard");
     } catch (err) {
       console.error("Login failed:", err);
       dispatch(authFailure(toErrorMessage(err)));

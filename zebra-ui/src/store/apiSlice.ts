@@ -19,6 +19,7 @@ import {
   TAGS,
 } from "@/utils/rtkQueryHelpers";
 import { BASE_API_URL } from "@/common/constants";
+import { PropertyForm } from "@/interfaces/PropertyForm";
 
 const safeDecode = (s: string) => {
   try {
@@ -213,13 +214,27 @@ export const apiSlice = createApi({
     // ──────────────── PHOTO ────────────────
     presignedUrls: builder.mutation<
       {
-        propertyID: string;
         fileURLMap: Record<string, string>;
       },
-      { fileMap: Record<string, string> }
+      { propertyID: string; fileMap: Record<string, string> }
     >({
       query: (payload) => ({
         url: "/photo/admin/presigned-urls",
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+    deletePresignedUrls: builder.mutation<
+      {
+        fileURLMap: Record<string, string>;
+      },
+      { propertyID: string; fileMap: Record<string, string> }
+    >({
+      query: (payload) => ({
+        url: "photo/admin/delete-presigned-urls",
         method: "POST",
         body: payload,
         headers: {
@@ -235,7 +250,7 @@ export const apiSlice = createApi({
         propertyID: number;
       },
       {
-        payload: AddPropertyRequest;
+        payload: PropertyForm;
         phoneNo: string;
       }
     >({

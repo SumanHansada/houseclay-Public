@@ -36,7 +36,7 @@ export enum BadgeTypeEnum {
   Exclusive = "Exclusive",
 }
 
-export enum PropertyStatusEnum {
+export enum PropertyStatus {
   PENDING = "PENDING_VERIFICATION",
   VERIFIED = "ACTIVE",
   REPORT = "REPORT",

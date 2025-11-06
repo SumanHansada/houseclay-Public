@@ -7,7 +7,9 @@ export interface FlatmateForm {
   // Property details (simplified for FLATMATE)
   propertyType: string;
   builtUpArea: number;
+  facing: string;
   bhkType: string;
+  bathrooms: number;
   floor: number;
   totalFloors: number;
   description: string;
@@ -35,6 +37,7 @@ export interface FlatmateForm {
   drinkingPreference: string;
   // Images
   images: string[];
+  coverImage?: string;
   // Additional info (FLATMATE specific)
   whoWillShowProperty?: string;
   secondaryPhoneNumber?: string;
