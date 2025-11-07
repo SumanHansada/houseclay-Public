@@ -1,5 +1,4 @@
 import { PropertyCategory } from "@/common/enums";
-import { ServerAPIService } from "@/services/serverAPIService";
 
 import { MyPropertyDetailsClient } from "./MyPropertyDetailsClient";
 
@@ -22,19 +21,12 @@ async function MyPropertyDetails({
   // Await the params before using them
   const { propertyCategory, propertyID } = await params;
 
-  try {
-    const propertyData = await ServerAPIService.getPropertyByID(propertyID);
-    console.log("propertyData", propertyData);
-    return (
-      <MyPropertyDetailsClient
-        propertyCategory={propertyCategory}
-        propertyID={propertyID}
-        initialData={propertyData}
-      />
-    );
-  } catch (error) {
-    console.error("Error fetching property data", error);
-  }
+  return (
+    <MyPropertyDetailsClient
+      propertyCategory={propertyCategory}
+      propertyID={propertyID}
+    />
+  );
 }
 
 export default MyPropertyDetails;

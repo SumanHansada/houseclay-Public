@@ -84,13 +84,19 @@ import {
 
 import PostedAndRentDetails from "./components/PostedAndRentDetails";
 import UpgradePropertyBanner from "./components/UpgradePropertyBanner";
+import PropertyDetailsLoading from "./loading";
 
 interface MyPropertyDetailsClientProps {
   propertyCategory: string;
   propertyID: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  initialData: any; // Replace 'any' with your property type
 }
+
+type PropertyData = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  property?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  propertyUpdates?: any[];
+};
 
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ClubhouseIcon = ClubhouseIconSvg as React.FC<
@@ -164,16 +170,16 @@ const AmenitiesMap = {
 export function MyPropertyDetailsClient({
   propertyCategory,
   propertyID,
-  initialData,
 }: MyPropertyDetailsClientProps): React.ReactElement {
+  const router = useRouter();
   const dispatch = useDispatch();
   const { isMobile } = useDeviceContext();
-  const { data: propertyData = initialData, isLoading: _isPropertyLoading } =
-    useGetMyPropertyByIdQuery(propertyID, {
-      skip: !!initialData, // Skip the query if we have initial data
-    });
-  const { property, propertyUpdates } = propertyData;
-  const router = useRouter();
+  const { data: propertyDataRaw, isLoading: isPropertyLoading } =
+    useGetMyPropertyByIdQuery(propertyID);
+
+  const propertyData = propertyDataRaw as PropertyData | undefined;
+  const property = propertyData?.property;
+  const propertyUpdates = propertyData?.propertyUpdates ?? [];
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const [generateLead, { isLoading: _isGeneratingLead }] =
@@ -224,6 +230,10 @@ export function MyPropertyDetailsClient({
       console.error("Error generating lead:", error);
     }
   };
+
+  if (isPropertyLoading) {
+    return <PropertyDetailsLoading />;
+  }
 
   return (
     <>
