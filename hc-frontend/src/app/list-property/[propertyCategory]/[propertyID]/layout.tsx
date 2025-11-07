@@ -2,7 +2,7 @@
 
 import { Form, Formik, FormikProvider } from "formik";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -31,9 +31,12 @@ import {
 } from "@/store/appSlice";
 import { clearFormData, setFileURLMap } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
+import { resetUpload } from "@/store/uploadToS3Slice";
 import { ImageWithLoader } from "@/utility-components";
 
 import ListPropertyStepper from "../../components/ListPropertyStepper";
+
+type FinalizationStage = "idle" | "uploading" | "posting";
 
 export default function ListPropertyTypeLayout({
   children,
@@ -119,6 +122,49 @@ export default function ListPropertyTypeLayout({
 
   const isFormValid = formState?.isValid;
 
+  const [finalizationStage, setFinalizationStage] =
+    useState<FinalizationStage>("idle");
+  const finalizationOpsRef = useRef({
+    uploadStarted: false,
+    postStarted: false,
+  });
+
+  const buildUploadQueue = () => {
+    const photos = propertyImages || [];
+
+    return photos
+      .filter((propertyImage: PropertyImage) =>
+        propertyImage.url.startsWith("blob:"),
+      )
+      .map((propertyImage: PropertyImage) => {
+        const fileName = propertyImage.file.name;
+        const mappedUrl =
+          propertyImagesS3Url?.[fileName] ??
+          propertyImagesS3Url?.[encodeURIComponent(fileName)];
+
+        if (!mappedUrl) {
+          return null;
+        }
+
+        return {
+          name: fileName,
+          url: propertyImage.url,
+          type: propertyImage.file.type,
+          S3Url: mappedUrl,
+        };
+      })
+      .filter(
+        (
+          item,
+        ): item is {
+          name: string;
+          url: string;
+          type: string;
+          S3Url: string;
+        } => Boolean(item),
+      );
+  };
+
   // Ensure proper form initialization with all required fields
   const getInitialValues = (): FormValues => {
     const data = formState?.data || {};
@@ -150,48 +196,23 @@ export default function ListPropertyTypeLayout({
     }
   }, [dispatch, isMobile]);
 
-  // Effect to handle upload completion and dialog transitions
-  useEffect(() => {
-    if (
-      uploadState.status === "success" &&
-      isDialogOpen("upload-photos-dialog")
-    ) {
-      // Close upload dialog
-      closeDialog("upload-photos-dialog");
-
-      // Small delay to ensure smooth transition
-      setTimeout(() => {
-        // Open success dialog
-        openDialog("list-property-success-dialog");
-      }, 300);
-    }
-  }, [uploadState.status, isDialogOpen, closeDialog, openDialog]);
-
   const setRoute = (stepSlug: string) => {
     const route = `/list-property/${propertyCategory.toLowerCase()}/${propertyID}/${stepSlug}`;
     router.push(route);
   };
 
   const uploadFilesToS3 = async () => {
-    const photos = propertyImages || [];
-    if (photos.length === 0) {
+    const photosToUpload = buildUploadQueue();
+
+    if (photosToUpload.length === 0) {
       return;
     }
-    // create a map of file names to their corresponding Blob URLs
-    const photosToUpload = photos.map((photo: PropertyImage) => {
-      return {
-        name: photo.file.name,
-        url: photo.url,
-        type: photo.file.type,
-        S3Url: propertyImagesS3Url[photo.file.name],
-      };
-    });
 
-    // Open upload dialog before starting upload
     openDialog("upload-photos-dialog");
 
-    // Start the upload process
-    uploadFiles(photosToUpload);
+    await uploadFiles(photosToUpload);
+
+    closeDialog("upload-photos-dialog");
   };
 
   const getPresignedPhotoUrls = async () => {
@@ -287,10 +308,22 @@ export default function ListPropertyTypeLayout({
       await getPresignedPhotoUrls();
       setRoute(ListPropertyRouteStep.ADDITIONAL_INFO);
     } else if (currentStep === ListPropertyFormStep.ADDITIONAL_INFO) {
-      uploadFilesToS3();
-      // Don't navigate to a route for DONE step, just handle the API call
-      // Make API call to post property
-      await handlePostProperty();
+      const pendingUploads = buildUploadQueue();
+
+      if (pendingUploads.length === 0) {
+        await handlePostProperty();
+        return;
+      }
+
+      finalizationOpsRef.current = {
+        uploadStarted: false,
+        postStarted: false,
+      };
+
+      dispatch(resetUpload());
+
+      setFinalizationStage("uploading");
+      return;
     }
   };
 
@@ -346,6 +379,49 @@ export default function ListPropertyTypeLayout({
       console.error("Error posting property:", error);
     }
   };
+
+  useEffect(() => {
+    if (finalizationStage !== "uploading") {
+      return;
+    }
+
+    if (!finalizationOpsRef.current.uploadStarted) {
+      finalizationOpsRef.current.uploadStarted = true;
+      void uploadFilesToS3();
+      return;
+    }
+
+    if (uploadState.status === "success" || uploadState.status === "error") {
+      finalizationOpsRef.current.uploadStarted = false;
+      setFinalizationStage("posting");
+    }
+  }, [finalizationStage, uploadFilesToS3, uploadState.status]);
+
+  useEffect(() => {
+    if (finalizationStage !== "posting") {
+      return;
+    }
+
+    if (finalizationOpsRef.current.postStarted) {
+      return;
+    }
+
+    finalizationOpsRef.current.postStarted = true;
+
+    const runPost = async () => {
+      try {
+        await handlePostProperty();
+      } finally {
+        setFinalizationStage("idle");
+        finalizationOpsRef.current = {
+          uploadStarted: false,
+          postStarted: false,
+        };
+      }
+    };
+
+    void runPost();
+  }, [finalizationStage, handlePostProperty]);
 
   const renderStepper = () => {
     return (

@@ -2,7 +2,7 @@
 
 import { Form, Formik, FormikProvider } from "formik";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -35,6 +35,7 @@ import {
   setHideHeader,
   setHideStickyNavBar,
 } from "@/store/appSlice";
+import { resetDelete } from "@/store/deleteFromS3Slice";
 import {
   clearFormData,
   setDeleteFileURLMap,
@@ -45,9 +46,12 @@ import {
   setPropertyImages,
 } from "@/store/editPropertySlice";
 import { RootState } from "@/store/store";
+import { resetUpload } from "@/store/uploadToS3Slice";
 import { ImageWithLoader } from "@/utility-components";
 
 import EditPropertyStepper from "../../components/EditPropertyStepper";
+
+type FinalizationStage = "idle" | "deleting" | "uploading" | "updating";
 
 export default function EditPropertyTypeLayout({
   children,
@@ -130,6 +134,7 @@ export default function EditPropertyTypeLayout({
   const { data: existingPropertyData, isLoading: isLoadingProperty } =
     useGetMyPropertyByIdQuery(propertyID, {
       skip: !propertyID,
+      refetchOnMountOrArgChange: true,
     });
 
   const propertyImagesS3Url = useSelector(
@@ -147,6 +152,83 @@ export default function EditPropertyTypeLayout({
   const formState = useSelector((state: RootState) => state.editProperty.form);
 
   const isFormValid = formState?.isValid;
+
+  const [finalizationStage, setFinalizationStage] =
+    useState<FinalizationStage>("idle");
+  const finalizationPlanRef = useRef({
+    needsDelete: false,
+    needsUpload: false,
+  });
+  const finalizationOpsRef = useRef({
+    deleteStarted: false,
+    uploadStarted: false,
+    updateStarted: false,
+  });
+
+  const buildUploadQueue = () => {
+    const photos = propertyImages || [];
+
+    return photos
+      .filter((propertyImage: PropertyImage) =>
+        propertyImage.url.startsWith("blob:"),
+      )
+      .map((propertyImage: PropertyImage) => {
+        const fileName = propertyImage.file.name;
+        const mappedUrl =
+          propertyImagesS3Url?.[fileName] ??
+          propertyImagesS3Url?.[encodeURIComponent(fileName)];
+
+        if (!mappedUrl) {
+          return null;
+        }
+
+        return {
+          name: fileName,
+          url: propertyImage.url,
+          type: propertyImage.file.type,
+          S3Url: mappedUrl,
+        };
+      })
+      .filter(
+        (
+          item,
+        ): item is {
+          name: string;
+          url: string;
+          type: string;
+          S3Url: string;
+        } => Boolean(item),
+      );
+  };
+
+  const buildDeleteQueue = () => {
+    const deletedPhotos = deletedImages || [];
+
+    return deletedPhotos
+      .map((propertyImage: PropertyImage) => {
+        const fileName = propertyImage.file.name;
+        const mappedUrl =
+          deletedImagesS3Url?.[fileName] ??
+          deletedImagesS3Url?.[encodeURIComponent(fileName)];
+
+        if (!mappedUrl) {
+          return null;
+        }
+
+        return {
+          name: fileName,
+          S3Url: mappedUrl,
+        };
+      })
+      .filter(
+        (
+          item,
+        ): item is {
+          name: string;
+          S3Url: string;
+        } => Boolean(item),
+      );
+  };
 
   // Ensure proper form initialization with all required fields
   const getInitialValues = (): FormValues => {
@@ -188,6 +270,7 @@ export default function EditPropertyTypeLayout({
   // Populate form data when existing property data is loaded
   useEffect(() => {
     if (existingPropertyData && !isLoadingProperty) {
+      dispatch(clearFormData());
       try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const propertyData = existingPropertyData as any;
@@ -224,63 +307,22 @@ export default function EditPropertyTypeLayout({
     }
   }, [existingPropertyData, isLoadingProperty, dispatch]);
 
-  // Effect to handle upload completion and dialog transitions
-  useEffect(() => {
-    if (
-      uploadState.status === "success" &&
-      isDialogOpen("upload-photos-dialog")
-    ) {
-      // Close upload dialog
-      closeDialog("upload-photos-dialog");
-
-      // Small delay to ensure smooth transition
-      setTimeout(() => {
-        // Open success dialog
-        openDialog("list-property-success-dialog");
-      }, 300);
-    }
-  }, [uploadState.status, isDialogOpen, closeDialog, openDialog]);
-
-  // Effect to handle delete completion and dialog transitions
-  useEffect(() => {
-    if (
-      deleteState.status === "success" &&
-      isDialogOpen("delete-photos-dialog")
-    ) {
-      // Close delete dialog (no success dialog for deletes)
-      closeDialog("delete-photos-dialog");
-    }
-  }, [deleteState.status, isDialogOpen, closeDialog]);
-
   const setRoute = (stepSlug: string) => {
     const route = `/edit-property/${propertyCategory.toLowerCase()}/${propertyID}/${stepSlug}`;
     router.push(route);
   };
 
   const uploadFilesToS3 = async () => {
-    const photos = propertyImages || [];
-    if (photos.length === 0) {
+    const photosToUpload = buildUploadQueue();
+
+    if (photosToUpload.length === 0) {
       return;
     }
-    const photosToUpload = photos
-      .filter((photo: PropertyImage) => photo.url.startsWith("blob:"))
-      .map((photo: PropertyImage) => {
-        return {
-          name: photo.file.name,
-          url: photo.url,
-          type: photo.file.type,
-          S3Url: propertyImagesS3Url[photo.file.name],
-        };
-      });
 
-    // Only upload if there are new photos
-    // Open upload dialog before starting upload
     openDialog("upload-photos-dialog");
 
-    // Start the upload process
     await uploadFiles(photosToUpload);
 
-    // Close upload dialog
     closeDialog("upload-photos-dialog");
   };
 
@@ -330,31 +372,16 @@ export default function EditPropertyTypeLayout({
   };
 
   const deleteFilesFromS3 = async () => {
-    const deletedPhotos = deletedImages || [];
-    if (deletedPhotos.length === 0) {
-      return;
-    }
-
-    // Create array of images with their delete URLs from Redux
-    const photosToDelete = deletedPhotos.map((photo: PropertyImage) => {
-      return {
-        name: photo.file.name,
-        S3Url: deletedImagesS3Url[photo.file.name],
-      };
-    });
+    const photosToDelete = buildDeleteQueue();
 
     if (photosToDelete.length === 0) {
-      console.log("No delete URLs found");
       return;
     }
 
-    // Open delete dialog before starting delete
     openDialog("delete-photos-dialog");
 
-    // Start the delete process
     await deleteFiles(photosToDelete);
 
-    // Close delete dialog
     closeDialog("delete-photos-dialog");
   };
 
@@ -468,13 +495,37 @@ export default function EditPropertyTypeLayout({
       }
       setRoute(ListPropertyRouteStep.ADDITIONAL_INFO);
     } else if (currentStep === ListPropertyFormStep.ADDITIONAL_INFO) {
-      // Delete images first if any
-      await deleteFilesFromS3();
+      const pendingDeletes = buildDeleteQueue();
+      const pendingUploads = buildUploadQueue();
 
-      await uploadFilesToS3();
-      // Don't navigate to a route for DONE step, just handle the API call
-      // Make API call to update property
-      await handleUpdateProperty();
+      const hasPendingDeletes = pendingDeletes.length > 0;
+      const hasPendingUploads = pendingUploads.length > 0;
+
+      if (!hasPendingDeletes && !hasPendingUploads) {
+        await handleUpdateProperty();
+        return;
+      }
+
+      finalizationPlanRef.current = {
+        needsDelete: hasPendingDeletes,
+        needsUpload: hasPendingUploads,
+      };
+      finalizationOpsRef.current = {
+        deleteStarted: false,
+        uploadStarted: false,
+        updateStarted: false,
+      };
+
+      if (hasPendingDeletes) {
+        dispatch(resetDelete());
+      }
+
+      if (hasPendingUploads) {
+        dispatch(resetUpload());
+      }
+
+      setFinalizationStage(hasPendingDeletes ? "deleting" : "uploading");
+      return;
     }
   };
 
@@ -540,10 +591,7 @@ export default function EditPropertyTypeLayout({
 
       await updateProperty(apiPayload);
 
-      // In case of no images, open list-property-success-dialog
-      if (imagesS3Keys.length === 0) {
-        openDialog("list-property-success-dialog");
-      }
+      openDialog("list-property-success-dialog");
 
       // Don't open success dialog here anymore - it will be opened automatically after upload completes
     } catch (error) {
@@ -551,6 +599,73 @@ export default function EditPropertyTypeLayout({
       console.error("Error updating property:", error);
     }
   };
+
+  useEffect(() => {
+    if (finalizationStage !== "deleting") {
+      return;
+    }
+
+    if (!finalizationOpsRef.current.deleteStarted) {
+      finalizationOpsRef.current.deleteStarted = true;
+      void deleteFilesFromS3();
+      return;
+    }
+
+    if (deleteState.status === "success" || deleteState.status === "error") {
+      finalizationOpsRef.current.deleteStarted = false;
+      setFinalizationStage(
+        finalizationPlanRef.current.needsUpload ? "uploading" : "updating",
+      );
+    }
+  }, [deleteFilesFromS3, deleteState.status, finalizationStage]);
+
+  useEffect(() => {
+    if (finalizationStage !== "uploading") {
+      return;
+    }
+
+    if (!finalizationOpsRef.current.uploadStarted) {
+      finalizationOpsRef.current.uploadStarted = true;
+      void uploadFilesToS3();
+      return;
+    }
+
+    if (uploadState.status === "success" || uploadState.status === "error") {
+      finalizationOpsRef.current.uploadStarted = false;
+      setFinalizationStage("updating");
+    }
+  }, [finalizationStage, uploadFilesToS3, uploadState.status]);
+
+  useEffect(() => {
+    if (finalizationStage !== "updating") {
+      return;
+    }
+
+    if (finalizationOpsRef.current.updateStarted) {
+      return;
+    }
+
+    finalizationOpsRef.current.updateStarted = true;
+
+    const runUpdate = async () => {
+      try {
+        await handleUpdateProperty();
+      } finally {
+        setFinalizationStage("idle");
+        finalizationPlanRef.current = {
+          needsDelete: false,
+          needsUpload: false,
+        };
+        finalizationOpsRef.current = {
+          deleteStarted: false,
+          uploadStarted: false,
+          updateStarted: false,
+        };
+      }
+    };
+
+    void runUpdate();
+  }, [finalizationStage, handleUpdateProperty]);
 
   const renderStepper = () => {
     return (

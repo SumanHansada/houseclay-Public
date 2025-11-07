@@ -9,6 +9,7 @@ import { FormPhotoUpload } from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
 import {
   setDeletedImages,
+  setFormData,
   setFormValidity,
   setPropertyImages,
 } from "@/store/editPropertySlice";
@@ -42,6 +43,9 @@ const GalleryClient: React.FC = () => {
   const previousImages = useSelector(
     (state: RootState) => state.editProperty.propertyImages,
   );
+  const deletedImages = useSelector(
+    (state: RootState) => state.editProperty.deletedImages,
+  );
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
   const previousImagesRef = useRef(previousImages);
@@ -74,12 +78,29 @@ const GalleryClient: React.FC = () => {
 
     // Only dispatch if there are deleted images
     if (deleted.length > 0) {
-      dispatch(setDeletedImages({ deletedImages: deleted }));
+      const existingDeletedIds = new Set(
+        deletedImages.map((image) => image.id),
+      );
+
+      const mergedDeleted = [
+        ...deletedImages,
+        ...deleted.filter((image) => !existingDeletedIds.has(image.id)),
+      ];
+
+      dispatch(setDeletedImages({ deletedImages: mergedDeleted }));
+      dispatch(
+        setFormData({
+          data: {
+            images: currentImages,
+            noPhotos: values.noPhotos,
+          },
+        }),
+      );
     }
 
     // Update the ref
     previousImagesRef.current = currentImages;
-  }, [imagesString, values.images, dispatch]);
+  }, [imagesString, values.images, deletedImages, dispatch, values.noPhotos]);
 
   useEffect(() => {
     const validateAndDispatch = async () => {
@@ -91,6 +112,14 @@ const GalleryClient: React.FC = () => {
         console.log("Images", values.images);
         // Set form data in the store
         dispatch(setPropertyImages({ propertyImages: values.images }));
+        dispatch(
+          setFormData({
+            data: {
+              images: values.images,
+              noPhotos: values.noPhotos,
+            },
+          }),
+        );
         // Form is valid
         if (!isFormValid) {
           dispatch(setFormValidity({ isValid: true }));

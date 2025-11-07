@@ -117,18 +117,18 @@ export default function PropertyDetailsLoading() {
 
             <section>
               <div className="flex py-0 ml-auto justify-end animate-pulse">
-                <div className="h-10 w-32 bg-red-300 rounded" />
+                <div className="h-10 w-32 bg-gray-300 rounded" />
               </div>
             </section>
 
             <div className="pt-4">
               <section className="flex flex-wrap gap-2 w-full py-6">
                 <div className="flex-col flex-1 px-4 py-2 border rounded-xl animate-pulse">
-                  <div className="h-4 w-20 bg-green-300 rounded mx-auto mb-2" />
+                  <div className="h-4 w-20 bg-gray-300 rounded mx-auto mb-2" />
                   <div className="h-6 w-28 bg-gray-300 rounded mx-auto" />
                 </div>
                 <div className="flex-col flex-1 px-4 py-2 border rounded-xl animate-pulse">
-                  <div className="h-4 w-20 bg-blue-300 rounded mx-auto mb-2" />
+                  <div className="h-4 w-20 bg-gray-300 rounded mx-auto mb-2" />
                   <div className="h-6 w-28 bg-gray-300 rounded mx-auto" />
                 </div>
               </section>

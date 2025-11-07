@@ -1,10 +1,8 @@
 "use client";
 
-import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 
-import { Button } from "@/base-components";
 import { PropertyCategory } from "@/common/enums";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { MobileHeader } from "@/layout-components";
@@ -60,26 +58,10 @@ const ListPropertySuccessDialog: React.FC<ListPropertySuccessDialogProps> = ({
       <DialogHeader className="-mx-4">
         {isMobile && (
           <>
-            <h1 className="text-xl py-1.5 text-black">
-              Woohoo! It&apos;s all done.
-            </h1>
-            <button className="absolute top-4 right-4 rounded-full">
-              <X onClick={handleClose} size={25} />
-            </button>
             <MobileHeader className="relative">
               <MobileHeader.Title>
                 Woohoo! It&apos;s all done.
               </MobileHeader.Title>
-              <MobileHeader.RightAction>
-                <Button
-                  variant="secondary"
-                  size="custom"
-                  className="rounded-full p-1"
-                  onClick={handleClose}
-                >
-                  <X size={24} />
-                </Button>
-              </MobileHeader.RightAction>
             </MobileHeader>
           </>
         )}
