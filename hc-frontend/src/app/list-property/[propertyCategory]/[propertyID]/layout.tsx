@@ -368,10 +368,7 @@ export default function ListPropertyTypeLayout({
 
       await addProperty(apiPayload);
 
-      // In case of no images, open list-property-success-dialog
-      if (imagesS3Keys.length === 0) {
-        openDialog("list-property-success-dialog");
-      }
+      openDialog("list-property-success-dialog");
 
       // Don't open success dialog here anymore - it will be opened automatically after upload completes
     } catch (error) {
