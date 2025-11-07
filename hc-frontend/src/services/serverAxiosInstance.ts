@@ -17,29 +17,31 @@ serverAxiosInstance.interceptors.request.use(
   async (config) => {
     const fullUrl = `${config.baseURL || ""}${config.url || ""}`;
 
-    // Read cookies from Next.js (only works in Server Components/Actions)
+    // Read cookies from Next.js only when credentials are required
     let cookieHeader = "";
-    try {
-      const cookieStore = await cookies();
-      const allCookies = cookieStore.getAll();
+    if (config.withCredentials) {
+      try {
+        const cookieStore = await cookies();
+        const allCookies = cookieStore.getAll();
 
-      if (allCookies.length > 0) {
-        cookieHeader = allCookies
-          .map((cookie) => `${cookie.name}=${cookie.value}`)
-          .join("; ");
+        if (allCookies.length > 0) {
+          cookieHeader = allCookies
+            .map((cookie) => `${cookie.name}=${cookie.value}`)
+            .join("; ");
 
-        // Add Cookie header to the request
-        if (config.headers) {
-          config.headers.Cookie = cookieHeader;
+          // Add Cookie header to the request
+          if (config.headers) {
+            config.headers.Cookie = cookieHeader;
+          }
         }
+      } catch (error) {
+        // cookies() only works in Server Components/Actions
+        // If called from client-side, this will fail (which is expected)
+        console.error(
+          "Note: cookies() not available in this context (client-side?)",
+          error,
+        );
       }
-    } catch (error) {
-      // cookies() only works in Server Components/Actions
-      // If called from client-side, this will fail (which is expected)
-      console.error(
-        "Note: cookies() not available in this context (client-side?)",
-        error,
-      );
     }
 
     console.log("=== API Request Debug ===");

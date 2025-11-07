@@ -3,6 +3,8 @@ import { ServerAPIService } from "@/services/serverAPIService";
 
 import { MyPropertyDetailsClient } from "./MyPropertyDetailsClient";
 
+export const fetchCache = "force-no-store";
+
 export async function generateStaticParams() {
   return [
     { propertyCategory: PropertyCategory.RENT.toLowerCase() },

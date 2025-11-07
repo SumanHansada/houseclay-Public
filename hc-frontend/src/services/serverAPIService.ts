@@ -1,5 +1,6 @@
 // src/services/serverApi.ts
 import axios from "axios";
+import { cache } from "react";
 
 import serverAxiosInstance from "./serverAxiosInstance";
 
@@ -26,6 +27,29 @@ export class ServerAPIService {
     }
   }
 
+  static fetchWithoutAuth = cache(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async (endpoint: string, options: any = {}) => {
+      try {
+        const response = await serverAxiosInstance({
+          url: endpoint,
+          method: options.method || "GET",
+          withCredentials: false,
+          ...options,
+        });
+
+        return response.data;
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          throw new Error(
+            `API call failed: ${error.response?.statusText || error.message}`,
+          );
+        }
+        throw error;
+      }
+    },
+  );
+
   // Property specific methods
   static async getPropertyByID(propertyID: string) {
     return this.fetchWithAuth(`/property/user/${propertyID}`);
@@ -33,22 +57,7 @@ export class ServerAPIService {
 
   // Public property method (no auth required)
   static async getPublicPropertyByID(propertyID: string) {
-    try {
-      const response = await serverAxiosInstance({
-        url: `/property/${propertyID}`,
-        method: "GET",
-        withCredentials: true,
-      });
-
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        throw new Error(
-          `API call failed: ${error.response?.statusText || error.message}`,
-        );
-      }
-      throw error;
-    }
+    return this.fetchWithoutAuth(`/property/${propertyID}`);
   }
 
   // Add more API methods as needed
