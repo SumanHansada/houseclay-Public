@@ -1,36 +1,26 @@
-"use client";
+import { redirect } from "next/navigation";
+import { PropertyCategory, PropertyDetailsTabEnum } from "@/common/enums";
 
-import { redirect, useParams } from "next/navigation";
+type Params = { propertyCategory: string; propertyID: string };
 
-import { PropertyCategory } from "@/common/enums";
-import { PropertyDetailsTabEnum } from "@/common/enums";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+export default function Page({ params }: { params: Params }) {
+  const paramID = (params.propertyID ?? "").trim();
+  const paramCategory = (params.propertyCategory ?? "").trim().toUpperCase();
 
-export const dynamicParams = true;
+  const propertyCategory =
+    (Object.values(PropertyCategory) as PropertyCategory[]).find(
+      (val) => val.toUpperCase() === paramCategory,
+    ) ?? null;
 
-export default function PropertyDetailsRedirectPage() {
-  const params = useParams();
-  const router = useRouter();
+  if (
+    !paramID ||
+    propertyCategory === null ||
+    propertyCategory === PropertyCategory.NONE
+  ) {
+    redirect("/admin/dashboard");
+  }
 
-  useEffect(() => {
-    const propertyCategory = (params.propertyCategory as string).toUpperCase();
-    const propertyID = params.propertyID as string;
-    console.log("propertyCategory", propertyCategory);
-    console.log("propertyID", propertyID);
-
-    if (
-      propertyCategory &&
-      Object.values(PropertyCategory).includes(
-        propertyCategory as PropertyCategory,
-      ) &&
-      propertyID
-    ) {
-      router.replace(
-        `/admin/property-details/${propertyCategory}/${propertyID}/${PropertyDetailsTabEnum.DETAILS}`,
-      );
-    } else {
-      router.replace("/admin/dashboard");
-    }
-  }, [params.propertyCategory, params.propertyID, router]);
+  redirect(
+    `/admin/property-details/${propertyCategory}/${paramID}/${PropertyDetailsTabEnum.DETAILS}`,
+  );
 }

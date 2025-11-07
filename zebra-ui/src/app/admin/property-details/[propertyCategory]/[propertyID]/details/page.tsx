@@ -5,8 +5,6 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 
 import { PropertyCategory } from "@/common/enums";
-import { PropertyResponseFormValues } from "@/interfaces/Property";
-import { selectFormData } from "@/store/propertyDetailsSlice";
 
 // import AdditionalInfoForm from "../../../components/AdditionalInfoForm";
 import GalleryForm from "../../../components/GalleryForm";
@@ -15,6 +13,12 @@ import {
   PropertyDetailsRentForm,
   PropertyDetailsResaleForm,
 } from "@/components/forms";
+import LocalityDetailsForm from "@/components/forms/LocalityDetailsForm";
+import { FormValues } from "@/interfaces/FormValues";
+import { RootState } from "@/store/store";
+import FlatmateDetailsForm from "@/components/forms/FlatmateDetailsForm";
+import ResaleDetailsForm from "@/components/forms/ResaleDetailsForm";
+import RentalDetailsForm from "@/components/forms/RentalDetailsForm";
 // import LocalityDetailsForm from "../../../components/LocalityDetailsForm";
 // import PropertyDetailsForm from "../../../components/PropertyDetailsForm";
 // import RentalDetailsForm from "../../../components/RentalDetailsForm";
@@ -23,20 +27,116 @@ import {
 export default function DetailsPage() {
   const [editMode, setEditMode] = useState(false);
 
-  const propertyData = useSelector(selectFormData);
+  const formState = useSelector((state: RootState) => state.editProperty.form);
+  const { propertyCategory } = useSelector(
+    (state: RootState) => state.editProperty,
+  );
 
-  if (!propertyData) return null;
-  const { propertyCategory } = propertyData;
+  const isFormValid = formState?.isValid;
 
-  const handleSaveChanges = async (values: PropertyResponseFormValues) => {
+  // Ensure proper form initialization with all required fields
+  const getInitialValues = (): FormValues => {
+    const data = formState?.data || {};
+
+    // Ensure all required fields are present
+    return {
+      localityDetails: data.localityDetails,
+      images: data.images || [],
+      propertyDetails: data.propertyDetails,
+      rentalDetails: data.rentalDetails,
+      resaleDetails: data.resaleDetails,
+      flatmateDetails: data.flatmateDetails,
+      additionalInfo: data.additionalInfo,
+    };
+  };
+
+  const initialValues = getInitialValues();
+
+  if (!initialValues) return null;
+
+  const handleSaveChanges = async (values: FormValues) => {
     console.log("Submitting all changes:", values);
     setEditMode(false);
   };
 
+  // const handleUpdateProperty = async () => {
+  //   try {
+  //     // Transform FormValues to PropertyForm using the type-safe transformer
+  //     const formValues = formState.data as FormValues;
+
+  //     if (!formValues) {
+  //       throw new Error("Form data is not available");
+  //     }
+
+  //     // Transform to the appropriate PropertyForm type
+  //     const propertyForm = transformFormValuesToPropertyForm(
+  //       formValues,
+  //       propertyID,
+  //       propertyCategory,
+  //     );
+
+  //     // Extract S3 image keys from propertyForm.images
+  //     // For new images (blob URLs), they should have been uploaded and the S3 URL should be in propertyImagesS3Url
+  //     // For existing images (S3 URLs), extract the key directly from the URL
+  //     const imagesS3Keys = propertyForm.images
+  //       .map((url) => {
+  //         // If it's an existing S3 URL, extract the key
+  //         if (url.startsWith("https://")) {
+  //           return extractS3KeyFromUrl(url) || "";
+  //         }
+  //         // If it's a blob URL, find the S3 URL from propertyImagesS3Url
+  //         const matchingPhoto = propertyImages.find((img) => img.url === url);
+  //         if (matchingPhoto) {
+  //           const s3Url =
+  //             propertyImagesS3Url[encodeURIComponent(matchingPhoto.file.name)];
+  //           return s3Url ? extractS3KeyFromUrl(s3Url) || "" : "";
+  //         }
+  //         return "";
+  //       })
+  //       .filter((key) => key !== ""); // Remove empty keys
+
+  //     // Add cover image information if needed
+  //     const coverImage = propertyImages.filter((image) => image.isCover);
+
+  //     // Find the cover image S3 key
+  //     let coverImageS3Key = "";
+  //     if (coverImage.length > 0) {
+  //       const coverImageUrl = coverImage[0].url;
+  //       if (coverImageUrl.startsWith("https://")) {
+  //         coverImageS3Key = extractS3KeyFromUrl(coverImageUrl) || "";
+  //       } else if (coverImageUrl.startsWith("blob:")) {
+  //         const s3Url =
+  //           propertyImagesS3Url[encodeURIComponent(coverImage[0].file.name)];
+  //         coverImageS3Key = s3Url ? extractS3KeyFromUrl(s3Url) || "" : "";
+  //       }
+  //     }
+
+  //     // Create the final API payload
+  //     const apiPayload = {
+  //       ...propertyForm,
+  //       propertyID: propertyID, // Use propertyID from URL for update
+  //       coverImage: coverImageS3Key,
+  //       images: imagesS3Keys,
+  //     };
+
+  //     await updateProperty(apiPayload);
+
+  //     // In case of no images, open list-property-success-dialog
+  //     if (imagesS3Keys.length === 0) {
+  //       openDialog("list-property-success-dialog");
+  //     }
+
+  //     // Don't open success dialog here anymore - it will be opened automatically after upload completes
+  //   } catch (error) {
+  //     setRoute(ListPropertyRouteStep.ADDITIONAL_INFO);
+  //     console.error("Error updating property:", error);
+  //   }
+  // };
+
   return (
     <div className="flex flex-col bg-gray-100 h-full overflow-auto">
       <Formik
-        initialValues={propertyData}
+        initialValues={initialValues}
         onSubmit={handleSaveChanges}
         enableReinitialize
       >
@@ -91,17 +191,21 @@ export default function DetailsPage() {
                   </div>
 
                   <div className="bg-white rounded-xl p-6 shadow-sm">
-                    {/* <LocalityDetailsForm disabled={!editMode} /> */}
+                    <LocalityDetailsForm disabled={!editMode} />
                   </div>
-                  {/* <div className="bg-white rounded-xl p-6 shadow-sm">
+
+                  <div className="bg-white rounded-xl p-6 shadow-sm">
                     {propertyCategory === PropertyCategory.RESALE ? (
                       <ResaleDetailsForm disabled={!editMode} />
-                    ) : (
+                    ) : propertyCategory === PropertyCategory.RENT ? (
                       <RentalDetailsForm disabled={!editMode} />
+                    ) : (
+                      <FlatmateDetailsForm disabled={!editMode} />
                     )}
-                  </div> */}
+                  </div>
+
                   <div className="bg-white rounded-xl p-6 shadow-sm">
-                    <GalleryForm disabled={!editMode} />
+                    {/* <GalleryForm disabled={!editMode} /> */}
                   </div>
                   <div className="bg-white rounded-xl p-6 shadow-sm">
                     {/* <AdditionalInfoForm disabled={!editMode} /> */}

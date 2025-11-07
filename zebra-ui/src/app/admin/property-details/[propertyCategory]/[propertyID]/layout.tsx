@@ -10,15 +10,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { PropertyDetailsTabEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
 import { useGetPropertyByIdQuery } from "@/store/apiSlice";
-import {
-  selectFormData,
-  setFulfilled,
-  setPending,
-  setRejected,
-} from "@/store/propertyDetailsSlice";
+// import { selectFormData } from "@/store/propertyDetailsSlice";
 import { ensureEnumValue } from "@/utils/core";
 import { apiToForm } from "@/utils/transform/propertyToFormValues";
 import { Tab, TabHeader, Tabs } from "@/utility-components";
+import { transformPropertyFormToFormValues } from "@/interfaces/FormTransformers";
+import {
+  setFormData,
+  setPropertyCategory,
+  setPropertyImages,
+} from "@/store/editPropertySlice";
+import { RootState } from "@/store/store";
 
 const tabs: { label: string; value: PropertyDetailsTabEnum }[] = [
   { label: "Details", value: PropertyDetailsTabEnum.DETAILS },
@@ -40,41 +42,82 @@ export default function PropertyDetailsLayout({
   const router = useRouter();
   const currentTabFromUrl = useSelectedLayoutSegment();
   const dispatch = useDispatch();
+  const { propertyCategory } = useSelector(
+    (state: RootState) => state.editProperty,
+  );
 
   const {
-    data: apiPropertyData,
-    isLoading,
+    data: propertyDetails,
+    isLoading: isLoadingProperty,
     isError,
     error,
   } = useGetPropertyByIdQuery({ propertyID: propertyID });
+  console.log("propertyDetails: ", propertyDetails);
 
+  // useEffect(() => {
+  //   if (isLoading) {
+  //     dispatch(setPending());
+  //   } else if (isError) {
+  //     const errMsg =
+  //       typeof error === "string" ? error : "Unknown error fetching property";
+  //     dispatch(setRejected(errMsg));
+  //   } else if (apiPropertyData) {
+  //     const currentProperty = apiToForm(apiPropertyData);
+  //     dispatch(setFulfilled(currentProperty));
+  //   }
+  // }, [isLoading, isError, apiPropertyData, error, dispatch]);
+
+  // Populate form data when existing property data is loaded
   useEffect(() => {
-    if (isLoading) {
-      dispatch(setPending());
-    } else if (isError) {
-      const errMsg =
-        typeof error === "string" ? error : "Unknown error fetching property";
-      dispatch(setRejected(errMsg));
-    } else if (apiPropertyData) {
-      const currentProperty = apiToForm(apiPropertyData);
-      dispatch(setFulfilled(currentProperty));
+    if (propertyDetails && !isLoadingProperty) {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // const propertyData = data;
+        console.log("Property Details - useEffect:", propertyDetails);
+        const apiPropertyData = propertyDetails.property;
+        console.log("apiPropertyData: ", apiPropertyData);
+
+        if (apiPropertyData) {
+          // Transform API response to FormValues
+          const formValues = transformPropertyFormToFormValues(apiPropertyData);
+
+          // Set property category
+          dispatch(setPropertyCategory(apiPropertyData.propertyCategory));
+
+          // Set form data
+          dispatch(setFormData({ data: formValues }));
+
+          // Set property images
+          if (formValues.images && formValues.images.length > 0) {
+            const decodedImages = formValues.images.map((image) => {
+              return {
+                ...image,
+                url: decodeURIComponent(image.url),
+              };
+            });
+            dispatch(setPropertyImages({ propertyImages: decodedImages }));
+          }
+        }
+      } catch (error) {
+        console.error(
+          "Error transforming property data to form values:",
+          error,
+        );
+      }
     }
-  }, [isLoading, isError, apiPropertyData, error, dispatch]);
+  }, [propertyDetails, isLoadingProperty, dispatch]);
 
-  const currentProperty = useSelector(selectFormData);
-
-  if (isLoading || isError || !currentProperty) {
+  if (isLoadingProperty || isError) {
     return (
       <AsyncFallback
-        isLoading={isLoading}
-        isError={isError || !currentProperty}
+        isLoading={isLoadingProperty}
+        isError={isError}
         error={error}
         loadingMessage="Loading property details…"
         errorMessage="Failed to fetch property."
       />
     );
   }
-  const { propertyCategory } = currentProperty;
 
   const activeTab = ensureEnumValue({
     enumObj: PropertyDetailsTabEnum,
@@ -91,9 +134,19 @@ export default function PropertyDetailsLayout({
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">
       <Tabs onTabChange={handleTabChange} defaultActive={activeTab}>
-        <TabHeader>
+        <TabHeader
+          containerClassName="border-b border-gray-200"
+          tabsClassName="flex w-full"
+        >
           {tabs.map((tab) => (
-            <Tab key={tab.value} label={tab.label} value={tab.value} />
+            <Tab
+              key={tab.value}
+              label={tab.label}
+              value={tab.value}
+              containerClassName="w-full py-3 font-medium"
+              activeClassName="text-red-500 border-b-2 border-red-500"
+              inactiveClassName="text-gray-500 hover:text-gray-700"
+            />
           ))}
         </TabHeader>
       </Tabs>

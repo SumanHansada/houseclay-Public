@@ -32,6 +32,7 @@ export default function UserDetailsLayout({
     { phoneNo: userPhoneNo },
     { skip: !userPhoneNo },
   );
+  console.log("currentUser: ", currentUser);
 
   if (isLoading || isError || !currentUser) {
     return (

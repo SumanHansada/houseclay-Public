@@ -32,6 +32,7 @@ const propertySchema = Yup.object({
     floor: Yup.number().required("Floor is required"),
     totalFloors: Yup.number().required("Total floors is required"),
     floorType: Yup.string().required("Floor type is required"),
+    bathrooms: Yup.number().required("Bathrooms is required"),
   }),
 });
 
@@ -132,8 +133,8 @@ const PropertyDetailsRentForm: React.FC<PropertyDetailsFormProps> = ({
         }
       />
 
-      {/* BUILT UP AREA + FACING */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* BUILT UP AREA + FACING + BHK TYPE */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         <FormTextField
           name="propertyDetails.builtUpArea"
           id="propertyDetails.builtUpArea"
@@ -166,10 +167,7 @@ const PropertyDetailsRentForm: React.FC<PropertyDetailsFormProps> = ({
               : undefined
           }
         />
-      </div>
 
-      {/* BHK TYPE, OWNERSHIP, AGE */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         <FormSelectDropdown
           label="BHK Type"
           name="propertyDetails.bhkType"
@@ -186,6 +184,31 @@ const PropertyDetailsRentForm: React.FC<PropertyDetailsFormProps> = ({
           aria-describedby={
             propertyDetailsErrors?.bhkType && propertyDetailsTouched?.bhkType
               ? "propertyDetails.bhkType-error"
+              : undefined
+          }
+        />
+      </div>
+
+      {/* BATHROOMS, OWNERSHIP, AGE */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <FormSelectDropdown
+          label="Bathrooms"
+          name="propertyDetails.bathrooms"
+          id="propertyDetails.bathrooms"
+          options={[
+            { value: 1, label: "1" },
+            { value: 2, label: "2" },
+            { value: 3, label: "3" },
+            { value: 4, label: "4" },
+            { value: 5, label: "5" },
+            { value: 6, label: "6" },
+          ]}
+          required
+          placeholder="Select Bathrooms"
+          aria-describedby={
+            propertyDetailsErrors?.bathrooms &&
+            propertyDetailsTouched?.bathrooms
+              ? "propertyDetails.bathrooms-error"
               : undefined
           }
         />
