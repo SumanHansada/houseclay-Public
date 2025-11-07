@@ -197,6 +197,7 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
               prefix={<IndianRupee size={20} />}
               suffix="/month"
               required
+              disabled={disabled}
             />
           </div>
           <div className="col-span-1">
@@ -218,6 +219,7 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
                   ? "flatmateDetails.parking-error"
                   : undefined
               }
+              disabled={disabled}
             />
           </div>
         </div>
@@ -230,6 +232,7 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
               prefix={<IndianRupee size={20} />}
               suffix="/month"
               required
+              disabled={disabled}
             />
           </div>
           <div className="col-span-1">
@@ -239,6 +242,7 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
               label="Deposit"
               prefix={<IndianRupee size={20} />}
               required
+              disabled={disabled}
             />
           </div>
         </div>
@@ -250,6 +254,7 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
               dateFormat="yyyy-MM-dd"
               className="w-full"
               required
+              disabled={disabled}
             />
           </div>
           <div className="col-span-1">
@@ -276,6 +281,7 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
                   ? "flatmateDetails.furnishing-error"
                   : undefined
               }
+              disabled={disabled}
             />
           </div>
         </div>
@@ -299,6 +305,7 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
             withIcons={true}
             required
             horizontal
+            disabled={disabled}
           />
           <FormRadioGroup
             name="flatmateDetails.nonVegAllowed"
@@ -318,6 +325,7 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
             ]}
             withIcons={true}
             horizontal
+            disabled={disabled}
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -345,6 +353,7 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
                   ? "flatmateDetails.waterSupply-error"
                   : undefined
               }
+              disabled={disabled}
             />
           </div>
           <div className="col-span-1">
@@ -371,6 +380,7 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
                   ? "flatmateDetails.powerBackup-error"
                   : undefined
               }
+              disabled={disabled}
             />
           </div>
         </div>
@@ -386,6 +396,7 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
               ]}
               required
               horizontal
+              disabled={disabled}
             />
           </div>
           <div className="col-span-1">
@@ -399,6 +410,7 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
               ]}
               required
               horizontal
+              disabled={disabled}
             />
           </div>
         </div>
@@ -414,6 +426,7 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
               ]}
               required
               horizontal
+              disabled={disabled}
             />
           </div>
           <div className="col-span-1">
@@ -427,6 +440,7 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
               ]}
               required
               horizontal
+              disabled={disabled}
             />
           </div>
         </div>
@@ -516,6 +530,7 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
           withIcons={true}
           alignment="start"
           required
+          disabled={disabled}
         />
       </div>
     </div>

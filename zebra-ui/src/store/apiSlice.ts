@@ -264,6 +264,22 @@ export const apiSlice = createApi({
       invalidatesTags: (_r, _e, { phoneNo }) =>
         [{ type: "UserDetail", id: phoneNo }, ...listTag("Users")] as const,
     }),
+    propertyUpdate: builder.mutation<
+      { message: string; propertyID: number },
+      {
+        payload: Partial<PropertyForm> & { propertyID: string };
+        phoneNo: string;
+      }
+    >({
+      query: ({ phoneNo, payload }) => ({
+        url: `property/admin/update?phoneNo=${phoneNo}`,
+        method: "PUT",
+        body: payload,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
 
     getProperties: builder.query<
       GetAllPropertiesResponse,
@@ -398,6 +414,7 @@ export const {
   useLeadAddCommentMutation,
   usePresignedUrlsMutation,
   usePropertyAddMutation,
+  usePropertyUpdateMutation,
   useGetPropertiesQuery,
   useGetPropertyByIdQuery,
   useGetPropertiesToVerifyQuery,

@@ -15,7 +15,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
-interface PropertyDetailsFormProps {
+interface PropertyDetailsRentFormProps {
   disabled: boolean;
 }
 
@@ -36,7 +36,7 @@ const propertySchema = Yup.object({
   }),
 });
 
-const PropertyDetailsRentForm: React.FC<PropertyDetailsFormProps> = ({
+const PropertyDetailsRentForm: React.FC<PropertyDetailsRentFormProps> = ({
   disabled,
 }) => {
   const { values, errors, touched, setFieldError, setErrors } =
@@ -131,6 +131,7 @@ const PropertyDetailsRentForm: React.FC<PropertyDetailsFormProps> = ({
             ? "propertyDetails.propertyType-error"
             : undefined
         }
+        disabled={disabled}
       />
 
       {/* BUILT UP AREA + FACING + BHK TYPE */}
@@ -143,6 +144,7 @@ const PropertyDetailsRentForm: React.FC<PropertyDetailsFormProps> = ({
           placeholder="Enter built up area"
           suffix="Sq.ft"
           required
+          disabled={disabled}
         />
 
         <FormSelectDropdown
@@ -166,6 +168,7 @@ const PropertyDetailsRentForm: React.FC<PropertyDetailsFormProps> = ({
               ? "propertyDetails.facing-error"
               : undefined
           }
+          disabled={disabled}
         />
 
         <FormSelectDropdown
@@ -186,6 +189,7 @@ const PropertyDetailsRentForm: React.FC<PropertyDetailsFormProps> = ({
               ? "propertyDetails.bhkType-error"
               : undefined
           }
+          disabled={disabled}
         />
       </div>
 
@@ -211,6 +215,7 @@ const PropertyDetailsRentForm: React.FC<PropertyDetailsFormProps> = ({
               ? "propertyDetails.bathrooms-error"
               : undefined
           }
+          disabled={disabled}
         />
 
         <FormSelectDropdown
@@ -234,6 +239,7 @@ const PropertyDetailsRentForm: React.FC<PropertyDetailsFormProps> = ({
               ? "propertyDetails.ownershipType-error"
               : undefined
           }
+          disabled={disabled}
         />
 
         <FormSelectDropdown
@@ -255,6 +261,7 @@ const PropertyDetailsRentForm: React.FC<PropertyDetailsFormProps> = ({
               ? "propertyDetails.propertyAge-error"
               : undefined
           }
+          disabled={disabled}
         />
       </div>
 
@@ -276,6 +283,7 @@ const PropertyDetailsRentForm: React.FC<PropertyDetailsFormProps> = ({
               ? "totalFloors-error"
               : undefined
           }
+          disabled={disabled}
         />
 
         <FormSelectDropdown
@@ -296,6 +304,7 @@ const PropertyDetailsRentForm: React.FC<PropertyDetailsFormProps> = ({
               ? "propertyDetails.floor-error"
               : undefined
           }
+          disabled={disabled}
         />
 
         <FormSelectDropdown
@@ -317,6 +326,7 @@ const PropertyDetailsRentForm: React.FC<PropertyDetailsFormProps> = ({
               ? "floorType-error"
               : undefined
           }
+          disabled={disabled}
         />
       </div>
 
@@ -327,6 +337,7 @@ const PropertyDetailsRentForm: React.FC<PropertyDetailsFormProps> = ({
           label="Description"
           placeholder="Enter property description"
           rows={5}
+          disabled={disabled}
         />
       </div>
     </div>

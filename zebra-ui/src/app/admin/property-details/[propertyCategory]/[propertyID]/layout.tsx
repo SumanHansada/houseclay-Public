@@ -42,8 +42,8 @@ export default function PropertyDetailsLayout({
   const router = useRouter();
   const currentTabFromUrl = useSelectedLayoutSegment();
   const dispatch = useDispatch();
-  const { propertyCategory } = useSelector(
-    (state: RootState) => state.editProperty,
+  const propertyCategory = useSelector(
+    (state: RootState) => state.editProperty.propertyCategory,
   );
 
   const {
@@ -51,7 +51,10 @@ export default function PropertyDetailsLayout({
     isLoading: isLoadingProperty,
     isError,
     error,
-  } = useGetPropertyByIdQuery({ propertyID: propertyID });
+  } = useGetPropertyByIdQuery(
+    { propertyID: propertyID },
+    { skip: !propertyID },
+  );
   console.log("propertyDetails: ", propertyDetails);
 
   // useEffect(() => {
@@ -69,41 +72,38 @@ export default function PropertyDetailsLayout({
 
   // Populate form data when existing property data is loaded
   useEffect(() => {
-    if (propertyDetails && !isLoadingProperty) {
-      try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        // const propertyData = data;
-        console.log("Property Details - useEffect:", propertyDetails);
-        const apiPropertyData = propertyDetails.property;
-        console.log("apiPropertyData: ", apiPropertyData);
+    if (!propertyDetails || isLoadingProperty) return;
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // const propertyData = data;
+      console.log("Property Details - useEffect:", propertyDetails);
+      const apiPropertyData = propertyDetails.property;
+      if (!apiPropertyData) return;
+      console.log("apiPropertyData: ", apiPropertyData);
 
-        if (apiPropertyData) {
-          // Transform API response to FormValues
-          const formValues = transformPropertyFormToFormValues(apiPropertyData);
+      if (apiPropertyData) {
+        // Transform API response to FormValues
+        const formValues = transformPropertyFormToFormValues(apiPropertyData);
 
-          // Set property category
-          dispatch(setPropertyCategory(apiPropertyData.propertyCategory));
+        // Set property category
+        dispatch(setPropertyCategory(apiPropertyData.propertyCategory));
 
-          // Set form data
-          dispatch(setFormData({ data: formValues }));
+        // Set form data
+        dispatch(setFormData({ data: formValues }));
 
-          // Set property images
-          if (formValues.images && formValues.images.length > 0) {
-            const decodedImages = formValues.images.map((image) => {
-              return {
-                ...image,
-                url: decodeURIComponent(image.url),
-              };
-            });
-            dispatch(setPropertyImages({ propertyImages: decodedImages }));
-          }
+        // Set property images
+        if (formValues.images && formValues.images.length > 0) {
+          const decodedImages = formValues.images.map((image) => {
+            return {
+              ...image,
+              url: decodeURIComponent(image.url),
+            };
+          });
+          dispatch(setPropertyImages({ propertyImages: decodedImages }));
         }
-      } catch (error) {
-        console.error(
-          "Error transforming property data to form values:",
-          error,
-        );
       }
+    } catch (error) {
+      console.error("Error transforming property data to form values:", error);
     }
   }, [propertyDetails, isLoadingProperty, dispatch]);
 

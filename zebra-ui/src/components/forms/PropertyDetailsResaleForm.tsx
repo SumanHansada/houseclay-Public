@@ -18,7 +18,7 @@ import {
   getPropertyDetailsTouched,
 } from "@/utils/formHelpers";
 
-interface PropertyDetailsFormProps {
+interface PropertyDetailsResaleFormProps {
   disabled: boolean;
 }
 
@@ -38,7 +38,7 @@ const propertySchema = Yup.object({
   }),
 });
 
-const PropertyDetailsResaleForm: React.FC<PropertyDetailsFormProps> = ({
+const PropertyDetailsResaleForm: React.FC<PropertyDetailsResaleFormProps> = ({
   disabled,
 }) => {
   const { values, errors, touched, setFieldError, setErrors } =
@@ -133,6 +133,7 @@ const PropertyDetailsResaleForm: React.FC<PropertyDetailsFormProps> = ({
             ? "propertyDetails.propertyType-error"
             : undefined
         }
+        disabled={disabled}
       />
 
       {/* BUILT UP AREA + FACING */}
@@ -145,6 +146,7 @@ const PropertyDetailsResaleForm: React.FC<PropertyDetailsFormProps> = ({
           placeholder="Enter built up area"
           suffix="Sq.ft"
           required
+          disabled={disabled}
         />
 
         <FormSelectDropdown
@@ -168,6 +170,7 @@ const PropertyDetailsResaleForm: React.FC<PropertyDetailsFormProps> = ({
               ? "propertyDetails.facing-error"
               : undefined
           }
+          disabled={disabled}
         />
       </div>
 
@@ -191,6 +194,7 @@ const PropertyDetailsResaleForm: React.FC<PropertyDetailsFormProps> = ({
               ? "propertyDetails.bhkType-error"
               : undefined
           }
+          disabled={disabled}
         />
 
         <FormSelectDropdown
@@ -214,6 +218,7 @@ const PropertyDetailsResaleForm: React.FC<PropertyDetailsFormProps> = ({
               ? "propertyDetails.ownershipType-error"
               : undefined
           }
+          disabled={disabled}
         />
 
         <FormSelectDropdown
@@ -235,6 +240,7 @@ const PropertyDetailsResaleForm: React.FC<PropertyDetailsFormProps> = ({
               ? "propertyDetails.propertyAge-error"
               : undefined
           }
+          disabled={disabled}
         />
       </div>
 
@@ -256,6 +262,7 @@ const PropertyDetailsResaleForm: React.FC<PropertyDetailsFormProps> = ({
               ? "totalFloors-error"
               : undefined
           }
+          disabled={disabled}
         />
 
         <FormSelectDropdown
@@ -276,6 +283,7 @@ const PropertyDetailsResaleForm: React.FC<PropertyDetailsFormProps> = ({
               ? "propertyDetails.floor-error"
               : undefined
           }
+          disabled={disabled}
         />
 
         <FormSelectDropdown
@@ -297,6 +305,7 @@ const PropertyDetailsResaleForm: React.FC<PropertyDetailsFormProps> = ({
               ? "floorType-error"
               : undefined
           }
+          disabled={disabled}
         />
       </div>
 
@@ -307,6 +316,7 @@ const PropertyDetailsResaleForm: React.FC<PropertyDetailsFormProps> = ({
           label="Description"
           placeholder="Enter property description"
           rows={5}
+          disabled={disabled}
         />
       </div>
     </div>

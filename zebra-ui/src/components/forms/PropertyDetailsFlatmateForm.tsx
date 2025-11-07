@@ -18,7 +18,7 @@ import {
   getPropertyDetailsTouched,
 } from "@/utils/formHelpers";
 
-interface PropertyDetailsFormProps {
+interface PropertyDetailsFlatmateFormProps {
   disabled: boolean;
 }
 
@@ -36,9 +36,9 @@ const propertySchema = Yup.object({
   }),
 });
 
-const PropertyDetailsFlatmateForm: React.FC<PropertyDetailsFormProps> = ({
-  disabled,
-}) => {
+const PropertyDetailsFlatmateForm: React.FC<
+  PropertyDetailsFlatmateFormProps
+> = ({ disabled }) => {
   const { values, errors, touched, setFieldError, setErrors } =
     useFormikContext<FormValues>();
   const propertyCategory = useSelector(
@@ -131,6 +131,7 @@ const PropertyDetailsFlatmateForm: React.FC<PropertyDetailsFormProps> = ({
             ? "propertyDetails.propertyType-error"
             : undefined
         }
+        disabled={disabled}
       />
 
       {/* BUILT UP AREA + FACING + BHK TYPE */}
@@ -143,6 +144,7 @@ const PropertyDetailsFlatmateForm: React.FC<PropertyDetailsFormProps> = ({
           placeholder="Enter built up area"
           suffix="Sq.ft"
           required
+          disabled={disabled}
         />
 
         <FormSelectDropdown
@@ -166,6 +168,7 @@ const PropertyDetailsFlatmateForm: React.FC<PropertyDetailsFormProps> = ({
               ? "propertyDetails.facing-error"
               : undefined
           }
+          disabled={disabled}
         />
 
         <FormSelectDropdown
@@ -186,6 +189,7 @@ const PropertyDetailsFlatmateForm: React.FC<PropertyDetailsFormProps> = ({
               ? "propertyDetails.bhkType-error"
               : undefined
           }
+          disabled={disabled}
         />
       </div>
 
@@ -211,6 +215,7 @@ const PropertyDetailsFlatmateForm: React.FC<PropertyDetailsFormProps> = ({
               ? "propertyDetails.bathrooms-error"
               : undefined
           }
+          disabled={disabled}
         />
 
         <FormSelectDropdown
@@ -229,6 +234,7 @@ const PropertyDetailsFlatmateForm: React.FC<PropertyDetailsFormProps> = ({
               ? "totalFloors-error"
               : undefined
           }
+          disabled={disabled}
         />
 
         <FormSelectDropdown
@@ -249,6 +255,7 @@ const PropertyDetailsFlatmateForm: React.FC<PropertyDetailsFormProps> = ({
               ? "propertyDetails.floor-error"
               : undefined
           }
+          disabled={disabled}
         />
       </div>
 
@@ -259,6 +266,7 @@ const PropertyDetailsFlatmateForm: React.FC<PropertyDetailsFormProps> = ({
           label="Description"
           placeholder="Enter property description"
           rows={5}
+          disabled={disabled}
         />
       </div>
     </div>

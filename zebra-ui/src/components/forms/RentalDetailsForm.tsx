@@ -196,6 +196,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
               prefix={<IndianRupee size={20} />}
               suffix="/month"
               required
+              disabled={disabled}
             />
           </div>
           <div className="col-span-1">
@@ -208,6 +209,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
                 { value: false, label: "No" },
               ]}
               horizontal
+              disabled={disabled}
             />
           </div>
         </div>
@@ -219,6 +221,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
               label="Maintenance Charges"
               prefix={<IndianRupee size={20} />}
               suffix="/month"
+              disabled={disabled}
             />
           </div>
           <div className="col-span-1">
@@ -228,6 +231,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
               label="Deposit"
               prefix={<IndianRupee size={20} />}
               required
+              disabled={disabled}
             />
           </div>
         </div>
@@ -239,6 +243,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
               dateFormat="yyyy-MM-dd"
               className="w-full"
               required
+              disabled={disabled}
             />
           </div>
           <div className="col-span-1">
@@ -265,6 +270,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
                   ? "rentalDetails.furnishing-error"
                   : undefined
               }
+              disabled={disabled}
             />
           </div>
         </div>
@@ -297,6 +303,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
             ]}
             withIcons={true}
             required
+            disabled={disabled}
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -324,6 +331,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
                   ? "rentalDetails.waterSupply-error"
                   : undefined
               }
+              disabled={disabled}
             />
           </div>
           <div className="col-span-1">
@@ -350,6 +358,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
                   ? "rentalDetails.powerBackup-error"
                   : undefined
               }
+              disabled={disabled}
             />
           </div>
         </div>
@@ -372,6 +381,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
                   ? "rentalDetails.parking-error"
                   : undefined
               }
+              disabled={disabled}
             />
           </div>
           <div className="col-span-1">
@@ -385,6 +395,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
               ]}
               required
               horizontal
+              disabled={disabled}
             />
           </div>
         </div>
@@ -470,6 +481,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
           withIcons={true}
           alignment="start"
           required
+          disabled={disabled}
         />
       </div>
     </div>

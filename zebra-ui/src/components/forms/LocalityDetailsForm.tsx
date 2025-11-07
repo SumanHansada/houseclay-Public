@@ -220,6 +220,7 @@ const LocalityDetailsForm: React.FC<LocalityDetailsFormProps> = ({
               dropdownClassName="absolute z-10 mt-1 py-1 w-full bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-auto"
               dropdownItemClassName="py-1 px-3 hover:bg-gray-100 cursor-pointer flex items-center"
               errorClassName="mt-1 text-sm text-red-600"
+              disabled={disabled}
             />
           </div>
         </div>
@@ -229,6 +230,7 @@ const LocalityDetailsForm: React.FC<LocalityDetailsFormProps> = ({
             name="localityDetails.landmark"
             id="localityDetails.landmark"
             placeholder="Landmark / Street"
+            disabled={disabled}
           />
         </div>
       </div>

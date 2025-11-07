@@ -174,6 +174,7 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({ disabled }) => {
               label="Expected Price"
               prefix={<IndianRupee size={20} />}
               required
+              disabled={disabled}
             />
           </div>
           <div className="col-span-1">
@@ -183,6 +184,7 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({ disabled }) => {
               dateFormat="yyyy-MM-dd"
               className="w-full"
               required
+              disabled={disabled}
             />
           </div>
         </div>
@@ -193,6 +195,7 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({ disabled }) => {
               id="resaleDetails.bathrooms"
               label="Bathroom(s)"
               required
+              disabled={disabled}
             />
           </div>
           <div className="col-span-1">
@@ -200,6 +203,7 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({ disabled }) => {
               name="resaleDetails.balcony"
               id="resaleDetails.balcony"
               label="Balcony"
+              disabled={disabled}
             />
           </div>
         </div>
@@ -214,6 +218,7 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({ disabled }) => {
                 { value: false, label: "No" },
               ]}
               horizontal
+              disabled={disabled}
             />
           </div>
           <div className="col-span-1">
@@ -227,6 +232,7 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({ disabled }) => {
               ]}
               required
               horizontal
+              disabled={disabled}
             />
           </div>
         </div>
@@ -248,6 +254,7 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({ disabled }) => {
                   ? "resaleDetails.waterSupply-error"
                   : undefined
               }
+              disabled={disabled}
             />
           </div>
           <div className="col-span-1">
@@ -267,6 +274,7 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({ disabled }) => {
                   ? "resaleDetails.powerBackup-error"
                   : undefined
               }
+              disabled={disabled}
             />
           </div>
         </div>
@@ -289,6 +297,7 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({ disabled }) => {
                   ? "resaleDetails.furnishing-error"
                   : undefined
               }
+              disabled={disabled}
             />
           </div>
           <div className="col-span-1">
@@ -309,6 +318,7 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({ disabled }) => {
                   ? "resaleDetails.parking-error"
                   : undefined
               }
+              disabled={disabled}
             />
           </div>
         </div>
@@ -386,6 +396,7 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({ disabled }) => {
           withIcons={true}
           alignment="start"
           required
+          disabled={disabled}
         />
       </div>
     </div>

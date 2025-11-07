@@ -2,15 +2,18 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  experimental: {
+    optimizePackageImports: ["lucide-react", "react-loading-skeleton"],
+  },
+  allowedDevOrigins: ["localhost.houseclay.com"],
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "houseclay.s3.ap-southeast-2.amazonaws.com",
-        pathname: "/**", // allow every key under the bucket
+        hostname: "houseclay.s3.ap-south-1.amazonaws.com",
       },
-      { hostname: "randomuser.me" },
     ],
+    formats: ["image/webp", "image/avif"],
+    minimumCacheTTL: 3600,
   },
   turbopack: {
     rules: {
