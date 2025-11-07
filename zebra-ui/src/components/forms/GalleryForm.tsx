@@ -65,46 +65,54 @@ const GalleryForm: React.FC<GalleryFormProps> = ({ disabled }) => {
   }, [imagesString, values.images]);
 
   // Track deleted images
-  useEffect(() => {
-    const currentImages = values.images;
-    const prevImages = previousImagesRef.current;
+  useEffect(
+    () => {
+      const currentImages = values.images;
+      const prevImages = previousImagesRef.current;
 
-    // Only track deletions if ref is initialized (not the first render)
-    if (prevImages.length === 0) {
-      return;
-    }
+      // Only track deletions if ref is initialized (not the first render)
+      if (prevImages.length === 0) {
+        return;
+      }
 
-    // Find images that were deleted
-    const deleted = prevImages.filter(
-      (prevImage) =>
-        !currentImages.some((currImage) => currImage.id === prevImage.id),
-    );
-
-    // Only dispatch if there are deleted images
-    if (deleted.length > 0) {
-      const existingDeletedIds = new Set(
-        deletedImages.map((image) => image.id),
+      // Find images that were deleted
+      const deleted = prevImages.filter(
+        (prevImage) =>
+          !currentImages.some((currImage) => currImage.id === prevImage.id),
       );
 
-      const mergedDeleted = [
-        ...deletedImages,
-        ...deleted.filter((image) => !existingDeletedIds.has(image.id)),
-      ];
+      // Only dispatch if there are deleted images
+      if (deleted.length > 0) {
+        const existingDeletedIds = new Set(
+          deletedImages.map((image) => image.id),
+        );
 
-      dispatch(setDeletedImages({ deletedImages: mergedDeleted }));
-      dispatch(
-        setFormData({
-          data: {
-            images: currentImages,
-            noPhotos: values.noPhotos,
-          },
-        }),
-      );
-    }
+        const mergedDeleted = [
+          ...deletedImages,
+          ...deleted.filter((image) => !existingDeletedIds.has(image.id)),
+        ];
 
-    // Update the ref
-    previousImagesRef.current = currentImages;
-  }, [imagesString, values.images, deletedImages, dispatch, values.noPhotos]);
+        dispatch(setDeletedImages({ deletedImages: mergedDeleted }));
+        // dispatch(
+        //   setFormData({
+        //     data: {
+        //       images: currentImages,
+        //       noPhotos: values.noPhotos,
+        //     },
+        //   }),
+        // );
+      }
+
+      // Update the ref
+      previousImagesRef.current = currentImages;
+    },
+    // [imagesString, values.images, deletedImages, dispatch, values.noPhotos]);},
+    [
+      values.images, // Depend directly on the images array
+      deletedImages, // Needed to calculate new deletions accurately
+      dispatch,
+    ],
+  );
 
   useEffect(() => {
     const validateAndDispatch = async () => {

@@ -413,6 +413,7 @@ export const {
   useLeadStatusUpdateMutation,
   useLeadAddCommentMutation,
   usePresignedUrlsMutation,
+  useDeletePresignedUrlsMutation,
   usePropertyAddMutation,
   usePropertyUpdateMutation,
   useGetPropertiesQuery,

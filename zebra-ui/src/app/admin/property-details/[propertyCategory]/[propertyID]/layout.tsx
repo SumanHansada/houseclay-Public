@@ -10,17 +10,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { PropertyDetailsTabEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
 import { useGetPropertyByIdQuery } from "@/store/apiSlice";
-// import { selectFormData } from "@/store/propertyDetailsSlice";
 import { ensureEnumValue } from "@/utils/core";
-import { apiToForm } from "@/utils/transform/propertyToFormValues";
 import { Tab, TabHeader, Tabs } from "@/utility-components";
 import { transformPropertyFormToFormValues } from "@/interfaces/FormTransformers";
 import {
   setFormData,
   setPropertyCategory,
+  setPropertyID,
   setPropertyImages,
 } from "@/store/editPropertySlice";
 import { RootState } from "@/store/store";
+import { setPropertyDetailsFromApi } from "@/store/propertyDetailsSlice";
 
 const tabs: { label: string; value: PropertyDetailsTabEnum }[] = [
   { label: "Details", value: PropertyDetailsTabEnum.DETAILS },
@@ -42,6 +42,7 @@ export default function PropertyDetailsLayout({
   const router = useRouter();
   const currentTabFromUrl = useSelectedLayoutSegment();
   const dispatch = useDispatch();
+
   const propertyCategory = useSelector(
     (state: RootState) => state.editProperty.propertyCategory,
   );
@@ -53,32 +54,24 @@ export default function PropertyDetailsLayout({
     error,
   } = useGetPropertyByIdQuery(
     { propertyID: propertyID },
-    { skip: !propertyID },
+    { skip: !propertyID, refetchOnMountOrArgChange: true },
   );
   console.log("propertyDetails: ", propertyDetails);
-
-  // useEffect(() => {
-  //   if (isLoading) {
-  //     dispatch(setPending());
-  //   } else if (isError) {
-  //     const errMsg =
-  //       typeof error === "string" ? error : "Unknown error fetching property";
-  //     dispatch(setRejected(errMsg));
-  //   } else if (apiPropertyData) {
-  //     const currentProperty = apiToForm(apiPropertyData);
-  //     dispatch(setFulfilled(currentProperty));
-  //   }
-  // }, [isLoading, isError, apiPropertyData, error, dispatch]);
 
   // Populate form data when existing property data is loaded
   useEffect(() => {
     if (!propertyDetails || isLoadingProperty) return;
+
+    // --- Update propertyDetails slice ---
+    dispatch(setPropertyDetailsFromApi(propertyDetails));
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       // const propertyData = data;
       console.log("Property Details - useEffect:", propertyDetails);
       const apiPropertyData = propertyDetails.property;
-      if (!apiPropertyData) return;
+      if (!apiPropertyData) {
+        return;
+      }
       console.log("apiPropertyData: ", apiPropertyData);
 
       if (apiPropertyData) {
@@ -106,6 +99,13 @@ export default function PropertyDetailsLayout({
       console.error("Error transforming property data to form values:", error);
     }
   }, [propertyDetails, isLoadingProperty, dispatch]);
+
+  // Set propertyID in Redux state when component mounts
+  useEffect(() => {
+    if (propertyID) {
+      dispatch(setPropertyID(propertyID));
+    }
+  }, [propertyID, dispatch]);
 
   if (isLoadingProperty || isError) {
     return (
