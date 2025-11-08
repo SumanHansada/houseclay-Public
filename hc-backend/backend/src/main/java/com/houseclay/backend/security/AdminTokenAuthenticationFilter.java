@@ -35,7 +35,8 @@ public class AdminTokenAuthenticationFilter extends OncePerRequestFilter {
             "/api/admin",
             "/api/property/admin",
             "/api/leads",
-            "/api/photo/admin/presigned-urls"
+            "/api/photo/admin/presigned-urls",
+            "/api/photo/admin/delete-presigned-urls"
     );
 
     @Override
