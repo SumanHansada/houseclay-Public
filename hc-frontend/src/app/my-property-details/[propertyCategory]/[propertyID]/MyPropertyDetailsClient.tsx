@@ -62,7 +62,7 @@ import {
   toBase64,
 } from "@/common/utils";
 import Carousel2D from "@/components/Carousel2D";
-import { Footer, MobileHeader } from "@/layout-components";
+import { Footer, MobileFooter, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -929,29 +929,29 @@ export function MyPropertyDetailsClient({
             <UpgradePropertyBanner onUpgrade={handleUpgrade} />
           </section>
         </section>
-        <section className="md:hidden">
-          <div className="fixed bottom-0 left-0 md:hidden right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
-            <button
-              type="button"
-              className="flex gap-2 items-center px-6 py-3 border border-gray-300 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-50 disabled:bg-gray-300 disabled:cursor-not-allowed"
-              onClick={handleEdit}
-            >
-              <EditIcon size={20} /> Edit
-            </button>
-
-            <button
-              type="submit"
-              className="flex gap-2 items-center px-6 py-3 border border-green-500 text-green-500 rounded-xl hover:bg-green-600 hover:text-white disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300"
-            >
-              <Stamp size={20} />{" "}
-              {property?.propertyCategory === PropertyCategory.RESALE
-                ? "Mark as Sold"
-                : "Mark as Rented"}
-            </button>
-          </div>
-        </section>
       </section>
       <Footer />
+
+      {/* Mobile Footer Section */}
+      <MobileFooter>
+        <button
+          type="button"
+          className="flex gap-2 items-center px-6 py-3 border border-gray-300 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-50 disabled:bg-gray-300 disabled:cursor-not-allowed"
+          onClick={handleEdit}
+        >
+          <EditIcon size={20} /> Edit
+        </button>
+
+        <button
+          type="submit"
+          className="flex gap-2 items-center px-6 py-3 border border-green-500 text-green-500 rounded-xl hover:bg-green-600 hover:text-white disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300"
+        >
+          <Stamp size={20} />{" "}
+          {property?.propertyCategory === PropertyCategory.RESALE
+            ? "Mark as Sold"
+            : "Mark as Rented"}
+        </button>
+      </MobileFooter>
 
       {/* Fullscreen Photo Viewer */}
       <FullscreenPhotoViewer
