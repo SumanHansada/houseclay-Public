@@ -16,7 +16,6 @@ jobs:
     env:
       PROJECT_PATH: hc-backend/backend
       TARGET_JAR: hc-backend/backend/target/backend-0.0.1-SNAPSHOT.jar
-      CLOUDFRONT_PRIVATE_KEY: ${{ secrets.CLOUDFRONT_PRIVATE_KEY }}
 
     steps:
       - name: Checkout repository
