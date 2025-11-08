@@ -2,67 +2,87 @@ import { useEffect, useState } from "react";
 
 const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 
-const useGoogleMapsAPI = () => {
+// Define the shape of the hook’s return values
+interface UseGoogleMapsPlacesReturn {
+  isLoaded: boolean;
+  loadError: Error | null;
+}
+
+/**
+ * Dynamically loads the Google Maps JavaScript API with the Places library.
+ * Handles reloading, avoids duplicates, and sets language + region for better results.
+ */
+export const useGoogleMapsAPI = (): UseGoogleMapsPlacesReturn => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [loadError, setLoadError] = useState<Error | null>(null);
 
   useEffect(() => {
-    // More thorough check for the Places library specifically
-    if (!isLoaded) {
-      const isPlacesLibraryLoaded =
-        window.google &&
-        window.google.maps &&
-        window.google.maps.places &&
-        typeof window.google.maps.places.Autocomplete === "function";
+    // Avoid reloading if already loaded or failed
+    if (isLoaded || loadError) return;
 
-      if (!isPlacesLibraryLoaded) {
-        // Check if there's already a script tag with this key to avoid duplicates
-        const existingScript = document.querySelector(
-          `script[src^="https://maps.googleapis.com/maps/api/js?key=${API_KEY}"]`,
-        );
+    // Check if the Places library is already available
+    const isPlacesLibraryLoaded =
+      typeof window !== "undefined" &&
+      !!window.google?.maps?.places &&
+      typeof window.google.maps.places.Autocomplete === "function";
 
-        if (existingScript) {
-          // If script exists but Places isn't available, remove it so we can reload with correct libraries
-          existingScript.remove();
-        }
-
-        const script = document.createElement("script");
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places`;
-        script.defer = true;
-        script.id = "google-maps-script";
-
-        // Use a more reliable way to detect when Places is actually available
-        const checkPlacesInterval = setInterval(() => {
-          if (
-            window.google &&
-            window.google.maps &&
-            window.google.maps.places &&
-            typeof window.google.maps.places.Autocomplete === "function"
-          ) {
-            setIsLoaded(true);
-            clearInterval(checkPlacesInterval);
-          }
-        }, 100);
-
-        script.onerror = () => {
-          setLoadError(new Error("Failed to load Google Maps API"));
-          clearInterval(checkPlacesInterval);
-          console.log("Google Maps useGoogleMapsAPI Load Error:", loadError);
-        };
-        console.log("Google Maps useGoogleMapsAPI Loaded:", isLoaded);
-        document.head.appendChild(script);
-
-        return () => {
-          clearInterval(checkPlacesInterval);
-          const scriptToRemove = document.getElementById("google-maps-script");
-          if (scriptToRemove && document.head.contains(scriptToRemove)) {
-            document.head.removeChild(scriptToRemove);
-          }
-        };
-      } else {
-        setIsLoaded(true);
-      }
+    // ✅ If it's already loaded, just mark ready
+    if (isPlacesLibraryLoaded) {
+      setIsLoaded(true);
+      return;
     }
+
+    // ✅ Check if a Google Maps script already exists in DOM
+    const existingScript = document.querySelector<HTMLScriptElement>(
+      `script[src^="https://maps.googleapis.com/maps/api/js?key=${API_KEY}"]`,
+    );
+
+    // ⚙️ If an existing script is missing the Places library, remove it to reload properly
+    if (existingScript && !existingScript.src.includes("libraries=places")) {
+      console.warn(
+        "Existing Google Maps script found without 'places' — reloading...",
+      );
+      existingScript.remove();
+    }
+
+    // ✅ Define a global callback that Google Maps will call after loading
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).initMapPlaces = () => {
+      setIsLoaded(true);
+    };
+
+    // ✅ Create a new script element with proper configuration
+    const script = document.createElement("script");
+    script.id = "google-maps-script";
+    script.defer = true;
+    script.src = [
+      `https://maps.googleapis.com/maps/api/js`,
+      `?key=${API_KEY}`,
+      `&libraries=places`, // Load the Places library
+      `&language=en`, // Improves fuzzy text search (consistent results)
+      `&region=IN`, // Helps match local results better (e.g., India)
+      `&v=weekly`, // Always use latest stable build
+      `&callback=initMapPlaces`, // Calls our defined callback
+    ].join("");
+
+    // ❌ Handle load errors
+    script.onerror = () => {
+      setLoadError(new Error("Failed to load Google Maps API"));
+      console.error("Google Maps useGoogleMapsPlaces Load Error");
+    };
+
+    // ✅ Append script to DOM
+    document.head.appendChild(script);
+
+    // 🧹 Cleanup function runs on unmount
+    return () => {
+      //eslint-disable-next-line @typescript-eslint/no-explicit-any
+      delete (window as any).initMapPlaces;
+      const scriptToRemove = document.getElementById("google-maps-script");
+      if (scriptToRemove) {
+        document.head.removeChild(scriptToRemove);
+      }
+    };
   }, [isLoaded, loadError]);
 
   return { isLoaded, loadError };
