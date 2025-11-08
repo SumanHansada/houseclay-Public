@@ -4,7 +4,12 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 
 import { PropertyCategory } from "@/common/enums";
-import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+} from "@/components/Dialog";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -80,24 +85,25 @@ const ListPropertySuccessDialog: React.FC<ListPropertySuccessDialogProps> = ({
             <br />
             it will be live within 2 Hrs.
           </p>
-
-          {/* Action buttons */}
-          <div className="flex gap-4 w-full">
-            <button
-              onClick={handleEditProperty}
-              className="w-full py-3 text-black border font-medium rounded-lg hover:bg-red-600 hover:text-white transition duration-200"
-            >
-              Edit
-            </button>
-            <button
-              onClick={handlePreviewListing}
-              className="w-full py-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200"
-            >
-              {isMobile ? "View Listing" : "Preview Listing"}
-            </button>
-          </div>
         </div>
       </DialogContent>
+      <DialogFooter>
+        {/* Action buttons */}
+        <div className="flex gap-4 w-full">
+          <button
+            onClick={handleEditProperty}
+            className="w-full py-3 text-black border font-medium rounded-lg hover:bg-red-600 hover:text-white transition duration-200"
+          >
+            Edit
+          </button>
+          <button
+            onClick={handlePreviewListing}
+            className="w-full py-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200"
+          >
+            {isMobile ? "View Listing" : "Preview Listing"}
+          </button>
+        </div>
+      </DialogFooter>
     </Dialog>
   );
 };
