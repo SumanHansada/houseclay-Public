@@ -2,11 +2,13 @@
 
 import type { SerializedError } from "@reduxjs/toolkit";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { redirect } from "next/navigation";
 import { type ReactNode, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { ACCOUNT_NAV } from "@/common/dataConstants";
 import { AccountNavList } from "@/components/AccountNavList";
+import { useLogout } from "@/hooks/useLogout";
 import { Footer } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useGetUserDetailQuery } from "@/store/apiSlice";
@@ -25,8 +27,9 @@ export default function ManageProfileLayout({
 }: {
   children: ReactNode;
 }) {
-  const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
+  const { logout } = useLogout();
+  const { isMobile } = useDeviceContext();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   const { data, isLoading, isFetching, isError, error } = useGetUserDetailQuery(
@@ -38,6 +41,11 @@ export default function ManageProfileLayout({
       skip: !isAuthenticated,
     },
   );
+
+  if (isError && error && "status" in error && error.status === 401) {
+    logout();
+    redirect("/login");
+  }
 
   useEffect(() => {
     dispatch(setUserDetailLoading(isLoading || isFetching));

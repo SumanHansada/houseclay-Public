@@ -52,7 +52,7 @@ const ListPropertyPage = dynamic(
   () =>
     Promise.resolve(() => {
       const { openDialog } = useDialog();
-      const { isMobile } = useDeviceContext();
+      const { isMobile, isTablet } = useDeviceContext();
       const router = useRouter();
       const isAuthenticated = useSelector(
         (state: RootState) => state.auth.isAuthenticated,
@@ -219,7 +219,7 @@ const ListPropertyPage = dynamic(
           </section>
 
           {/* Desktop Section */}
-          <section className="xl:min-h-[500px] min-h-[400px] max-md:min-h-[fit-content] w-full overflow-hidden max-md:hidden">
+          <section className="xl:max-h-[500px] max-h-[450px] max-md:max-h-[fit-content] w-full overflow-hidden max-md:hidden">
             <div className="container pt-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 flex justify-between gap-16">
               <div className="flex w-2/5 justify-around items-start">
                 <ImageWithLoader
@@ -230,8 +230,8 @@ const ListPropertyPage = dynamic(
                   className="my-0"
                 />
               </div>
-              <div className="flex w-3/5 justify-end items-start">
-                <div className="max-w-lg xl:max-w-xl lg:w-full my-0 flex flex-col gap-8">
+              <div className="flex w-3/5 items-start">
+                <div className="w-full xl:max-w-xl my-0 flex flex-col gap-8">
                   {!isAuthenticated ? (
                     <>
                       <div className="flex flex-col">
@@ -345,7 +345,11 @@ const ListPropertyPage = dynamic(
                 </div>
 
                 <div className="flex w-1/2">
-                  <Carousel2D gap={4} showArrows slidesPerView={2}>
+                  <Carousel2D
+                    gap={4}
+                    showArrows
+                    slidesPerView={isTablet ? 1 : 2}
+                  >
                     {testimonials.map((testimonial) => (
                       <TestimonialCard
                         key={testimonial.id}

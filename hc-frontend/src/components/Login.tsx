@@ -152,7 +152,9 @@ const Login = ({ onClose }: { onClose: () => void }) => {
 
   useEffect(() => {
     return () => {
-      dispatch(setAuthStep(AuthStep.NONE));
+      if (!loginFromAddProperty) {
+        dispatch(setAuthStep(AuthStep.NONE));
+      }
     };
   }, [dispatch]);
 

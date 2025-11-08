@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { AuthStep, ErrorStatus } from "@/common/enums";
 import LazyPhoneInput from "@/components/LazyPhoneInput";
+import { useLogout } from "@/hooks/useLogout";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useGenerateOtpMutation,
@@ -19,6 +20,7 @@ import { setCheckUser, setPhoneNo } from "@/store/userSlice";
 import { ImageWithLoader } from "@/utility-components";
 
 export default function LoginPage() {
+  const { logout } = useLogout();
   const { phoneNo } = useSelector((state: RootState) => state.user.userDetail);
   const [acceptTerms, setAcceptTerms] = useState(false);
   const dispatch = useDispatch();
@@ -27,6 +29,7 @@ export default function LoginPage() {
   const { openDialog } = useDialog();
 
   useEffect(() => {
+    logout();
     dispatch(setAuthStep(AuthStep.PHONE));
   }, [dispatch]);
 

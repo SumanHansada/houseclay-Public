@@ -34,8 +34,8 @@ export default function ListPropertyLoading() {
           <div className="hidden xl:flex w-2/5 justify-around items-start">
             <Skeleton height={475} width={550} />
           </div>
-          <div className="flex w-3/5 justify-end items-start">
-            <div className="max-w-lg xl:max-w-xl lg:w-full my-0 flex flex-col gap-8">
+          <div className="flex w-3/5 items-start">
+            <div className="w-full xl:max-w-xl my-0 flex flex-col gap-8">
               <Skeleton height={60} width="100%" />
               <Skeleton height={60} width="100%" />
               <Skeleton height={40} width="100%" />

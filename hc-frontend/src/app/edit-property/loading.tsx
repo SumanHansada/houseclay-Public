@@ -35,8 +35,8 @@ const EditPropertyLoading = () => {
               className="my-0"
             />
           </div>
-          <div className="flex w-3/5 justify-end items-start">
-            <div className="max-w-lg xl:max-w-xl lg:w-full my-0 flex flex-col gap-8">
+          <div className="flex w-3/5 items-start">
+            <div className="w-full xl:max-w-xl my-0 flex flex-col gap-8">
               <div className="flex flex-col items-center justify-center space-y-4">
                 <Loader2 className="h-8 w-8 animate-spin text-red-500" />
                 <p className="text-gray-600">Loading edit property form...</p>

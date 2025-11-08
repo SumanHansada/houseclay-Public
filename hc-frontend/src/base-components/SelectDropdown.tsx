@@ -194,12 +194,14 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
                       ? selectedOptionClassName
                       : "text-gray-900"
                   } ${sizeStyles[size]}`}
-                  onClick={() => handleSelect(option.value)}
                   role="option"
                   aria-selected={value === option.value}
                 >
                   {option.label}
-                  <span className="absolute z-10 inset-0 w-full h-full"></span>
+                  <span
+                    className="absolute z-10 inset-0 w-full h-full"
+                    onClick={() => handleSelect(option.value)}
+                  ></span>
                 </li>
               ))}
             </ul>

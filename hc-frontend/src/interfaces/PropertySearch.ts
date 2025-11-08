@@ -12,7 +12,6 @@ export interface PropertySearch {
   landmark: string;
   latitude: number;
   longitude: number;
-  image: string;
   images: string[];
   badges: string | null;
 }

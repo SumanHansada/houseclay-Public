@@ -339,7 +339,7 @@ export default function PropertySearchPage() {
     if (!properties || !Array.isArray(properties.items)) return [];
     return properties.items.map((property) => ({
       ...property,
-      images: property.image ? [property.image] : [],
+      images: property.images.length ? property.images : [],
     })) as PropertySearch[];
   }, [data, error]);
 
