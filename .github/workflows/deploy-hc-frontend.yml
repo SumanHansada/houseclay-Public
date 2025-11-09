@@ -10,26 +10,26 @@ on:
 
 jobs:
   deploy-hc-frontend:
-    name: Deploy hc-frontend to Zebra Host
+    name: Deploy hc-frontend to Houseclay Host
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Transfer hc-frontend source code to Zebra Host
+      - name: Transfer hc-frontend source code to Houseclay Host
         run: |
           echo "${{ secrets.FRONTEND_SECURITY_KEY }}" > zebra_key.pem
           chmod 600 zebra_key.pem
           rsync -az --delete -e "ssh -o StrictHostKeyChecking=no -i zebra_key.pem" hc-frontend ec2-user@${{ secrets.FRONTEND_HOST }}:/home/ec2-user/
 
-      - name: Install pm2 on Zebra Host
+      - name: Install pm2 on Houseclay Host
         run: |
           ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.FRONTEND_HOST }} << EOF
           sudo npm install -g pm2
           EOF
 
-      - name: Build hc-frontend on Zebra Host
+      - name: Build hc-frontend on Houseclay Host
         env:
           NEXT_PUBLIC_HOUSECLAY_API_BASE_URL: ${{ secrets.EC2_HOST }}:8080/api
           NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
@@ -44,7 +44,7 @@ jobs:
           EOF
 
       # Frontend server
-      - name: Start hc-frontend on Zebra Host
+      - name: Start hc-frontend on Houseclay Host
         run: |
           ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.FRONTEND_HOST }} << EOF
           cd /home/ec2-user/hc-frontend
