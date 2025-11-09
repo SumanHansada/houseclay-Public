@@ -188,6 +188,7 @@ export const RentalDetailsClient: React.FC = () => {
               name="rentalDetails.rent"
               id="rentalDetails.rent"
               label="Rent"
+              placeholder="Enter rent"
               prefix={<IndianRupee size={20} />}
               suffix="/month"
               required
@@ -212,6 +213,7 @@ export const RentalDetailsClient: React.FC = () => {
               name="rentalDetails.maintenanceCharges"
               id="rentalDetails.maintenanceCharges"
               label="Maintenance Charges"
+              placeholder="Enter maintenance charges"
               prefix={<IndianRupee size={20} />}
               suffix="/month"
             />
@@ -221,6 +223,7 @@ export const RentalDetailsClient: React.FC = () => {
               name="rentalDetails.deposit"
               id="rentalDetails.deposit"
               label="Deposit"
+              placeholder="Enter deposit"
               prefix={<IndianRupee size={20} />}
               required
             />

@@ -26,7 +26,9 @@ const propertySchema = Yup.object({
       .positive("Area must be positive"),
     facing: Yup.string().required("Facing is required"),
     bhkType: Yup.string().required("BHK type is required"),
-    floor: Yup.number().required("Floor is required"),
+    floor: Yup.number()
+      .required("Floor is required")
+      .max(Yup.ref("totalFloors"), "Floor cannot exceed total floors"),
     totalFloors: Yup.number().required("Total floors is required"),
     bathrooms: Yup.number().required("Bathrooms is required"),
   }),

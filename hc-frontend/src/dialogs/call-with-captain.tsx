@@ -81,9 +81,7 @@ const CallWithCaptainDialog: React.FC<CallWithCaptainDialogProps> = ({
         <button
           key="call-with-captain-button"
           className={`py-3 px-24 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200 ${isMobile ? "w-full" : ""}`}
-          onClick={() => {
-            // TODO: Add API Integration
-          }}
+          onClick={handleClose}
           tabIndex={0}
           autoFocus
         >

@@ -1,5 +1,5 @@
 export interface ResaleDetails {
-  price: number;
+  price?: number;
   availableFrom: string;
   bathrooms: number;
   balcony: number;

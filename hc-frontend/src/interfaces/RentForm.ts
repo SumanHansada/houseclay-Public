@@ -6,13 +6,13 @@ export interface RentForm {
   propertyCategory: PropertyCategory.RENT;
   // Property details (extended for RENT)
   propertyType: string;
-  builtUpArea: number;
+  builtUpArea?: number;
   facing: string;
   bhkType: string;
   bathrooms: number;
   ownershipType: string;
   propertyAge: string;
-  floor: number;
+  floor?: number;
   totalFloors: number;
   floorType: string;
   description: string;
@@ -23,9 +23,9 @@ export interface RentForm {
   latitude: number;
   longitude: number;
   // Rental details
-  rent: number;
-  deposit: number;
-  maintenanceCharges: number;
+  rent?: number;
+  deposit?: number;
+  maintenanceCharges?: number;
   rentNegotiable: boolean;
   availableFrom: string;
   preferredTenants: string[];

@@ -186,11 +186,12 @@ export const DialogContent: React.FC<{ children: React.ReactNode }> = ({
   </div>
 );
 
-export const DialogFooter: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => (
+export const DialogFooter: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+}> = ({ children, className = "" }) => (
   <div
-    className={`${children ? "border-t border-t-gray-200 flex pb-safe-bottom-2 pt-2 md:px-6 px-4 justify-center" : ""}`}
+    className={`${children ? "flex pb-safe-bottom-2 pt-2 md:px-6 px-4 justify-center" : ""} ${className}`}
   >
     {children}
   </div>

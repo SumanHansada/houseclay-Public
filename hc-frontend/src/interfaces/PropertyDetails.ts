@@ -1,11 +1,11 @@
 // Base property details that are common across all property categories
 export interface BasePropertyDetails {
   propertyType: string;
-  builtUpArea: number;
+  builtUpArea?: number;
   facing: string;
   bhkType: string;
   bathrooms: number;
-  floor: number;
+  floor?: number;
   totalFloors: number;
   description: string;
 }
