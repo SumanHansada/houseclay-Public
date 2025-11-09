@@ -9,16 +9,19 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { VerifyPropertyTabEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
-import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
-import { useGetPropertyByIdQuery } from "@/store/apiSlice";
-import {
-  selectFormData,
-  setFulfilled,
-  setPending,
-  setRejected,
-} from "@/store/propertyDetailsSlice";
+
 import { ensureEnumValue } from "@/utils/core";
-import { apiToForm } from "@/utils/transform/propertyToFormValues";
+import { RootState } from "@/store/store";
+import { useGetPropertyByIdQuery } from "@/store/apiSlice";
+import { setPropertyDetailsFromApi } from "@/store/propertyDetailsSlice";
+import { transformPropertyFormToFormValues } from "@/interfaces/FormTransformers";
+import {
+  setFormData,
+  setPropertyCategory,
+  setPropertyID,
+  setPropertyImages,
+} from "@/store/editPropertySlice";
+import { Tab, TabHeader, Tabs } from "@/utility-components";
 
 const tabs: { label: string; value: VerifyPropertyTabEnum }[] = [
   { label: "Details", value: VerifyPropertyTabEnum.DETAILS },
@@ -36,42 +39,81 @@ export default function VerifyPropertyLayout({
   const currentTabFromUrl = useSelectedLayoutSegment();
   const dispatch = useDispatch();
 
+  const propertyCategory = useSelector(
+    (state: RootState) => state.editProperty.propertyCategory,
+  );
+
   const {
-    data: apiPropertyData,
-    isLoading,
+    data: propertyDetails,
+    isLoading: isLoadingProperty,
     isError,
     error,
-  } = useGetPropertyByIdQuery({ propertyID: propertyID });
+  } = useGetPropertyByIdQuery(
+    { propertyID: propertyID },
+    { skip: !propertyID, refetchOnMountOrArgChange: true },
+  );
+  console.log("propertyDetails: ", propertyDetails);
 
+  // Populate form data when existing property data is loaded
   useEffect(() => {
-    if (isLoading) {
-      dispatch(setPending());
-    } else if (isError) {
-      const errMsg =
-        typeof error === "string" ? error : "Unknown error fetching property";
-      dispatch(setRejected(errMsg));
-    } else if (apiPropertyData) {
-      console.log("verify - apiPropertyData:", apiPropertyData);
-      const currentProperty = apiToForm(apiPropertyData);
-      console.log("currentProperty: ", currentProperty);
-      dispatch(setFulfilled(currentProperty));
+    if (!propertyDetails || isLoadingProperty) return;
+
+    // --- Update propertyDetails slice ---
+    dispatch(setPropertyDetailsFromApi(propertyDetails));
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // const propertyData = data;
+      console.log("Property Details - useEffect:", propertyDetails);
+      const apiPropertyData = propertyDetails.property;
+      if (!apiPropertyData) {
+        return;
+      }
+      console.log("apiPropertyData: ", apiPropertyData);
+
+      if (apiPropertyData) {
+        // Transform API response to FormValues
+        const formValues = transformPropertyFormToFormValues(apiPropertyData);
+
+        // Set property category
+        dispatch(setPropertyCategory(apiPropertyData.propertyCategory));
+
+        // Set form data
+        dispatch(setFormData({ data: formValues }));
+
+        // Set property images
+        if (formValues.images && formValues.images.length > 0) {
+          const decodedImages = formValues.images.map((image) => {
+            return {
+              ...image,
+              url: decodeURIComponent(image.url),
+            };
+          });
+          dispatch(setPropertyImages({ propertyImages: decodedImages }));
+        }
+      }
+    } catch (error) {
+      console.error("Error transforming property data to form values:", error);
     }
-  }, [isLoading, isError, apiPropertyData, error, dispatch]);
+  }, [propertyDetails, isLoadingProperty, dispatch]);
 
-  const currentProperty = useSelector(selectFormData);
+  // Set propertyID in Redux state when component mounts
+  useEffect(() => {
+    if (propertyID) {
+      dispatch(setPropertyID(propertyID));
+    }
+  }, [propertyID, dispatch]);
 
-  if (isLoading || isError || !currentProperty) {
+  if (isLoadingProperty || isError) {
     return (
       <AsyncFallback
-        isLoading={isLoading}
-        isError={isError || !currentProperty}
+        isLoading={isLoadingProperty}
+        isError={isError}
         error={error}
         loadingMessage="Loading property details…"
         errorMessage="Failed to fetch property."
       />
     );
   }
-  const { propertyCategory } = currentProperty;
 
   const activeTab = ensureEnumValue({
     enumObj: VerifyPropertyTabEnum,
@@ -81,17 +123,26 @@ export default function VerifyPropertyLayout({
 
   const handleTabChange = (tab: string) => {
     router.push(
-      `/admin/property-details/${propertyCategory.toLowerCase()}/verify/${propertyID}/${tab}`,
+      `/admin/property-details/${propertyCategory.toLowerCase()}/${propertyID}/${tab}`,
     );
   };
 
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">
-      {/* Using Tabs - for future scaling */}
       <Tabs onTabChange={handleTabChange} defaultActive={activeTab}>
-        <TabHeader>
+        <TabHeader
+          containerClassName="border-b border-gray-200"
+          tabsClassName="flex w-full"
+        >
           {tabs.map((tab) => (
-            <Tab key={tab.value} label={tab.label} value={tab.value} />
+            <Tab
+              key={tab.value}
+              label={tab.label}
+              value={tab.value}
+              containerClassName="w-full py-3 font-medium"
+              activeClassName="text-red-500 border-b-2 border-red-500"
+              inactiveClassName="text-gray-500 hover:text-gray-700"
+            />
           ))}
         </TabHeader>
       </Tabs>

@@ -2,7 +2,7 @@
 
 import { Form, Formik, FormikProvider } from "formik";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -33,6 +33,8 @@ import { FormValues } from "@/interfaces/FormValues";
 import { transformFormValuesToPropertyForm } from "@/interfaces/FormTransformers";
 import DesktopStepper from "../../components/DesktopStepper";
 import Spinner from "@/components/Spinner";
+
+type FinalizationStage = "idle" | "uploading" | "posting";
 
 export default function ListPropertyTypeLayout({
   children,
@@ -118,6 +120,49 @@ export default function ListPropertyTypeLayout({
   const formState = useSelector((state: RootState) => state.listProperty.form);
 
   const isFormValid = formState?.isValid;
+
+  const [finalizationStage, setFinalizationStage] =
+    useState<FinalizationStage>("idle");
+  const finalizationOpsRef = useRef({
+    uploadStarted: false,
+    postStarted: false,
+  });
+
+  const buildUploadQueue = () => {
+    const photos = propertyImages || [];
+
+    return photos
+      .filter((propertyImage: PropertyImage) =>
+        propertyImage.url.startsWith("blob:"),
+      )
+      .map((propertyImage: PropertyImage) => {
+        const fileName = propertyImage.file.name;
+        const mappedUrl =
+          propertyImagesS3Url?.[fileName] ??
+          propertyImagesS3Url?.[encodeURIComponent(fileName)];
+
+        if (!mappedUrl) {
+          return null;
+        }
+
+        return {
+          name: fileName,
+          url: propertyImage.url,
+          type: propertyImage.file.type,
+          S3Url: mappedUrl,
+        };
+      })
+      .filter(
+        (
+          item,
+        ): item is {
+          name: string;
+          url: string;
+          type: string;
+          S3Url: string;
+        } => Boolean(item),
+      );
+  };
 
   // Ensure proper form initialization with all required fields
   const getInitialValues = (): FormValues => {
