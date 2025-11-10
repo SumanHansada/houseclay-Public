@@ -53,6 +53,8 @@ const LocalityDetailsForm: React.FC<LocalityDetailsFormProps> = ({
   const localityDetailsErrors = getLocalityDetailsErrors(errors);
   const localityDetailsTouched = getLocalityDetailsTouched(touched);
 
+  console.log("<-- LocalityDetails (Form 2) -->");
+
   const onLocationSelect = (location: {
     latitude: number;
     longitude: number;

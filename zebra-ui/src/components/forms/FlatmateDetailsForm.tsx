@@ -129,6 +129,8 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
 
   const flatmateDetailsString = JSON.stringify(values.flatmateDetails);
 
+  console.log("<-- FlatmateDetails (Form 3) - Flatmate -->");
+
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {

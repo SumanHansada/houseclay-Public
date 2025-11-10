@@ -128,6 +128,8 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
 
   const rentalDetailsString = JSON.stringify(values.rentalDetails);
 
+  console.log("<-- RentalDetails (Form 3) - Rent -->");
+
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {

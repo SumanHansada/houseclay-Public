@@ -40,6 +40,7 @@ export const sidebarItems: SidebarItem[] = [
     children: [
       { label: "HouseClay Users", href: "/admin/user-management" },
       { label: "Add new Zebra user", href: "/admin/add-zebra-user" },
+      { label: "Add connects", href: "/admin/add-connects" },
     ],
   },
 ];

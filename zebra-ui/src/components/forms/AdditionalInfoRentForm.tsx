@@ -43,6 +43,8 @@ const AdditionalInfoRentForm: React.FC<AdditionalInfoRentFormProps> = ({
 
   const additionalInfoString = JSON.stringify(values.additionalInfo);
 
+  console.log("<-- AdditionalInfoDetails (Form 5) - Rent -->");
+
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {

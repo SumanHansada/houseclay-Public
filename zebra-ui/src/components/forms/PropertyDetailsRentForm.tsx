@@ -54,6 +54,8 @@ const PropertyDetailsRentForm: React.FC<PropertyDetailsRentFormProps> = ({
 
   const propertyDetailsString = JSON.stringify(values.propertyDetails);
 
+  console.log("<-- PropertyDetails (Form 1) - Rent -->");
+
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {

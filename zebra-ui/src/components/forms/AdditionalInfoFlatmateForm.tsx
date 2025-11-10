@@ -43,6 +43,8 @@ const AdditionalInfoFlatmateForm: React.FC<AdditionalInfoFlatmateFormProps> = ({
 
   const additionalInfoString = JSON.stringify(values.additionalInfo);
 
+  console.log("<-- AdditionalInfoDetails (Form 5) - Flatmate -->");
+
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {

@@ -80,6 +80,8 @@ export default function DetailsPage() {
 
   const isFormValid = formState?.isValid;
 
+  console.log("<-- Details Page (All Forms) -->");
+
   const [finalizationStage, setFinalizationStage] =
     useState<FinalizationStage>("idle");
   const finalizationPlanRef = useRef({
@@ -478,7 +480,7 @@ export default function DetailsPage() {
         }}
         validateOnChange={false}
         validateOnBlur={false}
-        enableReinitialize={true}
+        enableReinitialize={false}
       >
         {(formik) => (
           <Form>

@@ -530,21 +530,6 @@ export default function VerifyPropertyDetailsPage() {
                 </div>
 
                 {/* --- Form Sections from DetailsPage --- */}
-                {/* <div className="bg-white rounded-xl p-6 shadow-sm flex flex-col gap-6">
-                  <PropertyDetailsForm disabled={!editMode} />
-                  <LocalityDetailsForm disabled={!editMode} />
-                  {propertyCategory === PropertyCategory.RESALE ? (
-                    <ResaleDetailsForm disabled={!editMode} />
-                  ) : (
-                    <RentalDetailsForm disabled={!editMode} />
-                  )}
-                  <AdditionalInfoForm disabled={!editMode} />
-                </div> */}
-                {/* Gallery Section */}
-                {/* <div className="bg-white rounded-xl p-6 shadow-sm">
-                  <GalleryForm disabled={!editMode} />
-                </div> */}
-
                 <div className="flex flex-col gap-8">
                   <div className="bg-white rounded-xl p-6 shadow-sm">
                     {propertyCategory === PropertyCategory.RESALE ? (

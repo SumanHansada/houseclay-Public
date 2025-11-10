@@ -396,6 +396,22 @@ export const apiSlice = createApi({
           ...listTag("PropertiesToReverify"),
         ] as const,
     }),
+
+    addConnects: builder.mutation<
+      {},
+      {
+        connectCount: number;
+        phoneNo: string;
+      }
+    >({
+      query: ({ connectCount, phoneNo }) => ({
+        url: `/admin/add-connects?connectCount=${connectCount}&phoneNo=${phoneNo}`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
   }),
 });
 
@@ -423,4 +439,5 @@ export const {
   useGetPropertiesToReverifyQuery,
   useVerifyPropertyMutation,
   useDeactivatePropertyMutation,
+  useAddConnectsMutation,
 } = apiSlice;

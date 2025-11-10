@@ -69,7 +69,7 @@ const GalleryForm: React.FC<GalleryFormProps> = ({ disabled }) => {
   // Track initialization state
   const isInitializedRef = useRef(false);
 
-  console.log("GalleryForm render - images:", values.images.length);
+  console.log(`<-- Gallery (Form 4) - images: ${values.images.length} -->`);
 
   // Cleanup on unmount
   useEffect(() => {

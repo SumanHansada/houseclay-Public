@@ -54,6 +54,8 @@ const PropertyDetailsFlatmateForm: React.FC<
 
   const propertyDetailsString = JSON.stringify(values.propertyDetails);
 
+  console.log("<-- PropertyDetails (Form 1) - Flatmate -->");
+
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {
