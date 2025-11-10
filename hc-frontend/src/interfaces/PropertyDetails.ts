@@ -4,9 +4,9 @@ export interface BasePropertyDetails {
   builtUpArea?: number;
   facing: string;
   bhkType: string;
-  bathrooms: number;
+  bathrooms?: number;
   floor?: number;
-  totalFloors: number;
+  totalFloors?: number;
   description: string;
 }
 

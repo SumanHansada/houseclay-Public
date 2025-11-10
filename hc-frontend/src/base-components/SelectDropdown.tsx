@@ -170,6 +170,7 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
           aria-haspopup="listbox"
           aria-expanded={isOpen}
           disabled={disabled}
+          onBlur={onBlur}
         >
           <span
             className={`${!selectedOption ? "text-gray-400" : displayTextClassName}`}

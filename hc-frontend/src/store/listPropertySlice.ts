@@ -20,11 +20,11 @@ const getInitialData = (
     builtUpArea: undefined,
     facing: "",
     bhkType: "",
-    bathrooms: 0,
+    bathrooms: undefined,
     ownershipType: "",
     propertyAge: "",
     floor: undefined,
-    totalFloors: 0,
+    totalFloors: undefined,
     floorType: "",
     description: "",
   };
@@ -79,7 +79,7 @@ const getInitialData = (
         resaleDetails: {
           price: undefined,
           availableFrom: "",
-          bathrooms: 0,
+          bathrooms: undefined,
           balcony: 0,
           priceNegotiable: false,
           underLoan: false,

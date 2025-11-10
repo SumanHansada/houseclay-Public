@@ -12,7 +12,7 @@ export interface ResaleForm {
   ownershipType: string;
   propertyAge: string;
   floor?: number;
-  totalFloors: number;
+  totalFloors?: number;
   floorType: string;
   description: string;
   // Locality details
@@ -24,7 +24,7 @@ export interface ResaleForm {
   // Resale details
   price?: number;
   availableFrom: string;
-  bathrooms: number;
+  bathrooms?: number;
   balcony: number;
   priceNegotiable: boolean;
   underLoan: boolean;

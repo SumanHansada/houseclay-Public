@@ -245,6 +245,7 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
           aria-expanded={isOpen}
           aria-controls={`${id || name}-listbox`}
           disabled={disabled}
+          onBlur={onBlur}
         >
           <span
             className={`${selectedOptions.length === 0 ? "text-gray-400" : displayTextClassName}`}

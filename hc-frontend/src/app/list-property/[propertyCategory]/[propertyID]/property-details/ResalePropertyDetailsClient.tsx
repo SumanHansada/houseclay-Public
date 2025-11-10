@@ -30,7 +30,15 @@ const propertySchema = Yup.object({
     propertyAge: Yup.string().required("Property age is required"),
     floor: Yup.number()
       .required("Floor is required")
-      .max(Yup.ref("totalFloors"), "Floor cannot exceed total floors"),
+      .test(
+        "floor-less-than-total",
+        "Floor cannot exceed total floors",
+        function (value) {
+          const { totalFloors } = this.parent;
+          if (!value || !totalFloors) return true;
+          return value <= totalFloors;
+        },
+      ),
     totalFloors: Yup.number().required("Total floors is required"),
     floorType: Yup.string().required("Floor type is required"),
   }),

@@ -1,7 +1,7 @@
 export interface ResaleDetails {
   price?: number;
   availableFrom: string;
-  bathrooms: number;
+  bathrooms?: number;
   balcony: number;
   priceNegotiable: boolean;
   underLoan: boolean;

@@ -9,11 +9,11 @@ export interface RentForm {
   builtUpArea?: number;
   facing: string;
   bhkType: string;
-  bathrooms: number;
+  bathrooms?: number;
   ownershipType: string;
   propertyAge: string;
   floor?: number;
-  totalFloors: number;
+  totalFloors?: number;
   floorType: string;
   description: string;
   // Locality details
