@@ -2,7 +2,7 @@
 
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { type AccountNavItem } from "@/common/dataConstants";
 import { useLogout } from "@/hooks/useLogout";
@@ -43,6 +43,7 @@ export function AccountNavList({
 }: AccountNavProps) {
   const pathname = usePathname();
   const { logout } = useLogout();
+  const router = useRouter();
 
   // Get userName for header variant
   const userName = variant === "header" ? (props as HeaderProps).userName : "";
@@ -82,7 +83,7 @@ export function AccountNavList({
     if (item.actionId === "LOGOUT") {
       e.preventDefault();
       logout();
-      return;
+      router.replace("/");
     }
   };
 

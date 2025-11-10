@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 
 import { useLogoutMutation } from "@/store/apiSlice";
@@ -9,7 +8,6 @@ import { clearAllUserData } from "@/store/userSlice";
 
 export function useLogout() {
   const dispatch = useDispatch();
-  const router = useRouter();
   const [logoutMutation, { isLoading }] = useLogoutMutation();
 
   const logout = async () => {
@@ -22,7 +20,6 @@ export function useLogout() {
       dispatch(clearIsAuthenticated());
       dispatch(clearAllUserData());
       dispatch(clearAuthStep());
-      router.push("/");
     }
   };
 

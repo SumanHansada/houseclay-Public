@@ -3,7 +3,7 @@
 // import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { Menu, User } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import CoinSvg from "public/icons/coin.svg";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -92,6 +92,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
   const { openDialog, closeAllDialogs } = useDialog();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const onLogin = () => {
     closeAllDialogs();
@@ -104,7 +105,10 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
     openDialog("menu-dialog");
   };
 
-  const onLogout = () => logout();
+  const onLogout = () => {
+    logout();
+    router.replace("/");
+  };
 
   if (hideHeader) {
     return null;

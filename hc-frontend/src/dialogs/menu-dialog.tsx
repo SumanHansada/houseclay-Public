@@ -71,7 +71,10 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
     openDialog("login-dialog");
   };
 
-  const onLogout = () => logout();
+  const onLogout = () => {
+    logout();
+    router.replace("/");
+  };
 
   const onNavClick = () => {
     handleCloseDialog();

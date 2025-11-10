@@ -2,7 +2,7 @@
 
 import type { SerializedError } from "@reduxjs/toolkit";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { type ReactNode, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -27,6 +27,7 @@ export default function ManageProfileLayout({
 }: {
   children: ReactNode;
 }) {
+  const router = useRouter();
   const dispatch = useDispatch();
   const { logout } = useLogout();
   const { isMobile } = useDeviceContext();
@@ -44,7 +45,7 @@ export default function ManageProfileLayout({
 
   if (isError && error && "status" in error && error.status === 401) {
     logout();
-    redirect("/login");
+    router.replace("/");
   }
 
   useEffect(() => {
