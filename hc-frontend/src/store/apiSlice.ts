@@ -223,7 +223,7 @@ export const apiSlice = createApi({
       }),
     }),
     shortlistProperty: builder.mutation<
-      { message: string },
+      { data: object; status: number },
       { propertyId: string }
     >({
       query: ({ propertyId }) => ({
@@ -232,7 +232,7 @@ export const apiSlice = createApi({
       }),
     }),
     removeShortlistedProperty: builder.mutation<
-      { message: string },
+      { data: object; status: number },
       { propertyId: string }
     >({
       query: ({ propertyId }) => ({

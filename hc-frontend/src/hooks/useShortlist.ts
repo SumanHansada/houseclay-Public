@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { useCallback } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +10,7 @@ import {
   useRemoveShortlistedPropertyMutation,
   useShortlistPropertyMutation,
 } from "@/store/apiSlice";
+import { logout } from "@/store/authSlice";
 import {
   addToShortlist,
   removeFromShortlist,
@@ -66,9 +68,19 @@ export const useShortlist = () => {
           toast.success("Added to your Shortlist");
         }
         return !isCurrentlyShortlisted;
-      } catch (error) {
-        toast.error("Failed to update Shortlist");
-        console.error("Error toggling shortlist:", error);
+      } catch (error: unknown) {
+        const axiosError = error as AxiosError<{
+          data: { error: string };
+          status: number;
+        }>;
+        console.error("Error toggling shortlist:", axiosError);
+        if (axiosError && axiosError.status === 401) {
+          toast.error("Login to shortlist properties");
+          dispatch(logout());
+          openDialog("login-dialog");
+        } else {
+          toast.error("Failed to update Shortlist");
+        }
         return isCurrentlyShortlisted;
       }
     },

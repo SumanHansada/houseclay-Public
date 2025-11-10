@@ -175,7 +175,10 @@ export function MyPropertyDetailsClient({
   const dispatch = useDispatch();
   const { isMobile } = useDeviceContext();
   const { data: propertyDataRaw, isLoading: isPropertyLoading } =
-    useGetMyPropertyByIdQuery(propertyID);
+    useGetMyPropertyByIdQuery(propertyID, {
+      skip: !propertyID,
+      refetchOnMountOrArgChange: true,
+    });
 
   const propertyData = propertyDataRaw as PropertyData | undefined;
   const property = propertyData?.property;
