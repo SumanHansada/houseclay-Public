@@ -5,6 +5,7 @@ import React, { createContext, ReactNode, useContext, useState } from "react";
 // Define the shape of the context
 interface DialogContextType {
   isDialogOpen: (id: string) => boolean;
+  isDialogClosing: (id: string) => boolean;
   openDialog: (id: string) => void;
   closeDialog: (id: string) => void;
   closeAllDialogs: () => void;
@@ -25,24 +26,35 @@ export const DialogContextProvider: React.FC<DialogContextProviderProps> = ({
   const [openDialogs, setOpenDialogs] = useState<{ [key: string]: boolean }>(
     {},
   );
+  const [closingDialogs, setClosingDialogs] = useState<{
+    [key: string]: boolean;
+  }>({});
   const [currentOpenDialogId, setCurrentOpenDialogId] = useState<string>("");
 
   const isDialogOpen = (id: string) => !!openDialogs[id];
+  const isDialogClosing = (id: string) => !!closingDialogs[id];
 
   const openDialog = (id: string) => {
     setOpenDialogs((prev) => ({ ...prev, [id]: true }));
+    setClosingDialogs((prev) => ({ ...prev, [id]: false }));
     setCurrentOpenDialogId(id);
   };
 
   const closeDialog = (id: string) => {
-    setOpenDialogs((prev) => ({ ...prev, [id]: false }));
-    if (currentOpenDialogId === id) {
-      setCurrentOpenDialogId("");
-    }
+    setClosingDialogs((prev) => ({ ...prev, [id]: true }));
+    // Delay the actual closing to allow animation
+    setTimeout(() => {
+      setOpenDialogs((prev) => ({ ...prev, [id]: false }));
+      setClosingDialogs((prev) => ({ ...prev, [id]: false }));
+      if (currentOpenDialogId === id) {
+        setCurrentOpenDialogId("");
+      }
+    }, 300); // Match animation duration
   };
 
   const closeAllDialogs = () => {
     setOpenDialogs({});
+    setClosingDialogs({});
     setCurrentOpenDialogId("");
   };
 
@@ -50,6 +62,7 @@ export const DialogContextProvider: React.FC<DialogContextProviderProps> = ({
     <DialogContext.Provider
       value={{
         isDialogOpen,
+        isDialogClosing,
         openDialog,
         closeDialog,
         closeAllDialogs,

@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, ChevronDown, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 interface DropdownOption {
   value: string | number | boolean;
@@ -11,6 +11,27 @@ interface DropdownOption {
 type ValueType = string | number | boolean;
 
 type DisplayMode = "first" | "first+count" | "count" | "join";
+
+// Size styles
+const sizeStyles = {
+  sm: "p-2 text-sm",
+  md: "p-3 text-base",
+  lg: "p-4 text-lg",
+};
+
+// Variant styles
+const variantStyles = {
+  primary: "bg-white border-gray-300 hover:border-gray-400",
+  secondary: "bg-gray-50 border-gray-200 hover:border-gray-300",
+  outline: "bg-transparent border-gray-300 hover:border-gray-400",
+};
+
+// Dropdown width style
+const dropdownWidthStyles = {
+  auto: "w-auto",
+  full: "w-full",
+  fit: "w-fit",
+};
 
 interface MultiSelectDropdownProps {
   label?: string;
@@ -87,32 +108,36 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
   labelClassName = "block text-sm font-medium text-gray-700 mb-1",
   buttonClassName = "flex justify-between items-center w-full p-3 border rounded-xl text-left",
   dropdownClassName = "absolute z-10 mt-1 bg-white border border-gray-300 rounded-xl shadow-lg max-h-64 overflow-auto",
-  dropdownItemClassName = "px-3 py-2 cursor-pointer hover:bg-gray-100 relative flex items-center gap-2",
+  dropdownItemClassName = "px-3 py-2 w-full cursor-pointer hover:bg-gray-100 relative flex items-center gap-2",
   selectedOptionClassName = "bg-red-50 text-red-700 font-medium",
   displayTextClassName = "text-gray-900",
   errorClassName = "mt-1 text-sm text-red-600",
-  toolbarClassName = "flex items-center justify-between border-b border-gray-200 sticky top-0 bg-white px-2",
+  toolbarClassName = "flex items-center justify-start border-b border-gray-200 sticky top-0 bg-white",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const sizeStyles = {
-    sm: "p-2 text-sm",
-    md: "p-3 text-base",
-    lg: "p-4 text-lg",
-  };
+  // Handle clicks outside dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+        onBlur?.();
+      }
+    };
 
-  const variantStyles = {
-    primary: "bg-white border-gray-300 hover:border-gray-400",
-    secondary: "bg-gray-50 border-gray-200 hover:border-gray-300",
-    outline: "bg-transparent border-gray-300 hover:border-gray-400",
-  };
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
 
-  const dropdownWidthStyles = {
-    auto: "w-auto",
-    full: "w-full",
-    fit: "w-fit",
-  };
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen, onBlur]);
 
   const selectedOptions = useMemo(
     () => options.filter((o) => value.includes(o.value)),
@@ -200,7 +225,7 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
     options.length > 0 && selectedOptions.length === options.length;
 
   return (
-    <div className={containerClassName}>
+    <div className={containerClassName} ref={dropdownRef}>
       {label && (
         <label htmlFor={id || name} className={labelClassName}>
           {label} {required && <span className="text-red-500">*</span>}
@@ -216,14 +241,11 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
           } ${disabled ? "cursor-not-allowed disabled:bg-gray-300" : ""}`}
           onClick={() => !disabled && setIsOpen((o) => !o)}
           onKeyDown={handleKeyDown}
-          onBlur={() => {
-            onBlur?.();
-            setTimeout(() => setIsOpen(false), 150);
-          }}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
           aria-controls={`${id || name}-listbox`}
           disabled={disabled}
+          onBlur={onBlur}
         >
           <span
             className={`${selectedOptions.length === 0 ? "text-gray-400" : displayTextClassName}`}
@@ -247,13 +269,13 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
                 {showSelectAll ? (
                   <button
                     type="button"
-                    className="text-sm disabled:text-gray-400 py-2 hover:underline"
+                    className="disabled:text-gray-400 py-2 hover:bg-gray-100 w-full"
                     onClick={() =>
                       onChange(allSelected ? [] : options.map((o) => o.value))
                     }
                     disabled={options.length === 0}
                   >
-                    {allSelected ? "Unselect all" : "Select all"}
+                    {allSelected ? "Unselect All" : "Select All"}
                   </button>
                 ) : (
                   <span />
@@ -281,7 +303,6 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
             >
               {options.map((option, idx) => {
                 const selected = value.includes(option.value);
-                // const active = idx === activeIndex;
 
                 return (
                   <li
@@ -291,7 +312,11 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
                       selected ? selectedOptionClassName : "text-gray-900"
                     } ${sizeStyles[size]}`}
                     onMouseEnter={() => setActiveIndex(idx)}
-                    onClick={() => toggleValue(option.value)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      toggleValue(option.value);
+                    }}
                     role="option"
                     aria-selected={selected}
                   >
@@ -306,7 +331,6 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
                       </span>
                     ) : null}
                     <span>{option.label}</span>
-                    <span className="absolute z-10 inset-0 w-full h-full"></span>
                   </li>
                 );
               })}

@@ -1,17 +1,16 @@
 "use client";
 
 import { Form, Formik, FormikHelpers } from "formik";
-import { useRouter } from "next/navigation";
 import HouseClaySvg from "public/icons/houseclay.svg";
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
+import { FormTextField } from "@/form-components";
 import { authFailure, authStarted, authSuccess } from "@/store/adminAuthSlice";
 import { useLoginMutation } from "@/store/apiSlice";
 import { RootState } from "@/store/store";
 import { toErrorMessage } from "@/utils/rtkError";
-import { FormTextField } from "@/form-components";
 
 const loginSchema = Yup.object().shape({
   username: Yup.string().required("Username is required"),
@@ -28,11 +27,8 @@ const HouseClay = HouseClaySvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 export default function AdminLogin() {
   const dispatch = useDispatch();
-  const router = useRouter();
 
-  const { isAuthenticated, authError } = useSelector(
-    (state: RootState) => state.adminAuth,
-  );
+  const { authError } = useSelector((state: RootState) => state.adminAuth);
 
   const [loginUser, { isLoading, isError }] = useLoginMutation();
 

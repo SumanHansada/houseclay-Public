@@ -9,19 +9,18 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { VerifyPropertyTabEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
-
-import { ensureEnumValue } from "@/utils/core";
-import { RootState } from "@/store/store";
-import { useGetPropertyByIdQuery } from "@/store/apiSlice";
-import { setPropertyDetailsFromApi } from "@/store/propertyDetailsSlice";
 import { transformPropertyFormToFormValues } from "@/interfaces/FormTransformers";
+import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 import {
   setFormData,
   setPropertyCategory,
   setPropertyID,
   setPropertyImages,
 } from "@/store/editPropertySlice";
+import { setPropertyDetailsFromApi } from "@/store/propertyDetailsSlice";
+import { RootState } from "@/store/store";
 import { Tab, TabHeader, Tabs } from "@/utility-components";
+import { ensureEnumValue } from "@/utils/core";
 
 const tabs: { label: string; value: VerifyPropertyTabEnum }[] = [
   { label: "Details", value: VerifyPropertyTabEnum.DETAILS },
@@ -61,7 +60,6 @@ export default function VerifyPropertyLayout({
     // --- Update propertyDetails slice ---
     dispatch(setPropertyDetailsFromApi(propertyDetails));
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       // const propertyData = data;
       console.log("Property Details - useEffect:", propertyDetails);
       const apiPropertyData = propertyDetails.property;

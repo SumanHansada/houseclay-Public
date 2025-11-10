@@ -16,18 +16,17 @@ const getInitialData = (
   propertyCategory: PropertyCategory,
 ): Partial<FormValues> => {
   const basePropertyDetails = {
-    propertyType: "Apartment",
-    builtUpArea: 2500,
-    facing: "East",
-    bhkType: "3BHK",
-    bathrooms: 3,
-    ownershipType: "Self Owned",
-    propertyAge: "More than 10 year",
-    floor: 0,
-    totalFloors: 10,
-    floorType: "Mosaic",
-    description:
-      "Top floor nicely placed. This lovely three bedroom for sale is only 1.95 Crores rupees without any extra brokerage & could be your new home. This West facing home is over 1536 sqft. & is in a convenient location. Situated on the 29th floor this home can comfortably serve your space for car and bike parking needs.",
+    propertyType: "",
+    builtUpArea: undefined,
+    facing: "",
+    bhkType: "",
+    bathrooms: undefined,
+    ownershipType: "",
+    propertyAge: "",
+    floor: undefined,
+    totalFloors: undefined,
+    floorType: "",
+    description: "",
   };
 
   const baseLocalityDetails = {
@@ -56,10 +55,10 @@ const getInitialData = (
         additionalInfo: baseAdditionalInfo,
         images: baseImages,
         rentalDetails: {
-          rent: 0,
+          rent: undefined,
           rentNegotiable: false,
-          maintenanceCharges: 0,
-          deposit: 0,
+          maintenanceCharges: undefined,
+          deposit: undefined,
           availableFrom: "",
           furnishing: "",
           preferredTenants: [],
@@ -78,9 +77,9 @@ const getInitialData = (
         additionalInfo: baseAdditionalInfo,
         images: baseImages,
         resaleDetails: {
-          price: 0,
+          price: undefined,
           availableFrom: "",
-          bathrooms: 0,
+          bathrooms: undefined,
           balcony: 0,
           priceNegotiable: false,
           underLoan: false,
@@ -99,9 +98,9 @@ const getInitialData = (
         additionalInfo: baseAdditionalInfo,
         images: baseImages,
         flatmateDetails: {
-          rent: 0,
-          maintenanceCharges: 0,
-          depositCharges: 0,
+          rent: undefined,
+          maintenanceCharges: undefined,
+          depositCharges: undefined,
           availableFrom: "",
           furnishing: "",
           waterSupply: "",

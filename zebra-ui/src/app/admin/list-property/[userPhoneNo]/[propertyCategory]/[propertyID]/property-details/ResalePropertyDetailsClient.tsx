@@ -28,7 +28,17 @@ const propertySchema = Yup.object({
     bhkType: Yup.string().required("BHK type is required"),
     ownershipType: Yup.string().required("Ownership type is required"),
     propertyAge: Yup.string().required("Property age is required"),
-    floor: Yup.number().required("Floor is required"),
+    floor: Yup.number()
+      .required("Floor is required")
+      .test(
+        "floor-less-than-total",
+        "Floor cannot exceed total floors",
+        function (value) {
+          const { totalFloors } = this.parent;
+          if (!value || !totalFloors) return true;
+          return value <= totalFloors;
+        },
+      ),
     totalFloors: Yup.number().required("Total floors is required"),
     floorType: Yup.string().required("Floor type is required"),
   }),

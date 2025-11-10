@@ -9,10 +9,11 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { PropertyDetailsTabEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
-import { useGetPropertyByIdQuery } from "@/store/apiSlice";
-import { ensureEnumValue } from "@/utils/core";
-import { Tab, TabHeader, Tabs } from "@/utility-components";
+import { default as DeletePhotosDialog } from "@/dialogs/delete-photos-dialog";
+import { default as UploadPhotosDialog } from "@/dialogs/upload-photos-dialog";
 import { transformPropertyFormToFormValues } from "@/interfaces/FormTransformers";
+import { useDialog } from "@/providers/DialogContextProvider";
+import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 import {
   clearFormData,
   setFormData,
@@ -20,11 +21,10 @@ import {
   setPropertyID,
   setPropertyImages,
 } from "@/store/editPropertySlice";
-import { RootState } from "@/store/store";
 import { setPropertyDetailsFromApi } from "@/store/propertyDetailsSlice";
-import { default as UploadPhotosDialog } from "@/dialogs/upload-photos-dialog";
-import { default as DeletePhotosDialog } from "@/dialogs/delete-photos-dialog";
-import { useDialog } from "@/providers/DialogContextProvider";
+import { RootState } from "@/store/store";
+import { Tab, TabHeader, Tabs } from "@/utility-components";
+import { ensureEnumValue } from "@/utils/core";
 
 const tabs: { label: string; value: PropertyDetailsTabEnum }[] = [
   { label: "Details", value: PropertyDetailsTabEnum.DETAILS },

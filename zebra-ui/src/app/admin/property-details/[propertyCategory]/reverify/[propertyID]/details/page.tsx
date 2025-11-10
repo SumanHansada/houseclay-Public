@@ -1,5 +1,10 @@
 "use client";
 
+import { Form, Formik, FormikProvider } from "formik";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { OwnerDetails } from "@/app/admin/property-details/components/OwnerDetails";
 import { VerificationPanel } from "@/app/admin/property-details/components/VerificationPanel";
 import { PropertyCategory } from "@/common/enums";
@@ -32,10 +37,6 @@ import { resetDelete } from "@/store/deleteFromS3Slice";
 import { setDeleteFileURLMap, setFileURLMap } from "@/store/editPropertySlice";
 import { RootState } from "@/store/store";
 import { resetUpload } from "@/store/uploadToS3Slice";
-import { Form, Formik, FormikProvider } from "formik";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 type FinalizationStage = "idle" | "deleting" | "uploading" | "updating";
 

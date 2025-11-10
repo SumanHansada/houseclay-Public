@@ -30,9 +30,19 @@ const propertySchema = Yup.object({
       .positive("Area must be positive"),
     facing: Yup.string().required("Facing is required"),
     bhkType: Yup.string().required("BHK type is required"),
-    floor: Yup.number().required("Floor is required"),
+    floor: Yup.number()
+      .required("Floor is required")
+      .test(
+        "floor-less-than-total",
+        "Floor cannot exceed total floors",
+        function (value) {
+          const { totalFloors } = this.parent;
+          if (!value || !totalFloors) return true;
+          return value <= totalFloors;
+        },
+      ),
     totalFloors: Yup.number().required("Total floors is required"),
-    bathrooms: Yup.number().required("Bathrooms is required"),
+    bathrooms: Yup.number().required("Bathroom is required"),
   }),
 });
 

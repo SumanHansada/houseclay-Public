@@ -1,7 +1,7 @@
 // Base rental details common to RENT and FLATMATE
 export interface BaseRentalDetails {
-  rent: number;
-  maintenanceCharges: number;
+  rent?: number;
+  maintenanceCharges?: number;
   availableFrom: string;
   furnishing: string;
   waterSupply: string;
@@ -14,7 +14,7 @@ export interface BaseRentalDetails {
 // Extended rental details specific to RENT
 export interface RentalDetails extends BaseRentalDetails {
   rentNegotiable: boolean;
-  deposit: number;
+  deposit?: number;
   preferredTenants: string[];
 }
 

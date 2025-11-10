@@ -6,13 +6,13 @@ export interface ResaleForm {
   propertyCategory: PropertyCategory.RESALE;
   // Property details (extended for RESALE)
   propertyType: string;
-  builtUpArea: number;
+  builtUpArea?: number;
   facing: string;
   bhkType: string;
   ownershipType: string;
   propertyAge: string;
-  floor: number;
-  totalFloors: number;
+  floor?: number;
+  totalFloors?: number;
   floorType: string;
   description: string;
   // Locality details
@@ -22,9 +22,9 @@ export interface ResaleForm {
   latitude: number;
   longitude: number;
   // Resale details
-  price: number;
+  price?: number;
   availableFrom: string;
-  bathrooms: number;
+  bathrooms?: number;
   balcony: number;
   priceNegotiable: boolean;
   underLoan: boolean;

@@ -4,8 +4,8 @@ import {
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
 
-import { logout as logoutAction } from "@/store/adminAuthSlice";
 import { BASE_API_URL } from "@/common/constants";
+import { logout as logoutAction } from "@/store/adminAuthSlice";
 
 /**
  * A thin wrapper around RTK Query’s `fetchBaseQuery`.

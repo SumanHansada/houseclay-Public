@@ -11,9 +11,12 @@ import {
   PropertyCategory,
 } from "@/common/enums";
 import { extractS3KeyFromUrl } from "@/common/utils";
+import Spinner from "@/components/Spinner";
 import { ListPropertySuccessDialog } from "@/dialogs/list-property-success-dialog";
 import { default as UploadPhotosDialog } from "@/dialogs/upload-photos-dialog";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
+import { transformFormValuesToPropertyForm } from "@/interfaces/FormTransformers";
+import { FormValues } from "@/interfaces/FormValues";
 import { PropertyImage } from "@/interfaces/PropertyImage";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -28,12 +31,9 @@ import {
 } from "@/store/appSlice";
 import { clearFormData, setFileURLMap } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
-
-import { FormValues } from "@/interfaces/FormValues";
-import { transformFormValuesToPropertyForm } from "@/interfaces/FormTransformers";
-import DesktopStepper from "../../components/DesktopStepper";
-import Spinner from "@/components/Spinner";
 import { resetUpload } from "@/store/uploadToS3Slice";
+
+import DesktopStepper from "../../components/DesktopStepper";
 
 type FinalizationStage = "idle" | "uploading" | "posting";
 

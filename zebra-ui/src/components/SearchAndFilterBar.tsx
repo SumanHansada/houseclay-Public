@@ -5,6 +5,7 @@ import { SearchIcon, SlidersHorizontal } from "lucide-react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { Autocomplete, Button, SelectDropdown } from "@/base-components";
 import { PropertyCategory } from "@/common/enums";
 import SearchFilterDialog from "@/dialogs/search-filters-dialog";
 // import { PropertySearch } from "@/interfaces/PropertySearch";
@@ -23,7 +24,6 @@ import {
   setTenantType,
 } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
-import { Autocomplete, Button, SelectDropdown } from "@/base-components";
 
 export const SearchAndFilterBar: React.FC = () => {
   // const searchParams = useSearchParams();

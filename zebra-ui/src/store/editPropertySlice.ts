@@ -28,15 +28,15 @@ const getInitialData = (
   propertyCategory: PropertyCategory,
 ): Partial<FormValues> => {
   const basePropertyDetails = {
-    propertyType: "Apartment",
-    builtUpArea: 0,
+    propertyType: "",
+    builtUpArea: undefined,
     facing: "",
     bhkType: "",
-    bathrooms: 0,
+    bathrooms: undefined,
     ownershipType: "",
     propertyAge: "",
-    floor: 0,
-    totalFloors: 0,
+    floor: undefined,
+    totalFloors: undefined,
     floorType: "",
     description: "",
   };
@@ -91,7 +91,7 @@ const getInitialData = (
         resaleDetails: {
           price: 0,
           availableFrom: "",
-          bathrooms: 0,
+          bathrooms: undefined,
           balcony: 0,
           priceNegotiable: false,
           underLoan: false,

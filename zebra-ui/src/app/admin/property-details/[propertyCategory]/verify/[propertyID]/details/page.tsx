@@ -8,37 +8,37 @@ import { useDispatch, useSelector } from "react-redux";
 import { OwnerDetails } from "@/app/admin/property-details/components/OwnerDetails";
 import { VerificationPanel } from "@/app/admin/property-details/components/VerificationPanel";
 import { PropertyCategory } from "@/common/enums";
-import {
-  useDeletePresignedUrlsMutation,
-  usePresignedUrlsMutation,
-  usePropertyUpdateMutation,
-} from "@/store/apiSlice";
-import { useS3Uploader } from "@/hooks/useS3Uploader";
-import { useS3Deleter } from "@/hooks/useS3Deleter";
-import { useDialog } from "@/providers/DialogContextProvider";
-import { RootState } from "@/store/store";
-import { PropertyImage } from "@/interfaces/PropertyImage";
-import { FormValues } from "@/interfaces/FormValues";
-import { setDeleteFileURLMap, setFileURLMap } from "@/store/editPropertySlice";
-import { transformFormValuesToPropertyForm } from "@/interfaces/FormTransformers";
 import { extractS3KeyFromUrl } from "@/common/utils";
-import { resetDelete } from "@/store/deleteFromS3Slice";
-import { resetUpload } from "@/store/uploadToS3Slice";
 import {
   PropertyDetailsFlatmateForm,
   PropertyDetailsRentForm,
   PropertyDetailsResaleForm,
 } from "@/components/forms";
-import FlatmateDetailsForm from "@/components/forms/FlatmateDetailsForm";
-import AdditionalInfoResaleForm from "@/components/forms/AdditionalInfoResaleForm";
-import AdditionalInfoRentForm from "@/components/forms/AdditionalInfoRentForm";
 import AdditionalInfoFlatmateForm from "@/components/forms/AdditionalInfoFlatmateForm";
-import LocalityDetailsForm from "@/components/forms/LocalityDetailsForm";
-import ResaleDetailsForm from "@/components/forms/ResaleDetailsForm";
-import RentalDetailsForm from "@/components/forms/RentalDetailsForm";
+import AdditionalInfoRentForm from "@/components/forms/AdditionalInfoRentForm";
+import AdditionalInfoResaleForm from "@/components/forms/AdditionalInfoResaleForm";
+import FlatmateDetailsForm from "@/components/forms/FlatmateDetailsForm";
 import GalleryForm from "@/components/forms/GalleryForm";
-import UploadPhotosDialog from "@/dialogs/upload-photos-dialog";
+import LocalityDetailsForm from "@/components/forms/LocalityDetailsForm";
+import RentalDetailsForm from "@/components/forms/RentalDetailsForm";
+import ResaleDetailsForm from "@/components/forms/ResaleDetailsForm";
 import DeletePhotosDialog from "@/dialogs/delete-photos-dialog";
+import UploadPhotosDialog from "@/dialogs/upload-photos-dialog";
+import { useS3Deleter } from "@/hooks/useS3Deleter";
+import { useS3Uploader } from "@/hooks/useS3Uploader";
+import { transformFormValuesToPropertyForm } from "@/interfaces/FormTransformers";
+import { FormValues } from "@/interfaces/FormValues";
+import { PropertyImage } from "@/interfaces/PropertyImage";
+import { useDialog } from "@/providers/DialogContextProvider";
+import {
+  useDeletePresignedUrlsMutation,
+  usePresignedUrlsMutation,
+  usePropertyUpdateMutation,
+} from "@/store/apiSlice";
+import { resetDelete } from "@/store/deleteFromS3Slice";
+import { setDeleteFileURLMap, setFileURLMap } from "@/store/editPropertySlice";
+import { RootState } from "@/store/store";
+import { resetUpload } from "@/store/uploadToS3Slice";
 
 type FinalizationStage = "idle" | "deleting" | "uploading" | "updating";
 

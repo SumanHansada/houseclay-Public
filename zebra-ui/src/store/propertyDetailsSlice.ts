@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+import { GetPropertyByIdResponse } from "@/interfaces/api";
 import { PropertyUpdate } from "@/interfaces/PropertyUpdate";
 import { UserInfo } from "@/interfaces/User";
-import { GetPropertyByIdResponse } from "@/interfaces/api";
 
 export interface PropertyDetails {
   title: string | null;

@@ -4,10 +4,10 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { generateUUID } from "@/common/utils";
 import PropertyTypeOptions from "@/components/PropertyTypeOptions";
 import { clearFormData, setPropertyID } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
-import { generateUUID } from "@/common/utils";
 
 const ListPropertyPage = () => {
   const { userPhoneNo } = useParams() as { userPhoneNo: string };

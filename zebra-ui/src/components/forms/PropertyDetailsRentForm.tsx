@@ -1,3 +1,8 @@
+import { useFormikContext } from "formik";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import * as Yup from "yup";
+
 import {
   FormSelectDropdown,
   FormTextArea,
@@ -10,10 +15,6 @@ import {
   getPropertyDetailsErrors,
   getPropertyDetailsTouched,
 } from "@/utils/formHelpers";
-import { useFormikContext } from "formik";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import * as Yup from "yup";
 
 interface PropertyDetailsRentFormProps {
   disabled: boolean;
@@ -29,10 +30,20 @@ const propertySchema = Yup.object({
     bhkType: Yup.string().required("BHK type is required"),
     ownershipType: Yup.string().required("Ownership type is required"),
     propertyAge: Yup.string().required("Property age is required"),
-    floor: Yup.number().required("Floor is required"),
+    floor: Yup.number()
+      .required("Floor is required")
+      .test(
+        "floor-less-than-total",
+        "Floor cannot exceed total floors",
+        function (value) {
+          const { totalFloors } = this.parent;
+          if (!value || !totalFloors) return true;
+          return value <= totalFloors;
+        },
+      ),
     totalFloors: Yup.number().required("Total floors is required"),
     floorType: Yup.string().required("Floor type is required"),
-    bathrooms: Yup.number().required("Bathrooms is required"),
+    bathrooms: Yup.number().required("Bathroom is required"),
   }),
 });
 

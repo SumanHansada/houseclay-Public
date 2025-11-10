@@ -6,12 +6,12 @@ export interface FlatmateForm {
   propertyCategory: PropertyCategory.FLATMATE;
   // Property details (simplified for FLATMATE)
   propertyType: string;
-  builtUpArea: number;
+  builtUpArea?: number;
   facing: string;
   bhkType: string;
-  bathrooms: number;
-  floor: number;
-  totalFloors: number;
+  bathrooms?: number;
+  floor?: number;
+  totalFloors?: number;
   description: string;
   // Locality details
   city: string;
@@ -20,9 +20,9 @@ export interface FlatmateForm {
   latitude: number;
   longitude: number;
   // Flatmate details
-  rent: number;
-  maintenanceCharges: number;
-  depositCharges: number;
+  rent?: number;
+  maintenanceCharges?: number;
+  depositCharges?: number;
   availableFrom: string;
   furnishing: string;
   waterSupply: string;

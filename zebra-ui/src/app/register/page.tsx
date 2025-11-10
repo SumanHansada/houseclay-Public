@@ -7,11 +7,11 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
+import { FormTextField } from "@/form-components";
 import { authFailure, authSuccess } from "@/store/adminAuthSlice";
 import { useLoginMutation, useRegisterMutation } from "@/store/apiSlice";
 import { RootState } from "@/store/store";
 import { toErrorMessage } from "@/utils/rtkError";
-import { FormTextField } from "@/form-components";
 
 const registerSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),

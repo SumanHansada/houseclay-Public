@@ -1,4 +1,5 @@
 import { PaymentStatusEnum } from "@/common/enums";
+
 import { PropertyInfo } from "./PropertyInfo";
 
 export interface UserInfo {

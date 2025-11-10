@@ -1,11 +1,12 @@
 "use client";
 
 import { Form, Formik, FormikProvider } from "formik";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { PropertyCategory } from "@/common/enums";
-
+import { extractS3KeyFromUrl } from "@/common/utils";
 import {
   AdditionalInfoFlatmateForm,
   AdditionalInfoRentForm,
@@ -19,22 +20,20 @@ import {
   RentalDetailsForm,
   ResaleDetailsForm,
 } from "@/components/forms";
-import { FormValues } from "@/interfaces/FormValues";
-import { RootState } from "@/store/store";
+import { useS3Deleter } from "@/hooks/useS3Deleter";
+import { useS3Uploader } from "@/hooks/useS3Uploader";
 import { transformFormValuesToPropertyForm } from "@/interfaces/FormTransformers";
-import { extractS3KeyFromUrl } from "@/common/utils";
+import { FormValues } from "@/interfaces/FormValues";
+import { PropertyImage } from "@/interfaces/PropertyImage";
+import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useDeletePresignedUrlsMutation,
   usePresignedUrlsMutation,
   usePropertyUpdateMutation,
 } from "@/store/apiSlice";
-import { useRouter } from "next/navigation";
-import { useS3Uploader } from "@/hooks/useS3Uploader";
-import { useS3Deleter } from "@/hooks/useS3Deleter";
-import { PropertyImage } from "@/interfaces/PropertyImage";
-import { useDialog } from "@/providers/DialogContextProvider";
-import { setDeleteFileURLMap, setFileURLMap } from "@/store/editPropertySlice";
 import { resetDelete } from "@/store/deleteFromS3Slice";
+import { setDeleteFileURLMap, setFileURLMap } from "@/store/editPropertySlice";
+import { RootState } from "@/store/store";
 import { resetUpload } from "@/store/uploadToS3Slice";
 
 type FinalizationStage = "idle" | "deleting" | "uploading" | "updating";

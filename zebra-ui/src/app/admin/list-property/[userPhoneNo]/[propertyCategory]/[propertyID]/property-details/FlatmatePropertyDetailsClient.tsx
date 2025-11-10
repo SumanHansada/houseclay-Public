@@ -26,9 +26,19 @@ const propertySchema = Yup.object({
       .positive("Area must be positive"),
     facing: Yup.string().required("Facing is required"),
     bhkType: Yup.string().required("BHK type is required"),
-    floor: Yup.number().required("Floor is required"),
+    floor: Yup.number()
+      .required("Floor is required")
+      .test(
+        "floor-less-than-total",
+        "Floor cannot exceed total floors",
+        function (value) {
+          const { totalFloors } = this.parent;
+          if (!value || !totalFloors) return true;
+          return value <= totalFloors;
+        },
+      ),
     totalFloors: Yup.number().required("Total floors is required"),
-    bathrooms: Yup.number().required("Bathrooms is required"),
+    bathrooms: Yup.number().required("Bathroom is required"),
   }),
 });
 
@@ -179,7 +189,7 @@ const FlatmatePropertyDetailsClient: React.FC = () => {
               { value: "5+BHK", label: "5+ BHK" },
             ]}
             required
-            placeholder="Select BHK Type"
+            placeholder="Select BHK type"
             aria-describedby={
               propertyDetailsErrors?.bhkType && propertyDetailsTouched?.bhkType
                 ? "propertyDetails.bhkType-error"
@@ -203,7 +213,7 @@ const FlatmatePropertyDetailsClient: React.FC = () => {
               { value: 6, label: "6" },
             ]}
             required
-            placeholder="Select Bathrooms"
+            placeholder="Select bathrooms"
             aria-describedby={
               propertyDetailsErrors?.bathrooms &&
               propertyDetailsTouched?.bathrooms

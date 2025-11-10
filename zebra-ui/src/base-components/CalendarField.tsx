@@ -1,3 +1,5 @@
+"use client";
+
 import {
   addDays,
   addMonths,
@@ -319,6 +321,7 @@ const CalendarField: React.FC<CalendarFieldProps> = ({
           type="text"
           value={displayValue}
           onChange={handleInputChange}
+          onBlur={onBlur}
           placeholder={placeholder}
           disabled={disabled}
           aria-label={label || "Date input"}

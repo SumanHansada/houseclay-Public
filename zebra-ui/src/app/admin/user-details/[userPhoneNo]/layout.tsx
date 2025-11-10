@@ -10,9 +10,9 @@ import { userDetailsTabs } from "@/common/constants/user";
 import { UserDetailsTabEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
-import { ensureEnumValue } from "@/utils/core";
 // import { userDetailsTestIds } from "@/utils/testIds";
 import { Tab, TabHeader, Tabs } from "@/utility-components";
+import { ensureEnumValue } from "@/utils/core";
 
 export default function UserDetailsLayout({
   children,

@@ -6,12 +6,12 @@ import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 import { default as adminAuthReducer } from "./adminAuthSlice";
 import { apiSlice } from "./apiSlice";
 import { default as appReducer } from "./appSlice";
-import { default as listPropertyReducer } from "./listPropertySlice";
+import { default as deleteFromS3SliceReducer } from "./deleteFromS3Slice";
 import { default as editPropertyReducer } from "./editPropertySlice";
+import { default as listPropertyReducer } from "./listPropertySlice";
 import { default as propertyDetailsReducer } from "./propertyDetailsSlice";
 import { default as propertySearchReducer } from "./propertySearchSlice";
 import { default as uploadToS3SliceReducer } from "./uploadToS3Slice";
-import { default as deleteFromS3SliceReducer } from "./deleteFromS3Slice";
 import { default as userReducer } from "./userSlice";
 
 function createNoopStorage(): WebStorage {

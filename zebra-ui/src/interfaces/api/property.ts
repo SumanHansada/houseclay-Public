@@ -1,7 +1,7 @@
-import { UserInfo } from "../User";
-import { PropertyUpdate } from "../PropertyUpdate";
-import { PropertyInfo } from "../PropertyInfo";
 import { PropertyForm } from "../PropertyForm";
+import { PropertyInfo } from "../PropertyInfo";
+import { PropertyUpdate } from "../PropertyUpdate";
+import { UserInfo } from "../User";
 
 interface ResponseMeta {
   title: string | null;

@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+
 import { PropertyCategory, PropertyDetailsTabEnum } from "@/common/enums";
 
 type Params = { propertyCategory: string; propertyID: string };

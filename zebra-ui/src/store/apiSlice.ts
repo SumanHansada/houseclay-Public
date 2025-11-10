@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 
 import { LeadQueryParamEnum } from "@/common/enums";
 import {
@@ -11,14 +11,13 @@ import {
   GetPropertyByIdResponse,
   GetUserByPhoneNoResponse,
 } from "@/interfaces/api";
+import { PropertyForm } from "@/interfaces/PropertyForm";
 import {
   baseQueryWithAuth,
   invalidateAllTags,
   listTag,
   TAGS,
 } from "@/utils/rtkQueryHelpers";
-import { BASE_API_URL } from "@/common/constants";
-import { PropertyForm } from "@/interfaces/PropertyForm";
 
 const safeDecode = (s: string) => {
   try {
@@ -398,7 +397,7 @@ export const apiSlice = createApi({
     }),
 
     addConnects: builder.mutation<
-      {},
+      { message: string },
       {
         connectCount: number;
         phoneNo: string;
