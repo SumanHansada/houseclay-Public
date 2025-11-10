@@ -7,20 +7,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { PropertyCategory } from "@/common/enums";
 
 import {
+  AdditionalInfoFlatmateForm,
+  AdditionalInfoRentForm,
+  AdditionalInfoResaleForm,
+  FlatmateDetailsForm,
+  GalleryForm,
+  LocalityDetailsForm,
   PropertyDetailsFlatmateForm,
   PropertyDetailsRentForm,
   PropertyDetailsResaleForm,
+  RentalDetailsForm,
+  ResaleDetailsForm,
 } from "@/components/forms";
-import LocalityDetailsForm from "@/components/forms/LocalityDetailsForm";
 import { FormValues } from "@/interfaces/FormValues";
 import { RootState } from "@/store/store";
-import FlatmateDetailsForm from "@/components/forms/FlatmateDetailsForm";
-import ResaleDetailsForm from "@/components/forms/ResaleDetailsForm";
-import RentalDetailsForm from "@/components/forms/RentalDetailsForm";
-import GalleryForm from "@/components/forms/GalleryForm";
-import AdditionalInfoRentForm from "@/components/forms/AdditionalInfoRentForm";
-import AdditionalInfoResaleForm from "@/components/forms/AdditionalInfoResaleForm";
-import AdditionalInfoFlatmateForm from "@/components/forms/AdditionalInfoFlatmateForm";
 import { transformFormValuesToPropertyForm } from "@/interfaces/FormTransformers";
 import { extractS3KeyFromUrl } from "@/common/utils";
 import {
@@ -49,7 +49,7 @@ export default function DetailsPage() {
   const router = useRouter();
   const [updateProperty, { isLoading: isUpdatingProperty }] =
     usePropertyUpdateMutation();
-  const { openDialog, isDialogOpen, closeDialog } = useDialog();
+  const { openDialog, closeDialog } = useDialog();
 
   // Get upload state to monitor completion
   const uploadState = useSelector((state: RootState) => state.uploadToS3);

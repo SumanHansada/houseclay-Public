@@ -99,6 +99,7 @@ const CurrencyField: React.FC<CurrencyFieldProps> = ({
           onChange={handleChange}
           onBlur={handleBlur}
           disabled={disabled}
+          inputMode="numeric"
         />
         {suffix && (
           <span className="inline-flex items-center px-3 text-gray-500 bg-gray-100 border border-l-0 border-gray-300 rounded-r-xl">

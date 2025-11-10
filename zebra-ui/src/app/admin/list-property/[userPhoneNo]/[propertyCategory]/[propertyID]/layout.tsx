@@ -12,7 +12,7 @@ import {
 } from "@/common/enums";
 import { extractS3KeyFromUrl } from "@/common/utils";
 import { ListPropertySuccessDialog } from "@/dialogs/list-property-success-dialog";
-import { UploadDialog } from "@/dialogs/upload-dialog";
+import { default as UploadPhotosDialog } from "@/dialogs/upload-photos-dialog";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
 import { PropertyImage } from "@/interfaces/PropertyImage";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
@@ -33,6 +33,7 @@ import { FormValues } from "@/interfaces/FormValues";
 import { transformFormValuesToPropertyForm } from "@/interfaces/FormTransformers";
 import DesktopStepper from "../../components/DesktopStepper";
 import Spinner from "@/components/Spinner";
+import { resetUpload } from "@/store/uploadToS3Slice";
 
 type FinalizationStage = "idle" | "uploading" | "posting";
 
@@ -195,48 +196,23 @@ export default function ListPropertyTypeLayout({
     }
   }, [dispatch, isMobile]);
 
-  // Effect to handle upload completion and dialog transitions
-  useEffect(() => {
-    if (
-      uploadState.status === "success" &&
-      isDialogOpen("upload-photos-dialog")
-    ) {
-      // Close upload dialog
-      closeDialog("upload-photos-dialog");
-
-      // Small delay to ensure smooth transition
-      setTimeout(() => {
-        // Open success dialog
-        openDialog("list-property-success-dialog");
-      }, 300);
-    }
-  }, [uploadState.status, isDialogOpen, closeDialog, openDialog]);
-
   const setRoute = (stepSlug: string) => {
     const route = `/admin/list-property/${userPhoneNo}/${propertyCategory.toLowerCase()}/${propertyID}/${stepSlug}`;
     router.push(route);
   };
 
   const uploadFilesToS3 = async () => {
-    const photos = propertyImages || [];
-    if (photos.length === 0) {
+    const photosToUpload = buildUploadQueue();
+
+    if (photosToUpload.length === 0) {
       return;
     }
-    // create a map of file names to their corresponding Blob URLs
-    const photosToUpload = photos.map((photo: PropertyImage) => {
-      return {
-        name: photo.file.name,
-        url: photo.url,
-        type: photo.file.type,
-        S3Url: propertyImagesS3Url[photo.file.name],
-      };
-    });
 
-    // Open upload dialog before starting upload
     openDialog("upload-photos-dialog");
 
-    // Start the upload process
-    uploadFiles(photosToUpload);
+    await uploadFiles(photosToUpload);
+
+    closeDialog("upload-photos-dialog");
   };
 
   const getPresignedPhotoUrls = async () => {
@@ -332,10 +308,22 @@ export default function ListPropertyTypeLayout({
       await getPresignedPhotoUrls();
       setRoute(ListPropertyRouteStep.ADDITIONAL_INFO);
     } else if (currentStep === ListPropertyFormStep.ADDITIONAL_INFO) {
-      uploadFilesToS3();
-      // Don't navigate to a route for DONE step, just handle the API call
-      // Make API call to post property
-      await handlePostProperty();
+      const pendingUploads = buildUploadQueue();
+
+      if (pendingUploads.length === 0) {
+        await handlePostProperty();
+        return;
+      }
+
+      finalizationOpsRef.current = {
+        uploadStarted: false,
+        postStarted: false,
+      };
+
+      dispatch(resetUpload());
+
+      setFinalizationStage("uploading");
+      return;
     }
   };
 
@@ -383,10 +371,7 @@ export default function ListPropertyTypeLayout({
         phoneNo: userPhoneNo,
       });
 
-      // In case of no images, open list-property-success-dialog
-      if (imagesS3Keys.length === 0) {
-        openDialog("list-property-success-dialog");
-      }
+      openDialog("list-property-success-dialog");
 
       // Don't open success dialog here anymore - it will be opened automatically after upload completes
     } catch (error) {
@@ -394,6 +379,49 @@ export default function ListPropertyTypeLayout({
       console.error("Error posting property:", error);
     }
   };
+
+  useEffect(() => {
+    if (finalizationStage !== "uploading") {
+      return;
+    }
+
+    if (!finalizationOpsRef.current.uploadStarted) {
+      finalizationOpsRef.current.uploadStarted = true;
+      void uploadFilesToS3();
+      return;
+    }
+
+    if (uploadState.status === "success" || uploadState.status === "error") {
+      finalizationOpsRef.current.uploadStarted = false;
+      setFinalizationStage("posting");
+    }
+  }, [finalizationStage, uploadFilesToS3, uploadState.status]);
+
+  useEffect(() => {
+    if (finalizationStage !== "posting") {
+      return;
+    }
+
+    if (finalizationOpsRef.current.postStarted) {
+      return;
+    }
+
+    finalizationOpsRef.current.postStarted = true;
+
+    const runPost = async () => {
+      try {
+        await handlePostProperty();
+      } finally {
+        setFinalizationStage("idle");
+        finalizationOpsRef.current = {
+          uploadStarted: false,
+          postStarted: false,
+        };
+      }
+    };
+
+    void runPost();
+  }, [finalizationStage, handlePostProperty]);
 
   const renderStepper = () => {
     return (
@@ -469,7 +497,7 @@ export default function ListPropertyTypeLayout({
 
         {/* Upload Dialog */}
         {isDialogOpen("upload-photos-dialog") && (
-          <UploadDialog id="upload-photos-dialog" />
+          <UploadPhotosDialog id="upload-photos-dialog" />
         )}
 
         {/* Success Dialog */}

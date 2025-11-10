@@ -37,6 +37,8 @@ import LocalityDetailsForm from "@/components/forms/LocalityDetailsForm";
 import ResaleDetailsForm from "@/components/forms/ResaleDetailsForm";
 import RentalDetailsForm from "@/components/forms/RentalDetailsForm";
 import GalleryForm from "@/components/forms/GalleryForm";
+import UploadPhotosDialog from "@/dialogs/upload-photos-dialog";
+import DeletePhotosDialog from "@/dialogs/delete-photos-dialog";
 
 type FinalizationStage = "idle" | "deleting" | "uploading" | "updating";
 
@@ -601,6 +603,15 @@ export default function VerifyPropertyDetailsPage() {
           />
         ) : null}
       </div>
+      {/* Upload Dialog */}
+      {isDialogOpen("upload-photos-dialog") && (
+        <UploadPhotosDialog id="upload-photos-dialog" />
+      )}
+
+      {/* Delete Dialog */}
+      {isDialogOpen("delete-photos-dialog") && (
+        <DeletePhotosDialog id="upload-photos-dialog" />
+      )}
     </div>
   );
 }

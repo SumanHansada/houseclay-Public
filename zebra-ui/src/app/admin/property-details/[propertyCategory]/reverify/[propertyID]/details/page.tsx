@@ -1,59 +1,493 @@
 "use client";
 
-import { Form, Formik, FormikProvider } from "formik";
-import { useParams } from "next/navigation";
-import { useRef, useState } from "react";
-import { useSelector } from "react-redux";
-
-import AdditionalInfoForm from "@/app/admin/property-details/components/AdditionalInfoForm";
-import GalleryForm from "@/app/admin/property-details/components/GalleryForm";
-import LocalityDetailsForm from "@/app/admin/property-details/components/LocalityDetailsForm";
 import { OwnerDetails } from "@/app/admin/property-details/components/OwnerDetails";
-import PropertyDetailsForm from "@/app/admin/property-details/components/PropertyDetailsForm";
-import RentalDetailsForm from "@/app/admin/property-details/components/RentalDetailsForm";
-import ResaleDetailsForm from "@/app/admin/property-details/components/ResaleDetailsForm";
 import { VerificationPanel } from "@/app/admin/property-details/components/VerificationPanel";
 import { PropertyCategory } from "@/common/enums";
-import { PropertyResponseFormValues } from "@/interfaces/Property";
-import { useGetPropertyByIdQuery } from "@/store/apiSlice";
-import { selectFormData } from "@/store/propertyDetailsSlice";
+import { extractS3KeyFromUrl } from "@/common/utils";
+import {
+  AdditionalInfoFlatmateForm,
+  AdditionalInfoRentForm,
+  AdditionalInfoResaleForm,
+  FlatmateDetailsForm,
+  GalleryForm,
+  LocalityDetailsForm,
+  PropertyDetailsFlatmateForm,
+  PropertyDetailsRentForm,
+  PropertyDetailsResaleForm,
+  RentalDetailsForm,
+  ResaleDetailsForm,
+} from "@/components/forms";
+import { useS3Deleter } from "@/hooks/useS3Deleter";
+import { useS3Uploader } from "@/hooks/useS3Uploader";
+import { transformFormValuesToPropertyForm } from "@/interfaces/FormTransformers";
+import { FormValues } from "@/interfaces/FormValues";
+import { PropertyImage } from "@/interfaces/PropertyImage";
+import { useDialog } from "@/providers/DialogContextProvider";
+import {
+  useDeletePresignedUrlsMutation,
+  usePresignedUrlsMutation,
+  usePropertyUpdateMutation,
+} from "@/store/apiSlice";
+import { resetDelete } from "@/store/deleteFromS3Slice";
+import { setDeleteFileURLMap, setFileURLMap } from "@/store/editPropertySlice";
+import { RootState } from "@/store/store";
+import { resetUpload } from "@/store/uploadToS3Slice";
+import { Form, Formik, FormikProvider } from "formik";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+type FinalizationStage = "idle" | "deleting" | "uploading" | "updating";
 
 export default function ReverifyPropertyDetailsPage() {
-  const { propertyID } = useParams() as {
-    propertyID: string;
-  };
-
-  // --- From DetailsPage: Formik & Edit Mode State ---
   const [editMode, setEditMode] = useState(false);
-
-  const { data: currentProperty } = useGetPropertyByIdQuery({
-    propertyID: propertyID,
-  });
-  const currentUser = currentProperty!.owner;
+  const [getPresignedUrls] = usePresignedUrlsMutation();
+  const [getDeletePresignedUrls] = useDeletePresignedUrlsMutation();
+  const dispatch = useDispatch();
+  const uploadFiles = useS3Uploader();
+  const deleteFiles = useS3Deleter();
+  const router = useRouter();
+  const [updateProperty, { isLoading: isUpdatingProperty }] =
+    usePropertyUpdateMutation();
+  const { openDialog, closeDialog } = useDialog();
   const formRef = useRef<HTMLFormElement>(null);
 
-  const propertyData = useSelector(selectFormData);
+  // Get upload state to monitor completion
+  const uploadState = useSelector((state: RootState) => state.uploadToS3);
+  const deleteState = useSelector((state: RootState) => state.deleteFromS3);
 
-  if (!propertyData) return null;
-  const { propertyCategory } = propertyData;
+  const propertyImagesS3Url = useSelector(
+    (state: RootState) => state.editProperty.propertyImagesS3Url,
+  );
+  const propertyImages = useSelector(
+    (state: RootState) => state.editProperty.propertyImages,
+  );
+  const deletedImages = useSelector(
+    (state: RootState) => state.editProperty.deletedImages,
+  );
+  const deletedImagesS3Url = useSelector(
+    (state: RootState) => state.editProperty.deletedImagesS3Url,
+  );
+  const formState = useSelector((state: RootState) => state.editProperty.form);
+  const propertyCategory = useSelector(
+    (state: RootState) => state.editProperty.propertyCategory,
+  );
+  const propertyID = useSelector(
+    (state: RootState) => state.editProperty.propertyID,
+  );
+  const currentUser = useSelector(
+    (state: RootState) => state.propertyDetails.propertyDetails.owner,
+  );
 
-  // --- Event Handlers ---
-  const handleSaveChanges = async (values: PropertyResponseFormValues) => {
-    console.log("Submitting all changes:", values);
-    setEditMode(false);
+  const isFormValid = formState?.isValid;
+
+  const [finalizationStage, setFinalizationStage] =
+    useState<FinalizationStage>("idle");
+  const finalizationPlanRef = useRef({
+    needsDelete: false,
+    needsUpload: false,
+  });
+  const finalizationOpsRef = useRef({
+    deleteStarted: false,
+    uploadStarted: false,
+    updateStarted: false,
+  });
+
+  const buildUploadQueue = () => {
+    const photos = propertyImages || [];
+
+    return photos
+      .filter((propertyImage: PropertyImage) =>
+        propertyImage.url.startsWith("blob:"),
+      )
+      .map((propertyImage: PropertyImage) => {
+        const fileName = propertyImage.file.name;
+        const mappedUrl =
+          propertyImagesS3Url?.[fileName] ??
+          propertyImagesS3Url?.[encodeURIComponent(fileName)];
+
+        if (!mappedUrl) {
+          return null;
+        }
+
+        return {
+          name: fileName,
+          url: propertyImage.url,
+          type: propertyImage.file.type,
+          S3Url: mappedUrl,
+        };
+      })
+      .filter(
+        (
+          item,
+        ): item is {
+          name: string;
+          url: string;
+          type: string;
+          S3Url: string;
+        } => Boolean(item),
+      );
   };
+
+  const buildDeleteQueue = () => {
+    const deletedPhotos = deletedImages || [];
+
+    return deletedPhotos
+      .map((propertyImage: PropertyImage) => {
+        const fileName = propertyImage.file.name;
+        const mappedUrl =
+          deletedImagesS3Url?.[fileName] ??
+          deletedImagesS3Url?.[encodeURIComponent(fileName)];
+
+        if (!mappedUrl) {
+          return null;
+        }
+
+        return {
+          name: fileName,
+          S3Url: mappedUrl,
+        };
+      })
+      .filter(
+        (
+          item,
+        ): item is {
+          name: string;
+          S3Url: string;
+        } => Boolean(item),
+      );
+  };
+
+  // Ensure proper form initialization with all required fields
+  const getInitialValues = (): FormValues => {
+    const data = formState?.data || {};
+
+    // Ensure all required fields are present
+    return {
+      localityDetails: data.localityDetails,
+      images: data.images || [],
+      propertyDetails: data.propertyDetails,
+      rentalDetails: data.rentalDetails,
+      resaleDetails: data.resaleDetails,
+      flatmateDetails: data.flatmateDetails,
+      additionalInfo: data.additionalInfo,
+    };
+  };
+
+  const initialValues = getInitialValues();
+
+  const uploadFilesToS3 = async () => {
+    const photosToUpload = buildUploadQueue();
+
+    if (photosToUpload.length === 0) {
+      return;
+    }
+
+    openDialog("upload-photos-dialog");
+
+    await uploadFiles(photosToUpload);
+
+    closeDialog("upload-photos-dialog");
+  };
+
+  const getDeletePresignedPhotoUrls = async () => {
+    // Request delete pre-signed URLs for deleted images
+    const deletedPhotos = deletedImages || [];
+    if (deletedPhotos.length === 0) {
+      return;
+    }
+
+    const fileMap: Record<string, string> = {};
+    deletedPhotos.forEach((propertyImage: PropertyImage) => {
+      fileMap[encodeURIComponent(propertyImage.file.name)] =
+        propertyImage.file.type;
+    });
+
+    if (Object.keys(fileMap).length === 0) {
+      console.log("No files to delete");
+      return;
+    }
+
+    console.log("Requesting delete presigned URLs for:", fileMap);
+
+    const presignedUrlsResponse = await getDeletePresignedUrls({
+      propertyID,
+      fileMap,
+    })
+      .unwrap()
+      .catch((error: Error) => {
+        console.error("Error fetching delete presigned URLs:", error);
+      });
+
+    if (!presignedUrlsResponse) {
+      console.error("No delete presigned URLs received");
+      return;
+    }
+
+    if (!presignedUrlsResponse) {
+      console.error("No delete presigned URLs received");
+      return;
+    }
+    dispatch(
+      setDeleteFileURLMap({
+        data: presignedUrlsResponse.fileURLMap,
+      }),
+    );
+  };
+
+  const deleteFilesFromS3 = async () => {
+    const photosToDelete = buildDeleteQueue();
+
+    if (photosToDelete.length === 0) {
+      return;
+    }
+
+    openDialog("delete-photos-dialog");
+
+    await deleteFiles(photosToDelete);
+
+    closeDialog("delete-photos-dialog");
+  };
+
+  const getPresignedPhotoUrls = async () => {
+    // Only request pre-signed URLs for new images (blob URLs)
+    const newImages = propertyImages.filter((propertyImage: PropertyImage) =>
+      propertyImage.url.startsWith("blob:"),
+    );
+
+    if (newImages.length === 0) {
+      return;
+    }
+
+    const fileMap: Record<string, string> = {};
+    newImages.forEach((propertyImage: PropertyImage) => {
+      fileMap[encodeURIComponent(propertyImage.file.name)] =
+        propertyImage.file.type;
+    });
+    const presignedUrlsResponse = await getPresignedUrls({
+      propertyID,
+      fileMap,
+    })
+      .unwrap()
+      .catch((error: Error) => {
+        console.error("Error fetching presigned URLs:", error);
+      });
+    if (!presignedUrlsResponse) {
+      console.error("No presigned URLs received");
+      return;
+    }
+
+    // Decode all URLs in the fileURLMap
+    const decodedFileURLMap: Record<string, string> = {};
+    Object.entries(presignedUrlsResponse.fileURLMap).forEach(([key, value]) => {
+      decodedFileURLMap[key] = decodeURIComponent(value);
+    });
+
+    dispatch(
+      setFileURLMap({
+        data: decodedFileURLMap,
+      }),
+    );
+  };
+
+  const handleUpdateProperty = async () => {
+    try {
+      // Transform FormValues to PropertyForm using the type-safe transformer
+      const formValues = formState.data as FormValues;
+
+      if (!formValues) {
+        throw new Error("Form data is not available");
+      }
+
+      // Transform to the appropriate PropertyForm type
+      const propertyForm = transformFormValuesToPropertyForm(
+        formValues,
+        propertyID,
+        propertyCategory,
+      );
+
+      // Extract S3 image keys from propertyForm.images
+      // For new images (blob URLs), they should have been uploaded and the S3 URL should be in propertyImagesS3Url
+      // For existing images (S3 URLs), extract the key directly from the URL
+      const imagesS3Keys = propertyForm.images
+        .map((url) => {
+          // If it's an existing S3 URL, extract the key
+          if (url.startsWith("https://")) {
+            return extractS3KeyFromUrl(url) || "";
+          }
+          // If it's a blob URL, find the S3 URL from propertyImagesS3Url
+          const matchingPhoto = propertyImages.find((img) => img.url === url);
+          if (matchingPhoto) {
+            const s3Url =
+              propertyImagesS3Url[encodeURIComponent(matchingPhoto.file.name)];
+            return s3Url ? extractS3KeyFromUrl(s3Url) || "" : "";
+          }
+          return "";
+        })
+        .filter((key) => key !== ""); // Remove empty keys
+
+      // Add cover image information if needed
+      const coverImage = propertyImages.filter((image) => image.isCover);
+
+      // Find the cover image S3 key
+      let coverImageS3Key = "";
+      if (coverImage.length > 0) {
+        const coverImageUrl = coverImage[0].url;
+        if (coverImageUrl.startsWith("https://")) {
+          coverImageS3Key = extractS3KeyFromUrl(coverImageUrl) || "";
+        } else if (coverImageUrl.startsWith("blob:")) {
+          const s3Url =
+            propertyImagesS3Url[encodeURIComponent(coverImage[0].file.name)];
+          coverImageS3Key = s3Url ? extractS3KeyFromUrl(s3Url) || "" : "";
+        }
+      }
+
+      // Create the final API payload
+      const apiPayload = {
+        ...propertyForm,
+        propertyID: propertyID, // Use propertyID from URL for update
+        coverImage: coverImageS3Key,
+        images: imagesS3Keys,
+      };
+
+      if (currentUser) {
+        await updateProperty({
+          payload: apiPayload,
+          phoneNo: currentUser.phoneNo,
+        }).unwrap();
+      }
+      router.push("/admin/view-all-properties");
+
+      // Don't open success dialog here anymore - it will be opened automatically after upload completes
+    } catch (error) {
+      console.error("Error updating property:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (finalizationStage !== "deleting") {
+      return;
+    }
+
+    if (!finalizationOpsRef.current.deleteStarted) {
+      finalizationOpsRef.current.deleteStarted = true;
+      void deleteFilesFromS3();
+      return;
+    }
+
+    if (deleteState.status === "success" || deleteState.status === "error") {
+      finalizationOpsRef.current.deleteStarted = false;
+      setFinalizationStage(
+        finalizationPlanRef.current.needsUpload ? "uploading" : "updating",
+      );
+    }
+  }, [deleteFilesFromS3, deleteState.status, finalizationStage]);
+
+  useEffect(() => {
+    if (finalizationStage !== "uploading") {
+      return;
+    }
+
+    if (!finalizationOpsRef.current.uploadStarted) {
+      finalizationOpsRef.current.uploadStarted = true;
+      void uploadFilesToS3();
+      return;
+    }
+
+    if (uploadState.status === "success" || uploadState.status === "error") {
+      finalizationOpsRef.current.uploadStarted = false;
+      setFinalizationStage("updating");
+    }
+  }, [finalizationStage, uploadFilesToS3, uploadState.status]);
+
+  useEffect(() => {
+    if (finalizationStage !== "updating") {
+      return;
+    }
+
+    if (finalizationOpsRef.current.updateStarted) {
+      return;
+    }
+
+    finalizationOpsRef.current.updateStarted = true;
+
+    const runUpdate = async () => {
+      try {
+        await handleUpdateProperty();
+      } finally {
+        setFinalizationStage("idle");
+        finalizationPlanRef.current = {
+          needsDelete: false,
+          needsUpload: false,
+        };
+        finalizationOpsRef.current = {
+          deleteStarted: false,
+          uploadStarted: false,
+          updateStarted: false,
+        };
+      }
+    };
+
+    void runUpdate();
+  }, [finalizationStage, handleUpdateProperty]);
+
+  const handleSaveChanges = async () => {
+    // 1) Ensure presigned URLs are in place
+    await getPresignedPhotoUrls();
+    await getDeletePresignedPhotoUrls();
+
+    // 2) Plan
+    const pendingDeletes = buildDeleteQueue();
+    const pendingUploads = buildUploadQueue();
+    const hasPendingDeletes = pendingDeletes.length > 0;
+    const hasPendingUploads = pendingUploads.length > 0;
+
+    if (!hasPendingDeletes && !hasPendingUploads) {
+      await handleUpdateProperty();
+      return;
+    }
+
+    // 3) Reset statuses and kick stage machine
+    dispatch(resetDelete());
+    dispatch(resetUpload());
+
+    finalizationPlanRef.current = {
+      needsDelete: hasPendingDeletes,
+      needsUpload: hasPendingUploads,
+    };
+    finalizationOpsRef.current = {
+      deleteStarted: false,
+      uploadStarted: false,
+      updateStarted: false,
+    };
+
+    setFinalizationStage(hasPendingDeletes ? "deleting" : "uploading");
+  };
+
+  const isWorking =
+    isUpdatingProperty ||
+    finalizationStage === "deleting" ||
+    finalizationStage === "uploading" ||
+    finalizationStage === "updating";
 
   return (
     <div className="h-full bg-gray-100 flex flex-col px-4 py-8">
       <div className="flex-1 flex min-h-0 gap-5">
         <Formik
-          initialValues={propertyData}
-          onSubmit={handleSaveChanges}
-          enableReinitialize
+          initialValues={initialValues}
+          onSubmit={(values) => {
+            console.log("Submit all data:", values);
+          }}
+          validateOnChange={false}
+          validateOnBlur={false}
+          enableReinitialize={true}
         >
           {(formik) => (
             // Left Scrollable Column now contains the full form
-            <Form className="flex flex-col gap-5 w-2/3 overflow-y-auto pr-2 relative">
+            <Form
+              ref={formRef}
+              className="flex flex-col gap-5 w-2/3 overflow-y-auto pr-2 relative"
+            >
               <FormikProvider value={formik}>
                 {/* --- Sticky Header from DetailsPage --- */}
                 <div className="flex justify-between bg-white py-3 px-6 sticky top-0 rounded-xl z-10 border-b shadow-sm items-center">
@@ -75,7 +509,8 @@ export default function ReverifyPropertyDetailsPage() {
                       <button
                         type="submit"
                         className="border border-red-500 text-red-500 py-1 px-4 text-lg font-medium rounded-xl hover:bg-red-500 hover:text-white"
-                        disabled={!formik.dirty || !formik.isValid}
+                        disabled={!isFormValid || isWorking}
+                        onClick={handleSaveChanges}
                       >
                         Save Changes
                       </button>
@@ -92,35 +527,63 @@ export default function ReverifyPropertyDetailsPage() {
                 </div>
 
                 {/* --- Form Sections from DetailsPage --- */}
-                <div className="bg-white rounded-xl p-6 shadow-sm flex flex-col gap-6">
-                  <PropertyDetailsForm disabled={!editMode} />
-                  <LocalityDetailsForm disabled={!editMode} />
-                  {propertyCategory === PropertyCategory.RESALE ? (
-                    <ResaleDetailsForm disabled={!editMode} />
-                  ) : (
-                    <RentalDetailsForm disabled={!editMode} />
-                  )}
-                  <AdditionalInfoForm disabled={!editMode} />
-                </div>
-                {/* Gallery Section */}
-                <div className="bg-white rounded-xl p-6 shadow-sm">
-                  <GalleryForm disabled={!editMode} />
+                <div className="flex flex-col gap-8">
+                  <div className="bg-white rounded-xl p-6 shadow-sm">
+                    {propertyCategory === PropertyCategory.RESALE ? (
+                      <PropertyDetailsResaleForm disabled={!editMode} />
+                    ) : propertyCategory === PropertyCategory.RENT ? (
+                      <PropertyDetailsRentForm disabled={!editMode} />
+                    ) : (
+                      <PropertyDetailsFlatmateForm disabled={!editMode} />
+                    )}
+                  </div>
+
+                  <div className="bg-white rounded-xl p-6 shadow-sm">
+                    <LocalityDetailsForm disabled={!editMode} />
+                  </div>
+
+                  <div className="bg-white rounded-xl p-6 shadow-sm">
+                    {propertyCategory === PropertyCategory.RESALE ? (
+                      <ResaleDetailsForm disabled={!editMode} />
+                    ) : propertyCategory === PropertyCategory.RENT ? (
+                      <RentalDetailsForm disabled={!editMode} />
+                    ) : (
+                      <FlatmateDetailsForm disabled={!editMode} />
+                    )}
+                  </div>
+
+                  <div className="bg-white rounded-xl p-6 shadow-sm">
+                    <GalleryForm disabled={!editMode} />
+                  </div>
+                  <div className="bg-white rounded-xl p-6 shadow-sm">
+                    {propertyCategory === PropertyCategory.RESALE ? (
+                      <AdditionalInfoResaleForm disabled={!editMode} />
+                    ) : propertyCategory === PropertyCategory.RENT ? (
+                      <AdditionalInfoRentForm disabled={!editMode} />
+                    ) : (
+                      <AdditionalInfoFlatmateForm disabled={!editMode} />
+                    )}
+                  </div>
                 </div>
                 {/* Owner Details Section */}
-                <div className="p-6 rounded-xl bg-white shadow-sm">
-                  <OwnerDetails currentUser={currentUser} />
-                </div>
+                {currentUser ? (
+                  <div className="p-6 rounded-xl bg-white shadow-sm">
+                    <OwnerDetails currentUser={currentUser} />
+                  </div>
+                ) : null}
               </FormikProvider>
             </Form>
           )}
         </Formik>
 
         {/* Right Fixed Column (Verification Panel) */}
-        <VerificationPanel
-          propertyID={propertyID}
-          formScrollRef={formRef}
-          userPhoneNo={currentUser.phoneNo}
-        />
+        {currentUser ? (
+          <VerificationPanel
+            propertyID={propertyID}
+            formScrollRef={formRef}
+            userPhoneNo={currentUser.phoneNo}
+          />
+        ) : null}
       </div>
     </div>
   );

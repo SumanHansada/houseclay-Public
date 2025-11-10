@@ -2,18 +2,19 @@
 
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import ListPropertySuccessSvg from "public/icons/list-property-success.svg";
 import { useDispatch } from "react-redux";
 
 import { PropertyCategory } from "@/common/enums";
-import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+} from "@/components/Dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
-
-const ListPropertySuccess = ListPropertySuccessSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
+import { SvgIcon } from "@/utility-components";
 
 interface ListPropertySuccessDialogProps {
   id: string;
@@ -36,14 +37,15 @@ export const ListPropertySuccessDialog: React.FC<
 
   const handlePreviewListing = async () => {
     closeDialog(id);
-    // hc-frontend
-    // router.push(
-    //   `/property-details/${propertyCategory.toLowerCase()}/${propertyID}`,
-    // );
-
-    // zebra-ui
     router.push(
       `/admin/property-details/${propertyCategory.toLowerCase()}/${propertyID}`,
+    );
+  };
+
+  const handleVerifyListing = async () => {
+    closeDialog(id);
+    router.push(
+      `/admin/property-details/${propertyCategory.toLocaleLowerCase()}/verify/${propertyID}`,
     );
   };
 
@@ -75,7 +77,7 @@ export const ListPropertySuccessDialog: React.FC<
         <div className="flex flex-col items-center justify-center text-center px-6 pb-2 pt-6 gap-4">
           <div className="relative overflow-hidden rounded-lg">
             <div className="absolute inset-0 shadow-[inset_0_0_25px_25px_rgba(255,255,255,0.8)] z-20"></div>
-            <ListPropertySuccess />
+            <SvgIcon iconSize="large" name="list-property-success" size={270} />
           </div>
           {!isMobile && (
             <h2 className="text-3xl text-gray-800">Congratulations!</h2>
@@ -85,25 +87,25 @@ export const ListPropertySuccessDialog: React.FC<
             <br />
             it will be live within 2 Hrs.
           </p>
-
-          {/* Action buttons */}
-          <div className="flex gap-4 w-full py-2">
-            {/* <div className="flex gap-4 w-full"> */}
-            <button
-              onClick={handleClose}
-              className="w-full py-3 text-black border font-medium rounded-lg hover:bg-red-600 hover:text-white transition duration-200"
-            >
-              Edit
-            </button>
-            <button
-              onClick={handlePreviewListing}
-              className="w-full py-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200"
-            >
-              {isMobile ? "View Listing" : "Preview Listing"}
-            </button>
-          </div>
         </div>
       </DialogContent>
+      <DialogFooter>
+        {/* Action buttons */}
+        <div className="flex gap-4 w-full p-2">
+          <button
+            onClick={handlePreviewListing}
+            className="w-full py-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200"
+          >
+            {isMobile ? "View Listing" : "Preview Listing"}
+          </button>
+          <button
+            onClick={handleVerifyListing}
+            className="w-full py-3 text-black border font-medium rounded-lg hover:bg-red-600 hover:text-white transition duration-200"
+          >
+            Verify Listing
+          </button>
+        </div>
+      </DialogFooter>
     </Dialog>
   );
 };

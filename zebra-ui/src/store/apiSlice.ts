@@ -344,10 +344,11 @@ export const apiSlice = createApi({
       {
         propertyID: string;
         comment: string;
+        score: number;
       }
     >({
-      query: ({ propertyID, comment }) => ({
-        url: `/property/admin/verify-property?propertyId=${propertyID}&comment=${comment}`,
+      query: ({ propertyID, comment, score }) => ({
+        url: `/property/admin/verify-property?propertyId=${propertyID}&comment=${comment}&score=${score}`,
         method: "POST",
         headers: {
           "Content-Type": "application/json",

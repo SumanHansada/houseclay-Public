@@ -64,6 +64,13 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
   /* ----------------------- comment & scroll control --------------------- */
   const [hasScrolledToEnd, setHasScrolledToEnd] = useState(false);
   const [comment, setComment] = useState("");
+
+  const [score, setScore] = useState(0);
+  const scoreOptions = useMemo(
+    () => Array.from({ length: 10 }, (_, i) => (i + 1) * 10),
+    [],
+  );
+
   const router = useRouter();
 
   /* detect scroll‑to‑bottom on the left column */
@@ -80,7 +87,11 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
 
   const commentValid = comment.trim().length >= 12 && hasScrolledToEnd;
   const readyForVerification =
-    allDetailsChecked && allGalleryChecked && allOwnerChecked && commentValid;
+    allDetailsChecked &&
+    allGalleryChecked &&
+    allOwnerChecked &&
+    commentValid &&
+    score > 0;
 
   /* --------------------------- RTK mutation ----------------------------- */
   const [verifyProperty] = useVerifyPropertyMutation();
@@ -95,7 +106,7 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
 
   const handleVerify = async () => {
     if (!readyForVerification) return;
-    await verifyProperty({ propertyID, comment });
+    await verifyProperty({ propertyID, comment, score });
   };
 
   const handleDeactivate = async () => {
@@ -103,9 +114,9 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
     await deactivateProperty({ propertyID, comment });
   };
 
-  const handleTagBroker = async (comment: string) => {
-    await tagBroker({ phoneNo: userPhoneNo, comment });
-    await deactivateProperty({ propertyID, comment });
+  const handleTagBroker = async (commentFromDialog: string) => {
+    await tagBroker({ phoneNo: userPhoneNo, comment: commentFromDialog });
+    await deactivateProperty({ propertyID, comment: commentFromDialog });
   };
 
   const handleVerifyClicked = () => {
@@ -164,6 +175,37 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
         ]}
         complete={allOwnerChecked}
       />
+
+      {/* SECTION – SCORE PROPERTY (required) */}
+      <div className="mt-3">
+        <h2 className="text-lg font-semibold mb-2">Score Property</h2>
+        <fieldset
+          className="grid grid-cols-5 gap-2"
+          aria-label="Property score from 10 to 100"
+        >
+          {scoreOptions.map((val) => (
+            <label
+              key={val}
+              className={`flex items-center justify-center rounded-lg border px-3 py-2 cursor-pointer select-none
+                ${score === val ? "border-green-600 ring-1 ring-green-600" : "border-neutral-300 hover:border-neutral-400"}`}
+            >
+              <input
+                type="radio"
+                name="property-score"
+                value={val}
+                checked={score === val}
+                onChange={() => setScore(val)}
+                className="sr-only"
+                aria-label={`Score ${val}`}
+              />
+              <span className="text-sm font-medium">{val}</span>
+            </label>
+          ))}
+        </fieldset>
+        <p className="mt-2 text-sm text-neutral-600">
+          Selected: {score > 0 ? score : "None"} (required)
+        </p>
+      </div>
 
       {/* TAG OWNER AS BROKER – placeholder */}
       <button

@@ -20,7 +20,11 @@ export const LeadTableView = () => {
   const { leadType } = useParams() as { leadType: LeadType };
   const [currentPage, setCurrentPage] = useState(1);
   const statusBarTitle =
-    leadType === "property" ? "Property Listing Leads" : "Search Support Leads";
+    leadType === "property"
+      ? "Property Listing Leads"
+      : leadType === "support"
+        ? "Search Support Leads"
+        : "Upgrade Property Leads";
 
   const {
     data: paginatedLeadData,

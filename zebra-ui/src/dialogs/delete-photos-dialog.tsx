@@ -1,28 +1,41 @@
 "use client";
 
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { X } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useSelector } from "react-redux";
 
-import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
+import { Dialog, DialogContent } from "@/components/Dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { RootState } from "@/store/store";
 
-interface UploadDialogProps {
+// Lazy load DotLottieReact component
+const DotLottieReact = dynamic(
+  () =>
+    import("@lottiefiles/dotlottie-react").then((mod) => mod.DotLottieReact),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="animate-pulse bg-gray-200 rounded-lg w-full h-full"></div>
+      </div>
+    ),
+  },
+);
+
+interface DeletePhotosDialogProps {
   id: string;
 }
 
-export const UploadDialog: React.FC<UploadDialogProps> = ({ id }) => {
+const DeletePhotosDialog: React.FC<DeletePhotosDialogProps> = ({ id }) => {
   const { closeDialog } = useDialog();
   const { isMobile } = useDeviceContext();
 
-  const uploadState = useSelector((state: RootState) => state.uploadToS3);
-  const { status, progress, totalFiles, fileProgress } = uploadState;
+  const deleteState = useSelector((state: RootState) => state.deleteFromS3);
+  const { status, progress, totalFiles, fileProgress } = deleteState;
 
   const handleClose = () => {
     if (status === "uploading") {
-      // Don't allow closing during upload
+      // Don't allow closing during delete
       return;
     }
     closeDialog(id);
@@ -33,15 +46,15 @@ export const UploadDialog: React.FC<UploadDialogProps> = ({ id }) => {
       const completedFiles = fileProgress.filter(
         (file) => file.status === "completed",
       ).length;
-      return `Uploading photos (${completedFiles} of ${totalFiles} completed)`;
+      return `Deleting photos (${completedFiles} of ${totalFiles} completed)`;
     }
     if (status === "success") {
-      return "Upload completed successfully!";
+      return "Delete completed successfully!";
     }
     if (status === "error") {
-      return "Upload failed. Please try again.";
+      return "Delete failed. Please try again.";
     }
-    return "Preparing upload...";
+    return "Preparing delete...";
   };
 
   const getProgressPercentage = () => {
@@ -53,27 +66,9 @@ export const UploadDialog: React.FC<UploadDialogProps> = ({ id }) => {
       id={id}
       type={isMobile ? "bottom-sheet" : "card"}
       onClose={handleClose}
-      entryAnimation="animate-fade-in"
-      exitAnimation="animate-fade-out"
+      entryAnimation={isMobile ? "animate-slide-in-bottom" : "animate-fade-in"}
+      exitAnimation={isMobile ? "animate-slide-out-bottom" : "animate-fade-out"}
     >
-      <DialogHeader>
-        <div
-          className={`${isMobile ? "py-2 px-8" : ""} flex flex-col justify-between items-center w-full`}
-        >
-          {isMobile && (
-            <>
-              <h1 className="text-xl py-1.5 text-black">Uploading Photos</h1>
-              <button
-                className="absolute top-4 right-4 rounded-full"
-                onClick={handleClose}
-                disabled={status === "uploading"}
-              >
-                <X size={25} />
-              </button>
-            </>
-          )}
-        </div>
-      </DialogHeader>
       <DialogContent>
         <div className="flex flex-col items-center justify-center text-center p-6 gap-6">
           {/* Main Lottie Animation */}
@@ -90,7 +85,7 @@ export const UploadDialog: React.FC<UploadDialogProps> = ({ id }) => {
           {/* Status Text */}
           {!isMobile && (
             <h2 className="text-2xl text-gray-800 font-semibold">
-              Uploading Photos
+              Deleting Photos
             </h2>
           )}
 
@@ -141,3 +136,5 @@ export const UploadDialog: React.FC<UploadDialogProps> = ({ id }) => {
     </Dialog>
   );
 };
+
+export default DeletePhotosDialog;

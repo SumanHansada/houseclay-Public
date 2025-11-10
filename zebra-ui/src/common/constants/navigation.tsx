@@ -30,6 +30,7 @@ export const sidebarItems: SidebarItem[] = [
     children: [
       { label: "Property Lead", href: "/admin/lead-management/property" },
       { label: "Support Lead", href: "/admin/lead-management/support" },
+      { label: "Upgrade Property", href: "/admin/lead-management/upgrade" },
     ],
   },
   {

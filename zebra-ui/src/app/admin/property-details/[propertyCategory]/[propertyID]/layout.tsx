@@ -14,6 +14,7 @@ import { ensureEnumValue } from "@/utils/core";
 import { Tab, TabHeader, Tabs } from "@/utility-components";
 import { transformPropertyFormToFormValues } from "@/interfaces/FormTransformers";
 import {
+  clearFormData,
   setFormData,
   setPropertyCategory,
   setPropertyID,
@@ -21,6 +22,9 @@ import {
 } from "@/store/editPropertySlice";
 import { RootState } from "@/store/store";
 import { setPropertyDetailsFromApi } from "@/store/propertyDetailsSlice";
+import { default as UploadPhotosDialog } from "@/dialogs/upload-photos-dialog";
+import { default as DeletePhotosDialog } from "@/dialogs/delete-photos-dialog";
+import { useDialog } from "@/providers/DialogContextProvider";
 
 const tabs: { label: string; value: PropertyDetailsTabEnum }[] = [
   { label: "Details", value: PropertyDetailsTabEnum.DETAILS },
@@ -36,39 +40,47 @@ export default function PropertyDetailsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { propertyID } = useParams() as {
+  const { propertyID: propertyIDParam } = useParams() as {
     propertyID: string;
   };
   const router = useRouter();
   const currentTabFromUrl = useSelectedLayoutSegment();
   const dispatch = useDispatch();
+  const { isDialogOpen } = useDialog();
 
   const propertyCategory = useSelector(
     (state: RootState) => state.editProperty.propertyCategory,
   );
 
+  useEffect(() => {
+    dispatch(clearFormData());
+
+    // Cleanup on unmount
+    return () => {
+      dispatch(clearFormData());
+    };
+  }, [propertyIDParam, dispatch]);
+
   const {
-    data: propertyDetails,
+    data: propertyDetailsRaw,
     isLoading: isLoadingProperty,
     isError,
     error,
   } = useGetPropertyByIdQuery(
-    { propertyID: propertyID },
-    { skip: !propertyID, refetchOnMountOrArgChange: true },
+    { propertyID: propertyIDParam },
+    { skip: !propertyIDParam, refetchOnMountOrArgChange: true },
   );
-  console.log("propertyDetails: ", propertyDetails);
+  console.log("propertyDetailsRaw: ", propertyDetailsRaw);
 
   // Populate form data when existing property data is loaded
   useEffect(() => {
-    if (!propertyDetails || isLoadingProperty) return;
+    if (!propertyDetailsRaw || isLoadingProperty) return;
 
     // --- Update propertyDetails slice ---
-    dispatch(setPropertyDetailsFromApi(propertyDetails));
+    dispatch(setPropertyDetailsFromApi(propertyDetailsRaw));
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      // const propertyData = data;
-      console.log("Property Details - useEffect:", propertyDetails);
-      const apiPropertyData = propertyDetails.property;
+      console.log("Property Details - useEffect:", propertyDetailsRaw);
+      const apiPropertyData = propertyDetailsRaw.property;
       if (!apiPropertyData) {
         return;
       }
@@ -80,6 +92,9 @@ export default function PropertyDetailsLayout({
 
         // Set property category
         dispatch(setPropertyCategory(apiPropertyData.propertyCategory));
+
+        // Set propertyID
+        dispatch(setPropertyID(propertyIDParam));
 
         // Set form data
         dispatch(setFormData({ data: formValues }));
@@ -98,14 +113,7 @@ export default function PropertyDetailsLayout({
     } catch (error) {
       console.error("Error transforming property data to form values:", error);
     }
-  }, [propertyDetails, isLoadingProperty, dispatch]);
-
-  // Set propertyID in Redux state when component mounts
-  useEffect(() => {
-    if (propertyID) {
-      dispatch(setPropertyID(propertyID));
-    }
-  }, [propertyID, dispatch]);
+  }, [propertyDetailsRaw, isLoadingProperty, propertyIDParam, dispatch]);
 
   if (isLoadingProperty || isError) {
     return (
@@ -127,7 +135,7 @@ export default function PropertyDetailsLayout({
 
   const handleTabChange = (tab: string) => {
     router.push(
-      `/admin/property-details/${propertyCategory.toLowerCase()}/${propertyID}/${tab}`,
+      `/admin/property-details/${propertyCategory.toLowerCase()}/${propertyIDParam}/${tab}`,
     );
   };
 
@@ -151,6 +159,15 @@ export default function PropertyDetailsLayout({
         </TabHeader>
       </Tabs>
       <div className="flex-1 overflow-auto">{children}</div>
+      {/* Upload Dialog */}
+      {isDialogOpen("upload-photos-dialog") && (
+        <UploadPhotosDialog id="upload-photos-dialog" />
+      )}
+
+      {/* Delete Dialog */}
+      {isDialogOpen("delete-photos-dialog") && (
+        <DeletePhotosDialog id="upload-photos-dialog" />
+      )}
     </div>
   );
 }

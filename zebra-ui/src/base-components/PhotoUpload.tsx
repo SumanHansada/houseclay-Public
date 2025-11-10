@@ -75,10 +75,24 @@ const PhotoUpload: React.FC<PhotoUploadProps> = ({
       return;
     }
 
+    const formatFileName = (file: File) => {
+      const now = new Date();
+      const pad = (value: number) => value.toString().padStart(2, "0");
+      const datePart = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}`;
+      const timePart = `${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+      const uuidPart = crypto.randomUUID().slice(0, 8);
+      const extensionMatch = file.name?.split(".").pop();
+      const extension = extensionMatch ? extensionMatch.toLowerCase() : "";
+      return extension
+        ? `${datePart}_${timePart}_${uuidPart}.${extension}`
+        : `${datePart}_${timePart}_${uuidPart}`;
+    };
+
     const newPhotos = acceptedFiles.map((file: File, index: number) => {
+      const formattedName = formatFileName(file);
       // Extract only the properties we need from the File object
       const fileData: FileData = {
-        name: file.name,
+        name: formattedName,
         type: file.type,
         webkitRelativePath: file.webkitRelativePath,
       };

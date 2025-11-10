@@ -6,6 +6,13 @@ import { APIProvider } from "@vis.gl/react-google-maps";
 import { MapPin } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+const BENGALURU_BOUNDS = {
+  south: 12.834,
+  west: 77.46,
+  north: 13.139,
+  east: 77.743,
+};
+
 interface PlacesAutocompleteProps {
   label?: string;
   id: string;
@@ -104,9 +111,11 @@ const PlacesAutocompleteBase = ({
               textQuery: string;
               fields: string[];
               region: string;
-              locationBias: {
-                center: { lat: number; lng: number };
-                radius: number;
+              locationRestriction: {
+                south: number;
+                west: number;
+                north: number;
+                east: number;
               };
             }) => Promise<{
               places?: {
@@ -125,9 +134,11 @@ const PlacesAutocompleteBase = ({
           textQuery: newValue,
           fields: ["id", "displayName", "formattedAddress", "location"],
           region: "IN",
-          locationBias: {
-            center: { lat: 12.9716, lng: 77.5946 },
-            radius: 50000, // radius in meters
+          locationRestriction: {
+            south: BENGALURU_BOUNDS.south,
+            west: BENGALURU_BOUNDS.west,
+            north: BENGALURU_BOUNDS.north,
+            east: BENGALURU_BOUNDS.east,
           },
         });
 

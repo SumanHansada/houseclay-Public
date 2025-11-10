@@ -55,6 +55,7 @@ const PhoneField: React.FC<PhoneFieldProps> = ({
           defaultCountry={defaultCountry}
           value={value}
           forceDialCode={true}
+          disableFormatting={true}
           placeholder={placeholder}
           onChange={(phoneValue) => handlePhoneChange(phoneValue)}
           onBlur={onBlur}

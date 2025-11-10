@@ -121,6 +121,7 @@ const AdditionalInfoFlatmateForm: React.FC<AdditionalInfoFlatmateFormProps> = ({
                   ? "whoWillShowProperty-error"
                   : undefined
               }
+              disabled={disabled}
             />
           </div>
           <div className="col-span-1">
@@ -131,6 +132,7 @@ const AdditionalInfoFlatmateForm: React.FC<AdditionalInfoFlatmateFormProps> = ({
               defaultCountry="in" // Set to India as your default
               placeholder="Enter phone number"
               className="border border-gray-300 rounded-xl px-3 py-1.5 focus:ring-red-500 focus:border-red-500"
+              disabled={disabled}
             />
           </div>
         </div>
