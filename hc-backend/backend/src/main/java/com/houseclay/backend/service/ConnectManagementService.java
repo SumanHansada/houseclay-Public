@@ -50,7 +50,7 @@ public class ConnectManagementService {
     public boolean addConnect(String phoneNo, int connectCount, Admin admin) throws Exception {
         Optional<User> optionalUser = userRepository.findById(phoneNo);
         if(optionalUser.isEmpty()) {
-            throw new APIException("Invalid user login", HttpStatus.BAD_REQUEST);
+            throw new APIException(String.format("user with %s doesn't exist", phoneNo), HttpStatus.BAD_REQUEST);
         }
         User user = optionalUser.get();
         for (int i = 0; i < connectCount; i++) {
