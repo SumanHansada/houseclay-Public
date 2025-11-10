@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
@@ -55,6 +56,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
   const router = useRouter();
 
   const [otpCode, setOtpCode] = useState<string[]>(["", "", "", ""]);
+  const [timeLeft, setTimeLeft] = useState(0);
 
   const ref1 = useRef<HTMLInputElement>(null);
   const ref2 = useRef<HTMLInputElement>(null);
@@ -62,6 +64,34 @@ const Login = ({ onClose }: { onClose: () => void }) => {
   const ref4 = useRef<HTMLInputElement>(null);
 
   const inputRefs = useMemo(() => [ref1, ref2, ref3, ref4], []);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const startTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+    setTimeLeft(30);
+    timerRef.current = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          if (timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  const clearTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    setTimeLeft(0);
+  };
 
   const handleCheckUser = async () => {
     try {
@@ -109,6 +139,10 @@ const Login = ({ onClose }: { onClose: () => void }) => {
         if (registerResponse.data) {
           dispatch(setIsAuthenticated(true));
           dispatch(setUserDetail(registerResponse.data));
+        } else {
+          toast.error("Registration failed! Wrong OTP code");
+          setOtpCode(["", "", "", ""]);
+          throw new Error("Registration failed");
         }
       } else {
         if (!phoneNo) return;
@@ -121,6 +155,8 @@ const Login = ({ onClose }: { onClose: () => void }) => {
           dispatch(setIsAuthenticated(true));
           dispatch(setUserDetail(loginResponse?.data as UserDetail));
         } else {
+          toast.error("Login failed! Wrong OTP code");
+          setOtpCode(["", "", "", ""]);
           throw new Error("Login failed");
         }
       }
@@ -148,6 +184,14 @@ const Login = ({ onClose }: { onClose: () => void }) => {
     if (inputRefs[0].current) {
       inputRefs[0].current.focus();
     }
+    if (authStep === AuthStep.OTP) {
+      startTimer();
+    } else {
+      clearTimer();
+    }
+    return () => {
+      clearTimer();
+    };
   }, [inputRefs, authStep, dispatch]);
 
   useEffect(() => {
@@ -155,8 +199,21 @@ const Login = ({ onClose }: { onClose: () => void }) => {
       if (!loginFromAddProperty) {
         dispatch(setAuthStep(AuthStep.NONE));
       }
+      clearTimer();
     };
   }, [dispatch]);
+
+  const handleResendOtp = async () => {
+    if (timeLeft > 0 || !phoneNo) return;
+    try {
+      const otpResponse = await generateOtp({ phoneNo });
+      if (otpResponse.data) {
+        startTimer();
+      }
+    } catch (err) {
+      console.error("Resend OTP Error:", err);
+    }
+  };
 
   const handleChange = (index: number, value: string): void => {
     // Only allow single digit numbers
@@ -502,12 +559,22 @@ const Login = ({ onClose }: { onClose: () => void }) => {
 
                 {/* Resend option */}
                 <div className="text-center">
-                  <span className="text-gray-500">
-                    Didn&apos;t receive code?
-                  </span>{" "}
-                  <button className="text-red-500 font-medium underline">
-                    Resend
-                  </button>
+                  {timeLeft > 0 ? (
+                    <span>Resend code in {timeLeft}s</span>
+                  ) : (
+                    <>
+                      <span className="text-gray-500">
+                        Didn&apos;t receive code?
+                      </span>{" "}
+                      <button
+                        type="button"
+                        onClick={handleResendOtp}
+                        className="text-red-500 font-medium underline"
+                      >
+                        Resend
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
