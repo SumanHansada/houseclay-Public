@@ -6,14 +6,12 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-import static com.houseclay.backend.utils.Constants.TOKEN_KEY;
-
 public class CookieUtils {
 
-    public static String extractTokenFromCookie(HttpServletRequest request) {
+    public static String extractTokenFromCookie(HttpServletRequest request, String cookieName) {
         if (request.getCookies() == null) return null;
         for (Cookie c : request.getCookies()) {
-            if (TOKEN_KEY.equals(c.getName())) {
+            if (cookieName.equals(c.getName())) {
                 return c.getValue();
             }
         }

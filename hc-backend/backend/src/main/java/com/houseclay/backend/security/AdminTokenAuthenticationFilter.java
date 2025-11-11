@@ -3,6 +3,7 @@ package com.houseclay.backend.security;
 import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.entity.AdminLogin;
 import com.houseclay.backend.repository.AdminLoginRepository;
+import com.houseclay.backend.utils.Constants;
 import com.houseclay.backend.utils.CookieUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -57,7 +58,7 @@ public class AdminTokenAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = CookieUtils.extractTokenFromCookie(request);
+        String token = CookieUtils.extractTokenFromCookie(request, Constants.ADMIN_TOKEN_KEY);
         if (token == null || token.isBlank()) {
             CookieUtils.unauthorized(response, "Missing authentication cookie");
             return;

@@ -6,11 +6,9 @@ import com.houseclay.backend.entity.Property;
 import com.houseclay.backend.entity.PropertyAction;
 import com.houseclay.backend.entity.User;
 import com.houseclay.backend.exception.APIException;
-import com.houseclay.backend.mapper.PropertyDetailMapper;
 import com.houseclay.backend.mapper.PropertyMapper;
 import com.houseclay.backend.repository.PropertyActionRepository;
 import com.houseclay.backend.repository.PropertyRepository;
-import com.houseclay.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,9 +19,6 @@ import java.util.Optional;
 
 @Service
 public class ShortlistPropertyService {
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private PropertyActionRepository propertyActionRepository;
@@ -37,13 +32,21 @@ public class ShortlistPropertyService {
             throw new APIException("Property not found", HttpStatus.BAD_REQUEST);
         }
         Property property = propertyOpt.get();
-        property.setScore(property.getScore() + 1);
-        PropertyAction propertyAction = new PropertyAction();
-        propertyAction.setProperty(property);
-        propertyAction.setUser(user);
-        propertyAction.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        propertyAction.setUserActionType(UserActionType.SHORTLIST);
-        propertyRepository.save(property);
+        boolean shortlisted = property.getPropertyActions().stream().anyMatch(
+                action -> action.getUserActionType().equals(UserActionType.SHORTLIST) &&
+                action.getUser() != null &&
+                action.getUser().getPhoneNo().equalsIgnoreCase(user.getPhoneNo())
+        );
+        if (!shortlisted) {
+            property.setScore(property.getScore() + 1);
+            PropertyAction propertyAction = new PropertyAction();
+            propertyAction.setProperty(property);
+            propertyAction.setUser(user);
+            propertyAction.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+            propertyAction.setUserActionType(UserActionType.SHORTLIST);
+            property.getPropertyActions().add(propertyAction);
+            propertyRepository.save(property);
+        }
         return property;
     }
 

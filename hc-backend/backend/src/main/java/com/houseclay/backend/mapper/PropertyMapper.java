@@ -109,6 +109,7 @@ public class PropertyMapper {
         target.setAvailableFrom(source.getAvailableFrom());
         target.setPropertyState(source.getPropertyState().toString());
         target.setBuiltUpArea(source.getBuiltUpArea());
+        target.setPropertyCategory(PropertyUtils.getPropertyCategory(source));
     }
 
     private static void copyBaseFields(Property source, PropertyDTO target) {

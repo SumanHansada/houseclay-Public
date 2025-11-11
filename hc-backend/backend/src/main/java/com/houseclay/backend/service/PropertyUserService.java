@@ -1,20 +1,21 @@
 package com.houseclay.backend.service;
 
+import com.houseclay.backend.dto.PropertyContactDTO;
 import com.houseclay.backend.dto.PropertyDTO;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
+import com.houseclay.backend.mapper.OwnerMapper;
 import com.houseclay.backend.mapper.PropertyMapper;
 import com.houseclay.backend.repository.PropertyRepository;
 import com.houseclay.backend.repository.UserRepository;
 import com.houseclay.backend.utils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -31,6 +32,9 @@ public class PropertyUserService {
 
     @Autowired
     private PropertyElasticService propertyElasticService;
+
+    @Value("${contact.property-cost}")
+    private int propertyContactConnectQty;
 
     public Property addProperty(User user, PropertyDTO propertyDTO) throws APIException {
         Optional<User> userOpt = userRepository.findById(user.getPhoneNo());
@@ -104,7 +108,7 @@ public class PropertyUserService {
     }
 
     @Transactional
-    public Map<String, String> getOwnerContact(String propertyId, User user) throws Exception {
+    public PropertyContactDTO getOwnerContact(String propertyId, User user) throws Exception {
         Optional<Property> propertyOpt = propertyRepository.findById(propertyId);
         if (propertyOpt.isEmpty()) {
             throw new APIException("Property not found", HttpStatus.BAD_REQUEST);
@@ -131,16 +135,14 @@ public class PropertyUserService {
             userRepository.save(user);
         }
         User owner = property.getOwner();
-        Map<String, String> contact = new HashMap<>();
-        contact.put("phone", owner.getPhoneNo());
-        contact.put("name", owner.getName());
-        contact.put("email", owner.getEmailID());
-        contact.put("connectBal", Integer.toString(owner.getConnectBal()));
-        return contact;
+        PropertyContactDTO contactDTO = new PropertyContactDTO();
+        contactDTO.setOwner(OwnerMapper.toOwnerDetailDTO(owner));
+        contactDTO.setConnectBal(user.getConnectBal());
+        return contactDTO;
     }
 
     public int calculateContactCost(Property property, User user) {
-        return 2;
+        return propertyContactConnectQty;
     }
 
     public boolean isOwner(User user, Property property) {

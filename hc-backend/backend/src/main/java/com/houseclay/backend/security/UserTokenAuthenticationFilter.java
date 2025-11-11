@@ -3,6 +3,7 @@ package com.houseclay.backend.security;
 import com.houseclay.backend.entity.User;
 import com.houseclay.backend.entity.UserLogin;
 import com.houseclay.backend.repository.UserLoginRepository;
+import com.houseclay.backend.utils.Constants;
 import com.houseclay.backend.utils.CookieUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -70,7 +71,7 @@ public class UserTokenAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // ---- Extract token ONLY from cookie ----
-        String token = CookieUtils.extractTokenFromCookie(request);
+        String token = CookieUtils.extractTokenFromCookie(request, Constants.TOKEN_KEY);
         if (token == null || token.isBlank()) {
             CookieUtils.unauthorized(response, "Missing authentication cookie");
             return;

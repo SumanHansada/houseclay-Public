@@ -6,11 +6,14 @@ import com.houseclay.backend.entity.PropertyAction;
 import com.houseclay.backend.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Repository
 public interface PropertyActionRepository extends JpaRepository<PropertyAction, Integer> {
+    @Transactional
     void deleteByUserAndPropertyAndUserActionType(User user, Property property, UserActionType userActionType);
+
     List<PropertyAction> findByUserAndUserActionType(User user, UserActionType userActionType);
 }

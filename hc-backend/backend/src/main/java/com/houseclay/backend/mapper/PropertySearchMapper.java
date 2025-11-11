@@ -1,7 +1,9 @@
 package com.houseclay.backend.mapper;
 
 import com.houseclay.backend.dto.PropertySearchDTO;
+import com.houseclay.backend.dto.PropertyUserSearchDTO;
 import com.houseclay.backend.entity.Property;
+import com.houseclay.backend.entity.User;
 import com.houseclay.backend.entity.UserActionType;
 
 public class PropertySearchMapper {
@@ -18,6 +20,15 @@ public class PropertySearchMapper {
         dto.setViewUserCount(property.getPropertyActions().stream()
                 .filter(propertyAction -> propertyAction.getUserActionType() == UserActionType.VIEW)
                 .count());
+        return dto;
+    }
+
+    public static PropertyUserSearchDTO toPropertyUserSearchDTO(Property property, User user) {
+        PropertyUserSearchDTO dto = new PropertyUserSearchDTO();
+        dto.setProperty(toPropertySearchDTO(property));
+        if (user != null) {
+            dto.setOwner(OwnerMapper.toOwnerDetailDTO(user));
+        }
         return dto;
     }
 }

@@ -1,6 +1,7 @@
 package com.houseclay.backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.houseclay.backend.entity.PropertyCategory;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -20,4 +21,5 @@ public class OwnedPropertyDTO {
     private Timestamp createdOn;
     private Timestamp updatedOn;
     private Timestamp availableFrom;
+    private PropertyCategory propertyCategory;
 }

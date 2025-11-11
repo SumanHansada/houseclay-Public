@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.houseclay.backend.utils.Constants.TOKEN_KEY;
+import static com.houseclay.backend.utils.Constants.ADMIN_TOKEN_KEY;
 
 @Service
 public class AdminService {
@@ -141,7 +141,7 @@ public class AdminService {
     }
 
     private ResponseEntity<?> buildLoginResponse(Admin admin, String token) {
-        ResponseCookie cookie = ResponseCookie.from(TOKEN_KEY, token)
+        ResponseCookie cookie = ResponseCookie.from(ADMIN_TOKEN_KEY, token)
                 .httpOnly(true)
                 .secure(true) // Set to true when using HTTPS
                 .sameSite("None")
@@ -157,7 +157,7 @@ public class AdminService {
 
     private ResponseEntity<?> buildLogoutResponse() {
         // Clear the cookie by setting maxAge to 0
-        ResponseCookie cookie = ResponseCookie.from(TOKEN_KEY, "")
+        ResponseCookie cookie = ResponseCookie.from(ADMIN_TOKEN_KEY, "")
                 .httpOnly(true)
                 .secure(true)
                 .sameSite("None")

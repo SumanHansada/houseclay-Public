@@ -4,6 +4,8 @@ public class Constants {
 
     public static final String TOKEN_KEY = "token";
 
+    public static final String ADMIN_TOKEN_KEY = "admin-token";
+
     public static final String BUNDLE_DATA = """
         [
           {
