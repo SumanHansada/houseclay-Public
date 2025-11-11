@@ -45,7 +45,7 @@ export const config = {
     // Protected routes that require authentication
     "/edit-property/:path*",
     "/my-property-details/:path*",
-    "/manage-account",
+    "/manage-account/:path*",
     // "/buy-connects",
     // Add other protected routes here
   ],
