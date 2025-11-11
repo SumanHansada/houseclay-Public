@@ -8,7 +8,7 @@ interface TextFieldProps {
   id?: string;
   label?: string;
   type?: "text" | "number" | "email" | "password";
-  dataType?: "number" | "text"; // Determines how the value is handled
+  dataType?: "number" | "string"; // Determines how the value is handled
   required?: boolean;
   placeholder?: string;
   className?: string;
@@ -27,7 +27,7 @@ const TextField: React.FC<TextFieldProps> = ({
   id,
   label,
   type = "text",
-  dataType = "text",
+  dataType = "string",
   required = false,
   placeholder = "",
   className = "",

@@ -259,6 +259,7 @@ const ResalePropertyDetailsClient: React.FC = () => {
                 label: value.toString(),
               }),
             )}
+            optionsType="number"
             required
             placeholder="Select total floors"
             aria-describedby={
@@ -280,6 +281,7 @@ const ResalePropertyDetailsClient: React.FC = () => {
                 label: value.toString(),
               })),
             ]}
+            optionsType="number"
             required
             placeholder="Select floor"
             aria-describedby={

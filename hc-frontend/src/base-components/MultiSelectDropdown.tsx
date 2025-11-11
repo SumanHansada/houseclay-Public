@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, ChevronDown, X } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 interface DropdownOption {
   value: string | number | boolean;
@@ -38,6 +38,7 @@ interface MultiSelectDropdownProps {
   name: string;
   id: string;
   options: DropdownOption[];
+  optionsType?: "string" | "number" | "boolean";
   required?: boolean;
   placeholder?: string;
   disabled?: boolean;
@@ -81,6 +82,7 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
   name,
   id,
   options,
+  optionsType = "string",
   required = false,
   placeholder = "Select options",
   disabled = false,
@@ -139,9 +141,70 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
     };
   }, [isOpen, onBlur]);
 
+  const normalizeValue = useCallback(
+    (rawValue: ValueType | undefined) => {
+      if (rawValue === undefined) {
+        return undefined;
+      }
+
+      if (rawValue === "") {
+        return optionsType === "string" ? "" : undefined;
+      }
+
+      if (optionsType === "number") {
+        if (typeof rawValue === "number") {
+          return rawValue;
+        }
+
+        if (typeof rawValue === "string") {
+          const parsedValue = Number(rawValue);
+          return Number.isNaN(parsedValue) ? undefined : parsedValue;
+        }
+
+        return rawValue ? 1 : 0;
+      }
+
+      if (optionsType === "boolean") {
+        if (typeof rawValue === "boolean") {
+          return rawValue;
+        }
+
+        if (typeof rawValue === "string") {
+          const lowered = rawValue.toLowerCase();
+          if (lowered === "true") return true;
+          if (lowered === "false") return false;
+        }
+
+        if (typeof rawValue === "number") {
+          if (rawValue === 1) return true;
+          if (rawValue === 0) return false;
+        }
+
+        return Boolean(rawValue);
+      }
+
+      if (typeof rawValue === "string") {
+        return rawValue;
+      }
+
+      return String(rawValue);
+    },
+    [optionsType],
+  );
+
   const selectedOptions = useMemo(
-    () => options.filter((o) => value.includes(o.value)),
-    [options, value],
+    () =>
+      options.filter((option) => {
+        const normalizedOptionValue = normalizeValue(option.value);
+        if (normalizedOptionValue === undefined) {
+          return false;
+        }
+
+        return value.some(
+          (selected) => normalizeValue(selected) === normalizedOptionValue,
+        );
+      }),
+    [options, value, normalizeValue],
   );
 
   const displayText = useMemo(() => {
@@ -172,8 +235,29 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
 
   const toggleValue = (v: ValueType) => {
     if (disabled) return;
-    const exists = value.includes(v);
-    const next = exists ? value.filter((x) => x !== v) : [...value, v];
+
+    const normalized = normalizeValue(v);
+
+    if (normalized === undefined) {
+      const cleaned = value.filter(
+        (selected) => normalizeValue(selected) !== undefined,
+      );
+      onChange(cleaned);
+      if (closeOnSelect) setIsOpen(false);
+      return;
+    }
+
+    const exists = value.some(
+      (selected) => normalizeValue(selected) === normalized,
+    );
+
+    const next = exists
+      ? value.filter((selected) => normalizeValue(selected) !== normalized)
+      : [
+          ...value.filter((selected) => normalizeValue(selected) !== undefined),
+          normalized,
+        ];
+
     onChange(next);
     if (closeOnSelect) setIsOpen(false);
   };
@@ -221,8 +305,21 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
     }
   };
 
-  const allSelected =
-    options.length > 0 && selectedOptions.length === options.length;
+  const allSelected = useMemo(() => {
+    const normalizedOptionValues = options
+      .map((option) => normalizeValue(option.value))
+      .filter((val): val is string | number | boolean => val !== undefined);
+
+    if (normalizedOptionValues.length === 0) {
+      return false;
+    }
+
+    return normalizedOptionValues.every((normalizedOptionValue) =>
+      value.some(
+        (selected) => normalizeValue(selected) === normalizedOptionValue,
+      ),
+    );
+  }, [options, value, normalizeValue]);
 
   return (
     <div className={containerClassName} ref={dropdownRef}>
@@ -271,7 +368,16 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
                     type="button"
                     className="disabled:text-gray-400 py-2 hover:bg-gray-100 w-full"
                     onClick={() =>
-                      onChange(allSelected ? [] : options.map((o) => o.value))
+                      onChange(
+                        allSelected
+                          ? []
+                          : options
+                              .map((option) => normalizeValue(option.value))
+                              .filter(
+                                (val): val is string | number | boolean =>
+                                  val !== undefined,
+                              ),
+                      )
                     }
                     disabled={options.length === 0}
                   >
@@ -302,7 +408,13 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
               aria-multiselectable="true"
             >
               {options.map((option, idx) => {
-                const selected = value.includes(option.value);
+                const normalizedOptionValue = normalizeValue(option.value);
+                const selected =
+                  normalizedOptionValue !== undefined &&
+                  value.some(
+                    (selectedValue) =>
+                      normalizeValue(selectedValue) === normalizedOptionValue,
+                  );
 
                 return (
                   <li
