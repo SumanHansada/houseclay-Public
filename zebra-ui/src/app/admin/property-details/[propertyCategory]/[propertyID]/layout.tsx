@@ -166,7 +166,7 @@ export default function PropertyDetailsLayout({
 
       {/* Delete Dialog */}
       {isDialogOpen("delete-photos-dialog") && (
-        <DeletePhotosDialog id="upload-photos-dialog" />
+        <DeletePhotosDialog id="delete-photos-dialog" />
       )}
     </div>
   );

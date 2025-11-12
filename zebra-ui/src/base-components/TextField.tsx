@@ -110,7 +110,7 @@ const TextField: React.FC<TextFieldProps> = ({
             dataType === "number" ? formatNumber(value) : String(value || "")
           }
           inputMode={dataType === "number" ? "numeric" : "text"}
-          pattern={dataType === "number" ? "[0-9]*" : undefined}
+          // pattern={dataType === "number" ? "[0-9]*" : undefined}
           onChange={handleChange}
           onBlur={handleBlur}
           disabled={disabled}

@@ -19,11 +19,11 @@ import {
   TAGS,
 } from "@/utils/rtkQueryHelpers";
 
-const safeDecode = (s: string) => {
+const safeDecode = (param: string) => {
   try {
-    return decodeURIComponent(s);
+    return decodeURIComponent(param);
   } catch {
-    return s;
+    return param;
   }
 };
 
@@ -252,14 +252,18 @@ export const apiSlice = createApi({
         phoneNo: string;
       }
     >({
-      query: ({ phoneNo, payload }) => ({
-        url: `property/admin/add?phoneNo=${phoneNo}`,
-        method: "POST",
-        body: payload,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }),
+      query: ({ phoneNo, payload }) => {
+        const rawPhoneNo = safeDecode(phoneNo);
+        return {
+          url: "property/admin/add",
+          params: { phoneNo: rawPhoneNo },
+          method: "POST",
+          body: payload,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+      },
       invalidatesTags: (_r, _e, { phoneNo }) =>
         [{ type: "UserDetail", id: phoneNo }, ...listTag("Users")] as const,
     }),
@@ -270,14 +274,18 @@ export const apiSlice = createApi({
         phoneNo: string;
       }
     >({
-      query: ({ phoneNo, payload }) => ({
-        url: `property/admin/update?phoneNo=${phoneNo}`,
-        method: "PUT",
-        body: payload,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }),
+      query: ({ phoneNo, payload }) => {
+        const rawPhoneNo = safeDecode(phoneNo);
+        return {
+          url: "property/admin/update",
+          params: { phoneNo: rawPhoneNo },
+          method: "PUT",
+          body: payload,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+      },
     }),
 
     getProperties: builder.query<
@@ -403,13 +411,17 @@ export const apiSlice = createApi({
         phoneNo: string;
       }
     >({
-      query: ({ connectCount, phoneNo }) => ({
-        url: `/admin/add-connects?connectCount=${connectCount}&phoneNo=${phoneNo}`,
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }),
+      query: ({ connectCount, phoneNo }) => {
+        const rawPhoneNo = safeDecode(phoneNo).trim();
+        return {
+          url: "/admin/add-connects",
+          params: { connectCount: connectCount, phoneNo: rawPhoneNo },
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+      },
     }),
   }),
 });

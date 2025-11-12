@@ -40,7 +40,6 @@ const ListPropertyPage = () => {
     <div className="flex flex-col h-[calc(100vh-4rem)] items-center justify-center">
       <div className="border border-red-500 rounded-xl p-6 text-lg w-1/2">
         <PropertyTypeOptions
-          isMobile={false}
           onNext={handlePostListingClick}
           onBack={handleBack}
         />

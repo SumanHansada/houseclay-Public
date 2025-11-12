@@ -71,115 +71,16 @@ interface FlatmateDetailsFormProps {
   disabled: boolean;
 }
 
-const flatmateSchema = Yup.object().shape({
-  flatmateDetails: Yup.object().shape({
-    rent: Yup.string()
-      .required("Rent is required")
-      .test(
-        "is-greater-than-zero",
-        "Rent must be greater than zero",
-        (value) => parseFloat(value || "0") > 0,
-      ),
-    maintenanceCharges: Yup.string()
-      .required("Maintenance charges is required")
-      .test(
-        "is-greater-than-zero",
-        "Maintenance charges must be greater than zero",
-        (value) => parseFloat(value || "0") > 0,
-      ),
-    depositCharges: Yup.string()
-      .required("Deposit is required")
-      .test(
-        "is-greater-than-zero",
-        "Deposit must be greater than zero",
-        (value) => parseFloat(value || "0") > 0,
-      ),
-    availableFrom: Yup.string().required("Available from is required"),
-    furnishing: Yup.string().required("Furnishing is required"),
-    waterSupply: Yup.string().required("Water supply is required"),
-    powerBackup: Yup.string().required("Power backup is required"),
-    parking: Yup.string().required("Parking is required"),
-    nonVegAllowed: Yup.boolean().required("Non veg allowed is required"),
-    tenantType: Yup.string().required("Preferred tenant is required"),
-    attachedBathroom: Yup.boolean().required("Attached bathroom is required"),
-    attachedBalcony: Yup.boolean().required("Attached balcony is required"),
-    smokingPreference: Yup.string().required("Smoking preference is required"),
-    drinkingPreference: Yup.string().required(
-      "Drinking preference is required",
-    ),
-    amenities: Yup.array().of(Yup.string()).required("Amenities are required"),
-  }),
-});
-
 const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
   disabled,
 }) => {
-  const { values, errors, touched, setFieldError, setErrors } =
-    useFormikContext<FormValues>();
-  const propertyCategory = useSelector(
-    (state: RootState) => state.editProperty.propertyCategory,
-  );
-  const formState = useSelector((state: RootState) => state.editProperty.form);
-  const isFormValid = formState?.isValid;
-  const dispatch = useDispatch();
+  const { errors, touched } = useFormikContext<FormValues>();
 
   // Helper function to safely access optional fields
   const flatmateDetailsErrors = getFlatmateDetailsErrors(errors);
   const flatmateDetailsTouched = getFlatmateDetailsTouched(touched);
 
-  const flatmateDetailsString = JSON.stringify(values.flatmateDetails);
-
-  console.log("<-- FlatmateDetails (Form 3) - Flatmate -->");
-
-  useEffect(() => {
-    const validateAndDispatch = async () => {
-      try {
-        await flatmateSchema.validate(values, {
-          abortEarly: false,
-          context: { propertyCategory },
-        });
-        // Clear any previous errors
-        setErrors({});
-        // Set form data in the store
-        if (values.flatmateDetails) {
-          dispatch(
-            setFlatmateDetails({
-              flatmateDetails: values.flatmateDetails,
-            }),
-          );
-        }
-        // Form is valid
-        if (!isFormValid) {
-          dispatch(setFormValidity({ isValid: true }));
-        }
-      } catch (err) {
-        if (err instanceof Yup.ValidationError) {
-          // Clear any previous errors
-          setErrors({});
-          // Set individual field errors
-          err.inner.forEach((validationError) => {
-            if (validationError.path && validationError.message) {
-              setFieldError(validationError.path, validationError.message);
-            }
-          });
-          // Form is invalid
-          if (isFormValid) {
-            dispatch(setFormValidity({ isValid: false }));
-          }
-        }
-      }
-    };
-
-    validateAndDispatch();
-  }, [
-    flatmateDetailsString,
-    dispatch,
-    propertyCategory,
-    setErrors,
-    setFieldError,
-    isFormValid,
-    values,
-  ]);
+  // console.log("<-- FlatmateDetails (Form 3) - Flatmate -->");
 
   return (
     <div className="space-y-6">

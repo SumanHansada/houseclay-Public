@@ -58,7 +58,7 @@ export default function AdminLogin() {
       className="bg-gray-50 dark:bg-gray-900 h-screen flex justify-center items-center"
       data-testid="page-login"
     >
-      <div className="flex flex-col items-center justify-center mx-auto w-4/5 md:w-3/4 lg:w-2/3 xl:w-1/3">
+      <div className="flex flex-col items-center justify-center mx-auto w-4/5 md:w-3/5 lg:w-1/2 2xl:w-2/5">
         <div className="flex items-center mb-4 text-3xl gap-2">
           <HouseClay />
           <span className="text-red-600 text-lg font-nunito font-bold">

@@ -8,7 +8,7 @@ const loginPath = "/login";
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const token = request.cookies.get("token")?.value;
+  const token = request.cookies.get("admin-token")?.value;
 
   // Handle the root path "/"
   if (pathname === "/") {

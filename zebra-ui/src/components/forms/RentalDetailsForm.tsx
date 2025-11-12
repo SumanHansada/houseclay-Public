@@ -19,9 +19,6 @@ import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
 import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 import WifiIconSvg from "public/icons/amenities/wifi.svg";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import * as Yup from "yup";
 
 import {
   FormCalendarField,
@@ -31,8 +28,6 @@ import {
   FormSelectDropdown,
 } from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
-import { setFormValidity, setRentalDetails } from "@/store/editPropertySlice";
-import { RootState } from "@/store/store";
 import { SvgIcon } from "@/utility-components";
 import {
   getRentalDetailsErrors,
@@ -83,102 +78,14 @@ interface RentalDetailsFormProps {
   disabled: boolean;
 }
 
-const rentalSchema = Yup.object().shape({
-  rentalDetails: Yup.object().shape({
-    rent: Yup.string()
-      .required("Rent is required")
-      .test(
-        "is-greater-than-zero",
-        "Rent must be greater than zero",
-        (value) => parseFloat(value || "0") > 0,
-      ),
-    deposit: Yup.string()
-      .required("Deposit is required")
-      .test(
-        "is-greater-than-zero",
-        "Deposit must be greater than zero",
-        (value) => parseFloat(value || "0") > 0,
-      ),
-    availableFrom: Yup.string().required("Available from is required"),
-    furnishing: Yup.string().required("Furnishing is required"),
-    preferredTenants: Yup.array()
-      .of(Yup.string())
-      .required("Preferred tenant is required")
-      .min(1, "Select at least one preferred tenant"),
-    waterSupply: Yup.string().required("Water supply is required"),
-    powerBackup: Yup.string().required("Power backup is required"),
-    parking: Yup.string().required("Parking is required"),
-    nonVegAllowed: Yup.boolean().required("Non veg allowed is required"),
-  }),
-});
-
 const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
-  const { values, errors, touched, setFieldError, setErrors } =
-    useFormikContext<FormValues>();
-  const propertyCategory = useSelector(
-    (state: RootState) => state.editProperty.propertyCategory,
-  );
-  const formState = useSelector((state: RootState) => state.editProperty.form);
-  const isFormValid = formState?.isValid;
-  const dispatch = useDispatch();
+  const { errors, touched } = useFormikContext<FormValues>();
 
   // Helper function to safely access optional fields
   const rentalDetailsErrors = getRentalDetailsErrors(errors);
   const rentalDetailsTouched = getRentalDetailsTouched(touched);
 
-  const rentalDetailsString = JSON.stringify(values.rentalDetails);
-
-  console.log("<-- RentalDetails (Form 3) - Rent -->");
-
-  useEffect(() => {
-    const validateAndDispatch = async () => {
-      try {
-        await rentalSchema.validate(values, {
-          abortEarly: false,
-          context: { propertyCategory },
-        });
-        // Clear any previous errors
-        setErrors({});
-        // Set form data in the store
-        if (values.rentalDetails) {
-          dispatch(
-            setRentalDetails({
-              rentalDetails: values.rentalDetails,
-            }),
-          );
-        }
-        // Form is valid
-        if (!isFormValid) {
-          dispatch(setFormValidity({ isValid: true }));
-        }
-      } catch (err) {
-        if (err instanceof Yup.ValidationError) {
-          // Clear any previous errors
-          setErrors({});
-          // Set individual field errors
-          err.inner.forEach((validationError) => {
-            if (validationError.path && validationError.message) {
-              setFieldError(validationError.path, validationError.message);
-            }
-          });
-          // Form is invalid
-          if (isFormValid) {
-            dispatch(setFormValidity({ isValid: false }));
-          }
-        }
-      }
-    };
-
-    validateAndDispatch();
-  }, [
-    rentalDetailsString,
-    dispatch,
-    propertyCategory,
-    setErrors,
-    setFieldError,
-    isFormValid,
-    values,
-  ]);
+  // console.log("<-- RentalDetails (Form 3) - Rent -->");
 
   return (
     <div className="space-y-6">

@@ -4,8 +4,6 @@ import { useFormikContext } from "formik";
 import { MapPin } from "lucide-react";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import * as Yup from "yup";
 
 import {
   FormPlacesAutocomplete,
@@ -13,8 +11,6 @@ import {
   FormTextField,
 } from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
-import { setFormValidity, setLocalityDetails } from "@/store/editPropertySlice";
-import { RootState } from "@/store/store";
 import { GoogleMaps } from "@/utility-components";
 import {
   getLocalityDetailsErrors,
@@ -25,35 +21,17 @@ interface LocalityDetailsFormProps {
   disabled: boolean;
 }
 
-const localitySchema = Yup.object().shape({
-  localityDetails: Yup.object().shape({
-    city: Yup.string().required("City is required"),
-    locationOrSocietyName: Yup.string().required("Location is required"),
-    latitude: Yup.number()
-      .required("Latitude is required")
-      .min(-90, "Latitude must be greater than or equal to -90")
-      .max(90, "Latitude must be less than or equal to 90"),
-    longitude: Yup.number()
-      .required("Longitude is required")
-      .min(-180, "Longitude must be greater than or equal to -180")
-      .max(180, "Longitude must be less than or equal to 180"),
-  }),
-});
-
 const LocalityDetailsForm: React.FC<LocalityDetailsFormProps> = ({
   disabled,
 }) => {
-  const { values, errors, touched, setFieldError, setErrors, setFieldValue } =
+  const { values, errors, touched, setFieldValue } =
     useFormikContext<FormValues>();
-  const formState = useSelector((state: RootState) => state.editProperty.form);
-  const isFormValid = formState?.isValid;
-  const dispatch = useDispatch();
 
   // Get locality details errors and touched states
   const localityDetailsErrors = getLocalityDetailsErrors(errors);
   const localityDetailsTouched = getLocalityDetailsTouched(touched);
 
-  console.log("<-- LocalityDetails (Form 2) -->");
+  // console.log("<-- LocalityDetails (Form 2) -->");
 
   const onLocationSelect = (location: {
     latitude: number;
@@ -90,7 +68,7 @@ const LocalityDetailsForm: React.FC<LocalityDetailsFormProps> = ({
     }
   };
 
-  const localityDetailsString = JSON.stringify(values.localityDetails);
+  // const localityDetailsString = JSON.stringify(values.localityDetails);
 
   // Set default city to Bengaluru when component mounts
   useEffect(() => {
@@ -99,54 +77,6 @@ const LocalityDetailsForm: React.FC<LocalityDetailsFormProps> = ({
     }
   }, [setFieldValue, values.localityDetails?.city]);
 
-  useEffect(() => {
-    const validateAndDispatch = async () => {
-      try {
-        // Only validate if localityDetails exists
-        if (values.localityDetails) {
-          await localitySchema.validate(values, { abortEarly: false });
-          // Clear any previous errors
-          setErrors({});
-          // Set form data in the store
-          dispatch(
-            setLocalityDetails({
-              localityDetails: values.localityDetails,
-            }),
-          );
-          // Form is valid
-          if (!isFormValid) {
-            dispatch(setFormValidity({ isValid: true }));
-          }
-        }
-      } catch (err) {
-        if (err instanceof Yup.ValidationError) {
-          // Clear any previous errors
-          setErrors({});
-          // Set individual field errors
-          err.inner.forEach((validationError) => {
-            if (validationError.path && validationError.message) {
-              setFieldError(validationError.path, validationError.message);
-            }
-          });
-          // Form is invalid
-          if (isFormValid) {
-            dispatch(setFormValidity({ isValid: false }));
-          }
-        }
-      }
-    };
-
-    validateAndDispatch();
-  }, [
-    localityDetailsString,
-    dispatch,
-    setErrors,
-    setFieldError,
-    isFormValid,
-    values,
-  ]);
-
-  // Extract city value for dependency array
   const selectedCity = values.localityDetails?.city || "";
 
   useEffect(() => {

@@ -1,7 +1,4 @@
 import { useFormikContext } from "formik";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import * as Yup from "yup";
 
 import {
   FormSelectDropdown,
@@ -9,8 +6,6 @@ import {
   FormTextField,
 } from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
-import { setFormValidity, setPropertyDetails } from "@/store/editPropertySlice";
-import { RootState } from "@/store/store";
 import {
   getPropertyDetailsErrors,
   getPropertyDetailsTouched,
@@ -20,102 +15,16 @@ interface PropertyDetailsRentFormProps {
   disabled: boolean;
 }
 
-const propertySchema = Yup.object({
-  propertyDetails: Yup.object({
-    propertyType: Yup.string().required("Property type is required"),
-    builtUpArea: Yup.number()
-      .required("Built up area is required")
-      .positive("Area must be positive"),
-    facing: Yup.string().required("Facing is required"),
-    bhkType: Yup.string().required("BHK type is required"),
-    ownershipType: Yup.string().required("Ownership type is required"),
-    propertyAge: Yup.string().required("Property age is required"),
-    floor: Yup.number()
-      .required("Floor is required")
-      .test(
-        "floor-less-than-total",
-        "Floor cannot exceed total floors",
-        function (value) {
-          const { totalFloors } = this.parent;
-          if (!value || !totalFloors) return true;
-          return value <= totalFloors;
-        },
-      ),
-    totalFloors: Yup.number().required("Total floors is required"),
-    floorType: Yup.string().required("Floor type is required"),
-    bathrooms: Yup.number().required("Bathroom is required"),
-  }),
-});
-
 const PropertyDetailsRentForm: React.FC<PropertyDetailsRentFormProps> = ({
   disabled,
 }) => {
-  const { values, errors, touched, setFieldError, setErrors } =
-    useFormikContext<FormValues>();
-  const propertyCategory = useSelector(
-    (state: RootState) => state.listProperty.propertyCategory,
-  );
-  const formState = useSelector((state: RootState) => state.listProperty.form);
-  const isFormValid = formState?.isValid;
-  const dispatch = useDispatch();
+  const { errors, touched } = useFormikContext<FormValues>();
 
   // Helper function to safely access property details errors and touched
   const propertyDetailsErrors = getPropertyDetailsErrors(errors);
   const propertyDetailsTouched = getPropertyDetailsTouched(touched);
 
-  const propertyDetailsString = JSON.stringify(values.propertyDetails);
-
-  console.log("<-- PropertyDetails (Form 1) - Rent -->");
-
-  useEffect(() => {
-    const validateAndDispatch = async () => {
-      try {
-        await propertySchema.validate(values, {
-          abortEarly: false,
-          context: { propertyCategory },
-        });
-        // Clear any previous errors
-        setErrors({});
-        // Set form data in the store
-        if (values.propertyDetails) {
-          dispatch(
-            setPropertyDetails({
-              propertyDetails: values.propertyDetails,
-            }),
-          );
-        }
-        // Form is valid
-        if (!isFormValid) {
-          dispatch(setFormValidity({ isValid: true }));
-        }
-      } catch (err) {
-        if (err instanceof Yup.ValidationError) {
-          // Clear any previous errors
-          setErrors({});
-          // Set individual field errors
-          err.inner.forEach((validationError) => {
-            if (validationError.path && validationError.message) {
-              setFieldError(validationError.path, validationError.message);
-            }
-          });
-          // Form is invalid
-          if (isFormValid) {
-            dispatch(setFormValidity({ isValid: false }));
-          }
-        }
-      }
-    };
-
-    validateAndDispatch();
-  }, [
-    propertyDetailsString,
-    dispatch,
-    propertyCategory,
-    setErrors,
-    setFieldError,
-    isFormValid,
-    values,
-  ]);
+  // console.log("<-- PropertyDetails (Form 1) - Rent -->");
 
   return (
     <div className="space-y-6">

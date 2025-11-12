@@ -177,7 +177,7 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
       />
 
       {/* SECTION – SCORE PROPERTY (required) */}
-      <div className="mt-3">
+      <div className="my-4">
         <h2 className="text-lg font-semibold mb-2">Score Property</h2>
         <fieldset
           className="grid grid-cols-5 gap-2"
@@ -203,7 +203,7 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
           ))}
         </fieldset>
         <p className="mt-2 text-sm text-neutral-600">
-          Selected: {score > 0 ? score : "None"} (required)
+          Score (required): {score > 0 ? score : "None"}
         </p>
       </div>
 
