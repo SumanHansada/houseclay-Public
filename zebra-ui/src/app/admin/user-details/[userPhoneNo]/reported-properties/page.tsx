@@ -2,7 +2,7 @@
 import { useParams, useRouter } from "next/navigation";
 
 import { Column } from "@/components/DataTable";
-import { PropertyInfo } from "@/interfaces/Property";
+import { PropertyInfo } from "@/interfaces/PropertyInfo";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 import {
   buildPropertyColumns,

@@ -9,7 +9,10 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { VerifyPropertyTabEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
+import DeletePhotosDialog from "@/dialogs/delete-photos-dialog";
+import UploadPhotosDialog from "@/dialogs/upload-photos-dialog";
 import { transformPropertyFormToFormValues } from "@/interfaces/FormTransformers";
+import { useDialog } from "@/providers/DialogContextProvider";
 import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 import {
   setFormData,
@@ -37,6 +40,7 @@ export default function VerifyPropertyLayout({
   const router = useRouter();
   const currentTabFromUrl = useSelectedLayoutSegment();
   const dispatch = useDispatch();
+  const { isDialogOpen } = useDialog();
 
   const propertyCategory = useSelector(
     (state: RootState) => state.editProperty.propertyCategory,
@@ -51,7 +55,7 @@ export default function VerifyPropertyLayout({
     { propertyID: propertyID },
     { skip: !propertyID, refetchOnMountOrArgChange: true },
   );
-  console.log("propertyDetails: ", propertyDetails);
+  // console.log("propertyDetails: ", propertyDetails);
 
   // Populate form data when existing property data is loaded
   useEffect(() => {
@@ -145,6 +149,16 @@ export default function VerifyPropertyLayout({
         </TabHeader>
       </Tabs>
       <div className="flex-1 overflow-auto">{children}</div>
+
+      {/* Upload Dialog */}
+      {isDialogOpen("upload-photos-dialog") && (
+        <UploadPhotosDialog id="upload-photos-dialog" />
+      )}
+
+      {/* Delete Dialog */}
+      {isDialogOpen("delete-photos-dialog") && (
+        <DeletePhotosDialog id="delete-photos-dialog" />
+      )}
     </div>
   );
 }

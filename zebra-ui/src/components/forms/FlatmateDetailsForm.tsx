@@ -15,9 +15,6 @@ import PoolIconSvg from "public/icons/amenities/pool.svg";
 import PoolTableIconSvg from "public/icons/amenities/pool-table.svg";
 import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import * as Yup from "yup";
 
 import {
   FormCalendarField,
@@ -27,8 +24,6 @@ import {
   FormSelectDropdown,
 } from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
-import { setFlatmateDetails, setFormValidity } from "@/store/editPropertySlice";
-import { RootState } from "@/store/store";
 import { SvgIcon } from "@/utility-components";
 import {
   getFlatmateDetailsErrors,

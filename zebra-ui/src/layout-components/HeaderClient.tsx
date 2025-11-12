@@ -3,15 +3,13 @@
 import { ChevronDown, UserRound } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import HouseClaySvg from "public/icons/houseclay.svg";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import ActionMenu from "@/components/ActionMenu";
 import { useAdminLogout } from "@/hooks/useAdminLogout";
 import { RootState } from "@/store/store";
-
-const HouseClay = HouseClaySvg as React.FC<React.SVGProps<SVGSVGElement>>;
+import { SvgIcon } from "@/utility-components";
 
 const Header: React.FC = () => {
   const { isAuthenticated } = useSelector(
@@ -31,9 +29,9 @@ const Header: React.FC = () => {
       {/* Logo and App Name */}
       <div className="flex items-center gap-2">
         <Link href="/" className="flex items-center gap-1">
-          <HouseClay />
+          <SvgIcon name="houseclay" iconSize="small" size={25} />
           <span className="text-red-600 text-lg font-nunito font-bold">
-            ZEBRA | HouseClay
+            ZEBRA | Houseclay
           </span>
         </Link>
       </div>

@@ -7,7 +7,7 @@ import AsyncFallback from "@/components/AsyncFallback";
 import { DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/PaginationFooter";
 import { SearchAndFilterBar } from "@/components/SearchAndFilterBar";
-import { PropertyInfo } from "@/interfaces/Property";
+import { PropertyInfo } from "@/interfaces/PropertyInfo";
 import { useGetPropertiesQuery } from "@/store/apiSlice";
 import {
   buildPropertyColumns,

@@ -68,8 +68,6 @@ const LocalityDetailsForm: React.FC<LocalityDetailsFormProps> = ({
     }
   };
 
-  // const localityDetailsString = JSON.stringify(values.localityDetails);
-
   // Set default city to Bengaluru when component mounts
   useEffect(() => {
     if (!values.localityDetails?.city) {

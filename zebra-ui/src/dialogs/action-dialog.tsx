@@ -70,7 +70,7 @@ export const ActionDialog: React.FC<ActionDialogProps> = ({
       onClose={() => closeDialog(id)}
     >
       <DialogHeader>
-        <div className="px-6 py-3 flex justify-between items-center w-full">
+        <div className="flex justify-between items-center w-full">
           <h2 className="text-2xl font-semibold">{title}</h2>
           <X className="cursor-pointer" onClick={() => closeDialog(id)} />
         </div>
@@ -92,7 +92,7 @@ export const ActionDialog: React.FC<ActionDialogProps> = ({
       </DialogContent>
 
       <DialogFooter>
-        <div className="flex justify-end gap-4 px-6 py-3">
+        <div className="w-full flex justify-end gap-4">
           <button
             onClick={() => closeDialog(id)}
             className="px-4 py-2 border rounded-lg text-gray-700"

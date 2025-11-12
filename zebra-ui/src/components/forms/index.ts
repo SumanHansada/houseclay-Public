@@ -10,5 +10,4 @@ export { default as PropertyDetailsRentForm } from "./PropertyDetailsRentForm";
 export { default as PropertyDetailsResaleForm } from "./PropertyDetailsResaleForm";
 export { default as RentalDetailsForm } from "./RentalDetailsForm";
 export { default as ResaleDetailsForm } from "./ResaleDetailsForm";
-
 export { default as createValidationSchema } from "./ValidationSchema";

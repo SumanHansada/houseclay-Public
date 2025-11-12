@@ -1,5 +1,6 @@
-import { PropertyCategory } from "@/common/enums";
 import * as Yup from "yup";
+
+import { PropertyCategory } from "@/common/enums";
 
 const createValidationSchema = (propertyCategory: PropertyCategory) => {
   const baseSchema = {

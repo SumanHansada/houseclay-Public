@@ -8,10 +8,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { PropertyCategory } from "@/common/enums";
 import { extractS3KeyFromUrl } from "@/common/utils";
 import {
-  createValidationSchema,
   AdditionalInfoFlatmateForm,
   AdditionalInfoRentForm,
   AdditionalInfoResaleForm,
+  createValidationSchema,
   FlatmateDetailsForm,
   GalleryForm,
   LocalityDetailsForm,
@@ -34,11 +34,13 @@ import {
 } from "@/store/apiSlice";
 import { resetDelete } from "@/store/deleteFromS3Slice";
 import {
+  setDeletedImages,
   setDeleteFileURLMap,
   setFileURLMap,
   setFormData,
+  setPropertyImages,
 } from "@/store/editPropertySlice";
-import { RootState } from "@/store/store";
+import { RootState, store } from "@/store/store";
 import { resetUpload } from "@/store/uploadToS3Slice";
 
 type FinalizationStage = "idle" | "deleting" | "uploading" | "updating";
@@ -59,18 +61,6 @@ export default function DetailsPage() {
   const uploadState = useSelector((state: RootState) => state.uploadToS3);
   const deleteState = useSelector((state: RootState) => state.deleteFromS3);
 
-  const propertyImagesS3Url = useSelector(
-    (state: RootState) => state.editProperty.propertyImagesS3Url,
-  );
-  const propertyImages = useSelector(
-    (state: RootState) => state.editProperty.propertyImages,
-  );
-  const deletedImages = useSelector(
-    (state: RootState) => state.editProperty.deletedImages,
-  );
-  const deletedImagesS3Url = useSelector(
-    (state: RootState) => state.editProperty.deletedImagesS3Url,
-  );
   const formState = useSelector((state: RootState) => state.editProperty.form);
   const propertyCategory = useSelector(
     (state: RootState) => state.editProperty.propertyCategory,
@@ -81,8 +71,6 @@ export default function DetailsPage() {
   const userPhoneNo = useSelector(
     (state: RootState) => state.propertyDetails.propertyDetails.owner?.phoneNo,
   );
-
-  // const isFormValid = formState?.isValid;
 
   // Combined Schema
   const validationSchema = createValidationSchema(propertyCategory);
@@ -104,7 +92,7 @@ export default function DetailsPage() {
   };
 
   const initialValues = getInitialValues();
-  console.log("<-- Details Page (All Forms) -->");
+  // console.log("<-- Details Page (All Forms) -->");
 
   // Ref to store submitted values for chaining
   const submittedValuesRef = useRef<FormValues | null>(null);
@@ -123,8 +111,11 @@ export default function DetailsPage() {
   });
 
   // Build queues
-  const buildUploadQueue = () => {
-    const photos = propertyImages || [];
+  const buildUploadQueue = (
+    propertyImagesParam: PropertyImage[],
+    propertyImagesS3UrlParam: Record<string, string> | undefined,
+  ) => {
+    const photos = propertyImagesParam || [];
 
     return photos
       .filter((propertyImage: PropertyImage) =>
@@ -133,8 +124,8 @@ export default function DetailsPage() {
       .map((propertyImage: PropertyImage) => {
         const fileName = propertyImage.file.name;
         const mappedUrl =
-          propertyImagesS3Url?.[fileName] ??
-          propertyImagesS3Url?.[encodeURIComponent(fileName)];
+          propertyImagesS3UrlParam?.[fileName] ??
+          propertyImagesS3UrlParam?.[encodeURIComponent(fileName)];
 
         if (!mappedUrl) {
           return null;
@@ -159,15 +150,18 @@ export default function DetailsPage() {
       );
   };
 
-  const buildDeleteQueue = () => {
-    const deletedPhotos = deletedImages || [];
+  const buildDeleteQueue = (
+    deletedImagesParam: PropertyImage[],
+    deletedImagesS3UrlParam: Record<string, string> | undefined,
+  ) => {
+    const deletedPhotos = deletedImagesParam || [];
 
     return deletedPhotos
       .map((propertyImage: PropertyImage) => {
         const fileName = propertyImage.file.name;
         const mappedUrl =
-          deletedImagesS3Url?.[fileName] ??
-          deletedImagesS3Url?.[encodeURIComponent(fileName)];
+          deletedImagesS3UrlParam?.[fileName] ??
+          deletedImagesS3UrlParam?.[encodeURIComponent(fileName)];
 
         if (!mappedUrl) {
           return null;
@@ -189,9 +183,9 @@ export default function DetailsPage() {
   };
 
   // Presigned Helpers
-  const getPresignedPhotoUrls = async () => {
+  const getPresignedPhotoUrls = async (imagesParam: PropertyImage[]) => {
     // Only request pre-signed URLs for new images (blob URLs)
-    const newImages = propertyImages.filter((propertyImage: PropertyImage) =>
+    const newImages = imagesParam.filter((propertyImage: PropertyImage) =>
       propertyImage.url.startsWith("blob:"),
     );
 
@@ -230,9 +224,9 @@ export default function DetailsPage() {
     );
   };
 
-  const getDeletePresignedPhotoUrls = async () => {
+  const getDeletePresignedPhotoUrls = async (imagesParam: PropertyImage[]) => {
     // Request delete pre-signed URLs for deleted images
-    const deletedPhotos = deletedImages || [];
+    const deletedPhotos = imagesParam || [];
     if (deletedPhotos.length === 0) {
       return;
     }
@@ -264,10 +258,6 @@ export default function DetailsPage() {
       return;
     }
 
-    if (!presignedUrlsResponse) {
-      console.error("No delete presigned URLs received");
-      return;
-    }
     dispatch(
       setDeleteFileURLMap({
         data: presignedUrlsResponse.fileURLMap,
@@ -277,7 +267,11 @@ export default function DetailsPage() {
 
   // Upload/Delete functions
   const uploadFilesToS3 = async () => {
-    const photosToUpload = buildUploadQueue();
+    const latestEditProperty = store.getState().editProperty;
+    const photosToUpload = buildUploadQueue(
+      latestEditProperty.propertyImages,
+      latestEditProperty.propertyImagesS3Url,
+    );
 
     if (photosToUpload.length === 0) {
       return;
@@ -292,7 +286,11 @@ export default function DetailsPage() {
   };
 
   const deleteFilesFromS3 = async () => {
-    const photosToDelete = buildDeleteQueue();
+    const latestEditProperty = store.getState().editProperty;
+    const photosToDelete = buildDeleteQueue(
+      latestEditProperty.deletedImages,
+      latestEditProperty.deletedImagesS3Url,
+    );
 
     if (photosToDelete.length === 0) {
       return;
@@ -322,6 +320,11 @@ export default function DetailsPage() {
         propertyCategory,
       );
 
+      // Use latest from store for images
+      const latestEditProperty = store.getState().editProperty;
+      const latestPropertyImages = latestEditProperty.propertyImages;
+      const latestPropertyImagesS3Url = latestEditProperty.propertyImagesS3Url;
+
       // Extract S3 image keys from propertyForm.images
       // For new images (blob URLs), they should have been uploaded and the S3 URL should be in propertyImagesS3Url
       // For existing images (S3 URLs), extract the key directly from the URL
@@ -332,10 +335,14 @@ export default function DetailsPage() {
             return extractS3KeyFromUrl(url) || "";
           }
           // If it's a blob URL, find the S3 URL from propertyImagesS3Url
-          const matchingPhoto = propertyImages.find((img) => img.url === url);
+          const matchingPhoto = latestPropertyImages.find(
+            (img) => img.url === url,
+          );
           if (matchingPhoto) {
             const s3Url =
-              propertyImagesS3Url[encodeURIComponent(matchingPhoto.file.name)];
+              latestPropertyImagesS3Url[
+                encodeURIComponent(matchingPhoto.file.name)
+              ];
             return s3Url ? extractS3KeyFromUrl(s3Url) || "" : "";
           }
           return "";
@@ -343,7 +350,7 @@ export default function DetailsPage() {
         .filter((key) => key !== ""); // Remove empty keys
 
       // Add cover image information if needed
-      const coverImage = propertyImages.filter((image) => image.isCover);
+      const coverImage = latestPropertyImages.filter((image) => image.isCover);
 
       // Find the cover image S3 key
       let coverImageS3Key = "";
@@ -353,7 +360,9 @@ export default function DetailsPage() {
           coverImageS3Key = extractS3KeyFromUrl(coverImageUrl) || "";
         } else if (coverImageUrl.startsWith("blob:")) {
           const s3Url =
-            propertyImagesS3Url[encodeURIComponent(coverImage[0].file.name)];
+            latestPropertyImagesS3Url[
+              encodeURIComponent(coverImage[0].file.name)
+            ];
           coverImageS3Key = s3Url ? extractS3KeyFromUrl(s3Url) || "" : "";
         }
       }
@@ -373,8 +382,6 @@ export default function DetailsPage() {
         }).unwrap();
       }
       router.push("/admin/view-all-properties");
-
-      // Don't open success dialog here anymore - it will be opened automatically after upload completes
     } catch (error) {
       console.error("Error updating property:", error);
     }
@@ -454,20 +461,49 @@ export default function DetailsPage() {
   }, [finalizationStage, handleUpdateProperty]);
 
   // Centralized submit handler
-
   const handleSaveChanges = async (formikValues: FormValues) => {
+    // Detect net deleted images by comparing initial vs final
+    const initialImages = initialValues.images || [];
+    const finalImages = formikValues.images || [];
+    const netDeleted = initialImages.filter(
+      (initialImg) =>
+        !finalImages.some((finalImg) => finalImg.id === initialImg.id),
+    );
+
+    // Update Redux states
+    dispatch(setDeletedImages({ deletedImages: netDeleted }));
+    dispatch(setPropertyImages({ propertyImages: finalImages }));
+
+    // Now get latest from store
+    const latestEditPropertyAfterDispatch = store.getState().editProperty;
+    const latestPropertyImages = latestEditPropertyAfterDispatch.propertyImages;
+    const latestDeletedImages = latestEditPropertyAfterDispatch.deletedImages;
+
     // 1. Sync Formik -> Redux (one-time)
     dispatch(setFormData({ data: formikValues }));
 
     submittedValuesRef.current = formikValues;
 
     // 2. Handle presigned URLs
-    await getPresignedPhotoUrls();
-    await getDeletePresignedPhotoUrls();
+    await getPresignedPhotoUrls(latestPropertyImages);
+    await getDeletePresignedPhotoUrls(latestDeletedImages);
+
+    // Now get latest S3 URLs after presigned dispatches
+    const latestEditPropertyAfterPresigned = store.getState().editProperty;
+    const latestPropertyImagesS3Url =
+      latestEditPropertyAfterPresigned.propertyImagesS3Url;
+    const latestDeletedImagesS3Url =
+      latestEditPropertyAfterPresigned.deletedImagesS3Url;
 
     // 3. Plan & execute finalization
-    const pendingDeletes = buildDeleteQueue();
-    const pendingUploads = buildUploadQueue();
+    const pendingDeletes = buildDeleteQueue(
+      latestDeletedImages,
+      latestDeletedImagesS3Url,
+    );
+    const pendingUploads = buildUploadQueue(
+      latestPropertyImages,
+      latestPropertyImagesS3Url,
+    );
     const hasPendingDeletes = pendingDeletes.length > 0;
     const hasPendingUploads = pendingUploads.length > 0;
 
@@ -496,22 +532,6 @@ export default function DetailsPage() {
     finalizationStage === "deleting" ||
     finalizationStage === "uploading" ||
     finalizationStage === "updating";
-
-  useEffect(() => {
-    console.log("isUpdatingProperty: ", isUpdatingProperty);
-    console.log(
-      "finalizationStage === deleting: ",
-      finalizationStage === "deleting",
-    );
-    console.log(
-      "finalizationStage === uploading: ",
-      finalizationStage === "uploading",
-    );
-    console.log(
-      "finalizationStage === updating: ",
-      finalizationStage === "updating",
-    );
-  }, [isWorking]);
 
   return (
     <div className="flex flex-col bg-gray-100 h-full overflow-auto">

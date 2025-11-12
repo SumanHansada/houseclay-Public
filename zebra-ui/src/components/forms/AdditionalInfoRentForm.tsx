@@ -22,7 +22,7 @@ const AdditionalInfoRentForm: React.FC<AdditionalInfoRentFormProps> = ({
   const additionalInfoErrors = getAdditionalInfoErrors(errors);
   const additionalInfoTouched = getAdditionalInfoTouched(touched);
 
-  console.log("<-- AdditionalInfoDetails (Form 5) - Rent -->");
+  // console.log("<-- AdditionalInfoDetails (Form 5) - Rent -->");
 
   return (
     <div className="space-y-6">
