@@ -73,6 +73,7 @@ const AdditionalInfoResaleForm: React.FC<AdditionalInfoResaleFormProps> = ({
                   label: "No",
                 },
               ]}
+              optionsType="boolean"
               required={true}
               placeholder="Select Sale Deed Certificate"
               aria-describedby={
@@ -101,6 +102,7 @@ const AdditionalInfoResaleForm: React.FC<AdditionalInfoResaleFormProps> = ({
                   label: "No",
                 },
               ]}
+              optionsType="boolean"
               required={true}
               placeholder="Select Property Tax Status"
               aria-describedby={

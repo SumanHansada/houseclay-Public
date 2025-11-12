@@ -212,6 +212,7 @@ const FlatmatePropertyDetailsClient: React.FC = () => {
               { value: 5, label: "5" },
               { value: 6, label: "6" },
             ]}
+            optionsType="number"
             required
             placeholder="Select bathrooms"
             aria-describedby={
@@ -232,6 +233,7 @@ const FlatmatePropertyDetailsClient: React.FC = () => {
                 label: value.toString(),
               }),
             )}
+            optionsType="number"
             required
             placeholder="Select total floors"
             aria-describedby={
@@ -253,6 +255,7 @@ const FlatmatePropertyDetailsClient: React.FC = () => {
                 label: value.toString(),
               })),
             ]}
+            optionsType="number"
             required
             placeholder="Select floor"
             aria-describedby={

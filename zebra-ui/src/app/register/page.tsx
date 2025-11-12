@@ -105,7 +105,7 @@ export default function AdminRegister() {
                     name="name"
                     label="Name"
                     placeholder="Enter your full name"
-                    dataType="text"
+                    dataType="string"
                     required
                   />
 
@@ -113,7 +113,7 @@ export default function AdminRegister() {
                     name="username"
                     label="Username"
                     placeholder="Choose a username"
-                    dataType="text"
+                    dataType="string"
                     required
                   />
 
@@ -122,7 +122,7 @@ export default function AdminRegister() {
                     label="Password"
                     placeholder="••••••••"
                     type="password"
-                    dataType="text"
+                    dataType="string"
                     required
                   />
 
@@ -131,7 +131,7 @@ export default function AdminRegister() {
                     label="Confirm Password"
                     placeholder="••••••••"
                     type="password"
-                    dataType="text"
+                    dataType="string"
                     required
                   />
 

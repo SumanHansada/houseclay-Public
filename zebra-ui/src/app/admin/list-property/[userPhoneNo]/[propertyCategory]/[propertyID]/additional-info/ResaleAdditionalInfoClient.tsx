@@ -140,6 +140,7 @@ const ResaleAdditionalInfoClient = () => {
                   label: "No",
                 },
               ]}
+              optionsType="boolean"
               required={true}
               placeholder="Select Sale Deed Certificate"
               aria-describedby={
@@ -167,6 +168,7 @@ const ResaleAdditionalInfoClient = () => {
                   label: "No",
                 },
               ]}
+              optionsType="boolean"
               required={true}
               placeholder="Select Property Tax Status"
               aria-describedby={

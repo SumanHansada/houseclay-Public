@@ -174,6 +174,7 @@ const PropertyDetailsResaleForm: React.FC<PropertyDetailsResaleFormProps> = ({
             value: value,
             label: value.toString(),
           }))}
+          optionsType="number"
           required
           placeholder="Select total floors"
           aria-describedby={
@@ -196,6 +197,7 @@ const PropertyDetailsResaleForm: React.FC<PropertyDetailsResaleFormProps> = ({
               label: value.toString(),
             })),
           ]}
+          optionsType="number"
           required
           placeholder="Select floor"
           aria-describedby={

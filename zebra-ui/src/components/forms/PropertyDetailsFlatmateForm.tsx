@@ -85,6 +85,7 @@ const PropertyDetailsFlatmateForm: React.FC<
             { value: "South-East", label: "South-East" },
             { value: "South-West", label: "South-West" },
           ]}
+          optionsType="string"
           required
           placeholder="Select facing direction"
           aria-describedby={
@@ -131,6 +132,7 @@ const PropertyDetailsFlatmateForm: React.FC<
             { value: 5, label: "5" },
             { value: 6, label: "6" },
           ]}
+          optionsType="number"
           required
           placeholder="Select Bathrooms"
           aria-describedby={
@@ -150,6 +152,7 @@ const PropertyDetailsFlatmateForm: React.FC<
             value: value,
             label: value.toString(),
           }))}
+          optionsType="number"
           required
           placeholder="Select total floors"
           aria-describedby={
@@ -172,6 +175,7 @@ const PropertyDetailsFlatmateForm: React.FC<
               label: value.toString(),
             })),
           ]}
+          optionsType="number"
           required
           placeholder="Select floor"
           aria-describedby={

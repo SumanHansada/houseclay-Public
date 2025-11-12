@@ -85,7 +85,7 @@ export default function AdminLogin() {
                     name="username"
                     label="Username"
                     placeholder="Enter your username"
-                    dataType="text"
+                    dataType="string"
                     required
                     // testId="login-username"
                   />
@@ -95,7 +95,7 @@ export default function AdminLogin() {
                     label="Password"
                     placeholder="••••••••"
                     type="password"
-                    dataType="text"
+                    dataType="string"
                     required
                     // testId="login-password"
                   />

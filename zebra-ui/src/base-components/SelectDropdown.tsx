@@ -34,10 +34,11 @@ interface SelectDropdownProps {
   name: string;
   id: string;
   options: DropdownOption[];
+  optionsType?: "string" | "number" | "boolean";
   required?: boolean;
   placeholder?: string;
   disabled?: boolean;
-  value: string | number | boolean;
+  value: string | number | boolean | undefined;
   onChange: (value: string | number | boolean) => void;
   onBlur?: () => void;
   error?: string;
@@ -60,6 +61,7 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
   name,
   id,
   options,
+  optionsType = "string",
   required = false,
   placeholder = "Select an option",
   disabled = false,
@@ -108,10 +110,60 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
   const selectedOption = options.find((opt) => opt.value === value);
   const displayText = selectedOption ? selectedOption.label : placeholder;
 
+  const normalizeValue = (rawValue: string | number | boolean) => {
+    if (rawValue === "") {
+      return optionsType === "string" ? "" : undefined;
+    }
+
+    if (optionsType === "number") {
+      if (typeof rawValue === "number") {
+        return rawValue;
+      }
+
+      if (typeof rawValue === "string") {
+        const parsedValue = Number(rawValue);
+        return Number.isNaN(parsedValue) ? "" : parsedValue;
+      }
+
+      return rawValue ? 1 : 0;
+    }
+
+    if (optionsType === "boolean") {
+      if (typeof rawValue === "boolean") {
+        return rawValue;
+      }
+
+      if (typeof rawValue === "string") {
+        const lowered = rawValue.toLowerCase();
+        if (lowered === "true") return true;
+        if (lowered === "false") return false;
+      }
+
+      if (typeof rawValue === "number") {
+        if (rawValue === 1) return true;
+        if (rawValue === 0) return false;
+      }
+
+      return Boolean(rawValue);
+    }
+
+    if (typeof rawValue === "string") {
+      return rawValue;
+    }
+
+    return String(rawValue);
+  };
+
   // Function to handle option selection
-  const handleSelect = (value: string | number | boolean) => {
-    onChange(value);
-    setIsOpen(false);
+  const handleSelect = (
+    rawValue: string | number | boolean,
+    shouldCloseDropdown = true,
+  ) => {
+    const normalizedValue = normalizeValue(rawValue);
+    onChange(normalizedValue as string | number | boolean);
+    if (shouldCloseDropdown) {
+      setIsOpen(false);
+    }
   };
 
   // Add keyboard accessibility to the dropdown
@@ -146,7 +198,7 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
     }
 
     if (newIndex !== currentIndex && options[newIndex]) {
-      onChange(options[newIndex].value);
+      handleSelect(options[newIndex].value, false);
     }
   };
 
@@ -198,7 +250,7 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
                     handleSelect("");
                   }}
                   role="option"
-                  aria-selected={value === ""}
+                  aria-selected={value === "" || value === undefined}
                 >
                   {placeholder}
                 </li>

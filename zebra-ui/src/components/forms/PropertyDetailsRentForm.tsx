@@ -129,6 +129,7 @@ const PropertyDetailsRentForm: React.FC<PropertyDetailsRentFormProps> = ({
             { value: 5, label: "5" },
             { value: 6, label: "6" },
           ]}
+          optionsType="number"
           required
           placeholder="Select Bathrooms"
           aria-describedby={
@@ -197,6 +198,7 @@ const PropertyDetailsRentForm: React.FC<PropertyDetailsRentFormProps> = ({
             value: value,
             label: value.toString(),
           }))}
+          optionsType="number"
           required
           placeholder="Select total floors"
           aria-describedby={
@@ -219,6 +221,7 @@ const PropertyDetailsRentForm: React.FC<PropertyDetailsRentFormProps> = ({
               label: value.toString(),
             })),
           ]}
+          optionsType="number"
           required
           placeholder="Select floor"
           aria-describedby={
