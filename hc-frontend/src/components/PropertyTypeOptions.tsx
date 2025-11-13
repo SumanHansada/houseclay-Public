@@ -34,7 +34,7 @@ const PropertyTypeOptions = ({
   const propertyTypes = [
     {
       id: "rent",
-      label: "Rent",
+      label: "Rent out my property",
       icon: <Rent />,
       type: PropertyCategory.RENT,
     },
@@ -46,7 +46,7 @@ const PropertyTypeOptions = ({
     // },
     {
       id: "flatmates",
-      label: "Flatmates",
+      label: "Find a flatmate",
       icon: <Flatmates />,
       type: PropertyCategory.FLATMATE,
     },

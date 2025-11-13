@@ -1,6 +1,6 @@
 "use client";
 
-import { Lightbulb, Mail, Phone, PhoneCall, UserRound } from "lucide-react";
+import { Lightbulb, Mail, Phone, PhoneCall, UserRound, X } from "lucide-react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
@@ -8,6 +8,7 @@ import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useContactOwnerMutation } from "@/store/apiSlice";
 import { setConnectBal } from "@/store/userSlice";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
+import { Button } from "@/base-components";
 
 interface UnlockOwnerDetailsProps {
   onClose: () => void;
@@ -340,24 +341,38 @@ export const UnlockOwnerDetails = ({
   );
 
   return (
-    <div className="flex items-center justify-center h-full bg-white rounded-lg">
+    <>
       {!isMobile && (
-        <div className="relative w-2/5 rounded-l-lg h-[440px] lg:h-[460px] 2xl:h-[480px] overflow-hidden">
-          <ImageWithLoader
-            src="/images/contact-owner.svg"
-            alt="Contact owner"
-            fill
-            className="object-center"
-            sizes="100vw"
-            priority
-          />
+        <div className="relative w-full h-0">
+          <Button
+            variant="secondary"
+            size="custom"
+            className="absolute top-2 right-2 rounded-full p-1"
+            onClick={onClose}
+          >
+            <X size={24} />
+          </Button>
         </div>
       )}
-      <div className="flex-1 h-full">
-        {step === "confirm" && renderConfirm()}
-        {step === "unlocked" && renderUnlocked()}
-        {step === "error" && renderError()}
+      <div className="flex items-center justify-center h-full bg-white rounded-lg">
+        {!isMobile && (
+          <div className="relative w-2/5 rounded-l-lg h-[440px] lg:h-[460px] 2xl:h-[480px] overflow-hidden">
+            <ImageWithLoader
+              src="/images/contact-owner.svg"
+              alt="Contact owner"
+              fill
+              className="object-center"
+              sizes="100vw"
+              priority
+            />
+          </div>
+        )}
+        <div className="flex-1 h-full">
+          {step === "confirm" && renderConfirm()}
+          {step === "unlocked" && renderUnlocked()}
+          {step === "error" && renderError()}
+        </div>
       </div>
-    </div>
+    </>
   );
 };

@@ -157,13 +157,13 @@ const AmenitiesMap = {
   "Swimming Pool": { label: "Swimming Pool", icon: <SwimmingPoolIcon /> },
   "24/7 Power": { label: "24/7 Power", icon: <TwentyFourSevenPowerIcon /> },
   Security: { label: "Security", icon: <SecurityIcon /> },
-  "Parking Space": { label: "Parking Space", icon: <ParkingSpaceIcon /> },
+  "Visitor Parking": { label: "Visitor Parking", icon: <ParkingSpaceIcon /> },
   "Dedicated Workspace": {
     label: "Dedicated Workspace",
     icon: <DedicatedWorkspaceIcon />,
   },
   Wifi: { label: "Wifi", icon: <WifiIcon /> },
-  "BBQ Grill": { label: "BBQ Grill", icon: <BBQGrillIcon /> },
+  // "BBQ Grill": { label: "BBQ Grill", icon: <BBQGrillIcon /> },
   "Pool Table": { label: "Pool Table", icon: <PoolTableIcon /> },
   "First Aid Kit": { label: "First Aid Kit", icon: <FirstAidKitIcon /> },
 };
@@ -296,13 +296,13 @@ export function MyPropertyDetailsClient({
                     activeClassName="text-red-600 md:border-b-2 border-red-500 max-md:border max-md:rounded-lg"
                     inactiveClassName="text-gray-700 hover:text-red-500"
                   />
-                  <Tab
+                  {/* <Tab
                     label="Upgrades"
                     value="upgrades"
                     containerClassName="px-4 py-2 max-md:py-1.5 text-base font-medium max-md:font-normal focus:outline-none"
                     activeClassName="text-red-600 md:border-b-2 border-red-500 max-md:border max-md:rounded-lg"
                     inactiveClassName="text-gray-700 hover:text-red-500"
-                  />
+                  /> */}
                   <Tab
                     label="Prospects"
                     value="prospects"
@@ -887,7 +887,7 @@ export function MyPropertyDetailsClient({
                     </section>
                   )}
                 </TabContent>
-                <TabContent value="upgrades">
+                {/* <TabContent value="upgrades">
                   <section className="py-6 w-full">
                     <h2 className="text-lg font-semibold mb-2">Upgrades</h2>
                     <p className="text-gray-700">
@@ -896,7 +896,7 @@ export function MyPropertyDetailsClient({
                       student who is working to make an app. A life changing app
                     </p>
                   </section>
-                </TabContent>
+                </TabContent> */}
                 <TabContent value="prospects">
                   <section className="py-6">
                     <h2 className="text-lg font-semibold mb-2">Prospects</h2>

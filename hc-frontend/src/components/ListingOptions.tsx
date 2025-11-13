@@ -43,7 +43,7 @@ const ListingOptions = ({ isMobile = false, onNext }: ListingOptionsProps) => {
           id="option-call"
           icon={<SvgIcon iconSize="small" name="call-with-captain" />}
           iconColor="green"
-          title="Get a callback from our captain"
+          title="Request a callback"
           description="Let us do it for you over a quick phone call"
           className={isMobile ? "py-4" : ""}
           isSelected={listingType === PropertyListingType.CALL}

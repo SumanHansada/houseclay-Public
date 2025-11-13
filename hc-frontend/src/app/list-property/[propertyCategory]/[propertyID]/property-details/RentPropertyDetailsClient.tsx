@@ -170,6 +170,7 @@ const RentPropertyDetailsClient: React.FC = () => {
               { value: "North-West", label: "North-West" },
               { value: "South-East", label: "South-East" },
               { value: "South-West", label: "South-West" },
+              { value: "dont-know", label: "Don't Know" },
             ]}
             required
             placeholder="Select facing direction"
@@ -185,6 +186,7 @@ const RentPropertyDetailsClient: React.FC = () => {
             name="propertyDetails.bhkType"
             id="propertyDetails.bhkType"
             options={[
+              { value: "studio", label: "Studio" },
               { value: "1BHK", label: "1 BHK" },
               { value: "2BHK", label: "2 BHK" },
               { value: "3BHK", label: "3 BHK" },
@@ -233,10 +235,6 @@ const RentPropertyDetailsClient: React.FC = () => {
             options={[
               { value: "Self Owned", label: "Self Owned" },
               { value: "Rented", label: "Rented" },
-              {
-                value: "Co-operative Society",
-                label: "Co-operative Society",
-              },
               { value: "Power of Attorney", label: "Power of Attorney" },
             ]}
             required
@@ -254,11 +252,10 @@ const RentPropertyDetailsClient: React.FC = () => {
             name="propertyDetails.propertyAge"
             id="propertyDetails.propertyAge"
             options={[
-              { value: "Under Construction", label: "Under Construction" },
               { value: "Less than 1 year", label: "Less than 1 year" },
               { value: "1-5 years", label: "1-5 years" },
               { value: "5-10 years", label: "5-10 years" },
-              { value: "More than 10 year", label: "More than 10 year" },
+              { value: "More than 10 years", label: "More than 10 years" },
             ]}
             required
             placeholder="Select property age"

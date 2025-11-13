@@ -331,6 +331,20 @@ export const apiSlice = createApi({
     >({
       query: () => "/property/neighbourhood",
     }),
+    generateOtpEmail: builder.mutation<string, void>({
+      query: () => ({
+        url: "/user/generate-otp-email",
+        method: "POST",
+        responseHandler: "text",
+      }),
+    }),
+    verifyEmail: builder.mutation<{}, { otp: string; token: string }>({
+      query: ({ otp, token }) => ({
+        url: "/user/verifyEmail",
+        params: { otp, token },
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -365,4 +379,6 @@ export const {
   useContactOwnerMutation,
   useStandoutsQuery,
   usePopularNeighbourhoodsQuery,
+  useGenerateOtpEmailMutation,
+  useVerifyEmailMutation,
 } = apiSlice;

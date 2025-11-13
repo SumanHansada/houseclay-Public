@@ -25,6 +25,7 @@ import {
 } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 import {
+  clearCheckUser,
   setCheckUser,
   setEmailID,
   setName,
@@ -105,6 +106,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
       }
     } catch (err) {
       console.error("Login Error:", err);
+      dispatch(clearCheckUser());
       dispatch(setAuthStep(AuthStep.CREATE_USER));
     }
   };
@@ -535,17 +537,19 @@ const Login = ({ onClose }: { onClose: () => void }) => {
 
                 <div className="flex flex-col gap-4">
                   {/* Info box */}
-                  <div className="bg-red-50 p-2 rounded-lg flex items-center gap-2">
-                    <SvgIcon iconSize="medium" name="coin-egg" size={40} />
+                  {!checkUser ? (
+                    <div className="bg-red-50 p-2 rounded-lg flex items-center gap-2">
+                      <SvgIcon iconSize="medium" name="coin-egg" size={40} />
 
-                    <div>
-                      <p className="text-gray-800 font-normal">
-                        Verify your Phone Number and earn
-                        <span className="font-bold"> 2 Connects</span>{" "}
-                        instantly!
-                      </p>
+                      <div>
+                        <p className="text-gray-800 font-normal">
+                          Verify your Phone Number and earn
+                          <span className="font-bold"> 2 Connects</span>{" "}
+                          instantly!
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                  ) : null}
                   {/* Verify Button */}
                   <button
                     type="submit"

@@ -20,6 +20,7 @@ import { setHideStickyNavBar } from "@/store/appSlice";
 interface ReportListingDialogProps {
   id: string;
   propertyId: string;
+  onClose: () => void;
 }
 
 const reportOptions = [
@@ -47,16 +48,10 @@ const FORM_ID = "report-listing-form";
 const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
   id,
   propertyId,
+  onClose,
 }) => {
   const { isMobile } = useDeviceContext();
-  const { closeDialog } = useDialog();
-  const dispatch = useDispatch();
   const [reportProperty] = useReportPropertyMutation();
-
-  const handleClose = () => {
-    closeDialog("report-listing-dialog");
-    dispatch(setHideStickyNavBar(true));
-  };
 
   const formik = useFormik({
     initialValues: {
@@ -75,7 +70,7 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
         console.log(response);
 
         // Close dialog and show success message
-        handleClose();
+        onClose();
         // You can add a toast notification here
       } catch (error) {
         console.error("Error submitting report:", error);
@@ -91,7 +86,7 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
     <Dialog
       id={id}
       type={isMobile ? "fullscreen" : "card"}
-      onClose={handleClose}
+      onClose={onClose}
       entryAnimation={isMobile ? "animate-slide-in-right" : "animate-fade-in"}
       exitAnimation={isMobile ? "animate-slide-out-right" : "animate-fade-out"}
     >
@@ -104,7 +99,7 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
                 variant="secondary"
                 size="custom"
                 className="rounded-full p-1"
-                onClick={handleClose}
+                onClick={onClose}
               >
                 <X size={24} />
               </Button>
@@ -118,7 +113,7 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
               </h1>
             }
             <button className="relative rounded-full">
-              <X onClick={handleClose} size={24} />
+              <X onClick={onClose} size={24} />
             </button>
           </div>
         )}
@@ -182,7 +177,7 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
           <div className="flex gap-4 w-full">
             <button
               type="button"
-              onClick={handleClose}
+              onClick={onClose}
               className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
             >
               Cancel
@@ -199,7 +194,7 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
         <div className="flex border-gray-200 w-full justify-end gap-4 max-md:hidden">
           <button
             type="button"
-            onClick={handleClose}
+            onClick={onClose}
             className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
           >
             Cancel

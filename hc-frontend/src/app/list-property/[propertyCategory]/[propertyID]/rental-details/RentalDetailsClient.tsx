@@ -310,8 +310,12 @@ export const RentalDetailsClient: React.FC = () => {
                   label: "Tanker",
                 },
                 {
-                  value: "Ground-water",
-                  label: "Ground Water",
+                  value: "borewell-tanker",
+                  label: "Borewell & Tanker",
+                },
+                {
+                  value: "cauvery-water",
+                  label: "Cauvery water",
                 },
               ]}
               required={true}
@@ -408,12 +412,6 @@ export const RentalDetailsClient: React.FC = () => {
               icon: <OutdoorDiningAreaIcon />,
             },
             {
-              value: "Gated Security",
-              label: "Gated Security",
-              icon: <GatedSecurityIcon />,
-            },
-            { value: "Pool", label: "Pool ", icon: <PoolIcon /> },
-            {
               value: "Fire Extinguisher",
               label: "Fire Extinguisher",
               icon: <FireExtinguisherIcon />,
@@ -439,8 +437,8 @@ export const RentalDetailsClient: React.FC = () => {
               icon: <SecurityIcon />,
             },
             {
-              value: "Parking Space",
-              label: "Parking Space",
+              value: "Visitor Parking",
+              label: "Visitor Parking",
               icon: <ParkingSpaceIcon />,
             },
             {
@@ -449,11 +447,6 @@ export const RentalDetailsClient: React.FC = () => {
               icon: <DedicatedWorkspaceIcon />,
             },
             { value: "Wifi", label: "Wifi", icon: <WifiIcon /> },
-            {
-              value: "BBQ Grill",
-              label: "BBQ Grill",
-              icon: <BBQGrillIcon />,
-            },
             {
               value: "Pool Table",
               label: "Pool Table",

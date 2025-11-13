@@ -249,7 +249,9 @@ export function MobileClient({
                 <VerifiedBadge isVerified={values.emailVerified} />
               }
             />
-            <EmailVerifyIncentive onVerify={onVerifyEmail} />
+            {values.emailVerified ? null : (
+              <EmailVerifyIncentive onVerify={onVerifyEmail} />
+            )}
           </div>
         )}
       </div>
