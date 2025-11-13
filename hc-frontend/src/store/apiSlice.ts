@@ -311,7 +311,10 @@ export const apiSlice = createApi({
       }),
     }),
     contactOwner: builder.mutation<
-      { phone: string; name: string; email: string; connectBal: number },
+      {
+        owner: { name: string; phoneNo: string; emailID: string };
+        connectBal: number;
+      },
       { propertyID: string }
     >({
       query: ({ propertyID }) => ({
