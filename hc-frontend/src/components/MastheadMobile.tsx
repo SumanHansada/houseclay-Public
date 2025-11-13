@@ -1,20 +1,20 @@
 import dynamic from "next/dynamic";
+import Link from "next/link";
 // import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 // import bannerBackgroundMobile from "public/images/banner-background-mobile.webp";
 import bannerPeopleMobile from "public/images/banner-people-mobile.webp";
 import { useDispatch, useSelector } from "react-redux";
 
+import { BENGALURU_LOCATION } from "@/common/constants";
 import { PropertyCategory } from "@/common/enums";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { setPropertyCategory as setSearchPropertyCategory } from "@/store/propertySearchSlice";
 import { setPropertyCategory as setListPropertyCategory } from "@/store/listPropertySlice";
+import { setPropertyCategory as setSearchPropertyCategory } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
 import { ImageWithLoader } from "@/utility-components";
 
 import HomeSearchBar from "./HomeSearchBar";
-import Link from "next/link";
-import { BENGALURU_LOCATION } from "@/common/constants";
 
 const FindFlatmates = dynamic(
   () => import("public/icons/find-flatmates.svg"),

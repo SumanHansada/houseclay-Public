@@ -262,7 +262,7 @@ export const FlatmateDetailsClient: React.FC = () => {
                   value: "Semi-funnished",
                   label: "Semi Furnished",
                 },
-                { value: "Unfurnished", label: "UnFurnished" },
+                { value: "Unfurnished", label: "Un Furnished" },
               ]}
               required={true}
               placeholder="Select furnishing"
@@ -328,9 +328,10 @@ export const FlatmateDetailsClient: React.FC = () => {
                   value: "tanker",
                   label: "Tanker",
                 },
+                { value: "borewell-tanker", label: "Borewell & Tanker" },
                 {
-                  value: "Ground-water",
-                  label: "Ground Water",
+                  value: "cauvery-water",
+                  label: "Cauvery Water",
                 },
               ]}
               required={true}
@@ -448,12 +449,6 @@ export const FlatmateDetailsClient: React.FC = () => {
               icon: <OutdoorDiningAreaIcon />,
             },
             {
-              value: "Gated Security",
-              label: "Gated Security",
-              icon: <GatedSecurityIcon />,
-            },
-            { value: "Pool", label: "Pool ", icon: <PoolIcon /> },
-            {
               value: "Fire Extinguisher",
               label: "Fire Extinguisher",
               icon: <FireExtinguisherIcon />,
@@ -479,8 +474,8 @@ export const FlatmateDetailsClient: React.FC = () => {
               icon: <SecurityIcon />,
             },
             {
-              value: "Parking Space",
-              label: "Parking Space",
+              value: "Visitor Parking",
+              label: "Visitor Parking",
               icon: <ParkingSpaceIcon />,
             },
             {
@@ -492,11 +487,6 @@ export const FlatmateDetailsClient: React.FC = () => {
               value: "Wifi",
               label: "Wifi",
               icon: <SvgIcon name="wifi" iconSize="small" size={28} />,
-            },
-            {
-              value: "BBQ Grill",
-              label: "BBQ Grill",
-              icon: <SvgIcon name="bbq-grill" iconSize="medium" size={28} />,
             },
             {
               value: "Pool Table",

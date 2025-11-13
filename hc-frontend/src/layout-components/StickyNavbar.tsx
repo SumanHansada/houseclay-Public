@@ -5,9 +5,9 @@ import HouseClayHomeSvg from "public/icons/houseclay-home.svg";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
+import { EXPLORE_LOCATION } from "@/common/constants";
 import { RootState } from "@/store/store";
 import { SvgIcon } from "@/utility-components";
-import { EXPLORE_LOCATION } from "@/common/constants";
 
 type NavItem = {
   id: string;

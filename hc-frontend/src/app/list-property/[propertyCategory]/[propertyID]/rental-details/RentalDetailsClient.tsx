@@ -253,7 +253,7 @@ export const RentalDetailsClient: React.FC = () => {
                   value: "Semi-funnished",
                   label: "Semi Furnished",
                 },
-                { value: "Unfurnished", label: "UnFurnished" },
+                { value: "Unfurnished", label: "Un Furnished" },
               ]}
               required={true}
               placeholder="Select furnishing"

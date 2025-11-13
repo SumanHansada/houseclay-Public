@@ -8,7 +8,6 @@ import {
   Building2,
   ChevronLeft,
   Compass,
-  Crown,
   Eye,
   Flag,
   Heart,

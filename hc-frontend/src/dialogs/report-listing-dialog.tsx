@@ -2,7 +2,6 @@
 
 import { useFormik } from "formik";
 import { X } from "lucide-react";
-import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 
 import { Button, RadioGroup, TextArea } from "@/base-components";
@@ -14,9 +13,7 @@ import {
 } from "@/components/Dialog";
 import { MobileFooter, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { useDialog } from "@/providers/DialogContextProvider";
 import { useReportPropertyMutation } from "@/store/apiSlice";
-import { setHideStickyNavBar } from "@/store/appSlice";
 interface ReportListingDialogProps {
   id: string;
   propertyId: string;

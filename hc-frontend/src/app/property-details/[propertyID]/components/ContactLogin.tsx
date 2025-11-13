@@ -1,10 +1,13 @@
 "use client";
 
+import { X } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { PhoneInput } from "react-international-phone";
 import { useDispatch, useSelector } from "react-redux";
 
+import { Button } from "@/base-components";
 import { AuthStep } from "@/common/enums";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import {
@@ -24,9 +27,6 @@ import {
   UserDetail,
 } from "@/store/userSlice";
 import { ImageWithLoader } from "@/utility-components";
-import Link from "next/link";
-import { Button } from "@/base-components";
-import { X } from "lucide-react";
 
 const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 

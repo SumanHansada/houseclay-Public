@@ -237,9 +237,7 @@ export function MyPropertyDetailsClient({
   };
 
   const handleDeactivatingProperty = async () => {
-    const response = await deactivatingProperty({
-      payload: propertyID,
-    }).unwrap();
+    const response = await deactivatingProperty({ propertyID }).unwrap();
     console.log(response);
   };
 
@@ -927,7 +925,7 @@ export function MyPropertyDetailsClient({
             <div className="flex py-0 ml-auto justify-end">
               <button
                 className="border border-green-500 text-green-500 px-4 py-2 rounded-lg flex items-center gap-2"
-                onClick={() => handleDeactivatingProperty}
+                onClick={handleDeactivatingProperty}
               >
                 <Stamp size={20} />{" "}
                 {property?.propertyCategory === PropertyCategory.RESALE

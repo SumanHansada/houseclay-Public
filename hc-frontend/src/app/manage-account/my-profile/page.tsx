@@ -11,16 +11,16 @@ import {
 } from "@/dialogs";
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
 import { useDialog } from "@/providers/DialogContextProvider";
+import {
+  useGenerateOtpEmailMutation,
+  useVerifyEmailMutation,
+} from "@/store/apiSlice";
 import { setHideStickyNavBar } from "@/store/appSlice";
 import { RootState } from "@/store/store";
 
 import { DesktopClient } from "./DesktopClient";
 import Loading from "./loading";
 import { MobileClient } from "./MobileClient";
-import {
-  useGenerateOtpEmailMutation,
-  useVerifyEmailMutation,
-} from "@/store/apiSlice";
 
 const validationSchema = Yup.object({
   name: Yup.string().required("Name is required"),

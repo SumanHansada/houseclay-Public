@@ -4,11 +4,11 @@ import { Lightbulb, Mail, Phone, PhoneCall, UserRound, X } from "lucide-react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
+import { Button } from "@/base-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useContactOwnerMutation } from "@/store/apiSlice";
 import { setConnectBal } from "@/store/userSlice";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
-import { Button } from "@/base-components";
 
 interface UnlockOwnerDetailsProps {
   onClose: () => void;

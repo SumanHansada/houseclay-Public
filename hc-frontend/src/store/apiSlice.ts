@@ -262,12 +262,11 @@ export const apiSlice = createApi({
     }),
     deactivateProperty: builder.mutation<
       { message: string },
-      { payload: string }
+      { propertyID: string }
     >({
-      query: ({ payload }) => ({
-        url: "/property/user/deactivate",
+      query: ({ propertyID }) => ({
+        url: `/property/user/deactivate/${propertyID}`,
         method: "PUT",
-        body: payload,
         headers: {
           "Content-Type": "application/json",
         },

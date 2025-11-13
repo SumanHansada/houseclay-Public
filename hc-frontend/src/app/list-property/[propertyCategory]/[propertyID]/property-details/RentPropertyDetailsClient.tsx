@@ -130,10 +130,9 @@ const RentPropertyDetailsClient: React.FC = () => {
           id="propertyDetails.propertyType"
           options={[
             { value: "Apartment", label: "Apartment" },
-            { value: "Villa", label: "Villa" },
-            { value: "House", label: "House" },
-            { value: "Plot", label: "Plot" },
-            { value: "Commercial", label: "Commercial" },
+            { value: "Independent House/Villa", label: "House" },
+            { value: "Community Villa", label: "Villa" },
+            { value: "Standalone Building", label: "Building" },
           ]}
           required
           placeholder="Select property type"

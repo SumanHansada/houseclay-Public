@@ -42,12 +42,9 @@ import { Tab, TabContent, TabHeader, Tabs } from "@/utility-components/Tabs";
 
 const MINIMUM_CUSTOM_CONNECTS = 1;
 const CUSTOM_CONNECT_PRICE = 99;
-const GST_RATE = 0.18;
 const BUNDLE_VALIDITY_DAYS = 60;
 const RAZORPAY_KEY = "REDACTED_RAZORPAY_KEY_ID";
 
-const toPaise = (rupees: number) => Math.round(rupees * 100);
-const fromPaise = (paise: number) => paise / 100;
 const fmt2 = (rupees: number) =>
   rupees.toLocaleString("en-IN", {
     minimumFractionDigits: 2,
@@ -100,18 +97,10 @@ export default function BuyConnectsPage() {
 
   // This basePrice is for display purposes, using the same logic as before
   // (discounted price for bundles, calculated price for custom)
-  const baseRupees =
+  const price =
     selectedBundle === "CUSTOM_CONNECTS"
       ? customConnectsPrice
       : currentBundle?.discountedPrice || 0;
-
-  // computing in paise to prevent floating-point drift
-  const basePaise = toPaise(baseRupees);
-  const gstPaise = Math.round(basePaise * GST_RATE);
-  const totalPaise = basePaise + gstPaise;
-
-  const gstRupees = fromPaise(gstPaise);
-  const totalRupees = fromPaise(totalPaise);
 
   // Calculate the total connects to be purchased
   const connectsToBuy =
@@ -365,18 +354,8 @@ export default function BuyConnectsPage() {
                     </div>
 
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Discounted Price</span>
-                      <span className="font-medium">₹{fmt2(baseRupees)}</span>
-                    </div>
-
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Tax (18% GST)</span>
-                      <span className="font-medium">₹{fmt2(gstRupees)}</span>
-                    </div>
-
-                    <div className="flex justify-between">
                       <span className="text-gray-600">
-                        These New Connects will expire on
+                        These new connects will expire on
                       </span>
                       <span className="font-medium">
                         {expiryDate.toLocaleDateString("en-US", {
@@ -403,8 +382,13 @@ export default function BuyConnectsPage() {
 
                     <div className="border-t pt-4">
                       <div className="flex justify-between text-lg font-semibold">
-                        <span>Total Amount</span>
-                        <span>₹{fmt2(totalRupees)}</span>
+                        <span>
+                          Total Amount{" "}
+                          <span className="text-sm text-gray-500">
+                            (Inclusive of all taxes)
+                          </span>
+                        </span>
+                        <span>₹{fmt2(price)}</span>
                       </div>
                     </div>
                   </div>
@@ -613,9 +597,12 @@ export default function BuyConnectsPage() {
         {/* Mobile Footer */}
         <MobileFooter>
           <div className="flex flex-col justify-around items-start w-full">
-            <div className="text-gray-600 text-xs">Total Amount</div>
+            <div className="text-gray-600 text-xs flex flex-col font-bold">
+              Total Amount
+              <span className="font-light">(Inclusive of all taxes)</span>
+            </div>
             <div className="text-sm font-bold flex gap-2 items-center">
-              ₹{fmt2(totalRupees)}
+              ₹{fmt2(price)}
             </div>
           </div>
           <button
@@ -667,18 +654,8 @@ export default function BuyConnectsPage() {
               </div>
 
               <div className="flex justify-between">
-                <span className="text-gray-600">Discounted Price</span>
-                <span className="font-medium">₹{fmt2(baseRupees)}</span>
-              </div>
-
-              <div className="flex justify-between">
-                <span className="text-gray-600">Tax (18% GST)</span>
-                <span className="font-medium">₹{fmt2(gstRupees)}</span>
-              </div>
-
-              <div className="flex justify-between">
                 <span className="text-gray-600">
-                  These New Connects will expire on
+                  These new connects will expire on
                 </span>
                 <span className="font-medium">
                   {expiryDate.toLocaleDateString("en-US", {
@@ -706,9 +683,12 @@ export default function BuyConnectsPage() {
           </DialogContent>
           <DialogFooter>
             <div className="flex flex-col justify-around items-start w-full">
-              <div className="text-gray-600 text-xs">Total Amount</div>
+              <div className="text-gray-600 text-xs flex flex-col font-bold">
+                Total Amount
+                <span className="font-light">(Inclusive of all taxes)</span>
+              </div>
               <div className="text-sm font-bold flex gap-2 items-center">
-                ₹{fmt2(totalRupees)}
+                ₹{fmt2(price)}
               </div>
             </div>
             <button
