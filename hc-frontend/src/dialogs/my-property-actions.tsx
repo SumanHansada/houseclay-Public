@@ -8,7 +8,8 @@ import { useDeviceContext } from "@/providers/DeviceContextProvider";
 interface MyPropertyActionsDialogProps {
   id: string;
   propertyID: string;
-  onDashboard: (propertyId: string) => void;
+  propertyCategory: string;
+  onDashboard: (propertyCategory: string, propertyId: string) => void;
   onMarkSold: (propertyId: string) => void;
   onClose: () => void;
 }
@@ -16,6 +17,7 @@ interface MyPropertyActionsDialogProps {
 const MyPropertyActionsDialog: React.FC<MyPropertyActionsDialogProps> = ({
   id,
   propertyID,
+  propertyCategory,
   onDashboard,
   onMarkSold,
   onClose,
@@ -25,7 +27,7 @@ const MyPropertyActionsDialog: React.FC<MyPropertyActionsDialogProps> = ({
   if (!isMobile) return null;
 
   const handleDashboard = () => {
-    onDashboard(propertyID);
+    onDashboard(propertyCategory, propertyID);
     onClose();
   };
 

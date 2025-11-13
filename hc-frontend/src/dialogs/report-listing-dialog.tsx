@@ -15,10 +15,11 @@ import {
 import { MobileFooter, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
+import { useReportPropertyMutation } from "@/store/apiSlice";
 import { setHideStickyNavBar } from "@/store/appSlice";
 interface ReportListingDialogProps {
   id: string;
-  propertyId?: string;
+  propertyId: string;
 }
 
 const reportOptions = [
@@ -41,6 +42,8 @@ const validationSchema = Yup.object({
     .required("Please provide additional details"),
 });
 
+const FORM_ID = "report-listing-form";
+
 const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
   id,
   propertyId,
@@ -48,6 +51,7 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
   const { isMobile } = useDeviceContext();
   const { closeDialog } = useDialog();
   const dispatch = useDispatch();
+  const [reportProperty] = useReportPropertyMutation();
 
   const handleClose = () => {
     closeDialog("report-listing-dialog");
@@ -64,6 +68,11 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
       try {
         // TODO: Implement API call to submit report
         console.log("Submitting report:", { ...values, propertyId });
+        const response = await reportProperty({
+          propertyId: propertyId,
+          payload: values,
+        });
+        console.log(response);
 
         // Close dialog and show success message
         handleClose();
@@ -121,7 +130,11 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
             listing violates our policies or seems inaccurate.
           </p>
 
-          <form onSubmit={formik.handleSubmit} className="space-y-6">
+          <form
+            id={FORM_ID}
+            onSubmit={formik.handleSubmit}
+            className="space-y-6"
+          >
             <RadioGroup
               name="reason"
               label=""
@@ -193,6 +206,7 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
           </button>
           <button
             type="submit"
+            form={FORM_ID}
             disabled={!formik.isValid || formik.isSubmitting}
             className="px-6 py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
           >

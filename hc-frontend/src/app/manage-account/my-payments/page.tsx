@@ -57,12 +57,12 @@ export default function MyPaymentsPage() {
     }
   }, [isMobile, dispatch]);
 
-  const onDownload = (id: string) => {
-    console.log("Download Invoice: ", id);
-  };
+  // const onDownload = (id: string) => {
+  //   console.log("Download Invoice: ", id);
+  // };
 
-  console.log("externalPayments: " + externalPayments);
-  console.log("filteredPayments: " + filteredPayments);
+  // console.log("externalPayments: ", externalPayments);
+  // console.log("filteredPayments: ", filteredPayments);
 
   if (userDetailLoading) {
     return <Loading />;
@@ -141,12 +141,15 @@ export default function MyPaymentsPage() {
       <div className="hidden 2xl:block">
         <TransactionTable
           transactions={filteredPayments}
-          onDownload={onDownload}
+          // onDownload={onDownload}
         />
       </div>
 
       <div className="2xl:hidden max-md:px-6 pt-4 pb-16">
-        <TransactionCardList items={filteredPayments} onDownload={onDownload} />
+        <TransactionCardList
+          items={filteredPayments}
+          // onDownload={onDownload}
+        />
       </div>
     </section>
   );

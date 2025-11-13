@@ -19,9 +19,9 @@ export function PropertyCardList({
   onOpenDialog,
 }: {
   items: UserOwnedProperties[];
-  onDashboard: (propertyId: string) => void;
+  onDashboard: (propertyCategory: string, propertyId: string) => void;
   onMarkSold: (propertyId: string) => void;
-  onOpenDialog: (propertyId: string) => void;
+  onOpenDialog: (propertyCategory: string, propertyId: string) => void;
 }) {
   // backend guarantees items are already sorted
   const groupedProperties = useMemo<GroupedProperties[]>(() => {

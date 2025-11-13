@@ -66,6 +66,7 @@ import { Footer, MobileFooter, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
+  useDeactivatePropertyMutation,
   useGenerateLeadMutation,
   useGetMyPropertyByIdQuery,
 } from "@/store/apiSlice";
@@ -174,6 +175,7 @@ export function MyPropertyDetailsClient({
   const router = useRouter();
   const dispatch = useDispatch();
   const { isMobile } = useDeviceContext();
+  const [deactivatingProperty] = useDeactivatePropertyMutation();
   const { data: propertyDataRaw, isLoading: isPropertyLoading } =
     useGetMyPropertyByIdQuery(propertyID, {
       skip: !propertyID,
@@ -232,6 +234,13 @@ export function MyPropertyDetailsClient({
     } catch (error) {
       console.error("Error generating lead:", error);
     }
+  };
+
+  const handleDeactivatingProperty = async () => {
+    const response = await deactivatingProperty({
+      payload: propertyID,
+    }).unwrap();
+    console.log(response);
   };
 
   if (isPropertyLoading) {
@@ -916,7 +925,10 @@ export function MyPropertyDetailsClient({
               </div>
             </div>
             <div className="flex py-0 ml-auto justify-end">
-              <button className="border border-green-500 text-green-500 px-4 py-2 rounded-lg flex items-center gap-2">
+              <button
+                className="border border-green-500 text-green-500 px-4 py-2 rounded-lg flex items-center gap-2"
+                onClick={() => handleDeactivatingProperty}
+              >
                 <Stamp size={20} />{" "}
                 {property?.propertyCategory === PropertyCategory.RESALE
                   ? "Mark as Sold"

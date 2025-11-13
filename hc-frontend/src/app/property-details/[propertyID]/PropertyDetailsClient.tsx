@@ -823,8 +823,9 @@ export function PropertyDetailsClient({
               )}
               <section className="flex flex-col justify-between items-center mb-6">
                 <button
-                  className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-2"
+                  className="text-sm text-gray-700 hover:text-gray-700 flex items-center gap-2 disabled:cursor-not-allowed disabled:text-gray-400"
                   onClick={handleReportListingClick}
+                  disabled={!isAuthenticated}
                 >
                   <Flag size={14} />
                   <span className="underline">Report this listing</span>

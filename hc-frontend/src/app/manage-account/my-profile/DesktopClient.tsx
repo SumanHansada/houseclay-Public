@@ -6,7 +6,6 @@ import { CircleAlert, CircleCheck } from "lucide-react";
 import { getInitials } from "@/common/utils";
 import { FormPhoneField, FormTextField } from "@/form-components";
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
-import { SvgIcon } from "@/utility-components";
 
 import { EmailVerifyIncentive } from "../components/EmailVerifyIncentive";
 
@@ -21,7 +20,7 @@ export function DesktopClient({
   setEditMode,
   onVerifyEmail,
 }: DesktopClientProps) {
-  const { values, setFieldValue, resetForm, initialValues } =
+  const { values, resetForm, initialValues } =
     useFormikContext<MyProfileFormValues>();
 
   const handleCancel = () => {
@@ -31,17 +30,17 @@ export function DesktopClient({
 
   return (
     <>
-      {/* Page title */}
-      <div className="border-b-2 pb-2 flex items-center justify-between mb-8">
+      {/* Page title - commented edit functionality */}
+      <div className="border-b-2 pb-2 flex items-center mb-8">
         <h1 className="text-2xl font-medium">My Profile</h1>
-        <button
+        {/* <button
           type="button"
           className="md:px-5 md:py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-sm disabled:cursor-not-allowed disabled:bg-gray-300"
           onClick={() => setEditMode(true)}
           disabled={editMode}
         >
           Edit
-        </button>
+        </button> */}
       </div>
 
       <div className="flex flex-col lg:flex-row lg:gap-6 xl:gap-10 2xl:gap-20 space-y-8 lg:space-y-0">
@@ -96,8 +95,8 @@ export function DesktopClient({
               )}
             </div>
 
-            {/* WhatsApp toggle */}
-            <label
+            {/* WhatsApp toggle - commented whats app toggle field */}
+            {/* <label
               className="flex items-center gap-4 lg:gap-1 xl:gap-4 w-fit"
               aria-disabled={editMode ? false : true}
             >
@@ -121,7 +120,7 @@ export function DesktopClient({
                 <div className="w-10 h-6 rounded-full bg-gray-300 peer-checked:bg-black transition-colors" />
                 <div className="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow peer-checked:translate-x-4 transition-transform" />
               </div>
-            </label>
+            </label> */}
           </div>
 
           {/* Email */}

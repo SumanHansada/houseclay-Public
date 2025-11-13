@@ -246,6 +246,33 @@ export const apiSlice = createApi({
     >({
       query: () => `/property/user/shortlisted-properties`,
     }),
+    reportProperty: builder.mutation<
+      { message: string },
+      { propertyId: string; payload: { reason: string; message: string } }
+    >({
+      query: ({ propertyId, payload }) => ({
+        url: "/property/user/report-property",
+        params: { propertyId: propertyId },
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+    deactivateProperty: builder.mutation<
+      { message: string },
+      { payload: string }
+    >({
+      query: ({ payload }) => ({
+        url: "/property/user/deactivate",
+        method: "PUT",
+        body: payload,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
     bundleInfo: builder.query<ConnectsBundle[], void>({
       query: () => "/bundle/info",
     }),
@@ -327,6 +354,8 @@ export const {
   useRemoveShortlistedPropertyMutation,
   useGetShortlistedPropertiesQuery,
   useLazyGetShortlistedPropertiesQuery,
+  useReportPropertyMutation,
+  useDeactivatePropertyMutation,
   useBundleInfoQuery,
   useCreateOrderMutation,
   useVerifyPaymentMutation,

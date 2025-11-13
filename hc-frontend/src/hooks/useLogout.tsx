@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 
 import { useLogoutMutation } from "@/store/apiSlice";
 import { clearAuthStep, clearIsAuthenticated } from "@/store/authSlice";
+import { clearShortlist } from "@/store/shortlistPropertySlice";
 import { clearAllUserData } from "@/store/userSlice";
 
 export function useLogout() {
@@ -19,6 +20,7 @@ export function useLogout() {
     } finally {
       dispatch(clearIsAuthenticated());
       dispatch(clearAllUserData());
+      dispatch(clearShortlist());
       dispatch(clearAuthStep());
     }
   };

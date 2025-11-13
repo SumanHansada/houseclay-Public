@@ -1,6 +1,7 @@
 "use client";
 
 import { CircleCheck, Ellipsis } from "lucide-react";
+import Link from "next/link";
 
 import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { formatINRCurrency, pascalCase } from "@/common/utils";
@@ -10,9 +11,9 @@ import { Popover } from "@/utility-components";
 
 export interface PropertyCardProps {
   property: UserOwnedProperties;
-  onDashboard: (propertyId: string) => void;
+  onDashboard: (propertyCategory: string, propertyId: string) => void;
   onMarkSold: (propertyId: string) => void;
-  onOpenDialog: (propertyId: string) => void;
+  onOpenDialog: (propertyCategory: string, propertyId: string) => void;
 }
 
 export function PropertyCard({
@@ -24,8 +25,11 @@ export function PropertyCard({
   const { isMobile } = useDeviceContext();
 
   const isResale = property.propertyCategory === PropertyCategory.RESALE;
-  const amount = isResale ? property.price : property.rent;
-  const formattedAmount = amount != null ? formatINRCurrency(amount) : "NA";
+  // const amount = isResale ? property.price : property.rent;
+  const formattedAmount =
+    property.price != null ? formatINRCurrency(property.price) : "NA";
+
+  const propertyLink = `/my-property-details/${property.propertyCategory?.toLowerCase()}/${property.propertyID}`;
 
   return (
     <div className="rounded-xl bg-gray-50 p-4 shadow-sm">
@@ -51,7 +55,8 @@ export function PropertyCard({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                if (isMobile) onOpenDialog(property.propertyID);
+                if (isMobile)
+                  onOpenDialog(property.propertyCategory, property.propertyID);
               }}
               className="md:hidden inline-flex items-center justify-center rounded-md p-1 hover:bg-gray-100"
               aria-label="Open actions"
@@ -72,7 +77,10 @@ export function PropertyCard({
                       type="button"
                       className="block w-full px-3 py-2 text-left hover:bg-gray-100"
                       onClick={() => {
-                        onDashboard(property.propertyID);
+                        onDashboard(
+                          property.propertyCategory,
+                          property.propertyID,
+                        );
                         close();
                       }}
                     >
@@ -104,10 +112,13 @@ export function PropertyCard({
         </div>
 
         <div className="min-w-0 mt-4">
-          <h1 className="truncate text-lg font-medium text-gray-900">
-            {property.bhkType} in {property.locationOrSocietyName} for
+          <Link
+            href={propertyLink}
+            className="inline-block max-w-72 truncate text-lg font-medium text-gray-900"
+          >
+            {property.bhkType} in {property.locationOrSocietyName} for{" "}
             {pascalCase(property.propertyCategory)}
-          </h1>
+          </Link>
         </div>
       </div>
 
