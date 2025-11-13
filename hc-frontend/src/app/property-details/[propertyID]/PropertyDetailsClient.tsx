@@ -259,7 +259,7 @@ export function PropertyDetailsClient({
           variant="secondary"
           size="custom"
           className="rounded-full p-1"
-          onClick={() => router.back}
+          onClick={() => router.back()}
         >
           <ChevronLeft size={24} />
         </Button>
