@@ -64,9 +64,9 @@ const MastHeadMobile: React.FC = () => {
           </button>
           <button
             onClick={() =>
-              dispatch(setPropertyCategory(PropertyCategory.RESALE))
+              dispatch(setPropertyCategory(PropertyCategory.FLATMATE))
             }
-            className={`px-8 py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.RESALE ? "text-red-500 border-red-500" : "text-gray-700 "}`}
+            className={`px-8 py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.FLATMATE ? "text-red-500 border-red-500" : "text-gray-700 "}`}
           >
             Flatmate
           </button>

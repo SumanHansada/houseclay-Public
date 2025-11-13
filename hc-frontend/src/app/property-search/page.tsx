@@ -421,16 +421,21 @@ export default function PropertySearchPage() {
         <button className="rounded-full md:border-none items-center justify-center">
           <ChevronLeft onClick={() => router.back()} size={25} />
         </button>
-        <PlacesAutocomplete
-          id="location-search-mobile"
-          name="location"
-          value={locationSearch}
-          onChange={handleLocationChange}
-          onLocationSelect={handleLocationSelect}
-          placeholder="Search for a property"
-          containerClassName="w-full relative"
-          inputClassName="flex items-center h-10 bg-gray-100 w-full px-3 py-1 border-none rounded-full"
-        />
+        <div className="flex items-center h-10 bg-gray-100 w-full pl-3 pr-1 py-1 border-none rounded-full">
+          <PlacesAutocomplete
+            id="location-search-mobile"
+            name="location"
+            value={locationSearch}
+            onChange={handleLocationChange}
+            onLocationSelect={handleLocationSelect}
+            placeholder="Search for a property"
+            containerClassName="w-full relative"
+            inputClassName="h-10 bg-gray-100 w-full border-none outline-none"
+          />
+          <button className="p-2 rounded-full" onClick={handleSearch}>
+            <SearchIcon size={20} />
+          </button>
+        </div>
 
         <Button
           leftIcon={<SlidersHorizontal size={16} />}
@@ -469,7 +474,10 @@ export default function PropertySearchPage() {
               inputClassName="w-full outline-none px-3"
               containerClassName="w-full relative"
             />
-            <button className="p-2 rounded-full bg-gray-100">
+            <button
+              className="p-2 rounded-full bg-gray-100"
+              onClick={handleSearch}
+            >
               <SearchIcon size={20} />
             </button>
           </div>
