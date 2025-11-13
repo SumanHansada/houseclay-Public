@@ -1,4 +1,5 @@
 import { format, parseISO } from "date-fns";
+
 import { CDN_BASE_URL, PLACEHOLDER_IMAGE } from "./constants";
 
 const formatter = new Intl.NumberFormat("en-IN", {

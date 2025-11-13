@@ -70,7 +70,7 @@ import {
   setHideStickyNavBar,
 } from "@/store/appSlice";
 import { RootState } from "@/store/store";
-import { ImageWithLoader, PhotoGallery, SvgIcon } from "@/utility-components";
+import { PhotoGallery, SvgIcon } from "@/utility-components";
 import { GoogleMapsDirection } from "@/utility-components";
 
 const BalconyIcon = BalconyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
