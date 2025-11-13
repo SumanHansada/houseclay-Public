@@ -43,6 +43,8 @@ export interface UserDetails extends UserInfo {
   createdAt: string;
   blacklistedAt: string;
   broker: boolean;
+  connectBal: number;
+
   userUpdates: UserUpdate[];
   ownedProperties: PropertyInfo[];
   shortlistedProperties: PropertyInfo[];
