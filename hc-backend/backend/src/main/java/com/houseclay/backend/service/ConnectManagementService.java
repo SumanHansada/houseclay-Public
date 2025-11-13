@@ -47,7 +47,7 @@ public class ConnectManagementService {
     }
 
     @Transactional
-    public boolean addConnect(String phoneNo, int connectCount, Admin admin) throws Exception {
+    public int addConnect(String phoneNo, int connectCount, Admin admin) throws Exception {
         Optional<User> optionalUser = userRepository.findById(phoneNo);
         if(optionalUser.isEmpty()) {
             throw new APIException(String.format("user with %s doesn't exist", phoneNo), HttpStatus.BAD_REQUEST);
@@ -69,6 +69,6 @@ public class ConnectManagementService {
         }
         user.setConnectBal(user.getConnectBal() + connectCount);
         userRepository.save(user);
-        return true;
+        return user.getConnectBal();
     }
 }

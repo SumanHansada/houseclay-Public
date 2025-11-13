@@ -113,9 +113,10 @@ public class AdminUserController {
     public ResponseEntity<?> addConnects(@RequestParam int connectCount, @RequestParam String phoneNo,
                                          @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
-            connectManagementService.addConnect(phoneNo, connectCount, admin);
+            int connectBal = connectManagementService.addConnect(phoneNo, connectCount, admin);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Connect balance updated");
+            response.put("balance", connectBal);
             return ResponseEntity.ok(response);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());

@@ -61,8 +61,8 @@ public class PropertyUserController {
         }
     }
 
-    @PutMapping("/deactivate")
-    public ResponseEntity<?> deactivateProperty(@RequestBody String propertyID, @RequestAttribute("authenticatedUser") User user) {
+    @PutMapping("/deactivate/{propertyID}")
+    public ResponseEntity<?> deactivateProperty(@PathVariable String propertyID, @RequestAttribute("authenticatedUser") User user) {
         try {
             propertyUserService.deactivateProperty(user, propertyID);
             Map<String, Object> response = new HashMap<>();

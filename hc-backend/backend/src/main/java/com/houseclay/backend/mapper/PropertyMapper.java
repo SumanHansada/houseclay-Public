@@ -4,6 +4,10 @@ import com.houseclay.backend.dto.*;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.utils.PropertyUtils;
 
+import java.sql.Timestamp;
+import java.util.Comparator;
+import java.util.Optional;
+
 public class PropertyMapper {
 
 
@@ -98,6 +102,15 @@ public class PropertyMapper {
         if(property instanceof FlatmateProperty flatmate) {
             dto.setPrice(flatmate.getRent());
         }
+        Optional<Timestamp> createTimeOpt = property.getPropertyUpdateLogs().stream()
+                .filter(log -> log.getUpdateType().equals(PropertyUpdateType.CREATE))
+                .map(PropertyUpdateLog::getUpdatedAt)
+                .findFirst();
+        dto.setCreatedOn(createTimeOpt.orElse(null));
+        Optional<Timestamp> latestUpdateTime = property.getPropertyUpdateLogs().stream()
+                .map(PropertyUpdateLog::getUpdatedAt)
+                .max(Comparator.naturalOrder());
+        dto.setUpdatedOn(latestUpdateTime.orElse(null));
         return dto;
     }
 

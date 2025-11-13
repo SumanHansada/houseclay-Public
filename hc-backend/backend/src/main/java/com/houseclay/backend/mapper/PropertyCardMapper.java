@@ -6,6 +6,7 @@ import com.houseclay.backend.entity.elastic.FlatmateDocument;
 import com.houseclay.backend.entity.elastic.PropertyDocument;
 import com.houseclay.backend.entity.elastic.RentDocument;
 import com.houseclay.backend.entity.elastic.SaleDocument;
+import com.houseclay.backend.utils.PropertyUtils;
 
 public class PropertyCardMapper {
 
@@ -65,5 +66,8 @@ public class PropertyCardMapper {
         target.setLatitude(source.getLatitude());
         target.setLongitude(source.getLongitude());
         target.setPropertyState(source.getPropertyState());
+        target.setBathrooms(source.getBathrooms());
+        target.setPropertyCategory(PropertyUtils.getPropertyCategory(source));
+        target.setImages(source.getImages());
     }
 }

@@ -37,6 +37,7 @@ public class UserMapper {
         dto.setCreatedAt(user.getCreatedAt());
         dto.setBlacklisted(user.isBlacklisted());
         dto.setBroker(user.isBroker());
+        dto.setConnectBal(user.getConnectBal());
 
         dto.setUserUpdates(user.getUserUpdateLogs().stream()
                 .map(UserMapper::toUserUpdateDTO)
@@ -75,11 +76,11 @@ public class UserMapper {
                         .collect(Collectors.toList())
         );
 
-        dto.setConnectTransactions(
-                user.getConnects().stream()
-                        .map(UserMapper::toConnectDTO)
-                        .collect(Collectors.toList())
-        );
+//        dto.setConnectTransactions(
+//                user.getConnects().stream()
+//                        .map(UserMapper::toConnectDTO)
+//                        .collect(Collectors.toList())
+//        );
 
         dto.setReportProperties(
                 user.getReportedProperties().stream()

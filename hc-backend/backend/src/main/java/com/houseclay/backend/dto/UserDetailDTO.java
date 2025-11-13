@@ -14,6 +14,7 @@ public class UserDetailDTO {
     private boolean isBlacklisted;
     private boolean isBroker;
     private Timestamp blacklistedAt;
+    private int connectBal;
     private List<UserUpdateDTO> userUpdates;
     private List<UserPropertyDTO> ownedProperties;
     private List<UserPropertyDTO> shortlistedProperties;

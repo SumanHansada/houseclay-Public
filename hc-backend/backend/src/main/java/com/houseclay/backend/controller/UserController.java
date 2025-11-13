@@ -114,7 +114,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/info")
+    @GetMapping("/info")
     public ResponseEntity<?> info(@RequestAttribute("authenticatedUser") User user) {
         UserLoginResponseDTO userLoginResponseDTO = UserMapper.toUserLoginResponseDTO(user);
         return ResponseEntity.ok(userLoginResponseDTO);
