@@ -17,6 +17,7 @@ public class ConnectManagementService {
     private UserRepository userRepository;
 
     final static int NEW_USER_CONNECT_GRANT = 2;
+    final static int EMAIL_VERIFICATION_GRANT = 1;
 
     final static String SYSTEM_ACTOR = "SYSTEM";
 
@@ -70,5 +71,30 @@ public class ConnectManagementService {
         user.setConnectBal(user.getConnectBal() + connectCount);
         userRepository.save(user);
         return user.getConnectBal();
+    }
+
+    @Transactional
+    public void addEmailVerificationConnect(String phoneNo) throws Exception {
+        Optional<User> optionalUser = userRepository.findById(phoneNo);
+        if(optionalUser.isEmpty()) {
+            throw new APIException("Invalid user login", HttpStatus.BAD_REQUEST);
+        }
+        User user = optionalUser.get();
+        for (int i = 0; i < EMAIL_VERIFICATION_GRANT; i++) {
+            ConnectEvent connectEvent = new ConnectEvent();
+            connectEvent.setEventType(ConnectEventType.CREATED);
+            connectEvent.setActorType(ActorType.SYSTEM);
+            connectEvent.setActorId(SYSTEM_ACTOR);
+            Connect connect = new Connect();
+            connect.setSourceType(ConnectSourceType.EMAIL_VERIFICATION_GRANT);
+            connect.setSourceId(SYSTEM_ACTOR);
+            connect.setUser(user);
+            connect.setStatus(ConnectStatus.ACTIVE);
+            connect.getEvents().add(connectEvent);
+            connectEvent.setConnect(connect);
+            user.getConnects().add(connect);
+        }
+        user.setConnectBal(user.getConnectBal() + EMAIL_VERIFICATION_GRANT);
+        userRepository.save(user);
     }
 }

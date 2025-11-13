@@ -102,6 +102,7 @@ public class UserService {
         user = optionalUser.get();
         user.setEmailVerified(true);
         userRepository.save(user);
+        connectManagementService.addEmailVerificationConnect(user.getPhoneNo());
     }
     
     public ResponseEntity<?> buildLogoutResponse() {
