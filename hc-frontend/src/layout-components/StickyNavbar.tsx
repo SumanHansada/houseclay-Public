@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 
 import { RootState } from "@/store/store";
 import { SvgIcon } from "@/utility-components";
+import { EXPLORE_LOCATION } from "@/common/constants";
 
 type NavItem = {
   id: string;
@@ -40,7 +41,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
       id: "explore",
       icon: <Search size={25} />,
       label: "Explore",
-      href: "/explore",
+      href: `/property-search?lat=${EXPLORE_LOCATION.lat}&lon=${EXPLORE_LOCATION.lng}&propertyCategory=rent`,
     },
     {
       id: "shortlists",

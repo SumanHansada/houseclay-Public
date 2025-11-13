@@ -1,17 +1,20 @@
 import dynamic from "next/dynamic";
 // import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 // import bannerBackgroundMobile from "public/images/banner-background-mobile.webp";
 import bannerPeopleMobile from "public/images/banner-people-mobile.webp";
 import { useDispatch, useSelector } from "react-redux";
 
 import { PropertyCategory } from "@/common/enums";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { setPropertyCategory } from "@/store/propertySearchSlice";
+import { setPropertyCategory as setSearchPropertyCategory } from "@/store/propertySearchSlice";
+import { setPropertyCategory as setListPropertyCategory } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 import { ImageWithLoader } from "@/utility-components";
 
 import HomeSearchBar from "./HomeSearchBar";
+import Link from "next/link";
+import { BENGALURU_LOCATION } from "@/common/constants";
 
 const FindFlatmates = dynamic(
   () => import("public/icons/find-flatmates.svg"),
@@ -40,6 +43,14 @@ const MastHeadMobile: React.FC = () => {
   );
   const router = useRouter();
 
+  const searchParams = useSearchParams();
+
+  const handleFindFlatmates = () => {
+    dispatch(setListPropertyCategory(PropertyCategory.FLATMATE));
+    // dispatch(ListPropertyMobileS)
+    router.push("/list-property");
+  };
+
   return (
     <div className="relative flex flex-col px-6 pt-8 pb-14 gap-6">
       {/* <div className="absolute inset-0 -z-10">
@@ -57,18 +68,20 @@ const MastHeadMobile: React.FC = () => {
         {/* Tabs */}
         <div className="flex justify-center">
           <button
-            onClick={() => dispatch(setPropertyCategory(PropertyCategory.RENT))}
+            onClick={() =>
+              dispatch(setSearchPropertyCategory(PropertyCategory.RENT))
+            }
             className={`px-8 py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.RENT ? "text-red-500 border-red-500" : "text-gray-700 "}`}
           >
-            Rent
+            Flats for rent
           </button>
           <button
             onClick={() =>
-              dispatch(setPropertyCategory(PropertyCategory.FLATMATE))
+              dispatch(setSearchPropertyCategory(PropertyCategory.FLATMATE))
             }
             className={`px-8 py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.FLATMATE ? "text-red-500 border-red-500" : "text-gray-700 "}`}
           >
-            Flatmate
+            Find rooms
           </button>
           {/* <button
             onClick={() =>
@@ -83,6 +96,7 @@ const MastHeadMobile: React.FC = () => {
         {/* Search */}
         <HomeSearchBar id="mobile-search-bar" />
       </div>
+
       {/* Tagline */}
       <div className="flex justify-center items-center">
         <div className="flex items-center gap-2">
@@ -101,6 +115,7 @@ const MastHeadMobile: React.FC = () => {
             role="button"
             name="find-flatmates"
             aria-label="find-flatmates"
+            onClick={handleFindFlatmates}
           >
             <div className="rounded-full">
               <FindFlatmates />
@@ -112,18 +127,23 @@ const MastHeadMobile: React.FC = () => {
         </div>
 
         <div className="flex flex-col items-center justify-center self-start justify-self-center">
-          <button
+          <Link
+            href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=flatmate`}
+            data-category="flatmate"
+            data-active={
+              searchParams.get("propertyCategory") === "flatmate"
+                ? "true"
+                : "false"
+            }
             className="bg-white p-4 border border-gray-200 rounded-2xl shadow-lg justify-center items-center"
-            role="button"
-            name="find-rooms"
             aria-label="find-rooms"
           >
             <div className="rounded-full">
               <FindRooms />
             </div>
-          </button>
+          </Link>
           <div className="text-center mt-2">
-            <div className="text-sm font-nunito">Find Rooms</div>
+            <div className="text-sm font-nunito px-4">Find Rooms</div>
           </div>
         </div>
 

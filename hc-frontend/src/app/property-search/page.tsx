@@ -22,7 +22,6 @@ import {
   SelectDropdown,
 } from "@/base-components";
 import { BadgeType, PropertyCategory } from "@/common/enums";
-import { pascalCase } from "@/common/utils";
 import Properties from "@/components/Properties";
 import { SearchFiltersDialog, SortFiltersDialog } from "@/dialogs";
 import { PropertySearch } from "@/interfaces/PropertySearch";
@@ -91,11 +90,11 @@ export default function PropertySearchPage() {
   const selectedSortToken = stateToToken({ exclusive, sortFields, sortOrder });
 
   // Hydrate category from URL on first load / URL change
-  useEffect(() => {
-    if (urlCategory !== searchState.propertyCategory) {
-      dispatch(setPropertyCategory(urlCategory));
-    }
-  }, [dispatch, urlCategory, searchState.propertyCategory]);
+  // useEffect(() => {
+  //   if (urlCategory !== searchState.propertyCategory) {
+  //     dispatch(setPropertyCategory(urlCategory));
+  //   }
+  // }, [dispatch, urlCategory, searchState.propertyCategory]);
 
   // Parse BHK selections from comma-separated Redux string
   const bhkSelectedValues = useMemo<string[]>(
@@ -491,7 +490,7 @@ export default function PropertySearchPage() {
                 },
                 {
                   value: PropertyCategory.FLATMATE,
-                  label: "Flatmate",
+                  label: "Rooms",
                 },
                 // {
                 //   value: PropertyCategory.RESALE,
@@ -620,9 +619,10 @@ export default function PropertySearchPage() {
                 <p className="text-gray-500 text-sm">
                   {properties.length}{" "}
                   {searchState.propertyCategory === PropertyCategory.FLATMATE
-                    ? "Rooms"
-                    : "Properties"}{" "}
-                  for {pascalCase(propertyCategory || "")}
+                    ? "Single Occupancy Rooms for Rent"
+                    : searchState.propertyCategory === PropertyCategory.RENT
+                      ? "Properties for Rent"
+                      : "Properties for Sale"}
                 </p>
               </div>
             </div>

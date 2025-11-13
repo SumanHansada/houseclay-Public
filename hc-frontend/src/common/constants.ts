@@ -12,6 +12,9 @@ export const HOUSECLAY_LINKEDIN = "https://in.linkedin.com/company/houseclay";
 
 export const BENGALURU_LOCATION = { lat: 12.9716, lng: 77.5946 };
 
+// Currently using Bellandur lat(12.9337127) and lng(77.6621937)
+export const EXPLORE_LOCATION = { lat: 12.9337127, lng: 77.6621937 };
+
 export const CDN_BASE_URL = "https://cdn.houseclay.com";
 export const PLACEHOLDER_IMAGE =
   "/optimizedIcons/medium/property-placeholder.svg";

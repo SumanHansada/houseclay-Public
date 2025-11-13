@@ -189,8 +189,6 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
     [bhkType],
   );
 
-  console.log("propertyCategory", propertyCategory);
-
   const marksForRent = [
     { value: 0, label: "0" },
     { value: 200000, label: "200K" },
@@ -217,6 +215,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
   };
 
   const handleTabChange = (value: string) => {
+    console.log("handleTabChange: ", value);
     dispatch(setLookingFor(value as string));
     dispatch(setPropertyCategory(value as PropertyCategory));
   };
@@ -276,14 +275,14 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
               >
                 <TabHeader tabsClassName="justify-between border rounded-xl p-2 w-full flex gap-2">
                   <Tab
-                    label="Full House"
+                    label="Full house"
                     value={PropertyCategory.RENT}
                     containerClassName="w-1/2 p-2 md:p-3 text-base font-medium max-md:font-normal rounded-xl border transition-colors duration-300"
                     activeClassName="text-red-600 border-red-500"
                     inactiveClassName="text-gray-700 border-transparent"
                   />
                   <Tab
-                    label="Flatmates"
+                    label="Rooms"
                     value={PropertyCategory.FLATMATE}
                     containerClassName="w-1/2 p-2 md:p-3 text-base font-medium max-md:font-normal rounded-xl border transition-colors duration-300"
                     activeClassName="text-red-600 border-red-500"
