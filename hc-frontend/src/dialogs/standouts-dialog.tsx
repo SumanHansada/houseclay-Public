@@ -26,7 +26,7 @@ const StandoutsDialog: React.FC<StandoutsDialogProps> = ({
     }, 300);
   };
 
-  if (properties.length > 0) return null;
+  if (properties.length < 1) return null;
 
   return (
     <Dialog

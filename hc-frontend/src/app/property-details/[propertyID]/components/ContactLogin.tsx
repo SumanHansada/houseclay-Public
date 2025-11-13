@@ -23,6 +23,7 @@ import {
   UserDetail,
 } from "@/store/userSlice";
 import { ImageWithLoader } from "@/utility-components";
+import Link from "next/link";
 
 const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -322,13 +323,19 @@ export const ContactLogin = ({ onSuccess }: ContactLoginProps) => {
               {/* Privacy policy */}
               <div className="md:hidden text-gray-500 text-sm">
                 By continuing to use this service, you agree to our{" "}
-                <span className="text-gray-700 underline font-bold">
+                <Link
+                  href="/terms-and-conditions"
+                  className="text-gray-700 underline font-bold"
+                >
                   Terms of Service
-                </span>{" "}
+                </Link>{" "}
                 and{" "}
-                <span className="text-gray-700 underline font-bold">
+                <Link
+                  href="/privacy-policy"
+                  className="text-gray-700 underline font-bold"
+                >
                   Privacy Policy
-                </span>
+                </Link>
               </div>
             </div>
           </div>

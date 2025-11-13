@@ -225,7 +225,7 @@ const FooterClient: React.FC = () => {
             <ul className="flex space-x-6">
               <li>
                 <Link
-                  href="/privacy"
+                  href="/privacy-policy"
                   className="text-gray-400 hover:text-red-500"
                 >
                   Privacy Policy

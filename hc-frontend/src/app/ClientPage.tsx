@@ -59,7 +59,7 @@ export default function ClientPage({ testimonials }: ClientPageProps) {
   }, [standoutProperties]);
 
   useEffect(() => {
-    if (isDialogOpen("standouts-dialog") && standoutPropertyCards.length <= 4) {
+    if (isDialogOpen("standouts-dialog") && standoutPropertyCards.length < 1) {
       closeDialog("standouts-dialog");
       toast.error(
         "Currently there are no Standouts Properties. Please check again later!",
