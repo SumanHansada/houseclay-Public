@@ -9,7 +9,6 @@ import com.houseclay.backend.payload.CreateOrderRequest;
 import com.houseclay.backend.utils.Constants;
 import com.razorpay.Utils;
 import com.houseclay.backend.exception.APIException;
-import com.houseclay.backend.repository.ConnectTransactionRepository;
 import com.houseclay.backend.repository.ExternalPaymentsRepository;
 import com.houseclay.backend.repository.UserRepository;
 import com.razorpay.Order;
@@ -35,9 +34,6 @@ public class PaymentService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private ConnectTransactionRepository connectTransactionRepository;
 
     @Autowired
     private ExternalPaymentsRepository externalPaymentsRepository;
