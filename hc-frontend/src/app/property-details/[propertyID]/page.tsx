@@ -6,6 +6,7 @@ import { ServerAPIService } from "@/services/serverAPIService";
 import { PropertyDetailsClient } from "./PropertyDetailsClient";
 
 const WEBSITE_BASE_URL = "https://houseclay.com";
+const CDN_BASE_URL = "https://cdn.houseclay.com";
 
 type PropertyParams = Promise<{ propertyID: string }>;
 
@@ -25,7 +26,7 @@ const buildImageUrl = (image?: string | null) => {
   const imagePart = image
     .split("?")[0]
     .split("https://houseclay.s3.ap-south-1.amazonaws.com/")[1];
-  return `https://cdn.houseclay.com/${imagePart}`;
+  return `${CDN_BASE_URL}/${imagePart}`;
 };
 
 const resolvePropertyFromResponse = (
@@ -91,7 +92,7 @@ export async function generateMetadata({
     openGraph: {
       title,
       description: description || undefined,
-      url: pageUrl,
+      url: CDN_BASE_URL,
       type: "website",
       images: imageUrl ? [{ url: imageUrl }] : undefined,
     },
