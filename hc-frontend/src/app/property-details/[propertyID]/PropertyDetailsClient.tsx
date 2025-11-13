@@ -194,7 +194,7 @@ export function PropertyDetailsClient({
       const propertyUrl = window.location.href;
 
       // Check if Web Share API is supported
-      if (navigator.share) {
+      if (navigator.share && isMobile) {
         await navigator.share({
           title: property?.title || "Property Details",
           text: `Check out this property: ${property?.title || "Property"}`,

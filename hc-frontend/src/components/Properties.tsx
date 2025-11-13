@@ -60,7 +60,7 @@ const Properties: React.FC<PropertiesProps> = ({
       {/* Image Carousel */}
       <div className="relative h-72 max-md:h-60">
         <ImageWithLoader
-          src={property?.images[currentImageIndex]}
+          src={`https://cdn.houseclay.com/${property?.images[currentImageIndex]}`}
           alt={`Property ${property?.propertyID}`}
           fill
           className="rounded-xl"
