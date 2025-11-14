@@ -27,11 +27,14 @@ export default function LoginPage() {
   const [triggerCheckUser] = useLazyCheckUserQuery();
   const [generateOtp] = useGenerateOtpMutation();
   const { openDialog } = useDialog();
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
-    logout();
+    if (isAuthenticated) {
+      logout();
+    }
     dispatch(setAuthStep(AuthStep.PHONE));
-  }, [dispatch]);
+  }, []);
 
   const handleLoginClick = async () => {
     if (acceptTerms && phoneNo.substring(2)) {

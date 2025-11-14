@@ -120,11 +120,9 @@ const VerifyConnectsDialog: React.FC<VerifyConnectsDialogProps> = ({
     >
       <DialogHeader>
         <div
-          className={` py-2 px-6 flex flex-col justify-between items-center w-full`}
+          className={`px-6 flex flex-col justify-between items-center w-full`}
         >
-          <h1 className="text-lg md:text-xl py-1.5 text-black">
-            {getHeaderText()}
-          </h1>
+          <h1 className="text-lg md:text-xl text-black">{getHeaderText()}</h1>
         </div>
       </DialogHeader>
       <DialogContent>
