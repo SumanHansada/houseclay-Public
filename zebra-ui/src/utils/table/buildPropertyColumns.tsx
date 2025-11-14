@@ -33,7 +33,7 @@ import { Eye, LucideIcon, Pencil } from "lucide-react";
 import { Column } from "@/components/DataTable";
 import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
 import { RenderPropertyStatus } from "@/components/status/RenderPropertyStatus";
-import { PropertyInfo } from "@/interfaces/Property";
+import { PropertyInfo } from "@/interfaces/PropertyInfo";
 
 import { formatDateVerbose } from "../core";
 

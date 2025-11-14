@@ -1,102 +1,140 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { PropertyCategoryEnum, PropertyListingType } from "@/common/enums";
+import { PropertyCategory, PropertyListingType } from "@/common/enums";
 import { AdditionalInfo } from "@/interfaces/AdditionalInfo";
 import { FlatmateDetails } from "@/interfaces/FlatmateDetails";
-import { FlatmateForm } from "@/interfaces/FlatmateForm";
+import { FormValues } from "@/interfaces/FormValues";
 import { ListPropertyState } from "@/interfaces/ListPropertyState";
 import { LocalityDetails } from "@/interfaces/LocalityDetails";
 import { PropertyDetails } from "@/interfaces/PropertyDetails";
 import { PropertyImage } from "@/interfaces/PropertyImage";
 import { RentalDetails } from "@/interfaces/RentalDetails";
-import { RentForm } from "@/interfaces/RentForm";
 import { ResaleDetails } from "@/interfaces/ResaleDetails";
-import { ResaleForm } from "@/interfaces/ResaleForm";
 
-const initialData: Partial<RentForm | ResaleForm | FlatmateForm> = {
-  propertyDetails: {
-    propertyType: "Apartment",
-    builtUpArea: 2500,
-    facing: "East",
-    bhkType: "3BHK",
-    ownershipType: "Self Owned",
-    propertyAge: "More than 10 year",
-    floor: 0,
-    totalFloors: 10,
-    floorType: "Mosaic",
-    description:
-      "Top floor nicely placed. This lovely three bedroom for sale is only 1.95 Crores rupees without any extra brokerage & could be your new home. This West facing home is over 1536 sqft. & is in a convenient location. Situated on the 29th floor this home can comfortably serve your space for car and bike parking needs.",
-  },
-  localityDetails: {
+// Separate initial data for each property category
+const getInitialData = (
+  propertyCategory: PropertyCategory,
+): Partial<FormValues> => {
+  const basePropertyDetails = {
+    propertyType: "",
+    builtUpArea: undefined,
+    facing: "",
+    bhkType: "",
+    bathrooms: undefined,
+    ownershipType: "",
+    propertyAge: "",
+    floor: undefined,
+    totalFloors: undefined,
+    floorType: "",
+    description: "",
+  };
+
+  const baseLocalityDetails = {
     city: "",
     locationOrSocietyName: "",
     landmark: "",
     latitude: 0,
     longitude: 0,
-  },
-  rentalDetails: {
-    rent: 0,
-    rentNegotiable: false,
-    maintenanceCharges: 0,
-    deposit: 0,
-    availableFrom: "",
-    furnishing: "",
-    preferredTenants: [],
-    waterSupply: "",
-    powerBackup: "",
-    parking: "",
-    nonVegAllowed: false,
-    amenities: [],
-  },
-  images: [],
-  additionalInfo: {
+  };
+
+  const baseAdditionalInfo = {
     whoWillShowProperty: "",
     secondaryPhoneNumber: "",
     khataCertificate: "",
     saleDeed: false,
     propertyTax: false,
-  },
-  resaleDetails: {
-    price: 0,
-    availableFrom: "",
-    bathrooms: 0,
-    balcony: 0,
-    priceNegotiable: false,
-    underLoan: false,
-    waterSupply: "",
-    powerBackup: "",
-    furnishing: "",
-    parking: "",
-    amenities: [],
-  },
-  flatmateDetails: {
-    rent: 0,
-    maintenanceCharges: 0,
-    depositCharges: 0,
-    availableFrom: "",
-    furnishing: "",
-    waterSupply: "",
-    powerBackup: "",
-    parking: "",
-    nonVegAllowed: false,
-    amenities: [],
-    tenantType: "",
-    attachedBathroom: false,
-    attachedBalcony: false,
-    smokingPreference: "",
-    drinkingPreference: "",
-  },
+  };
+
+  const baseImages: PropertyImage[] = [];
+
+  switch (propertyCategory) {
+    case PropertyCategory.RENT:
+      return {
+        propertyDetails: basePropertyDetails,
+        localityDetails: baseLocalityDetails,
+        additionalInfo: baseAdditionalInfo,
+        images: baseImages,
+        rentalDetails: {
+          rent: undefined,
+          rentNegotiable: false,
+          maintenanceCharges: undefined,
+          deposit: undefined,
+          availableFrom: "",
+          furnishing: "",
+          preferredTenants: [],
+          waterSupply: "",
+          powerBackup: "",
+          parking: "",
+          nonVegAllowed: false,
+          amenities: [],
+        },
+      };
+
+    case PropertyCategory.RESALE:
+      return {
+        propertyDetails: basePropertyDetails,
+        localityDetails: baseLocalityDetails,
+        additionalInfo: baseAdditionalInfo,
+        images: baseImages,
+        resaleDetails: {
+          price: undefined,
+          availableFrom: "",
+          bathrooms: undefined,
+          balcony: 0,
+          priceNegotiable: false,
+          underLoan: false,
+          waterSupply: "",
+          powerBackup: "",
+          furnishing: "",
+          parking: "",
+          amenities: [],
+        },
+      };
+
+    case PropertyCategory.FLATMATE:
+      return {
+        propertyDetails: basePropertyDetails,
+        localityDetails: baseLocalityDetails,
+        additionalInfo: baseAdditionalInfo,
+        images: baseImages,
+        flatmateDetails: {
+          rent: undefined,
+          maintenanceCharges: undefined,
+          depositCharges: undefined,
+          availableFrom: "",
+          furnishing: "",
+          waterSupply: "",
+          powerBackup: "",
+          parking: "",
+          nonVegAllowed: false,
+          amenities: [],
+          tenantType: "",
+          attachedBathroom: false,
+          attachedBalcony: false,
+          smokingPreference: "",
+          drinkingPreference: "",
+        },
+      };
+
+    default:
+      return {
+        propertyDetails: basePropertyDetails,
+        localityDetails: baseLocalityDetails,
+        additionalInfo: baseAdditionalInfo,
+        images: baseImages,
+      };
+  }
 };
 
 const initialState: ListPropertyState = {
   propertyID: "",
   propertyImagesS3Url: {},
   propertyImages: [],
-  propertyCategory: PropertyCategoryEnum.NONE,
+  propertyCategory: PropertyCategory.NONE,
   listingType: PropertyListingType.NONE,
   form: {
     isValid: false,
-    data: initialData,
+    data: getInitialData(PropertyCategory.NONE),
   },
 };
 
@@ -104,11 +142,11 @@ const listPropertySlice = createSlice({
   name: "listProperty",
   initialState,
   reducers: {
-    setPropertyCategory: (
-      state,
-      action: PayloadAction<PropertyCategoryEnum>,
-    ) => {
-      state.propertyCategory = action.payload;
+    setPropertyCategory: (state, action: PayloadAction<PropertyCategory>) => {
+      const newCategory = action.payload;
+      state.propertyCategory = newCategory;
+      // Update form data to match the new property category
+      state.form.data = getInitialData(newCategory);
     },
     setListingType: (state, action: PayloadAction<PropertyListingType>) => {
       state.listingType = action.payload;
@@ -120,19 +158,12 @@ const listPropertySlice = createSlice({
     setFormData: (
       state,
       action: PayloadAction<{
-        data: Partial<{
-          propertyDetails: PropertyDetails;
-          localityDetails: LocalityDetails;
-          rentalDetails: RentalDetails;
-          resaleDetails: ResaleDetails;
-          images: string[];
-          additionalInfo: AdditionalInfo;
-        }>;
+        data: Partial<FormValues>;
       }>,
     ) => {
       const { data } = action.payload;
       state.form.data = {
-        ...(state.form.data || initialData),
+        ...(state.form.data || getInitialData(state.propertyCategory)),
         ...data,
       };
     },
@@ -176,7 +207,7 @@ const listPropertySlice = createSlice({
     ) => {
       const { rentalDetails } = action.payload;
       if (state.form.data) {
-        (state.form.data as RentForm).rentalDetails = rentalDetails;
+        state.form.data.rentalDetails = rentalDetails;
       }
     },
     setResaleDetails: (
@@ -185,7 +216,7 @@ const listPropertySlice = createSlice({
     ) => {
       const { resaleDetails } = action.payload;
       if (state.form.data) {
-        (state.form.data as ResaleForm).resaleDetails = resaleDetails;
+        state.form.data.resaleDetails = resaleDetails;
       }
     },
     setFlatmateDetails: (
@@ -194,10 +225,10 @@ const listPropertySlice = createSlice({
     ) => {
       const { flatmateDetails } = action.payload;
       if (state.form.data) {
-        (state.form.data as FlatmateForm).flatmateDetails = flatmateDetails;
+        state.form.data.flatmateDetails = flatmateDetails;
       }
     },
-    setImages: (state, action: PayloadAction<{ images: string[] }>) => {
+    setImages: (state, action: PayloadAction<{ images: PropertyImage[] }>) => {
       const { images } = action.payload;
       if (state.form.data) {
         state.form.data.images = images;
@@ -222,12 +253,10 @@ const listPropertySlice = createSlice({
     clearFormData: (state) => {
       state.form = {
         isValid: false,
-        data: {
-          ...initialData,
-        },
+        data: getInitialData(PropertyCategory.NONE),
       };
       state.listingType = PropertyListingType.NONE;
-      state.propertyCategory = PropertyCategoryEnum.NONE;
+      state.propertyCategory = PropertyCategory.NONE;
       state.propertyID = "";
       state.propertyImagesS3Url = {};
       state.propertyImages = [];

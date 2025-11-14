@@ -19,7 +19,7 @@ const nutino = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Zebra UI",
+  title: "ZEBRA | houseclay",
   description: "Admin Dashboard",
 };
 

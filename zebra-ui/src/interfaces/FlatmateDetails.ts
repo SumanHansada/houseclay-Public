@@ -1,14 +1,8 @@
-export interface FlatmateDetails {
-  rent: number;
-  maintenanceCharges: number;
-  depositCharges: number;
-  availableFrom: string;
-  furnishing: string;
-  waterSupply: string;
-  powerBackup: string;
-  parking: string;
-  nonVegAllowed: boolean;
-  amenities: string[];
+import { BaseRentalDetails } from "./RentalDetails";
+
+// Flatmate-specific details that extend base rental details
+export interface FlatmateDetails extends BaseRentalDetails {
+  depositCharges?: number;
   tenantType: string;
   attachedBathroom: boolean;
   attachedBalcony: boolean;

@@ -16,7 +16,7 @@ export default function PropertyDetailsOverviewPage() {
     propertyID: propertyID,
   });
   const ownerDetails = currentProperty!.owner;
-  const verificationStatus = currentProperty!.propertyState;
+  const verificationStatus = currentProperty!.property.propertyState;
   const propertyUpdates = currentProperty!.propertyUpdates;
   const latestUpdate = propertyUpdates[propertyUpdates.length - 1] ?? null;
 

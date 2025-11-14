@@ -4,11 +4,8 @@ import {
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
 
+import { BASE_API_URL } from "@/common/constants";
 import { logout as logoutAction } from "@/store/adminAuthSlice";
-
-export const BASE_API_URL =
-  process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL ||
-  "https://apis.houseclay.com/api";
 
 /**
  * A thin wrapper around RTK Query’s `fetchBaseQuery`.
@@ -42,9 +39,22 @@ export const baseQueryWithAuth: BaseQueryFn<
 > = async (args, api, extra) => {
   const res = await rawBaseQuery(args, api, extra);
 
-  if (res.error && (res.error.status === 401 || res.error.status === 403)) {
+  // status can be number | "FETCH_ERROR" | "PARSING_ERROR" | "CUSTOM_ERROR"
+  const statusCode =
+    typeof res.error?.status === "number" ? res.error.status : undefined;
+
+  if (statusCode === 401 || statusCode === 403) {
+    // 1) Ask backend to clear the HttpOnly cookie (no throw; returns {data|error})
+    await rawBaseQuery({ url: "/admin/logout", method: "POST" }, api, extra);
+
+    // 2) Clear local UI state
     api.dispatch(logoutAction());
-    if (typeof window !== "undefined") window.location.assign("/login");
+
+    // 3) Hard redirect to login
+    if (typeof window !== "undefined") {
+      const from = window.location.pathname + window.location.search;
+      window.location.replace(`/login?from=${encodeURIComponent(from)}`);
+    }
   }
 
   return res;

@@ -1,26 +1,27 @@
 import { redirect } from "next/navigation";
-import { use } from "react";
 
-import { PropertyCategoryEnum } from "@/common/enums";
-import { PropertyDetailsTabEnum } from "@/common/enums";
+import { PropertyCategory, PropertyDetailsTabEnum } from "@/common/enums";
 
-export const dynamicParams = true;
+type Params = { propertyCategory: string; propertyID: string };
 
-interface TParams {
-  params: Promise<{ propertyID: string; propertyCategory: string }>;
-}
+export default function Page({ params }: { params: Params }) {
+  const paramID = (params.propertyID ?? "").trim();
+  const paramCategory = (params.propertyCategory ?? "").trim().toUpperCase();
 
-export async function generateStaticParams() {
-  return [
-    { propertyCategory: PropertyCategoryEnum.RENT.toLowerCase() },
-    { propertyCategory: PropertyCategoryEnum.RESALE.toLowerCase() },
-    { propertyCategory: PropertyCategoryEnum.FLATMATE.toLowerCase() },
-  ];
-}
+  const propertyCategory =
+    (Object.values(PropertyCategory) as PropertyCategory[]).find(
+      (val) => val.toUpperCase() === paramCategory,
+    ) ?? null;
 
-export default function PropertyDetailsRedirectPage({ params }: TParams) {
-  const { propertyID, propertyCategory } = use(params);
+  if (
+    !paramID ||
+    propertyCategory === null ||
+    propertyCategory === PropertyCategory.NONE
+  ) {
+    redirect("/admin/dashboard");
+  }
+
   redirect(
-    `/admin/property-details/${propertyCategory}/${propertyID}/${PropertyDetailsTabEnum.DETAILS}`,
+    `/admin/property-details/${propertyCategory}/${paramID}/${PropertyDetailsTabEnum.DETAILS}`,
   );
 }

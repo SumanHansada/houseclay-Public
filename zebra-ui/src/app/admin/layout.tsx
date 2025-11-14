@@ -1,5 +1,5 @@
-import Header from "@/components/common/Header";
-import Sidebar from "@/components/common/Sidebar";
+import { Header } from "@/layout-components";
+import { Sidebar } from "@/layout-components";
 
 export default function RootLayout({
   children,
@@ -7,9 +7,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen">
-      <Sidebar />
+    <div className="w-full h-full min-h-screen">
       <Header />
+      <Sidebar />
       <main className="pl-72 lg:pl-80 pt-16">{children}</main>
     </div>
   );

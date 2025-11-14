@@ -207,7 +207,7 @@ export const LeadDetails = () => {
           {isLeadTypeProperty && (
             <button
               onClick={() =>
-                router.push(`/admin/add-property/${currentLead.phoneNo}`)
+                router.push(`/admin/list-property/${currentLead.phoneNo}`)
               }
               className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white"
             >

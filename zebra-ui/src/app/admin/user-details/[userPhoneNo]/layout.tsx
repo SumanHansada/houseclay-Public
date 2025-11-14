@@ -1,4 +1,5 @@
 "use client";
+
 import {
   useParams,
   useRouter,
@@ -8,10 +9,10 @@ import {
 import { userDetailsTabs } from "@/common/constants/user";
 import { UserDetailsTabEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
-import Tabs, { Tab, TabHeader } from "@/components/common/Tabs";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
+// import { userDetailsTestIds } from "@/utils/testIds";
+import { Tab, TabHeader, Tabs } from "@/utility-components";
 import { ensureEnumValue } from "@/utils/core";
-import { userDetailsTestIds } from "@/utils/testIds";
 
 export default function UserDetailsLayout({
   children,
@@ -31,6 +32,7 @@ export default function UserDetailsLayout({
     { phoneNo: userPhoneNo },
     { skip: !userPhoneNo },
   );
+  console.log("currentUser: ", currentUser);
 
   if (isLoading || isError || !currentUser) {
     return (
@@ -57,13 +59,19 @@ export default function UserDetailsLayout({
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">
       <Tabs onTabChange={handleTabChange} defaultActive={activeTab}>
-        <TabHeader>
+        <TabHeader
+          containerClassName="border-b border-gray-200"
+          tabsClassName="flex w-full"
+        >
           {userDetailsTabs.map((tab) => (
             <Tab
               key={tab.value}
               label={tab.label}
               value={tab.value}
-              testId={userDetailsTestIds.getTabButtonId(tab.value)}
+              containerClassName="w-full py-3 font-medium"
+              activeClassName="text-red-500 border-b-2 border-red-500"
+              inactiveClassName="text-gray-500 hover:text-gray-700"
+              // testId={userDetailsTestIds.getTabButtonId(tab.value)}
             />
           ))}
         </TabHeader>

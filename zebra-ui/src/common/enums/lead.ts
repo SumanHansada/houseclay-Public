@@ -1,6 +1,7 @@
 export enum LeadQueryParamEnum {
   property = "PROPERTY_LISTING",
   support = "SEARCH_SUPPORT",
+  upgrade = "UPGRADE_PROPERTY",
 }
 
 export enum LeadStatusEnum {

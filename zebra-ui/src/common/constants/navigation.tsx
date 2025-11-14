@@ -1,4 +1,4 @@
-import { Archive, Home, UserCheck, Users } from "lucide-react";
+import { Home, UserCheck, Users } from "lucide-react";
 import { ReactNode } from "react";
 
 export interface SidebarChild {
@@ -30,6 +30,7 @@ export const sidebarItems: SidebarItem[] = [
     children: [
       { label: "Property Lead", href: "/admin/lead-management/property" },
       { label: "Support Lead", href: "/admin/lead-management/support" },
+      { label: "Upgrade Property", href: "/admin/lead-management/upgrade" },
     ],
   },
   {
@@ -39,12 +40,7 @@ export const sidebarItems: SidebarItem[] = [
     children: [
       { label: "HouseClay Users", href: "/admin/user-management" },
       { label: "Add new Zebra user", href: "/admin/add-zebra-user" },
+      { label: "Add connects", href: "/admin/add-connects" },
     ],
-  },
-  {
-    label: "UI - Testing",
-    icon: <Archive size={20} />,
-    href: "#",
-    children: [{ label: "current task", href: "#" }],
   },
 ];

@@ -1,8 +1,7 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 
 import { LeadQueryParamEnum } from "@/common/enums";
 import {
-  AddPropertyRequest,
   GetAllLeadsResponse,
   GetAllPropertiesResponse,
   GetAllUsersResponse,
@@ -12,20 +11,25 @@ import {
   GetPropertyByIdResponse,
   GetUserByPhoneNoResponse,
 } from "@/interfaces/api";
+import { PropertyForm } from "@/interfaces/PropertyForm";
 import {
-  BASE_API_URL,
+  baseQueryWithAuth,
   invalidateAllTags,
   listTag,
   TAGS,
 } from "@/utils/rtkQueryHelpers";
 
+const safeDecode = (param: string) => {
+  try {
+    return decodeURIComponent(param);
+  } catch {
+    return param;
+  }
+};
+
 export const apiSlice = createApi({
   reducerPath: "api",
-  // baseQuery: baseQueryWithAuth,
-  baseQuery: fetchBaseQuery({
-    baseUrl: BASE_API_URL,
-    credentials: "include",
-  }),
+  baseQuery: baseQueryWithAuth,
   tagTypes: TAGS,
 
   endpoints: (builder) => ({
@@ -77,10 +81,14 @@ export const apiSlice = createApi({
       GetUserByPhoneNoResponse,
       { phoneNo: string }
     >({
-      query: ({ phoneNo }) => ({
-        url: `/admin/search-user?phoneNo=${phoneNo}`,
-        method: "GET",
-      }),
+      query: ({ phoneNo }) => {
+        const raw = safeDecode(phoneNo).trim();
+        return {
+          url: "/admin/search-user",
+          params: { phoneNo: raw },
+          method: "GET",
+        };
+      },
       providesTags: (_r, _e, { phoneNo }) =>
         [{ type: "UserDetail", id: phoneNo }] as const,
     }),
@@ -204,13 +212,27 @@ export const apiSlice = createApi({
     // ──────────────── PHOTO ────────────────
     presignedUrls: builder.mutation<
       {
-        propertyID: string;
         fileURLMap: Record<string, string>;
       },
-      { fileMap: Record<string, string> }
+      { propertyID: string; fileMap: Record<string, string> }
     >({
       query: (payload) => ({
         url: "/photo/admin/presigned-urls",
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+    deletePresignedUrls: builder.mutation<
+      {
+        fileURLMap: Record<string, string>;
+      },
+      { propertyID: string; fileMap: Record<string, string> }
+    >({
+      query: (payload) => ({
+        url: "photo/admin/delete-presigned-urls",
         method: "POST",
         body: payload,
         headers: {
@@ -226,20 +248,44 @@ export const apiSlice = createApi({
         propertyID: number;
       },
       {
-        payload: AddPropertyRequest;
+        payload: PropertyForm;
         phoneNo: string;
       }
     >({
-      query: ({ phoneNo, payload }) => ({
-        url: `property/admin/add?phoneNo=${phoneNo}`,
-        method: "POST",
-        body: payload,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }),
+      query: ({ phoneNo, payload }) => {
+        const rawPhoneNo = safeDecode(phoneNo);
+        return {
+          url: "property/admin/add",
+          params: { phoneNo: rawPhoneNo },
+          method: "POST",
+          body: payload,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+      },
       invalidatesTags: (_r, _e, { phoneNo }) =>
         [{ type: "UserDetail", id: phoneNo }, ...listTag("Users")] as const,
+    }),
+    propertyUpdate: builder.mutation<
+      { message: string; propertyID: number },
+      {
+        payload: Partial<PropertyForm> & { propertyID: string };
+        phoneNo: string;
+      }
+    >({
+      query: ({ phoneNo, payload }) => {
+        const rawPhoneNo = safeDecode(phoneNo);
+        return {
+          url: "property/admin/update",
+          params: { phoneNo: rawPhoneNo },
+          method: "PUT",
+          body: payload,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+      },
     }),
 
     getProperties: builder.query<
@@ -305,10 +351,11 @@ export const apiSlice = createApi({
       {
         propertyID: string;
         comment: string;
+        score: number;
       }
     >({
-      query: ({ propertyID, comment }) => ({
-        url: `/property/admin/verify-property?propertyId=${propertyID}&comment=${comment}`,
+      query: ({ propertyID, comment, score }) => ({
+        url: `/property/admin/verify-property?propertyId=${propertyID}&comment=${comment}&score=${score}`,
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -356,6 +403,26 @@ export const apiSlice = createApi({
           ...listTag("PropertiesToReverify"),
         ] as const,
     }),
+
+    addConnects: builder.mutation<
+      { message: string },
+      {
+        connectCount: number;
+        phoneNo: string;
+      }
+    >({
+      query: ({ connectCount, phoneNo }) => {
+        const rawPhoneNo = safeDecode(phoneNo).trim();
+        return {
+          url: "/admin/add-connects",
+          params: { connectCount: connectCount, phoneNo: rawPhoneNo },
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+      },
+    }),
   }),
 });
 
@@ -374,11 +441,14 @@ export const {
   useLeadStatusUpdateMutation,
   useLeadAddCommentMutation,
   usePresignedUrlsMutation,
+  useDeletePresignedUrlsMutation,
   usePropertyAddMutation,
+  usePropertyUpdateMutation,
   useGetPropertiesQuery,
   useGetPropertyByIdQuery,
   useGetPropertiesToVerifyQuery,
   useGetPropertiesToReverifyQuery,
   useVerifyPropertyMutation,
   useDeactivatePropertyMutation,
+  useAddConnectsMutation,
 } = apiSlice;

@@ -4,11 +4,31 @@ export default {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/dialogs/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/base-components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/form-components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/utility-components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/layout-components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/utils/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/data/**/*.json",
     "./.storybook/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
+      fontSize: {
+        // Smaller fonts
+        xxs: "0.625rem", // 10px
+        xxxs: "0.5rem", // 8px
+      },
+      spacing: {
+        // Safe area variables
+        "safe-top": "env(safe-area-inset-top)",
+        "safe-right": "env(safe-area-inset-right)",
+        "safe-bottom": "env(safe-area-inset-bottom)",
+        "safe-left": "env(safe-area-inset-left)",
+        "safe-bottom-2": "calc(env(safe-area-inset-bottom) + 0.5rem)",
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
@@ -69,6 +89,9 @@ export default {
           "0%": { transform: "scale(1)", opacity: "1" },
           "100%": { transform: "scale(0.95)", opacity: "0" },
         },
+        shimmer: {
+          "100%": { transform: "translateX(100%)" },
+        },
       },
       animation: {
         "fade-in": "fade-in 300ms ease-out",
@@ -83,6 +106,7 @@ export default {
         "slide-out-right": "slide-out-right 300ms ease-in",
         "zoom-in": "zoom-in 300ms cubic-bezier(0.34, 1.56, 0.64, 1)",
         "zoom-out": "zoom-out 300ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+        shimmer: "shimmer 1.5s infinite",
       },
     },
   },

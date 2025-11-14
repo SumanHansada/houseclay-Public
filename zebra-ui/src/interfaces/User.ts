@@ -1,6 +1,6 @@
 import { PaymentStatusEnum } from "@/common/enums";
 
-import { PropertyInfo } from "./Property";
+import { PropertyInfo } from "./PropertyInfo";
 
 export interface UserInfo {
   name: string;
@@ -43,6 +43,8 @@ export interface UserDetails extends UserInfo {
   createdAt: string;
   blacklistedAt: string;
   broker: boolean;
+  connectBal: number;
+
   userUpdates: UserUpdate[];
   ownedProperties: PropertyInfo[];
   shortlistedProperties: PropertyInfo[];

@@ -24,7 +24,7 @@ export enum PropertyListingType {
   CALL = "CALL",
 }
 
-export enum PropertyCategoryEnum {
+export enum PropertyCategory {
   NONE = "",
   RENT = "RENT",
   RESALE = "RESALE",
@@ -36,7 +36,7 @@ export enum BadgeTypeEnum {
   Exclusive = "Exclusive",
 }
 
-export enum PropertyStatusEnum {
+export enum PropertyStatus {
   PENDING = "PENDING_VERIFICATION",
   VERIFIED = "ACTIVE",
   REPORT = "REPORT",

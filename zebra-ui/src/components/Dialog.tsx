@@ -4,10 +4,7 @@ import { FocusTrap } from "focus-trap-react";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  DeviceContextProps,
-  useDeviceContext,
-} from "@/providers/DeviceContextProvider";
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
 import { RootState } from "@/store/store";
@@ -21,14 +18,14 @@ interface DialogProps {
   children: React.ReactNode;
   entryAnimation?: string; // New prop for entry animation
   exitAnimation?: string; // New prop for exit animation
+  disableOverlayClick?: boolean; // New prop to disable overlay click
 }
 
 const getDialogStyles = (
   type: string,
-  deviceContext?: DeviceContextProps,
+  isMobile?: boolean,
   hideStickyFooter?: boolean,
 ): string => {
-  const isMobile = deviceContext?.isMobile;
   switch (type) {
     case "fullscreen":
       return `fixed inset-0 bg-white flex flex-col ${
@@ -71,31 +68,35 @@ export const Dialog: React.FC<DialogProps> = ({
   children,
   entryAnimation = "animate-fade-in", // Default entry animation
   exitAnimation = "animate-fade-out", // Default exit animation
+  disableOverlayClick = false, // Default to allowing overlay click
 }) => {
-  const { isDialogOpen, closeDialog } = useDialog();
+  const { isDialogOpen, isDialogClosing, closeDialog } = useDialog();
   const isOpen = isDialogOpen(id);
-  const deviceContext = useDeviceContext();
+  const isClosing = isDialogClosing(id);
+  const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
   const hideStickyFooter = useSelector(
     (state: RootState) => state.app.hideStickyNavBar,
   );
-  const [isClosing, setIsClosing] = useState(false);
+  const [shouldRender, setShouldRender] = useState(isOpen);
   const dialogOverlayStyles = overlayStyles(type, hideStickyFooter);
 
   useEffect(() => {
-    if (!isOpen) {
-      setIsClosing(true);
-      setTimeout(() => setIsClosing(false), 300); // Animation duration
+    if (isOpen) {
+      setShouldRender(true);
+    } else if (!isOpen && !isClosing) {
+      // Only unmount when dialog is fully closed (not open and not closing)
+      setShouldRender(false);
     }
-  }, [isOpen]);
+  }, [isOpen, isClosing]);
 
   useEffect(() => {
-    if (deviceContext?.isMobile && type === "fullscreen") {
+    if (isMobile && type === "fullscreen") {
       dispatch(setHideStickyNavBar(true));
-    } else if (deviceContext?.isMobile && type === "bottom-sheet") {
+    } else if (isMobile && type === "bottom-sheet") {
       dispatch(setHideStickyNavBar(true));
     }
-  }, [deviceContext?.isMobile, type, dispatch]);
+  }, [isMobile, type, dispatch]);
 
   useEffect(() => {
     if (isOpen) {
@@ -109,17 +110,17 @@ export const Dialog: React.FC<DialogProps> = ({
     };
   }, [isOpen]);
 
-  if (!isOpen && !isClosing) return null;
+  if (!shouldRender) return null;
 
   const handleOverlayClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isOpen) {
+    if (isOpen && !disableOverlayClick) {
       closeDialog(id); // Close dialog via context
       onClose();
     }
   };
 
-  const dialogStyles = getDialogStyles(type, deviceContext, hideStickyFooter);
+  const dialogStyles = getDialogStyles(type, isMobile, hideStickyFooter);
 
   return (
     <FocusTrap
@@ -149,6 +150,14 @@ export const Dialog: React.FC<DialogProps> = ({
           }}
           onClick={(e) => e.stopPropagation()}
         >
+          {isMobile && type === "bottom-sheet" && (
+            <div
+              id="dragArea"
+              className="w-full flex justify-center items-center px-4 pt-2"
+            >
+              <div className="w-12 h-1 rounded-full bg-gray-300"></div>
+            </div>
+          )}
           {children}
         </div>
       </div>
@@ -156,14 +165,13 @@ export const Dialog: React.FC<DialogProps> = ({
   );
 };
 
-export const DialogHeader: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const { isMobile } = useDeviceContext();
-
+export const DialogHeader: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+}> = ({ children, className = "" }) => {
   return (
     <div
-      className={`${isMobile ? "border-b border-gray-200 h-[55px]" : ""} flex items-center justify-between`}
+      className={`relative ${children ? "h-14 border-b border-gray-200 flex max-md:px-4 max-md:py-2 max-md:items-center max-md:justify-center md:px-6 md:py-4 md:items-start md:justify-start" : ""} ${className}`}
     >
       {children}
     </div>
@@ -178,6 +186,13 @@ export const DialogContent: React.FC<{ children: React.ReactNode }> = ({
   </div>
 );
 
-export const DialogFooter: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => <div className="border-t border-gray-200 flex">{children}</div>;
+export const DialogFooter: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+}> = ({ children, className = "" }) => (
+  <div
+    className={`${children ? "flex pb-safe-bottom-2 pt-2 md:px-6 px-4 justify-center" : ""} ${className}`}
+  >
+    {children}
+  </div>
+);

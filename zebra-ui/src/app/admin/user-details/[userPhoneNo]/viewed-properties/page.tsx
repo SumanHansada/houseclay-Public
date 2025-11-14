@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 
-import { PropertyInfo } from "@/interfaces/Property";
+import { PropertyInfo } from "@/interfaces/PropertyInfo";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 import {
   buildPropertyColumns,

@@ -6,7 +6,7 @@ import { AddAdminFormValues } from "../page";
 
 export const DocumentUpload: React.FC<{
   label: string;
-  fieldName: "pan" | "aadhar";
+  fieldName: "pan" | "aadhaar";
 }> = ({ label, fieldName }) => {
   const { setFieldValue } = useFormikContext<AddAdminFormValues>();
   const [field, meta] = useField<File | null>(`documents.${fieldName}`);

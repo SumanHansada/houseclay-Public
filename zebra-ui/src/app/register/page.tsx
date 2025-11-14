@@ -2,15 +2,15 @@
 
 import { Form, Formik, FormikHelpers } from "formik";
 import { useRouter } from "next/navigation";
-import HouseClaySvg from "public/icons/houseclay.svg";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
-import FormInputField from "@/components/common/FormInputField";
+import { FormTextField } from "@/form-components";
 import { authFailure, authSuccess } from "@/store/adminAuthSlice";
 import { useLoginMutation, useRegisterMutation } from "@/store/apiSlice";
 import { RootState } from "@/store/store";
+import { SvgIcon } from "@/utility-components";
 import { toErrorMessage } from "@/utils/rtkError";
 
 const registerSchema = Yup.object().shape({
@@ -30,8 +30,6 @@ interface RegisterFormValues {
   password: string;
   confirmPassword: string;
 }
-
-const HouseClay = HouseClaySvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 export default function AdminRegister() {
   const router = useRouter();
@@ -81,18 +79,18 @@ export default function AdminRegister() {
   };
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900 h-screen flex justify-center items-center">
-      <div className="flex flex-col items-center justify-center mx-auto w-4/5 md:w-3/4 lg:w-2/3 xl:w-1/3">
-        <div className="flex items-center mb-4 text-3xl gap-2">
-          <HouseClay />
-          <span className="text-red-600 text-lg font-nunito font-bold">
-            HouseClay
+    <section className="bg-gray-100 h-screen flex justify-center items-center">
+      <div className="flex flex-col items-center justify-center mx-auto w-4/5 md:w-2/3 lg:w-3/5 xl:w-1/2 2xl:w-2/5">
+        <div className="flex items-center mb-4 gap-1">
+          <SvgIcon name="houseclay" iconSize="small" size={25} />
+          <span className="text-red-500 text-2xl font-nunito font-bold">
+            ZEBRA | houseclay
           </span>
         </div>
 
-        <div className="w-full bg-white rounded-lg shadow dark:border dark:bg-gray-800 dark:border-gray-700">
+        <div className="w-full bg-white rounded-lg shadow">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
               Create a new account
             </h1>
 
@@ -103,35 +101,37 @@ export default function AdminRegister() {
             >
               {({ isSubmitting }) => (
                 <Form className="space-y-4 md:space-y-6">
-                  <FormInputField
+                  <FormTextField
                     name="name"
                     label="Name"
                     placeholder="Enter your full name"
-                    dataType="text"
+                    dataType="string"
                     required
                   />
 
-                  <FormInputField
+                  <FormTextField
                     name="username"
                     label="Username"
                     placeholder="Choose a username"
-                    dataType="text"
+                    dataType="string"
                     required
                   />
 
-                  <FormInputField
+                  <FormTextField
                     name="password"
                     label="Password"
                     placeholder="••••••••"
-                    dataType="password"
+                    type="password"
+                    dataType="string"
                     required
                   />
 
-                  <FormInputField
+                  <FormTextField
                     name="confirmPassword"
                     label="Confirm Password"
                     placeholder="••••••••"
-                    dataType="password"
+                    type="password"
+                    dataType="string"
                     required
                   />
 
@@ -147,18 +147,18 @@ export default function AdminRegister() {
                     disabled={
                       isSubmitting || isRegisterLoading || isLoginLoading
                     }
-                    className="w-full text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isRegisterLoading || isLoginLoading
                       ? "Authenticating..."
                       : "Register"}
                   </button>
 
-                  <p className="text-sm font-light text-gray-500 dark:text-gray-400 text-center">
+                  <p className="text-sm font-light text-gray-500 text-center">
                     Already have an account?{" "}
                     <a
                       href="/login"
-                      className="font-medium text-red-600 hover:underline dark:text-red-500"
+                      className="font-medium text-red-600 hover:underline"
                     >
                       Sign in
                     </a>

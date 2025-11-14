@@ -1,6 +1,6 @@
 import React, { JSX } from "react";
 
-import { PropertyStatusEnum } from "@/common/enums";
+import { PropertyStatus } from "@/common/enums";
 import { Pill } from "@/components/Pill";
 import { isEnumValue } from "@/utils/core";
 
@@ -8,17 +8,17 @@ interface RenderPropertyStatusProps {
   status: string;
 }
 
-const statusMap: Record<PropertyStatusEnum, JSX.Element> = {
-  [PropertyStatusEnum.PENDING]: <Pill color="blue">Pending</Pill>,
-  [PropertyStatusEnum.VERIFIED]: <Pill color="green">Verified</Pill>,
-  [PropertyStatusEnum.REPORT]: <Pill color="orange">Reported</Pill>,
-  [PropertyStatusEnum.INACTIVE]: <Pill color="red">Inactive</Pill>,
+const statusMap: Record<PropertyStatus, JSX.Element> = {
+  [PropertyStatus.PENDING]: <Pill color="blue">Pending</Pill>,
+  [PropertyStatus.VERIFIED]: <Pill color="green">Verified</Pill>,
+  [PropertyStatus.REPORT]: <Pill color="orange">Reported</Pill>,
+  [PropertyStatus.INACTIVE]: <Pill color="red">Inactive</Pill>,
 };
 
 export const RenderPropertyStatus: React.FC<RenderPropertyStatusProps> = ({
   status,
 }) => {
-  if (!isEnumValue(PropertyStatusEnum, status)) {
+  if (!isEnumValue(PropertyStatus, status)) {
     console.warn(`[RenderPropertyStatus] Invalid status: "${status}"`);
     return <Pill color="gray">Unknown</Pill>;
   }
