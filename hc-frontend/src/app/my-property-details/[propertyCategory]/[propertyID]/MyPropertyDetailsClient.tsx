@@ -18,7 +18,9 @@ import {
   Hourglass,
   House,
   Landmark,
+  Mail,
   MapPin,
+  PhoneCall,
   PlugZap,
   Ruler,
   Sofa,
@@ -30,7 +32,7 @@ import {
   Wine,
 } from "lucide-react";
 import { EditIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
 import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
 import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
@@ -52,7 +54,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 
 import { Button } from "@/base-components";
-import { LeadCategory, PropertyCategory } from "@/common/enums";
+import { LeadCategory, PropertyCategory, PropertyStatus } from "@/common/enums";
 import {
   formatDateToReadable,
   formatINRCurrency,
@@ -97,6 +99,8 @@ type PropertyData = {
   property?: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   propertyUpdates?: any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  contactUsers?: any[];
 };
 
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -162,7 +166,6 @@ const AmenitiesMap = {
     icon: <DedicatedWorkspaceIcon />,
   },
   Wifi: { label: "Wifi", icon: <WifiIcon /> },
-  // "BBQ Grill": { label: "BBQ Grill", icon: <BBQGrillIcon /> },
   "Pool Table": { label: "Pool Table", icon: <PoolTableIcon /> },
   "First Aid Kit": { label: "First Aid Kit", icon: <FirstAidKitIcon /> },
 };
@@ -174,6 +177,7 @@ export function MyPropertyDetailsClient({
   const router = useRouter();
   const dispatch = useDispatch();
   const { isMobile } = useDeviceContext();
+  const searchParams = useSearchParams();
   const [deactivatingProperty] = useDeactivatePropertyMutation();
   const { data: propertyDataRaw, isLoading: isPropertyLoading } =
     useGetMyPropertyByIdQuery(propertyID, {
@@ -184,6 +188,7 @@ export function MyPropertyDetailsClient({
   const propertyData = propertyDataRaw as PropertyData | undefined;
   const property = propertyData?.property;
   const propertyUpdates = propertyData?.propertyUpdates ?? [];
+  const contactedUsers = propertyData?.contactUsers ?? [];
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const [generateLead, { isLoading: _isGeneratingLead }] =
@@ -253,7 +258,13 @@ export function MyPropertyDetailsClient({
             variant="secondary"
             size="custom"
             className="rounded-full p-1"
-            onClick={() => router.back()}
+            onClick={() => {
+              if (searchParams.get("from") === "list-property") {
+                router.push("/");
+              } else {
+                router.back();
+              }
+            }}
           >
             <ChevronLeft size={24} />
           </Button>
@@ -485,7 +496,7 @@ export function MyPropertyDetailsClient({
                   {/* Rental/Sale/Flatmate Details Section */}
                   <section className="py-6 my-6 max-md:py-3 max-md:my-3">
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 text-base justify-items-start items-center">
-                      {property?.propertyCategory === "Rent" && (
+                      {property?.propertyCategory === PropertyCategory.RENT && (
                         <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                           <div className="flex-col">
                             <div className="p-0.5">
@@ -502,8 +513,9 @@ export function MyPropertyDetailsClient({
                           </div>
                         </div>
                       )}
-                      {(property?.propertyCategory === "Rent" ||
-                        property?.propertyCategory === "Flatmate") && (
+                      {(property?.propertyCategory === PropertyCategory.RENT ||
+                        property?.propertyCategory ===
+                          PropertyCategory.FLATMATE) && (
                         <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                           <div className="flex-col">
                             <div className="p-0.5">
@@ -524,8 +536,9 @@ export function MyPropertyDetailsClient({
                           </div>
                         </div>
                       )}
-                      {(property?.propertyCategory === "Rent" ||
-                        property?.propertyCategory === "Flatmate") && (
+                      {(property?.propertyCategory === PropertyCategory.RENT ||
+                        property?.propertyCategory ===
+                          PropertyCategory.FLATMATE) && (
                         <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                           <div className="flex-col">
                             <div className="p-0.5">
@@ -897,9 +910,39 @@ export function MyPropertyDetailsClient({
                 <TabContent value="prospects">
                   <section className="py-6">
                     <h2 className="text-lg font-semibold mb-2">Prospects</h2>
-                    <p className="text-gray-700">
-                      No prospects information available yet.
-                    </p>
+
+                    {contactedUsers.length
+                      ? contactedUsers.map((user) => (
+                          <div
+                            key={user.phoneNo}
+                            className="flex max-lg:flex-col w-full bg-gray-100 rounded-lg py-3 px-4 text-lg mb-4 max-lg:gap-2"
+                          >
+                            <div className="flex-1 lg:border-r border-gray-400 px-4">
+                              {user.name}
+                            </div>
+                            <a
+                              href={`tel:${user.phoneNo}`}
+                              className="flex-1 lg:border-r border-gray-400 px-4 flex gap-1 items-center"
+                            >
+                              <PhoneCall size={20} />
+                              <span className="hover:underline">
+                                {user.phoneNo}
+                              </span>
+                            </a>
+                            {user.email && (
+                              <a
+                                href={`mailto:${user.email}`}
+                                className="flex-1 px-4 flex gap-1 items-center"
+                              >
+                                <Mail size={20} />
+                                <span className="hover:underline">
+                                  {user.email}
+                                </span>
+                              </a>
+                            )}
+                          </div>
+                        ))
+                      : "Currently no prospects!"}
                   </section>
                 </TabContent>
               </Tabs>
@@ -911,7 +954,7 @@ export function MyPropertyDetailsClient({
             <div className="py-12 mx-auto">
               <div className="flex justify-end">
                 <h1 className="text-xl text-gray-900 m-1 flex items-center gap-2">
-                  10{" "}
+                  {contactedUsers.length ?? 0}{" "}
                   <span className="text-gray-500 text-base">
                     People Connected
                   </span>{" "}
@@ -921,17 +964,19 @@ export function MyPropertyDetailsClient({
                 </h1>
               </div>
             </div>
-            <div className="flex py-0 ml-auto justify-end">
-              <button
-                className="border border-green-500 text-green-500 px-4 py-2 rounded-lg flex items-center gap-2"
-                onClick={handleDeactivatingProperty}
-              >
-                <Stamp size={20} />{" "}
-                {property?.propertyCategory === PropertyCategory.RESALE
-                  ? "Mark as Sold"
-                  : "Mark as Rented"}
-              </button>
-            </div>
+            {property?.propertyState === PropertyStatus.INACTIVE ? null : (
+              <div className="flex py-0 ml-auto justify-end">
+                <button
+                  className="border border-green-500 text-green-500 px-4 py-2 rounded-lg flex items-center gap-2"
+                  onClick={handleDeactivatingProperty}
+                >
+                  <Stamp size={20} />{" "}
+                  {property?.propertyCategory === PropertyCategory.RESALE
+                    ? "Mark as Sold"
+                    : "Mark as Rented"}
+                </button>
+              </div>
+            )}
             <div className="pt-4">
               <PostedAndRentDetails
                 property={property}
@@ -954,15 +999,18 @@ export function MyPropertyDetailsClient({
           <EditIcon size={20} /> Edit
         </button>
 
-        <button
-          type="submit"
-          className="flex gap-2 items-center px-6 py-3 border border-green-500 text-green-500 rounded-xl hover:bg-green-600 hover:text-white disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300"
-        >
-          <Stamp size={20} />{" "}
-          {property?.propertyCategory === PropertyCategory.RESALE
-            ? "Mark as Sold"
-            : "Mark as Rented"}
-        </button>
+        {property?.propertyState === PropertyStatus.INACTIVE ? null : (
+          <button
+            type="submit"
+            className="flex gap-2 items-center px-6 py-3 border border-green-500 text-green-500 rounded-xl hover:bg-green-600 hover:text-white disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300"
+            onClick={handleDeactivatingProperty}
+          >
+            <Stamp size={20} />{" "}
+            {property?.propertyCategory === PropertyCategory.RESALE
+              ? "Mark as Sold"
+              : "Mark as Rented"}
+          </button>
+        )}
       </MobileFooter>
 
       {/* Fullscreen Photo Viewer */}
