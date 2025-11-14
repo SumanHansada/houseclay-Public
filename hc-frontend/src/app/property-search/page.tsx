@@ -6,8 +6,12 @@ import {
   SearchIcon,
   SlidersHorizontal,
 } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import {
+  ReadonlyURLSearchParams,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
+import { useEffect, useMemo, useRef } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -38,9 +42,9 @@ import {
 } from "@/store/appSlice";
 import {
   setAvailability,
+  setBhkType,
   setExclusiveFilter,
   setLocation,
-  setPropertyBhk,
   setPropertyCategory,
   setPropertyType,
   setSortFields,
@@ -51,13 +55,13 @@ import { RootState } from "@/store/store";
 import { ImageWithLoader } from "@/utility-components";
 
 // normalize & validate category from URL
-// function getUrlCategory(sp: ReadonlyURLSearchParams): PropertyCategory {
-//   const raw = (sp.get("propertyCategory") || "").toUpperCase();
-//   const values = Object.values(PropertyCategory) as string[];
-//   return values.includes(raw)
-//     ? (raw as PropertyCategory)
-//     : PropertyCategory.RENT;
-// }
+function getUrlCategory(sp: ReadonlyURLSearchParams): PropertyCategory {
+  const raw = (sp.get("propertyCategory") || "").toUpperCase();
+  const values = Object.values(PropertyCategory) as string[];
+  return values.includes(raw)
+    ? (raw as PropertyCategory)
+    : PropertyCategory.RENT;
+}
 
 const PROPERTY_FILTERS_DIALOG_ID = "property-filters-dialog";
 const SORT_FILTERS_DIALOG_ID = "sort-filters-dialog";
@@ -74,6 +78,8 @@ export default function PropertySearchPage() {
   const router = useRouter();
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
+  const urlCategory = getUrlCategory(searchParams);
+  const isFilterDialogChange = useRef(false);
 
   const location = searchState.location;
   const locationSearch = location?.name || "";
@@ -85,17 +91,21 @@ export default function PropertySearchPage() {
   const selectedSortToken = stateToToken({ exclusive, sortFields, sortOrder });
 
   // Hydrate category from URL on first load / URL change
-  // useEffect(() => {
-  //   if (urlCategory !== searchState.propertyCategory) {
-  //     dispatch(setPropertyCategory(urlCategory));
-  //   }
-  // }, [dispatch, urlCategory, searchState.propertyCategory]);
+  useEffect(() => {
+    if (isFilterDialogChange.current) {
+      isFilterDialogChange.current = false;
+      return; // Skip hydration if change came from filter dialog (already in sync)
+    }
+
+    if (urlCategory !== searchState.propertyCategory) {
+      dispatch(setPropertyCategory(urlCategory));
+    }
+  }, [dispatch, urlCategory]);
 
   // Parse BHK selections from comma-separated Redux string
   const bhkSelectedValues = useMemo<string[]>(
-    () =>
-      searchState.propertyBhk ? String(searchState.propertyBhk).split(",") : [],
-    [searchState.propertyBhk],
+    () => (searchState.bhkType ? String(searchState.bhkType).split(",") : []),
+    [searchState.bhkType],
   );
 
   // small helper: mutate & replace URL
@@ -118,7 +128,7 @@ export default function PropertySearchPage() {
         dispatch(setTenantType(""));
       } else if (cat === PropertyCategory.FLATMATE) {
         q.delete("bhkType");
-        dispatch(setPropertyBhk(""));
+        dispatch(setBhkType(""));
       }
     });
   };
@@ -138,7 +148,7 @@ export default function PropertySearchPage() {
   // New multi-select handler (keeps Redux as comma-separated string; updates URL)
   const onBhkMultiChange = (vals: (string | number | boolean)[]) => {
     const asStr = vals.map(String);
-    dispatch(setPropertyBhk(asStr.join(",")));
+    dispatch(setBhkType(asStr.join(",")));
     replaceQuery((q) => {
       if (asStr.length) {
         q.set("bhkType", asStr.join(","));
@@ -368,12 +378,13 @@ export default function PropertySearchPage() {
     if (searchState.propertyType && searchState.propertyType !== "") {
       params.set("propertyType", String(searchState.propertyType));
     }
-    if (searchState.propertyBhk && searchState.propertyBhk !== "") {
-      params.set("bhkType", String(searchState.propertyBhk));
+    if (searchState.bhkType && searchState.bhkType !== "") {
+      params.set("bhkType", String(searchState.bhkType));
     }
     if (searchState.tenantType && searchState.tenantType !== "") {
       params.set("preferredTenant", String(searchState.tenantType));
     }
+
     if (searchState.availability && searchState.availability !== "Any") {
       params.set("availability", searchState.availability);
     }
@@ -525,6 +536,7 @@ export default function PropertySearchPage() {
             {searchState.propertyCategory === PropertyCategory.RENT ? (
               <MultiSelectDropdown
                 options={[
+                  { value: "studio", label: "Studio" },
                   { value: "1BHK", label: "1 BHK" },
                   { value: "2BHK", label: "2 BHK" },
                   { value: "3BHK", label: "3 BHK" },
@@ -603,18 +615,18 @@ export default function PropertySearchPage() {
           </div>
         </div>
       </section>
+
       <section className="w-full md:pt-[64px] bg-gray-50 relative max-md:pb-12">
         <div className="min-h-screen bg-gray-50 pb-10 xl:px-24 md:px-12 px-6">
           {/* Header Bar */}
           <div className="">
             <div className="flex flex-col gap-4 py-6">
               {/* Filter/Search Bar */}
-
               <div>
                 <p className="text-gray-500 text-sm">
                   {properties.length}{" "}
                   {searchState.propertyCategory === PropertyCategory.FLATMATE
-                    ? "Single Occupancy Rooms for Rent"
+                    ? "Single occupancy rooms for Rent"
                     : searchState.propertyCategory === PropertyCategory.RENT
                       ? "Properties for Rent"
                       : "Properties for Sale"}
@@ -688,6 +700,7 @@ export default function PropertySearchPage() {
           }}
           onReset={() => {}}
           onApply={() => {
+            isFilterDialogChange.current = true;
             closeDialog(PROPERTY_FILTERS_DIALOG_ID);
             dispatch(setHideStickyNavBar(false));
             handleSearch();

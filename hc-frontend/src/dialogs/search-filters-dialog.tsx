@@ -59,7 +59,7 @@ import {
   setPriceRangeForRent,
   setPropertyCategory,
   setPropertyType,
-  setTenant,
+  setTenantType,
 } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
 import {
@@ -87,6 +87,7 @@ const availabilityTypes = [
 ];
 
 const bhkTypes = [
+  { label: "Studio", value: "studio" },
   { label: "1 BHK", value: "1BHK" },
   { label: "2 BHK", value: "2BHK" },
   { label: "3 BHK", value: "3BHK" },
@@ -171,7 +172,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
   const {
     propertyCategory,
     propertyType,
-    tenant,
+    tenantType,
     foodPref,
     bathroomType,
     furnishing,
@@ -442,8 +443,10 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                         },
                       ]}
                       withIcons={true}
-                      value={tenant}
-                      onChange={(value) => dispatch(setTenant(value as string))}
+                      value={tenantType as string}
+                      onChange={(value) =>
+                        dispatch(setTenantType(value as string))
+                      }
                     />
                   </div>
                   <hr className="my-4" />
@@ -662,9 +665,9 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           },
                         ]}
                         withIcons={true}
-                        value={tenant}
+                        value={tenantType as string}
                         onChange={(value) =>
-                          dispatch(setTenant(value as string))
+                          dispatch(setTenantType(value as string))
                         }
                       />
                     </div>
@@ -968,8 +971,8 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                     },
                   ]}
                   withIcons={true}
-                  value={tenant}
-                  onChange={(value) => dispatch(setTenant(value as string))}
+                  value={tenantType as string}
+                  onChange={(value) => dispatch(setTenantType(value as string))}
                 />
               </div>
               <hr className="my-4" />

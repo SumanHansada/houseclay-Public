@@ -17,6 +17,7 @@ import {
 } from "@/store/apiSlice";
 import { setHideStickyNavBar } from "@/store/appSlice";
 import { RootState } from "@/store/store";
+import { setEmailVerified } from "@/store/userSlice";
 
 import { DesktopClient } from "./DesktopClient";
 import Loading from "./loading";
@@ -91,6 +92,7 @@ export default function MyProfilePage() {
       console.log("verification response: ", response);
       emailVerificationTokenRef.current = "";
       closeVerificationDialog();
+      dispatch(setEmailVerified(true));
       openDialog(EMAIL_VERIFICATION_SUCCESS_DIALOG_ID);
     } catch (error) {
       console.error("Failed to verify email:", error);

@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/base-components";
 import { AuthStep } from "@/common/enums";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useGenerateOtpMutation,
   useLazyCheckUserQuery,
@@ -40,7 +39,6 @@ import LazyPhoneInput from "./LazyPhoneInput";
 const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const Login = ({ onClose }: { onClose: () => void }) => {
-  const { closeDialog } = useDialog();
   const {
     authStep,
     loginFromAddProperty,
@@ -166,7 +164,8 @@ const Login = ({ onClose }: { onClose: () => void }) => {
         }
       }
       dispatch(setAuthStep(AuthStep.LOGGED_IN));
-      closeDialog("login-dialog");
+      // closeDialog("login-dialog");
+      onClose();
       if (loginFromBuyConnects) {
         router.push("/buy-connects");
         dispatch(setLoginFromBuyConnects(false));

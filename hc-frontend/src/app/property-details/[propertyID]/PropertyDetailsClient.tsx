@@ -258,7 +258,15 @@ export function PropertyDetailsClient({
           variant="secondary"
           size="custom"
           className="rounded-full p-1"
-          onClick={() => router.back()}
+          onClick={() => {
+            console.log("onClick");
+            if (window.history.length > 1) {
+              router.back();
+            } else {
+              console.log("home page");
+              router.push("/");
+            }
+          }}
         >
           <ChevronLeft size={24} />
         </Button>
@@ -678,10 +686,10 @@ export function PropertyDetailsClient({
                     </div>
                     <div className="flex-col">
                       <div className="flex gap-2 items-center font-nunito text-sm">
-                        No. of Balcony
+                        Balcony
                       </div>
                       <div className="text-gray-900 font-semibold font-nunito text-base">
-                        {property?.balcony} Balcony
+                        {property?.balcony}
                       </div>
                     </div>
                   </div>
