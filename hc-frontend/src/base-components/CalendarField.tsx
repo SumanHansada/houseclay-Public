@@ -288,7 +288,7 @@ const CalendarField: React.FC<CalendarFieldProps> = ({
         ${isToday ? "bg-gray-200" : ""}
         ${isSelected ? "bg-red-500 text-white hover:bg-red-600" : ""}
         ${isFocused && !isSelected ? "ring-2 ring-red-500" : ""}
-        ${isDisabled ? "text-gray-300 cursor-not-allowed" : ""}
+        ${isDisabled ? "text-gray-100 cursor-not-allowed" : ""}
       `,
       tabIndex: isFocused && !isDisabled ? 0 : -1,
       "aria-label": format(date, "EEEE, MMMM do, yyyy"),

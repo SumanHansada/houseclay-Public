@@ -15,7 +15,7 @@ export function PropertyTable({
   onMarkSold,
 }: {
   properties: UserOwnedProperties[];
-  onDashboard: (propertyId: string) => void;
+  onDashboard: (propertyCategory: string, propertyId: string) => void;
   onMarkSold: (propertyId: string) => void;
 }) {
   const columns: Column<UserOwnedProperties>[] = [
@@ -28,7 +28,7 @@ export function PropertyTable({
         return (
           <Link
             href={propertyLink}
-            className="inline-block max-w-xs truncate align-middle font-medium text-gray-800"
+            className="inline-block max-w-[360px] truncate align-middle font-medium text-gray-800"
           >
             {propertyTitle}
           </Link>
@@ -41,9 +41,9 @@ export function PropertyTable({
       className: "w-32",
       render: (prop) => {
         const isResale = prop.propertyCategory === PropertyCategory.RESALE;
-        const amount = isResale ? prop.price : prop.rent;
+        // const amount = isResale ? prop.price : prop.rent;
         const formattedAmount =
-          amount != null ? formatINRCurrency(amount) : "-";
+          prop.price != null ? formatINRCurrency(prop.price) : "-";
         return (
           <span className="font-medium text-gray-800 whitespace-nowrap">
             {isResale ? formattedAmount : `${formattedAmount}/Month`}
@@ -105,7 +105,7 @@ export function PropertyTable({
                 type="button"
                 className="block w-full px-3 py-2 text-left hover:bg-gray-100"
                 onClick={() => {
-                  onDashboard(item.propertyID);
+                  onDashboard(item.propertyCategory, item.propertyID);
                   close();
                 }}
               >

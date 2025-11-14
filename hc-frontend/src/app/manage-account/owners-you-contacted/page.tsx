@@ -6,10 +6,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
-import { FALLBACK_IMG } from "@/common/constants";
 import { BadgeType, PropertyCategory, PropertyStatus } from "@/common/enums";
 import Properties from "@/components/Properties";
-import { PropertyCardWithImages } from "@/interfaces/User";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
@@ -19,7 +17,7 @@ import Loading from "./loading";
 
 const filterOptions = [
   { label: "All", value: PropertyCategory.NONE },
-  { label: "Resale", value: PropertyCategory.RESALE },
+  // { label: "Resale", value: PropertyCategory.RESALE },
   { label: "Rent", value: PropertyCategory.RENT },
   { label: "Flatmate", value: PropertyCategory.FLATMATE },
 ];
@@ -27,9 +25,8 @@ const filterOptions = [
 export default function OwnersContactedPage() {
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
-  const [selectedCategory, setSelectedCategory] = useState<PropertyCategory>(
-    PropertyCategory.NONE,
-  );
+  const [selectedFilterCategory, setSelectedFilterCategory] =
+    useState<PropertyCategory>(PropertyCategory.NONE);
   const [onlyAvailable, setOnlyAvailable] = useState(false);
   const router = useRouter();
 
@@ -42,25 +39,25 @@ export default function OwnersContactedPage() {
     [userDetail.contactedProperties],
   );
 
-  const propertyCards: PropertyCardWithImages[] = useMemo(() => {
-    return contactedProperties.map((prop: PropertyCardWithImages) => ({
-      ...prop,
-      images: prop.image ? [prop.image] : [FALLBACK_IMG],
-    }));
-  }, [contactedProperties]);
+  // const propertyCards: PropertyCardWithImages[] = useMemo(() => {
+  //   return contactedProperties.map((prop: PropertyCardWithImages) => ({
+  //     ...prop,
+  //     images: prop.image ? [prop.image] : [FALLBACK_IMG],
+  //   }));
+  // }, [contactedProperties]);
 
-  const filteredProperties: PropertyCardWithImages[] = useMemo(() => {
-    return propertyCards.filter((prop) => {
+  const filteredProperties = useMemo(() => {
+    return contactedProperties.filter((prop) => {
       if (
-        selectedCategory !== PropertyCategory.NONE &&
-        prop.propertyCategory !== selectedCategory
+        selectedFilterCategory !== PropertyCategory.NONE &&
+        prop.propertyCategory !== selectedFilterCategory
       )
         return false;
       if (onlyAvailable && prop.propertyState !== PropertyStatus.VERIFIED)
         return false;
       return true;
     });
-  }, [propertyCards, selectedCategory, onlyAvailable]);
+  }, [contactedProperties, selectedFilterCategory, onlyAvailable]);
 
   useEffect(() => {
     if (isMobile) {
@@ -113,11 +110,11 @@ export default function OwnersContactedPage() {
         {/* Filter buttons */}
         <div className="flex gap-3 text-lg font-medium text-gray-700 mb-4">
           {filterOptions.map((f) => {
-            const active = selectedCategory === f.value;
+            const active = selectedFilterCategory === f.value;
             return (
               <button
                 key={f.value}
-                onClick={() => setSelectedCategory(f.value)}
+                onClick={() => setSelectedFilterCategory(f.value)}
                 aria-pressed={active}
                 className={`px-4 py-2 rounded-lg border shadow-sm whitespace-nowrap ${
                   active ? "bg-red-500 text-white border-red-500" : "bg-white"
@@ -151,11 +148,11 @@ export default function OwnersContactedPage() {
         {/* Filter buttons */}
         <div className="flex justify-between text-lg m-3 border p-1.5 sm:p-2 rounded-xl mx-8">
           {filterOptions.map((f) => {
-            const active = selectedCategory === f.value;
+            const active = selectedFilterCategory === f.value;
             return (
               <button
                 key={f.value}
-                onClick={() => setSelectedCategory(f.value)}
+                onClick={() => setSelectedFilterCategory(f.value)}
                 aria-pressed={active}
                 className={`px-2 py-1 sm:px-4 sm:py-2 flex-1 whitespace-nowrap ${
                   active ? "border border-red-500 text-red-500 rounded-lg" : ""

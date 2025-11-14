@@ -29,6 +29,7 @@
     "@types/js-cookie": "^3.0.6",
     "@vis.gl/react-google-maps": "^1.5.2",
     "axios": "^1.8.3",
+    "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "evaporate": "^2.1.4",
     "focus-trap-react": "^11.0.3",

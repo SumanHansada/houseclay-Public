@@ -1,7 +1,6 @@
 "use client";
 
-import { Download } from "lucide-react";
-
+import { ConnectBundleTitle } from "@/common/enums";
 import { type Column, DataTable } from "@/components/DataTable";
 import type { UserExternalPayment } from "@/interfaces/User";
 import { SvgIcon } from "@/utility-components";
@@ -10,17 +9,19 @@ import { getStatusConfig } from "./statusConfig";
 
 export function TransactionTable({
   transactions,
-  onDownload,
+  // onDownload,
 }: {
   transactions: UserExternalPayment[];
-  onDownload: (paymentId: string) => void;
+  // onDownload: (paymentId: string) => void;
 }) {
   const columns: Column<UserExternalPayment>[] = [
     {
-      key: "type",
-      label: "Type",
-      accessor: "paymentType",
-      // you can add className here if you want header-specific styling
+      key: "bundle",
+      label: "Bundle Type",
+      render: (transaction) => {
+        const bundleKey = transaction.bundle as keyof typeof ConnectBundleTitle;
+        return ConnectBundleTitle[bundleKey] ?? "Unknown Bundle";
+      },
     },
     {
       key: "dateTime",
@@ -32,11 +33,11 @@ export function TransactionTable({
       key: "connects",
       label: "Connects",
       render: (transaction) =>
-        transaction.connects ? (
-          <span className="inline-flex items-center gap-2">
+        transaction.connectQty ? (
+          <span className="inline-flex items-center gap-1">
             <SvgIcon iconSize="medium" name="coin" size={18} />
             <span className="text-base font-medium">
-              {transaction.connects}
+              {transaction.connectQty}
             </span>
           </span>
         ) : (
@@ -47,7 +48,7 @@ export function TransactionTable({
       key: "amount",
       label: "Amount",
       render: (transaction) => (
-        <span className="font-medium">₹{transaction.amount}/-</span>
+        <span className="font-medium">&#8377;{transaction.amount}/-</span>
       ),
     },
     {
@@ -70,25 +71,25 @@ export function TransactionTable({
         );
       },
     },
-    {
-      key: "invoice",
-      label: "Invoice",
-      render: (transaction) =>
-        transaction.invoice ? (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDownload(transaction.paymentId);
-            }}
-            className="rounded-md p-1 hover:bg-gray-200"
-            aria-label="Download invoice"
-          >
-            <Download size={20} className="text-red-500" />
-          </button>
-        ) : (
-          "-"
-        ),
-    },
+    // {
+    //   key: "invoice",
+    //   label: "Invoice",
+    //   render: (transaction) =>
+    //     transaction.invoice ? (
+    //       <button
+    //         onClick={(e) => {
+    //           e.stopPropagation();
+    //           onDownload(transaction.paymentId);
+    //         }}
+    //         className="rounded-md p-1 hover:bg-gray-200"
+    //         aria-label="Download invoice"
+    //       >
+    //         <Download size={20} className="text-red-500" />
+    //       </button>
+    //     ) : (
+    //       "-"
+    //     ),
+    // },
   ];
 
   return (

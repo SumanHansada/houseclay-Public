@@ -6,11 +6,7 @@ import {
   SearchIcon,
   SlidersHorizontal,
 } from "lucide-react";
-import {
-  ReadonlyURLSearchParams,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,7 +18,6 @@ import {
   SelectDropdown,
 } from "@/base-components";
 import { BadgeType, PropertyCategory } from "@/common/enums";
-import { pascalCase } from "@/common/utils";
 import Properties from "@/components/Properties";
 import { SearchFiltersDialog, SortFiltersDialog } from "@/dialogs";
 import { PropertySearch } from "@/interfaces/PropertySearch";
@@ -56,13 +51,13 @@ import { RootState } from "@/store/store";
 import { ImageWithLoader } from "@/utility-components";
 
 // normalize & validate category from URL
-function getUrlCategory(sp: ReadonlyURLSearchParams): PropertyCategory {
-  const raw = (sp.get("propertyCategory") || "").toUpperCase();
-  const values = Object.values(PropertyCategory) as string[];
-  return values.includes(raw)
-    ? (raw as PropertyCategory)
-    : PropertyCategory.RENT;
-}
+// function getUrlCategory(sp: ReadonlyURLSearchParams): PropertyCategory {
+//   const raw = (sp.get("propertyCategory") || "").toUpperCase();
+//   const values = Object.values(PropertyCategory) as string[];
+//   return values.includes(raw)
+//     ? (raw as PropertyCategory)
+//     : PropertyCategory.RENT;
+// }
 
 const PROPERTY_FILTERS_DIALOG_ID = "property-filters-dialog";
 const SORT_FILTERS_DIALOG_ID = "sort-filters-dialog";
@@ -75,7 +70,6 @@ export default function PropertySearchPage() {
     .get("propertyCategory")
     ?.toUpperCase() as PropertyCategory;
 
-  const urlCategory = getUrlCategory(searchParams);
   const searchState = useSelector((state: RootState) => state.propertySearch);
   const router = useRouter();
   const { isMobile } = useDeviceContext();
@@ -91,11 +85,11 @@ export default function PropertySearchPage() {
   const selectedSortToken = stateToToken({ exclusive, sortFields, sortOrder });
 
   // Hydrate category from URL on first load / URL change
-  useEffect(() => {
-    if (urlCategory !== searchState.propertyCategory) {
-      dispatch(setPropertyCategory(urlCategory));
-    }
-  }, [dispatch, urlCategory, searchState.propertyCategory]);
+  // useEffect(() => {
+  //   if (urlCategory !== searchState.propertyCategory) {
+  //     dispatch(setPropertyCategory(urlCategory));
+  //   }
+  // }, [dispatch, urlCategory, searchState.propertyCategory]);
 
   // Parse BHK selections from comma-separated Redux string
   const bhkSelectedValues = useMemo<string[]>(
@@ -421,16 +415,21 @@ export default function PropertySearchPage() {
         <button className="rounded-full md:border-none items-center justify-center">
           <ChevronLeft onClick={() => router.back()} size={25} />
         </button>
-        <PlacesAutocomplete
-          id="location-search-mobile"
-          name="location"
-          value={locationSearch}
-          onChange={handleLocationChange}
-          onLocationSelect={handleLocationSelect}
-          placeholder="Search for a property"
-          containerClassName="w-full relative"
-          inputClassName="flex items-center h-10 bg-gray-100 w-full px-3 py-1 border-none rounded-full"
-        />
+        <div className="flex items-center h-10 bg-gray-100 w-full pl-3 pr-1 py-1 border-none rounded-full">
+          <PlacesAutocomplete
+            id="location-search-mobile"
+            name="location"
+            value={locationSearch}
+            onChange={handleLocationChange}
+            onLocationSelect={handleLocationSelect}
+            placeholder="Search for a property"
+            containerClassName="w-full relative"
+            inputClassName="h-10 bg-gray-100 w-full border-none outline-none"
+          />
+          <button className="p-2 rounded-full" onClick={handleSearch}>
+            <SearchIcon size={20} />
+          </button>
+        </div>
 
         <Button
           leftIcon={<SlidersHorizontal size={16} />}
@@ -469,7 +468,10 @@ export default function PropertySearchPage() {
               inputClassName="w-full outline-none px-3"
               containerClassName="w-full relative"
             />
-            <button className="p-2 rounded-full bg-gray-100">
+            <button
+              className="p-2 rounded-full bg-gray-100"
+              onClick={handleSearch}
+            >
               <SearchIcon size={20} />
             </button>
           </div>
@@ -483,7 +485,7 @@ export default function PropertySearchPage() {
                 },
                 {
                   value: PropertyCategory.FLATMATE,
-                  label: "Flatmate",
+                  label: "Rooms",
                 },
                 // {
                 //   value: PropertyCategory.RESALE,
@@ -612,9 +614,10 @@ export default function PropertySearchPage() {
                 <p className="text-gray-500 text-sm">
                   {properties.length}{" "}
                   {searchState.propertyCategory === PropertyCategory.FLATMATE
-                    ? "Rooms"
-                    : "Properties"}{" "}
-                  for {pascalCase(propertyCategory || "")}
+                    ? "Single Occupancy Rooms for Rent"
+                    : searchState.propertyCategory === PropertyCategory.RENT
+                      ? "Properties for Rent"
+                      : "Properties for Sale"}
                 </p>
               </div>
             </div>

@@ -37,19 +37,19 @@ export interface PropertyCardWithImages {
 }
 
 export interface UserExternalPayment {
-  paymentType:
-    | "Basic Blue Bundle"
-    | "Premium Gold Bundle"
-    | "Elite Purple Bundle"
-    | "Custom Connects"
-    | string; // pending
+  bundle:
+    | "BASIC_BLUE_BUNDLE"
+    | "PREMIUM_GOLD_BUNDLE"
+    | "ELITE_PURPLE_BUNDLE"
+    | "CUSTOM_CONNECTS"
+    | string;
   paymentId: string;
   amount: number;
-  connects: number;
+  connectQty: number;
   status: "COMPLETED" | "FAILED" | "IN_PROGRESS" | string;
   createdAt: string;
   completedAt: string | null;
-  invoice: boolean;
+  // invoice: boolean;
 }
 
 export interface UserDetailsDTO {

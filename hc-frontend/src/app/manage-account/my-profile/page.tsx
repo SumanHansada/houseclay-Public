@@ -1,7 +1,7 @@
 "use client";
 
 import { Formik, FormikHelpers } from "formik";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
@@ -11,6 +11,10 @@ import {
 } from "@/dialogs";
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
 import { useDialog } from "@/providers/DialogContextProvider";
+import {
+  useGenerateOtpEmailMutation,
+  useVerifyEmailMutation,
+} from "@/store/apiSlice";
 import { setHideStickyNavBar } from "@/store/appSlice";
 import { RootState } from "@/store/store";
 
@@ -34,12 +38,10 @@ export default function MyProfilePage() {
   const { userDetail, userDetailLoading, userDetailError } = useSelector(
     (state: RootState) => state.user,
   );
+  const emailVerificationTokenRef = useRef("");
 
-  // RTK Query mutations
-  // const [updateUserProfile, { isLoading: isUpdating }] =
-  //   useUpdateUserProfileMutation();
-  // const [sendEmailVerification] = useSendEmailVerificationMutation();
-  // const [verifyEmailOTP] = useVerifyEmailOTPMutation();
+  const [generateEmailOTP] = useGenerateOtpEmailMutation();
+  const [verifyEmailOTP] = useVerifyEmailMutation();
 
   const initialValues: MyProfileFormValues = useMemo(
     () => ({
@@ -61,22 +63,38 @@ export default function MyProfilePage() {
     setCurrentFormValues(initialValues);
   }, [initialValues]);
 
-  const handleEmailVerification = () =>
-    openDialog(EMAIL_VERIFICATION_DIALOG_ID);
+  const handleEmailOtpGeneration = async () => {
+    try {
+      const response = await generateEmailOTP().unwrap();
+      console.log("generate otp response: ", response);
+      if (response) {
+        emailVerificationTokenRef.current = response;
+        console.log("Token set:", response);
+        openDialog(EMAIL_VERIFICATION_DIALOG_ID);
+      } else {
+        console.warn("Empty token from API");
+      }
+    } catch (err) {
+      console.error("Error generating OTP:", err);
+    }
+  };
 
   const handleEmailVerificationSubmit = async (email: string, otp: string) => {
+    if (!emailVerificationTokenRef.current) {
+      throw new Error("No token available. Please request a new OTP.");
+    }
     try {
-      console.log("email: " + email + ", otp: " + otp);
-      // await verifyEmailOTP({ email, otp }).unwrap();
-
-      // Update Redux state to reflect email verification
-      // dispatch(updateUserInfo({ emailVerified: true }));
-
+      const response = await verifyEmailOTP({
+        token: emailVerificationTokenRef.current,
+        otp,
+      }).unwrap();
+      console.log("verification response: ", response);
+      emailVerificationTokenRef.current = "";
       closeVerificationDialog();
       openDialog(EMAIL_VERIFICATION_SUCCESS_DIALOG_ID);
     } catch (error) {
       console.error("Failed to verify email:", error);
-      throw error; // Let the dialog handle the error
+      throw error;
     }
   };
 
@@ -142,7 +160,7 @@ export default function MyProfilePage() {
               <DesktopClient
                 editMode={editMode}
                 setEditMode={setEditMode}
-                onVerifyEmail={handleEmailVerification}
+                onVerifyEmail={handleEmailOtpGeneration}
               />
             </section>
 
@@ -151,7 +169,7 @@ export default function MyProfilePage() {
               <MobileClient
                 editMode={editMode}
                 setEditMode={setEditMode}
-                onVerifyEmail={handleEmailVerification}
+                onVerifyEmail={handleEmailOtpGeneration}
               />
             </section>
           </>

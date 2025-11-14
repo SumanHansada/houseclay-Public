@@ -32,7 +32,6 @@ import {
 import { EditIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
-import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
 import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
 import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
 import FireExtinguisherIconSvg from "public/icons/amenities/fire-extinguisher.svg";
@@ -66,6 +65,7 @@ import { Footer, MobileFooter, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
+  useDeactivatePropertyMutation,
   useGenerateLeadMutation,
   useGetMyPropertyByIdQuery,
 } from "@/store/apiSlice";
@@ -83,6 +83,7 @@ import {
 } from "@/utility-components";
 
 import PostedAndRentDetails from "./components/PostedAndRentDetails";
+import { RenderPropertyStatus } from "./components/RenderPropertyStatus";
 import UpgradePropertyBanner from "./components/UpgradePropertyBanner";
 import PropertyDetailsLoading from "./loading";
 
@@ -130,7 +131,6 @@ const DedicatedWorkspaceIcon = DedicatedWorkspaceIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
 const WifiIcon = WifiIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const BBQGrillIcon = BBQGrillIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const PoolTableIcon = PoolTableIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
@@ -156,13 +156,13 @@ const AmenitiesMap = {
   "Swimming Pool": { label: "Swimming Pool", icon: <SwimmingPoolIcon /> },
   "24/7 Power": { label: "24/7 Power", icon: <TwentyFourSevenPowerIcon /> },
   Security: { label: "Security", icon: <SecurityIcon /> },
-  "Parking Space": { label: "Parking Space", icon: <ParkingSpaceIcon /> },
+  "Visitor Parking": { label: "Visitor Parking", icon: <ParkingSpaceIcon /> },
   "Dedicated Workspace": {
     label: "Dedicated Workspace",
     icon: <DedicatedWorkspaceIcon />,
   },
   Wifi: { label: "Wifi", icon: <WifiIcon /> },
-  "BBQ Grill": { label: "BBQ Grill", icon: <BBQGrillIcon /> },
+  // "BBQ Grill": { label: "BBQ Grill", icon: <BBQGrillIcon /> },
   "Pool Table": { label: "Pool Table", icon: <PoolTableIcon /> },
   "First Aid Kit": { label: "First Aid Kit", icon: <FirstAidKitIcon /> },
 };
@@ -174,6 +174,7 @@ export function MyPropertyDetailsClient({
   const router = useRouter();
   const dispatch = useDispatch();
   const { isMobile } = useDeviceContext();
+  const [deactivatingProperty] = useDeactivatePropertyMutation();
   const { data: propertyDataRaw, isLoading: isPropertyLoading } =
     useGetMyPropertyByIdQuery(propertyID, {
       skip: !propertyID,
@@ -234,6 +235,11 @@ export function MyPropertyDetailsClient({
     }
   };
 
+  const handleDeactivatingProperty = async () => {
+    const response = await deactivatingProperty({ propertyID }).unwrap();
+    console.log(response);
+  };
+
   if (isPropertyLoading) {
     return <PropertyDetailsLoading />;
   }
@@ -264,12 +270,10 @@ export function MyPropertyDetailsClient({
           <section className="max-md:min-h-[fit-content] w-full overflow-hidden max-md:hidden">
             <div className="py-12 mx-auto">
               <div>
-                <h1 className="text-3xl text-gray-900 flex items-center gap-2">
+                <h1 className="text-3xl text-gray-900 flex items-center justify-between">
                   {property?.bhkType} in {property?.locationOrSocietyName} for{" "}
                   {pascalCase(property?.propertyCategory)} in {property?.city}
-                  <span className="bg-green-500 rounded-lg text-white px-2 py-1 text-sm">
-                    Active
-                  </span>
+                  <RenderPropertyStatus status={property?.propertyState} />
                 </h1>
               </div>
             </div>
@@ -287,13 +291,13 @@ export function MyPropertyDetailsClient({
                     activeClassName="text-red-600 md:border-b-2 border-red-500 max-md:border max-md:rounded-lg"
                     inactiveClassName="text-gray-700 hover:text-red-500"
                   />
-                  <Tab
+                  {/* <Tab
                     label="Upgrades"
                     value="upgrades"
                     containerClassName="px-4 py-2 max-md:py-1.5 text-base font-medium max-md:font-normal focus:outline-none"
                     activeClassName="text-red-600 md:border-b-2 border-red-500 max-md:border max-md:rounded-lg"
                     inactiveClassName="text-gray-700 hover:text-red-500"
-                  />
+                  /> */}
                   <Tab
                     label="Prospects"
                     value="prospects"
@@ -656,7 +660,9 @@ export function MyPropertyDetailsClient({
                             Water Supply
                           </div>
                           <div className="text-gray-900">
-                            {pascalCase(property?.waterSupply)}
+                            {property?.waterSupply === "borewell-tanker"
+                              ? "Borewell & Tanker"
+                              : pascalCase(property?.waterSupply)}
                           </div>
                         </div>
                       </div>
@@ -878,7 +884,7 @@ export function MyPropertyDetailsClient({
                     </section>
                   )}
                 </TabContent>
-                <TabContent value="upgrades">
+                {/* <TabContent value="upgrades">
                   <section className="py-6 w-full">
                     <h2 className="text-lg font-semibold mb-2">Upgrades</h2>
                     <p className="text-gray-700">
@@ -887,7 +893,7 @@ export function MyPropertyDetailsClient({
                       student who is working to make an app. A life changing app
                     </p>
                   </section>
-                </TabContent>
+                </TabContent> */}
                 <TabContent value="prospects">
                   <section className="py-6">
                     <h2 className="text-lg font-semibold mb-2">Prospects</h2>
@@ -916,7 +922,10 @@ export function MyPropertyDetailsClient({
               </div>
             </div>
             <div className="flex py-0 ml-auto justify-end">
-              <button className="border border-green-500 text-green-500 px-4 py-2 rounded-lg flex items-center gap-2">
+              <button
+                className="border border-green-500 text-green-500 px-4 py-2 rounded-lg flex items-center gap-2"
+                onClick={handleDeactivatingProperty}
+              >
                 <Stamp size={20} />{" "}
                 {property?.propertyCategory === PropertyCategory.RESALE
                   ? "Mark as Sold"

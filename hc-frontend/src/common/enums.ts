@@ -93,3 +93,10 @@ export enum PropertyStatus {
   REPORT = "REPORT",
   INACTIVE = "INACTIVE",
 }
+
+export enum ConnectBundleTitle {
+  BASIC_BLUE_BUNDLE = "Basic Blue Bundle",
+  PREMIUM_GOLD_BUNDLE = "Premium Gold Bundle",
+  ELITE_PURPLE_BUNDLE = "Elite Purple Bundle",
+  CUSTOM_CONNECTS = "Custom Connects",
+}

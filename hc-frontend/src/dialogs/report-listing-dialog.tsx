@@ -2,7 +2,6 @@
 
 import { useFormik } from "formik";
 import { X } from "lucide-react";
-import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 
 import { Button, RadioGroup, TextArea } from "@/base-components";
@@ -14,11 +13,11 @@ import {
 } from "@/components/Dialog";
 import { MobileFooter, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { useDialog } from "@/providers/DialogContextProvider";
-import { setHideStickyNavBar } from "@/store/appSlice";
+import { useReportPropertyMutation } from "@/store/apiSlice";
 interface ReportListingDialogProps {
   id: string;
-  propertyId?: string;
+  propertyId: string;
+  onClose: () => void;
 }
 
 const reportOptions = [
@@ -41,18 +40,15 @@ const validationSchema = Yup.object({
     .required("Please provide additional details"),
 });
 
+const FORM_ID = "report-listing-form";
+
 const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
   id,
   propertyId,
+  onClose,
 }) => {
   const { isMobile } = useDeviceContext();
-  const { closeDialog } = useDialog();
-  const dispatch = useDispatch();
-
-  const handleClose = () => {
-    closeDialog("report-listing-dialog");
-    dispatch(setHideStickyNavBar(true));
-  };
+  const [reportProperty] = useReportPropertyMutation();
 
   const formik = useFormik({
     initialValues: {
@@ -64,9 +60,14 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
       try {
         // TODO: Implement API call to submit report
         console.log("Submitting report:", { ...values, propertyId });
+        const response = await reportProperty({
+          propertyId: propertyId,
+          payload: values,
+        });
+        console.log(response);
 
         // Close dialog and show success message
-        handleClose();
+        onClose();
         // You can add a toast notification here
       } catch (error) {
         console.error("Error submitting report:", error);
@@ -82,7 +83,7 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
     <Dialog
       id={id}
       type={isMobile ? "fullscreen" : "card"}
-      onClose={handleClose}
+      onClose={onClose}
       entryAnimation={isMobile ? "animate-slide-in-right" : "animate-fade-in"}
       exitAnimation={isMobile ? "animate-slide-out-right" : "animate-fade-out"}
     >
@@ -95,7 +96,7 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
                 variant="secondary"
                 size="custom"
                 className="rounded-full p-1"
-                onClick={handleClose}
+                onClick={onClose}
               >
                 <X size={24} />
               </Button>
@@ -109,7 +110,7 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
               </h1>
             }
             <button className="relative rounded-full">
-              <X onClick={handleClose} size={24} />
+              <X onClick={onClose} size={24} />
             </button>
           </div>
         )}
@@ -121,7 +122,11 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
             listing violates our policies or seems inaccurate.
           </p>
 
-          <form onSubmit={formik.handleSubmit} className="space-y-6">
+          <form
+            id={FORM_ID}
+            onSubmit={formik.handleSubmit}
+            className="space-y-6"
+          >
             <RadioGroup
               name="reason"
               label=""
@@ -169,7 +174,7 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
           <div className="flex gap-4 w-full">
             <button
               type="button"
-              onClick={handleClose}
+              onClick={onClose}
               className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
             >
               Cancel
@@ -186,13 +191,14 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
         <div className="flex border-gray-200 w-full justify-end gap-4 max-md:hidden">
           <button
             type="button"
-            onClick={handleClose}
+            onClick={onClose}
             className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
+            form={FORM_ID}
             disabled={!formik.isValid || formik.isSubmitting}
             className="px-6 py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
           >

@@ -34,7 +34,7 @@ const PropertyTypeOptions = ({
   const propertyTypes = [
     {
       id: "rent",
-      label: "Rent",
+      label: "Rent out my property",
       icon: <Rent />,
       type: PropertyCategory.RENT,
     },
@@ -46,7 +46,7 @@ const PropertyTypeOptions = ({
     // },
     {
       id: "flatmates",
-      label: "Flatmates",
+      label: "Find a flatmate",
       icon: <Flatmates />,
       type: PropertyCategory.FLATMATE,
     },
@@ -57,7 +57,7 @@ const PropertyTypeOptions = ({
       <h1
         className={`${isMobile ? "text-2xl" : "lg:text-2xl text-xl lg:mb-8 mb-4"}`}
       >
-        Tell us about your property
+        Tell us what we can do for you today!
       </h1>
       <div
         className={`grid ${isMobile ? "grid-cols-3 max-md:grid-cols-1 lg:gap-4 gap-4" : "grid-cols-2 max-md:grid-cols-1 gap-4 justify-between"} lg:mb-8 mb-4`}

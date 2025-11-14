@@ -22,9 +22,7 @@ const nextConfig: NextConfig = {
       {
         hostname: "houseclay.s3.ap-south-1.amazonaws.com",
       },
-      {
-        hostname: "cdn.houseclay.com",
-      },
+      { protocol: "https", hostname: "cdn.houseclay.com" },
     ],
     formats: ["image/webp", "image/avif"],
     minimumCacheTTL: 3600,

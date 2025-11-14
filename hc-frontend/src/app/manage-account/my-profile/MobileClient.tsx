@@ -1,7 +1,7 @@
 "use client";
 
 import { Form, useFormikContext } from "formik";
-import { ChevronLeft, CircleAlert, CircleCheck, SquarePen } from "lucide-react";
+import { ChevronLeft, CircleAlert, CircleCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -12,7 +12,6 @@ import { FormPhoneField, FormTextField } from "@/form-components";
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
 import { MobileFooter, MobileHeader } from "@/layout-components";
 import { setHideStickyNavBar } from "@/store/appSlice";
-import { SvgIcon } from "@/utility-components";
 
 import { EmailVerifyIncentive } from "../components/EmailVerifyIncentive";
 
@@ -66,7 +65,7 @@ export function MobileClient({
   onVerifyEmail,
 }: MobileClientProps) {
   const router = useRouter();
-  const { values, setFieldValue, resetForm, initialValues } =
+  const { values, resetForm, initialValues } =
     useFormikContext<MyProfileFormValues>();
   const dispatch = useDispatch();
 
@@ -84,6 +83,7 @@ export function MobileClient({
 
   return (
     <>
+      {/* Mobile - commented edit flow */}
       <MobileHeader>
         <MobileHeader.LeftAction>
           <Button
@@ -96,7 +96,7 @@ export function MobileClient({
           </Button>
         </MobileHeader.LeftAction>
         <MobileHeader.Title>My Profile</MobileHeader.Title>
-        {!editMode ? (
+        {/* {!editMode ? (
           <MobileHeader.RightAction>
             <Button
               variant="secondary"
@@ -107,7 +107,7 @@ export function MobileClient({
               <SquarePen size={24} className="p-0.5" />
             </Button>
           </MobileHeader.RightAction>
-        ) : null}
+        ) : null} */}
       </MobileHeader>
 
       <div className="md:hidden">
@@ -162,8 +162,8 @@ export function MobileClient({
                 )}
               </div>
 
-              {/* WhatsApp toggle */}
-              <label className="flex items-center gap-4 cursor-pointer w-full justify-between">
+              {/* WhatsApp toggle - commented */}
+              {/* <label className="flex items-center gap-4 cursor-pointer w-full justify-between">
                 <div className="flex gap-1 items-center">
                   <SvgIcon iconSize="small" name="whatsapp" size={40} />
                   <span className="text-nowrap">Available on WhatsApp</span>
@@ -181,7 +181,7 @@ export function MobileClient({
                   <div className="w-10 h-6 rounded-full bg-gray-300 peer-checked:bg-black transition-colors" />
                   <div className="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow peer-checked:translate-x-4 transition-transform" />
                 </div>
-              </label>
+              </label> */}
             </div>
 
             {/* Email */}
@@ -238,10 +238,10 @@ export function MobileClient({
                 <VerifiedBadge isVerified={values.phoneVerified} />
               }
             />
-            <DisplayRow
+            {/* <DisplayRow
               label="Available on WhatsApp"
               value={values.onWhatsapp ? "Yes" : "No"}
-            />
+            /> */}
             <DisplayRow
               label="Email"
               value={values.email}
@@ -249,7 +249,9 @@ export function MobileClient({
                 <VerifiedBadge isVerified={values.emailVerified} />
               }
             />
-            <EmailVerifyIncentive onVerify={onVerifyEmail} />
+            {values.emailVerified ? null : (
+              <EmailVerifyIncentive onVerify={onVerifyEmail} />
+            )}
           </div>
         )}
       </div>

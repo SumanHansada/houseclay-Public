@@ -71,7 +71,11 @@ const VerifyConnectsDialog: React.FC<VerifyConnectsDialogProps> = ({
             <div className="flex items-center justify-center gap-2">
               <span className="text-yellow-600 text-sm md:text-lg w-full contents">
                 <span className="font-semibold">+{connects} Connects</span>
-                <SvgIcon iconSize="medium" name="connects" size={20} />
+                <SvgIcon
+                  iconSize="medium"
+                  name="connects"
+                  size={isMobile ? 12 : 20}
+                />
                 <span className="">added to account.</span>
               </span>
             </div>

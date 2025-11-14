@@ -134,7 +134,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
 
         {/* Center - Navigation */}
         <div className="flex justify-between items-center w-full text-sm">
-          <nav className="hidden md:flex xl:gap-8 lg:gap-4 md:gap-2 gap-3 text-gray-800 text-base">
+          <nav className="hidden md:flex xl:gap-8 lg:gap-6 md:gap-5 gap-3 text-gray-800 text-base">
             <Link
               href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=rent`}
               data-category="rent"
@@ -159,7 +159,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
               }
               className="relative hover:text-red-500 py-2 nav-link"
             >
-              Flatmate
+              Rooms
             </Link>
             {/* <Link
               href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=resale`}
@@ -180,10 +180,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
             >
               Buy Connects
             </Link>
-            <Link
-              href="/about-us"
-              className="hover:text-red-500 py-2 md:hidden lg:block"
-            >
+            <Link href="/about-us" className="hover:text-red-500 py-2">
               About Us
             </Link>
           </nav>

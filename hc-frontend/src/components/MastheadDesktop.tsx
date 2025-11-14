@@ -42,7 +42,7 @@ const MastHeadDesktop = () => {
             className={`px-6 py-2 text-lg border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.RENT ? "text-red-500 border-b-2 border-red-500" : "text-gray-700"}`}
             onClick={() => dispatch(setPropertyCategory(PropertyCategory.RENT))}
           >
-            Rent
+            Flats for rent
           </button>
           <button
             className={`px-6 py-2 text-lg border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.FLATMATE ? "text-red-500 border-b-2 border-red-500" : "text-gray-700"}`}
@@ -50,7 +50,7 @@ const MastHeadDesktop = () => {
               dispatch(setPropertyCategory(PropertyCategory.FLATMATE))
             }
           >
-            Flatmate
+            Find rooms
           </button>
           {/* <button
             className={`px-6 py-2 text-lg border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.RESALE ? "text-red-500 border-b-2 border-red-500" : "text-gray-700"}`}

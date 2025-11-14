@@ -12,8 +12,12 @@ export const HOUSECLAY_LINKEDIN = "https://in.linkedin.com/company/houseclay";
 
 export const BENGALURU_LOCATION = { lat: 12.9716, lng: 77.5946 };
 
-// 1x1 transparent GIF — tiny, inline, no network
-export const FALLBACK_IMG = "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
+// Currently using Bellandur lat(12.9337127) and lng(77.6621937)
+export const EXPLORE_LOCATION = { lat: 12.9337127, lng: 77.6621937 };
+
+export const CDN_BASE_URL = "https://cdn.houseclay.com";
+export const PLACEHOLDER_IMAGE =
+  "/optimizedIcons/medium/property-placeholder.svg";
 
 // Popular Neighbourhoods
 export const NEIGHBOURHOODS = [

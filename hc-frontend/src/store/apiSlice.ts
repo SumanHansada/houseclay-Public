@@ -246,6 +246,32 @@ export const apiSlice = createApi({
     >({
       query: () => `/property/user/shortlisted-properties`,
     }),
+    reportProperty: builder.mutation<
+      { message: string },
+      { propertyId: string; payload: { reason: string; message: string } }
+    >({
+      query: ({ propertyId, payload }) => ({
+        url: "/property/user/report-property",
+        params: { propertyId: propertyId },
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+    deactivateProperty: builder.mutation<
+      { message: string },
+      { propertyID: string }
+    >({
+      query: ({ propertyID }) => ({
+        url: `/property/user/deactivate/${propertyID}`,
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
     bundleInfo: builder.query<ConnectsBundle[], void>({
       query: () => "/bundle/info",
     }),
@@ -284,7 +310,10 @@ export const apiSlice = createApi({
       }),
     }),
     contactOwner: builder.mutation<
-      { phone: string; name: string; email: string; connectBal: number },
+      {
+        owner: { name: string; phoneNo: string; emailID: string };
+        connectBal: number;
+      },
       { propertyID: string }
     >({
       query: ({ propertyID }) => ({
@@ -300,6 +329,20 @@ export const apiSlice = createApi({
       void
     >({
       query: () => "/property/neighbourhood",
+    }),
+    generateOtpEmail: builder.mutation<string, void>({
+      query: () => ({
+        url: "/user/generate-otp-email",
+        method: "POST",
+        responseHandler: "text",
+      }),
+    }),
+    verifyEmail: builder.mutation<undefined, { otp: string; token: string }>({
+      query: ({ otp, token }) => ({
+        url: "/user/verifyEmail",
+        params: { otp, token },
+        method: "POST",
+      }),
     }),
   }),
 });
@@ -327,10 +370,14 @@ export const {
   useRemoveShortlistedPropertyMutation,
   useGetShortlistedPropertiesQuery,
   useLazyGetShortlistedPropertiesQuery,
+  useReportPropertyMutation,
+  useDeactivatePropertyMutation,
   useBundleInfoQuery,
   useCreateOrderMutation,
   useVerifyPaymentMutation,
   useContactOwnerMutation,
   useStandoutsQuery,
   usePopularNeighbourhoodsQuery,
+  useGenerateOtpEmailMutation,
+  useVerifyEmailMutation,
 } = apiSlice;

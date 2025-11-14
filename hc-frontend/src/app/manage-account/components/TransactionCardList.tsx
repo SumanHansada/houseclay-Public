@@ -14,12 +14,12 @@ interface GroupedTransactions {
 
 interface TransactionCardListProps {
   items: UserExternalPayment[];
-  onDownload: (transactionId: string) => void;
+  // onDownload: (transactionId: string) => void;
 }
 
 export function TransactionCardList({
   items,
-  onDownload,
+  // onDownload,
 }: TransactionCardListProps) {
   // backend guarantees items are already sorted
   const groupedTransactions = useMemo<GroupedTransactions[]>(() => {
@@ -55,7 +55,7 @@ export function TransactionCardList({
               <TransactionCard
                 key={transaction.paymentId}
                 transaction={transaction}
-                onDownload={onDownload}
+                // onDownload={onDownload}
               />
             ))}
           </div>

@@ -8,7 +8,6 @@ import {
   Building2,
   ChevronLeft,
   Compass,
-  Crown,
   Eye,
   Flag,
   Heart,
@@ -70,7 +69,7 @@ import {
   setHideStickyNavBar,
 } from "@/store/appSlice";
 import { RootState } from "@/store/store";
-import { PhotoGallery } from "@/utility-components";
+import { PhotoGallery, SvgIcon } from "@/utility-components";
 import { GoogleMapsDirection } from "@/utility-components";
 
 const BalconyIcon = BalconyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
@@ -264,11 +263,11 @@ export function PropertyDetailsClient({
           <ChevronLeft size={24} />
         </Button>
         <div className="flex gap-2 items-center">
-          {property.managed && (
+          {/* {property.managed && (
             <button className="rounded-full border md:border-none items-center justify-center p-2 bg-gradient-to-br from-yellow-400 via-yellow-500 to-orange-500 fill-current">
               <Crown onClick={() => console.log("Crown Clicked")} size={20} />
             </button>
-          )}
+          )} */}
           {property.featured && (
             <button className="rounded-full border md:border-none items-center justify-center p-2 bg-gradient-to-br from-red-400 via-red-400 to-red-500 fill-current">
               <SquareStar
@@ -317,7 +316,12 @@ export function PropertyDetailsClient({
               className="md:h-[60vh] h-60 rounded-none"
             />
           ) : (
-            <div className="h-60 w-full flex items-center justify-center">
+            <div className="w-full h-60 flex flex-col items-center justify-center bg-gray-100">
+              <SvgIcon
+                iconSize="medium"
+                name="property-placeholder-icon"
+                size={80}
+              />
               <p className="text-gray-500">No images available</p>
             </div>
           )}
@@ -412,8 +416,13 @@ export function PropertyDetailsClient({
                 thumbnailPosition="bottom"
               />
             ) : (
-              <div className="h-96 w-full flex items-center justify-center">
-                <p className="text-gray-500">No images available</p>
+              <div className="w-full h-96 flex flex-col items-center justify-center bg-gray-100">
+                <SvgIcon
+                  iconSize="medium"
+                  name="property-placeholder-icon"
+                  size={120}
+                />
+                <p className="text-gray-500 text-xl">No images available</p>
               </div>
             )}
           </section>
@@ -790,7 +799,7 @@ export function PropertyDetailsClient({
                 </div>
               </section>
               {/* Exclusive listing */}
-              {property.managed ? (
+              {/* {property.managed ? (
                 <section className="flex flex-col justify-between items-center gap-4 mb-6">
                   <button className="px-8 py-3 flex justify-around border rounded-xl w-full text-base max-md:text-sm hover:bg-gray-50 transition-colors">
                     <div className="flex items-center gap-4">
@@ -799,7 +808,7 @@ export function PropertyDetailsClient({
                     </div>
                   </button>
                 </section>
-              ) : null}
+              ) : null} */}
               {/* Featured Property */}
               {property.featured && (
                 <section className="flex flex-col justify-between items-center gap-4 mb-6">
@@ -813,8 +822,9 @@ export function PropertyDetailsClient({
               )}
               <section className="flex flex-col justify-between items-center mb-6">
                 <button
-                  className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-2"
+                  className="text-sm text-gray-700 hover:text-gray-700 flex items-center gap-2 disabled:cursor-not-allowed disabled:text-gray-400"
                   onClick={handleReportListingClick}
+                  disabled={!isAuthenticated}
                 >
                   <Flag size={14} />
                   <span className="underline">Report this listing</span>
@@ -1225,14 +1235,14 @@ export function PropertyDetailsClient({
             </section>
 
             {/* Exclusive listing */}
-            <section className="flex flex-col justify-between items-center gap-4">
+            {/* <section className="flex flex-col justify-between items-center gap-4">
               <button className="px-8 py-3 flex justify-around border rounded-xl w-full text-base max-md:text-sm max-md:hidden hover:bg-gray-50 transition-colors">
                 <div className="flex items-center gap-4">
                   <Crown size={24} className="text-yellow-500" />
                   <span>This is an Exclusive listing</span>
                 </div>
               </button>
-            </section>
+            </section> */}
 
             {/* Report this listing */}
             <section className="flex justify-around items-center">
@@ -1296,6 +1306,10 @@ export function PropertyDetailsClient({
         <ReportListingDialog
           id="report-listing-dialog"
           propertyId={propertyID}
+          onClose={() => {
+            closeDialog("report-listing-dialog");
+            dispatch(setHideStickyNavBar(true));
+          }}
         />
       )}
 

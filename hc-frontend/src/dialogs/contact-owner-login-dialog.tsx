@@ -46,7 +46,7 @@ const ContactOwnerLoginDialog: React.FC<ContactOwnerLoginDialogProps> = ({
         )}
       </DialogHeader>
       <DialogContent>
-        <ContactLogin onSuccess={onSuccess} />
+        <ContactLogin onSuccess={onSuccess} onClose={onClose} />
       </DialogContent>
     </Dialog>
   );

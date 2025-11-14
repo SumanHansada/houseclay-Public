@@ -2,7 +2,7 @@ export type SortFields = "POSTED_ON" | "AVAILABLE_FROM" | "PRICE" | "DISTANCE";
 export type SortOrder = "ASC" | "DESC";
 
 export const SORT_OPTIONS = [
-  { value: "EXCLUSIVE", label: "Exclusive" },
+  // { value: "EXCLUSIVE", label: "Exclusive" },
   { value: "POSTED_DESC", label: "Posted (Latest First)" },
   { value: "POSTED_ASC", label: "Posted (Oldest First)" },
   { value: "AVAIL_ASC", label: "Availability (Early First)" },

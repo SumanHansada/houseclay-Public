@@ -3,10 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
-import { FALLBACK_IMG } from "@/common/constants";
 import { BadgeType } from "@/common/enums";
 import Properties from "@/components/Properties";
-import { PropertyCardWithImages } from "@/interfaces/User";
 import { useStandoutsQuery } from "@/store/apiSlice";
 
 import GridSkeleton from "../GridSkeleton";
@@ -34,14 +32,14 @@ export default function StandoutsRentPage() {
   const noDataYet = standoutProperties.length === 0;
   const showSkeleton = isLoading || (isFetching && noDataYet);
 
-  const standoutPropertyCards: PropertyCardWithImages[] = useMemo(() => {
-    return standoutProperties.map((prop: PropertyCardWithImages) => ({
-      ...prop,
-      images: prop.image ? [prop.image] : [FALLBACK_IMG],
-    }));
-  }, [standoutProperties]);
+  // const standoutPropertyCards: PropertyCardWithImages[] = useMemo(() => {
+  //   return standoutProperties.map((prop: PropertyCardWithImages) => ({
+  //     ...prop,
+  //     images: prop.image ? [prop.image] : [FALLBACK_IMG],
+  //   }));
+  // }, [standoutProperties]);
 
-  console.log("Standout Property cards: ", standoutPropertyCards);
+  // console.log("Standout Property cards: ", standoutPropertyCards);
 
   const handleCardClick = (e: React.MouseEvent, propertyID: string) => {
     e.stopPropagation();
@@ -64,7 +62,7 @@ export default function StandoutsRentPage() {
 
   return (
     <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(330px,1fr))]">
-      {standoutPropertyCards.map((property, idx) => (
+      {standoutProperties.map((property, idx) => (
         <Properties
           key={`${property.propertyID}-${idx}`}
           property={property}

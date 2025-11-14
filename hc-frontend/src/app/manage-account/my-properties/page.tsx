@@ -20,7 +20,7 @@ import Loading from "./loading";
 
 const filterOptions = [
   { label: "All", value: PropertyCategory.NONE },
-  { label: "Resale", value: PropertyCategory.RESALE },
+  // { label: "Resale", value: PropertyCategory.RESALE },
   { label: "Rent", value: PropertyCategory.RENT },
   { label: "Flatmate", value: PropertyCategory.FLATMATE },
 ];
@@ -30,11 +30,11 @@ const PROPERTY_ACTIONS_DIALOG_ID = "property-actions-dialog";
 export default function MyPropertiesPage() {
   const router = useRouter();
   const { isMobile } = useDeviceContext();
-  const [selectedCategory, setSelectedCategory] = useState<PropertyCategory>(
-    PropertyCategory.NONE,
-  );
+  const [selectedFilterCategory, setSelectedFilterCategory] =
+    useState<PropertyCategory>(PropertyCategory.NONE);
   const [onlyActive, setOnlyActive] = useState(false);
-  const [selectedPropertyId, setSelectedPropertyId] = useState<string>("");
+  const [selectedPropertyId, setSelectedPropertyId] = useState("");
+  const [selectedPropertyCategory, setSelectedPropertyCategory] = useState("");
   const { isDialogOpen, openDialog, closeDialog } = useDialog();
   const dispatch = useDispatch();
 
@@ -50,15 +50,15 @@ export default function MyPropertiesPage() {
   const filteredProperties = useMemo(() => {
     return ownedProperties.filter((prop) => {
       if (
-        selectedCategory !== PropertyCategory.NONE &&
-        prop.propertyCategory !== selectedCategory
+        selectedFilterCategory !== PropertyCategory.NONE &&
+        prop.propertyCategory !== selectedFilterCategory
       )
         return false;
       if (onlyActive && prop.propertyState !== PropertyStatus.VERIFIED)
         return false;
       return true;
     });
-  }, [ownedProperties, selectedCategory, onlyActive]);
+  }, [ownedProperties, selectedFilterCategory, onlyActive]);
 
   useEffect(() => {
     if (isMobile) {
@@ -68,8 +68,8 @@ export default function MyPropertiesPage() {
     }
   }, [isMobile, dispatch]);
 
-  const onDashboard = (id: string) => {
-    // router.push(`/account/properties/${id}`)
+  const onDashboard = (category: string, id: string) => {
+    router.push(`/my-property-details/${category?.toLowerCase()}/${id}`);
     console.log("Redirect to my-properties-details for: ", id);
   };
 
@@ -83,8 +83,9 @@ export default function MyPropertiesPage() {
     }
   };
 
-  const onOpenDialog = (propertyId: string) => {
+  const onOpenDialog = (propertyCategory: string, propertyId: string) => {
     setSelectedPropertyId(propertyId);
+    setSelectedPropertyCategory(propertyCategory);
     openDialog(PROPERTY_ACTIONS_DIALOG_ID);
     console.log("Open dialog for:", selectedPropertyId);
   };
@@ -93,6 +94,7 @@ export default function MyPropertiesPage() {
     closeDialog(PROPERTY_ACTIONS_DIALOG_ID);
     dispatch(setHideStickyNavBar(false));
     setSelectedPropertyId("");
+    setSelectedPropertyCategory("");
   };
 
   if (userDetailLoading) {
@@ -132,11 +134,11 @@ export default function MyPropertiesPage() {
         {/* Filters */}
         <div className="mb-8 flex gap-3 text-lg font-medium text-gray-700">
           {filterOptions.map((f) => {
-            const active = selectedCategory === f.value;
+            const active = selectedFilterCategory === f.value;
             return (
               <button
                 key={f.value}
-                onClick={() => setSelectedCategory(f.value)}
+                onClick={() => setSelectedFilterCategory(f.value)}
                 aria-pressed={active}
                 className={`whitespace-nowrap rounded-lg border px-4 py-2 shadow-sm ${
                   active ? "bg-red-500 text-white border-red-500" : "bg-white"
@@ -168,11 +170,11 @@ export default function MyPropertiesPage() {
         {/* Filter buttons */}
         <div className="flex justify-between text-lg m-3 border p-1.5 sm:p-2 rounded-xl mx-8">
           {filterOptions.map((f) => {
-            const active = selectedCategory === f.value;
+            const active = selectedFilterCategory === f.value;
             return (
               <button
                 key={f.value}
-                onClick={() => setSelectedCategory(f.value)}
+                onClick={() => setSelectedFilterCategory(f.value)}
                 aria-pressed={active}
                 className={`px-2 py-1 sm:px-4 sm:py-2 flex-1 whitespace-nowrap ${
                   active ? "border border-red-500 text-red-500 rounded-lg" : ""
@@ -208,6 +210,7 @@ export default function MyPropertiesPage() {
         <MyPropertyActionsDialog
           id={PROPERTY_ACTIONS_DIALOG_ID}
           propertyID={selectedPropertyId}
+          propertyCategory={selectedPropertyCategory}
           onDashboard={onDashboard}
           onMarkSold={onMarkSold}
           onClose={handleCloseDialog}

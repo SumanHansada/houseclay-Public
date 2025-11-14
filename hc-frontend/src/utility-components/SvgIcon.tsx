@@ -146,6 +146,9 @@ const MEDIUM_ICONS = {
   transparency: "/optimizedIcons/medium/transparency.svg",
   simplicity: "/optimizedIcons/medium/simplicity.svg",
   fairness: "/optimizedIcons/medium/fairness.svg",
+  "property-placeholder": "/optimizedIcons/medium/property-placeholder.svg",
+  "property-placeholder-icon":
+    "/optimizedIcons/medium/property-placeholder-icon.svg",
 };
 
 // Large icons configuration (external files, > 20KB)

@@ -14,7 +14,7 @@ import {
   useGenerateOtpMutation,
   useLazyCheckUserQuery,
 } from "@/store/apiSlice";
-import { setAuthStep } from "@/store/authSlice";
+import { setAuthStep, setLoginFromLoginPage } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 import { setCheckUser, setPhoneNo } from "@/store/userSlice";
 import { ImageWithLoader } from "@/utility-components";
@@ -46,6 +46,7 @@ export default function LoginPage() {
         if (otpResponse.data) {
           dispatch(setAuthStep(AuthStep.OTP));
         }
+        dispatch(setLoginFromLoginPage(true));
       } catch (error) {
         const e = error as FetchBaseQueryError;
         console.error("Login Error:", e);

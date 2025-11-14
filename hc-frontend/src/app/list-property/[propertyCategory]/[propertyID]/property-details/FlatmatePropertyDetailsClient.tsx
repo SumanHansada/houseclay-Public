@@ -127,10 +127,9 @@ const FlatmatePropertyDetailsClient: React.FC = () => {
           id="propertyDetails.propertyType"
           options={[
             { value: "Apartment", label: "Apartment" },
-            { value: "Villa", label: "Villa" },
-            { value: "House", label: "House" },
-            { value: "Plot", label: "Plot" },
-            { value: "Commercial", label: "Commercial" },
+            { value: "Independent House/Villa", label: "House" },
+            { value: "Community Villa", label: "Villa" },
+            { value: "Standalone Building", label: "Building" },
           ]}
           required
           placeholder="Select property type"
@@ -167,6 +166,7 @@ const FlatmatePropertyDetailsClient: React.FC = () => {
               { value: "North-West", label: "North-West" },
               { value: "South-East", label: "South-East" },
               { value: "South-West", label: "South-West" },
+              { value: "dont-know", label: "Don't Know" },
             ]}
             required
             placeholder="Select facing direction"
@@ -182,6 +182,7 @@ const FlatmatePropertyDetailsClient: React.FC = () => {
             name="propertyDetails.bhkType"
             id="propertyDetails.bhkType"
             options={[
+              { value: "studio", label: "Studio" },
               { value: "1BHK", label: "1 BHK" },
               { value: "2BHK", label: "2 BHK" },
               { value: "3BHK", label: "3 BHK" },

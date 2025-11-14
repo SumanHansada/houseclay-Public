@@ -5,6 +5,7 @@ import HouseClayHomeSvg from "public/icons/houseclay-home.svg";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
+import { EXPLORE_LOCATION } from "@/common/constants";
 import { RootState } from "@/store/store";
 import { SvgIcon } from "@/utility-components";
 
@@ -40,7 +41,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
       id: "explore",
       icon: <Search size={25} />,
       label: "Explore",
-      href: "/explore",
+      href: `/property-search?lat=${EXPLORE_LOCATION.lat}&lon=${EXPLORE_LOCATION.lng}&propertyCategory=rent`,
     },
     {
       id: "shortlists",

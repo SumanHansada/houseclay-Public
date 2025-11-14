@@ -1,9 +1,10 @@
 "use client";
 
-import { Lightbulb, Mail, Phone, PhoneCall, UserRound } from "lucide-react";
+import { Lightbulb, Mail, Phone, PhoneCall, UserRound, X } from "lucide-react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
+import { Button } from "@/base-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useContactOwnerMutation } from "@/store/apiSlice";
 import { setConnectBal } from "@/store/userSlice";
@@ -17,16 +18,10 @@ interface UnlockOwnerDetailsProps {
 type Step = "confirm" | "unlocked" | "error";
 
 type ApiError = {
-  data?: {
-    code?: string;
-    message?: string;
-  };
-  error?:
-    | string
-    | {
-        code?: string;
-        message?: string;
-      };
+  status: string;
+  originalStatus?: number;
+  data?: string;
+  error?: string;
 };
 
 function getErrorMeta(err: unknown): {
@@ -35,36 +30,22 @@ function getErrorMeta(err: unknown): {
   code?: string;
 } {
   const apiError = err as ApiError;
-  const errorPayload =
-    apiError?.data ??
-    (typeof apiError?.error === "object" ? apiError.error : undefined);
-
-  const code = errorPayload?.code;
-  const message =
-    errorPayload?.message ||
-    (typeof apiError?.error === "string" ? apiError.error : undefined) ||
-    "Unable to unlock. Please try again.";
-
-  if (code === "INSUFFICIENT_CONNECTS") {
+  // Handle parsing error from status 400 (insufficient connects)
+  if (apiError.status === "PARSING_ERROR" && apiError.originalStatus === 400) {
     return {
       title: "Not enough Connects",
-      message: "You don't have enough Connects to unlock owner details.",
-      code,
+      message:
+        // apiError.data ||
+        "You don't have enough Connects to unlock owner details.",
+      code: "INSUFFICIENT_CONNECTS",
     };
   }
-
-  if (code === "ALREADY_UNLOCKED") {
-    return {
-      title: "Already unlocked",
-      message: "You have already unlocked this owner's contact earlier.",
-      code,
-    };
-  }
-
-  return { title: "Something went wrong", message, code };
+  const message =
+    apiError?.data ||
+    (typeof apiError?.error === "string" ? apiError.error : undefined) ||
+    "Unable to unlock. Please try again.";
+  return { title: "Something went wrong", message, code: undefined };
 }
-
-// ----------------------------------------------------------------------------
 
 export const UnlockOwnerDetails = ({
   onClose,
@@ -74,32 +55,29 @@ export const UnlockOwnerDetails = ({
   const dispatch = useDispatch();
 
   const [step, setStep] = useState<Step>("confirm");
-  const [lastError, setLastError] = useState<{
+  const [errorMeta, setErrorMeta] = useState<{
     title: string;
     message: string;
     code?: string;
-  }>();
+  } | null>(null);
 
-  const [contactOwner, { data: ownerDetails, isLoading, reset }] =
+  const [contactOwner, { data: apiResponse, isLoading, reset }] =
     useContactOwnerMutation();
 
   const handleConfirmAndUnlock = async () => {
-    setLastError(undefined);
+    setErrorMeta(null);
     try {
       const res = await contactOwner({ propertyID }).unwrap();
       if (res) {
         dispatch(setConnectBal(res.connectBal));
       }
       setStep("unlocked");
-    } catch (err) {
-      setLastError(getErrorMeta(err));
+    } catch (err: unknown) {
+      console.log(err);
+      const meta = getErrorMeta(err);
+      setErrorMeta(meta);
       setStep("error");
     }
-  };
-
-  const handleRetry = async () => {
-    reset();
-    setStep("confirm");
   };
 
   const renderConfirm = () => (
@@ -166,33 +144,33 @@ export const UnlockOwnerDetails = ({
           <p className="flex gap-1 text-gray-700 lg:text-lg">
             Owner&apos;s Name{" "}
             <span className="text-black font-medium">
-              {ownerDetails?.name ?? "Owner"}
+              {apiResponse?.owner.name ?? "Owner"}
             </span>
           </p>
 
-          <div className="grid grid-cols-2 border rounded-xl p-4 gap-2 lg:gap-4">
-            {ownerDetails?.phone && (
+          <div className="grid grid-cols-5 border rounded-xl p-4 gap-2 lg:gap-4">
+            {apiResponse?.owner.phoneNo && (
               <a
-                className="flex flex-col items-start gap-3 border-r md:border-r md:pr-4"
-                href={`tel:${ownerDetails.phone}`}
+                className="flex flex-col col-span-2 items-start gap-3 xl:border-r md:pr-2"
+                href={`tel:${apiResponse.owner.phoneNo}`}
               >
                 <Phone size={20} className="text-red-500 mt-1" />
                 <h3 className="flex flex-col">
                   <span className="text-gray-700 text-sm">Phone Number</span>
-                  <span>{ownerDetails.phone}</span>
+                  <span>{apiResponse.owner.phoneNo}</span>
                 </h3>
               </a>
             )}
 
-            {ownerDetails?.email && (
+            {apiResponse?.owner.emailID && (
               <a
-                className="flex flex-col items-start gap-3 md:pl-4"
-                href={`mailto:${ownerDetails.email}`}
+                className="flex flex-col items-start gap-3 md:pl-2"
+                href={`mailto:${apiResponse.owner.emailID}`}
               >
                 <Mail size={20} className="text-red-500 mt-1" />
                 <h3 className="flex flex-col">
                   <span className="text-gray-700 text-sm">Email Address</span>
-                  <span>{ownerDetails.email}</span>
+                  <span>{apiResponse.owner.emailID}</span>
                 </h3>
               </a>
             )}
@@ -212,10 +190,10 @@ export const UnlockOwnerDetails = ({
           </div>
 
           <div className="flex">
-            {ownerDetails?.phone && (
+            {apiResponse?.owner.phoneNo && (
               <div className="flex w-full mt-4 gap-2">
                 <a
-                  href={`tel:${ownerDetails.phone}`}
+                  href={`tel:${apiResponse.owner.phoneNo}`}
                   className="flex items-center justify-center w-1/2 gap-2 border border-red-500 rounded-lg py-2 hover:bg-red-100"
                 >
                   <PhoneCall size={20} className="text-red-500" />
@@ -223,7 +201,7 @@ export const UnlockOwnerDetails = ({
                 </a>
                 <a
                   className="flex items-center justify-center w-1/2 gap-1 border border-green-500 rounded-lg py-2 hover:bg-green-100"
-                  href={`https://wa.me/${ownerDetails.phone}`}
+                  href={`https://wa.me/${apiResponse.owner.phoneNo}`}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -258,31 +236,31 @@ export const UnlockOwnerDetails = ({
             <h3 className="flex flex-col py-1">
               <span className="text-sm text-gray-700">Owner&apos; Name</span>
               <span className="font-medium">
-                {ownerDetails?.name ?? "Owner"}
+                {apiResponse?.owner.name ?? "Owner"}
               </span>
             </h3>
           </div>
-          {ownerDetails?.phone && (
+          {apiResponse?.owner.phoneNo && (
             <a
               className="flex border rounded-xl py-2 px-4 gap-2"
-              href={`tel:${ownerDetails.phone}`}
+              href={`tel:${apiResponse.owner.phoneNo}`}
             >
               <Phone size={20} className="text-red-500 mt-1" />
               <h3 className="flex flex-col py-1">
                 <span className="text-gray-700 text-sm">Phone Number</span>
-                <span>{ownerDetails.phone}</span>
+                <span>{apiResponse.owner.phoneNo}</span>
               </h3>
             </a>
           )}
-          {ownerDetails?.email && (
+          {apiResponse?.owner.emailID && (
             <a
               className="flex border rounded-xl py-2 px-4 gap-2"
-              href={`mailto:${ownerDetails.email}`}
+              href={`mailto:${apiResponse.owner.emailID}`}
             >
               <Mail size={20} className="text-red-500 mt-1" />
               <h3 className="flex flex-col py-1">
                 <span className="text-gray-700 text-sm">Email Address</span>
-                <span>{ownerDetails.email}</span>
+                <span>{apiResponse.owner.emailID}</span>
               </h3>
             </a>
           )}
@@ -301,10 +279,10 @@ export const UnlockOwnerDetails = ({
           </div>
 
           <div className="flex">
-            {ownerDetails?.phone && (
+            {apiResponse?.owner.phoneNo && (
               <div className="flex w-full mt-4 gap-2">
                 <a
-                  href={`tel:${ownerDetails.phone}`}
+                  href={`tel:${apiResponse.owner.phoneNo}`}
                   className="flex items-center justify-center w-1/2 gap-2 border border-red-500 rounded-lg py-2 hover:bg-red-100"
                 >
                   <PhoneCall size={20} className="text-red-500" />
@@ -312,7 +290,7 @@ export const UnlockOwnerDetails = ({
                 </a>
                 <a
                   className="flex items-center justify-center w-1/2 gap-1 border border-green-500 rounded-lg py-2 hover:bg-green-100"
-                  href={`https://wa.me/${ownerDetails.phone}`}
+                  href={`https://wa.me/${apiResponse.owner.phoneNo}`}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -335,76 +313,66 @@ export const UnlockOwnerDetails = ({
   const renderError = () => (
     <div className="px-8 space-y-6">
       <div className="space-y-1 mt-5">
-        <h1 className="text-2xl">{lastError?.title ?? "Couldn’t unlock"}</h1>
+        <h1 className="text-2xl">{errorMeta?.title ?? "Couldn't unlock"}</h1>
         <p className="text-gray-700">
-          {lastError?.message ?? "Please try again."}
+          {errorMeta?.message ?? "Something went wrong!"}
         </p>
       </div>
-
-      <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700">
-        {lastError?.code
-          ? `Error code: ${lastError.code}`
-          : "An error occurred while unlocking owner details."}
-      </div>
-
       <div className="space-y-2">
-        {lastError?.code === "INSUFFICIENT_CONNECTS" ? (
-          <>
-            <a
-              href="/buy-connects"
-              className="block w-full text-center text-white py-3 px-4 rounded-lg bg-gray-900 hover:bg-black"
-            >
-              Buy Connects
-            </a>
-            <button
-              className="w-full py-3 px-4 rounded-lg border hover:bg-gray-50"
-              onClick={handleRetry}
-            >
-              Try Again
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              className="w-full text-white py-3 px-4 rounded-lg bg-red-500 hover:bg-red-600"
-              onClick={handleRetry}
-            >
-              Retry Unlock
-            </button>
-            <button
-              className="w-full py-3 px-4 rounded-lg border hover:bg-gray-50"
-              onClick={() => {
-                reset();
-                onClose();
-              }}
-            >
-              Close
-            </button>
-          </>
-        )}
+        <>
+          <a
+            href="/buy-connects"
+            className="block w-full text-center text-white py-3 px-4 rounded-lg bg-red-500 hover:bg-red-600"
+          >
+            Buy Connects
+          </a>
+          <button
+            className="w-full py-3 px-4 rounded-lg border hover:bg-gray-50"
+            onClick={() => {
+              reset();
+              onClose();
+            }}
+          >
+            Close
+          </button>
+        </>
       </div>
     </div>
   );
 
   return (
-    <div className="flex items-center justify-center h-full bg-white rounded-lg">
+    <>
       {!isMobile && (
-        <div className="relative w-2/5 rounded-l-lg h-[440px] lg:h-[460px] 2xl:h-[480px] overflow-hidden">
-          <ImageWithLoader
-            src="/images/contact-owner.svg"
-            alt="Contact owner"
-            fill
-            className="object-center"
-            sizes="100vw"
-            priority
-          />
+        <div className="relative w-full h-0">
+          <Button
+            variant="secondary"
+            size="custom"
+            className="absolute top-2 right-2 rounded-full p-1"
+            onClick={onClose}
+          >
+            <X size={24} />
+          </Button>
         </div>
       )}
-      <div className="flex-1 h-full">
-        {step === "confirm" && renderConfirm()}
-        {step === "unlocked" && renderUnlocked()}
-        {step === "error" && renderError()}
+      <div className="flex items-center justify-center h-full bg-white rounded-lg">
+        {!isMobile && (
+          <div className="relative w-2/5 rounded-l-lg h-[440px] lg:h-[460px] 2xl:h-[480px] overflow-hidden">
+            <ImageWithLoader
+              src="/images/contact-owner.svg"
+              alt="Contact owner"
+              fill
+              className="object-center"
+              sizes="100vw"
+              priority
+            />
+          </div>
+        )}
+        <div className="flex-1 h-full">
+          {step === "confirm" && renderConfirm()}
+          {step === "unlocked" && renderUnlocked()}
+          {step === "error" && renderError()}
+        </div>
       </div>
-    </div>
+    </>
   );
 };

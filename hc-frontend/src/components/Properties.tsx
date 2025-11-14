@@ -1,10 +1,14 @@
 // pages/index.js
 import { motion } from "framer-motion";
 import { Crown, Heart, MapPin, Star } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { BadgeType } from "@/common/enums";
-import { formatBhkType, formatINRCurrency } from "@/common/utils";
+import {
+  formatBhkType,
+  formatINRCurrency,
+  processPropertyImages,
+} from "@/common/utils";
 import { useShortlist } from "@/hooks/useShortlist";
 import { PropertySearch } from "@/interfaces/PropertySearch";
 import { PropertyCardWithImages } from "@/interfaces/User";
@@ -35,9 +39,14 @@ const Properties: React.FC<PropertiesProps> = ({
   const [isShortlistedProperty, setIsShortlistedProperty] =
     useState(shortlistStatus);
 
+  // Process images with fallback
+  const propertyImages = useMemo(() => {
+    return processPropertyImages(property.images);
+  }, [property.images]);
+
   const nextImage = useCallback(() => {
-    setCurrentImageIndex((prev) => (prev + 1) % property.images.length);
-  }, [property.images.length]);
+    setCurrentImageIndex((prev) => (prev + 1) % propertyImages.length);
+  }, [propertyImages.length]);
 
   // const prevImage = () => {
   //   setCurrentImageIndex(
@@ -46,11 +55,11 @@ const Properties: React.FC<PropertiesProps> = ({
   // };
 
   useEffect(() => {
-    if (autoplay) {
+    if (autoplay && propertyImages.length > 1) {
       const interval = setInterval(nextImage, autoplayInterval);
       return () => clearInterval(interval);
     }
-  }, [autoplay, autoplayInterval, nextImage]);
+  }, [autoplay, autoplayInterval, nextImage, propertyImages.length]);
 
   return (
     <div
@@ -60,7 +69,7 @@ const Properties: React.FC<PropertiesProps> = ({
       {/* Image Carousel */}
       <div className="relative h-72 max-md:h-60">
         <ImageWithLoader
-          src={`https://cdn.houseclay.com/${property?.images[currentImageIndex]}`}
+          src={propertyImages[currentImageIndex]}
           alt={`Property ${property?.propertyID}`}
           fill
           className="rounded-xl"
@@ -123,15 +132,18 @@ const Properties: React.FC<PropertiesProps> = ({
         </motion.button>
 
         {/* Carousel Dots */}
-        {showCarouselDots && (
+        {showCarouselDots && propertyImages.length > 1 && (
           <div className="absolute bottom-2 left-0 right-0 flex justify-center space-x-1">
-            {property.images.map((_, index) => (
+            {propertyImages.map((_, index) => (
               <button
                 key={index}
                 className={`w-2 h-2 rounded-full ${
                   index === currentImageIndex ? "bg-white" : "bg-white/50"
                 }`}
-                onClick={() => setCurrentImageIndex(index)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCurrentImageIndex(index);
+                }}
               />
             ))}
           </div>
@@ -152,7 +164,7 @@ const Properties: React.FC<PropertiesProps> = ({
         <div className="flex justify-between items-center mb-2">
           <p className="font-medium text-xs">
             {formatBhkType(property.bhkType)} Beds |{" "}
-            {property.bathrooms ? `${property.bathrooms} Bath |` : ""}
+            {property.bathrooms ? `${property.bathrooms} Bath | ` : ""}
             {property.furnishing}
           </p>
           <p className="font-bold">
