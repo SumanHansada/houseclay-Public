@@ -192,3 +192,20 @@ export function processPropertyImages(
   // If all images were invalid, return placeholder
   return processedImages.length > 0 ? processedImages : [PLACEHOLDER_IMAGE];
 }
+
+/**
+ * Returns true if the provided value is a valid member of the string enum.
+ *
+ * @remarks
+ * Used as a type guard for validating string enum values at runtime.
+ *
+ * @example
+ * isEnumValue(PropertyCategory, "RENT"); // true
+ * isEnumValue(PropertyCategory, "xyz");  // false
+ */
+export function isEnumValue<E extends Record<string, string>>(
+  enumObj: E,
+  value: unknown,
+): value is E[keyof E] {
+  return Object.values(enumObj).includes(value as string);
+}

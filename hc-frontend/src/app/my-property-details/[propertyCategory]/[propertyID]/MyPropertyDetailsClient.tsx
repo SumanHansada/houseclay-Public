@@ -32,7 +32,6 @@ import {
 import { EditIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
-import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
 import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
 import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
 import FireExtinguisherIconSvg from "public/icons/amenities/fire-extinguisher.svg";
@@ -84,6 +83,7 @@ import {
 } from "@/utility-components";
 
 import PostedAndRentDetails from "./components/PostedAndRentDetails";
+import { RenderPropertyStatus } from "./components/RenderPropertyStatus";
 import UpgradePropertyBanner from "./components/UpgradePropertyBanner";
 import PropertyDetailsLoading from "./loading";
 
@@ -131,7 +131,6 @@ const DedicatedWorkspaceIcon = DedicatedWorkspaceIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
 const WifiIcon = WifiIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const BBQGrillIcon = BBQGrillIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const PoolTableIcon = PoolTableIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
@@ -271,12 +270,10 @@ export function MyPropertyDetailsClient({
           <section className="max-md:min-h-[fit-content] w-full overflow-hidden max-md:hidden">
             <div className="py-12 mx-auto">
               <div>
-                <h1 className="text-3xl text-gray-900 flex items-center gap-2">
+                <h1 className="text-3xl text-gray-900 flex items-center justify-between">
                   {property?.bhkType} in {property?.locationOrSocietyName} for{" "}
                   {pascalCase(property?.propertyCategory)} in {property?.city}
-                  <span className="bg-green-500 rounded-lg text-white px-2 py-1 text-sm">
-                    Active
-                  </span>
+                  <RenderPropertyStatus status={property?.propertyState} />
                 </h1>
               </div>
             </div>
@@ -663,7 +660,9 @@ export function MyPropertyDetailsClient({
                             Water Supply
                           </div>
                           <div className="text-gray-900">
-                            {pascalCase(property?.waterSupply)}
+                            {property?.waterSupply === "borewell-tanker"
+                              ? "Borewell & Tanker"
+                              : pascalCase(property?.waterSupply)}
                           </div>
                         </div>
                       </div>

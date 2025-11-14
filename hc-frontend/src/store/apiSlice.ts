@@ -337,7 +337,7 @@ export const apiSlice = createApi({
         responseHandler: "text",
       }),
     }),
-    verifyEmail: builder.mutation<{}, { otp: string; token: string }>({
+    verifyEmail: builder.mutation<undefined, { otp: string; token: string }>({
       query: ({ otp, token }) => ({
         url: "/user/verifyEmail",
         params: { otp, token },

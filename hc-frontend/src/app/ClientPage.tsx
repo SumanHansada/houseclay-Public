@@ -4,7 +4,6 @@ import { useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 
-import { FALLBACK_IMG } from "@/common/constants";
 import Advantages from "@/components/Advantages";
 import Neighbourhoods from "@/components/Neighborhoods";
 import PropertyOwners from "@/components/PropertyOwners";
@@ -12,7 +11,6 @@ import Standouts from "@/components/Standouts";
 import { Testimonials } from "@/components/Testimonials";
 import { StandoutsDialog } from "@/dialogs";
 import { Testimonial } from "@/interfaces/Testimonial";
-import { PropertyCardWithImages } from "@/interfaces/User";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   usePopularNeighbourhoodsQuery,
@@ -51,22 +49,22 @@ export default function ClientPage({ testimonials }: ClientPageProps) {
     [standoutsData],
   );
 
-  const standoutPropertyCards: PropertyCardWithImages[] = useMemo(() => {
-    return standoutProperties.map((prop: PropertyCardWithImages) => ({
-      ...prop,
-      images: prop.image ? [prop.image] : [FALLBACK_IMG],
-    }));
-  }, [standoutProperties]);
+  // const standoutPropertyCards: PropertyCardWithImages[] = useMemo(() => {
+  //   return standoutProperties.map((prop: PropertyCardWithImages) => ({
+  //     ...prop,
+  //     images: prop.image ? [prop.image] : [FALLBACK_IMG],
+  //   }));
+  // }, [standoutProperties]);
 
   useEffect(() => {
-    if (isDialogOpen("standouts-dialog") && standoutPropertyCards.length < 1) {
+    if (isDialogOpen("standouts-dialog") && standoutProperties.length < 1) {
       closeDialog("standouts-dialog");
       toast.error(
         "Currently there are no Standouts Properties. Please check again later!",
         { id: "standouts-empty" },
       );
     }
-  }, [standoutPropertyCards.length, isDialogOpen, closeDialog]);
+  }, [standoutProperties.length, isDialogOpen, closeDialog]);
 
   // Initialize app state
   useEffect(() => {
@@ -83,9 +81,9 @@ export default function ClientPage({ testimonials }: ClientPageProps) {
       </section>
 
       {/* Standouts Section */}
-      {standoutPropertyCards.length > 3 ? (
+      {standoutProperties.length > 3 ? (
         <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
-          <Standouts properties={standoutPropertyCards} />
+          <Standouts properties={standoutProperties} />
         </section>
       ) : null}
 
@@ -107,10 +105,10 @@ export default function ClientPage({ testimonials }: ClientPageProps) {
       </section>
 
       {/* Standouts Dialog */}
-      {isDialogOpen("standouts-dialog") && standoutPropertyCards.length > 0 && (
+      {isDialogOpen("standouts-dialog") && standoutProperties.length > 0 && (
         <StandoutsDialog
           id="standouts-dialog"
-          properties={standoutPropertyCards}
+          properties={standoutProperties}
         />
       )}
     </>

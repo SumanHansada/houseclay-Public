@@ -6,11 +6,7 @@ import {
   SearchIcon,
   SlidersHorizontal,
 } from "lucide-react";
-import {
-  ReadonlyURLSearchParams,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -55,13 +51,13 @@ import { RootState } from "@/store/store";
 import { ImageWithLoader } from "@/utility-components";
 
 // normalize & validate category from URL
-function getUrlCategory(sp: ReadonlyURLSearchParams): PropertyCategory {
-  const raw = (sp.get("propertyCategory") || "").toUpperCase();
-  const values = Object.values(PropertyCategory) as string[];
-  return values.includes(raw)
-    ? (raw as PropertyCategory)
-    : PropertyCategory.RENT;
-}
+// function getUrlCategory(sp: ReadonlyURLSearchParams): PropertyCategory {
+//   const raw = (sp.get("propertyCategory") || "").toUpperCase();
+//   const values = Object.values(PropertyCategory) as string[];
+//   return values.includes(raw)
+//     ? (raw as PropertyCategory)
+//     : PropertyCategory.RENT;
+// }
 
 const PROPERTY_FILTERS_DIALOG_ID = "property-filters-dialog";
 const SORT_FILTERS_DIALOG_ID = "sort-filters-dialog";
@@ -74,7 +70,6 @@ export default function PropertySearchPage() {
     .get("propertyCategory")
     ?.toUpperCase() as PropertyCategory;
 
-  const urlCategory = getUrlCategory(searchParams);
   const searchState = useSelector((state: RootState) => state.propertySearch);
   const router = useRouter();
   const { isMobile } = useDeviceContext();

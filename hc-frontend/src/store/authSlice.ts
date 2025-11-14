@@ -7,6 +7,7 @@ interface AuthState {
   authStep: AuthStep;
   loginFromAddProperty: boolean;
   loginFromBuyConnects: boolean;
+  loginFromLoginPage: boolean;
 }
 
 const initialState: AuthState = {
@@ -14,6 +15,7 @@ const initialState: AuthState = {
   authStep: AuthStep.NONE,
   loginFromAddProperty: false,
   loginFromBuyConnects: false,
+  loginFromLoginPage: false,
 };
 
 const authSlice = createSlice({
@@ -38,6 +40,9 @@ const authSlice = createSlice({
     setLoginFromBuyConnects: (state, action: PayloadAction<boolean>) => {
       state.loginFromBuyConnects = action.payload;
     },
+    setLoginFromLoginPage: (state, action: PayloadAction<boolean>) => {
+      state.loginFromLoginPage = action.payload;
+    },
     // Complete logout - clear all auth state
     logout: (state) => {
       state.isAuthenticated = false;
@@ -53,6 +58,7 @@ export const {
   clearAuthStep,
   setLoginFromAddProperty,
   setLoginFromBuyConnects,
+  setLoginFromLoginPage,
   setIsAuthenticated,
   clearIsAuthenticated,
   logout,

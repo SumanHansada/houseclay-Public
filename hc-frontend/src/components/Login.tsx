@@ -41,9 +41,12 @@ const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const Login = ({ onClose }: { onClose: () => void }) => {
   const { closeDialog } = useDialog();
-  const { authStep, loginFromAddProperty, loginFromBuyConnects } = useSelector(
-    (state: RootState) => state.auth,
-  );
+  const {
+    authStep,
+    loginFromAddProperty,
+    loginFromBuyConnects,
+    loginFromLoginPage,
+  } = useSelector((state: RootState) => state.auth);
   const { name, emailID, phoneNo } = useSelector(
     (state: RootState) => state.user.userDetail,
   );
@@ -198,7 +201,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
 
   useEffect(() => {
     return () => {
-      if (!loginFromAddProperty) {
+      if (!loginFromAddProperty && !loginFromLoginPage) {
         dispatch(setAuthStep(AuthStep.NONE));
       }
       clearTimer();

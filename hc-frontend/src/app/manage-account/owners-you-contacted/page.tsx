@@ -6,10 +6,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
-import { FALLBACK_IMG } from "@/common/constants";
 import { BadgeType, PropertyCategory, PropertyStatus } from "@/common/enums";
 import Properties from "@/components/Properties";
-import { PropertyCardWithImages } from "@/interfaces/User";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { setHideStickyNavBar } from "@/store/appSlice";
@@ -41,15 +39,15 @@ export default function OwnersContactedPage() {
     [userDetail.contactedProperties],
   );
 
-  const propertyCards: PropertyCardWithImages[] = useMemo(() => {
-    return contactedProperties.map((prop: PropertyCardWithImages) => ({
-      ...prop,
-      images: prop.image ? [prop.image] : [FALLBACK_IMG],
-    }));
-  }, [contactedProperties]);
+  // const propertyCards: PropertyCardWithImages[] = useMemo(() => {
+  //   return contactedProperties.map((prop: PropertyCardWithImages) => ({
+  //     ...prop,
+  //     images: prop.image ? [prop.image] : [FALLBACK_IMG],
+  //   }));
+  // }, [contactedProperties]);
 
-  const filteredProperties: PropertyCardWithImages[] = useMemo(() => {
-    return propertyCards.filter((prop) => {
+  const filteredProperties = useMemo(() => {
+    return contactedProperties.filter((prop) => {
       if (
         selectedFilterCategory !== PropertyCategory.NONE &&
         prop.propertyCategory !== selectedFilterCategory
@@ -59,7 +57,7 @@ export default function OwnersContactedPage() {
         return false;
       return true;
     });
-  }, [propertyCards, selectedFilterCategory, onlyAvailable]);
+  }, [contactedProperties, selectedFilterCategory, onlyAvailable]);
 
   useEffect(() => {
     if (isMobile) {

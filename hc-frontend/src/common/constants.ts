@@ -19,9 +19,6 @@ export const CDN_BASE_URL = "https://cdn.houseclay.com";
 export const PLACEHOLDER_IMAGE =
   "/optimizedIcons/medium/property-placeholder.svg";
 
-// 1x1 transparent GIF — tiny, inline, no network
-export const FALLBACK_IMG = "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
-
 // Popular Neighbourhoods
 export const NEIGHBOURHOODS = [
   { name: "Bellandur", imgURL: "" },
