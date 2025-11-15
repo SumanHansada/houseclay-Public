@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 const publicPaths = ["/", "/login", "/signup", "/buy-connects"];
 
 export function middleware(request: NextRequest) {
+  const start = performance.now();
   const token = request.cookies.get("token")?.value;
   const { pathname } = request.nextUrl;
 
@@ -31,7 +32,12 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  return NextResponse.next();
+  const res = NextResponse.next();
+  res.headers.set(
+    "Server-Timing",
+    `mw;dur=${(performance.now() - start).toFixed(1)}`,
+  );
+  return res;
 }
 
 // Configure which paths the middleware should run on
