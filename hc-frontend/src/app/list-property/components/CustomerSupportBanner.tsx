@@ -1,12 +1,8 @@
-import { useDialog } from "@/providers/DialogContextProvider";
 import { SvgIcon } from "@/utility-components";
 
-const CustomerSupportBanner: React.FC = () => {
-  const { openDialog } = useDialog();
-  const handleBookAFreeCall = () => {
-    openDialog("call-with-captain-dialog");
-  };
+import CustomerSupportCTAButton from "./CustomerSupportCTAButton";
 
+const CustomerSupportBanner: React.FC = () => {
   return (
     <div className="container pt-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8">
       <div className="p-8 bg-gray-50 border border-gray-200 rounded-2xl shadow-sm flex items-center w-full justify-between gap-16">
@@ -25,12 +21,7 @@ const CustomerSupportBanner: React.FC = () => {
             experts to get your property listed quickly and easily!
           </p>
           <div className="mt-6">
-            <button
-              className="px-6 py-3 border border-red-500 rounded-xl hover:bg-red-50 "
-              onClick={handleBookAFreeCall}
-            >
-              Book a Free Call Now
-            </button>
+            <CustomerSupportCTAButton />
           </div>
         </div>
       </div>

@@ -8,13 +8,13 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import CustomerSupportBanner from "@/app/list-property/components/CustomerSupportBanner";
 import { Button } from "@/base-components";
 import {
   ListPropertyDesktopStep,
   ListPropertyMobileStep,
 } from "@/common/enums";
 import Carousel2D from "@/components/Carousel2D";
-import CustomerSupportBanner from "@/components/CustomerSupportBanner";
 import GetStarted from "@/components/GetStarted";
 import ListingOptions from "@/components/ListingOptions";
 import ListPropertyAdvantages from "@/components/ListPropertyAdvantages";
