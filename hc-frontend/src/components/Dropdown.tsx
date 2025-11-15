@@ -229,8 +229,12 @@ const Dropdown: React.FC<DropdownProps> = ({
         aria-haspopup="listbox"
         aria-controls="dropdown-list"
         aria-disabled={disabled}
+        aria-label="city-dropdown"
       >
-        <span className={`text-gray-700 ${selectedLabelClass}`}>
+        <span
+          aria-label="city-dropdown-selected"
+          className={`text-gray-700 ${selectedLabelClass}`}
+        >
           {selected.label}
         </span>
         <ChevronDown

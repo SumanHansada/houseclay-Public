@@ -67,6 +67,7 @@ export function PropertyCard({
             {/* Desktop: use ActionMenu (portal + fixed) */}
             <div className="max-md:hidden">
               <Popover
+                id="property-card-popover"
                 trigger="click"
                 align="end"
                 offset={2}
@@ -102,7 +103,7 @@ export function PropertyCard({
                 <button
                   type="button"
                   className="inline-flex items-center justify-center rounded-md p-1 hover:bg-gray-100"
-                  aria-label="Actions"
+                  aria-label="property-card-actions"
                 >
                   <Ellipsis size={24} />
                 </button>

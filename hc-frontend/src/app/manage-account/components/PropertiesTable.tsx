@@ -95,6 +95,7 @@ export function PropertyTable({
       className: "w-20 text-center",
       render: (item) => (
         <Popover
+          id="manage-account-popover"
           trigger="click"
           align="end"
           offset={2}

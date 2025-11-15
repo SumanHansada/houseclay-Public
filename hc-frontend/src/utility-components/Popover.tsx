@@ -3,7 +3,6 @@
 import React, {
   useCallback,
   useEffect,
-  useId,
   useLayoutEffect,
   useRef,
   useState,
@@ -17,6 +16,7 @@ type Content =
   | ((ctx: { close: () => void }) => React.ReactNode);
 
 interface PopoverProps {
+  id: string;
   trigger: Trigger;
   align?: Align; // bottom placement only; horizontal align
   enabled?: boolean; // if false, behaves as plain children
@@ -37,6 +37,7 @@ const clamp = (v: number, min: number, max: number) =>
 type NativeMouseEventLike = { stopImmediatePropagation?: () => void };
 
 export default function Popover({
+  id,
   trigger,
   align = "start",
   enabled = true,
@@ -59,7 +60,6 @@ export default function Popover({
   const [coords, setCoords] = useState<{ top: number; left: number } | null>(
     null,
   );
-  const id = useId();
 
   // Treat hover as click on touch devices
   const [effectiveTrigger, setEffectiveTrigger] = useState<Trigger>(trigger);
@@ -228,20 +228,28 @@ export default function Popover({
     </div>
   ) : null;
 
+  const triggerProps =
+    effectiveTrigger === "click"
+      ? {
+          role: "button" as const,
+          tabIndex: 0,
+          "aria-haspopup": true,
+          "aria-expanded": open,
+          "aria-controls": `menu-${id}`,
+        }
+      : {};
+
   return (
     <>
       <span
         ref={triggerRef}
         className={className}
-        aria-haspopup
-        aria-expanded={open}
-        aria-controls={id}
         onMouseEnter={onTriggerMouseEnter}
         onMouseLeave={onTriggerMouseLeave}
         onClick={onTriggerClick}
         onMouseDown={onTriggerMouseDown}
-        tabIndex={0}
         style={{ display: "inline-flex" }}
+        {...triggerProps}
       >
         {children}
       </span>

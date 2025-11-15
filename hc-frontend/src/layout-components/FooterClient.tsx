@@ -4,12 +4,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
 
-import {
-  BENGALURU_LOCATION,
-  HOUSECLAY_FACEBOOK,
-  HOUSECLAY_INSTAGRAM,
-  HOUSECLAY_LINKEDIN,
-} from "@/common/constants";
+import { BENGALURU_LOCATION, SOCIAL_MEDIA_LINKS } from "@/common/constants";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { RootState } from "@/store/store";
 import { SvgIcon } from "@/utility-components";
@@ -62,7 +57,8 @@ const FooterClient: React.FC = () => {
                   <ul className="flex gap-4 items-end">
                     <li>
                       <Link
-                        href={HOUSECLAY_INSTAGRAM}
+                        aria-label="instagram"
+                        href={SOCIAL_MEDIA_LINKS.instagram}
                         target="_blank"
                         className="flex items-center text-black hover:text-red-500 gap-1"
                       >
@@ -71,7 +67,8 @@ const FooterClient: React.FC = () => {
                     </li>
                     <li>
                       <Link
-                        href={HOUSECLAY_FACEBOOK}
+                        aria-label="facebook"
+                        href={SOCIAL_MEDIA_LINKS.facebook}
                         target="_blank"
                         className="flex items-center text-black hover:text-red-500 gap-1"
                       >
@@ -80,7 +77,8 @@ const FooterClient: React.FC = () => {
                     </li>
                     <li>
                       <Link
-                        href={HOUSECLAY_LINKEDIN}
+                        aria-label="linkedin"
+                        href={SOCIAL_MEDIA_LINKS.linkedin}
                         target="_blank"
                         className="flex items-start text-black hover:text-red-500 gap-1"
                       >

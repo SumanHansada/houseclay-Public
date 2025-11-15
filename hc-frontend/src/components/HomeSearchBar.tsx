@@ -160,12 +160,14 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
 
       {/* Search Button */}
       <button
+        aria-label="search-properties-mobile"
         className="bg-red-500 flex items-center justify-center rounded-full p-3 shadow-xl md:hidden"
         onClick={handleSearch}
       >
         <Search size={20} className="text-white fill-red-500" />
       </button>
       <button
+        aria-label="search-properties"
         className="bg-red-500 flex items-center justify-center rounded-full p-3 shadow-xl max-md:hidden"
         onClick={handleSearch}
         onMouseEnter={handlePrefetch}
