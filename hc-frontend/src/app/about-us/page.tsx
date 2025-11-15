@@ -203,7 +203,7 @@ export default function AboutUsPage() {
             <button
               type="button"
               onClick={() => router.push("/list-property")}
-              className="bg-red-500 text-white px-7 py-2 rounded-lg hover:cursor-pointer hover:bg-red-600 text-lg"
+              className="bg-red-600 text-white px-7 py-2 rounded-lg hover:cursor-pointer hover:bg-red-600 text-lg"
             >
               List your property
             </button>

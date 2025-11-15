@@ -66,7 +66,7 @@ export const InfoTipZeroBalance: React.FC = () => (
       <p className="text-gray-500 font-light text-nowrap">
         Purchase more now to continue!
       </p>
-      <Link href="/buy-connects" className="text-red-500 cursor-pointer">
+      <Link href="/buy-connects" className="text-red-600 cursor-pointer">
         Buy Connects
       </Link>
     </div>
@@ -126,7 +126,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
               size={25}
               className="scale-90 lg:scale-100"
             />
-            <span className="text-red-500 text-xl lg:text-2xl font-inter font-bold">
+            <span className="text-red-600 text-xl lg:text-2xl font-inter font-bold">
               houseclay
             </span>
           </Link>
@@ -145,7 +145,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
                   ? "true"
                   : "false"
               }
-              className="relative hover:text-red-500 py-2 nav-link"
+              className="relative hover:text-red-600 py-2 nav-link"
             >
               Rent
             </Link>
@@ -157,7 +157,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
                   ? "true"
                   : "false"
               }
-              className="relative hover:text-red-500 py-2 nav-link"
+              className="relative hover:text-red-600 py-2 nav-link"
             >
               Rooms
             </Link>
@@ -169,18 +169,18 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
                   ? "true"
                   : "false"
               }
-              className="relative hover:text-red-500 py-2 nav-link"
+              className="relative hover:text-red-600 py-2 nav-link"
             >
               Buy
             </Link> */}
             <Link
               href="/buy-connects"
               data-active={pathname === "/buy-connects" ? "true" : "false"}
-              className="relative hover:text-red-500 py-2 nav-link"
+              className="relative hover:text-red-600 py-2 nav-link"
             >
               Buy Connects
             </Link>
-            <Link href="/about-us" className="hover:text-red-500 py-2">
+            <Link href="/about-us" className="hover:text-red-600 py-2">
               About Us
             </Link>
           </nav>
@@ -190,10 +190,10 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
             {/* List Property Button */}
             <Link
               href="/list-property"
-              className="relative border border-red-500 text-red-500 xl:px-6 lg:px-5 md:px-3 px-3 py-2 rounded-xl hover:bg-red-50"
+              className="relative border border-red-600 text-red-600 xl:px-6 lg:px-5 md:px-3 px-3 py-2 rounded-xl hover:bg-red-50"
             >
               List Your Property
-              <span className="absolute bottom-0 right-0 -mb-2 -mr-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-md">
+              <span className="absolute bottom-0 right-0 -mb-2 -mr-2 bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-md">
                 FREE
               </span>
             </Link>
@@ -243,7 +243,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
           <Menu role="button" onClick={onMenuClick} />
           <Link href="/" className="flex items-center gap-1">
             <SvgIcon iconSize="small" name="houseclay" size={22} />
-            <span className="text-red-500 text-2xl font-inter font-bold">
+            <span className="text-red-600 text-2xl font-inter font-bold">
               houseclay
             </span>
           </Link>

@@ -99,9 +99,9 @@ const FooterClient: React.FC = () => {
             <div className="flex md:gap-8 lg:gap-12">
               {/* Quick Links */}
               <div>
-                <h3 className="text-gray-400 font-medium text-lg mb-5">
+                <h1 className="text-gray-600 font-medium text-lg mb-5">
                   Quick Links
-                </h3>
+                </h1>
                 <ul className="space-y-2">
                   {/* <li>
                     <Link
@@ -172,9 +172,9 @@ const FooterClient: React.FC = () => {
 
               {/* Resources */}
               <div>
-                <h3 className="text-gray-400 font-medium text-lg mb-5">
+                <h1 className="text-gray-600 font-medium text-lg mb-5">
                   Resources
-                </h3>
+                </h1>
                 <ul className="space-y-2">
                   <li>
                     <Link

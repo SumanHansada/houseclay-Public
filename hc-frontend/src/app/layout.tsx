@@ -34,8 +34,6 @@ const nutino = Nunito({
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   viewportFit: "cover", // very  important you know this
 };
 

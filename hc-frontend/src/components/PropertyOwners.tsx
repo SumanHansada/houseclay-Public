@@ -6,12 +6,12 @@ const PropertyOwners: React.FC = () => {
     <div className="mx-auto xl:px-28 lg:px-14 md:px-14 px-6 py-20 flex flex-col md:flex-row items-center justify-between bg-white">
       {/* Left Side - Text Content */}
       <div className="flex-col flex-1 text-left items-center">
-        <span className="bg-red-50 text-red-500 px-4 py-2 rounded-full text-sm ">
+        <span className="bg-red-50 text-red-600 px-4 py-2 rounded-full text-sm ">
           For Property Owners
         </span>
         <h1 className="text-3xl font-bold mt-4">
           Sell or Rent your <span className="text-black">property</span>{" "}
-          <span className="text-red-500">quickly</span>
+          <span className="text-red-600">quickly</span>
         </h1>
         <p className="text-gray-600 mt-2">
           Easily sell or rent your property. Our platform ensures fast,
@@ -20,7 +20,7 @@ const PropertyOwners: React.FC = () => {
         </p>
         <Link
           href="/list-property"
-          className="inline-block text-center mt-4 px-6 py-2 border-2 border-red-500 text-red-500 rounded-xl font-medium hover:bg-red-500 hover:text-white transition duration-200"
+          className="inline-block text-center mt-4 px-6 py-2 border-2 border-red-600 text-red-600 rounded-xl font-medium hover:bg-red-600 hover:text-white transition duration-200"
         >
           List Your Property
         </Link>
