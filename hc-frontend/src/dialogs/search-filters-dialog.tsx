@@ -87,7 +87,7 @@ const availabilityTypes = [
 ];
 
 const bhkTypes = [
-  { label: "Studio", value: "studio" },
+  { label: "Studio", value: "Studio" },
   { label: "1 BHK", value: "1BHK" },
   { label: "2 BHK", value: "2BHK" },
   { label: "3 BHK", value: "3BHK" },

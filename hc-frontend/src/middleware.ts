@@ -43,16 +43,16 @@ export function middleware(request: NextRequest) {
 // Configure which paths the middleware should run on
 export const config = {
   matcher: [
-    // Property category redirects
+    // Protected routes that require authentication
     "/list-property/rent/:path*",
     "/list-property/resale/:path*",
     "/list-property/flatmate/:path*",
 
-    // Protected routes that require authentication
-    "/edit-property/:path*",
+    "/edit-property/rent/:path*",
+    "/edit-property/resale/:path*",
+    "/edit-property/flatmate/:path*",
+
     "/my-property-details/:path*",
     "/manage-account/:path*",
-    // "/buy-connects",
-    // Add other protected routes here
   ],
 };

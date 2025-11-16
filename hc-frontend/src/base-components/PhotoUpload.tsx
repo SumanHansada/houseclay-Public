@@ -10,7 +10,7 @@ import {
   Trash2,
 } from "lucide-react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
 import { FileData } from "@/interfaces/FileData";
@@ -69,6 +69,24 @@ const PhotoUpload: React.FC<PhotoUploadProps> = ({
 
   // Get the current photos value
   const photos = value || [];
+
+  // Ensure cover photo is always at first index on load
+  useEffect(() => {
+    if (!value || value.length === 0) return;
+
+    const coverPhotoIndex = value.findIndex((photo) => photo.isCover);
+
+    // If cover photo exists but is not at index 0, normalize the array
+    if (coverPhotoIndex > 0) {
+      const coverPhoto = value[coverPhotoIndex];
+      const otherPhotos = value.filter((_, index) => index !== coverPhotoIndex);
+      const normalizedPhotos = [
+        { ...coverPhoto, isCover: true },
+        ...otherPhotos.map((photo) => ({ ...photo, isCover: false })),
+      ];
+      onChange(normalizedPhotos);
+    }
+  }, [value, onChange]);
 
   // Handle file drop/selection
   const onDrop = (acceptedFiles: File[]) => {

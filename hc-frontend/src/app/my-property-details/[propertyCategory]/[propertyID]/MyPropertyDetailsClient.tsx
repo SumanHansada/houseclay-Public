@@ -186,6 +186,7 @@ export function MyPropertyDetailsClient({
     });
 
   const propertyData = propertyDataRaw as PropertyData | undefined;
+  console.log("Property Data", propertyData);
   const property = propertyData?.property;
   const propertyUpdates = propertyData?.propertyUpdates ?? [];
   const contactedUsers = propertyData?.contactUsers ?? [];

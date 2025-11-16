@@ -183,6 +183,7 @@ const FlatmatePropertyDetailsClient: React.FC = () => {
             name="propertyDetails.bhkType"
             id="propertyDetails.bhkType"
             options={[
+              { value: "Studio", label: "Studio" },
               { value: "1BHK", label: "1 BHK" },
               { value: "2BHK", label: "2 BHK" },
               { value: "3BHK", label: "3 BHK" },
