@@ -27,6 +27,7 @@ public class PropertyCardDTO {
     private double latitude;
     private double longitude;
     private List<String> images;
+    private String coverImage;
     private List<String> badges;
 }
 

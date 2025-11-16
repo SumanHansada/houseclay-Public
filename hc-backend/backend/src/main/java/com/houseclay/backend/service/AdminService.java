@@ -147,7 +147,7 @@ public class AdminService {
                 .sameSite("None")
                 .domain(".houseclay.com")
                 .path("/")
-                .maxAge(60 * 60)
+                .maxAge(86400)
                 .build();
 
         return ResponseEntity.ok()

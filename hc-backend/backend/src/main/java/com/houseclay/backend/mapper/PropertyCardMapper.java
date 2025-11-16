@@ -52,6 +52,7 @@ public class PropertyCardMapper {
         target.setLongitude(source.getLocation().getLon());
         target.setBathrooms(source.getBathrooms());
         target.setImages(source.getImages());
+        target.setCoverImage(source.getCoverImage());
     }
 
     private static void copyBaseFields(Property source, PropertyCardDTO target) {
@@ -69,5 +70,6 @@ public class PropertyCardMapper {
         target.setBathrooms(source.getBathrooms());
         target.setPropertyCategory(PropertyUtils.getPropertyCategory(source));
         target.setImages(source.getImages());
+        target.setCoverImage(source.getCoverImage());
     }
 }

@@ -15,7 +15,7 @@ public class CloudFrontCookieService {
 
     private static final String KEY_PAIR_ID = "K17ZTW5NPXMRFP";
     private static final String PRIVATE_KEY_PATH = "/home/ec2-user/backend/private_key.pem";
-    private static final String DISTRIBUTION_DOMAIN = "cdn.houseclay.com";
+    private static final String DISTRIBUTION_DOMAIN = ".houseclay.com";
 
     public Map<String, ResponseCookie> generateSignedCookies() throws Exception {
         String resourcePath = "https://" + DISTRIBUTION_DOMAIN + "/properties/*" ;
@@ -36,27 +36,30 @@ public class CloudFrontCookieService {
 
         // Convert to Spring-friendly ResponseCookies
         ResponseCookie policyCookie = ResponseCookie.from(cookies.getPolicy().getKey(), cookies.getPolicy().getValue())
-                .domain(DISTRIBUTION_DOMAIN)
-                .path("/")
                 .httpOnly(true)
                 .secure(true)
                 .sameSite("None")
+                .domain(DISTRIBUTION_DOMAIN)
+                .path("/")
+                .maxAge(86400)
                 .build();
 
         ResponseCookie signatureCookie = ResponseCookie.from(cookies.getSignature().getKey(), cookies.getSignature().getValue())
-                .domain(DISTRIBUTION_DOMAIN)
-                .path("/")
                 .httpOnly(true)
                 .secure(true)
                 .sameSite("None")
+                .domain(DISTRIBUTION_DOMAIN)
+                .path("/")
+                .maxAge(86400)
                 .build();
 
         ResponseCookie keyPairCookie = ResponseCookie.from(cookies.getKeyPairId().getKey(), cookies.getKeyPairId().getValue())
-                .domain(DISTRIBUTION_DOMAIN)
-                .path("/")
                 .httpOnly(true)
                 .secure(true)
                 .sameSite("None")
+                .domain(DISTRIBUTION_DOMAIN)
+                .path("/")
+                .maxAge(86400)
                 .build();
 
         return Map.of(
