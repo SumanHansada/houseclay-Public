@@ -38,6 +38,13 @@ import {
   getRentalDetailsErrors,
   getRentalDetailsTouched,
 } from "@/utils/formHelpers";
+import {
+  FURNISHING_OPTIONS,
+  PARKING_OPTIONS,
+  POWER_BACKUP_OPTIONS,
+  WATER_SUPPLY_OPTIONS,
+  YES_NO_OPTIONS,
+} from "@/common/dataConstants/options";
 
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ClubhouseIcon = ClubhouseIconSvg as React.FC<
@@ -198,10 +205,7 @@ export const RentalDetailsClient: React.FC = () => {
               name="rentalDetails.rentNegotiable"
               label="Rent Negotiable"
               columns={2}
-              options={[
-                { value: true, label: "Yes" },
-                { value: false, label: "No" },
-              ]}
+              options={YES_NO_OPTIONS}
               horizontal
             />
           </div>
@@ -241,17 +245,7 @@ export const RentalDetailsClient: React.FC = () => {
               label="Furnishing"
               name="rentalDetails.furnishing"
               id="rentalDetails.furnishing"
-              options={[
-                {
-                  value: "Fully-furnished",
-                  label: "Fully Furnished",
-                },
-                {
-                  value: "Semi-funnished",
-                  label: "Semi Furnished",
-                },
-                { value: "Unfurnished", label: "UnFurnished" },
-              ]}
+              options={FURNISHING_OPTIONS}
               required={true}
               placeholder="Select furnishing"
               aria-describedby={
@@ -300,17 +294,7 @@ export const RentalDetailsClient: React.FC = () => {
               label="Water Supply"
               name="rentalDetails.waterSupply"
               id="rentalDetails.waterSupply"
-              options={[
-                { value: "borewell", label: "Borewell" },
-                {
-                  value: "tanker",
-                  label: "Tanker",
-                },
-                {
-                  value: "Ground-water",
-                  label: "Ground Water",
-                },
-              ]}
+              options={WATER_SUPPLY_OPTIONS}
               required={true}
               placeholder="Select Water supply"
               aria-describedby={
@@ -326,17 +310,7 @@ export const RentalDetailsClient: React.FC = () => {
               label="Power Backup"
               name="rentalDetails.powerBackup"
               id="rentalDetails.powerBackup"
-              options={[
-                { value: "full", label: "Full" },
-                {
-                  value: "partial",
-                  label: "Partial",
-                },
-                {
-                  value: "no",
-                  label: "No",
-                },
-              ]}
+              options={POWER_BACKUP_OPTIONS}
               required={true}
               placeholder="Select Power backup"
               aria-describedby={
@@ -354,12 +328,7 @@ export const RentalDetailsClient: React.FC = () => {
               label="Parking"
               name="rentalDetails.parking"
               id="rentalDetails.parking"
-              options={[
-                { value: "Both", label: "Both" },
-                { value: "2 Wheeler", label: "2 Wheeler" },
-                { value: "4 Wheeler", label: "4 Wheeler" },
-                { value: "None", label: "None" },
-              ]}
+              options={PARKING_OPTIONS}
               required={true}
               placeholder="Select Parking"
               aria-describedby={
@@ -374,10 +343,7 @@ export const RentalDetailsClient: React.FC = () => {
               name="rentalDetails.nonVegAllowed"
               label="Non Veg Allowed"
               columns={2}
-              options={[
-                { value: true, label: "Yes" },
-                { value: false, label: "No" },
-              ]}
+              options={YES_NO_OPTIONS}
               required
               horizontal
             />

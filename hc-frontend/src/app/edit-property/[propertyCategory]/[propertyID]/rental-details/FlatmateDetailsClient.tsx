@@ -34,6 +34,15 @@ import {
   getFlatmateDetailsErrors,
   getFlatmateDetailsTouched,
 } from "@/utils/formHelpers";
+import {
+  DRINKING_PREFERENCE_OPTIONS,
+  FURNISHING_OPTIONS,
+  PARKING_OPTIONS,
+  POWER_BACKUP_OPTIONS,
+  SMOKING_PREFERENCE_OPTIONS,
+  WATER_SUPPLY_OPTIONS,
+  YES_NO_OPTIONS,
+} from "@/common/dataConstants/options";
 
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ClubhouseIcon = ClubhouseIconSvg as React.FC<
@@ -197,12 +206,7 @@ export const FlatmateDetailsClient: React.FC = () => {
               label="Parking"
               name="flatmateDetails.parking"
               id="flatmateDetails.parking"
-              options={[
-                { value: "Both", label: "Both" },
-                { value: "2 Wheeler", label: "2 Wheeler" },
-                { value: "4 Wheeler", label: "4 Wheeler" },
-                { value: "None", label: "None" },
-              ]}
+              options={PARKING_OPTIONS}
               required={true}
               placeholder="Select Parking"
               aria-describedby={
@@ -250,17 +254,7 @@ export const FlatmateDetailsClient: React.FC = () => {
               label="Furnishing"
               name="flatmateDetails.furnishing"
               id="flatmateDetails.furnishing"
-              options={[
-                {
-                  value: "Fully-furnished",
-                  label: "Fully Furnished",
-                },
-                {
-                  value: "Semi-funnished",
-                  label: "Semi Furnished",
-                },
-                { value: "Unfurnished", label: "UnFurnished" },
-              ]}
+              options={FURNISHING_OPTIONS}
               required={true}
               placeholder="Select furnishing"
               aria-describedby={
@@ -319,17 +313,7 @@ export const FlatmateDetailsClient: React.FC = () => {
               label="Water Supply"
               name="flatmateDetails.waterSupply"
               id="flatmateDetails.waterSupply"
-              options={[
-                { value: "borewell", label: "Borewell" },
-                {
-                  value: "tanker",
-                  label: "Tanker",
-                },
-                {
-                  value: "Ground-water",
-                  label: "Ground Water",
-                },
-              ]}
+              options={WATER_SUPPLY_OPTIONS}
               required={true}
               placeholder="Select Water supply"
               aria-describedby={
@@ -345,17 +329,7 @@ export const FlatmateDetailsClient: React.FC = () => {
               label="Power Backup"
               name="flatmateDetails.powerBackup"
               id="flatmateDetails.powerBackup"
-              options={[
-                { value: "full", label: "Full" },
-                {
-                  value: "partial",
-                  label: "Partial",
-                },
-                {
-                  value: "no",
-                  label: "No",
-                },
-              ]}
+              options={POWER_BACKUP_OPTIONS}
               required={true}
               placeholder="Select Power backup"
               aria-describedby={
@@ -373,10 +347,7 @@ export const FlatmateDetailsClient: React.FC = () => {
               name="flatmateDetails.attachedBathroom"
               label="Attached Bathroom"
               columns={2}
-              options={[
-                { value: true, label: "Yes" },
-                { value: false, label: "No" },
-              ]}
+              options={YES_NO_OPTIONS}
               required
               horizontal
             />
@@ -386,10 +357,7 @@ export const FlatmateDetailsClient: React.FC = () => {
               name="flatmateDetails.attachedBalcony"
               label="Attached Balcony"
               columns={2}
-              options={[
-                { value: true, label: "Yes" },
-                { value: false, label: "No" },
-              ]}
+              options={YES_NO_OPTIONS}
               required
               horizontal
             />
@@ -401,10 +369,7 @@ export const FlatmateDetailsClient: React.FC = () => {
               name="flatmateDetails.smokingPreference"
               label="Smoking Allowed"
               columns={2}
-              options={[
-                { value: "Not Allowed", label: "Not Allowed" },
-                { value: "Allowed", label: "Allowed" },
-              ]}
+              options={SMOKING_PREFERENCE_OPTIONS}
               required
               horizontal
             />
@@ -414,10 +379,7 @@ export const FlatmateDetailsClient: React.FC = () => {
               name="flatmateDetails.drinkingPreference"
               label="Drinking Allowed"
               columns={2}
-              options={[
-                { value: "No", label: "No" },
-                { value: "Occasionally", label: "Occasionally" },
-              ]}
+              options={DRINKING_PREFERENCE_OPTIONS}
               required
               horizontal
             />
