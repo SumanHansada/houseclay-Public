@@ -4,8 +4,8 @@ import { ChevronDown, UserRound } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-import { ACCOUNT_NAV } from "@/common/dataConstants";
 import { AccountNavList } from "@/components/AccountNavList";
+import { ACCOUNT_NAV } from "@/common/dataConstants/navbar";
 
 interface UserDropdownProps {
   userName: string;

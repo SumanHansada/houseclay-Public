@@ -4,8 +4,8 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
-import { type AccountNavItem } from "@/common/dataConstants";
 import { useLogout } from "@/hooks/useLogout";
+import { type AccountNavItem } from "@/common/dataConstants/navbar";
 interface BaseProps {
   items: AccountNavItem[];
   listClassName?: string;

@@ -17,6 +17,17 @@ import {
   getPropertyDetailsErrors,
   getPropertyDetailsTouched,
 } from "@/utils/formHelpers";
+import {
+  BATHROOM_OPTIONS,
+  BHK_TYPE_OPTIONS,
+  FACING_OPTIONS,
+  FLOOR_NUMERIC_OPTIONS,
+  FLOOR_TYPE_OPTIONS,
+  OWNERSHIP_TYPE_OPTIONS,
+  PROPERTY_AGE_OPTIONS,
+  PROPERTY_TYPE_OPTIONS,
+  TOTAL_FLOORS_NUMERIC_OPTIONS,
+} from "@/common/dataConstants/options";
 
 const propertySchema = Yup.object({
   propertyDetails: Yup.object({
@@ -128,13 +139,7 @@ const RentPropertyDetailsClient: React.FC = () => {
           label="Property Type"
           name="propertyDetails.propertyType"
           id="propertyDetails.propertyType"
-          options={[
-            { value: "Apartment", label: "Apartment" },
-            { value: "Villa", label: "Villa" },
-            { value: "House", label: "House" },
-            { value: "Plot", label: "Plot" },
-            { value: "Commercial", label: "Commercial" },
-          ]}
+          options={PROPERTY_TYPE_OPTIONS}
           required
           placeholder="Select property type"
           aria-describedby={
@@ -161,16 +166,7 @@ const RentPropertyDetailsClient: React.FC = () => {
             label="Facing"
             name="propertyDetails.facing"
             id="propertyDetails.facing"
-            options={[
-              { value: "East", label: "East" },
-              { value: "West", label: "West" },
-              { value: "North", label: "North" },
-              { value: "South", label: "South" },
-              { value: "North-East", label: "North-East" },
-              { value: "North-West", label: "North-West" },
-              { value: "South-East", label: "South-East" },
-              { value: "South-West", label: "South-West" },
-            ]}
+            options={FACING_OPTIONS}
             required
             placeholder="Select facing direction"
             aria-describedby={
@@ -184,14 +180,7 @@ const RentPropertyDetailsClient: React.FC = () => {
             label="BHK Type"
             name="propertyDetails.bhkType"
             id="propertyDetails.bhkType"
-            options={[
-              { value: "Studio", label: "Studio" },
-              { value: "1BHK", label: "1 BHK" },
-              { value: "2BHK", label: "2 BHK" },
-              { value: "3BHK", label: "3 BHK" },
-              { value: "4BHK", label: "4 BHK" },
-              { value: "5+BHK", label: "5+ BHK" },
-            ]}
+            options={BHK_TYPE_OPTIONS}
             required
             placeholder="Select BHK Type"
             aria-describedby={
@@ -208,14 +197,7 @@ const RentPropertyDetailsClient: React.FC = () => {
             label="Bathrooms"
             name="propertyDetails.bathrooms"
             id="propertyDetails.bathrooms"
-            options={[
-              { value: 1, label: "1" },
-              { value: 2, label: "2" },
-              { value: 3, label: "3" },
-              { value: 4, label: "4" },
-              { value: 5, label: "5" },
-              { value: 6, label: "6" },
-            ]}
+            options={BATHROOM_OPTIONS}
             optionsType="number"
             required
             placeholder="Select Bathrooms"
@@ -231,15 +213,7 @@ const RentPropertyDetailsClient: React.FC = () => {
             label="Ownership Type"
             name="propertyDetails.ownershipType"
             id="propertyDetails.ownershipType"
-            options={[
-              { value: "Self Owned", label: "Self Owned" },
-              { value: "Rented", label: "Rented" },
-              {
-                value: "Co-operative Society",
-                label: "Co-operative Society",
-              },
-              { value: "Power of Attorney", label: "Power of Attorney" },
-            ]}
+            options={OWNERSHIP_TYPE_OPTIONS}
             required
             placeholder="Select ownership type"
             aria-describedby={
@@ -254,13 +228,7 @@ const RentPropertyDetailsClient: React.FC = () => {
             label="Property Age"
             name="propertyDetails.propertyAge"
             id="propertyDetails.propertyAge"
-            options={[
-              { value: "Under Construction", label: "Under Construction" },
-              { value: "Less than 1 year", label: "Less than 1 year" },
-              { value: "1-5 years", label: "1-5 years" },
-              { value: "5-10 years", label: "5-10 years" },
-              { value: "More than 10 year", label: "More than 10 year" },
-            ]}
+            options={PROPERTY_AGE_OPTIONS}
             required
             placeholder="Select property age"
             aria-describedby={
@@ -278,12 +246,7 @@ const RentPropertyDetailsClient: React.FC = () => {
             label="Total Floor"
             name="propertyDetails.totalFloors"
             id="totalFloors"
-            options={Array.from({ length: 50 }, (_, i) => i + 1).map(
-              (value) => ({
-                value: value,
-                label: value.toString(),
-              }),
-            )}
+            options={TOTAL_FLOORS_NUMERIC_OPTIONS}
             optionsType="number"
             required
             placeholder="Select total floors"
@@ -299,13 +262,7 @@ const RentPropertyDetailsClient: React.FC = () => {
             label="Floor"
             name="propertyDetails.floor"
             id="propertyDetails.floor"
-            options={[
-              { value: 0, label: "Ground" },
-              ...Array.from({ length: 50 }, (_, i) => i + 1).map((value) => ({
-                value: value,
-                label: value.toString(),
-              })),
-            ]}
+            options={FLOOR_NUMERIC_OPTIONS}
             optionsType="number"
             required
             placeholder="Select floor"
@@ -320,13 +277,7 @@ const RentPropertyDetailsClient: React.FC = () => {
             label="Floor Type"
             name="propertyDetails.floorType"
             id="floorType"
-            options={[
-              { value: "Mosaic", label: "Mosaic" },
-              { value: "Marble", label: "Marble" },
-              { value: "Granite", label: "Granite" },
-              { value: "Vitrified", label: "Vitrified" },
-              { value: "Wooden", label: "Wooden" },
-            ]}
+            options={FLOOR_TYPE_OPTIONS}
             required
             placeholder="Select floor type"
             aria-describedby={

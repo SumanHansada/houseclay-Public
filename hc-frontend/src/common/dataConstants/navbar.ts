@@ -10,8 +10,8 @@ import { default as ShortlistsIcon } from "public/optimizedIcons/small/shortlist
 import { default as SupportIcon } from "public/optimizedIcons/small/support.svg";
 import type { FC, SVGProps } from "react";
 
-export type NavIconType = FC<SVGProps<SVGSVGElement>>;
-export type NavActionId = "LOGOUT";
+type NavIconType = FC<SVGProps<SVGSVGElement>>;
+type NavActionId = "LOGOUT";
 
 export interface AccountNavItem {
   label: string;

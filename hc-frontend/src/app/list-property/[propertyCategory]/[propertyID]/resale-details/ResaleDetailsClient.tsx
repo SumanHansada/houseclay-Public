@@ -38,6 +38,13 @@ import {
   getResaleDetailsErrors,
   getResaleDetailsTouched,
 } from "@/utils/formHelpers";
+import {
+  FURNISHING_OPTIONS,
+  PARKING_OPTIONS,
+  POWER_BACKUP_OPTIONS,
+  WATER_SUPPLY_OPTIONS,
+  YES_NO_OPTIONS,
+} from "@/common/dataConstants/options";
 
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ClubhouseIcon = ClubhouseIconSvg as React.FC<
@@ -205,10 +212,7 @@ const ResaleDetailsClient: React.FC = () => {
               name="resaleDetails.priceNegotiable"
               label="Price Negotiable"
               columns={2}
-              options={[
-                { value: true, label: "Yes" },
-                { value: false, label: "No" },
-              ]}
+              options={YES_NO_OPTIONS}
               horizontal
             />
           </div>
@@ -217,10 +221,7 @@ const ResaleDetailsClient: React.FC = () => {
               name="resaleDetails.underLoan"
               label="Currently Under Loan"
               columns={2}
-              options={[
-                { value: true, label: "Yes" },
-                { value: false, label: "No" },
-              ]}
+              options={YES_NO_OPTIONS}
               required
               horizontal
             />
@@ -232,17 +233,7 @@ const ResaleDetailsClient: React.FC = () => {
               label="Water Supply"
               name="resaleDetails.waterSupply"
               id="resaleDetails.waterSupply"
-              options={[
-                { value: "borewell", label: "Borewell" },
-                {
-                  value: "tanker",
-                  label: "Tanker",
-                },
-                {
-                  value: "Ground-water",
-                  label: "Ground Water",
-                },
-              ]}
+              options={WATER_SUPPLY_OPTIONS}
               placeholder="Select Water supply"
               aria-describedby={
                 resaleDetailsErrors?.waterSupply &&
@@ -257,17 +248,7 @@ const ResaleDetailsClient: React.FC = () => {
               label="Power Backup"
               name="resaleDetails.powerBackup"
               id="resaleDetails.powerBackup"
-              options={[
-                { value: "full", label: "Full" },
-                {
-                  value: "partial",
-                  label: "Partial",
-                },
-                {
-                  value: "no",
-                  label: "No",
-                },
-              ]}
+              options={POWER_BACKUP_OPTIONS}
               placeholder="Select Power backup"
               aria-describedby={
                 resaleDetailsErrors?.powerBackup &&
@@ -284,17 +265,7 @@ const ResaleDetailsClient: React.FC = () => {
               label="Furnishing"
               name="resaleDetails.furnishing"
               id="resaleDetails.furnishing"
-              options={[
-                {
-                  value: "Fully-furnished",
-                  label: "Fully Furnished",
-                },
-                {
-                  value: "Semi-funnished",
-                  label: "Semi Furnished",
-                },
-                { value: "Unfurnished", label: "UnFurnished" },
-              ]}
+              options={FURNISHING_OPTIONS}
               required={true}
               placeholder="Select furnishing"
               aria-describedby={
@@ -310,12 +281,7 @@ const ResaleDetailsClient: React.FC = () => {
               label="Parking"
               name="resaleDetails.parking"
               id="resaleDetails.parking"
-              options={[
-                { value: "Both", label: "Both" },
-                { value: "2 Wheeler", label: "2 Wheeler" },
-                { value: "4 Wheeler", label: "4 Wheeler" },
-                { value: "None", label: "None" },
-              ]}
+              options={PARKING_OPTIONS}
               required={true}
               placeholder="Select Parking"
               aria-describedby={

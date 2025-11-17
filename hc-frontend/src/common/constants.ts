@@ -1,7 +1,12 @@
 export const BASE_API_URL =
   process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL ||
   "https://apis.houseclay.com/api";
-export const SUPPORT_EMAIL = "support@houseclay.com";
+
+export const HOUSECLAY_SUPPORT = {
+  email: "support@houseclay.com",
+  phone: "+91 7892014327",
+};
+export const SUPPORT_EMAIL = "";
 export const SUPPORT_CONTACT = "+91 7892014327";
 
 // media links
