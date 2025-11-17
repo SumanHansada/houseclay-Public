@@ -104,6 +104,7 @@ public class PropertyUserService {
         if (property.getReportedProperties().size() >= 2) {
             property.setPropertyState(PropertyState.PENDING_RE_VERIFICATION);
         }
+        property.getReportedProperties().add(reportProperty);
         propertyRepository.save(property);
     }
 

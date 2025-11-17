@@ -48,6 +48,11 @@ public class ViewPropertyService {
                         action.getUser() != null &&
                         action.getUser().getPhoneNo().equalsIgnoreCase(user.getPhoneNo())
         );
+
+        boolean reported = property.getReportedProperties().stream().anyMatch(
+                reportProperty -> reportProperty.getUser().getPhoneNo().equalsIgnoreCase(user.getPhoneNo())
+        );
+
         if (!viewed) {
             property.setScore(property.getScore() + 1);
             PropertyAction propertyAction = new PropertyAction();
@@ -59,9 +64,9 @@ public class ViewPropertyService {
             propertyRepository.save(property);
         }
         if (contacted || property.getOwner().getPhoneNo().equalsIgnoreCase(user.getPhoneNo())) {
-            return ResponseEntity.ok(PropertySearchMapper.toPropertyUserSearchDTO(property, property.getOwner()));
+            return ResponseEntity.ok(PropertySearchMapper.toPropertyUserSearchDTO(property, property.getOwner(), reported));
         }
-        return ResponseEntity.ok(PropertySearchMapper.toPropertyUserSearchDTO(property, null));
+        return ResponseEntity.ok(PropertySearchMapper.toPropertyUserSearchDTO(property, null, reported));
     }
 
     public List<PropertyDTO> getViewedProperties(User user) {

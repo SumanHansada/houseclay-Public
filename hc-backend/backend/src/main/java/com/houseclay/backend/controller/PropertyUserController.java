@@ -106,7 +106,7 @@ public class PropertyUserController {
             Property shortlistedProperty = shortlistPropertyService.shortlistProperty(user, propertyId);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Property shortlisted successfully");
-            response.put("shortlistedProperty", PropertySearchMapper.toPropertyUserSearchDTO(shortlistedProperty, null));
+            response.put("shortlistedProperty", PropertySearchMapper.toPropertyUserSearchDTO(shortlistedProperty, null, false));
             return ResponseEntity.ok(response);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());

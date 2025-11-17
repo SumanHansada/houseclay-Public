@@ -9,6 +9,7 @@ import com.houseclay.backend.mapper.UserMapper;
 import com.houseclay.backend.repository.AdminLoginRepository;
 import com.houseclay.backend.repository.AdminRepository;
 import com.houseclay.backend.repository.UserRepository;
+import com.houseclay.backend.utils.CookieUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -147,7 +148,7 @@ public class AdminService {
                 .sameSite("None")
                 .domain(".houseclay.com")
                 .path("/")
-                .maxAge(86400)
+                .maxAge(CookieUtils.COOKIE_MAX_AGE)
                 .build();
 
         return ResponseEntity.ok()

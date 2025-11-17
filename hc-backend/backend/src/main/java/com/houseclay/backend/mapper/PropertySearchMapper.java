@@ -23,12 +23,13 @@ public class PropertySearchMapper {
         return dto;
     }
 
-    public static PropertyUserSearchDTO toPropertyUserSearchDTO(Property property, User user) {
+    public static PropertyUserSearchDTO toPropertyUserSearchDTO(Property property, User user, boolean isReported) {
         PropertyUserSearchDTO dto = new PropertyUserSearchDTO();
         dto.setProperty(toPropertySearchDTO(property));
         if (user != null) {
             dto.setOwner(OwnerMapper.toOwnerDetailDTO(user));
         }
+        dto.setReported(isReported);
         return dto;
     }
 }

@@ -7,6 +7,7 @@ import com.houseclay.backend.payload.LoginPayload;
 import com.houseclay.backend.payload.UserPayload;
 import com.houseclay.backend.repository.UserLoginRepository;
 import com.houseclay.backend.repository.UserRepository;
+import com.houseclay.backend.utils.CookieUtils;
 import com.houseclay.backend.utils.EmailOTPUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -137,7 +138,7 @@ public class UserService {
                 .sameSite("None")
                 .domain(".houseclay.com")
                 .path("/")
-                .maxAge(86400)
+                .maxAge(CookieUtils.COOKIE_MAX_AGE)
                 .build();
                 
         return ResponseEntity.ok()
