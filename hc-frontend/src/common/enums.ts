@@ -119,3 +119,10 @@ export enum FLATMATE_PREFERRED_TENANTS {
   MALE = "male",
   FEMALE = "female",
 }
+
+export const enum ReportStatus {
+  BROKER = "BROKER",
+  INCORRECT_INFO = "INCORRECT_INFO",
+  RENTED_OUT = "RENTED_OUT",
+  OTHER = "OTHER",
+}

@@ -100,6 +100,7 @@ import {
   SMOKING_PREFERENCE_OPTIONS,
   WATER_SUPPLY_OPTIONS,
 } from "@/common/dataConstants/options";
+import { ActionDialog } from "@/dialogs/action-dialog";
 
 interface MyPropertyDetailsClientProps {
   propertyCategory: string;
@@ -176,6 +177,8 @@ const AmenitiesMap = {
   "First Aid Kit": { label: "First Aid Kit", icon: <FirstAidKitIcon /> },
 };
 
+const ACTION_DIALOG_ID = "mark-as-action-dialog-id";
+
 export function MyPropertyDetailsClient({
   propertyCategory,
   propertyID,
@@ -185,11 +188,14 @@ export function MyPropertyDetailsClient({
   const { isMobile } = useDeviceContext();
   const searchParams = useSearchParams();
   const [deactivatingProperty] = useDeactivatePropertyMutation();
-  const { data: propertyDataRaw, isLoading: isPropertyLoading } =
-    useGetMyPropertyByIdQuery(propertyID, {
-      skip: !propertyID,
-      refetchOnMountOrArgChange: true,
-    });
+  const {
+    data: propertyDataRaw,
+    isLoading: isPropertyLoading,
+    refetch,
+  } = useGetMyPropertyByIdQuery(propertyID, {
+    skip: !propertyID,
+    refetchOnMountOrArgChange: true,
+  });
 
   const propertyData = propertyDataRaw as PropertyData | undefined;
   console.log("Property Data", propertyData);
@@ -201,7 +207,7 @@ export function MyPropertyDetailsClient({
   const [generateLead, { isLoading: _isGeneratingLead }] =
     useGenerateLeadMutation();
 
-  const { openDialog } = useDialog();
+  const { openDialog, isDialogOpen } = useDialog();
 
   const handleEdit = async () => {
     router.push(
@@ -1002,7 +1008,7 @@ export function MyPropertyDetailsClient({
               <div className="flex py-0 ml-auto justify-end">
                 <button
                   className="border border-green-500 text-green-500 px-4 py-2 rounded-lg flex items-center gap-2"
-                  onClick={handleDeactivatingProperty}
+                  onClick={() => openDialog(ACTION_DIALOG_ID)}
                 >
                   <Stamp size={20} />{" "}
                   {property?.propertyCategory === PropertyCategory.RESALE
@@ -1037,7 +1043,7 @@ export function MyPropertyDetailsClient({
           <button
             type="submit"
             className="flex gap-2 items-center px-6 py-3 border border-green-500 text-green-500 rounded-xl hover:bg-green-600 hover:text-white disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300"
-            onClick={handleDeactivatingProperty}
+            onClick={() => openDialog(ACTION_DIALOG_ID)}
           >
             <Stamp size={20} />{" "}
             {property?.propertyCategory === PropertyCategory.RESALE
@@ -1057,6 +1063,19 @@ export function MyPropertyDetailsClient({
         showThumbnails={true}
         thumbnailPosition="bottom"
       />
+
+      {isDialogOpen(ACTION_DIALOG_ID) && (
+        <ActionDialog
+          id={ACTION_DIALOG_ID}
+          title="Mark as rented out"
+          prompt="Are you sure you want to mark this property as Rented out?"
+          confirmLabel="Deactivate Property"
+          colour="red"
+          requireComment={false}
+          onConfirm={handleDeactivatingProperty}
+          onSuccess={async () => await refetch()}
+        />
+      )}
     </>
   );
 }
