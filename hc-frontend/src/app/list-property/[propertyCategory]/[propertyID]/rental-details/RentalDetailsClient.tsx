@@ -42,6 +42,7 @@ import {
   WATER_SUPPLY_OPTIONS,
   YES_NO_OPTIONS,
 } from "@/common/dataConstants/options";
+import { RENT_PREFERRED_TENANTS } from "@/common/enums";
 
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ClubhouseIcon = ClubhouseIconSvg as React.FC<
@@ -259,22 +260,22 @@ export const RentalDetailsClient: React.FC = () => {
             columns={4}
             options={[
               {
-                value: "Family",
+                value: RENT_PREFERRED_TENANTS.FAMILY,
                 label: "Family",
                 icon: <SvgIcon iconSize="large" name="family" size={68} />,
               },
               {
-                value: "Company",
+                value: RENT_PREFERRED_TENANTS.COMPANY,
                 label: "Company",
                 icon: <SvgIcon iconSize="large" name="company" size={68} />,
               },
               {
-                value: "Bachelor",
+                value: RENT_PREFERRED_TENANTS.BACHELOR,
                 label: "Bachelor",
                 icon: <SvgIcon iconSize="large" name="bachelor" size={68} />,
               },
               {
-                value: "Couple",
+                value: RENT_PREFERRED_TENANTS.COUPLE,
                 label: "Couple",
                 icon: <SvgIcon iconSize="large" name="couple" size={68} />,
               },

@@ -41,6 +41,7 @@ import {
   WATER_SUPPLY_OPTIONS,
   YES_NO_OPTIONS,
 } from "@/common/dataConstants/options";
+import { FLATMATE_PREFERRED_TENANTS } from "@/common/enums";
 
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ClubhouseIcon = ClubhouseIconSvg as React.FC<
@@ -270,12 +271,12 @@ export const FlatmateDetailsClient: React.FC = () => {
             columns={2}
             options={[
               {
-                value: "Female",
+                value: FLATMATE_PREFERRED_TENANTS.FEMALE,
                 label: "Female",
                 icon: <SvgIcon name="female" iconSize="medium" size={75} />,
               },
               {
-                value: "Male",
+                value: FLATMATE_PREFERRED_TENANTS.MALE,
                 label: "Male",
                 icon: <SvgIcon name="male" iconSize="medium" size={75} />,
               },

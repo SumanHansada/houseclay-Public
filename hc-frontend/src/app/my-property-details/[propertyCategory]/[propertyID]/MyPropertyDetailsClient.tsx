@@ -38,12 +38,10 @@ import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
 import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
 import FireExtinguisherIconSvg from "public/icons/amenities/fire-extinguisher.svg";
 import FirstAidKitIconSvg from "public/icons/amenities/first-aid-kit.svg";
-import GatedSecurityIconSvg from "public/icons/amenities/gated-security.svg";
 import GymIconSvg from "public/icons/amenities/gym.svg";
 import LiftIconSvg from "public/icons/amenities/lift.svg";
 import OutdoorDiningAreaIconSvg from "public/icons/amenities/outdoor-dining-area.svg";
 import ParkingSpaceIconSvg from "public/icons/amenities/parking-space.svg";
-import PoolIconSvg from "public/icons/amenities/pool.svg";
 import PoolTableIconSvg from "public/icons/amenities/pool-table.svg";
 import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
@@ -88,6 +86,20 @@ import PostedAndRentDetails from "./components/PostedAndRentDetails";
 import { RenderPropertyStatus } from "./components/RenderPropertyStatus";
 import UpgradePropertyBanner from "./components/UpgradePropertyBanner";
 import PropertyDetailsLoading from "./loading";
+import {
+  BHK_TYPE_OPTIONS,
+  DRINKING_PREFERENCE_OPTIONS,
+  FACING_OPTIONS,
+  FURNISHING_OPTIONS,
+  getOptionLabel,
+  getOptionLabels,
+  PARKING_OPTIONS,
+  PREFERRED_TENANTS_OPTIONS,
+  PROPERTY_AGE_OPTIONS,
+  PROPERTY_TYPE_OPTIONS,
+  SMOKING_PREFERENCE_OPTIONS,
+  WATER_SUPPLY_OPTIONS,
+} from "@/common/dataConstants/options";
 
 interface MyPropertyDetailsClientProps {
   propertyCategory: string;
@@ -111,10 +123,6 @@ const GymIcon = GymIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const OutdoorDiningAreaIcon = OutdoorDiningAreaIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
-const GatedSecurityIcon = GatedSecurityIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const PoolIcon = PoolIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const FireExtinguisherIcon = FireExtinguisherIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
@@ -150,8 +158,6 @@ const AmenitiesMap = {
     label: "Outdoor Dining Area",
     icon: <OutdoorDiningAreaIcon />,
   },
-  "Gated Security": { label: "Gated Security", icon: <GatedSecurityIcon /> },
-  Pool: { label: "Pool", icon: <PoolIcon /> },
   "Fire Extinguisher": {
     label: "Fire Extinguisher",
     icon: <FireExtinguisherIcon />,
@@ -271,7 +277,8 @@ export function MyPropertyDetailsClient({
           </Button>
         </MobileHeader.LeftAction>
         <MobileHeader.Title>
-          {property?.bhkType} in {property?.locationOrSocietyName} for{" "}
+          {getOptionLabel(BHK_TYPE_OPTIONS, property?.bhkType)} in{" "}
+          {property?.locationOrSocietyName} for{" "}
           {pascalCase(property?.propertyCategory)} in {property?.city}
         </MobileHeader.Title>
       </MobileHeader>
@@ -283,7 +290,8 @@ export function MyPropertyDetailsClient({
             <div className="py-12 mx-auto">
               <div>
                 <h1 className="text-3xl text-gray-900 flex items-center justify-between">
-                  {property?.bhkType} in {property?.locationOrSocietyName} for{" "}
+                  {getOptionLabel(BHK_TYPE_OPTIONS, property?.bhkType)} in{" "}
+                  {property?.locationOrSocietyName} for{" "}
                   {pascalCase(property?.propertyCategory)} in {property?.city}
                   <RenderPropertyStatus status={property?.propertyState} />
                 </h1>
@@ -363,7 +371,10 @@ export function MyPropertyDetailsClient({
                             Property Type
                           </div>
                           <div className="text-gray-900 font-bold font-nunito">
-                            {property?.propertyType || "Apartment"}
+                            {getOptionLabel(
+                              PROPERTY_TYPE_OPTIONS,
+                              property?.propertyType,
+                            ) || "Apartment"}
                           </div>
                         </div>
                       </div>
@@ -378,7 +389,13 @@ export function MyPropertyDetailsClient({
                             No. of Bedroom
                           </div>
                           <div className="text-gray-900 font-bold font-nunito">
-                            {property?.bhkType?.split("BHK")[0] || "-"} Bedroom
+                            {property?.bhkType === "studio"
+                              ? "1"
+                              : getOptionLabel(
+                                  BHK_TYPE_OPTIONS,
+                                  property?.bhkType,
+                                ) || "-"}{" "}
+                            Bedroom
                           </div>
                         </div>
                       </div>
@@ -393,7 +410,7 @@ export function MyPropertyDetailsClient({
                             Built Up Area
                           </div>
                           <div className="text-gray-900 font-bold font-nunito">
-                            {property?.builtUpArea}sqft
+                            {property?.builtUpArea} Sq. Ft
                           </div>
                         </div>
                       </div>
@@ -427,7 +444,7 @@ export function MyPropertyDetailsClient({
                               Facing
                             </div>
                             <div className="text-gray-900 font-bold font-nunito">
-                              {property?.facing}
+                              {getOptionLabel(FACING_OPTIONS, property?.facing)}
                             </div>
                           </div>
                         </div>
@@ -467,7 +484,10 @@ export function MyPropertyDetailsClient({
                               Property Age
                             </div>
                             <div className="text-gray-900 font-bold font-nunito">
-                              {property?.propertyAge}
+                              {getOptionLabel(
+                                PROPERTY_AGE_OPTIONS,
+                                property?.propertyAge,
+                              )}
                             </div>
                           </div>
                         </div>
@@ -487,7 +507,7 @@ export function MyPropertyDetailsClient({
                               Floor Type
                             </div>
                             <div className="text-gray-900 font-bold font-nunito">
-                              {property?.floorType}
+                              {pascalCase(property?.floorType)}
                             </div>
                           </div>
                         </div>
@@ -659,7 +679,10 @@ export function MyPropertyDetailsClient({
                             Furnishing
                           </div>
                           <div className="text-gray-900">
-                            {property?.furnishing}
+                            {getOptionLabel(
+                              FURNISHING_OPTIONS,
+                              property?.furnishing,
+                            )}
                           </div>
                         </div>
                       </div>
@@ -674,9 +697,10 @@ export function MyPropertyDetailsClient({
                             Water Supply
                           </div>
                           <div className="text-gray-900">
-                            {property?.waterSupply === "borewell-tanker"
-                              ? "Borewell & Tanker"
-                              : pascalCase(property?.waterSupply)}
+                            {getOptionLabel(
+                              WATER_SUPPLY_OPTIONS,
+                              property?.waterSupply,
+                            )}
                           </div>
                         </div>
                       </div>
@@ -706,7 +730,7 @@ export function MyPropertyDetailsClient({
                             Parking
                           </div>
                           <div className="text-gray-900">
-                            {property?.parking}
+                            {getOptionLabel(PARKING_OPTIONS, property?.parking)}
                           </div>
                         </div>
                       </div>
@@ -741,7 +765,10 @@ export function MyPropertyDetailsClient({
                               Preferred Tenants
                             </div>
                             <div className="text-gray-900">
-                              {property?.preferredTenants.join(", ")}
+                              {getOptionLabels(
+                                PREFERRED_TENANTS_OPTIONS.RENT,
+                                property?.preferredTenants,
+                              ).join(", ")}
                             </div>
                           </div>
                         </div>
@@ -759,7 +786,7 @@ export function MyPropertyDetailsClient({
                               Tenant Type
                             </div>
                             <div className="text-gray-900">
-                              {property?.tenantType}
+                              {pascalCase(property?.tenantType)}
                             </div>
                           </div>
                         </div>
@@ -813,7 +840,10 @@ export function MyPropertyDetailsClient({
                               Smoking Preference
                             </div>
                             <div className="text-gray-900">
-                              {property?.smokingPreference}
+                              {getOptionLabel(
+                                SMOKING_PREFERENCE_OPTIONS,
+                                property?.smokingPreference,
+                              )}
                             </div>
                           </div>
                         </div>
@@ -831,7 +861,10 @@ export function MyPropertyDetailsClient({
                               Drinking Preference
                             </div>
                             <div className="text-gray-900">
-                              {property?.drinkingPreference}
+                              {getOptionLabel(
+                                DRINKING_PREFERENCE_OPTIONS,
+                                property?.drinkingPreference,
+                              )}
                             </div>
                           </div>
                         </div>

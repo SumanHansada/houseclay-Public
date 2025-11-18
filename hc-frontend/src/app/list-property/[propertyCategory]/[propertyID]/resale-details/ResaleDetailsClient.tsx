@@ -3,17 +3,14 @@
 import { useFormikContext } from "formik";
 import { IndianRupee } from "lucide-react";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
-import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
 import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
 import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
 import FireExtinguisherIconSvg from "public/icons/amenities/fire-extinguisher.svg";
 import FirstAidKitIconSvg from "public/icons/amenities/first-aid-kit.svg";
-import GatedSecurityIconSvg from "public/icons/amenities/gated-security.svg";
 import GymIconSvg from "public/icons/amenities/gym.svg";
 import LiftIconSvg from "public/icons/amenities/lift.svg";
 import OutdoorDiningAreaIconSvg from "public/icons/amenities/outdoor-dining-area.svg";
 import ParkingSpaceIconSvg from "public/icons/amenities/parking-space.svg";
-import PoolIconSvg from "public/icons/amenities/pool.svg";
 import PoolTableIconSvg from "public/icons/amenities/pool-table.svg";
 import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
@@ -54,10 +51,6 @@ const GymIcon = GymIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const OutdoorDiningAreaIcon = OutdoorDiningAreaIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
-const GatedSecurityIcon = GatedSecurityIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const PoolIcon = PoolIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const FireExtinguisherIcon = FireExtinguisherIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
@@ -78,7 +71,6 @@ const DedicatedWorkspaceIcon = DedicatedWorkspaceIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
 const WifiIcon = WifiIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const BBQGrillIcon = BBQGrillIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const PoolTableIcon = PoolTableIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
@@ -314,12 +306,6 @@ const ResaleDetailsClient: React.FC = () => {
               icon: <OutdoorDiningAreaIcon />,
             },
             {
-              value: "Gated Security",
-              label: "Gated Security",
-              icon: <GatedSecurityIcon />,
-            },
-            { value: "Pool", label: "Pool ", icon: <PoolIcon /> },
-            {
               value: "Fire Extinguisher",
               label: "Fire Extinguisher",
               icon: <FireExtinguisherIcon />,
@@ -345,8 +331,8 @@ const ResaleDetailsClient: React.FC = () => {
               icon: <SecurityIcon />,
             },
             {
-              value: "Parking Space",
-              label: "Parking Space",
+              value: "Visitor Parking",
+              label: "Visitor Parking",
               icon: <ParkingSpaceIcon />,
             },
             {
@@ -355,11 +341,6 @@ const ResaleDetailsClient: React.FC = () => {
               icon: <DedicatedWorkspaceIcon />,
             },
             { value: "Wifi", label: "Wifi", icon: <WifiIcon /> },
-            {
-              value: "BBQ Grill",
-              label: "BBQ Grill",
-              icon: <BBQGrillIcon />,
-            },
             {
               value: "Pool Table",
               label: "Pool Table",

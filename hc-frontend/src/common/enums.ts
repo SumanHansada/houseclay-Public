@@ -100,3 +100,22 @@ export enum ConnectBundleTitle {
   ELITE_PURPLE_BUNDLE = "Elite Purple Bundle",
   CUSTOM_CONNECTS = "Custom Connects",
 }
+
+export enum PROPERTY_TYPES {
+  APARTMENT = "apartment",
+  VILLA = "villa",
+  HOUSE = "house",
+  BUILDING = "building",
+}
+
+export enum RENT_PREFERRED_TENANTS {
+  FAMILY = "family",
+  COMPANY = "company",
+  BACHELOR = "bachelor",
+  COUPLE = "couple",
+}
+
+export enum FLATMATE_PREFERRED_TENANTS {
+  MALE = "male",
+  FEMALE = "female",
+}

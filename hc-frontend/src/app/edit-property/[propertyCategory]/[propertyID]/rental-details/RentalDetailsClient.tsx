@@ -3,17 +3,14 @@
 import { useFormikContext } from "formik";
 import { IndianRupee } from "lucide-react";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
-import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
 import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
 import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
 import FireExtinguisherIconSvg from "public/icons/amenities/fire-extinguisher.svg";
 import FirstAidKitIconSvg from "public/icons/amenities/first-aid-kit.svg";
-import GatedSecurityIconSvg from "public/icons/amenities/gated-security.svg";
 import GymIconSvg from "public/icons/amenities/gym.svg";
 import LiftIconSvg from "public/icons/amenities/lift.svg";
 import OutdoorDiningAreaIconSvg from "public/icons/amenities/outdoor-dining-area.svg";
 import ParkingSpaceIconSvg from "public/icons/amenities/parking-space.svg";
-import PoolIconSvg from "public/icons/amenities/pool.svg";
 import PoolTableIconSvg from "public/icons/amenities/pool-table.svg";
 import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
@@ -45,6 +42,7 @@ import {
   WATER_SUPPLY_OPTIONS,
   YES_NO_OPTIONS,
 } from "@/common/dataConstants/options";
+import { RENT_PREFERRED_TENANTS } from "@/common/enums";
 
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ClubhouseIcon = ClubhouseIconSvg as React.FC<
@@ -54,10 +52,6 @@ const GymIcon = GymIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const OutdoorDiningAreaIcon = OutdoorDiningAreaIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
-const GatedSecurityIcon = GatedSecurityIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const PoolIcon = PoolIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const FireExtinguisherIcon = FireExtinguisherIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
@@ -78,7 +72,6 @@ const DedicatedWorkspaceIcon = DedicatedWorkspaceIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
 const WifiIcon = WifiIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const BBQGrillIcon = BBQGrillIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const PoolTableIcon = PoolTableIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
@@ -264,22 +257,22 @@ export const RentalDetailsClient: React.FC = () => {
             columns={4}
             options={[
               {
-                value: "Family",
+                value: RENT_PREFERRED_TENANTS.FAMILY,
                 label: "Family",
                 icon: <SvgIcon iconSize="large" name="family" size={68} />,
               },
               {
-                value: "Company",
+                value: RENT_PREFERRED_TENANTS.COMPANY,
                 label: "Company",
                 icon: <SvgIcon iconSize="large" name="company" size={68} />,
               },
               {
-                value: "Bachelor",
+                value: RENT_PREFERRED_TENANTS.BACHELOR,
                 label: "Bachelor",
                 icon: <SvgIcon iconSize="large" name="bachelor" size={68} />,
               },
               {
-                value: "Couple",
+                value: RENT_PREFERRED_TENANTS.COUPLE,
                 label: "Couple",
                 icon: <SvgIcon iconSize="large" name="couple" size={68} />,
               },
@@ -371,12 +364,6 @@ export const RentalDetailsClient: React.FC = () => {
               icon: <OutdoorDiningAreaIcon />,
             },
             {
-              value: "Gated Security",
-              label: "Gated Security",
-              icon: <GatedSecurityIcon />,
-            },
-            { value: "Pool", label: "Pool ", icon: <PoolIcon /> },
-            {
               value: "Fire Extinguisher",
               label: "Fire Extinguisher",
               icon: <FireExtinguisherIcon />,
@@ -402,8 +389,8 @@ export const RentalDetailsClient: React.FC = () => {
               icon: <SecurityIcon />,
             },
             {
-              value: "Parking Space",
-              label: "Parking Space",
+              value: "Visitor Parking",
+              label: "Visitor Parking",
               icon: <ParkingSpaceIcon />,
             },
             {
@@ -412,11 +399,6 @@ export const RentalDetailsClient: React.FC = () => {
               icon: <DedicatedWorkspaceIcon />,
             },
             { value: "Wifi", label: "Wifi", icon: <WifiIcon /> },
-            {
-              value: "BBQ Grill",
-              label: "BBQ Grill",
-              icon: <BBQGrillIcon />,
-            },
             {
               value: "Pool Table",
               label: "Pool Table",

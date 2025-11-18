@@ -25,17 +25,14 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
-import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
 import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
 import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
 import FireExtinguisherIconSvg from "public/icons/amenities/fire-extinguisher.svg";
 import FirstAidKitIconSvg from "public/icons/amenities/first-aid-kit.svg";
-import GatedSecurityIconSvg from "public/icons/amenities/gated-security.svg";
 import GymIconSvg from "public/icons/amenities/gym.svg";
 import LiftIconSvg from "public/icons/amenities/lift.svg";
 import OutdoorDiningAreaIconSvg from "public/icons/amenities/outdoor-dining-area.svg";
 import ParkingSpaceIconSvg from "public/icons/amenities/parking-space.svg";
-import PoolIconSvg from "public/icons/amenities/pool.svg";
 import PoolTableIconSvg from "public/icons/amenities/pool-table.svg";
 import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
@@ -89,10 +86,6 @@ const GymIcon = GymIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const OutdoorDiningAreaIcon = OutdoorDiningAreaIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
-const GatedSecurityIcon = GatedSecurityIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const PoolIcon = PoolIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const FireExtinguisherIcon = FireExtinguisherIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
@@ -110,7 +103,6 @@ const DedicatedWorkspaceIcon = DedicatedWorkspaceIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
 const WifiIcon = WifiIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const BBQGrillIcon = BBQGrillIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const PoolTableIcon = PoolTableIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
@@ -126,8 +118,6 @@ const AmenitiesMap = {
     label: "Outdoor Dining Area",
     icon: <OutdoorDiningAreaIcon />,
   },
-  "Gated Security": { label: "Gated Security", icon: <GatedSecurityIcon /> },
-  Pool: { label: "Pool", icon: <PoolIcon /> },
   "Fire Extinguisher": {
     label: "Fire Extinguisher",
     icon: <FireExtinguisherIcon />,
@@ -136,13 +126,12 @@ const AmenitiesMap = {
   "Swimming Pool": { label: "Swimming Pool", icon: <SwimmingPoolIcon /> },
   "24/7 Power": { label: "24/7 Power", icon: <TwentyFourSevenPowerIcon /> },
   Security: { label: "Security", icon: <SecurityIcon /> },
-  "Parking Space": { label: "Parking Space", icon: <ParkingSpaceIcon /> },
+  "Visitor Parking": { label: "Visitor Parking", icon: <ParkingSpaceIcon /> },
   "Dedicated Workspace": {
     label: "Dedicated Workspace",
     icon: <DedicatedWorkspaceIcon />,
   },
   Wifi: { label: "Wifi", icon: <WifiIcon /> },
-  "BBQ Grill": { label: "BBQ Grill", icon: <BBQGrillIcon /> },
   "Pool Table": { label: "Pool Table", icon: <PoolTableIcon /> },
   "First Aid Kit": { label: "First Aid Kit", icon: <FirstAidKitIcon /> },
 };
@@ -259,11 +248,9 @@ export function PropertyDetailsClient({
           size="custom"
           className="rounded-full p-1"
           onClick={() => {
-            console.log("onClick");
             if (window.history.length > 1) {
               router.back();
             } else {
-              console.log("home page");
               router.push("/");
             }
           }}

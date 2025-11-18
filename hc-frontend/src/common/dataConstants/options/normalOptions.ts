@@ -1,10 +1,18 @@
+import { PROPERTY_TYPES } from "@/common/enums";
 import { BaseOption, generateNumericOptions } from "./optionUtils";
 
 export const PROPERTY_TYPE_OPTIONS: BaseOption[] = [
-  { value: "apartment", label: "Apartment" },
-  { value: "villa", label: "Community Villa" },
-  { value: "house", label: "Independent House" },
-  { value: "building", label: "Standalone Building" },
+  { value: PROPERTY_TYPES.APARTMENT, label: "Apartment" },
+  { value: PROPERTY_TYPES.VILLA, label: "Community Villa" },
+  { value: PROPERTY_TYPES.HOUSE, label: "Independent House" },
+  { value: PROPERTY_TYPES.BUILDING, label: "Standalone Building" },
+];
+
+export const PROPERTY_TYPE_SHORT_OPTIONS: BaseOption[] = [
+  { value: PROPERTY_TYPES.APARTMENT, label: "Apartment" },
+  { value: PROPERTY_TYPES.VILLA, label: "Villa" },
+  { value: PROPERTY_TYPES.HOUSE, label: "House" },
+  { value: PROPERTY_TYPES.BUILDING, label: "Building" },
 ];
 
 export const FACING_OPTIONS: BaseOption[] = [
@@ -114,8 +122,16 @@ export const TOTAL_FLOORS_NUMERIC_OPTIONS = generateNumericOptions({
   max: 50,
 });
 
-// Generic
 export const YES_NO_OPTIONS: BaseOption<boolean>[] = [
   { value: true, label: "Yes" },
   { value: false, label: "No" },
+];
+
+// Property Search
+export const PROPERTY_AVAILABILITY: BaseOption[] = [
+  { label: "Any", value: "Any" },
+  { label: "Immediate", value: "Immediate" },
+  { label: "Within 15 Days", value: "Within 15 Days" },
+  { label: "Within 30 Days", value: "Within 30 Days" },
+  { label: "After 45 Days", value: "After 45 Days" },
 ];

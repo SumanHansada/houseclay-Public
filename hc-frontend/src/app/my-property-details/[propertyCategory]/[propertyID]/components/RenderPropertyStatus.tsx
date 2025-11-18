@@ -10,22 +10,22 @@ interface RenderPropertyStatusProps {
 
 const statusMap: Record<PropertyStatus, JSX.Element> = {
   [PropertyStatus.PENDING]: (
-    <Pill color="blue" className="text-lg">
+    <Pill color="blue" className="text-base xl:text-lg">
       Pending
     </Pill>
   ),
   [PropertyStatus.VERIFIED]: (
-    <Pill color="green" className="text-lg">
+    <Pill color="green" className="text-base xl:text-lg">
       Verified
     </Pill>
   ),
   [PropertyStatus.REPORT]: (
-    <Pill color="orange" className="text-lg">
+    <Pill color="orange" className="text-base xl:text-lg">
       Reported
     </Pill>
   ),
   [PropertyStatus.INACTIVE]: (
-    <Pill color="red" className="text-lg">
+    <Pill color="red" className="text-base xl:text-lg">
       Inactive
     </Pill>
   ),
@@ -36,7 +36,11 @@ export const RenderPropertyStatus: React.FC<RenderPropertyStatusProps> = ({
 }) => {
   if (!isEnumValue(PropertyStatus, status)) {
     console.warn(`[RenderPropertyStatus] Invalid status: "${status}"`);
-    return <Pill color="gray">Unknown</Pill>;
+    return (
+      <Pill color="gray" className="text-base xl:text-lg">
+        Unknown
+      </Pill>
+    );
   }
 
   return statusMap[status];

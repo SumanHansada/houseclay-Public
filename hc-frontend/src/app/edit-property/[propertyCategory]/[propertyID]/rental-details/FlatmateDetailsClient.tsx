@@ -6,12 +6,10 @@ import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
 import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
 import FireExtinguisherIconSvg from "public/icons/amenities/fire-extinguisher.svg";
 import FirstAidKitIconSvg from "public/icons/amenities/first-aid-kit.svg";
-import GatedSecurityIconSvg from "public/icons/amenities/gated-security.svg";
 import GymIconSvg from "public/icons/amenities/gym.svg";
 import LiftIconSvg from "public/icons/amenities/lift.svg";
 import OutdoorDiningAreaIconSvg from "public/icons/amenities/outdoor-dining-area.svg";
 import ParkingSpaceIconSvg from "public/icons/amenities/parking-space.svg";
-import PoolIconSvg from "public/icons/amenities/pool.svg";
 import PoolTableIconSvg from "public/icons/amenities/pool-table.svg";
 import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
@@ -43,6 +41,7 @@ import {
   WATER_SUPPLY_OPTIONS,
   YES_NO_OPTIONS,
 } from "@/common/dataConstants/options";
+import { FLATMATE_PREFERRED_TENANTS } from "@/common/enums";
 
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ClubhouseIcon = ClubhouseIconSvg as React.FC<
@@ -52,10 +51,6 @@ const GymIcon = GymIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const OutdoorDiningAreaIcon = OutdoorDiningAreaIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
-const GatedSecurityIcon = GatedSecurityIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const PoolIcon = PoolIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const FireExtinguisherIcon = FireExtinguisherIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
@@ -273,12 +268,12 @@ export const FlatmateDetailsClient: React.FC = () => {
             columns={2}
             options={[
               {
-                value: "Female",
+                value: FLATMATE_PREFERRED_TENANTS.FEMALE,
                 label: "Female",
                 icon: <SvgIcon name="female" iconSize="medium" size={75} />,
               },
               {
-                value: "Male",
+                value: FLATMATE_PREFERRED_TENANTS.MALE,
                 label: "Male",
                 icon: <SvgIcon name="male" iconSize="medium" size={75} />,
               },
@@ -407,12 +402,6 @@ export const FlatmateDetailsClient: React.FC = () => {
               icon: <OutdoorDiningAreaIcon />,
             },
             {
-              value: "Gated Security",
-              label: "Gated Security",
-              icon: <GatedSecurityIcon />,
-            },
-            { value: "Pool", label: "Pool ", icon: <PoolIcon /> },
-            {
               value: "Fire Extinguisher",
               label: "Fire Extinguisher",
               icon: <FireExtinguisherIcon />,
@@ -438,8 +427,8 @@ export const FlatmateDetailsClient: React.FC = () => {
               icon: <SecurityIcon />,
             },
             {
-              value: "Parking Space",
-              label: "Parking Space",
+              value: "Visitor Parking",
+              label: "Visitor Parking",
               icon: <ParkingSpaceIcon />,
             },
             {
@@ -451,11 +440,6 @@ export const FlatmateDetailsClient: React.FC = () => {
               value: "Wifi",
               label: "Wifi",
               icon: <SvgIcon name="wifi" iconSize="small" size={28} />,
-            },
-            {
-              value: "BBQ Grill",
-              label: "BBQ Grill",
-              icon: <SvgIcon name="bbq-grill" iconSize="medium" size={28} />,
             },
             {
               value: "Pool Table",
