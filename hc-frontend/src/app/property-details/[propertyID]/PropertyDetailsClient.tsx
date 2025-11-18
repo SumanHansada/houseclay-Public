@@ -40,7 +40,7 @@ import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 import WifiIconSvg from "public/icons/amenities/wifi.svg";
 import BalconyIconSvg from "public/icons/common/balcony.svg";
 import BuildUpAreaIconSvg from "public/icons/common/build-up-area.svg";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -59,7 +59,10 @@ import { PropertyCardWithImages } from "@/interfaces/User";
 import { MobileFooter } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { useGetPublicPropertyByIdQuery } from "@/store/apiSlice";
+import {
+  useGetAuthenticatedPropertyByIdQuery,
+  useGetPublicPropertyByIdQuery,
+} from "@/store/apiSlice";
 import {
   setHideFooter,
   setHideHeader,
@@ -68,6 +71,11 @@ import {
 import { RootState } from "@/store/store";
 import { PhotoGallery, SvgIcon } from "@/utility-components";
 import { GoogleMapsDirection } from "@/utility-components";
+import {
+  getOptionLabel,
+  PROPERTY_AGE_OPTIONS,
+} from "@/common/dataConstants/options";
+import Loading from "./loading";
 
 const BalconyIcon = BalconyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const BuildUpAreaIcon = BuildUpAreaIconSvg as React.FC<
@@ -136,13 +144,8 @@ const AmenitiesMap = {
   "First Aid Kit": { label: "First Aid Kit", icon: <FirstAidKitIcon /> },
 };
 
-const propertyAgeMap = {
-  "Under Construction": "Under Construction",
-  "Less than 1 year": "< 1 year",
-  "1-5 years": "1-5 years",
-  "5-10 years": "5-10 years",
-  "More than 10 year": "10+ years",
-};
+const CONTACT_LOGIN_DIALOG_ID = "contact-owner-login-dialog";
+const UNLOCK_DETAILS_DIALOG_ID = "unlock-owner-details-dialog";
 
 interface PropertyDetailsClientProps {
   propertyID: string;
@@ -154,13 +157,61 @@ export function PropertyDetailsClient({
   propertyID,
   initialData,
 }: PropertyDetailsClientProps) {
-  const { data: propertyData = initialData, isLoading: _isPropertyLoading } =
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated,
+  );
+  // const { data: propertyData = initialData, isLoading: _isPropertyLoading } =
+  //   useGetPublicPropertyByIdQuery(propertyID, {
+  //     skip: !!initialData, // Skip the query if we have initial data
+  //   });
+
+  // Always call both hooks, but skip the ones we don't need
+  const { data: publicPropertyData = initialData, isLoading: isPublicLoading } =
     useGetPublicPropertyByIdQuery(propertyID, {
-      skip: !!initialData, // Skip the query if we have initial data
+      skip: !!initialData && isAuthenticated, // Skip if we have initial data and user is authenticated
     });
 
-  const { property, contactUserCount, shortlistUserCount, viewUserCount } =
-    propertyData;
+  const {
+    data: authenticatedPropertyData,
+    isLoading: isAuthLoading,
+    refetch: refetchAuthPropertyDetails,
+  } = useGetAuthenticatedPropertyByIdQuery(propertyID, {
+    skip: !isAuthenticated, // Only fetch when authenticated
+  });
+
+  // Merge the data intelligently based on authentication status
+  const propertyData = useMemo(() => {
+    if (isAuthenticated && authenticatedPropertyData) {
+      // When authenticated, use authenticated API data
+      // The authenticated API returns nested structure: property.property, property.owner, etc.
+      return {
+        property: authenticatedPropertyData.property.property,
+        contactUserCount: authenticatedPropertyData.property.contactUserCount,
+        shortlistUserCount:
+          authenticatedPropertyData.property.shortlistUserCount,
+        viewUserCount: authenticatedPropertyData.property.viewUserCount,
+        owner: authenticatedPropertyData.owner,
+        reported: authenticatedPropertyData.reported,
+      };
+    }
+
+    // When not authenticated or authenticated data not loaded yet, use public data
+    return publicPropertyData;
+  }, [isAuthenticated, authenticatedPropertyData, publicPropertyData]);
+
+  const {
+    property,
+    contactUserCount,
+    shortlistUserCount,
+    viewUserCount,
+    owner,
+    reported,
+  } = propertyData;
+  console.log("owner: ", owner);
+  console.log("reported: ", reported);
+
+  const isLoading = isAuthenticated ? isAuthLoading : isPublicLoading;
+
   const { toggleShortlist, isShortlisted } = useShortlist();
   const shortlistStatus = isShortlisted(propertyID);
   const [isShortlistedProperty, setIsShortlistedProperty] =
@@ -172,9 +223,6 @@ export function PropertyDetailsClient({
   const router = useRouter();
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated,
-  );
   const { isDialogOpen, closeDialog, openDialog } = useDialog();
 
   const handleShare = async () => {
@@ -206,18 +254,14 @@ export function PropertyDetailsClient({
     openDialog("report-listing-dialog");
   };
 
-  const handleContactOwnerClick = () => {
-    openDialog(
-      isAuthenticated
-        ? "unlock-owner-details-dialog"
-        : "contact-owner-login-dialog",
-    );
-  };
+  // const handleContactOwnerClick = () => {
+  //   openDialog(isAuthenticated ? "" : "");
+  // };
 
-  const handleContactLoginSuccess = () => {
-    closeDialog("contact-owner-login-dialog");
-    openDialog("unlock-owner-details-dialog");
-  };
+  // const handleContactLoginSuccess = () => {
+  //   closeDialog("contact-owner-login-dialog");
+  //   openDialog("unlock-owner-details-dialog");
+  // };
 
   // Split description into sentences array
   const descriptionSentences = property?.description
@@ -237,6 +281,10 @@ export function PropertyDetailsClient({
       dispatch(setHideFooter(false));
     }
   }, [dispatch, isMobile]);
+
+  if (isLoading) {
+    <Loading />;
+  }
 
   return (
     <>
@@ -454,11 +502,10 @@ export function PropertyDetailsClient({
                           Age of Building
                         </div>
                         <div className="font-medium text-gray-900">
-                          {
-                            propertyAgeMap[
-                              property?.propertyAge as keyof typeof propertyAgeMap
-                            ]
-                          }
+                          {getOptionLabel(
+                            PROPERTY_AGE_OPTIONS,
+                            property?.propertyAge,
+                          )}
                         </div>
                       </div>
                     </div>
@@ -737,27 +784,54 @@ export function PropertyDetailsClient({
                 {/* Price & Contact Section */}
                 <div className="">
                   <div className="flex justify-between items-center">
-                    <div className="text-gray-600">
-                      {property?.propertyCategory === PropertyCategory.RESALE
-                        ? "Price"
-                        : "Rent"}
+                    <div className="flex gap-2 items-center">
+                      <div className="text-gray-600">
+                        {property?.propertyCategory === PropertyCategory.RESALE
+                          ? "Price:"
+                          : "Rent:"}
+                      </div>
+                      <div>
+                        {property?.propertyCategory === PropertyCategory.RESALE
+                          ? property?.price
+                            ? formatINRCurrency(property.price)
+                            : "-"
+                          : property?.rent
+                            ? formatINRCurrency(property.rent)
+                            : "-"}
+                      </div>
                     </div>
-                    <div>
-                      {property?.propertyCategory === PropertyCategory.RESALE
-                        ? property?.price
-                          ? formatINRCurrency(property.price)
-                          : "-"
-                        : property?.rent
-                          ? formatINRCurrency(property.rent)
+                    <div className="flex gap-2 items-center">
+                      <div className="text-gray-600">Deposit:</div>
+                      <div>
+                        {property?.deposit
+                          ? formatINRCurrency(property.deposit)
                           : "-"}
+                      </div>
                     </div>
                   </div>
-                  <button
-                    className="mt-4 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full text-base max-md:text-sm hover:bg-red-600 transition-colors"
-                    onClick={handleContactOwnerClick}
-                  >
-                    Contact Owner
-                  </button>
+                  {isAuthenticated ? (
+                    owner ? (
+                      <div>
+                        <div>Owner Name: {owner?.name}</div>
+                        <div>Email: {owner?.emailID}</div>
+                        <div>Phone: {owner?.phoneNo}</div>
+                      </div>
+                    ) : (
+                      <button
+                        className="mt-4 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full text-base max-md:text-sm hover:bg-red-600 transition-colors"
+                        onClick={() => openDialog(UNLOCK_DETAILS_DIALOG_ID)}
+                      >
+                        Contact Owner
+                      </button>
+                    )
+                  ) : (
+                    <button
+                      className="mt-4 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full text-base max-md:text-sm hover:bg-red-600 transition-colors"
+                      onClick={() => openDialog(CONTACT_LOGIN_DIALOG_ID)}
+                    >
+                      Log in to Contact Owner
+                    </button>
+                  )}
                 </div>
               </section>
               {/* Activity Card */}
@@ -815,16 +889,18 @@ export function PropertyDetailsClient({
                   </button>
                 </section>
               )}
-              <section className="flex flex-col justify-between items-center mb-6">
-                <button
-                  className="text-sm text-gray-700 hover:text-gray-700 flex items-center gap-2 disabled:cursor-not-allowed disabled:text-gray-400"
-                  onClick={handleReportListingClick}
-                  disabled={!isAuthenticated}
-                >
-                  <Flag size={14} />
-                  <span className="underline">Report this listing</span>
-                </button>
-              </section>
+              {owner ? (
+                <section className="flex flex-col justify-between items-center mb-6">
+                  <button
+                    className="text-sm text-gray-700 hover:text-gray-700 flex items-center gap-2 disabled:cursor-not-allowed disabled:text-gray-400"
+                    onClick={handleReportListingClick}
+                    disabled={!isAuthenticated}
+                  >
+                    <Flag size={14} />
+                    <span className="underline">Report this listing</span>
+                  </button>
+                </section>
+              ) : null}
             </section>
           </section>
 
@@ -987,11 +1063,10 @@ export function PropertyDetailsClient({
                       Age of Building
                     </div>
                     <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {
-                        propertyAgeMap[
-                          property?.propertyAge as keyof typeof propertyAgeMap
-                        ]
-                      }
+                      {getOptionLabel(
+                        PROPERTY_AGE_OPTIONS,
+                        property?.propertyAge,
+                      )}
                     </div>
                   </div>
                 </div>
@@ -1271,12 +1346,29 @@ export function PropertyDetailsClient({
                 : "-"}
           </div>
         </div>
-        <button
-          className="px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full hover:bg-red-600 transition-colors"
-          onClick={handleContactOwnerClick}
-        >
-          Contact Owner
-        </button>
+        {isAuthenticated ? (
+          owner ? (
+            <div>
+              <div>Owner Name: {owner?.name}</div>
+              <div>Email: {owner?.emailID}</div>
+              <div>Phone: {owner?.phoneNo}</div>
+            </div>
+          ) : (
+            <button
+              className="px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full hover:bg-red-600 transition-colors"
+              onClick={() => openDialog(UNLOCK_DETAILS_DIALOG_ID)}
+            >
+              Contact Owner
+            </button>
+          )
+        ) : (
+          <button
+            className="px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full hover:bg-red-600 transition-colors"
+            onClick={() => openDialog(CONTACT_LOGIN_DIALOG_ID)}
+          >
+            Log in to Contact Owner
+          </button>
+        )}
       </MobileFooter>
       {/* Mobile Photo Gallery Dialog */}
       {isDialogOpen("photo-gallery-dialog") && (
@@ -1288,11 +1380,22 @@ export function PropertyDetailsClient({
       )}
 
       {/* Contact owner login dialog */}
-      {isDialogOpen("contact-owner-login-dialog") && (
+      {isDialogOpen(CONTACT_LOGIN_DIALOG_ID) && (
         <ContactOwnerLoginDialog
-          id="contact-owner-login-dialog"
-          onSuccess={handleContactLoginSuccess}
-          onClose={() => closeDialog("contact-owner-login-dialog")}
+          id={CONTACT_LOGIN_DIALOG_ID}
+          onSuccess={async () => {
+            console.log("refetching");
+            await refetchAuthPropertyDetails();
+          }}
+          onClose={() => closeDialog(CONTACT_LOGIN_DIALOG_ID)}
+        />
+      )}
+
+      {/* Unlock owner details dialog */}
+      {isDialogOpen(UNLOCK_DETAILS_DIALOG_ID) && (
+        <UnlockOwnerDetailsDialog
+          id={UNLOCK_DETAILS_DIALOG_ID}
+          propertyID={propertyID}
         />
       )}
 
@@ -1305,14 +1408,6 @@ export function PropertyDetailsClient({
             closeDialog("report-listing-dialog");
             dispatch(setHideStickyNavBar(true));
           }}
-        />
-      )}
-
-      {/* Unlock owner details dialog */}
-      {isDialogOpen("unlock-owner-details-dialog") && (
-        <UnlockOwnerDetailsDialog
-          id="unlock-owner-details-dialog"
-          propertyID={propertyID}
         />
       )}
     </>
