@@ -8,6 +8,7 @@ import {
   getAdditionalInfoErrors,
   getAdditionalInfoTouched,
 } from "@/utils/formHelpers";
+import { WHO_WILL_SHOW_PROPERTY_OPTIONS } from "@/common/constants/options/normalOptions";
 
 interface AdditionalInfoRentFormProps {
   disabled: boolean;
@@ -38,13 +39,7 @@ const AdditionalInfoRentForm: React.FC<AdditionalInfoRentFormProps> = ({
               name="additionalInfo.whoWillShowProperty"
               id="additionalInfo.whoWillShowProperty"
               label="Who will show the property?"
-              options={[
-                { value: "Owner", label: "I will show" },
-                {
-                  value: "Friend/Neighbour",
-                  label: "Friend/Neighbour will show",
-                },
-              ]}
+              options={WHO_WILL_SHOW_PROPERTY_OPTIONS}
               placeholder="Select"
               aria-describedby={
                 additionalInfoErrors?.whoWillShowProperty &&

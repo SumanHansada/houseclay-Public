@@ -8,6 +8,10 @@ import {
   getAdditionalInfoErrors,
   getAdditionalInfoTouched,
 } from "@/utils/formHelpers";
+import {
+  KHATA_CERTIFICATE_OPTIONS,
+  YES_NO_OPTIONS,
+} from "@/common/constants/options/normalOptions";
 
 interface AdditionalInfoResaleFormProps {
   disabled: boolean;
@@ -36,17 +40,7 @@ const AdditionalInfoResaleForm: React.FC<AdditionalInfoResaleFormProps> = ({
               label="Do You have Khata Certificate?"
               name="additionalInfo.khataCertificate"
               id="additionalInfo.khataCertificate"
-              options={[
-                { value: "A-Khata", label: "Yes, A-Khata" },
-                {
-                  value: "B-Khata",
-                  label: "Yes, B-Khata",
-                },
-                {
-                  value: "No",
-                  label: "No",
-                },
-              ]}
+              options={KHATA_CERTIFICATE_OPTIONS}
               required={true}
               placeholder="Select Khata Certificate"
               aria-describedby={
@@ -63,16 +57,7 @@ const AdditionalInfoResaleForm: React.FC<AdditionalInfoResaleFormProps> = ({
               label="Do You have Sale Deed Certificate?"
               name="additionalInfo.saleDeed"
               id="additionalInfo.saleDeed"
-              options={[
-                {
-                  value: true,
-                  label: "Yes",
-                },
-                {
-                  value: false,
-                  label: "No",
-                },
-              ]}
+              options={YES_NO_OPTIONS}
               optionsType="boolean"
               required={true}
               placeholder="Select Sale Deed Certificate"
@@ -92,16 +77,7 @@ const AdditionalInfoResaleForm: React.FC<AdditionalInfoResaleFormProps> = ({
               label="Have you paid Property Tax?"
               name="additionalInfo.propertyTax"
               id="additionalInfo.propertyTax"
-              options={[
-                {
-                  value: true,
-                  label: "Yes",
-                },
-                {
-                  value: false,
-                  label: "No",
-                },
-              ]}
+              options={YES_NO_OPTIONS}
               optionsType="boolean"
               required={true}
               placeholder="Select Property Tax Status"

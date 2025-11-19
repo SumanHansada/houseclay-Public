@@ -64,3 +64,22 @@ export enum VerifyPropertyTabEnum {
 export enum ReverifyPropertyTabEnum {
   DETAILS = "details",
 }
+
+export enum PROPERTY_TYPES {
+  APARTMENT = "apartment",
+  VILLA = "villa",
+  HOUSE = "house",
+  BUILDING = "building",
+}
+
+export enum RENT_PREFERRED_TENANTS {
+  FAMILY = "family",
+  COMPANY = "company",
+  BACHELOR = "bachelor",
+  COUPLE = "couple",
+}
+
+export enum FLATMATE_PREFERRED_TENANTS {
+  MALE = "male",
+  FEMALE = "female",
+}
