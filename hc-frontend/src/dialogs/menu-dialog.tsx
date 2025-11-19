@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
 import { BENGALURU_LOCATION } from "@/common/constants";
+import { ACCOUNT_NAV } from "@/common/dataConstants/navbar";
 import { AuthStep } from "@/common/enums";
 import { shimmer, toBase64 } from "@/common/utils";
 import { AccountNavList } from "@/components/AccountNavList";
@@ -26,7 +27,6 @@ import { setHideStickyNavBar } from "@/store/appSlice";
 import { setAuthStep, setLoginFromAddProperty } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
-import { ACCOUNT_NAV } from "@/common/dataConstants/navbar";
 
 const ZeroPercentRed = ZeroPercentRedSvg as React.FC<
   React.SVGProps<SVGSVGElement>

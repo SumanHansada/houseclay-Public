@@ -1,7 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import {
   Dialog,
@@ -10,9 +10,6 @@ import {
   DialogHeader,
 } from "@/components/Dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { useDialog } from "@/providers/DialogContextProvider";
-import { setHideStickyNavBar } from "@/store/appSlice";
-import { useDispatch } from "react-redux";
 
 export interface DialogLabelConfig {
   title: string;
@@ -55,8 +52,6 @@ export const ActionDialog: React.FC<ActionDialogProps> = ({
   onClose,
 }) => {
   const { isMobile } = useDeviceContext();
-  const { closeDialog } = useDialog();
-  const dispatch = useDispatch();
 
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);

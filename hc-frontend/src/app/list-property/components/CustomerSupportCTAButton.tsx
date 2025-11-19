@@ -1,11 +1,12 @@
 "use client";
 
+import { useSelector } from "react-redux";
+
 import { Button } from "@/base-components";
 import { LeadCategory } from "@/common/enums";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useGenerateLeadMutation } from "@/store/apiSlice";
 import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
 
 const CustomerSupportCTAButton = () => {
   const { openDialog } = useDialog();

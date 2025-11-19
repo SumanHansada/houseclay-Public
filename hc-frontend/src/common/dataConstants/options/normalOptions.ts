@@ -1,4 +1,5 @@
 import { PROPERTY_TYPES } from "@/common/enums";
+
 import { BaseOption, generateNumericOptions } from "./optionUtils";
 
 export const PROPERTY_TYPE_OPTIONS: BaseOption[] = [

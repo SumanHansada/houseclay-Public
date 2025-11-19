@@ -38,6 +38,13 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Button, Checkbox, RadioGroup, RangeSlider } from "@/base-components";
 import {
+  BHK_TYPE_OPTIONS,
+  FURNISHING_OPTIONS,
+  PARKING_OPTIONS,
+  PROPERTY_AVAILABILITY,
+  YES_NO_OPTIONS,
+} from "@/common/dataConstants/options";
+import {
   FLATMATE_PREFERRED_TENANTS,
   PROPERTY_TYPES,
   PropertyCategory,
@@ -75,13 +82,6 @@ import {
   TabHeader,
   Tabs,
 } from "@/utility-components";
-import {
-  BHK_TYPE_OPTIONS,
-  FURNISHING_OPTIONS,
-  PARKING_OPTIONS,
-  PROPERTY_AVAILABILITY,
-  YES_NO_OPTIONS,
-} from "@/common/dataConstants/options";
 
 interface SearchFiltersDialogProps {
   id: string;

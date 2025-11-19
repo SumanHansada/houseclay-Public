@@ -20,6 +20,13 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
+import {
+  FURNISHING_OPTIONS,
+  PARKING_OPTIONS,
+  POWER_BACKUP_OPTIONS,
+  WATER_SUPPLY_OPTIONS,
+  YES_NO_OPTIONS,
+} from "@/common/dataConstants/options";
 import { FormCalendarField } from "@/form-components";
 import {
   FormCheckbox,
@@ -35,13 +42,6 @@ import {
   getResaleDetailsErrors,
   getResaleDetailsTouched,
 } from "@/utils/formHelpers";
-import {
-  FURNISHING_OPTIONS,
-  PARKING_OPTIONS,
-  POWER_BACKUP_OPTIONS,
-  WATER_SUPPLY_OPTIONS,
-  YES_NO_OPTIONS,
-} from "@/common/dataConstants/options";
 
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ClubhouseIcon = ClubhouseIconSvg as React.FC<

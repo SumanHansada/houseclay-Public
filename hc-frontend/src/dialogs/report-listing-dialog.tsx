@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import * as Yup from "yup";
 
 import { Button, RadioGroup, TextArea } from "@/base-components";
+import { ReportStatus } from "@/common/enums";
 import {
   Dialog,
   DialogContent,
@@ -14,7 +15,6 @@ import {
 import { MobileFooter, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useReportPropertyMutation } from "@/store/apiSlice";
-import { ReportStatus } from "@/common/enums";
 interface ReportListingDialogProps {
   id: string;
   propertyId: string;

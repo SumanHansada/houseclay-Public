@@ -21,6 +21,12 @@ import {
   PlacesAutocomplete,
   SelectDropdown,
 } from "@/base-components";
+import {
+  BHK_TYPE_OPTIONS,
+  PREFERRED_TENANTS_OPTIONS,
+  PROPERTY_AVAILABILITY,
+  PROPERTY_TYPE_SHORT_OPTIONS,
+} from "@/common/dataConstants/options";
 import { BadgeType, PropertyCategory } from "@/common/enums";
 import Properties from "@/components/Properties";
 import { SearchFiltersDialog, SortFiltersDialog } from "@/dialogs";
@@ -53,12 +59,6 @@ import {
 } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
 import { ImageWithLoader } from "@/utility-components";
-import {
-  BHK_TYPE_OPTIONS,
-  PREFERRED_TENANTS_OPTIONS,
-  PROPERTY_AVAILABILITY,
-  PROPERTY_TYPE_SHORT_OPTIONS,
-} from "@/common/dataConstants/options";
 
 // normalize & validate category from URL
 function getUrlCategory(sp: ReadonlyURLSearchParams): PropertyCategory {

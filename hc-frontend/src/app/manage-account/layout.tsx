@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { type ReactNode, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { ACCOUNT_NAV } from "@/common/dataConstants/navbar";
 import { AccountNavList } from "@/components/AccountNavList";
 import { useLogout } from "@/hooks/useLogout";
 import { Footer } from "@/layout-components";
@@ -20,7 +21,6 @@ import {
   setUserDetailError,
   setUserDetailLoading,
 } from "@/store/userSlice";
-import { ACCOUNT_NAV } from "@/common/dataConstants/navbar";
 
 export default function ManageProfileLayout({
   children,

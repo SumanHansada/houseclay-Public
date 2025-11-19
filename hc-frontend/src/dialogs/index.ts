@@ -3,6 +3,7 @@ export { default as ContactOwnerLoginDialog } from "./contact-owner-login-dialog
 export { default as DeletePhotosDialog } from "./delete-photos-dialog";
 export { default as EmailVerificationDialog } from "./email-verification-dialog";
 export { default as EmailVerificationSuccessDialog } from "./email-verification-success-dialog";
+export { default as FindFlatmatesDialog } from "./find-flatmates-dialog";
 export { default as ListPropertySuccessDialog } from "./list-property-success-dialog";
 export { default as LoginDialog } from "./login-dialog";
 export { default as MenuDialog } from "./menu-dialog";
@@ -15,4 +16,3 @@ export { default as StandoutsDialog } from "./standouts-dialog";
 export { default as UpgradePropertyDialog } from "./upgrade-property";
 export { default as UploadPhotosDialog } from "./upload-photos-dialog";
 export { default as VerifyConnectsDialog } from "./verify-connects-dialog";
-export { default as FindFlatmatesDialog } from "./find-flatmates-dialog";

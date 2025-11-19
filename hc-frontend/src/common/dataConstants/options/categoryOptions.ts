@@ -1,4 +1,5 @@
 import { PropertyCategory } from "@/common/enums";
+
 import { BaseOption } from "./optionUtils";
 
 // Preferred Tenants - Different for each category

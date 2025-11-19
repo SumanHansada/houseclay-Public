@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 
+import {
+  BHK_TYPE_OPTIONS,
+  getOptionLabel,
+} from "@/common/dataConstants/options";
 import { pascalCase } from "@/common/utils";
 import { ServerAPIService } from "@/services/serverAPIService";
 
@@ -62,7 +66,7 @@ export async function generateMetadata({
     console.error("Error fetching property data", _error);
   }
 
-  const bhkType = property?.bhkType ?? "";
+  const bhkType = getOptionLabel(BHK_TYPE_OPTIONS, property?.bhkType);
   const location = property?.locationOrSocietyName ?? "";
   const propertyCategory = property?.propertyCategory ?? "";
   const city = property?.city ?? "";

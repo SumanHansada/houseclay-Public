@@ -6,6 +6,16 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import {
+  BHK_TYPE_OPTIONS,
+  FACING_OPTIONS,
+  FLOOR_NUMERIC_OPTIONS,
+  FLOOR_TYPE_OPTIONS,
+  OWNERSHIP_TYPE_OPTIONS,
+  PROPERTY_AGE_OPTIONS,
+  PROPERTY_TYPE_OPTIONS,
+  TOTAL_FLOORS_NUMERIC_OPTIONS,
+} from "@/common/dataConstants/options";
+import {
   FormSelectDropdown,
   FormTextArea,
   FormTextField,
@@ -17,16 +27,6 @@ import {
   getPropertyDetailsErrors,
   getPropertyDetailsTouched,
 } from "@/utils/formHelpers";
-import {
-  BHK_TYPE_OPTIONS,
-  FACING_OPTIONS,
-  FLOOR_NUMERIC_OPTIONS,
-  FLOOR_TYPE_OPTIONS,
-  OWNERSHIP_TYPE_OPTIONS,
-  PROPERTY_AGE_OPTIONS,
-  PROPERTY_TYPE_OPTIONS,
-  TOTAL_FLOORS_NUMERIC_OPTIONS,
-} from "@/common/dataConstants/options";
 
 const propertySchema = Yup.object({
   propertyDetails: Yup.object({

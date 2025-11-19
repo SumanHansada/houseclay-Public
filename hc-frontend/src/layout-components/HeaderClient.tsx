@@ -10,16 +10,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { BENGALURU_LOCATION } from "@/common/constants";
 import { AuthStep } from "@/common/enums";
 import { UserDropdown } from "@/components/UserDropdown";
+import { ActionDialog } from "@/dialogs/action-dialog";
 import { useLogout } from "@/hooks/useLogout";
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
+import { setHideStickyNavBar } from "@/store/appSlice";
 import { setAuthStep } from "@/store/authSlice";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
 import { Popover } from "@/utility-components";
 
 import { RootState } from "../store/store";
-import { ActionDialog } from "@/dialogs/action-dialog";
-import { setHideStickyNavBar } from "@/store/appSlice";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
 
 const ACTION_DIALOG_ID = "logout-action-dialog";
 

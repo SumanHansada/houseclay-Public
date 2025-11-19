@@ -52,6 +52,20 @@ import React from "react";
 import { useDispatch } from "react-redux";
 
 import { Button } from "@/base-components";
+import {
+  BHK_TYPE_OPTIONS,
+  DRINKING_PREFERENCE_OPTIONS,
+  FACING_OPTIONS,
+  FURNISHING_OPTIONS,
+  getOptionLabel,
+  getOptionLabels,
+  PARKING_OPTIONS,
+  PREFERRED_TENANTS_OPTIONS,
+  PROPERTY_AGE_OPTIONS,
+  PROPERTY_TYPE_OPTIONS,
+  SMOKING_PREFERENCE_OPTIONS,
+  WATER_SUPPLY_OPTIONS,
+} from "@/common/dataConstants/options";
 import { LeadCategory, PropertyCategory, PropertyStatus } from "@/common/enums";
 import {
   formatDateToReadable,
@@ -61,6 +75,7 @@ import {
   toBase64,
 } from "@/common/utils";
 import Carousel2D from "@/components/Carousel2D";
+import { ActionDialog } from "@/dialogs/action-dialog";
 import { Footer, MobileFooter, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -86,21 +101,6 @@ import PostedAndRentDetails from "./components/PostedAndRentDetails";
 import { RenderPropertyStatus } from "./components/RenderPropertyStatus";
 import UpgradePropertyBanner from "./components/UpgradePropertyBanner";
 import PropertyDetailsLoading from "./loading";
-import {
-  BHK_TYPE_OPTIONS,
-  DRINKING_PREFERENCE_OPTIONS,
-  FACING_OPTIONS,
-  FURNISHING_OPTIONS,
-  getOptionLabel,
-  getOptionLabels,
-  PARKING_OPTIONS,
-  PREFERRED_TENANTS_OPTIONS,
-  PROPERTY_AGE_OPTIONS,
-  PROPERTY_TYPE_OPTIONS,
-  SMOKING_PREFERENCE_OPTIONS,
-  WATER_SUPPLY_OPTIONS,
-} from "@/common/dataConstants/options";
-import { ActionDialog } from "@/dialogs/action-dialog";
 
 interface MyPropertyDetailsClientProps {
   propertyCategory: string;

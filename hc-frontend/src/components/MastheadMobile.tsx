@@ -8,7 +8,10 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { BENGALURU_LOCATION } from "@/common/constants";
 import { PropertyCategory } from "@/common/enums";
+import { generateUUID } from "@/common/utils";
+import { FindFlatmatesDialog } from "@/dialogs";
 import { useDialog } from "@/providers/DialogContextProvider";
+import { setHideStickyNavBar } from "@/store/appSlice";
 import {
   setPropertyCategory as setListPropertyCategory,
   setPropertyID,
@@ -18,9 +21,6 @@ import { RootState } from "@/store/store";
 import { ImageWithLoader } from "@/utility-components";
 
 import HomeSearchBar from "./HomeSearchBar";
-import { FindFlatmatesDialog } from "@/dialogs";
-import { generateUUID } from "@/common/utils";
-import { setHideStickyNavBar } from "@/store/appSlice";
 
 const FindFlatmates = dynamic(
   () => import("public/icons/find-flatmates.svg"),

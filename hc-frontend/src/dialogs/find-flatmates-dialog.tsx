@@ -2,7 +2,6 @@
 
 import { Lightbulb, X } from "lucide-react";
 import React from "react";
-import { useDispatch } from "react-redux";
 
 import { Button } from "@/base-components";
 import {
@@ -13,8 +12,6 @@ import {
 } from "@/components/Dialog";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { useDialog } from "@/providers/DialogContextProvider";
-import { setHideStickyNavBar } from "@/store/appSlice";
 import { SvgIcon } from "@/utility-components";
 
 interface FindFlatmatesDialogProps {
