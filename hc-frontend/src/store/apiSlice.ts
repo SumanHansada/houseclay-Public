@@ -85,7 +85,16 @@ export const apiSlice = createApi({
         };
       },
     }),
-    getUserInfo: builder.query<{ message: string }, void>({
+    getUserInfo: builder.query<
+      {
+        name: string;
+        emailID: string;
+        connectBal: number;
+        avatarUrl: string | null;
+        phoneNo: string;
+      },
+      void
+    >({
       query: () => "/user/info",
     }),
     logout: builder.mutation<
@@ -175,13 +184,13 @@ export const apiSlice = createApi({
     getAuthenticatedPropertyById: builder.query<
       {
         property: {
-          property: any;
+          property: unknown;
           contactUserCount: number;
           viewUserCount: number;
           shortlistUserCount: number;
         };
-        owner: any;
-        reported: any;
+        owner: { name: string; phoneNo: string; emailID: string };
+        reported: boolean;
       },
       string
     >({
@@ -374,6 +383,7 @@ export const {
   useCheckUserQuery,
   useLazyCheckUserQuery,
   useGetUserInfoQuery,
+  useLazyGetUserInfoQuery,
   useLogoutMutation,
   useGetUserDetailQuery,
   usePresignedUrlsMutation,

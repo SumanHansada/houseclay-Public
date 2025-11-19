@@ -165,10 +165,10 @@ export function PropertyDetailsClient({
   //     skip: !!initialData, // Skip the query if we have initial data
   //   });
 
-  // Always call both hooks, but skip the ones we don't need
+  // call both hooks, but skip the ones we don't need
   const { data: publicPropertyData = initialData, isLoading: isPublicLoading } =
     useGetPublicPropertyByIdQuery(propertyID, {
-      skip: !!initialData && isAuthenticated, // Skip if we have initial data and user is authenticated
+      skip: !!initialData && isAuthenticated,
     });
 
   const {
@@ -176,14 +176,12 @@ export function PropertyDetailsClient({
     isLoading: isAuthLoading,
     refetch: refetchAuthPropertyDetails,
   } = useGetAuthenticatedPropertyByIdQuery(propertyID, {
-    skip: !isAuthenticated, // Only fetch when authenticated
+    skip: !isAuthenticated,
   });
 
-  // Merge the data intelligently based on authentication status
+  // Merge the data based on authentication status
   const propertyData = useMemo(() => {
     if (isAuthenticated && authenticatedPropertyData) {
-      // When authenticated, use authenticated API data
-      // The authenticated API returns nested structure: property.property, property.owner, etc.
       return {
         property: authenticatedPropertyData.property.property,
         contactUserCount: authenticatedPropertyData.property.contactUserCount,
@@ -195,7 +193,6 @@ export function PropertyDetailsClient({
       };
     }
 
-    // When not authenticated or authenticated data not loaded yet, use public data
     return publicPropertyData;
   }, [isAuthenticated, authenticatedPropertyData, publicPropertyData]);
 
@@ -783,7 +780,7 @@ export function PropertyDetailsClient({
 
                 {/* Price & Contact Section */}
                 <div className="">
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center mb-4">
                     <div className="flex gap-2 items-center">
                       <div className="text-gray-600">
                         {property?.propertyCategory === PropertyCategory.RESALE

@@ -6,6 +6,7 @@ import { useLogoutMutation } from "@/store/apiSlice";
 import { clearAuthStep, clearIsAuthenticated } from "@/store/authSlice";
 import { clearShortlist } from "@/store/shortlistPropertySlice";
 import { clearAllUserData, clearCheckUser } from "@/store/userSlice";
+import { resetPropertySearch } from "@/store/propertySearchSlice";
 
 export function useLogout() {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ export function useLogout() {
       dispatch(clearCheckUser());
       dispatch(clearAllUserData());
       dispatch(clearShortlist());
+      dispatch(resetPropertySearch());
       dispatch(clearAuthStep());
     }
   };

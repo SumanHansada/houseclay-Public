@@ -13,11 +13,12 @@ import { MyProfileFormValues } from "@/interfaces/ManageAccount";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useGenerateOtpEmailMutation,
+  useLazyGetUserInfoQuery,
   useVerifyEmailMutation,
 } from "@/store/apiSlice";
 import { setHideStickyNavBar } from "@/store/appSlice";
 import { RootState } from "@/store/store";
-import { setEmailVerified } from "@/store/userSlice";
+import { setConnectBal, setEmailVerified } from "@/store/userSlice";
 
 import { DesktopClient } from "./DesktopClient";
 import Loading from "./loading";
@@ -41,6 +42,7 @@ export default function MyProfilePage() {
   );
   const emailVerificationTokenRef = useRef("");
 
+  const [getUserInfo] = useLazyGetUserInfoQuery();
   const [generateEmailOTP] = useGenerateOtpEmailMutation();
   const [verifyEmailOTP] = useVerifyEmailMutation();
 
@@ -80,7 +82,7 @@ export default function MyProfilePage() {
     }
   };
 
-  const handleEmailVerificationSubmit = async (email: string, otp: string) => {
+  const handleEmailVerificationSubmit = async (otp: string) => {
     if (!emailVerificationTokenRef.current) {
       throw new Error("No token available. Please request a new OTP.");
     }
@@ -93,6 +95,10 @@ export default function MyProfilePage() {
       emailVerificationTokenRef.current = "";
       closeVerificationDialog();
       dispatch(setEmailVerified(true));
+      const userInfoResponse = await getUserInfo().unwrap();
+      if (userInfoResponse) {
+        dispatch(setConnectBal(userInfoResponse?.connectBal));
+      }
       openDialog(EMAIL_VERIFICATION_SUCCESS_DIALOG_ID);
     } catch (error) {
       console.error("Failed to verify email:", error);

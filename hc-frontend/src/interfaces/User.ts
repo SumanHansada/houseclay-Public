@@ -2,11 +2,11 @@ import { PropertyCategory, PropertyStatus } from "@/common/enums";
 
 export interface UserOwnedProperties {
   propertyID: string;
-  propertyCategory: PropertyCategory; // pending
+  propertyCategory: PropertyCategory;
   propertyType: string;
   bhkType: string;
-  rent: number | null; // pending
-  builtUpArea: number; // pending
+  rent: number | null;
+  builtUpArea: number;
   price: number | null;
   locationOrSocietyName: string;
   propertyState: PropertyStatus;
