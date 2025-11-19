@@ -1473,7 +1473,6 @@ export function PropertyDetailsClient({
         <ContactOwnerLoginDialog
           id={CONTACT_LOGIN_DIALOG_ID}
           onSuccess={async () => {
-            console.log("refetching");
             await refetchAuthPropertyDetails();
           }}
           onClose={() => closeDialog(CONTACT_LOGIN_DIALOG_ID)}

@@ -282,9 +282,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
           confirmLabel="Yes, I want to logout!"
           colour="red"
           requireComment={false}
-          onConfirm={async () => {
-            await onLogout();
-          }}
+          onConfirm={onLogout}
           onClose={() => {
             closeDialog(ACTION_DIALOG_ID);
             dispatch(setHideStickyNavBar(false));

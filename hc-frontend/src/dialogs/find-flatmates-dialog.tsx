@@ -26,13 +26,6 @@ const FindFlatmatesDialog: React.FC<FindFlatmatesDialogProps> = ({
   handleGetStarted,
 }) => {
   const { isMobile } = useDeviceContext();
-  // const { closeDialog } = useDialog();
-  // const dispatch = useDispatch();
-
-  // const handleClose = () => {
-  //   closeDialog(id);
-  //   dispatch(setHideStickyNavBar(false));
-  // };
 
   return (
     <Dialog

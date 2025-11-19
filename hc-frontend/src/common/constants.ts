@@ -6,8 +6,6 @@ export const HOUSECLAY_SUPPORT = {
   email: "support@houseclay.com",
   phone: "+91 7892014327",
 };
-export const SUPPORT_EMAIL = "";
-export const SUPPORT_CONTACT = "+91 7892014327";
 
 // media links
 export const SOCIAL_MEDIA_LINKS = {

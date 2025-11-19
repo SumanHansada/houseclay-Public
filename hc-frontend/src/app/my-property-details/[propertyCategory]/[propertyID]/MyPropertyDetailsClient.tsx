@@ -56,6 +56,7 @@ import {
   BHK_TYPE_OPTIONS,
   DRINKING_PREFERENCE_OPTIONS,
   FACING_OPTIONS,
+  FLOOR_NUMERIC_OPTIONS,
   FURNISHING_OPTIONS,
   getOptionLabel,
   getOptionLabels,
@@ -64,6 +65,7 @@ import {
   PROPERTY_AGE_OPTIONS,
   PROPERTY_TYPE_OPTIONS,
   SMOKING_PREFERENCE_OPTIONS,
+  TOTAL_FLOORS_NUMERIC_OPTIONS,
   WATER_SUPPLY_OPTIONS,
 } from "@/common/dataConstants/options";
 import { LeadCategory, PropertyCategory, PropertyStatus } from "@/common/enums";
@@ -202,6 +204,71 @@ export function MyPropertyDetailsClient({
   const property = propertyData?.property;
   const propertyUpdates = propertyData?.propertyUpdates ?? [];
   const contactedUsers = propertyData?.contactUsers ?? [];
+
+  const bhkType = getOptionLabel(BHK_TYPE_OPTIONS, property?.bhkType);
+  const propertyType = getOptionLabel(
+    PROPERTY_TYPE_OPTIONS,
+    property?.propertyType,
+  );
+  const propertyAge = getOptionLabel(
+    PROPERTY_AGE_OPTIONS,
+    property?.propertyAge,
+  );
+  const propertyFacing =
+    property?.facing === "dont-know"
+      ? "Not Specified"
+      : getOptionLabel(FACING_OPTIONS, property?.facing);
+  const propertyFloor = getOptionLabel(FLOOR_NUMERIC_OPTIONS, property?.floor);
+  const totalFloors = getOptionLabel(
+    TOTAL_FLOORS_NUMERIC_OPTIONS,
+    property?.totalFloors,
+  );
+  const furnishingStatus = getOptionLabel(
+    FURNISHING_OPTIONS,
+    property?.furnishing,
+  );
+  const parking = getOptionLabel(PARKING_OPTIONS, property?.parking);
+  const waterSupply = getOptionLabel(
+    WATER_SUPPLY_OPTIONS,
+    property?.waterSupply,
+  );
+  const preferredTenants = getOptionLabels(
+    PREFERRED_TENANTS_OPTIONS.RENT,
+    property?.preferredTenants,
+  ).join(", ");
+  const smokingPreference = getOptionLabel(
+    SMOKING_PREFERENCE_OPTIONS,
+    property?.smokingPreference,
+  );
+  const drinkingPreference = getOptionLabel(
+    DRINKING_PREFERENCE_OPTIONS,
+    property?.drinkingPreference,
+  );
+
+  const bedrooms = bhkType
+    ? bhkType === "Studio" || bhkType === "1-bhk"
+      ? "1 Bedroom"
+      : `${bhkType.split("BHK")[0]} Bedrooms`
+    : "N/A";
+  const bathrooms = property?.bathrooms
+    ? `${property?.bathrooms} ${property?.bathrooms > 1 ? "Bathrooms" : "Bathroom"}`
+    : "N/A";
+  const availableFrom = `${property?.availableFrom ? formatDateToReadable(property?.availableFrom) : "N/A"}`;
+  const formattedMaintenanceCharges = `${
+    property?.maintenanceCharges
+      ? formatINRCurrency(property?.maintenanceCharges)
+      : "N/A"
+  }`;
+
+  const formattedDeposit = `${
+    property?.deposit ? formatINRCurrency(property.deposit) : "-"
+  }`;
+
+  // TODO: add balcony to add property
+  const balcony = property?.balcony
+    ? `${property?.balcony} ${property?.balcony > 1 ? "Balconies" : "Balcony"}`
+    : "N/A";
+
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const [generateLead, { isLoading: _isGeneratingLead }] =
@@ -283,8 +350,7 @@ export function MyPropertyDetailsClient({
           </Button>
         </MobileHeader.LeftAction>
         <MobileHeader.Title>
-          {getOptionLabel(BHK_TYPE_OPTIONS, property?.bhkType)} in{" "}
-          {property?.locationOrSocietyName} for{" "}
+          {bhkType} in {property?.locationOrSocietyName} for{" "}
           {pascalCase(property?.propertyCategory)} in {property?.city}
         </MobileHeader.Title>
       </MobileHeader>
@@ -296,8 +362,7 @@ export function MyPropertyDetailsClient({
             <div className="py-12 mx-auto">
               <div>
                 <h1 className="text-3xl text-gray-900 flex items-center justify-between">
-                  {getOptionLabel(BHK_TYPE_OPTIONS, property?.bhkType)} in{" "}
-                  {property?.locationOrSocietyName} for{" "}
+                  {bhkType} in {property?.locationOrSocietyName} for{" "}
                   {pascalCase(property?.propertyCategory)} in {property?.city}
                   <RenderPropertyStatus status={property?.propertyState} />
                 </h1>
@@ -377,10 +442,7 @@ export function MyPropertyDetailsClient({
                             Property Type
                           </div>
                           <div className="text-gray-900 font-bold font-nunito">
-                            {getOptionLabel(
-                              PROPERTY_TYPE_OPTIONS,
-                              property?.propertyType,
-                            ) || "Apartment"}
+                            {propertyType}
                           </div>
                         </div>
                       </div>
@@ -395,13 +457,7 @@ export function MyPropertyDetailsClient({
                             No. of Bedroom
                           </div>
                           <div className="text-gray-900 font-bold font-nunito">
-                            {property?.bhkType === "studio"
-                              ? "1"
-                              : getOptionLabel(
-                                  BHK_TYPE_OPTIONS,
-                                  property?.bhkType,
-                                ) || "-"}{" "}
-                            Bedroom
+                            {bedrooms}
                           </div>
                         </div>
                       </div>
@@ -431,7 +487,7 @@ export function MyPropertyDetailsClient({
                             Floor
                           </div>
                           <div className="text-gray-900 font-bold font-nunito">
-                            {property?.floor} of {property?.totalFloors}
+                            {propertyFloor} of {totalFloors}
                           </div>
                         </div>
                       </div>
@@ -450,7 +506,7 @@ export function MyPropertyDetailsClient({
                               Facing
                             </div>
                             <div className="text-gray-900 font-bold font-nunito">
-                              {getOptionLabel(FACING_OPTIONS, property?.facing)}
+                              {propertyFacing}
                             </div>
                           </div>
                         </div>
@@ -470,7 +526,7 @@ export function MyPropertyDetailsClient({
                               Bathrooms
                             </div>
                             <div className="text-gray-900 font-bold font-nunito">
-                              {property?.bathrooms || "NA"}
+                              {bathrooms}
                             </div>
                           </div>
                         </div>
@@ -490,10 +546,7 @@ export function MyPropertyDetailsClient({
                               Property Age
                             </div>
                             <div className="text-gray-900 font-bold font-nunito">
-                              {getOptionLabel(
-                                PROPERTY_AGE_OPTIONS,
-                                property?.propertyAge,
-                              )}
+                              {propertyAge}
                             </div>
                           </div>
                         </div>
@@ -554,11 +607,7 @@ export function MyPropertyDetailsClient({
                               Maintenance Charges
                             </div>
                             <div className="text-gray-900">
-                              {property?.maintenanceCharges
-                                ? formatINRCurrency(
-                                    property?.maintenanceCharges,
-                                  )
-                                : "-"}
+                              {formattedMaintenanceCharges}
                             </div>
                           </div>
                         </div>
@@ -577,12 +626,7 @@ export function MyPropertyDetailsClient({
                               Deposit
                             </div>
                             <div className="text-gray-900">
-                              {property?.deposit || property?.depositCharges
-                                ? formatINRCurrency(
-                                    property?.deposit ||
-                                      property?.depositCharges,
-                                  )
-                                : "-"}
+                              {formattedDeposit}
                             </div>
                           </div>
                         </div>
@@ -597,9 +641,7 @@ export function MyPropertyDetailsClient({
                           <div className="flex gap-2 items-center font-nunito">
                             Available From
                           </div>
-                          <div className="text-gray-900">
-                            {formatDateToReadable(property?.availableFrom)}
-                          </div>
+                          <div className="text-gray-900">{availableFrom}</div>
                         </div>
                       </div>
                       {property?.propertyCategory ===
@@ -614,9 +656,7 @@ export function MyPropertyDetailsClient({
                             <div className="flex gap-2 items-center font-nunito">
                               Bathrooms
                             </div>
-                            <div className="text-gray-900">
-                              {property?.bathrooms}
-                            </div>
+                            <div className="text-gray-900">{bathrooms}</div>
                           </div>
                         </div>
                       )}
@@ -632,9 +672,7 @@ export function MyPropertyDetailsClient({
                             <div className="flex gap-2 items-center font-nunito">
                               Balcony
                             </div>
-                            <div className="text-gray-900">
-                              {property?.balcony}
-                            </div>
+                            <div className="text-gray-900">{balcony}</div>
                           </div>
                         </div>
                       )}
@@ -685,10 +723,7 @@ export function MyPropertyDetailsClient({
                             Furnishing
                           </div>
                           <div className="text-gray-900">
-                            {getOptionLabel(
-                              FURNISHING_OPTIONS,
-                              property?.furnishing,
-                            )}
+                            {furnishingStatus}
                           </div>
                         </div>
                       </div>
@@ -702,12 +737,7 @@ export function MyPropertyDetailsClient({
                           <div className="flex gap-2 items-center font-nunito">
                             Water Supply
                           </div>
-                          <div className="text-gray-900">
-                            {getOptionLabel(
-                              WATER_SUPPLY_OPTIONS,
-                              property?.waterSupply,
-                            )}
-                          </div>
+                          <div className="text-gray-900">{waterSupply}</div>
                         </div>
                       </div>
                       <div className="flex w-full justify-start items-start gap-2 text-gray-600">
@@ -735,9 +765,7 @@ export function MyPropertyDetailsClient({
                           <div className="flex gap-2 items-center font-nunito">
                             Parking
                           </div>
-                          <div className="text-gray-900">
-                            {getOptionLabel(PARKING_OPTIONS, property?.parking)}
-                          </div>
+                          <div className="text-gray-900">{parking}</div>
                         </div>
                       </div>
                       {(property?.propertyCategory === PropertyCategory.RENT ||
@@ -771,10 +799,7 @@ export function MyPropertyDetailsClient({
                               Preferred Tenants
                             </div>
                             <div className="text-gray-900">
-                              {getOptionLabels(
-                                PREFERRED_TENANTS_OPTIONS.RENT,
-                                property?.preferredTenants,
-                              ).join(", ")}
+                              {preferredTenants}
                             </div>
                           </div>
                         </div>
@@ -846,10 +871,7 @@ export function MyPropertyDetailsClient({
                               Smoking Preference
                             </div>
                             <div className="text-gray-900">
-                              {getOptionLabel(
-                                SMOKING_PREFERENCE_OPTIONS,
-                                property?.smokingPreference,
-                              )}
+                              {smokingPreference}
                             </div>
                           </div>
                         </div>
@@ -867,10 +889,7 @@ export function MyPropertyDetailsClient({
                               Drinking Preference
                             </div>
                             <div className="text-gray-900">
-                              {getOptionLabel(
-                                DRINKING_PREFERENCE_OPTIONS,
-                                property?.drinkingPreference,
-                              )}
+                              {drinkingPreference}
                             </div>
                           </div>
                         </div>
