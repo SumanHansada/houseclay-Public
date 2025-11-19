@@ -260,7 +260,9 @@ export function PropertyDetailsClient({
         : "-"
   }`;
   const formattedDeposit = `${
-    property?.deposit ? formatINRCurrency(property.deposit) : "-"
+    property?.deposit || property?.depositCharges
+      ? formatINRCurrency(property.deposit || property.depositCharges)
+      : "-"
   }`;
 
   // TODO: add balcony to add property
