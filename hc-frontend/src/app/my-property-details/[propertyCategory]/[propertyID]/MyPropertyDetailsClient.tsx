@@ -207,7 +207,7 @@ export function MyPropertyDetailsClient({
   const [generateLead, { isLoading: _isGeneratingLead }] =
     useGenerateLeadMutation();
 
-  const { openDialog, isDialogOpen } = useDialog();
+  const { openDialog, isDialogOpen, closeDialog } = useDialog();
 
   const handleEdit = async () => {
     router.push(
@@ -1069,11 +1069,12 @@ export function MyPropertyDetailsClient({
           id={ACTION_DIALOG_ID}
           title="Mark as rented out"
           prompt="Are you sure you want to mark this property as Rented out?"
-          confirmLabel="Deactivate Property"
+          confirmLabel="Yes, mark as rented!"
           colour="red"
           requireComment={false}
           onConfirm={handleDeactivatingProperty}
           onSuccess={async () => await refetch()}
+          onClose={() => closeDialog(ACTION_DIALOG_ID)}
         />
       )}
     </>

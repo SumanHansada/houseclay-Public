@@ -1,7 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Dialog,
@@ -11,6 +11,8 @@ import {
 } from "@/components/Dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
+import { setHideStickyNavBar } from "@/store/appSlice";
+import { useDispatch } from "react-redux";
 
 export interface DialogLabelConfig {
   title: string;
@@ -23,6 +25,7 @@ export interface DialogLabelConfig {
 
 interface ActionDialogCommon extends DialogLabelConfig {
   id: string;
+  onClose: () => void;
   onSuccess?: () => void;
 }
 
@@ -49,9 +52,11 @@ export const ActionDialog: React.FC<ActionDialogProps> = ({
   requireComment,
   onConfirm,
   onSuccess,
+  onClose,
 }) => {
   const { isMobile } = useDeviceContext();
   const { closeDialog } = useDialog();
+  const dispatch = useDispatch();
 
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
@@ -68,19 +73,15 @@ export const ActionDialog: React.FC<ActionDialogProps> = ({
     }
     setLoading(false);
     onSuccess?.();
-    closeDialog(id);
+    onClose();
   };
 
   return (
-    <Dialog
-      id={id}
-      type={isMobile ? "bottom-sheet" : "card"}
-      onClose={() => closeDialog(id)}
-    >
+    <Dialog id={id} type={isMobile ? "bottom-sheet" : "card"} onClose={onClose}>
       <DialogHeader>
         <div className="flex justify-between items-center w-full">
           <h2 className="text-2xl font-semibold">{title}</h2>
-          <X className="cursor-pointer" onClick={() => closeDialog(id)} />
+          <X className="cursor-pointer" onClick={onClose} />
         </div>
       </DialogHeader>
 
@@ -102,7 +103,7 @@ export const ActionDialog: React.FC<ActionDialogProps> = ({
       <DialogFooter>
         <div className="w-full flex justify-end gap-4">
           <button
-            onClick={() => closeDialog(id)}
+            onClick={onClose}
             className="px-4 py-2 border rounded-lg text-gray-700"
           >
             Cancel

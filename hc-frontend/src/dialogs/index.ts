@@ -15,3 +15,4 @@ export { default as StandoutsDialog } from "./standouts-dialog";
 export { default as UpgradePropertyDialog } from "./upgrade-property";
 export { default as UploadPhotosDialog } from "./upload-photos-dialog";
 export { default as VerifyConnectsDialog } from "./verify-connects-dialog";
+export { default as FindFlatmatesDialog } from "./find-flatmates-dialog";

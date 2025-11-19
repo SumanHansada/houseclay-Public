@@ -49,13 +49,6 @@ export default function ClientPage({ testimonials }: ClientPageProps) {
     [standoutsData],
   );
 
-  // const standoutPropertyCards: PropertyCardWithImages[] = useMemo(() => {
-  //   return standoutProperties.map((prop: PropertyCardWithImages) => ({
-  //     ...prop,
-  //     images: prop.image ? [prop.image] : [FALLBACK_IMG],
-  //   }));
-  // }, [standoutProperties]);
-
   useEffect(() => {
     if (isDialogOpen("standouts-dialog") && standoutProperties.length < 1) {
       closeDialog("standouts-dialog");

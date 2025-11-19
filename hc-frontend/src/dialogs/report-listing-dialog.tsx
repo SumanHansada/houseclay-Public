@@ -26,7 +26,7 @@ const reportOptions = [
   { value: ReportStatus.INCORRECT_INFO, label: "Incorrect information" },
   {
     value: ReportStatus.RENTED_OUT,
-    label: "Property is already rented out/sold",
+    label: "Property is already rented out",
   },
   { value: ReportStatus.OTHER, label: "Other" },
 ];
