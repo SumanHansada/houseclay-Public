@@ -21,6 +21,12 @@ import {
   PlacesAutocomplete,
   SelectDropdown,
 } from "@/base-components";
+import {
+  BHK_TYPE_OPTIONS,
+  PREFERRED_TENANTS_OPTIONS,
+  PROPERTY_AVAILABILITY,
+  PROPERTY_TYPE_SHORT_OPTIONS,
+} from "@/common/dataConstants/options";
 import { BadgeType, PropertyCategory } from "@/common/enums";
 import Properties from "@/components/Properties";
 import { SearchFiltersDialog, SortFiltersDialog } from "@/dialogs";
@@ -516,12 +522,7 @@ export default function PropertySearchPage() {
 
             {/* Property Type (common) */}
             <SelectDropdown
-              options={[
-                { value: "Apartment", label: "Apartment" },
-                { value: "Independent House/Villa", label: "House" },
-                { value: "Community Villa", label: "Villa" },
-                { value: "Standalone Building", label: "Building" },
-              ]}
+              options={PROPERTY_TYPE_SHORT_OPTIONS}
               name="property-type"
               id="property-type"
               value={searchState.propertyType}
@@ -535,14 +536,7 @@ export default function PropertySearchPage() {
             {/* Rent: BHK | Flatmate: Preferred Tenant */}
             {searchState.propertyCategory === PropertyCategory.RENT ? (
               <MultiSelectDropdown
-                options={[
-                  { value: "Studio", label: "Studio" },
-                  { value: "1BHK", label: "1 BHK" },
-                  { value: "2BHK", label: "2 BHK" },
-                  { value: "3BHK", label: "3 BHK" },
-                  { value: "4BHK", label: "4 BHK" },
-                  { value: "5+BHK", label: "5+ BHK" },
-                ]}
+                options={BHK_TYPE_OPTIONS}
                 name="property-bhk"
                 id="property-bhk"
                 value={bhkSelectedValues}
@@ -556,10 +550,7 @@ export default function PropertySearchPage() {
               />
             ) : (
               <SelectDropdown
-                options={[
-                  { value: "Female", label: "Female" },
-                  { value: "Male", label: "Male" },
-                ]}
+                options={PREFERRED_TENANTS_OPTIONS.FLATMATE}
                 name="preferred-tenant"
                 id="preferred-tenant"
                 value={searchState.tenantType}
@@ -573,13 +564,7 @@ export default function PropertySearchPage() {
 
             {/* Availability (common) */}
             <SelectDropdown
-              options={[
-                { label: "Any", value: "Any" },
-                { label: "Immediate", value: "Immediate" },
-                { label: "Within 15 Days", value: "Within 15 Days" },
-                { label: "Within 30 Days", value: "Within 30 Days" },
-                { label: "After 45 Days", value: "After 45 Days" },
-              ]}
+              options={PROPERTY_AVAILABILITY}
               name="availability"
               id="availability"
               value={searchState.availability}

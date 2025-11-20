@@ -36,9 +36,7 @@ interface ContactLoginProps {
 }
 
 export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
-  const { authStep, loginFromAddProperty } = useSelector(
-    (state: RootState) => state.auth,
-  );
+  const { authStep } = useSelector((state: RootState) => state.auth);
   const { name, emailID } = useSelector(
     (state: RootState) => state.user.userDetail,
   );
@@ -159,6 +157,7 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
         }
       }
       dispatch(setAuthStep(AuthStep.LOGGED_IN));
+      onClose();
       onSuccess();
     } catch (err) {
       console.error(err);
@@ -167,7 +166,6 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
 
   useEffect(() => {
     if (authStep === AuthStep.NONE) {
-      console.log(authStep);
       dispatch(setAuthStep(AuthStep.PHONE));
     }
     // Focus the first input when component mounts
@@ -186,9 +184,7 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
 
   useEffect(() => {
     return () => {
-      if (!loginFromAddProperty) {
-        dispatch(setAuthStep(AuthStep.NONE));
-      }
+      dispatch(setAuthStep(AuthStep.NONE));
       clearTimer();
     };
   }, [dispatch]);

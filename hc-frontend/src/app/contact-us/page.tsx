@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 
 import { Button } from "@/base-components";
-import { SUPPORT_CONTACT, SUPPORT_EMAIL } from "@/common/constants";
+import { HOUSECLAY_SUPPORT } from "@/common/constants";
 import { FormPhoneField, FormTextArea, FormTextField } from "@/form-components";
 import { Footer, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
@@ -241,15 +241,15 @@ export default function ContactUsPage() {
               </p>
 
               <a
-                href={`mailto:${SUPPORT_EMAIL}`}
+                href={`mailto:${HOUSECLAY_SUPPORT.email}`}
                 className="flex items-center gap-2 mb-4 w-fit"
               >
                 <Mail width={25} height={25} className="text-red-500" />
-                <span>{SUPPORT_EMAIL}</span>
+                <span>{HOUSECLAY_SUPPORT.email}</span>
               </a>
 
               <a
-                href={`tel:${SUPPORT_CONTACT}`}
+                href={`tel:${HOUSECLAY_SUPPORT.phone}`}
                 className="flex gap-2 items-start w-fit"
               >
                 <PhoneCall
@@ -258,7 +258,7 @@ export default function ContactUsPage() {
                   className="text-red-500 mt-1"
                 />
                 <div className="flex flex-col">
-                  <span>{SUPPORT_CONTACT}</span>
+                  <span>{HOUSECLAY_SUPPORT.phone}</span>
                   <span className="text-sm text-gray-700">
                     (9 AM &ndash; 7 PM, Mon &ndash; Sat)
                   </span>

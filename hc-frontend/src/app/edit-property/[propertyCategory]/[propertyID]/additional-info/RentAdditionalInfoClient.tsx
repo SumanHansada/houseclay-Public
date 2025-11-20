@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
+import { WHO_WILL_SHOW_PROPERTY_OPTIONS } from "@/common/dataConstants/options";
 import { FormPhoneField, FormSelectDropdown } from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
 import { setAdditionalInfo, setFormValidity } from "@/store/editPropertySlice";
@@ -101,13 +102,7 @@ const RentAdditionalInfoClient = () => {
               name="additionalInfo.whoWillShowProperty"
               id="additionalInfo.whoWillShowProperty"
               label="Who will show the property?"
-              options={[
-                { value: "Owner", label: "I will show" },
-                {
-                  value: "Friend/Neighbour",
-                  label: "Friend/Neighbour will show",
-                },
-              ]}
+              options={WHO_WILL_SHOW_PROPERTY_OPTIONS}
               placeholder="Select"
               aria-describedby={
                 additionalInfoErrors?.whoWillShowProperty &&

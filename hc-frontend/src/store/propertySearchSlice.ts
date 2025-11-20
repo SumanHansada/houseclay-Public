@@ -8,9 +8,7 @@ const initialState: PropertySearchFilter = {
   location: null,
   propertyType: "",
   propertyCategory: PropertyCategory.RENT,
-  propertyBhk: "",
   bhkType: "",
-  tenant: "",
   tenantType: "",
   availability: "Any",
   // New filter initial states
@@ -44,12 +42,6 @@ const propertySearchSlice = createSlice({
     ) => {
       state.propertyType = String(action.payload || "");
     },
-    setPropertyBhk: (
-      state,
-      action: PayloadAction<string | number | boolean>,
-    ) => {
-      state.propertyBhk = String(action.payload || "");
-    },
     setTenantType: (
       state,
       action: PayloadAction<string | number | boolean>,
@@ -65,9 +57,6 @@ const propertySearchSlice = createSlice({
     },
     setPropertyTypeFilter: (state, action: PayloadAction<string>) => {
       state.propertyTypeFilter = action.payload;
-    },
-    setTenant: (state, action: PayloadAction<string>) => {
-      state.tenant = action.payload;
     },
     setFoodPref: (state, action: PayloadAction<string>) => {
       state.foodPref = action.payload;
@@ -106,13 +95,12 @@ const propertySearchSlice = createSlice({
       state.location = null;
       state.propertyType = "";
       state.propertyCategory = PropertyCategory.RENT;
-      state.propertyBhk = "";
       state.tenantType = "";
+      state.bhkType = "";
       state.availability = "";
       // Reset filter states to initial values
       state.lookingFor = "";
       state.propertyTypeFilter = "";
-      state.tenant = "";
       state.foodPref = "";
       state.bathroomType = "";
       state.furnishing = "";
@@ -120,7 +108,6 @@ const propertySearchSlice = createSlice({
       state.parking = "";
       state.priceRangeForRent = [200000, 700000];
       state.priceRangeForBuy = [5000000, 70000000];
-      state.bhkType = "";
       state.exclusive = false;
       state.sortFields = "";
       state.sortOrder = "";
@@ -132,12 +119,10 @@ export const {
   setLocation,
   setPropertyType,
   setPropertyCategory,
-  setPropertyBhk,
   setTenantType,
   setAvailability,
   setLookingFor,
   setPropertyTypeFilter,
-  setTenant,
   setFoodPref,
   setBathroomType,
   setFurnishing,

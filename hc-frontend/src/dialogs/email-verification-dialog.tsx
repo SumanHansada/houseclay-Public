@@ -16,7 +16,7 @@ import { useDeviceContext } from "@/providers/DeviceContextProvider";
 interface EmailVerificationDialogProps {
   id: string;
   emailToVerify: string;
-  onSubmit: (email: string, otp: string) => void;
+  onSubmit: (otp: string) => void;
   onClose: () => void;
 }
 
@@ -99,7 +99,7 @@ const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
     // run the api
     const otp = otpCode.join("");
     console.log("Email is Verified - OTP: " + otpCode);
-    onSubmit(emailToVerify, otp);
+    onSubmit(otp);
   };
 
   const isVerifyEnabled = otpCode.every((digit) => digit && digit !== "");

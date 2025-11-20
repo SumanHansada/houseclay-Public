@@ -6,13 +6,14 @@ export interface PropertySearchFilter {
   location: Location | null;
   propertyType: string | number | boolean;
   propertyCategory: PropertyCategory;
-  propertyBhk: string | number | boolean;
   tenantType: string | number | boolean;
+  bhkType: string;
+  // propertyBhk: string | number | boolean;  // not using - repeated
+  // tenant: string;                          // not using - repeated
   availability: string;
   // New filter states
   lookingFor: string;
   propertyTypeFilter: string;
-  tenant: string;
   foodPref: string;
   bathroomType: string;
   furnishing: string;
@@ -20,7 +21,6 @@ export interface PropertySearchFilter {
   parking: string;
   priceRangeForRent: [number, number];
   priceRangeForBuy: [number, number];
-  bhkType: string;
   exclusive: boolean;
   sortFields: string;
   sortOrder: string;

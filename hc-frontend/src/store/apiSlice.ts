@@ -85,6 +85,18 @@ export const apiSlice = createApi({
         };
       },
     }),
+    getUserInfo: builder.query<
+      {
+        name: string;
+        emailID: string;
+        connectBal: number;
+        avatarUrl: string | null;
+        phoneNo: string;
+      },
+      void
+    >({
+      query: () => "/user/info",
+    }),
     logout: builder.mutation<
       { message: string }, // Response type
       void // No request body
@@ -167,6 +179,23 @@ export const apiSlice = createApi({
         headers: {
           // Explicitly exclude Authorization header for public endpoint
         },
+      }),
+    }),
+    getAuthenticatedPropertyById: builder.query<
+      {
+        property: {
+          property: unknown;
+          contactUserCount: number;
+          viewUserCount: number;
+          shortlistUserCount: number;
+        };
+        owner: { name: string; phoneNo: string; emailID: string };
+        reported: boolean;
+      },
+      string
+    >({
+      query: (id) => ({
+        url: `/property/user/get-property/${id}`,
       }),
     }),
 
@@ -353,6 +382,8 @@ export const {
   useGenerateOtpMutation,
   useCheckUserQuery,
   useLazyCheckUserQuery,
+  useGetUserInfoQuery,
+  useLazyGetUserInfoQuery,
   useLogoutMutation,
   useGetUserDetailQuery,
   usePresignedUrlsMutation,
@@ -366,6 +397,7 @@ export const {
   useGenerateLeadMutation,
   useGetPublicPropertyByIdQuery,
   useLazyGetPublicPropertyByIdQuery,
+  useGetAuthenticatedPropertyByIdQuery,
   useShortlistPropertyMutation,
   useRemoveShortlistedPropertyMutation,
   useGetShortlistedPropertiesQuery,

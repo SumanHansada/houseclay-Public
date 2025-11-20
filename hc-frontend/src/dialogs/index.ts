@@ -3,6 +3,7 @@ export { default as ContactOwnerLoginDialog } from "./contact-owner-login-dialog
 export { default as DeletePhotosDialog } from "./delete-photos-dialog";
 export { default as EmailVerificationDialog } from "./email-verification-dialog";
 export { default as EmailVerificationSuccessDialog } from "./email-verification-success-dialog";
+export { default as FindFlatmatesDialog } from "./find-flatmates-dialog";
 export { default as ListPropertySuccessDialog } from "./list-property-success-dialog";
 export { default as LoginDialog } from "./login-dialog";
 export { default as MenuDialog } from "./menu-dialog";

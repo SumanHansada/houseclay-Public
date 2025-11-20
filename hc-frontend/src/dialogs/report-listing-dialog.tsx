@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import * as Yup from "yup";
 
 import { Button, RadioGroup, TextArea } from "@/base-components";
+import { ReportStatus } from "@/common/enums";
 import {
   Dialog,
   DialogContent,
@@ -21,11 +22,13 @@ interface ReportListingDialogProps {
 }
 
 const reportOptions = [
-  { value: "incorrect_information", label: "Incorrect information" },
-  { value: "duplicate_listing", label: "Duplicate listing" },
-  { value: "fraudulent_activity", label: "Fraudulent or suspicious activity" },
-  { value: "inappropriate_content", label: "Inappropriate content" },
-  { value: "other", label: "Other" },
+  { value: ReportStatus.BROKER, label: "Property is listed by a Broker" },
+  { value: ReportStatus.INCORRECT_INFO, label: "Incorrect information" },
+  {
+    value: ReportStatus.RENTED_OUT,
+    label: "Property is already rented out",
+  },
+  { value: ReportStatus.OTHER, label: "Other" },
 ];
 
 const getPlaceholderText = () => {

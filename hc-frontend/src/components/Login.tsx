@@ -21,6 +21,7 @@ import {
   setIsAuthenticated,
   setLoginFromAddProperty,
   setLoginFromBuyConnects,
+  setLoginFromLoginPage,
 } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 import {
@@ -172,8 +173,9 @@ const Login = ({ onClose }: { onClose: () => void }) => {
       } else if (loginFromAddProperty) {
         router.push("/list-property");
         dispatch(setLoginFromAddProperty(false));
-      } else {
+      } else if (loginFromLoginPage) {
         router.replace("/");
+        dispatch(setLoginFromLoginPage(false));
       }
     } catch (err) {
       console.error(err);

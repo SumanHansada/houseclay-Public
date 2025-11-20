@@ -5,30 +5,26 @@ import { Button } from "@/base-components";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { useDialog } from "@/providers/DialogContextProvider";
 
 interface UnlockOwnerDetailsProps {
   id: string;
   propertyID: string;
+  onClose: () => void;
 }
 
 const UnlockOwnerDetailsDialog: React.FC<UnlockOwnerDetailsProps> = ({
   id,
   propertyID,
+  onClose,
 }) => {
   const { isMobile } = useDeviceContext();
-  const { closeDialog } = useDialog();
-
-  const handleClose = () => {
-    closeDialog("unlock-owner-details-dialog");
-  };
 
   return (
     <Dialog
       id={id}
       type={isMobile ? "fullscreen" : "card"}
       width={isMobile ? 100 : 55}
-      onClose={handleClose}
+      onClose={onClose}
       entryAnimation={isMobile ? "animate-slide-in-right" : "animate-fade-in"}
       exitAnimation={isMobile ? "animate-slide-out-right" : "animate-fade-out"}
     >
@@ -41,7 +37,7 @@ const UnlockOwnerDetailsDialog: React.FC<UnlockOwnerDetailsProps> = ({
                 variant="secondary"
                 size="custom"
                 className="rounded-full p-1"
-                onClick={handleClose}
+                onClick={onClose}
               >
                 <X size={24} />
               </Button>
@@ -50,7 +46,7 @@ const UnlockOwnerDetailsDialog: React.FC<UnlockOwnerDetailsProps> = ({
         )}
       </DialogHeader>
       <DialogContent>
-        <UnlockOwnerDetails propertyID={propertyID} onClose={handleClose} />
+        <UnlockOwnerDetails propertyID={propertyID} onClose={onClose} />
       </DialogContent>
     </Dialog>
   );

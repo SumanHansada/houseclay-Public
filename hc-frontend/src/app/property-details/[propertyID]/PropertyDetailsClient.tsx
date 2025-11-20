@@ -19,23 +19,21 @@ import {
   MapPin,
   ParkingCircle,
   Phone,
+  PhoneCall,
   Share,
   Sofa,
   SquareStar,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
-import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
 import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
 import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
 import FireExtinguisherIconSvg from "public/icons/amenities/fire-extinguisher.svg";
 import FirstAidKitIconSvg from "public/icons/amenities/first-aid-kit.svg";
-import GatedSecurityIconSvg from "public/icons/amenities/gated-security.svg";
 import GymIconSvg from "public/icons/amenities/gym.svg";
 import LiftIconSvg from "public/icons/amenities/lift.svg";
 import OutdoorDiningAreaIconSvg from "public/icons/amenities/outdoor-dining-area.svg";
 import ParkingSpaceIconSvg from "public/icons/amenities/parking-space.svg";
-import PoolIconSvg from "public/icons/amenities/pool.svg";
 import PoolTableIconSvg from "public/icons/amenities/pool-table.svg";
 import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
@@ -43,11 +41,22 @@ import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 import WifiIconSvg from "public/icons/amenities/wifi.svg";
 import BalconyIconSvg from "public/icons/common/balcony.svg";
 import BuildUpAreaIconSvg from "public/icons/common/build-up-area.svg";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button, PlacesAutocomplete } from "@/base-components";
+import {
+  BHK_TYPE_OPTIONS,
+  FACING_OPTIONS,
+  FLOOR_NUMERIC_OPTIONS,
+  FURNISHING_OPTIONS,
+  getOptionLabel,
+  PARKING_OPTIONS,
+  PROPERTY_AGE_OPTIONS,
+  PROPERTY_TYPE_OPTIONS,
+  TOTAL_FLOORS_NUMERIC_OPTIONS,
+} from "@/common/dataConstants/options";
 import { PropertyCategory } from "@/common/enums";
 import {
   formatDateToReadable,
@@ -62,7 +71,10 @@ import { PropertyCardWithImages } from "@/interfaces/User";
 import { MobileFooter } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { useGetPublicPropertyByIdQuery } from "@/store/apiSlice";
+import {
+  useGetAuthenticatedPropertyByIdQuery,
+  useGetPublicPropertyByIdQuery,
+} from "@/store/apiSlice";
 import {
   setHideFooter,
   setHideHeader,
@@ -71,6 +83,8 @@ import {
 import { RootState } from "@/store/store";
 import { PhotoGallery, SvgIcon } from "@/utility-components";
 import { GoogleMapsDirection } from "@/utility-components";
+
+import Loading from "./loading";
 
 const BalconyIcon = BalconyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const BuildUpAreaIcon = BuildUpAreaIconSvg as React.FC<
@@ -89,10 +103,6 @@ const GymIcon = GymIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const OutdoorDiningAreaIcon = OutdoorDiningAreaIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
-const GatedSecurityIcon = GatedSecurityIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const PoolIcon = PoolIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const FireExtinguisherIcon = FireExtinguisherIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
@@ -110,7 +120,6 @@ const DedicatedWorkspaceIcon = DedicatedWorkspaceIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
 const WifiIcon = WifiIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const BBQGrillIcon = BBQGrillIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const PoolTableIcon = PoolTableIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
@@ -126,8 +135,6 @@ const AmenitiesMap = {
     label: "Outdoor Dining Area",
     icon: <OutdoorDiningAreaIcon />,
   },
-  "Gated Security": { label: "Gated Security", icon: <GatedSecurityIcon /> },
-  Pool: { label: "Pool", icon: <PoolIcon /> },
   "Fire Extinguisher": {
     label: "Fire Extinguisher",
     icon: <FireExtinguisherIcon />,
@@ -136,24 +143,18 @@ const AmenitiesMap = {
   "Swimming Pool": { label: "Swimming Pool", icon: <SwimmingPoolIcon /> },
   "24/7 Power": { label: "24/7 Power", icon: <TwentyFourSevenPowerIcon /> },
   Security: { label: "Security", icon: <SecurityIcon /> },
-  "Parking Space": { label: "Parking Space", icon: <ParkingSpaceIcon /> },
+  "Visitor Parking": { label: "Visitor Parking", icon: <ParkingSpaceIcon /> },
   "Dedicated Workspace": {
     label: "Dedicated Workspace",
     icon: <DedicatedWorkspaceIcon />,
   },
   Wifi: { label: "Wifi", icon: <WifiIcon /> },
-  "BBQ Grill": { label: "BBQ Grill", icon: <BBQGrillIcon /> },
   "Pool Table": { label: "Pool Table", icon: <PoolTableIcon /> },
   "First Aid Kit": { label: "First Aid Kit", icon: <FirstAidKitIcon /> },
 };
 
-const propertyAgeMap = {
-  "Under Construction": "Under Construction",
-  "Less than 1 year": "< 1 year",
-  "1-5 years": "1-5 years",
-  "5-10 years": "5-10 years",
-  "More than 10 year": "10+ years",
-};
+const CONTACT_LOGIN_DIALOG_ID = "contact-owner-login-dialog";
+const UNLOCK_DETAILS_DIALOG_ID = "unlock-owner-details-dialog";
 
 interface PropertyDetailsClientProps {
   propertyID: string;
@@ -165,13 +166,112 @@ export function PropertyDetailsClient({
   propertyID,
   initialData,
 }: PropertyDetailsClientProps) {
-  const { data: propertyData = initialData, isLoading: _isPropertyLoading } =
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated,
+  );
+  // const { data: propertyData = initialData, isLoading: _isPropertyLoading } =
+  //   useGetPublicPropertyByIdQuery(propertyID, {
+  //     skip: !!initialData, // Skip the query if we have initial data
+  //   });
+
+  // call both hooks, but skip the ones we don't need
+  const { data: publicPropertyData = initialData, isLoading: isPublicLoading } =
     useGetPublicPropertyByIdQuery(propertyID, {
-      skip: !!initialData, // Skip the query if we have initial data
+      skip: !!initialData && isAuthenticated,
     });
 
-  const { property, contactUserCount, shortlistUserCount, viewUserCount } =
-    propertyData;
+  const {
+    data: authenticatedPropertyData,
+    isLoading: isAuthLoading,
+    refetch: refetchAuthPropertyDetails,
+  } = useGetAuthenticatedPropertyByIdQuery(propertyID, {
+    skip: !isAuthenticated,
+  });
+
+  // Merge the data based on authentication status
+  const propertyData = useMemo(() => {
+    if (isAuthenticated && authenticatedPropertyData) {
+      return {
+        property: authenticatedPropertyData.property.property,
+        contactUserCount: authenticatedPropertyData.property.contactUserCount,
+        shortlistUserCount:
+          authenticatedPropertyData.property.shortlistUserCount,
+        viewUserCount: authenticatedPropertyData.property.viewUserCount,
+        owner: authenticatedPropertyData.owner,
+        reported: authenticatedPropertyData.reported,
+      };
+    }
+
+    return publicPropertyData;
+  }, [isAuthenticated, authenticatedPropertyData, publicPropertyData]);
+
+  const {
+    property,
+    contactUserCount,
+    shortlistUserCount,
+    viewUserCount,
+    owner,
+    reported,
+  } = propertyData;
+
+  const bhkType = getOptionLabel(BHK_TYPE_OPTIONS, property?.bhkType);
+  const propertyType = getOptionLabel(
+    PROPERTY_TYPE_OPTIONS,
+    property?.propertyType,
+  );
+  const propertyAge = getOptionLabel(
+    PROPERTY_AGE_OPTIONS,
+    property?.propertyAge,
+  );
+  const propertyFacing =
+    property?.facing === "dont-know"
+      ? "Not Specified"
+      : getOptionLabel(FACING_OPTIONS, property?.facing);
+  const propertyFloor = getOptionLabel(FLOOR_NUMERIC_OPTIONS, property?.floor);
+  const totalFloors = getOptionLabel(
+    TOTAL_FLOORS_NUMERIC_OPTIONS,
+    property?.totalFloors,
+  );
+  const furnishingStatus = getOptionLabel(
+    FURNISHING_OPTIONS,
+    property?.furnishing,
+  );
+  const parking = getOptionLabel(PARKING_OPTIONS, property?.parking);
+
+  const bedrooms = bhkType
+    ? bhkType === "Studio" || bhkType === "1-bhk"
+      ? "1 Bedroom"
+      : `${bhkType.split("BHK")[0]} Bedrooms`
+    : "N/A";
+  const bathrooms = property?.bathrooms
+    ? `${property?.bathrooms} ${property?.bathrooms > 1 ? "Bathrooms" : "Bathroom"}`
+    : "N/A";
+  const availableFrom = `${property?.availableFrom ? formatDateToReadable(property?.availableFrom) : "N/A"}`;
+  const catBasedPriceOrRentTag = `${
+    property?.propertyCategory === PropertyCategory.RESALE ? "Price:" : "Rent:"
+  }`;
+  const formattedPriceOrRentAmount = `${
+    property?.propertyCategory === PropertyCategory.RESALE
+      ? property?.price
+        ? formatINRCurrency(property.price)
+        : "-"
+      : property?.rent
+        ? formatINRCurrency(property.rent)
+        : "-"
+  }`;
+  const formattedDeposit = `${
+    property?.deposit || property?.depositCharges
+      ? formatINRCurrency(property.deposit || property.depositCharges)
+      : "-"
+  }`;
+
+  // TODO: add balcony to add property
+  const balcony = property?.balcony
+    ? `${property?.balcony} ${property?.balcony > 1 ? "Balconies" : "Balcony"}`
+    : "N/A";
+
+  const isLoading = isAuthenticated ? isAuthLoading : isPublicLoading;
+
   const { toggleShortlist, isShortlisted } = useShortlist();
   const shortlistStatus = isShortlisted(propertyID);
   const [isShortlistedProperty, setIsShortlistedProperty] =
@@ -183,9 +283,6 @@ export function PropertyDetailsClient({
   const router = useRouter();
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated,
-  );
   const { isDialogOpen, closeDialog, openDialog } = useDialog();
 
   const handleShare = async () => {
@@ -217,19 +314,6 @@ export function PropertyDetailsClient({
     openDialog("report-listing-dialog");
   };
 
-  const handleContactOwnerClick = () => {
-    openDialog(
-      isAuthenticated
-        ? "unlock-owner-details-dialog"
-        : "contact-owner-login-dialog",
-    );
-  };
-
-  const handleContactLoginSuccess = () => {
-    closeDialog("contact-owner-login-dialog");
-    openDialog("unlock-owner-details-dialog");
-  };
-
   // Split description into sentences array
   const descriptionSentences = property?.description
     ? property.description
@@ -249,6 +333,10 @@ export function PropertyDetailsClient({
     }
   }, [dispatch, isMobile]);
 
+  if (isLoading) {
+    <Loading />;
+  }
+
   return (
     <>
       <section
@@ -259,11 +347,9 @@ export function PropertyDetailsClient({
           size="custom"
           className="rounded-full p-1"
           onClick={() => {
-            console.log("onClick");
             if (window.history.length > 1) {
               router.back();
             } else {
-              console.log("home page");
               router.push("/");
             }
           }}
@@ -350,7 +436,7 @@ export function PropertyDetailsClient({
                 <span>{property?.city}</span>
                 <span className="text-gray-400">›</span>
                 <span className="text-gray-900 font-medium">
-                  {property?.bhkType} {property?.propertyType}
+                  {bhkType} {propertyType}
                 </span>
               </div>
 
@@ -390,7 +476,7 @@ export function PropertyDetailsClient({
             <div className="md:hidden">
               <div className="flex justify-between items-center mb-2">
                 <p className="text-black text-sm border border-gray-200 py-1 px-1.5 rounded-full bg-gray-100">
-                  {property.propertyType}
+                  {propertyType}
                 </p>
                 <p className="text-gray-500 text-sm md:hidden">
                   {property.locationOrSocietyName}, {property.city}
@@ -399,7 +485,7 @@ export function PropertyDetailsClient({
             </div>
             <div>
               <h1 className="text-2xl text-gray-900 flex items-center gap-2">
-                {property?.bhkType} in {property?.locationOrSocietyName} for{" "}
+                {bhkType} in {property?.locationOrSocietyName} for{" "}
                 {pascalCase(property?.propertyCategory)} in {property?.city}
               </h1>
             </div>
@@ -453,7 +539,7 @@ export function PropertyDetailsClient({
                           Property Type
                         </div>
                         <div className="font-medium text-gray-900">
-                          {property?.propertyType}
+                          {propertyType}
                         </div>
                       </div>
                     </div>
@@ -467,11 +553,7 @@ export function PropertyDetailsClient({
                           Age of Building
                         </div>
                         <div className="font-medium text-gray-900">
-                          {
-                            propertyAgeMap[
-                              property?.propertyAge as keyof typeof propertyAgeMap
-                            ]
-                          }
+                          {propertyAge}
                         </div>
                       </div>
                     </div>
@@ -483,7 +565,7 @@ export function PropertyDetailsClient({
                       <div>
                         <div className="text-sm text-gray-500">Facing</div>
                         <div className="font-medium text-gray-900">
-                          {property?.facing}
+                          {propertyFacing}
                         </div>
                       </div>
                     </div>
@@ -495,7 +577,7 @@ export function PropertyDetailsClient({
                       <div>
                         <div className="text-sm text-gray-500">Floor</div>
                         <div className="font-medium text-gray-900">
-                          {property?.floor}/{property?.totalFloors}
+                          {propertyFloor}/{totalFloors}
                         </div>
                       </div>
                     </div>
@@ -510,7 +592,7 @@ export function PropertyDetailsClient({
                       <div>
                         <div className="text-sm text-gray-500">Bathrooms</div>
                         <div className="font-medium text-gray-900">
-                          {property?.bathrooms || "NA"}
+                          {property?.bathrooms}
                         </div>
                       </div>
                     </div>
@@ -524,7 +606,7 @@ export function PropertyDetailsClient({
                           Furnishing Status
                         </div>
                         <div className="font-medium text-gray-900">
-                          {property?.furnishing}
+                          {furnishingStatus}
                         </div>
                       </div>
                     </div>
@@ -536,7 +618,7 @@ export function PropertyDetailsClient({
                       <div>
                         <div className="text-sm text-gray-500">Flooring</div>
                         <div className="font-medium text-gray-900">
-                          {property?.floorType}
+                          {pascalCase(property?.floorType)}
                         </div>
                       </div>
                     </div>
@@ -657,7 +739,7 @@ export function PropertyDetailsClient({
                         No. of Bedroom
                       </div>
                       <div className="text-gray-900 font-semibold font-nunito text-base">
-                        {property?.bhkType?.split("BHK")[0]} Bedroom
+                        {bedrooms}
                       </div>
                     </div>
                   </div>
@@ -672,7 +754,7 @@ export function PropertyDetailsClient({
                         No. of Bathroom
                       </div>
                       <div className="text-gray-900 font-semibold font-nunito text-base">
-                        {property?.bathrooms} Bathroom
+                        {bathrooms}
                       </div>
                     </div>
                   </div>
@@ -689,7 +771,7 @@ export function PropertyDetailsClient({
                         Balcony
                       </div>
                       <div className="text-gray-900 font-semibold font-nunito text-base">
-                        {property?.balcony}
+                        {balcony}
                       </div>
                     </div>
                   </div>
@@ -702,10 +784,10 @@ export function PropertyDetailsClient({
                     </div>
                     <div className="flex-col">
                       <div className="flex gap-2 items-center font-nunito text-sm">
-                        Buildup Area
+                        Builtup Area
                       </div>
                       <div className="text-gray-900 font-semibold font-nunito text-base">
-                        {property?.builtUpArea} sqft
+                        {property?.builtUpArea} Sq. Ft
                       </div>
                     </div>
                   </div>
@@ -723,7 +805,7 @@ export function PropertyDetailsClient({
                         Parking
                       </div>
                       <div className="text-gray-900 font-semibold font-nunito text-base">
-                        {property?.parking}
+                        {parking}
                       </div>
                     </div>
                   </div>
@@ -739,7 +821,7 @@ export function PropertyDetailsClient({
                         Available From
                       </div>
                       <div className="text-gray-900 font-semibold font-nunito text-base">
-                        {formatDateToReadable(property?.availableFrom)}
+                        {availableFrom}
                       </div>
                     </div>
                   </div>
@@ -749,28 +831,75 @@ export function PropertyDetailsClient({
 
                 {/* Price & Contact Section */}
                 <div className="">
-                  <div className="flex justify-between items-center">
-                    <div className="text-gray-600">
-                      {property?.propertyCategory === PropertyCategory.RESALE
-                        ? "Price"
-                        : "Rent"}
+                  <div className="grid grid-cols-2 gap-4 justify-items-center items-center mb-4 divide-x w-full">
+                    <div className="flex w-full justify-start items-start gap-2 text-gray-600">
+                      <div className="text-gray-600">
+                        {catBasedPriceOrRentTag}
+                      </div>
+                      <div className="text-gray-900 font-semibold font-nunito text-base">
+                        {formattedPriceOrRentAmount}
+                      </div>
                     </div>
-                    <div>
-                      {property?.propertyCategory === PropertyCategory.RESALE
-                        ? property?.price
-                          ? formatINRCurrency(property.price)
-                          : "-"
-                        : property?.rent
-                          ? formatINRCurrency(property.rent)
-                          : "-"}
+                    <div className="flex w-full justify-start items-start gap-2 text-gray-600 pl-2">
+                      <div className="text-gray-600">Deposit:</div>
+                      <div className="text-gray-900 font-semibold font-nunito text-base">
+                        {formattedDeposit}
+                      </div>
                     </div>
                   </div>
-                  <button
-                    className="mt-4 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full text-base max-md:text-sm hover:bg-red-600 transition-colors"
-                    onClick={handleContactOwnerClick}
-                  >
-                    Contact Owner
-                  </button>
+                  {isAuthenticated ? (
+                    owner ? (
+                      <div>
+                        <div className="flex items-center gap-2 mt-4">
+                          <div className="text-gray-600">Owner Name:</div>
+                          <div className="text-gray-900 font-semibold font-nunito text-base">
+                            {owner?.name}
+                          </div>
+                        </div>
+                        <div className="flex">
+                          {owner?.phoneNo && (
+                            <div className="flex w-full mt-4 gap-2">
+                              <a
+                                href={`tel:${owner?.phoneNo}`}
+                                className="flex items-center justify-center w-1/2 gap-2 border rounded-lg py-2 bg-red-500 hover:bg-red-600"
+                              >
+                                <PhoneCall size={20} className="text-white" />
+                                <span className="text-white">Call Owner</span>
+                              </a>
+                              <a
+                                className="flex items-center justify-center w-1/2 gap-1 border rounded-lg py-2 hover:bg-green-600 bg-green-500"
+                                href={`https://wa.me/${owner?.phoneNo}`}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                <SvgIcon
+                                  iconSize="small"
+                                  name="whatsapp"
+                                  size={32}
+                                  className="text-white"
+                                />
+                                <span className="text-white">WhatsApp</span>
+                              </a>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <button
+                        className="mt-4 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full text-base max-md:text-sm hover:bg-red-600 transition-colors"
+                        onClick={() => openDialog(UNLOCK_DETAILS_DIALOG_ID)}
+                      >
+                        Contact Owner
+                      </button>
+                    )
+                  ) : (
+                    <button
+                      className="mt-4 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full text-base max-md:text-sm hover:bg-red-600 transition-colors"
+                      onClick={() => openDialog(CONTACT_LOGIN_DIALOG_ID)}
+                    >
+                      Log in to Contact Owner
+                    </button>
+                  )}
                 </div>
               </section>
               {/* Activity Card */}
@@ -828,16 +957,18 @@ export function PropertyDetailsClient({
                   </button>
                 </section>
               )}
-              <section className="flex flex-col justify-between items-center mb-6">
-                <button
-                  className="text-sm text-gray-700 hover:text-gray-700 flex items-center gap-2 disabled:cursor-not-allowed disabled:text-gray-400"
-                  onClick={handleReportListingClick}
-                  disabled={!isAuthenticated}
-                >
-                  <Flag size={14} />
-                  <span className="underline">Report this listing</span>
-                </button>
-              </section>
+              {owner && !reported ? (
+                <section className="flex flex-col justify-between items-center mb-6">
+                  <button
+                    className="text-sm text-gray-700 hover:text-gray-700 flex items-center gap-2 disabled:cursor-not-allowed disabled:text-gray-400"
+                    onClick={handleReportListingClick}
+                    disabled={!isAuthenticated}
+                  >
+                    <Flag size={14} />
+                    <span className="underline">Report this listing</span>
+                  </button>
+                </section>
+              ) : null}
             </section>
           </section>
 
@@ -857,7 +988,7 @@ export function PropertyDetailsClient({
                       No. of Bedroom
                     </div>
                     <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {property?.bhkType?.split("BHK")[0]} Bedroom
+                      {bedrooms}
                     </div>
                   </div>
                 </div>
@@ -872,7 +1003,7 @@ export function PropertyDetailsClient({
                       No. of Bathroom
                     </div>
                     <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {property?.bathrooms} Bathroom
+                      {bathrooms}
                     </div>
                   </div>
                 </div>
@@ -890,7 +1021,7 @@ export function PropertyDetailsClient({
                       No. of Balcony
                     </div>
                     <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {property?.balcony} Balcony
+                      {balcony}
                     </div>
                   </div>
                 </div>
@@ -903,10 +1034,10 @@ export function PropertyDetailsClient({
                   </div>
                   <div className="flex-col">
                     <div className="flex gap-2 items-center font-nunito text-xs">
-                      Buildup Area
+                      Builtup Area
                     </div>
                     <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {property?.builtUpArea}sqft
+                      {property?.builtUpArea} Sq. Ft
                     </div>
                   </div>
                 </div>
@@ -924,7 +1055,7 @@ export function PropertyDetailsClient({
                       Parking
                     </div>
                     <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {property?.parking}
+                      {parking}
                     </div>
                   </div>
                 </div>
@@ -940,7 +1071,7 @@ export function PropertyDetailsClient({
                       Available From
                     </div>
                     <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {formatDateToReadable(property?.availableFrom)}
+                      {availableFrom}
                     </div>
                   </div>
                 </div>
@@ -984,7 +1115,7 @@ export function PropertyDetailsClient({
                       Property Type
                     </div>
                     <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {property?.propertyType}
+                      {propertyType}
                     </div>
                   </div>
                 </div>
@@ -1000,11 +1131,7 @@ export function PropertyDetailsClient({
                       Age of Building
                     </div>
                     <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {
-                        propertyAgeMap[
-                          property?.propertyAge as keyof typeof propertyAgeMap
-                        ]
-                      }
+                      {propertyAge}
                     </div>
                   </div>
                 </div>
@@ -1022,7 +1149,7 @@ export function PropertyDetailsClient({
                       Facing
                     </div>
                     <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {property?.facing}
+                      {propertyFacing}
                     </div>
                   </div>
                 </div>
@@ -1038,7 +1165,7 @@ export function PropertyDetailsClient({
                       Floor
                     </div>
                     <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {property?.floor}/{property?.totalFloors}
+                      {propertyFloor}/{totalFloors}
                     </div>
                   </div>
                 </div>
@@ -1056,7 +1183,7 @@ export function PropertyDetailsClient({
                       Bathrooms
                     </div>
                     <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {property?.bathrooms || "NA"}
+                      {bathrooms}
                     </div>
                   </div>
                 </div>
@@ -1072,7 +1199,7 @@ export function PropertyDetailsClient({
                       Furnishing Status
                     </div>
                     <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {property?.furnishing}
+                      {furnishingStatus}
                     </div>
                   </div>
                 </div>
@@ -1090,7 +1217,7 @@ export function PropertyDetailsClient({
                       Flooring
                     </div>
                     <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {property?.floorType}
+                      {pascalCase(property?.floorType)}
                     </div>
                   </div>
                 </div>
@@ -1253,43 +1380,86 @@ export function PropertyDetailsClient({
             </section> */}
 
             {/* Report this listing */}
-            <section className="flex justify-around items-center">
-              <button
-                className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-2"
-                onClick={handleReportListingClick}
-              >
-                <Flag size={14} />
-                <span className="underline">Report this listing</span>
-              </button>
-            </section>
+            {owner && !reported ? (
+              <section className="flex justify-around items-center">
+                <button
+                  className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-2"
+                  onClick={handleReportListingClick}
+                >
+                  <Flag size={14} />
+                  <span className="underline">Report this listing</span>
+                </button>
+              </section>
+            ) : null}
           </section>
         </section>
       </section>
 
       {/* Contact Owner Section */}
       <MobileFooter>
-        <div className="flex-col justify-between items-center w-full">
-          <div className="text-gray-600 text-xs">
-            {property?.propertyCategory === PropertyCategory.RESALE
-              ? "Price"
-              : "Rent"}
+        <div className="flex w-full">
+          <div className="flex flex-col justify-evenly items-start w-1/3">
+            <div className="flex items-center gap-2">
+              <div className="text-gray-600">{catBasedPriceOrRentTag}</div>
+              <div className="text-gray-900">{formattedPriceOrRentAmount}</div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="text-gray-600">Deposit:</div>
+              <div className="text-gray-900">{formattedDeposit}</div>
+            </div>
           </div>
-          <div className="text-lg">
-            {property?.propertyCategory === PropertyCategory.RESALE
-              ? property?.price
-                ? formatINRCurrency(property.price)
-                : "-"
-              : property?.rent
-                ? formatINRCurrency(property.rent)
-                : "-"}
-          </div>
+
+          {isAuthenticated ? (
+            owner ? (
+              <div className="flex flex-col justify-between border-l pl-3 w-2/3">
+                {/* <div className="flex items-center gap-2">
+                  <div className="text-gray-600">Owner:</div>
+                  <div className="text-gray-900">{owner?.name}</div>
+                </div> */}
+                {owner?.phoneNo && (
+                  <div className="flex w-full gap-2">
+                    <a
+                      href={`tel:${owner?.phoneNo}`}
+                      className="flex items-center justify-center gap-2 border rounded-lg py-1.5 px-4 border-red-500 hover:bg-red-100 w-1/2"
+                    >
+                      <PhoneCall size={20} className="text-red-500" />
+                      Call
+                    </a>
+                    <a
+                      className="flex items-center justify-center gap-1 border rounded-lg py-1.5 px-2 hover:bg-green-100 border-green-500 w-1/2"
+                      href={`https://wa.me/${owner?.phoneNo}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <SvgIcon
+                        iconSize="small"
+                        name="whatsapp"
+                        size={32}
+                        className="text-green-500"
+                      />
+                      Whatsapp
+                    </a>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                className="border-l pl-3 w-2/3 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl hover:bg-red-600 transition-colors"
+                onClick={() => openDialog(UNLOCK_DETAILS_DIALOG_ID)}
+              >
+                Contact Owner
+              </button>
+            )
+          ) : (
+            <button
+              className="border-l pl-3 w-2/3 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl hover:bg-red-600 transition-colors"
+              onClick={() => openDialog(CONTACT_LOGIN_DIALOG_ID)}
+            >
+              Log in to Contact Owner
+            </button>
+          )}
         </div>
-        <button
-          className="px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl w-full hover:bg-red-600 transition-colors"
-          onClick={handleContactOwnerClick}
-        >
-          Contact Owner
-        </button>
       </MobileFooter>
       {/* Mobile Photo Gallery Dialog */}
       {isDialogOpen("photo-gallery-dialog") && (
@@ -1301,11 +1471,25 @@ export function PropertyDetailsClient({
       )}
 
       {/* Contact owner login dialog */}
-      {isDialogOpen("contact-owner-login-dialog") && (
+      {isDialogOpen(CONTACT_LOGIN_DIALOG_ID) && (
         <ContactOwnerLoginDialog
-          id="contact-owner-login-dialog"
-          onSuccess={handleContactLoginSuccess}
-          onClose={() => closeDialog("contact-owner-login-dialog")}
+          id={CONTACT_LOGIN_DIALOG_ID}
+          onSuccess={async () => {
+            await refetchAuthPropertyDetails();
+          }}
+          onClose={() => closeDialog(CONTACT_LOGIN_DIALOG_ID)}
+        />
+      )}
+
+      {/* Unlock owner details dialog */}
+      {isDialogOpen(UNLOCK_DETAILS_DIALOG_ID) && (
+        <UnlockOwnerDetailsDialog
+          id={UNLOCK_DETAILS_DIALOG_ID}
+          propertyID={propertyID}
+          onClose={async () => {
+            closeDialog(UNLOCK_DETAILS_DIALOG_ID);
+            await refetchAuthPropertyDetails();
+          }}
         />
       )}
 
@@ -1314,18 +1498,11 @@ export function PropertyDetailsClient({
         <ReportListingDialog
           id="report-listing-dialog"
           propertyId={propertyID}
-          onClose={() => {
+          onClose={async () => {
             closeDialog("report-listing-dialog");
             dispatch(setHideStickyNavBar(true));
+            await refetchAuthPropertyDetails();
           }}
-        />
-      )}
-
-      {/* Unlock owner details dialog */}
-      {isDialogOpen("unlock-owner-details-dialog") && (
-        <UnlockOwnerDetailsDialog
-          id="unlock-owner-details-dialog"
-          propertyID={propertyID}
         />
       )}
     </>

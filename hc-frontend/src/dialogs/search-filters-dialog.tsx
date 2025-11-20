@@ -17,17 +17,17 @@ import {
   X,
 } from "lucide-react";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
-import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
+// import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
 import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
 import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
 import FireExtinguisherIconSvg from "public/icons/amenities/fire-extinguisher.svg";
 import FirstAidKitIconSvg from "public/icons/amenities/first-aid-kit.svg";
-import GatedSecurityIconSvg from "public/icons/amenities/gated-security.svg";
+// import GatedSecurityIconSvg from "public/icons/amenities/gated-security.svg";
 import GymIconSvg from "public/icons/amenities/gym.svg";
 import LiftIconSvg from "public/icons/amenities/lift.svg";
 import OutdoorDiningAreaIconSvg from "public/icons/amenities/outdoor-dining-area.svg";
 import ParkingSpaceIconSvg from "public/icons/amenities/parking-space.svg";
-import PoolIconSvg from "public/icons/amenities/pool.svg";
+// import PoolIconSvg from "public/icons/amenities/pool.svg";
 import PoolTableIconSvg from "public/icons/amenities/pool-table.svg";
 import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
@@ -37,7 +37,19 @@ import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button, Checkbox, RadioGroup, RangeSlider } from "@/base-components";
-import { PropertyCategory } from "@/common/enums";
+import {
+  BHK_TYPE_OPTIONS,
+  FURNISHING_OPTIONS,
+  PARKING_OPTIONS,
+  PROPERTY_AVAILABILITY,
+  YES_NO_OPTIONS,
+} from "@/common/dataConstants/options";
+import {
+  FLATMATE_PREFERRED_TENANTS,
+  PROPERTY_TYPES,
+  PropertyCategory,
+  RENT_PREFERRED_TENANTS,
+} from "@/common/enums";
 import {
   Dialog,
   DialogContent,
@@ -78,30 +90,6 @@ interface SearchFiltersDialogProps {
   onApply: () => void;
 }
 
-const availabilityTypes = [
-  { label: "Any", value: "Any" },
-  { label: "Immediate", value: "Immediate" },
-  { label: "Within 15 Days", value: "Within 15 Days" },
-  { label: "Within 30 Days", value: "Within 30 Days" },
-  { label: "After 45 Days", value: "After 45 Days" },
-];
-
-const bhkTypes = [
-  { label: "Studio", value: "Studio" },
-  { label: "1 BHK", value: "1BHK" },
-  { label: "2 BHK", value: "2BHK" },
-  { label: "3 BHK", value: "3BHK" },
-  { label: "4 BHK", value: "4BHK" },
-  { label: "5+ BHK", value: "5+BHK" },
-];
-
-const parkingTypes = [
-  { label: "Both", value: "Both" },
-  { label: "2 Wheeler", value: "2 Wheeler" },
-  { label: "4 Wheeler", value: "4 Wheeler" },
-  { label: "None", value: "None" },
-];
-
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ClubhouseIcon = ClubhouseIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
@@ -110,10 +98,10 @@ const GymIcon = GymIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const OutdoorDiningAreaIcon = OutdoorDiningAreaIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
-const GatedSecurityIcon = GatedSecurityIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const PoolIcon = PoolIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+// const GatedSecurityIcon = GatedSecurityIconSvg as React.FC<
+//   React.SVGProps<SVGSVGElement>
+// >;
+// const PoolIcon = PoolIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const FireExtinguisherIcon = FireExtinguisherIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
@@ -134,7 +122,7 @@ const DedicatedWorkspaceIcon = DedicatedWorkspaceIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
 const WifiIcon = WifiIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const BBQGrillIcon = BBQGrillIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
+// const BBQGrillIcon = BBQGrillIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const PoolTableIcon = PoolTableIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
@@ -147,17 +135,17 @@ const amenities = [
   { label: "Club house", icon: <ClubhouseIcon /> },
   { label: "Gym", icon: <GymIcon /> },
   { label: "Outdoor Dining Area", icon: <OutdoorDiningAreaIcon /> },
-  { label: "Gated Security", icon: <GatedSecurityIcon /> },
-  { label: "Pool", icon: <PoolIcon /> },
+  // { label: "Gated Security", icon: <GatedSecurityIcon /> },
+  // { label: "Pool", icon: <PoolIcon /> },
   { label: "Fire Extinguisher", icon: <FireExtinguisherIcon /> },
   { label: "Smoke Alarm", icon: <SmokeAlarmIcon /> },
   { label: "Swimming Pool", icon: <SwimmingPoolIcon /> },
   { label: "24/7 Power", icon: <TwentyFourSevenPowerIcon /> },
   { label: "Security", icon: <SecurityIcon /> },
-  { label: "Parking Space", icon: <ParkingSpaceIcon /> },
+  { label: "Visitor Parking", icon: <ParkingSpaceIcon /> },
   { label: "Dedicated Workspace", icon: <DedicatedWorkspaceIcon /> },
   { label: "Wifi", icon: <WifiIcon /> },
-  { label: "BBQ Grill", icon: <BBQGrillIcon /> },
+  // { label: "BBQ Grill", icon: <BBQGrillIcon /> },
   { label: "Pool Table", icon: <PoolTableIcon /> },
   { label: "First Aid Kit", icon: <FirstAidKitIcon /> },
 ];
@@ -301,7 +289,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       columns={4}
                       options={[
                         {
-                          value: "Apartment",
+                          value: PROPERTY_TYPES.APARTMENT,
                           label: "Apartment",
                           icon: (
                             <ImageWithLoader
@@ -313,7 +301,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           ),
                         },
                         {
-                          value: "Independent House/Villa",
+                          value: PROPERTY_TYPES.HOUSE,
                           label: "Independent House/Villa",
                           icon: (
                             <ImageWithLoader
@@ -325,7 +313,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           ),
                         },
                         {
-                          value: "Community Villa",
+                          value: PROPERTY_TYPES.VILLA,
                           label: "Community Villa",
                           icon: (
                             <ImageWithLoader
@@ -337,7 +325,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           ),
                         },
                         {
-                          value: "Standalone Building",
+                          value: PROPERTY_TYPES.BUILDING,
                           label: "Standalone Building",
                           icon: (
                             <ImageWithLoader
@@ -366,7 +354,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       <Checkbox
                         name="bhkType"
                         columns={4}
-                        options={bhkTypes}
+                        options={BHK_TYPE_OPTIONS}
                         value={bhkSelectedValues}
                         onChange={(value) => {
                           dispatch(setBhkType(value.join(",")));
@@ -383,7 +371,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                     <RadioGroup
                       name="availability"
                       columns={4}
-                      options={availabilityTypes}
+                      options={PROPERTY_AVAILABILITY}
                       value={availability}
                       onChange={(value) =>
                         dispatch(setAvailability(value as string))
@@ -406,14 +394,14 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       columns={4}
                       options={[
                         {
-                          value: "Family",
+                          value: RENT_PREFERRED_TENANTS.FAMILY,
                           label: "Family",
                           icon: (
                             <SvgIcon iconSize="large" name="family" size={68} />
                           ),
                         },
                         {
-                          value: "Company",
+                          value: RENT_PREFERRED_TENANTS.COMPANY,
                           label: "Company",
                           icon: (
                             <SvgIcon
@@ -424,7 +412,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           ),
                         },
                         {
-                          value: "Bachelor",
+                          value: RENT_PREFERRED_TENANTS.BACHELOR,
                           label: "Bachelor",
                           icon: (
                             <SvgIcon
@@ -435,7 +423,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           ),
                         },
                         {
-                          value: "Couple",
+                          value: RENT_PREFERRED_TENANTS.COUPLE,
                           label: "Couple",
                           icon: (
                             <SvgIcon iconSize="large" name="couple" size={68} />
@@ -483,12 +471,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                     <RadioGroup
                       name="furnishing"
                       columns={4}
-                      options={[
-                        { value: "Any", label: "Any" },
-                        { value: "Fully-furnished", label: "Fully Furnished" },
-                        { value: "Semi-furnished", label: "Semi Furnished" },
-                        { value: "Unfurnished", label: "Unfurnished" },
-                      ]}
+                      options={FURNISHING_OPTIONS}
                       value={furnishing}
                       onChange={(value) =>
                         dispatch(setFurnishing(value as string))
@@ -535,7 +518,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                     <RadioGroup
                       name="parking"
                       columns={2}
-                      options={parkingTypes}
+                      options={PARKING_OPTIONS}
                       value={parking}
                       onChange={(value) =>
                         dispatch(setParking(value as string))
@@ -554,7 +537,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       columns={4}
                       options={[
                         {
-                          value: "Apartment",
+                          value: PROPERTY_TYPES.APARTMENT,
                           label: "Apartment",
                           icon: (
                             <ImageWithLoader
@@ -566,7 +549,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           ),
                         },
                         {
-                          value: "Independent House/Villa",
+                          value: PROPERTY_TYPES.HOUSE,
                           label: "Independent House/Villa",
                           icon: (
                             <ImageWithLoader
@@ -578,7 +561,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           ),
                         },
                         {
-                          value: "Community Villa",
+                          value: PROPERTY_TYPES.VILLA,
                           label: "Community Villa",
                           icon: (
                             <ImageWithLoader
@@ -590,7 +573,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           ),
                         },
                         {
-                          value: "Standalone Building",
+                          value: PROPERTY_TYPES.BUILDING,
                           label: "Standalone Building",
                           icon: (
                             <ImageWithLoader
@@ -618,7 +601,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                     <RadioGroup
                       name="availability"
                       columns={4}
-                      options={availabilityTypes}
+                      options={PROPERTY_AVAILABILITY}
                       value={availability}
                       onChange={(value) =>
                         dispatch(setAvailability(value as string))
@@ -642,7 +625,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                         columns={2}
                         options={[
                           {
-                            value: "Female",
+                            value: FLATMATE_PREFERRED_TENANTS.FEMALE,
                             label: "Female",
                             icon: (
                               <SvgIcon
@@ -653,7 +636,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                             ),
                           },
                           {
-                            value: "Male",
+                            value: FLATMATE_PREFERRED_TENANTS.MALE,
                             label: "Male",
                             icon: (
                               <SvgIcon
@@ -741,12 +724,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                     <RadioGroup
                       name="furnishing"
                       columns={4}
-                      options={[
-                        { value: "Any", label: "Any" },
-                        { value: "Fully-furnished", label: "Fully Furnished" },
-                        { value: "Semi-furnished", label: "Semi Furnished" },
-                        { value: "Unfurnished", label: "Unfurnished" },
-                      ]}
+                      options={FURNISHING_OPTIONS}
                       value={furnishing}
                       onChange={(value) =>
                         dispatch(setFurnishing(value as string))
@@ -787,15 +765,12 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                   {/* Bathroom Type */}
                   <div>
                     <div className="flex items-center gap-2 mb-2 text-lg">
-                      <Bath size={20} /> Bathroom Type
+                      <Bath size={20} /> Attached Bathroom
                     </div>
                     <RadioGroup
                       name="bathroomType"
                       columns={2}
-                      options={[
-                        { value: true, label: "Attached" },
-                        { value: false, label: "Non-Attached" },
-                      ]}
+                      options={YES_NO_OPTIONS}
                       containerClassName="w-1/2 max-md:w-full"
                       value={bathroomType}
                       onChange={(value) =>
@@ -812,7 +787,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                     <RadioGroup
                       name="parking"
                       columns={2}
-                      options={parkingTypes}
+                      options={PARKING_OPTIONS}
                       value={parking}
                       onChange={(value) =>
                         dispatch(setParking(value as string))
@@ -836,7 +811,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                   columns={4}
                   options={[
                     {
-                      value: "Apartment",
+                      value: PROPERTY_TYPES.APARTMENT,
                       label: "Apartment",
                       icon: (
                         <ImageWithLoader
@@ -848,7 +823,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       ),
                     },
                     {
-                      value: "Independent House/Villa",
+                      value: PROPERTY_TYPES.HOUSE,
                       label: "Independent House/Villa",
                       icon: (
                         <ImageWithLoader
@@ -860,7 +835,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       ),
                     },
                     {
-                      value: "Community Villa",
+                      value: PROPERTY_TYPES.VILLA,
                       label: "Community Villa",
                       icon: (
                         <ImageWithLoader
@@ -872,7 +847,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       ),
                     },
                     {
-                      value: "Standalone Building",
+                      value: PROPERTY_TYPES.BUILDING,
                       label: "Standalone Building",
                       icon: (
                         <ImageWithLoader
@@ -902,7 +877,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                   <RadioGroup
                     name="bhkType"
                     columns={4}
-                    options={bhkTypes}
+                    options={BHK_TYPE_OPTIONS}
                     value={bhkType}
                     onChange={(value) => {
                       dispatch(setBhkType(value as string));
@@ -919,7 +894,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                 <RadioGroup
                   name="availability"
                   columns={4}
-                  options={availabilityTypes}
+                  options={PROPERTY_AVAILABILITY}
                   value={availability}
                   onChange={(value) =>
                     dispatch(setAvailability(value as string))
@@ -942,28 +917,28 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                   columns={4}
                   options={[
                     {
-                      value: "Family",
+                      value: RENT_PREFERRED_TENANTS.FAMILY,
                       label: "Family",
                       icon: (
                         <SvgIcon iconSize="large" name="family" size={68} />
                       ),
                     },
                     {
-                      value: "Company",
+                      value: RENT_PREFERRED_TENANTS.COMPANY,
                       label: "Company",
                       icon: (
                         <SvgIcon iconSize="large" name="company" size={68} />
                       ),
                     },
                     {
-                      value: "Bachelor",
+                      value: RENT_PREFERRED_TENANTS.BACHELOR,
                       label: "Bachelor",
                       icon: (
                         <SvgIcon iconSize="large" name="bachelor" size={68} />
                       ),
                     },
                     {
-                      value: "Couple",
+                      value: RENT_PREFERRED_TENANTS.COUPLE,
                       label: "Couple",
                       icon: (
                         <SvgIcon iconSize="large" name="couple" size={68} />
@@ -984,12 +959,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                 <RadioGroup
                   name="furnishing"
                   columns={4}
-                  options={[
-                    { value: "Any", label: "Any" },
-                    { value: "Fully-furnished", label: "Fully Furnished" },
-                    { value: "Semi-furnished", label: "Semi Furnished" },
-                    { value: "Unfurnished", label: "Unfurnished" },
-                  ]}
+                  options={FURNISHING_OPTIONS}
                   value={furnishing}
                   onChange={(value) => dispatch(setFurnishing(value as string))}
                 />
@@ -1055,7 +1025,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                 <RadioGroup
                   name="parking"
                   columns={2}
-                  options={parkingTypes}
+                  options={PARKING_OPTIONS}
                   value={parking}
                   onChange={(value) => dispatch(setParking(value as string))}
                 />

@@ -3,12 +3,14 @@ import { motion } from "framer-motion";
 import { Crown, Heart, MapPin, Star } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { BadgeType } from "@/common/enums";
 import {
-  formatBhkType,
-  formatINRCurrency,
-  processPropertyImages,
-} from "@/common/utils";
+  BHK_TYPE_OPTIONS,
+  FURNISHING_OPTIONS,
+  getOptionLabel,
+  PROPERTY_TYPE_OPTIONS,
+} from "@/common/dataConstants/options";
+import { BadgeType } from "@/common/enums";
+import { formatINRCurrency, processPropertyImages } from "@/common/utils";
 import { useShortlist } from "@/hooks/useShortlist";
 import { PropertySearch } from "@/interfaces/PropertySearch";
 import { PropertyCardWithImages } from "@/interfaces/User";
@@ -38,6 +40,25 @@ const Properties: React.FC<PropertiesProps> = ({
   const shortlistStatus = isShortlisted(property.propertyID);
   const [isShortlistedProperty, setIsShortlistedProperty] =
     useState(shortlistStatus);
+
+  const propertyType = getOptionLabel(
+    PROPERTY_TYPE_OPTIONS,
+    property.propertyType,
+  );
+  const bhkType = getOptionLabel(BHK_TYPE_OPTIONS, property.bhkType);
+  const furnishing = getOptionLabel(FURNISHING_OPTIONS, property.furnishing);
+  const formattedPriceOrRentAmount = formatINRCurrency(
+    property?.price || property?.rent || 0,
+  );
+
+  const bedrooms = bhkType
+    ? bhkType === "Studio" || bhkType === "1-bhk"
+      ? "1 Bed"
+      : `${bhkType.split("BHK")[0]} Beds`
+    : "N/A";
+  const bathrooms = property.bathrooms
+    ? `${property.bathrooms} ${property?.bathrooms > 1 ? "Baths" : "Bath"}`
+    : "N/A";
 
   // Process images with fallback
   const propertyImages = useMemo(() => {
@@ -152,29 +173,25 @@ const Properties: React.FC<PropertiesProps> = ({
 
       {/* Property Info */}
       <div className="flex-col mt-4">
-        <div className="flex justify-between items-center mb-2">
-          <p className="text-black text-xs border border-gray-200 py-1 px-1.5 rounded-full bg-gray-100">
-            {property.propertyType}
+        <div className="flex justify-between items-center mb-2 gap-8">
+          <p className="text-black text-xs border border-gray-200 py-1 px-1.5 rounded-full bg-gray-100 text-nowrap">
+            {propertyType}
           </p>
-          <p className="text-gray-500 text-xs">
+          <p className="text-gray-500 text-xs truncate">
             {property.locationOrSocietyName}
           </p>
         </div>
 
         <div className="flex justify-between items-center mb-2">
           <p className="font-medium text-xs">
-            {formatBhkType(property.bhkType)} Beds |{" "}
-            {property.bathrooms ? `${property.bathrooms} Bath | ` : ""}
-            {property.furnishing}
+            {bedrooms} | {bathrooms} | {furnishing}
           </p>
-          <p className="font-bold">
-            {formatINRCurrency(property?.price || property?.rent || 0)}
-          </p>
+          <p className="font-bold">{formattedPriceOrRentAmount}</p>
         </div>
 
         <div className="flex justify-between items-center text-xs">
           <p className="text-gray-600">
-            Buildup Area {property.builtUpArea} sq.ft.
+            Buildup Area {property.builtUpArea} Sq. Ft
           </p>
         </div>
 

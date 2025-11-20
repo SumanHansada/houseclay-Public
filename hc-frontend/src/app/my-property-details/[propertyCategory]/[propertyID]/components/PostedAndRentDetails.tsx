@@ -12,6 +12,16 @@ export default function PostedAndRentDetails(props: any) {
     propertyUpdates && propertyUpdates.length > 0
       ? propertyUpdates[propertyUpdates.length - 1]
       : null;
+
+  const formattedPriceOrRentAmount = `${
+    property?.propertyCategory === PropertyCategory.RESALE
+      ? property?.price
+        ? formatINRCurrency(property.price)
+        : "-"
+      : property?.rent
+        ? formatINRCurrency(property.rent)
+        : "-"
+  }`;
   return (
     <section className="grid grid-flow-row 2xl:grid-cols-2 max-md:grid-cols-2 gap-2 w-full py-6 max-md:py-3">
       <div className="flex-col flex-1 px-4 py-2 border rounded-xl">
@@ -28,11 +38,7 @@ export default function PostedAndRentDetails(props: any) {
             ? "Price"
             : "Rent"}
         </div>
-        <div className="text-center text-lg">
-          {property?.propertyCategory === PropertyCategory.RESALE
-            ? formatINRCurrency(property?.price)
-            : formatINRCurrency(property?.rent)}
-        </div>
+        <div className="text-center text-lg">{formattedPriceOrRentAmount}</div>
       </div>
     </section>
   );

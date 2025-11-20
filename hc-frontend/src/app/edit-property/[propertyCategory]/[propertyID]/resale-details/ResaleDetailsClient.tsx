@@ -3,17 +3,14 @@
 import { useFormikContext } from "formik";
 import { IndianRupee } from "lucide-react";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
-import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
 import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
 import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
 import FireExtinguisherIconSvg from "public/icons/amenities/fire-extinguisher.svg";
 import FirstAidKitIconSvg from "public/icons/amenities/first-aid-kit.svg";
-import GatedSecurityIconSvg from "public/icons/amenities/gated-security.svg";
 import GymIconSvg from "public/icons/amenities/gym.svg";
 import LiftIconSvg from "public/icons/amenities/lift.svg";
 import OutdoorDiningAreaIconSvg from "public/icons/amenities/outdoor-dining-area.svg";
 import ParkingSpaceIconSvg from "public/icons/amenities/parking-space.svg";
-import PoolIconSvg from "public/icons/amenities/pool.svg";
 import PoolTableIconSvg from "public/icons/amenities/pool-table.svg";
 import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
@@ -23,6 +20,13 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
+import {
+  FURNISHING_OPTIONS,
+  PARKING_OPTIONS,
+  POWER_BACKUP_OPTIONS,
+  WATER_SUPPLY_OPTIONS,
+  YES_NO_OPTIONS,
+} from "@/common/dataConstants/options";
 import { FormCalendarField } from "@/form-components";
 import {
   FormCheckbox,
@@ -47,10 +51,6 @@ const GymIcon = GymIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const OutdoorDiningAreaIcon = OutdoorDiningAreaIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
-const GatedSecurityIcon = GatedSecurityIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const PoolIcon = PoolIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const FireExtinguisherIcon = FireExtinguisherIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
@@ -71,7 +71,6 @@ const DedicatedWorkspaceIcon = DedicatedWorkspaceIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
 const WifiIcon = WifiIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const BBQGrillIcon = BBQGrillIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const PoolTableIcon = PoolTableIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
@@ -205,10 +204,7 @@ const ResaleDetailsClient: React.FC = () => {
               name="resaleDetails.priceNegotiable"
               label="Price Negotiable"
               columns={2}
-              options={[
-                { value: true, label: "Yes" },
-                { value: false, label: "No" },
-              ]}
+              options={YES_NO_OPTIONS}
               horizontal
             />
           </div>
@@ -217,10 +213,7 @@ const ResaleDetailsClient: React.FC = () => {
               name="resaleDetails.underLoan"
               label="Currently Under Loan"
               columns={2}
-              options={[
-                { value: true, label: "Yes" },
-                { value: false, label: "No" },
-              ]}
+              options={YES_NO_OPTIONS}
               required
               horizontal
             />
@@ -232,11 +225,7 @@ const ResaleDetailsClient: React.FC = () => {
               label="Water Supply"
               name="resaleDetails.waterSupply"
               id="resaleDetails.waterSupply"
-              options={[
-                { value: "borewell", label: "Borewell" },
-                { value: "tanker", label: "Tanker" },
-                { value: "Ground-water", label: "Ground Water" },
-              ]}
+              options={WATER_SUPPLY_OPTIONS}
               placeholder="Select Water supply"
               aria-describedby={
                 resaleDetailsErrors?.waterSupply &&
@@ -251,11 +240,7 @@ const ResaleDetailsClient: React.FC = () => {
               label="Power Backup"
               name="resaleDetails.powerBackup"
               id="resaleDetails.powerBackup"
-              options={[
-                { value: "full", label: "Full" },
-                { value: "partial", label: "Partial" },
-                { value: "no", label: "No" },
-              ]}
+              options={POWER_BACKUP_OPTIONS}
               placeholder="Select Power backup"
               aria-describedby={
                 resaleDetailsErrors?.powerBackup &&
@@ -272,11 +257,7 @@ const ResaleDetailsClient: React.FC = () => {
               label="Furnishing"
               name="resaleDetails.furnishing"
               id="resaleDetails.furnishing"
-              options={[
-                { value: "Fully-furnished", label: "Fully Furnished" },
-                { value: "Semi-funnished", label: "Semi Furnished" },
-                { value: "Unfurnished", label: "UnFurnished" },
-              ]}
+              options={FURNISHING_OPTIONS}
               required={true}
               placeholder="Select furnishing"
               aria-describedby={
@@ -292,12 +273,7 @@ const ResaleDetailsClient: React.FC = () => {
               label="Parking"
               name="resaleDetails.parking"
               id="resaleDetails.parking"
-              options={[
-                { value: "Both", label: "Both" },
-                { value: "2 Wheeler", label: "2 Wheeler" },
-                { value: "4 Wheeler", label: "4 Wheeler" },
-                { value: "None", label: "None" },
-              ]}
+              options={PARKING_OPTIONS}
               required={true}
               placeholder="Select Parking"
               aria-describedby={
@@ -330,12 +306,6 @@ const ResaleDetailsClient: React.FC = () => {
               icon: <OutdoorDiningAreaIcon />,
             },
             {
-              value: "Gated Security",
-              label: "Gated Security",
-              icon: <GatedSecurityIcon />,
-            },
-            { value: "Pool", label: "Pool ", icon: <PoolIcon /> },
-            {
               value: "Fire Extinguisher",
               label: "Fire Extinguisher",
               icon: <FireExtinguisherIcon />,
@@ -357,8 +327,8 @@ const ResaleDetailsClient: React.FC = () => {
             },
             { value: "Security", label: "Security", icon: <SecurityIcon /> },
             {
-              value: "Parking Space",
-              label: "Parking Space",
+              value: "Visitor Parking",
+              label: "Visitor Parking",
               icon: <ParkingSpaceIcon />,
             },
             {
@@ -367,7 +337,6 @@ const ResaleDetailsClient: React.FC = () => {
               icon: <DedicatedWorkspaceIcon />,
             },
             { value: "Wifi", label: "Wifi", icon: <WifiIcon /> },
-            { value: "BBQ Grill", label: "BBQ Grill", icon: <BBQGrillIcon /> },
             {
               value: "Pool Table",
               label: "Pool Table",

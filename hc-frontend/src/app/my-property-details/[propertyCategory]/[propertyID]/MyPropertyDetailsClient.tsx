@@ -38,12 +38,10 @@ import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
 import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
 import FireExtinguisherIconSvg from "public/icons/amenities/fire-extinguisher.svg";
 import FirstAidKitIconSvg from "public/icons/amenities/first-aid-kit.svg";
-import GatedSecurityIconSvg from "public/icons/amenities/gated-security.svg";
 import GymIconSvg from "public/icons/amenities/gym.svg";
 import LiftIconSvg from "public/icons/amenities/lift.svg";
 import OutdoorDiningAreaIconSvg from "public/icons/amenities/outdoor-dining-area.svg";
 import ParkingSpaceIconSvg from "public/icons/amenities/parking-space.svg";
-import PoolIconSvg from "public/icons/amenities/pool.svg";
 import PoolTableIconSvg from "public/icons/amenities/pool-table.svg";
 import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
@@ -54,6 +52,22 @@ import React from "react";
 import { useDispatch } from "react-redux";
 
 import { Button } from "@/base-components";
+import {
+  BHK_TYPE_OPTIONS,
+  DRINKING_PREFERENCE_OPTIONS,
+  FACING_OPTIONS,
+  FLOOR_NUMERIC_OPTIONS,
+  FURNISHING_OPTIONS,
+  getOptionLabel,
+  getOptionLabels,
+  PARKING_OPTIONS,
+  PREFERRED_TENANTS_OPTIONS,
+  PROPERTY_AGE_OPTIONS,
+  PROPERTY_TYPE_OPTIONS,
+  SMOKING_PREFERENCE_OPTIONS,
+  TOTAL_FLOORS_NUMERIC_OPTIONS,
+  WATER_SUPPLY_OPTIONS,
+} from "@/common/dataConstants/options";
 import { LeadCategory, PropertyCategory, PropertyStatus } from "@/common/enums";
 import {
   formatDateToReadable,
@@ -63,6 +77,7 @@ import {
   toBase64,
 } from "@/common/utils";
 import Carousel2D from "@/components/Carousel2D";
+import { ActionDialog } from "@/dialogs/action-dialog";
 import { Footer, MobileFooter, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -111,10 +126,6 @@ const GymIcon = GymIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const OutdoorDiningAreaIcon = OutdoorDiningAreaIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
-const GatedSecurityIcon = GatedSecurityIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const PoolIcon = PoolIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const FireExtinguisherIcon = FireExtinguisherIconSvg as React.FC<
   React.SVGProps<SVGSVGElement>
 >;
@@ -150,8 +161,6 @@ const AmenitiesMap = {
     label: "Outdoor Dining Area",
     icon: <OutdoorDiningAreaIcon />,
   },
-  "Gated Security": { label: "Gated Security", icon: <GatedSecurityIcon /> },
-  Pool: { label: "Pool", icon: <PoolIcon /> },
   "Fire Extinguisher": {
     label: "Fire Extinguisher",
     icon: <FireExtinguisherIcon />,
@@ -170,6 +179,8 @@ const AmenitiesMap = {
   "First Aid Kit": { label: "First Aid Kit", icon: <FirstAidKitIcon /> },
 };
 
+const ACTION_DIALOG_ID = "mark-as-action-dialog-id";
+
 export function MyPropertyDetailsClient({
   propertyCategory,
   propertyID,
@@ -179,23 +190,93 @@ export function MyPropertyDetailsClient({
   const { isMobile } = useDeviceContext();
   const searchParams = useSearchParams();
   const [deactivatingProperty] = useDeactivatePropertyMutation();
-  const { data: propertyDataRaw, isLoading: isPropertyLoading } =
-    useGetMyPropertyByIdQuery(propertyID, {
-      skip: !propertyID,
-      refetchOnMountOrArgChange: true,
-    });
+  const {
+    data: propertyDataRaw,
+    isLoading: isPropertyLoading,
+    refetch,
+  } = useGetMyPropertyByIdQuery(propertyID, {
+    skip: !propertyID,
+    refetchOnMountOrArgChange: true,
+  });
 
   const propertyData = propertyDataRaw as PropertyData | undefined;
   console.log("Property Data", propertyData);
   const property = propertyData?.property;
   const propertyUpdates = propertyData?.propertyUpdates ?? [];
   const contactedUsers = propertyData?.contactUsers ?? [];
+
+  const bhkType = getOptionLabel(BHK_TYPE_OPTIONS, property?.bhkType);
+  const propertyType = getOptionLabel(
+    PROPERTY_TYPE_OPTIONS,
+    property?.propertyType,
+  );
+  const propertyAge = getOptionLabel(
+    PROPERTY_AGE_OPTIONS,
+    property?.propertyAge,
+  );
+  const propertyFacing =
+    property?.facing === "dont-know"
+      ? "Not Specified"
+      : getOptionLabel(FACING_OPTIONS, property?.facing);
+  const propertyFloor = getOptionLabel(FLOOR_NUMERIC_OPTIONS, property?.floor);
+  const totalFloors = getOptionLabel(
+    TOTAL_FLOORS_NUMERIC_OPTIONS,
+    property?.totalFloors,
+  );
+  const furnishingStatus = getOptionLabel(
+    FURNISHING_OPTIONS,
+    property?.furnishing,
+  );
+  const parking = getOptionLabel(PARKING_OPTIONS, property?.parking);
+  const waterSupply = getOptionLabel(
+    WATER_SUPPLY_OPTIONS,
+    property?.waterSupply,
+  );
+  const preferredTenants = getOptionLabels(
+    PREFERRED_TENANTS_OPTIONS.RENT,
+    property?.preferredTenants,
+  ).join(", ");
+  const smokingPreference = getOptionLabel(
+    SMOKING_PREFERENCE_OPTIONS,
+    property?.smokingPreference,
+  );
+  const drinkingPreference = getOptionLabel(
+    DRINKING_PREFERENCE_OPTIONS,
+    property?.drinkingPreference,
+  );
+
+  const bedrooms = bhkType
+    ? bhkType === "Studio" || bhkType === "1-bhk"
+      ? "1 Bedroom"
+      : `${bhkType.split("BHK")[0]} Bedrooms`
+    : "N/A";
+  const bathrooms = property?.bathrooms
+    ? `${property?.bathrooms} ${property?.bathrooms > 1 ? "Bathrooms" : "Bathroom"}`
+    : "N/A";
+  const availableFrom = `${property?.availableFrom ? formatDateToReadable(property?.availableFrom) : "N/A"}`;
+  const formattedMaintenanceCharges = `${
+    property?.maintenanceCharges
+      ? formatINRCurrency(property?.maintenanceCharges)
+      : "N/A"
+  }`;
+
+  const formattedDeposit = `${
+    property?.deposit || property?.depositCharges
+      ? formatINRCurrency(property.deposit || property.depositCharges)
+      : "-"
+  }`;
+
+  // TODO: add balcony to add property
+  const balcony = property?.balcony
+    ? `${property?.balcony} ${property?.balcony > 1 ? "Balconies" : "Balcony"}`
+    : "N/A";
+
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const [generateLead, { isLoading: _isGeneratingLead }] =
     useGenerateLeadMutation();
 
-  const { openDialog } = useDialog();
+  const { openDialog, isDialogOpen, closeDialog } = useDialog();
 
   const handleEdit = async () => {
     router.push(
@@ -271,7 +352,7 @@ export function MyPropertyDetailsClient({
           </Button>
         </MobileHeader.LeftAction>
         <MobileHeader.Title>
-          {property?.bhkType} in {property?.locationOrSocietyName} for{" "}
+          {bhkType} in {property?.locationOrSocietyName} for{" "}
           {pascalCase(property?.propertyCategory)} in {property?.city}
         </MobileHeader.Title>
       </MobileHeader>
@@ -283,7 +364,7 @@ export function MyPropertyDetailsClient({
             <div className="py-12 mx-auto">
               <div>
                 <h1 className="text-3xl text-gray-900 flex items-center justify-between">
-                  {property?.bhkType} in {property?.locationOrSocietyName} for{" "}
+                  {bhkType} in {property?.locationOrSocietyName} for{" "}
                   {pascalCase(property?.propertyCategory)} in {property?.city}
                   <RenderPropertyStatus status={property?.propertyState} />
                 </h1>
@@ -363,7 +444,7 @@ export function MyPropertyDetailsClient({
                             Property Type
                           </div>
                           <div className="text-gray-900 font-bold font-nunito">
-                            {property?.propertyType || "Apartment"}
+                            {propertyType}
                           </div>
                         </div>
                       </div>
@@ -378,7 +459,7 @@ export function MyPropertyDetailsClient({
                             No. of Bedroom
                           </div>
                           <div className="text-gray-900 font-bold font-nunito">
-                            {property?.bhkType?.split("BHK")[0] || "-"} Bedroom
+                            {bedrooms}
                           </div>
                         </div>
                       </div>
@@ -393,7 +474,7 @@ export function MyPropertyDetailsClient({
                             Built Up Area
                           </div>
                           <div className="text-gray-900 font-bold font-nunito">
-                            {property?.builtUpArea}sqft
+                            {property?.builtUpArea} Sq. Ft
                           </div>
                         </div>
                       </div>
@@ -408,7 +489,7 @@ export function MyPropertyDetailsClient({
                             Floor
                           </div>
                           <div className="text-gray-900 font-bold font-nunito">
-                            {property?.floor} of {property?.totalFloors}
+                            {propertyFloor} of {totalFloors}
                           </div>
                         </div>
                       </div>
@@ -427,7 +508,7 @@ export function MyPropertyDetailsClient({
                               Facing
                             </div>
                             <div className="text-gray-900 font-bold font-nunito">
-                              {property?.facing}
+                              {propertyFacing}
                             </div>
                           </div>
                         </div>
@@ -447,7 +528,7 @@ export function MyPropertyDetailsClient({
                               Bathrooms
                             </div>
                             <div className="text-gray-900 font-bold font-nunito">
-                              {property?.bathrooms || "NA"}
+                              {bathrooms}
                             </div>
                           </div>
                         </div>
@@ -467,7 +548,7 @@ export function MyPropertyDetailsClient({
                               Property Age
                             </div>
                             <div className="text-gray-900 font-bold font-nunito">
-                              {property?.propertyAge}
+                              {propertyAge}
                             </div>
                           </div>
                         </div>
@@ -487,7 +568,7 @@ export function MyPropertyDetailsClient({
                               Floor Type
                             </div>
                             <div className="text-gray-900 font-bold font-nunito">
-                              {property?.floorType}
+                              {pascalCase(property?.floorType)}
                             </div>
                           </div>
                         </div>
@@ -528,11 +609,7 @@ export function MyPropertyDetailsClient({
                               Maintenance Charges
                             </div>
                             <div className="text-gray-900">
-                              {property?.maintenanceCharges
-                                ? formatINRCurrency(
-                                    property?.maintenanceCharges,
-                                  )
-                                : "-"}
+                              {formattedMaintenanceCharges}
                             </div>
                           </div>
                         </div>
@@ -551,12 +628,7 @@ export function MyPropertyDetailsClient({
                               Deposit
                             </div>
                             <div className="text-gray-900">
-                              {property?.deposit || property?.depositCharges
-                                ? formatINRCurrency(
-                                    property?.deposit ||
-                                      property?.depositCharges,
-                                  )
-                                : "-"}
+                              {formattedDeposit}
                             </div>
                           </div>
                         </div>
@@ -571,9 +643,7 @@ export function MyPropertyDetailsClient({
                           <div className="flex gap-2 items-center font-nunito">
                             Available From
                           </div>
-                          <div className="text-gray-900">
-                            {formatDateToReadable(property?.availableFrom)}
-                          </div>
+                          <div className="text-gray-900">{availableFrom}</div>
                         </div>
                       </div>
                       {property?.propertyCategory ===
@@ -588,9 +658,7 @@ export function MyPropertyDetailsClient({
                             <div className="flex gap-2 items-center font-nunito">
                               Bathrooms
                             </div>
-                            <div className="text-gray-900">
-                              {property?.bathrooms}
-                            </div>
+                            <div className="text-gray-900">{bathrooms}</div>
                           </div>
                         </div>
                       )}
@@ -606,9 +674,7 @@ export function MyPropertyDetailsClient({
                             <div className="flex gap-2 items-center font-nunito">
                               Balcony
                             </div>
-                            <div className="text-gray-900">
-                              {property?.balcony}
-                            </div>
+                            <div className="text-gray-900">{balcony}</div>
                           </div>
                         </div>
                       )}
@@ -659,7 +725,7 @@ export function MyPropertyDetailsClient({
                             Furnishing
                           </div>
                           <div className="text-gray-900">
-                            {property?.furnishing}
+                            {furnishingStatus}
                           </div>
                         </div>
                       </div>
@@ -673,11 +739,7 @@ export function MyPropertyDetailsClient({
                           <div className="flex gap-2 items-center font-nunito">
                             Water Supply
                           </div>
-                          <div className="text-gray-900">
-                            {property?.waterSupply === "borewell-tanker"
-                              ? "Borewell & Tanker"
-                              : pascalCase(property?.waterSupply)}
-                          </div>
+                          <div className="text-gray-900">{waterSupply}</div>
                         </div>
                       </div>
                       <div className="flex w-full justify-start items-start gap-2 text-gray-600">
@@ -705,9 +767,7 @@ export function MyPropertyDetailsClient({
                           <div className="flex gap-2 items-center font-nunito">
                             Parking
                           </div>
-                          <div className="text-gray-900">
-                            {property?.parking}
-                          </div>
+                          <div className="text-gray-900">{parking}</div>
                         </div>
                       </div>
                       {(property?.propertyCategory === PropertyCategory.RENT ||
@@ -741,7 +801,7 @@ export function MyPropertyDetailsClient({
                               Preferred Tenants
                             </div>
                             <div className="text-gray-900">
-                              {property?.preferredTenants.join(", ")}
+                              {preferredTenants}
                             </div>
                           </div>
                         </div>
@@ -759,7 +819,7 @@ export function MyPropertyDetailsClient({
                               Tenant Type
                             </div>
                             <div className="text-gray-900">
-                              {property?.tenantType}
+                              {pascalCase(property?.tenantType)}
                             </div>
                           </div>
                         </div>
@@ -813,7 +873,7 @@ export function MyPropertyDetailsClient({
                               Smoking Preference
                             </div>
                             <div className="text-gray-900">
-                              {property?.smokingPreference}
+                              {smokingPreference}
                             </div>
                           </div>
                         </div>
@@ -831,7 +891,7 @@ export function MyPropertyDetailsClient({
                               Drinking Preference
                             </div>
                             <div className="text-gray-900">
-                              {property?.drinkingPreference}
+                              {drinkingPreference}
                             </div>
                           </div>
                         </div>
@@ -969,7 +1029,7 @@ export function MyPropertyDetailsClient({
               <div className="flex py-0 ml-auto justify-end">
                 <button
                   className="border border-green-500 text-green-500 px-4 py-2 rounded-lg flex items-center gap-2"
-                  onClick={handleDeactivatingProperty}
+                  onClick={() => openDialog(ACTION_DIALOG_ID)}
                 >
                   <Stamp size={20} />{" "}
                   {property?.propertyCategory === PropertyCategory.RESALE
@@ -1004,7 +1064,7 @@ export function MyPropertyDetailsClient({
           <button
             type="submit"
             className="flex gap-2 items-center px-6 py-3 border border-green-500 text-green-500 rounded-xl hover:bg-green-600 hover:text-white disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300"
-            onClick={handleDeactivatingProperty}
+            onClick={() => openDialog(ACTION_DIALOG_ID)}
           >
             <Stamp size={20} />{" "}
             {property?.propertyCategory === PropertyCategory.RESALE
@@ -1024,6 +1084,20 @@ export function MyPropertyDetailsClient({
         showThumbnails={true}
         thumbnailPosition="bottom"
       />
+
+      {isDialogOpen(ACTION_DIALOG_ID) && (
+        <ActionDialog
+          id={ACTION_DIALOG_ID}
+          title="Mark as rented out"
+          prompt="Are you sure you want to mark this property as Rented out?"
+          confirmLabel="Yes, mark as rented!"
+          colour="red"
+          requireComment={false}
+          onConfirm={handleDeactivatingProperty}
+          onSuccess={async () => await refetch()}
+          onClose={() => closeDialog(ACTION_DIALOG_ID)}
+        />
+      )}
     </>
   );
 }

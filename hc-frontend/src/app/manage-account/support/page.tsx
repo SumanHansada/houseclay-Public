@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Button } from "@/base-components";
-import { SUPPORT_CONTACT, SUPPORT_EMAIL } from "@/common/constants";
+import { HOUSECLAY_SUPPORT } from "@/common/constants";
 import { default as ACCORDION_DATA } from "@/data/SupportAccordionData.json";
 import { MobileHeader } from "@/layout-components";
 import { SvgIcon } from "@/utility-components";
@@ -42,14 +42,14 @@ export default function SupportPage() {
                   following channels:
                 </p>
                 <a
-                  href={`mailto:${SUPPORT_EMAIL}`}
+                  href={`mailto:${HOUSECLAY_SUPPORT.email}`}
                   className="flex items-center gap-2 mb-4"
                 >
                   <Mail size={25} className="text-red-500" strokeWidth={1.25} />
-                  <span>{SUPPORT_EMAIL}</span>
+                  <span>{HOUSECLAY_SUPPORT.email}</span>
                 </a>
                 <a
-                  href={`tel:${SUPPORT_CONTACT}`}
+                  href={`tel:${HOUSECLAY_SUPPORT.phone}`}
                   className="flex gap-2 items-start"
                 >
                   <PhoneCall
@@ -58,7 +58,7 @@ export default function SupportPage() {
                     strokeWidth={1.25}
                   />
                   <div className="flex flex-col">
-                    <span>{SUPPORT_CONTACT}</span>
+                    <span>{HOUSECLAY_SUPPORT.phone}</span>
                     <span className="text-sm text-gray-700">
                       (9 AM &ndash; 7 PM, Mon &ndash; Sat)
                     </span>
@@ -129,7 +129,7 @@ export default function SupportPage() {
               </div>
               <div className="w-2/3 sm:w-3/5 p-1">
                 <a
-                  href={`mailto:${SUPPORT_EMAIL}`}
+                  href={`mailto:${HOUSECLAY_SUPPORT.email}`}
                   className="flex items-center gap-2 mb-4"
                 >
                   <div>
@@ -139,10 +139,10 @@ export default function SupportPage() {
                       strokeWidth={1.25}
                     />
                   </div>
-                  <span className="">{SUPPORT_EMAIL}</span>
+                  <span className="">{HOUSECLAY_SUPPORT.email}</span>
                 </a>
                 <a
-                  href={`tel:${SUPPORT_CONTACT}`}
+                  href={`tel:${HOUSECLAY_SUPPORT.phone}`}
                   className="flex gap-2 items-start"
                 >
                   <div>
@@ -153,7 +153,7 @@ export default function SupportPage() {
                     />
                   </div>
                   <div className="flex flex-col">
-                    <span>{SUPPORT_CONTACT}</span>
+                    <span>{HOUSECLAY_SUPPORT.phone}</span>
                     <span className="text-sm text-gray-700">
                       (9 AM &ndash; 7 PM, Mon &ndash; Sat)
                     </span>

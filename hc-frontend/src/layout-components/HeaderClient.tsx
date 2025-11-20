@@ -10,13 +10,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { BENGALURU_LOCATION } from "@/common/constants";
 import { AuthStep } from "@/common/enums";
 import { UserDropdown } from "@/components/UserDropdown";
+import { ActionDialog } from "@/dialogs/action-dialog";
 import { useLogout } from "@/hooks/useLogout";
+import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
+import { setHideStickyNavBar } from "@/store/appSlice";
 import { setAuthStep } from "@/store/authSlice";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
 import { Popover } from "@/utility-components";
 
 import { RootState } from "../store/store";
+
+const ACTION_DIALOG_ID = "logout-action-dialog";
 
 type User = {
   name: string;
@@ -89,7 +94,9 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
 
   const dispatch = useDispatch();
   const { logout } = useLogout();
-  const { openDialog, closeAllDialogs } = useDialog();
+  const { openDialog, closeAllDialogs, isDialogOpen, closeDialog } =
+    useDialog();
+  const { isMobile } = useDeviceContext();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -105,8 +112,8 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
     openDialog("menu-dialog");
   };
 
-  const onLogout = () => {
-    logout();
+  const onLogout = async () => {
+    await logout();
     router.replace("/");
   };
 
@@ -252,7 +259,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
           {isAuthenticated ? (
             <button
               className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100 text-center"
-              onClick={onLogout}
+              onClick={() => openDialog(ACTION_DIALOG_ID)}
             >
               Logout
             </button>
@@ -266,6 +273,22 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
           )}
         </div>
       </header>
+
+      {isMobile && isDialogOpen(ACTION_DIALOG_ID) && (
+        <ActionDialog
+          id={ACTION_DIALOG_ID}
+          title="Logout"
+          prompt="Are you sure you want to logout?"
+          confirmLabel="Yes, I want to logout!"
+          colour="red"
+          requireComment={false}
+          onConfirm={onLogout}
+          onClose={() => {
+            closeDialog(ACTION_DIALOG_ID);
+            dispatch(setHideStickyNavBar(false));
+          }}
+        />
+      )}
     </>
   );
 };
