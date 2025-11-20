@@ -382,7 +382,7 @@ export function MyPropertyDetailsClient({
                   <Tab
                     label="Details"
                     value="details"
-                    containerClassName="px-4 py-2 max-md:py-1.5 text-base font-medium max-md:font-normal focus:outline-none"
+                    containerClassName="px-4 py-2 max-md:py-1.5 max-md:w-1/2 text-base font-medium max-md:font-normal focus:outline-none"
                     activeClassName="text-red-600 md:border-b-2 border-red-500 max-md:border max-md:rounded-lg"
                     inactiveClassName="text-gray-700 hover:text-red-500"
                   />
@@ -396,7 +396,7 @@ export function MyPropertyDetailsClient({
                   <Tab
                     label="Prospects"
                     value="prospects"
-                    containerClassName="px-4 py-2 max-md:py-1.5 text-base font-medium max-md:font-normal focus:outline-none"
+                    containerClassName="px-4 py-2 max-md:py-1.5 max-md:w-1/2 text-base font-medium max-md:font-normal focus:outline-none"
                     activeClassName="text-red-600 md:border-b-2 border-red-500 max-md:border max-md:rounded-lg"
                     inactiveClassName="text-gray-700 hover:text-red-500"
                   />

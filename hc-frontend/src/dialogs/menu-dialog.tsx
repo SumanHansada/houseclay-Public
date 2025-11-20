@@ -86,12 +86,13 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
       onLogin();
     } else {
       router.push("/list-property");
+      dispatch(setHideStickyNavBar(true));
     }
   };
 
   useEffect(() => {
     if (pathname !== initialPathRef.current) {
-      handleCloseDialog();
+      closeDialog(id);
     }
   }, [pathname, handleCloseDialog]);
 

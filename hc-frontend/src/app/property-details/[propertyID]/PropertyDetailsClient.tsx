@@ -317,6 +317,7 @@ export function PropertyDetailsClient({
     : "N/A";
 
   const propertyImages = processPropertyImages(property?.images);
+  console.log(propertyImages);
 
   const handleShare = async () => {
     try {

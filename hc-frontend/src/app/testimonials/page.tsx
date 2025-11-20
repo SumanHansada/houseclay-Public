@@ -134,9 +134,9 @@ export default function TestimonialsPage() {
           <h2 id="testimonials-cta" className="sr-only">
             More testimonials
           </h2>
-          <button className="rounded-xl px-6 py-2 border border-red-600 hover:bg-red-50">
+          {/* <button className="rounded-xl px-6 py-2 border border-red-600 hover:bg-red-50">
             Load More
-          </button>
+          </button> */}
         </div>
 
         <Footer />

@@ -43,6 +43,10 @@ export default function ManageProfileLayout({
     },
   );
 
+  if (!isAuthenticated) {
+    router.push("/login");
+  }
+
   if (isError && error && "status" in error && error.status === 401) {
     logout();
     router.replace("/");

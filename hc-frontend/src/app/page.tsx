@@ -2,13 +2,13 @@ import { Suspense } from "react";
 
 import MastheadDesktopClient from "@/components/MastheadDesktopClient";
 import MastHeadMobileClient from "@/components/MastheadMobileClient";
-import PropertiesData from "@/data/PropertiesData.json";
+import TESTIMONIALS_DATA from "@/data/TestimonialsData.json";
 import { Footer } from "@/layout-components";
 
 import ClientPage from "./ClientPage";
 
 export default async function Home() {
-  const testimonials = PropertiesData.testimonials;
+  const testimonials = TESTIMONIALS_DATA;
 
   return (
     <>

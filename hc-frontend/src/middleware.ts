@@ -20,12 +20,12 @@ export function middleware(request: NextRequest) {
   }
 
   // Redirect /manage-account to /manage-account/my-profile
-  const manageAccountMatch = pathname.endsWith("/manage-account");
-  if (manageAccountMatch) {
-    return NextResponse.redirect(
-      new URL("/manage-account/my-profile", request.url),
-    );
-  }
+  // const manageAccountMatch = pathname.endsWith("/manage-account");
+  // if (manageAccountMatch) {
+  //   return NextResponse.redirect(
+  //     new URL("/manage-account/my-profile", request.url),
+  //   );
+  // }
 
   // Allow access to public paths without token
   if (publicPaths.includes(pathname)) {
@@ -53,6 +53,6 @@ export const config = {
     "/edit-property/flatmate/:path*",
 
     "/my-property-details/:path*",
-    "/manage-account/:path*",
+    // "/manage-account/:path*",
   ],
 };
