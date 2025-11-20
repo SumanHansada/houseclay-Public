@@ -36,8 +36,8 @@ const getPlaceholderText = () => {
 };
 
 const validationSchema = Yup.object({
-  reason: Yup.string().required("Please select a reason for reporting"),
-  message: Yup.string()
+  reportType: Yup.string().required("Please select a reason for reporting"),
+  comment: Yup.string()
     .min(10, "Message must be at least 10 characters")
     .max(500, "Message must not exceed 500 characters")
     .required("Please provide additional details"),
@@ -55,8 +55,8 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
 
   const formik = useFormik({
     initialValues: {
-      reason: "",
-      message: "",
+      reportType: "",
+      comment: "",
     },
     validationSchema,
     onSubmit: async (values) => {
@@ -78,8 +78,8 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
     },
   });
 
-  const handleReasonChange = (value: string) => {
-    formik.setFieldValue("reason", value);
+  const handleReportTypeChange = (value: string) => {
+    formik.setFieldValue("reportType", value);
   };
 
   return (
@@ -131,16 +131,16 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
             className="space-y-6"
           >
             <RadioGroup
-              name="reason"
+              name="reportType"
               label=""
               options={reportOptions}
-              value={formik.values.reason}
+              value={formik.values.reportType}
               onChange={(value: string | boolean) =>
-                handleReasonChange(value as string)
+                handleReportTypeChange(value as string)
               }
               error={
-                formik.touched.reason && formik.errors.reason
-                  ? formik.errors.reason
+                formik.touched.reportType && formik.errors.reportType
+                  ? formik.errors.reportType
                   : undefined
               }
               columns={1}
@@ -153,17 +153,17 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
             />
 
             <TextArea
-              name="message"
-              label="Message"
+              name="comment"
+              label="Comment"
               placeholder={getPlaceholderText()}
-              value={formik.values.message}
+              value={formik.values.comment}
               onChange={(value: string) =>
-                formik.setFieldValue("message", value)
+                formik.setFieldValue("comment", value)
               }
-              onBlur={() => formik.setFieldTouched("message", true)}
+              onBlur={() => formik.setFieldTouched("comment", true)}
               error={
-                formik.touched.message && formik.errors.message
-                  ? formik.errors.message
+                formik.touched.comment && formik.errors.comment
+                  ? formik.errors.comment
                   : undefined
               }
               rows={4}

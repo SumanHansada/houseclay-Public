@@ -2,7 +2,7 @@
 
 import { useDispatch } from "react-redux";
 
-import { useLogoutMutation } from "@/store/apiSlice";
+import { apiSlice, useLogoutMutation } from "@/store/apiSlice";
 import { clearAuthStep, clearIsAuthenticated } from "@/store/authSlice";
 import { resetPropertySearch } from "@/store/propertySearchSlice";
 import { clearShortlist } from "@/store/shortlistPropertySlice";
@@ -25,6 +25,8 @@ export function useLogout() {
       dispatch(clearShortlist());
       dispatch(resetPropertySearch());
       dispatch(clearAuthStep());
+
+      dispatch(apiSlice.util.resetApiState());
     }
   };
 

@@ -1,14 +1,14 @@
 "use client";
 import { Camera } from "lucide-react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
+import { validateImages } from "@/common/utils";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 
 import FullscreenPhotoViewer from "./FullscreenPhotoViewer";
 import ImageWithLoader from "./ImageWithLoader";
-import toast from "react-hot-toast";
-import { validateImages } from "@/common/utils";
 
 interface PhotoGalleryProps {
   images: string[];

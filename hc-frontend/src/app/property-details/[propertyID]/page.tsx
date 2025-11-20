@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { CDN_BASE_URL, WEBSITE_BASE_URL } from "@/common/constants";
 import {
   BHK_TYPE_OPTIONS,
   getOptionLabel,
@@ -8,9 +9,6 @@ import { pascalCase } from "@/common/utils";
 import { ServerAPIService } from "@/services/serverAPIService";
 
 import { PropertyDetailsClient } from "./PropertyDetailsClient";
-
-const WEBSITE_BASE_URL = "https://houseclay.com";
-const CDN_BASE_URL = "https://cdn.houseclay.com";
 
 type PropertyParams = Promise<{ propertyID: string }>;
 
