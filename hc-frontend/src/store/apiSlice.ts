@@ -191,6 +191,7 @@ export const apiSlice = createApi({
         };
         owner: { name: string; phoneNo: string; emailID: string };
         reported: boolean;
+        propertyOwner: boolean;
       },
       string
     >({
@@ -277,7 +278,7 @@ export const apiSlice = createApi({
     }),
     reportProperty: builder.mutation<
       { message: string },
-      { propertyId: string; payload: { reason: string; message: string } }
+      { propertyId: string; payload: { reportType: string; comment: string } }
     >({
       query: ({ propertyId, payload }) => ({
         url: "/property/user/report-property",

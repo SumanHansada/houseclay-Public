@@ -1,7 +1,9 @@
 "use client";
 import { Camera } from "lucide-react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
+import { validateImages } from "@/common/utils";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 
@@ -27,6 +29,7 @@ export default function PhotoGallery({
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { isMobile } = useDeviceContext();
   const { openDialog } = useDialog();
+  const [isValidating, setIsValidating] = useState(false);
 
   // Limit the number of images to display
   const displayImages = images.slice(0, maxDisplayImages);
@@ -45,8 +48,22 @@ export default function PhotoGallery({
     setCurrentImageIndex(index);
   };
 
-  const handleMobileGalleryClick = () => {
-    openDialog("photo-gallery-dialog");
+  // const handleMobileGalleryClick = () => {
+  //   openDialog("photo-gallery-dialog");
+  // };
+
+  const handleMobileGalleryClick = async () => {
+    if (isValidating || (images.length || 0) === 0) return;
+
+    setIsValidating(true);
+    const validated = await validateImages(images || []);
+    setIsValidating(false);
+
+    if (validated.length > 0) {
+      openDialog("photo-gallery-dialog");
+    } else {
+      toast.error("No images found!");
+    }
   };
 
   if (!displayImages.length) {

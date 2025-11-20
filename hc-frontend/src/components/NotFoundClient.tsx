@@ -30,7 +30,7 @@ export default function NotFoundClient() {
 
           <Link
             href="/"
-            className="px-7 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-lg sm:text-xl text-white tracking-normal"
+            className="px-7 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-lg sm:text-xl text-white tracking-normal hover:cursor-pointer"
           >
             Go to Home
           </Link>

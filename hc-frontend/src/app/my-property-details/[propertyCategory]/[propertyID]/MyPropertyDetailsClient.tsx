@@ -31,7 +31,6 @@ import {
   UserSearch,
   Wine,
 } from "lucide-react";
-import { EditIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
 import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
@@ -73,6 +72,7 @@ import {
   formatDateToReadable,
   formatINRCurrency,
   pascalCase,
+  processPropertyImages,
   shimmer,
   toBase64,
 } from "@/common/utils";
@@ -92,7 +92,6 @@ import { setHideStickyNavBar } from "@/store/appSlice";
 import {
   FullscreenPhotoViewer,
   ImageWithLoader,
-  NonTab,
   Tab,
   TabContent,
   TabHeader,
@@ -200,7 +199,6 @@ export function MyPropertyDetailsClient({
   });
 
   const propertyData = propertyDataRaw as PropertyData | undefined;
-  console.log("Property Data", propertyData);
   const property = propertyData?.property;
   const propertyUpdates = propertyData?.propertyUpdates ?? [];
   const contactedUsers = propertyData?.contactUsers ?? [];
@@ -271,6 +269,8 @@ export function MyPropertyDetailsClient({
     ? `${property?.balcony} ${property?.balcony > 1 ? "Balconies" : "Balcony"}`
     : "N/A";
 
+  const propertyImages = processPropertyImages(property?.images);
+
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const [generateLead, { isLoading: _isGeneratingLead }] =
@@ -278,11 +278,13 @@ export function MyPropertyDetailsClient({
 
   const { openDialog, isDialogOpen, closeDialog } = useDialog();
 
-  const handleEdit = async () => {
-    router.push(
-      `/edit-property/${propertyCategory.toLowerCase()}/${propertyID}`,
-    );
-  };
+  console.log(propertyCategory);
+
+  // const handleEdit = async () => {
+  //   router.push(
+  //     `/edit-property/${propertyCategory.toLowerCase()}/${propertyID}`,
+  //   );
+  // };
 
   useEffect(() => {
     if (isMobile) {
@@ -398,7 +400,7 @@ export function MyPropertyDetailsClient({
                     activeClassName="text-red-600 md:border-b-2 border-red-500 max-md:border max-md:rounded-lg"
                     inactiveClassName="text-gray-700 hover:text-red-500"
                   />
-                  <NonTab className="max-md:hidden">
+                  {/* <NonTab className="max-md:hidden">
                     <div className="flex items-center gap-2">
                       <button
                         className="border bg-gray-100 px-4 py-2 rounded-lg flex items-center gap-2"
@@ -407,7 +409,7 @@ export function MyPropertyDetailsClient({
                         <EditIcon size={20} /> Edit
                       </button>
                     </div>
-                  </NonTab>
+                  </NonTab> */}
                 </TabHeader>
                 <TabContent value="details">
                   <section className="py-3 md:hidden">
@@ -419,16 +421,25 @@ export function MyPropertyDetailsClient({
                   </section>
                   {/* Description Section */}
                   <section className="py-6 max-md:py-3">
-                    <h2 className="text-xl mb-2">Description</h2>
-                    <p className="text-gray-700 mb-2">
+                    <h2 className="text-xl">Description</h2>
+                    <p className="text-gray-700 mb-6">
                       {property?.description}
                     </p>
-                    <div className="flex items-center gap-2 text-gray-500 text-base">
+                    <div className="flex flex-col justify-between items-start">
+                      <h2 className="text-xl flex gap-1 items-center">
+                        <span className="">Property Location</span>
+                        <MapPin size={16} />
+                      </h2>
+                      <div className="flex items-center gap-2 text-gray-500">
+                        {property?.locationOrSocietyName}, {property?.city}
+                      </div>
+                    </div>
+                    {/* <div className="flex items-center gap-2 text-gray-500 text-base">
                       <MapPin size={16} />
                       <span>
                         {property?.locationOrSocietyName}, {property?.city}
                       </span>
-                    </div>
+                    </div> */}
                   </section>
                   {/* Property Details Section */}
                   <section className="p-6 border rounded-xl shadow-md max-md:p-3 max-md:my-3">
@@ -922,7 +933,7 @@ export function MyPropertyDetailsClient({
                     </div>
                   </section>
                   {/* Images Section */}
-                  {property?.images?.length > 0 && (
+                  {propertyImages?.length > 0 && (
                     <section className="py-6 my-6 max-md:py-3 max-md:my-3">
                       <h2 className="text-xl mb-4">Images</h2>
                       <div className="min-w-full">
@@ -933,7 +944,7 @@ export function MyPropertyDetailsClient({
                           showArrows
                           responsiveSlidesPerView
                         >
-                          {property?.images?.map(
+                          {propertyImages?.map(
                             (imgUrl: string, idx: number) => (
                               <div
                                 key={idx}
@@ -953,7 +964,7 @@ export function MyPropertyDetailsClient({
                             ),
                           )}
                         </Carousel2D>
-                        {/* <Carousel images={property?.images || []}></Carousel> */}
+                        {/* <Carousel images={propertyImages || []}></Carousel> */}
                       </div>
                     </section>
                   )}
@@ -1052,31 +1063,33 @@ export function MyPropertyDetailsClient({
 
       {/* Mobile Footer Section */}
       <MobileFooter>
-        <button
+        <div className="flex justify-end w-full">
+          {/* <button
           type="button"
           className="flex gap-2 items-center px-6 py-3 border border-gray-300 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-50 disabled:bg-gray-300 disabled:cursor-not-allowed"
           onClick={handleEdit}
         >
           <EditIcon size={20} /> Edit
-        </button>
+        </button> */}
 
-        {property?.propertyState === PropertyStatus.INACTIVE ? null : (
-          <button
-            type="submit"
-            className="flex gap-2 items-center px-6 py-3 border border-green-500 text-green-500 rounded-xl hover:bg-green-600 hover:text-white disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300"
-            onClick={() => openDialog(ACTION_DIALOG_ID)}
-          >
-            <Stamp size={20} />{" "}
-            {property?.propertyCategory === PropertyCategory.RESALE
-              ? "Mark as Sold"
-              : "Mark as Rented"}
-          </button>
-        )}
+          {property?.propertyState === PropertyStatus.INACTIVE ? null : (
+            <button
+              type="submit"
+              className="flex gap-2 items-center px-6 py-3 border border-green-500 text-green-500 rounded-xl hover:bg-green-600 hover:text-white disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300"
+              onClick={() => openDialog(ACTION_DIALOG_ID)}
+            >
+              <Stamp size={20} />{" "}
+              {property?.propertyCategory === PropertyCategory.RESALE
+                ? "Mark as Sold"
+                : "Mark as Rented"}
+            </button>
+          )}
+        </div>
       </MobileFooter>
 
       {/* Fullscreen Photo Viewer */}
       <FullscreenPhotoViewer
-        images={property?.images || []}
+        images={propertyImages || []}
         currentIndex={currentImageIndex}
         isOpen={!!selectedImage}
         onClose={handleCloseFullscreen}

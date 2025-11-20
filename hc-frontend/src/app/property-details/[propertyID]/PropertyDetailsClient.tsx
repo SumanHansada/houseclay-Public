@@ -62,6 +62,7 @@ import {
   formatDateToReadable,
   formatINRCurrency,
   pascalCase,
+  processPropertyImages,
 } from "@/common/utils";
 import { ContactOwnerLoginDialog, PhotoGalleryDialog } from "@/dialogs";
 import ReportListingDialog from "@/dialogs/report-listing-dialog";
@@ -177,7 +178,10 @@ export function PropertyDetailsClient({
   // call both hooks, but skip the ones we don't need
   const { data: publicPropertyData = initialData, isLoading: isPublicLoading } =
     useGetPublicPropertyByIdQuery(propertyID, {
-      skip: !!initialData && isAuthenticated,
+      skip: isAuthenticated,
+      refetchOnMountOrArgChange: true,
+      refetchOnFocus: true,
+      refetchOnReconnect: true,
     });
 
   const {
@@ -186,6 +190,9 @@ export function PropertyDetailsClient({
     refetch: refetchAuthPropertyDetails,
   } = useGetAuthenticatedPropertyByIdQuery(propertyID, {
     skip: !isAuthenticated,
+    refetchOnMountOrArgChange: true,
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
   });
 
   // Merge the data based on authentication status
@@ -199,11 +206,49 @@ export function PropertyDetailsClient({
         viewUserCount: authenticatedPropertyData.property.viewUserCount,
         owner: authenticatedPropertyData.owner,
         reported: authenticatedPropertyData.reported,
+        propertyOwner: authenticatedPropertyData.propertyOwner,
       };
     }
 
-    return publicPropertyData;
-  }, [isAuthenticated, authenticatedPropertyData, publicPropertyData]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return publicPropertyData as any;
+  }, [
+    isAuthenticated,
+    authenticatedPropertyData,
+    publicPropertyData,
+    isAuthenticated,
+  ]);
+
+  const { toggleShortlist, isShortlisted } = useShortlist();
+  const shortlistStatus = isShortlisted(propertyID);
+  const [isShortlistedProperty, setIsShortlistedProperty] =
+    useState(shortlistStatus);
+
+  const [showFullDescription, setShowFullDescription] = useState(false);
+  const [origin, setOrigin] = useState<string>("");
+  const [showDirections, setShowDirections] = useState(false);
+  const router = useRouter();
+  const { isMobile } = useDeviceContext();
+  const dispatch = useDispatch();
+  const { isDialogOpen, closeDialog, openDialog } = useDialog();
+
+  useEffect(() => {
+    if (isMobile) {
+      dispatch(setHideStickyNavBar(true));
+      dispatch(setHideHeader(true));
+      dispatch(setHideFooter(true));
+    } else {
+      dispatch(setHideStickyNavBar(true));
+      dispatch(setHideHeader(false));
+      dispatch(setHideFooter(false));
+    }
+  }, [dispatch, isMobile]);
+
+  const isLoading = isAuthenticated ? isAuthLoading : isPublicLoading;
+
+  if (isLoading) {
+    <Loading />;
+  }
 
   const {
     property,
@@ -212,6 +257,7 @@ export function PropertyDetailsClient({
     viewUserCount,
     owner,
     reported,
+    propertyOwner,
   } = propertyData;
 
   const bhkType = getOptionLabel(BHK_TYPE_OPTIONS, property?.bhkType);
@@ -270,20 +316,7 @@ export function PropertyDetailsClient({
     ? `${property?.balcony} ${property?.balcony > 1 ? "Balconies" : "Balcony"}`
     : "N/A";
 
-  const isLoading = isAuthenticated ? isAuthLoading : isPublicLoading;
-
-  const { toggleShortlist, isShortlisted } = useShortlist();
-  const shortlistStatus = isShortlisted(propertyID);
-  const [isShortlistedProperty, setIsShortlistedProperty] =
-    useState(shortlistStatus);
-
-  const [showFullDescription, setShowFullDescription] = useState(false);
-  const [origin, setOrigin] = useState<string>("");
-  const [showDirections, setShowDirections] = useState(false);
-  const router = useRouter();
-  const { isMobile } = useDeviceContext();
-  const dispatch = useDispatch();
-  const { isDialogOpen, closeDialog, openDialog } = useDialog();
+  const propertyImages = processPropertyImages(property?.images);
 
   const handleShare = async () => {
     try {
@@ -320,22 +353,6 @@ export function PropertyDetailsClient({
         .split(/[.!?] +/)
         .filter((sentence: string) => sentence.trim().length > 0)
     : [];
-
-  useEffect(() => {
-    if (isMobile) {
-      dispatch(setHideStickyNavBar(true));
-      dispatch(setHideHeader(true));
-      dispatch(setHideFooter(true));
-    } else {
-      dispatch(setHideStickyNavBar(true));
-      dispatch(setHideHeader(false));
-      dispatch(setHideFooter(false));
-    }
-  }, [dispatch, isMobile]);
-
-  if (isLoading) {
-    <Loading />;
-  }
 
   return (
     <>
@@ -404,9 +421,9 @@ export function PropertyDetailsClient({
       <section className="overflow-x-hidden flex-grow max-md:pb-16">
         {/* Photo Gallery Section Mobile */}
         <section className="h-60 w-full md:hidden">
-          {property?.images?.length > 0 ? (
+          {propertyImages?.length > 0 ? (
             <PhotoGallery
-              images={property?.images}
+              images={propertyImages}
               className="md:h-[60vh] h-60 rounded-none"
             />
           ) : (
@@ -474,11 +491,11 @@ export function PropertyDetailsClient({
             </div>
 
             <div className="md:hidden">
-              <div className="flex justify-between items-center mb-2">
-                <p className="text-black text-sm border border-gray-200 py-1 px-1.5 rounded-full bg-gray-100">
+              <div className="flex justify-between items-center mb-2 gap-8">
+                <p className="text-black text-sm border border-gray-200 py-1 px-1.5 rounded-full bg-gray-100 text-nowrap">
                   {propertyType}
                 </p>
-                <p className="text-gray-500 text-sm md:hidden">
+                <p className="text-gray-500 text-sm md:hidden truncate">
                   {property.locationOrSocietyName}, {property.city}
                 </p>
               </div>
@@ -502,9 +519,9 @@ export function PropertyDetailsClient({
 
           {/* Photo Gallery Section Desktop */}
           <section className="mb-8 max-md:hidden">
-            {property?.images?.length > 0 ? (
+            {propertyImages?.length > 0 ? (
               <PhotoGallery
-                images={property?.images}
+                images={propertyImages}
                 maxDisplayImages={5}
                 className="md:h-[60vh] h-96 rounded-xl"
                 thumbnailPosition="bottom"
@@ -570,17 +587,19 @@ export function PropertyDetailsClient({
                       </div>
                     </div>
 
-                    <div className="flex gap-3">
-                      <div className="w-8 h-8 flex items-center justify-center">
-                        <Building2 size={24} className="text-gray-600" />
-                      </div>
-                      <div>
-                        <div className="text-sm text-gray-500">Floor</div>
-                        <div className="font-medium text-gray-900">
-                          {propertyFloor}/{totalFloors}
+                    {property?.propertyCategory === PropertyCategory.RENT ? (
+                      <div className="flex  gap-3">
+                        <div className="w-8 h-8 flex items-center justify-center">
+                          <Icon iconNode={floorPlan} size={24} />
+                        </div>
+                        <div>
+                          <div className="text-sm text-gray-500">Flooring</div>
+                          <div className="font-medium text-gray-900">
+                            {pascalCase(property?.floorType)}
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    ) : null}
                   </div>
 
                   {/* Right Column */}
@@ -611,14 +630,14 @@ export function PropertyDetailsClient({
                       </div>
                     </div>
 
-                    <div className="flex  gap-3">
+                    <div className="flex gap-3">
                       <div className="w-8 h-8 flex items-center justify-center">
-                        <Icon iconNode={floorPlan} size={24} />
+                        <Building2 size={24} className="text-gray-600" />
                       </div>
                       <div>
-                        <div className="text-sm text-gray-500">Flooring</div>
+                        <div className="text-sm text-gray-500">Floor</div>
                         <div className="font-medium text-gray-900">
-                          {pascalCase(property?.floorType)}
+                          {propertyFloor}/{totalFloors}
                         </div>
                       </div>
                     </div>
@@ -669,10 +688,10 @@ export function PropertyDetailsClient({
               <hr />
               {/* Map Section */}
               <section className="py-6 mb-6">
-                <div className="flex flex-col lg:flex-row justify-between  items-start lg:items-center mb-6">
-                  <h2 className="text-xl mb-4">Where you&apos;ll be</h2>
-                  <div className="flex items-center gap-2 text-gray-700 mb-4">
-                    <MapPin size={16} />
+                <div className="flex flex-col 2xl:flex-row justify-between max-2xl:items-start max-2xl:mb-4 2xl:items-center 2xl:mb-10 2xl:gap-16 truncate">
+                  <h2 className="text-xl max-2xl:mb-2">Where you&apos;ll be</h2>
+                  <div className="flex items-center gap-2 text-gray-700 max-2xl:mb-2">
+                    <MapPin size={20} />
                     <span>
                       {property?.locationOrSocietyName}, {property?.city}
                     </span>
@@ -856,6 +875,12 @@ export function PropertyDetailsClient({
                             {owner?.name}
                           </div>
                         </div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <div className="text-gray-600">Phone:</div>
+                          <div className="text-gray-900 font-semibold font-nunito text-base">
+                            {owner?.phoneNo}
+                          </div>
+                        </div>
                         <div className="flex">
                           {owner?.phoneNo && (
                             <div className="flex w-full mt-4 gap-2">
@@ -957,7 +982,7 @@ export function PropertyDetailsClient({
                   </button>
                 </section>
               )}
-              {owner && !reported ? (
+              {owner && !reported && !propertyOwner ? (
                 <section className="flex flex-col justify-between items-center mb-6">
                   <button
                     className="text-sm text-gray-700 hover:text-gray-700 flex items-center gap-2 disabled:cursor-not-allowed disabled:text-gray-400"
@@ -1245,13 +1270,13 @@ export function PropertyDetailsClient({
 
             {/* Map Section */}
             <section className="py-6">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl mb-4">Where you&apos;ll be</h2>
-                <div className="flex items-center gap-2 text-gray-700 mb-4">
-                  <MapPin size={16} />
-                  <span>
-                    {property?.locationOrSocietyName}, {property?.city}
-                  </span>
+              <div className="flex flex-col justify-between items-start mb-6">
+                <h2 className="text-xl mb-2 flex gap-1 items-center">
+                  <span className="">Where you&apos;ll be</span>
+                  <MapPin size={20} />
+                </h2>
+                <div className="flex items-center gap-2 text-gray-700">
+                  {property?.locationOrSocietyName}, {property?.city}
                 </div>
               </div>
               <div className="flex gap-2 mb-4">
@@ -1380,7 +1405,7 @@ export function PropertyDetailsClient({
             </section> */}
 
             {/* Report this listing */}
-            {owner && !reported ? (
+            {owner && !reported && !propertyOwner ? (
               <section className="flex justify-around items-center">
                 <button
                   className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-2"
@@ -1397,7 +1422,7 @@ export function PropertyDetailsClient({
 
       {/* Contact Owner Section */}
       <MobileFooter>
-        <div className="flex w-full">
+        <div className="flex w-full gap-2">
           <div className="flex flex-col justify-evenly items-start w-1/3">
             <div className="flex items-center gap-2">
               <div className="text-gray-600">{catBasedPriceOrRentTag}</div>
@@ -1412,7 +1437,7 @@ export function PropertyDetailsClient({
 
           {isAuthenticated ? (
             owner ? (
-              <div className="flex flex-col justify-between border-l pl-3 w-2/3">
+              <div className="flex flex-col justify-between w-2/3">
                 {/* <div className="flex items-center gap-2">
                   <div className="text-gray-600">Owner:</div>
                   <div className="text-gray-900">{owner?.name}</div>
@@ -1421,13 +1446,13 @@ export function PropertyDetailsClient({
                   <div className="flex w-full gap-2">
                     <a
                       href={`tel:${owner?.phoneNo}`}
-                      className="flex items-center justify-center gap-2 border rounded-lg py-1.5 px-4 border-red-500 hover:bg-red-100 w-1/2"
+                      className="flex items-center justify-center gap-1 border rounded-lg px-4 py-2.5 border-red-500 hover:bg-red-100 w-1/2"
                     >
                       <PhoneCall size={20} className="text-red-500" />
                       Call
                     </a>
                     <a
-                      className="flex items-center justify-center gap-1 border rounded-lg py-1.5 px-2 hover:bg-green-100 border-green-500 w-1/2"
+                      className="flex items-center justify-center gap-1 border rounded-lg px-2 py-2.5 hover:bg-green-100 border-green-500 w-1/2"
                       href={`https://wa.me/${owner?.phoneNo}`}
                       target="_blank"
                       rel="noreferrer"
@@ -1435,7 +1460,7 @@ export function PropertyDetailsClient({
                       <SvgIcon
                         iconSize="small"
                         name="whatsapp"
-                        size={32}
+                        size={22}
                         className="text-green-500"
                       />
                       Whatsapp
@@ -1445,7 +1470,7 @@ export function PropertyDetailsClient({
               </div>
             ) : (
               <button
-                className="border-l pl-3 w-2/3 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl hover:bg-red-600 transition-colors"
+                className="w-2/3 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl hover:bg-red-600 transition-colors"
                 onClick={() => openDialog(UNLOCK_DETAILS_DIALOG_ID)}
               >
                 Contact Owner
@@ -1453,7 +1478,7 @@ export function PropertyDetailsClient({
             )
           ) : (
             <button
-              className="border-l pl-3 w-2/3 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl hover:bg-red-600 transition-colors"
+              className="w-2/3 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl hover:bg-red-600 transition-colors"
               onClick={() => openDialog(CONTACT_LOGIN_DIALOG_ID)}
             >
               Log in to Contact Owner
@@ -1465,7 +1490,7 @@ export function PropertyDetailsClient({
       {isDialogOpen("photo-gallery-dialog") && (
         <PhotoGalleryDialog
           id="photo-gallery-dialog"
-          images={property?.images || []}
+          images={propertyImages || []}
           onClose={() => closeDialog("photo-gallery-dialog")}
         />
       )}
@@ -1474,9 +1499,11 @@ export function PropertyDetailsClient({
       {isDialogOpen(CONTACT_LOGIN_DIALOG_ID) && (
         <ContactOwnerLoginDialog
           id={CONTACT_LOGIN_DIALOG_ID}
-          onSuccess={async () => {
-            await refetchAuthPropertyDetails();
-          }}
+          // onSuccess={async () => {
+          //   if (authenticatedPropertyData) {
+          //     await refetchAuthPropertyDetails();
+          //   }
+          // }}
           onClose={() => closeDialog(CONTACT_LOGIN_DIALOG_ID)}
         />
       )}

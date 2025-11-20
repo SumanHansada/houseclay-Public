@@ -31,7 +31,7 @@ import { ImageWithLoader } from "@/utility-components";
 const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 interface ContactLoginProps {
-  onSuccess: () => void;
+  onSuccess?: () => void;
   onClose: () => void;
 }
 
@@ -158,7 +158,7 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
       }
       dispatch(setAuthStep(AuthStep.LOGGED_IN));
       onClose();
-      onSuccess();
+      onSuccess?.();
     } catch (err) {
       console.error(err);
     }

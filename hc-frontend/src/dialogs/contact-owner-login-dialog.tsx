@@ -9,7 +9,7 @@ import { useDeviceContext } from "@/providers/DeviceContextProvider";
 interface ContactOwnerLoginDialogProps {
   id: string;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess?: () => void;
 }
 
 const ContactOwnerLoginDialog: React.FC<ContactOwnerLoginDialogProps> = ({
