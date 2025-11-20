@@ -111,7 +111,6 @@ async function PropertyDetails({ params }: { params: PropertyParams }) {
   try {
     const propertyData =
       await ServerAPIService.getPublicPropertyByID(propertyID);
-    console.log("Property Data", propertyData);
     return (
       <PropertyDetailsClient
         propertyID={propertyID}

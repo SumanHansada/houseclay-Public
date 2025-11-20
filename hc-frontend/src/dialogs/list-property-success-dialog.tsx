@@ -85,9 +85,9 @@ const ListPropertySuccessDialog: React.FC<ListPropertySuccessDialogProps> = ({
             <h2 className="text-3xl text-gray-800">Congratulations!</h2>
           )}
           <p className="text-gray-600 text-lg">
-            You have successfully posted your property,
+            You have successfully posted your property.
             <br />
-            it will be live within 6 Hrs.
+            It will be live soon!
           </p>
         </div>
       </DialogContent>
@@ -104,7 +104,6 @@ const ListPropertySuccessDialog: React.FC<ListPropertySuccessDialogProps> = ({
             onClick={handlePreviewListing}
             className="w-full py-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200"
           >
-            {/* {isMobile ? "View Listing" : "Preview Listing"} */}
             View Listing
           </button>
         </div>

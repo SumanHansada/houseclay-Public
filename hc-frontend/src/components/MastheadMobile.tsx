@@ -75,14 +75,14 @@ const MastHeadMobile: React.FC = () => {
         />
       </div> */}
       {/* Tabs and Search */}
-      <div>
+      <div className="w-full">
         {/* Tabs */}
-        <div className="flex justify-center">
+        <div className="flex justify-center w-4/5 mx-auto">
           <button
             onClick={() =>
               dispatch(setSearchPropertyCategory(PropertyCategory.RENT))
             }
-            className={`px-8 py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.RENT ? "text-red-500 border-red-500" : "text-gray-700 "}`}
+            className={`w-1/2 py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.RENT ? "text-red-500 border-red-500" : "text-gray-700 "}`}
           >
             Flats for rent
           </button>
@@ -90,7 +90,7 @@ const MastHeadMobile: React.FC = () => {
             onClick={() =>
               dispatch(setSearchPropertyCategory(PropertyCategory.FLATMATE))
             }
-            className={`px-8 py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.FLATMATE ? "text-red-500 border-red-500" : "text-gray-700 "}`}
+            className={`w-1/2 py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.FLATMATE ? "text-red-500 border-red-500" : "text-gray-700 "}`}
           >
             Find rooms
           </button>

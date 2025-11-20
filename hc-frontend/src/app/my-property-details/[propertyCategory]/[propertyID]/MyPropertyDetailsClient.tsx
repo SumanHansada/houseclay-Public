@@ -419,16 +419,25 @@ export function MyPropertyDetailsClient({
                   </section>
                   {/* Description Section */}
                   <section className="py-6 max-md:py-3">
-                    <h2 className="text-xl mb-2">Description</h2>
-                    <p className="text-gray-700 mb-2">
+                    <h2 className="text-xl">Description</h2>
+                    <p className="text-gray-700 mb-6">
                       {property?.description}
                     </p>
-                    <div className="flex items-center gap-2 text-gray-500 text-base">
+                    <div className="flex flex-col justify-between items-start">
+                      <h2 className="text-xl flex gap-1 items-center">
+                        <span className="">Property Location</span>
+                        <MapPin size={16} />
+                      </h2>
+                      <div className="flex items-center gap-2 text-gray-500">
+                        {property?.locationOrSocietyName}, {property?.city}
+                      </div>
+                    </div>
+                    {/* <div className="flex items-center gap-2 text-gray-500 text-base">
                       <MapPin size={16} />
                       <span>
                         {property?.locationOrSocietyName}, {property?.city}
                       </span>
-                    </div>
+                    </div> */}
                   </section>
                   {/* Property Details Section */}
                   <section className="p-6 border rounded-xl shadow-md max-md:p-3 max-md:my-3">

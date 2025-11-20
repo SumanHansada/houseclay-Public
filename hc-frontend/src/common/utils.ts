@@ -209,3 +209,22 @@ export function isEnumValue<E extends Record<string, string>>(
 ): value is E[keyof E] {
   return Object.values(enumObj).includes(value as string);
 }
+
+export const validateImages = async (
+  imageUrls: string[],
+): Promise<string[]> => {
+  if (imageUrls.length === 0) return [];
+
+  const validationPromises = imageUrls.map(
+    (url) =>
+      new Promise<boolean>((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = url;
+      }),
+  );
+
+  const results = await Promise.all(validationPromises);
+  return imageUrls.filter((_, i) => results[i]);
+};

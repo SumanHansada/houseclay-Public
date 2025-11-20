@@ -188,6 +188,9 @@ export function PropertyDetailsClient({
     skip: !isAuthenticated,
   });
 
+  console.log("Public Property Data: ", publicPropertyData);
+  console.log("Auth Property Details: ", authenticatedPropertyData);
+
   // Merge the data based on authentication status
   const propertyData = useMemo(() => {
     if (isAuthenticated && authenticatedPropertyData) {
@@ -1257,9 +1260,7 @@ export function PropertyDetailsClient({
                   <MapPin size={20} />
                 </h2>
                 <div className="flex items-center gap-2 text-gray-700">
-                  <span className="px-1">
-                    {property?.locationOrSocietyName}, {property?.city}
-                  </span>
+                  {property?.locationOrSocietyName}, {property?.city}
                 </div>
               </div>
               <div className="flex gap-2 mb-4">
