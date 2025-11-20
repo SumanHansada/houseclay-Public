@@ -19,7 +19,7 @@ export default function ContactedUsersPage() {
   const { data: currentProperty } = useGetPropertyByIdQuery({
     propertyID: propertyID,
   });
-  const rows = currentProperty!.shortlistUsers;
+  const rows = currentProperty!.contactUsers;
 
   const {
     currentPage,

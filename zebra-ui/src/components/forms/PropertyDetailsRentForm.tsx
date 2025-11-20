@@ -1,16 +1,6 @@
 import { useFormikContext } from "formik";
 
 import {
-  FormSelectDropdown,
-  FormTextArea,
-  FormTextField,
-} from "@/form-components";
-import { FormValues } from "@/interfaces/FormValues";
-import {
-  getPropertyDetailsErrors,
-  getPropertyDetailsTouched,
-} from "@/utils/formHelpers";
-import {
   BATHROOM_OPTIONS,
   BHK_TYPE_OPTIONS,
   FACING_OPTIONS,
@@ -21,6 +11,16 @@ import {
   PROPERTY_TYPE_OPTIONS,
   TOTAL_FLOORS_NUMERIC_OPTIONS,
 } from "@/common/constants/options/normalOptions";
+import {
+  FormSelectDropdown,
+  FormTextArea,
+  FormTextField,
+} from "@/form-components";
+import { FormValues } from "@/interfaces/FormValues";
+import {
+  getPropertyDetailsErrors,
+  getPropertyDetailsTouched,
+} from "@/utils/formHelpers";
 
 interface PropertyDetailsRentFormProps {
   disabled: boolean;

@@ -5,7 +5,7 @@ export const userDetailsTabLabels: Record<UserDetailsTabEnum, string> = {
   [UserDetailsTabEnum.PROFILE]: "Profile",
   [UserDetailsTabEnum.OWNED]: "Owned Properties",
   [UserDetailsTabEnum.SHORTLISTED]: "Shortlisted",
-  [UserDetailsTabEnum.CONNECT]: "Connect History",
+  // [UserDetailsTabEnum.CONNECT]: "Connect History",
   [UserDetailsTabEnum.PAYMENT]: "Payment History",
   [UserDetailsTabEnum.CONTACTED]: "Contacted",
   [UserDetailsTabEnum.VIEWED]: "Viewed",

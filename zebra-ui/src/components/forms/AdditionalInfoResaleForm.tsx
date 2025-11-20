@@ -2,16 +2,16 @@
 
 import { useFormikContext } from "formik";
 
+import {
+  KHATA_CERTIFICATE_OPTIONS,
+  YES_NO_OPTIONS,
+} from "@/common/constants/options/normalOptions";
 import { FormPhoneField, FormSelectDropdown } from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
 import {
   getAdditionalInfoErrors,
   getAdditionalInfoTouched,
 } from "@/utils/formHelpers";
-import {
-  KHATA_CERTIFICATE_OPTIONS,
-  YES_NO_OPTIONS,
-} from "@/common/constants/options/normalOptions";
 
 interface AdditionalInfoResaleFormProps {
   disabled: boolean;

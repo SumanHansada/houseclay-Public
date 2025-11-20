@@ -17,6 +17,13 @@ import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
 import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 import WifiIconSvg from "public/icons/amenities/wifi.svg";
 
+import {
+  FURNISHING_OPTIONS,
+  PARKING_OPTIONS,
+  POWER_BACKUP_OPTIONS,
+  WATER_SUPPLY_OPTIONS,
+  YES_NO_OPTIONS,
+} from "@/common/constants/options/normalOptions";
 import { FormCalendarField } from "@/form-components";
 import {
   FormCheckbox,
@@ -30,13 +37,6 @@ import {
   getResaleDetailsErrors,
   getResaleDetailsTouched,
 } from "@/utils/formHelpers";
-import {
-  FURNISHING_OPTIONS,
-  PARKING_OPTIONS,
-  POWER_BACKUP_OPTIONS,
-  WATER_SUPPLY_OPTIONS,
-  YES_NO_OPTIONS,
-} from "@/common/constants/options/normalOptions";
 
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ClubhouseIcon = ClubhouseIconSvg as React.FC<

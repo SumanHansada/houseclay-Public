@@ -18,6 +18,14 @@ import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 import WifiIconSvg from "public/icons/amenities/wifi.svg";
 
 import {
+  FURNISHING_OPTIONS,
+  PARKING_OPTIONS,
+  POWER_BACKUP_OPTIONS,
+  WATER_SUPPLY_OPTIONS,
+  YES_NO_OPTIONS,
+} from "@/common/constants/options/normalOptions";
+import { RENT_PREFERRED_TENANTS } from "@/common/enums";
+import {
   FormCalendarField,
   FormCheckbox,
   FormCurrencyField,
@@ -30,14 +38,6 @@ import {
   getRentalDetailsErrors,
   getRentalDetailsTouched,
 } from "@/utils/formHelpers";
-import {
-  FURNISHING_OPTIONS,
-  PARKING_OPTIONS,
-  POWER_BACKUP_OPTIONS,
-  WATER_SUPPLY_OPTIONS,
-  YES_NO_OPTIONS,
-} from "@/common/constants/options/normalOptions";
-import { RENT_PREFERRED_TENANTS } from "@/common/enums";
 
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ClubhouseIcon = ClubhouseIconSvg as React.FC<

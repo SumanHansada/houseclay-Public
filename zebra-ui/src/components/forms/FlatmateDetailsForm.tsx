@@ -15,6 +15,16 @@ import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 
 import {
+  DRINKING_PREFERENCE_OPTIONS,
+  FURNISHING_OPTIONS,
+  PARKING_OPTIONS,
+  POWER_BACKUP_OPTIONS,
+  SMOKING_PREFERENCE_OPTIONS,
+  WATER_SUPPLY_OPTIONS,
+  YES_NO_OPTIONS,
+} from "@/common/constants/options/normalOptions";
+import { FLATMATE_PREFERRED_TENANTS } from "@/common/enums";
+import {
   FormCalendarField,
   FormCheckbox,
   FormCurrencyField,
@@ -27,16 +37,6 @@ import {
   getFlatmateDetailsErrors,
   getFlatmateDetailsTouched,
 } from "@/utils/formHelpers";
-import {
-  DRINKING_PREFERENCE_OPTIONS,
-  FURNISHING_OPTIONS,
-  PARKING_OPTIONS,
-  POWER_BACKUP_OPTIONS,
-  SMOKING_PREFERENCE_OPTIONS,
-  WATER_SUPPLY_OPTIONS,
-  YES_NO_OPTIONS,
-} from "@/common/constants/options/normalOptions";
-import { FLATMATE_PREFERRED_TENANTS } from "@/common/enums";
 
 const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 const ClubhouseIcon = ClubhouseIconSvg as React.FC<

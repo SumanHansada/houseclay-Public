@@ -3,6 +3,14 @@
 import { useFormikContext } from "formik";
 
 import {
+  BATHROOM_OPTIONS,
+  BHK_TYPE_OPTIONS,
+  FACING_OPTIONS,
+  FLOOR_NUMERIC_OPTIONS,
+  PROPERTY_TYPE_OPTIONS,
+  TOTAL_FLOORS_NUMERIC_OPTIONS,
+} from "@/common/constants/options/normalOptions";
+import {
   FormSelectDropdown,
   FormTextArea,
   FormTextField,
@@ -12,14 +20,6 @@ import {
   getPropertyDetailsErrors,
   getPropertyDetailsTouched,
 } from "@/utils/formHelpers";
-import {
-  BATHROOM_OPTIONS,
-  BHK_TYPE_OPTIONS,
-  FACING_OPTIONS,
-  FLOOR_NUMERIC_OPTIONS,
-  PROPERTY_TYPE_OPTIONS,
-  TOTAL_FLOORS_NUMERIC_OPTIONS,
-} from "@/common/constants/options/normalOptions";
 
 interface PropertyDetailsFlatmateFormProps {
   disabled: boolean;

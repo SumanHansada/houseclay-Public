@@ -2,13 +2,13 @@
 
 import { useFormikContext } from "formik";
 
+import { WHO_WILL_SHOW_PROPERTY_OPTIONS } from "@/common/constants/options/normalOptions";
 import { FormPhoneField, FormSelectDropdown } from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
 import {
   getAdditionalInfoErrors,
   getAdditionalInfoTouched,
 } from "@/utils/formHelpers";
-import { WHO_WILL_SHOW_PROPERTY_OPTIONS } from "@/common/constants/options/normalOptions";
 
 interface AdditionalInfoFlatmateFormProps {
   disabled: boolean;
