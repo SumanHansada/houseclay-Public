@@ -64,8 +64,11 @@ public class PropertyUserService {
         }
         Property property = propertyOpt.get();
         PropertyMapper.toBasicEntity(propertyDTO, property);
+        property.setPropertyState(PropertyState.PENDING_VERIFICATION);
         property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, user,"updated by user", PropertyUpdateType.UPDATE));
-        return propertyRepository.save(property);
+        property = propertyRepository.save(property);
+        propertyElasticService.deletePropertyInElastic(property);
+        return property;
     }
 
     public void deactivateProperty(User user, String propertyID) throws APIException {
