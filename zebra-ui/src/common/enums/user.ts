@@ -7,7 +7,7 @@ export enum UserDetailsTabEnum {
   PROFILE = "profile",
   OWNED = "owned-properties",
   SHORTLISTED = "shortlisted-properties",
-  CONNECT = "connect-history",
+  // CONNECT = "connect-history",
   PAYMENT = "payment-history",
   CONTACTED = "contacted-properties",
   VIEWED = "viewed-properties",

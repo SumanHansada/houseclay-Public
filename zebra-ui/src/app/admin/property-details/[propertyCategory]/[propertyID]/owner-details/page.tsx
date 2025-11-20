@@ -5,14 +5,25 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 
+import { dialogLabels } from "@/common/constants";
+import { PropertyStatus } from "@/common/enums";
 import { InitialsAvatar } from "@/components/InitialsAvatar";
 import { RenderPropertyStatus } from "@/components/status/RenderPropertyStatus";
-import { useGetPropertyByIdQuery } from "@/store/apiSlice";
+import { ActionDialog } from "@/dialogs/action-dialog";
+import { useDialog } from "@/providers/DialogContextProvider";
+import {
+  useDeactivatePropertyMutation,
+  useGetPropertyByIdQuery,
+} from "@/store/apiSlice";
+
+const DEACTIVATE_DIALOG_ID = "report-property-dialog";
 
 export default function PropertyDetailsOverviewPage() {
   const { propertyID } = useParams() as { propertyID: string };
+  const { openDialog, isDialogOpen } = useDialog();
+  const [deactivateProperty] = useDeactivatePropertyMutation();
 
-  const { data: currentProperty } = useGetPropertyByIdQuery({
+  const { data: currentProperty, refetch } = useGetPropertyByIdQuery({
     propertyID: propertyID,
   });
   const ownerDetails = currentProperty!.owner;
@@ -25,6 +36,11 @@ export default function PropertyDetailsOverviewPage() {
   const currentStatus = isBlacklisted
     ? "The user is blacklisted"
     : "The user is active";
+
+  // Deactivate the property
+  const handleDeactivate = async (commentFromDialog: string) => {
+    await deactivateProperty({ propertyID, comment: commentFromDialog });
+  };
 
   return (
     <div className="h-full bg-gray-100 flex flex-col overflow-auto px-16 py-8">
@@ -66,9 +82,20 @@ export default function PropertyDetailsOverviewPage() {
             </form>
           </div>
         </div>
-        <div className="bg-white rounded-xl p-6 flex items-center gap-3">
-          <h1 className="text-2xl">Verification Status:</h1>
-          <RenderPropertyStatus status={verificationStatus} />
+        <div className="flex items-center justify-between bg-white rounded-xl p-6">
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl">Verification Status:</h1>
+            <RenderPropertyStatus status={verificationStatus} />
+          </div>
+          {verificationStatus === PropertyStatus.INACTIVE ? null : (
+            <button
+              type="button"
+              onClick={() => openDialog(DEACTIVATE_DIALOG_ID)}
+              className="border border-red-500 text-red-500 py-1 px-4 text-lg font-medium rounded-xl hover:bg-red-500 hover:text-white"
+            >
+              Deactivate Property
+            </button>
+          )}
         </div>
         {latestUpdate ? (
           <div className="bg-white rounded-xl p-6 flex flex-col gap-3">
@@ -95,6 +122,16 @@ export default function PropertyDetailsOverviewPage() {
           </div>
         ) : null}
       </div>
+
+      {isDialogOpen(DEACTIVATE_DIALOG_ID) && (
+        <ActionDialog
+          id={DEACTIVATE_DIALOG_ID}
+          {...dialogLabels.deactivate}
+          onConfirm={handleDeactivate}
+          onSuccess={refetch}
+          requireComment
+        />
+      )}
     </div>
   );
 }

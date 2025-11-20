@@ -575,13 +575,15 @@ export default function DetailsPage() {
                       </button>
                     </div>
                   ) : (
-                    <button
-                      type="button"
-                      onClick={() => setEditMode(true)}
-                      className="border border-red-500 text-red-500 py-1 px-4 text-lg font-medium rounded-xl hover:bg-red-500 hover:text-white"
-                    >
-                      Edit
-                    </button>
+                    <div className="flex gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setEditMode(true)}
+                        className="border border-red-500 text-red-500 py-1 px-4 text-lg font-medium rounded-xl hover:bg-red-500 hover:text-white"
+                      >
+                        Edit
+                      </button>
+                    </div>
                   )}
                 </div>
 

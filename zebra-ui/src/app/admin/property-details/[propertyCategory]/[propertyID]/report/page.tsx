@@ -19,7 +19,7 @@ export default function ReportUsersPage() {
   const { data: currentProperty } = useGetPropertyByIdQuery({
     propertyID: propertyID,
   });
-  const rows = currentProperty!.shortlistUsers;
+  const rows = currentProperty!.reportUsers;
 
   const {
     currentPage,
