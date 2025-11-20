@@ -30,7 +30,7 @@ public class PropertySearchMapper {
             dto.setOwner(OwnerMapper.toOwnerDetailDTO(user));
         }
         dto.setReported(isReported);
-        dto.setOwner(isOwner);
+        dto.setPropertyOwner(isOwner);
         return dto;
     }
 }

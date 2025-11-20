@@ -8,5 +8,5 @@ public class PropertyUserSearchDTO {
     PropertySearchDTO property;
     OwnerDetailDTO owner;
     boolean isReported;
-    boolean isOwner;
+    boolean isPropertyOwner;
 }
