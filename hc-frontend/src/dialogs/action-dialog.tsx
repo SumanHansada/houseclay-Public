@@ -106,7 +106,7 @@ export const ActionDialog: React.FC<ActionDialogProps> = ({
           <button
             disabled={disabled}
             onClick={handleSubmit}
-            className={`px-4 py-2 text-white rounded-lg disabled:opacity-50 bg-${colour}-600 hover:bg-${colour}-700`}
+            className={`px-4 py-3 text-white rounded-lg disabled:opacity-50 bg-${colour}-600 hover:bg-${colour}-700`}
           >
             {loading ? "Processing…" : confirmLabel}
           </button>

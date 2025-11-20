@@ -474,11 +474,11 @@ export function PropertyDetailsClient({
             </div>
 
             <div className="md:hidden">
-              <div className="flex justify-between items-center mb-2">
-                <p className="text-black text-sm border border-gray-200 py-1 px-1.5 rounded-full bg-gray-100">
+              <div className="flex justify-between items-center mb-2 gap-8">
+                <p className="text-black text-sm border border-gray-200 py-1 px-1.5 rounded-full bg-gray-100 text-nowrap">
                   {propertyType}
                 </p>
-                <p className="text-gray-500 text-sm md:hidden">
+                <p className="text-gray-500 text-sm md:hidden truncate">
                   {property.locationOrSocietyName}, {property.city}
                 </p>
               </div>
@@ -669,10 +669,10 @@ export function PropertyDetailsClient({
               <hr />
               {/* Map Section */}
               <section className="py-6 mb-6">
-                <div className="flex flex-col lg:flex-row justify-between  items-start lg:items-center mb-6">
-                  <h2 className="text-xl mb-4">Where you&apos;ll be</h2>
-                  <div className="flex items-center gap-2 text-gray-700 mb-4">
-                    <MapPin size={16} />
+                <div className="flex flex-col 2xl:flex-row justify-between max-2xl:items-start max-2xl:mb-4 2xl:items-center 2xl:mb-10 2xl:gap-16 truncate">
+                  <h2 className="text-xl max-2xl:mb-2">Where you&apos;ll be</h2>
+                  <div className="flex items-center gap-2 text-gray-700 max-2xl:mb-2">
+                    <MapPin size={20} />
                     <span>
                       {property?.locationOrSocietyName}, {property?.city}
                     </span>
@@ -854,6 +854,12 @@ export function PropertyDetailsClient({
                           <div className="text-gray-600">Owner Name:</div>
                           <div className="text-gray-900 font-semibold font-nunito text-base">
                             {owner?.name}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <div className="text-gray-600">Phone:</div>
+                          <div className="text-gray-900 font-semibold font-nunito text-base">
+                            {owner?.phoneNo}
                           </div>
                         </div>
                         <div className="flex">
@@ -1245,11 +1251,13 @@ export function PropertyDetailsClient({
 
             {/* Map Section */}
             <section className="py-6">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl mb-4">Where you&apos;ll be</h2>
-                <div className="flex items-center gap-2 text-gray-700 mb-4">
-                  <MapPin size={16} />
-                  <span>
+              <div className="flex flex-col justify-between items-start mb-6">
+                <h2 className="text-xl mb-2 flex gap-1 items-center">
+                  <span className="">Where you&apos;ll be</span>
+                  <MapPin size={20} />
+                </h2>
+                <div className="flex items-center gap-2 text-gray-700">
+                  <span className="px-1">
                     {property?.locationOrSocietyName}, {property?.city}
                   </span>
                 </div>
@@ -1397,7 +1405,7 @@ export function PropertyDetailsClient({
 
       {/* Contact Owner Section */}
       <MobileFooter>
-        <div className="flex w-full">
+        <div className="flex w-full gap-2">
           <div className="flex flex-col justify-evenly items-start w-1/3">
             <div className="flex items-center gap-2">
               <div className="text-gray-600">{catBasedPriceOrRentTag}</div>
@@ -1412,7 +1420,7 @@ export function PropertyDetailsClient({
 
           {isAuthenticated ? (
             owner ? (
-              <div className="flex flex-col justify-between border-l pl-3 w-2/3">
+              <div className="flex flex-col justify-between w-2/3">
                 {/* <div className="flex items-center gap-2">
                   <div className="text-gray-600">Owner:</div>
                   <div className="text-gray-900">{owner?.name}</div>
@@ -1421,13 +1429,13 @@ export function PropertyDetailsClient({
                   <div className="flex w-full gap-2">
                     <a
                       href={`tel:${owner?.phoneNo}`}
-                      className="flex items-center justify-center gap-2 border rounded-lg py-1.5 px-4 border-red-500 hover:bg-red-100 w-1/2"
+                      className="flex items-center justify-center gap-1 border rounded-lg px-4 py-2.5 border-red-500 hover:bg-red-100 w-1/2"
                     >
                       <PhoneCall size={20} className="text-red-500" />
                       Call
                     </a>
                     <a
-                      className="flex items-center justify-center gap-1 border rounded-lg py-1.5 px-2 hover:bg-green-100 border-green-500 w-1/2"
+                      className="flex items-center justify-center gap-1 border rounded-lg px-2 py-2.5 hover:bg-green-100 border-green-500 w-1/2"
                       href={`https://wa.me/${owner?.phoneNo}`}
                       target="_blank"
                       rel="noreferrer"
@@ -1435,7 +1443,7 @@ export function PropertyDetailsClient({
                       <SvgIcon
                         iconSize="small"
                         name="whatsapp"
-                        size={32}
+                        size={22}
                         className="text-green-500"
                       />
                       Whatsapp
@@ -1445,7 +1453,7 @@ export function PropertyDetailsClient({
               </div>
             ) : (
               <button
-                className="border-l pl-3 w-2/3 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl hover:bg-red-600 transition-colors"
+                className="w-2/3 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl hover:bg-red-600 transition-colors"
                 onClick={() => openDialog(UNLOCK_DETAILS_DIALOG_ID)}
               >
                 Contact Owner
@@ -1453,7 +1461,7 @@ export function PropertyDetailsClient({
             )
           ) : (
             <button
-              className="border-l pl-3 w-2/3 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl hover:bg-red-600 transition-colors"
+              className="w-2/3 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl hover:bg-red-600 transition-colors"
               onClick={() => openDialog(CONTACT_LOGIN_DIALOG_ID)}
             >
               Log in to Contact Owner
