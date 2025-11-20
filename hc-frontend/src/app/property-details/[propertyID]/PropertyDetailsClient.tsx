@@ -1435,53 +1435,48 @@ export function PropertyDetailsClient({
             </div>
           </div>
 
-          {isAuthenticated ? (
-            owner ? (
-              <div className="flex flex-col justify-between w-2/3">
-                {/* <div className="flex items-center gap-2">
+          {owner ? (
+            <div className="flex flex-col justify-between w-2/3">
+              {/* <div className="flex items-center gap-2">
                   <div className="text-gray-600">Owner:</div>
                   <div className="text-gray-900">{owner?.name}</div>
                 </div> */}
-                {owner?.phoneNo && (
-                  <div className="flex w-full gap-2">
-                    <a
-                      href={`tel:${owner?.phoneNo}`}
-                      className="flex items-center justify-center gap-1 border rounded-lg px-4 py-2.5 border-red-500 hover:bg-red-100 w-1/2"
-                    >
-                      <PhoneCall size={20} className="text-red-500" />
-                      Call
-                    </a>
-                    <a
-                      className="flex items-center justify-center gap-1 border rounded-lg px-2 py-2.5 hover:bg-green-100 border-green-500 w-1/2"
-                      href={`https://wa.me/${owner?.phoneNo}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <SvgIcon
-                        iconSize="small"
-                        name="whatsapp"
-                        size={22}
-                        className="text-green-500"
-                      />
-                      Whatsapp
-                    </a>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <button
-                className="w-2/3 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl hover:bg-red-600 transition-colors"
-                onClick={() => openDialog(UNLOCK_DETAILS_DIALOG_ID)}
-              >
-                Contact Owner
-              </button>
-            )
+              {owner?.phoneNo && (
+                <div className="flex w-full gap-2">
+                  <a
+                    href={`tel:${owner?.phoneNo}`}
+                    className="flex items-center justify-center gap-1 border rounded-lg px-4 py-2.5 border-red-500 hover:bg-red-100 w-1/2"
+                  >
+                    <PhoneCall size={20} className="text-red-500" />
+                    Call
+                  </a>
+                  <a
+                    className="flex items-center justify-center gap-1 border rounded-lg px-2 py-2.5 hover:bg-green-100 border-green-500 w-1/2"
+                    href={`https://wa.me/${owner?.phoneNo}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <SvgIcon
+                      iconSize="small"
+                      name="whatsapp"
+                      size={22}
+                      className="text-green-500"
+                    />
+                    Whatsapp
+                  </a>
+                </div>
+              )}
+            </div>
           ) : (
             <button
               className="w-2/3 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl hover:bg-red-600 transition-colors"
-              onClick={() => openDialog(CONTACT_LOGIN_DIALOG_ID)}
+              onClick={() =>
+                isAuthenticated
+                  ? openDialog(UNLOCK_DETAILS_DIALOG_ID)
+                  : openDialog(CONTACT_LOGIN_DIALOG_ID)
+              }
             >
-              Log in to Contact Owner
+              Contact Owner
             </button>
           )}
         </div>

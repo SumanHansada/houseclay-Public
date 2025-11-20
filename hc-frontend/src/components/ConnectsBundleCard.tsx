@@ -93,11 +93,11 @@ export default function ConnectsBundleCard({
         </span>
       </div>
 
-      <div className="flex items-center justify-between mb-8  text-white">
+      {/* <div className="flex items-center justify-between mb-8  text-white">
         <span className="text-white font-medium text-xxs bg-gray-200 bg-opacity-30 px-2 py-1 rounded-full">
           {bundle.discount}
         </span>
-      </div>
+      </div> */}
       <div className="flex items-center gap-1 max-md:mt-20">
         <span className="text-white text-xxs">Validity:</span>
         <span className="text-white text-xs md:text-base">
