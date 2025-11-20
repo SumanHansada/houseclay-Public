@@ -17,6 +17,8 @@ public class ReportProperty {
 
     private Timestamp reportTime;
 
+    private String comment;
+
     @ManyToOne
     @JoinColumn(name = "propertyID")
     private Property property;

@@ -1,8 +1,8 @@
 package com.houseclay.backend.controller;
 
 import com.houseclay.backend.dto.PropertyDTO;
+import com.houseclay.backend.dto.UserReportDTO;
 import com.houseclay.backend.entity.Property;
-import com.houseclay.backend.entity.ReportType;
 import com.houseclay.backend.entity.User;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.mapper.PropertyDetailMapper;
@@ -103,10 +103,9 @@ public class PropertyUserController {
             @PathVariable String propertyId,
             @RequestAttribute("authenticatedUser") User user) {
         try {
-            Property shortlistedProperty = shortlistPropertyService.shortlistProperty(user, propertyId);
+            shortlistPropertyService.shortlistProperty(user, propertyId);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Property shortlisted successfully");
-            response.put("shortlistedProperty", PropertySearchMapper.toPropertyUserSearchDTO(shortlistedProperty, null, false));
             return ResponseEntity.ok(response);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
@@ -161,10 +160,10 @@ public class PropertyUserController {
     @PostMapping("/report-property/{propertyId}")
     public ResponseEntity<?> reportProperty(
             @PathVariable String propertyId,
-            @RequestBody ReportType reportType,
+            @RequestBody UserReportDTO reportDTO,
             @RequestAttribute("authenticatedUser") User user) {
         try {
-            propertyUserService.reportProperty(user, propertyId, reportType);
+            propertyUserService.reportProperty(user, propertyId, reportDTO);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Reported property successfully");
             return ResponseEntity.ok(response);

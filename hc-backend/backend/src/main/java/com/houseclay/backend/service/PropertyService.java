@@ -33,14 +33,7 @@ public class PropertyService {
     public Property getProperty(String id) throws APIException {
         Optional<Property> propertyOpt = propertyRepository.findById(id);
         if (propertyOpt.isPresent()) {
-            Property property = propertyOpt.get();
-            property.setImages(
-                    property.getImages().stream()
-                            .map(photoService::getObjectPresignedUrl)
-                            .collect(Collectors.toList())
-            );
-            property.setCoverImage(photoService.getObjectPresignedUrl(property.getCoverImage()));
-            return property;
+            return propertyOpt.get();
         }
         throw new APIException("Invalid property ID", HttpStatus.BAD_REQUEST);
     }

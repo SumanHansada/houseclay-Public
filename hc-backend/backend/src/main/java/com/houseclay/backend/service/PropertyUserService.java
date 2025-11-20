@@ -2,6 +2,7 @@ package com.houseclay.backend.service;
 
 import com.houseclay.backend.dto.PropertyContactDTO;
 import com.houseclay.backend.dto.PropertyDTO;
+import com.houseclay.backend.dto.UserReportDTO;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.mapper.OwnerMapper;
@@ -90,14 +91,15 @@ public class PropertyUserService {
         throw new APIException("Access denied", HttpStatus.FORBIDDEN);
     }
 
-    public void reportProperty(User user, String propertyId, ReportType reportType) throws APIException {
+    public void reportProperty(User user, String propertyId, UserReportDTO userReportDTO) throws APIException {
         Optional<Property> propertyOpt = propertyRepository.findById(propertyId);
         if (propertyOpt.isEmpty()) {
             throw new APIException("Invalid property", HttpStatus.BAD_REQUEST);
         }
         Property property = propertyOpt.get();
         ReportProperty reportProperty = new ReportProperty();
-        reportProperty.setReportType(reportType);
+        reportProperty.setReportType(userReportDTO.getReportType());
+        reportProperty.setComment(userReportDTO.getComment());
         reportProperty.setReportTime(new Timestamp(System.currentTimeMillis()));
         reportProperty.setProperty(property);
         reportProperty.setUser(user);
