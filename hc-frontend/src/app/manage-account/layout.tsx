@@ -102,21 +102,21 @@ export default function ManageProfileLayout({
   return (
     <>
       {/* Desktop */}
-      <div className="max-md:hidden w-full h-full">
-        <div className="flex flex-col bg-white xl:px-28 lg:px-14 md:px-14 px-8 py-12">
+      <div className="w-full h-full max-md:hidden">
+        <div className="flex flex-col px-8 py-12 bg-white xl:px-28 lg:px-14 md:px-14">
           <h1 className="pb-6 text-3xl font-medium">Manage Account</h1>
           <div className="flex md:gap-6 lg:gap-8 xl:gap-24">
             <aside className="md:w-[320px] lg:w-[380px] xl:w-[460px]">
               <AccountNavList items={ACCOUNT_NAV} iconSize={36} />
             </aside>
-            <section className="overflow-y-auto w-full">{children}</section>
+            <section className="w-full overflow-y-auto">{children}</section>
           </div>
         </div>
         <Footer />
       </div>
 
       {/* Mobile */}
-      <div className="md:hidden w-full h-full">{children}</div>
+      <div className="w-full h-full md:hidden">{children}</div>
     </>
   );
 }

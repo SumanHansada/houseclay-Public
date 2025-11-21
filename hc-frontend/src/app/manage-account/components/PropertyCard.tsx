@@ -1,28 +1,33 @@
 "use client";
 
-import { CircleCheck, Ellipsis } from "lucide-react";
+import { CircleCheck, Clock, Ellipsis } from "lucide-react";
 import Link from "next/link";
 
+import { MARK_RENTED_ACTION_DIALOG_ID } from "@/common/constants";
+import {
+  BHK_TYPE_OPTIONS,
+  getOptionLabel,
+} from "@/common/dataConstants/options";
 import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { formatINRCurrency, pascalCase } from "@/common/utils";
 import { UserOwnedProperties } from "@/interfaces/User";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
+import { useDialog } from "@/providers/DialogContextProvider";
 import { Popover } from "@/utility-components";
 
 export interface PropertyCardProps {
   property: UserOwnedProperties;
   onDashboard: (propertyCategory: string, propertyId: string) => void;
-  onMarkSold: (propertyId: string) => void;
   onOpenDialog: (propertyCategory: string, propertyId: string) => void;
 }
 
 export function PropertyCard({
   property,
   onDashboard,
-  onMarkSold,
   onOpenDialog,
 }: PropertyCardProps) {
   const { isMobile } = useDeviceContext();
+  const { openDialog } = useDialog();
 
   const isResale = property.propertyCategory === PropertyCategory.RESALE;
   // const amount = isResale ? property.price : property.rent;
@@ -32,14 +37,19 @@ export function PropertyCard({
   const propertyLink = `/my-property-details/${property.propertyCategory?.toLowerCase()}/${property.propertyID}`;
 
   return (
-    <div className="rounded-xl bg-gray-50 p-4 shadow-sm">
-      <div className="border-b-2 pb-2">
-        <div className="w-full flex justify-between">
-          <div className="flex shrink-0 items-center gap-2 text-lg">
+    <div className="p-4 shadow-sm rounded-xl bg-gray-50">
+      <div className="pb-2 border-b-2">
+        <div className="flex justify-between w-full">
+          <div className="flex items-center gap-2 text-lg shrink-0">
             {property.propertyState === PropertyStatus.VERIFIED ? (
               <span className="inline-flex items-center gap-1">
                 <CircleCheck size={25} className="text-white fill-green-600" />
                 Active
+              </span>
+            ) : property.propertyState === PropertyStatus.PENDING ? (
+              <span className="inline-flex items-center gap-1">
+                <Clock size={20} className="text-orange-500" />
+                Pending
               </span>
             ) : (
               <span className="inline-flex items-center gap-1">Inactive</span>
@@ -47,7 +57,7 @@ export function PropertyCard({
           </div>
 
           <div className="flex items-center justify-center gap-4">
-            <span className="py-1 px-2 border border-black rounded-lg text-sm">
+            <span className="px-2 py-1 text-sm border border-black rounded-lg">
               {pascalCase(property.propertyCategory)}
             </span>
 
@@ -58,7 +68,7 @@ export function PropertyCard({
                 if (isMobile)
                   onOpenDialog(property.propertyCategory, property.propertyID);
               }}
-              className="md:hidden inline-flex items-center justify-center rounded-md p-1 hover:bg-gray-100"
+              className="inline-flex items-center justify-center p-1 rounded-md md:hidden hover:bg-gray-100"
               aria-label="Open actions"
             >
               <Ellipsis size={25} />
@@ -91,7 +101,7 @@ export function PropertyCard({
                       type="button"
                       className="block w-full px-3 py-2 text-left hover:bg-gray-100"
                       onClick={() => {
-                        onMarkSold(property.propertyID);
+                        openDialog(MARK_RENTED_ACTION_DIALOG_ID);
                         close();
                       }}
                     >
@@ -102,7 +112,7 @@ export function PropertyCard({
               >
                 <button
                   type="button"
-                  className="inline-flex items-center justify-center rounded-md p-1 hover:bg-gray-100"
+                  className="inline-flex items-center justify-center p-1 rounded-md hover:bg-gray-100"
                   aria-label="property-card-actions"
                 >
                   <Ellipsis size={24} />
@@ -115,16 +125,17 @@ export function PropertyCard({
         <div className="min-w-0 mt-4">
           <Link
             href={propertyLink}
-            className="inline-block max-w-72 truncate text-lg font-medium text-gray-900"
+            className="inline-block text-lg font-medium text-gray-900 truncate max-w-72"
           >
-            {property.bhkType} in {property.locationOrSocietyName} for{" "}
+            {getOptionLabel(BHK_TYPE_OPTIONS, property.bhkType)} in{" "}
+            {property.locationOrSocietyName} for{" "}
             {pascalCase(property.propertyCategory)}
           </Link>
         </div>
       </div>
 
-      <div className="w-full flex justify-between items-center mt-4">
-        <div className="text-gray-400 text-sm">
+      <div className="flex items-center justify-between w-full mt-4">
+        <div className="text-sm text-gray-400">
           BuiltUp Area
           <span className="ml-2 text-gray-800">
             {property.builtUpArea}&nbsp;Sqft.
