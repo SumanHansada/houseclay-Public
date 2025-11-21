@@ -1,5 +1,6 @@
+import { CDN_BASE_URL } from "@/common/constants";
 import { PropertyCategory } from "@/common/enums";
-import { fileDataFromUrl } from "@/common/utils";
+import { fileDataFromUrl, processPropertyImages } from "@/common/utils";
 
 import {
   isFlatmateAdditionalInfo,
@@ -350,11 +351,13 @@ export const transformPropertyFormToFormValues = (
   };
 
   // Extract images with cover flag
-  const images: PropertyImage[] = apiData.images.map((url: string) => ({
+  const propertyImages = processPropertyImages(apiData.images);
+  const coverImage = `${CDN_BASE_URL}/${apiData.coverImage}`;
+  const images: PropertyImage[] = propertyImages.map((url: string) => ({
     id: `photo-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
     file: fileDataFromUrl(url),
-    url,
-    isCover: url === apiData.coverImage,
+    url: url,
+    isCover: url === coverImage,
   }));
 
   // Extract category-specific details

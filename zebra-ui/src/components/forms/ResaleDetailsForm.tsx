@@ -268,8 +268,8 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({ disabled }) => {
             },
             { value: "Security", label: "Security", icon: <SecurityIcon /> },
             {
-              value: "Parking Space",
-              label: "Parking Space",
+              value: "Visitor Parking",
+              label: "Visitor Parking",
               icon: <ParkingSpaceIcon />,
             },
             {

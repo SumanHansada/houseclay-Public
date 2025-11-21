@@ -177,12 +177,12 @@ export const RentalDetailsClient: React.FC = () => {
   return (
     <>
       <div className="mb-8">
-        <h1 className="text-2xl md:text-3xl text-gray-800">
+        <h1 className="text-2xl text-gray-800 md:text-3xl">
           Provide rental details about your property
         </h1>
       </div>
       <div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
           <div className="col-span-1">
             <FormCurrencyField
               name="rentalDetails.rent"
@@ -204,7 +204,7 @@ export const RentalDetailsClient: React.FC = () => {
             />
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
           <div className="col-span-1">
             <FormCurrencyField
               name="rentalDetails.maintenanceCharges"
@@ -226,7 +226,7 @@ export const RentalDetailsClient: React.FC = () => {
             />
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
           <div className="col-span-1">
             <FormCalendarField
               name="rentalDetails.availableFrom"
@@ -284,7 +284,7 @@ export const RentalDetailsClient: React.FC = () => {
             required
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
           <div className="col-span-1">
             <FormSelectDropdown
               label="Water Supply"
@@ -318,7 +318,7 @@ export const RentalDetailsClient: React.FC = () => {
             />
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
           <div className="col-span-1">
             <FormSelectDropdown
               label="Parking"
@@ -392,8 +392,8 @@ export const RentalDetailsClient: React.FC = () => {
               icon: <SecurityIcon />,
             },
             {
-              value: "Parking Space",
-              label: "Parking Space",
+              value: "Visitor Parking",
+              label: "Visitor Parking",
               icon: <ParkingSpaceIcon />,
             },
             {
