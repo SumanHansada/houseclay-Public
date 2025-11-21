@@ -171,7 +171,7 @@ const amenities = [
   { label: "Swimming Pool", icon: <SwimmingPoolIcon /> },
   { label: "24/7 Power", icon: <TwentyFourSevenPowerIcon /> },
   { label: "Security", icon: <SecurityIcon /> },
-  { label: "Parking Space", icon: <ParkingSpaceIcon /> },
+  { label: "Visitor Parking", icon: <ParkingSpaceIcon /> },
   { label: "Dedicated Workspace", icon: <DedicatedWorkspaceIcon /> },
   { label: "Wifi", icon: <WifiIcon /> },
   { label: "BBQ Grill", icon: <BBQGrillIcon /> },
