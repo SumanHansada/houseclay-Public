@@ -3,7 +3,6 @@
 import { CircleCheck, Clock, Ellipsis } from "lucide-react";
 import Link from "next/link";
 
-import { MARK_RENTED_ACTION_DIALOG_ID } from "@/common/constants";
 import {
   BHK_TYPE_OPTIONS,
   getOptionLabel,
@@ -12,22 +11,26 @@ import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { formatINRCurrency, pascalCase } from "@/common/utils";
 import { UserOwnedProperties } from "@/interfaces/User";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { useDialog } from "@/providers/DialogContextProvider";
 import { Popover } from "@/utility-components";
 
 export interface PropertyCardProps {
   property: UserOwnedProperties;
   onDashboard: (propertyCategory: string, propertyId: string) => void;
-  onOpenDialog: (propertyCategory: string, propertyId: string) => void;
+  onOpenDialog: (
+    propertyCategory: string,
+    propertyId: string,
+    propertyState: string,
+  ) => void;
+  onMarkAsRented?: (propertyId: string) => void;
 }
 
 export function PropertyCard({
   property,
   onDashboard,
   onOpenDialog,
+  onMarkAsRented,
 }: PropertyCardProps) {
   const { isMobile } = useDeviceContext();
-  const { openDialog } = useDialog();
 
   const isResale = property.propertyCategory === PropertyCategory.RESALE;
   // const amount = isResale ? property.price : property.rent;
@@ -66,7 +69,11 @@ export function PropertyCard({
               onClick={(e) => {
                 e.stopPropagation();
                 if (isMobile)
-                  onOpenDialog(property.propertyCategory, property.propertyID);
+                  onOpenDialog(
+                    property.propertyCategory,
+                    property.propertyID,
+                    property.propertyState,
+                  );
               }}
               className="inline-flex items-center justify-center p-1 rounded-md md:hidden hover:bg-gray-100"
               aria-label="Open actions"
@@ -97,16 +104,19 @@ export function PropertyCard({
                     >
                       Open Dashboard
                     </button>
-                    <button
-                      type="button"
-                      className="block w-full px-3 py-2 text-left hover:bg-gray-100"
-                      onClick={() => {
-                        openDialog(MARK_RENTED_ACTION_DIALOG_ID);
-                        close();
-                      }}
-                    >
-                      Mark as Sold/Rented
-                    </button>
+                    {property.propertyState ===
+                    PropertyStatus.INACTIVE ? null : (
+                      <button
+                        type="button"
+                        className="block w-full px-3 py-2 text-left hover:bg-gray-100"
+                        onClick={() => {
+                          onMarkAsRented?.(property.propertyID);
+                          close();
+                        }}
+                      >
+                        Mark as Rented
+                      </button>
+                    )}
                   </div>
                 )}
               >

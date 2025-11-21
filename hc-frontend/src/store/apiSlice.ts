@@ -15,6 +15,7 @@ export const apiSlice = createApi({
     baseUrl: BASE_API_URL,
     credentials: "include", // Required for HTTP-only cookies
   }),
+  tagTypes: ["User"],
   endpoints: (builder) => ({
     login: builder.mutation<
       | {
@@ -108,6 +109,7 @@ export const apiSlice = createApi({
     }),
     getUserDetail: builder.query<GetUserDetailResponse, void>({
       query: () => "/user/detail",
+      providesTags: ["User"],
     }),
     presignedUrls: builder.mutation<
       {
@@ -301,6 +303,7 @@ export const apiSlice = createApi({
           "Content-Type": "application/json",
         },
       }),
+      invalidatesTags: ["User"],
     }),
     bundleInfo: builder.query<ConnectsBundle[], void>({
       query: () => "/bundle/info",
