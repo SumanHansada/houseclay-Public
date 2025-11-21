@@ -1,8 +1,9 @@
 "use client";
 
-import { CircleCheck, Ellipsis } from "lucide-react";
+import { CircleCheck, Clock, Ellipsis } from "lucide-react";
 import Link from "next/link";
 
+import { MARK_RENTED_ACTION_DIALOG_ID } from "@/common/constants";
 import {
   BHK_TYPE_OPTIONS,
   getOptionLabel,
@@ -11,18 +12,18 @@ import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { formatINRCurrency, pascalCase } from "@/common/utils";
 import { Column, DataTable } from "@/components/DataTable";
 import { UserOwnedProperties } from "@/interfaces/User";
+import { useDialog } from "@/providers/DialogContextProvider";
 import { Popover } from "@/utility-components";
 
 export function PropertyTable({
   properties,
   onDashboard,
-  onMarkSold,
 }: {
   properties: UserOwnedProperties[];
   onDashboard: (propertyCategory: string, propertyId: string) => void;
-  onMarkSold: (propertyId: string) => void;
 }) {
-  // getOptionLabel(BHK_TYPE_OPTIONS, prop.bhkType);
+  const { openDialog } = useDialog();
+
   const columns: Column<UserOwnedProperties>[] = [
     {
       key: "propertyName",
@@ -90,6 +91,11 @@ export function PropertyTable({
             <CircleCheck size={25} className="text-white fill-green-600" />
             <span>Active</span>
           </div>
+        ) : prop.propertyState === PropertyStatus.PENDING ? (
+          <span className="inline-flex items-center gap-1">
+            <Clock size={18} className="text-orange-500" />
+            Pending
+          </span>
         ) : (
           <span className="px-1 text-gray-500">Inactive</span>
         ),
@@ -121,7 +127,7 @@ export function PropertyTable({
                 type="button"
                 className="block w-full px-3 py-2 text-left hover:bg-gray-100"
                 onClick={() => {
-                  onMarkSold(item.propertyID);
+                  openDialog(MARK_RENTED_ACTION_DIALOG_ID);
                   close();
                 }}
               >

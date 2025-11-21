@@ -1,8 +1,9 @@
 "use client";
 
-import { CircleCheck, Ellipsis } from "lucide-react";
+import { CircleCheck, Clock, Ellipsis } from "lucide-react";
 import Link from "next/link";
 
+import { MARK_RENTED_ACTION_DIALOG_ID } from "@/common/constants";
 import {
   BHK_TYPE_OPTIONS,
   getOptionLabel,
@@ -11,22 +12,22 @@ import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { formatINRCurrency, pascalCase } from "@/common/utils";
 import { UserOwnedProperties } from "@/interfaces/User";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
+import { useDialog } from "@/providers/DialogContextProvider";
 import { Popover } from "@/utility-components";
 
 export interface PropertyCardProps {
   property: UserOwnedProperties;
   onDashboard: (propertyCategory: string, propertyId: string) => void;
-  onMarkSold: (propertyId: string) => void;
   onOpenDialog: (propertyCategory: string, propertyId: string) => void;
 }
 
 export function PropertyCard({
   property,
   onDashboard,
-  onMarkSold,
   onOpenDialog,
 }: PropertyCardProps) {
   const { isMobile } = useDeviceContext();
+  const { openDialog } = useDialog();
 
   const isResale = property.propertyCategory === PropertyCategory.RESALE;
   // const amount = isResale ? property.price : property.rent;
@@ -44,6 +45,11 @@ export function PropertyCard({
               <span className="inline-flex items-center gap-1">
                 <CircleCheck size={25} className="text-white fill-green-600" />
                 Active
+              </span>
+            ) : property.propertyState === PropertyStatus.PENDING ? (
+              <span className="inline-flex items-center gap-1">
+                <Clock size={20} className="text-orange-500" />
+                Pending
               </span>
             ) : (
               <span className="inline-flex items-center gap-1">Inactive</span>
@@ -95,7 +101,7 @@ export function PropertyCard({
                       type="button"
                       className="block w-full px-3 py-2 text-left hover:bg-gray-100"
                       onClick={() => {
-                        onMarkSold(property.propertyID);
+                        openDialog(MARK_RENTED_ACTION_DIALOG_ID);
                         close();
                       }}
                     >

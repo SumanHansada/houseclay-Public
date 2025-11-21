@@ -6,11 +6,14 @@ import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
+import { MARK_RENTED_ACTION_DIALOG_ID } from "@/common/constants";
 import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { MyPropertyActionsDialog } from "@/dialogs";
+import { ActionDialog } from "@/dialogs/action-dialog";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
+import { useDeactivatePropertyMutation } from "@/store/apiSlice";
 import { setHideStickyNavBar } from "@/store/appSlice";
 import { RootState } from "@/store/store";
 
@@ -37,6 +40,8 @@ export default function MyPropertiesPage() {
   const [selectedPropertyCategory, setSelectedPropertyCategory] = useState("");
   const { isDialogOpen, openDialog, closeDialog } = useDialog();
   const dispatch = useDispatch();
+
+  const [deactivatingProperty] = useDeactivatePropertyMutation();
 
   const { userDetail, userDetailLoading, userDetailError } = useSelector(
     (state: RootState) => state.user,
@@ -73,16 +78,6 @@ export default function MyPropertiesPage() {
     console.log("Redirect to my-properties-details for: ", id);
   };
 
-  const onMarkSold = (id: string) => {
-    try {
-      // TODO: call API -> mark sold, then mutate UI cache
-      // await markPropertySold(id).unwrap();
-      console.log("Property marked as sold:", id);
-    } catch (error) {
-      console.error("Failed to mark property as sold:", error);
-    }
-  };
-
   const onOpenDialog = (propertyCategory: string, propertyId: string) => {
     setSelectedPropertyId(propertyId);
     setSelectedPropertyCategory(propertyCategory);
@@ -95,6 +90,13 @@ export default function MyPropertiesPage() {
     dispatch(setHideStickyNavBar(false));
     setSelectedPropertyId("");
     setSelectedPropertyCategory("");
+  };
+
+  const handleDeactivatingProperty = async () => {
+    const response = await deactivatingProperty({
+      propertyID: selectedPropertyId,
+    }).unwrap();
+    console.log(response);
   };
 
   if (userDetailLoading) {
@@ -110,7 +112,7 @@ export default function MyPropertiesPage() {
       {/* Desktop */}
       <section className="max-md:hidden">
         {/* Header */}
-        <div className="mb-8 flex justify-between border-b-2 pb-2">
+        <div className="flex justify-between pb-2 mb-8 border-b-2">
           <h1 className="text-2xl font-medium">My Properties</h1>
           <button
             type="button"
@@ -125,14 +127,14 @@ export default function MyPropertiesPage() {
                   : "bg-transparent text-transparent"
               }`}
             >
-              <Check className="h-4 w-4" />
+              <Check className="w-4 h-4" />
             </span>
             <span className="text-lg text-gray-700">Only Active</span>
           </button>
         </div>
 
         {/* Filters */}
-        <div className="mb-8 flex gap-3 text-lg font-medium text-gray-700">
+        <div className="flex gap-3 mb-8 text-lg font-medium text-gray-700">
           {filterOptions.map((f) => {
             const active = selectedFilterCategory === f.value;
             return (
@@ -158,7 +160,7 @@ export default function MyPropertiesPage() {
             <Button
               variant="secondary"
               size="custom"
-              className="rounded-full p-1"
+              className="p-1 rounded-full"
               onClick={() => router.back()}
             >
               <ChevronLeft size={24} />
@@ -192,16 +194,14 @@ export default function MyPropertiesPage() {
         <PropertyTable
           properties={filteredProperties}
           onDashboard={onDashboard}
-          onMarkSold={onMarkSold}
         />
       </div>
 
       {/* Cards for < 2xl */}
-      <div className="2xl:hidden max-md:px-6 pt-4 pb-16">
+      <div className="pt-4 pb-16 2xl:hidden max-md:px-6">
         <PropertyCardList
           items={filteredProperties}
           onDashboard={onDashboard}
-          onMarkSold={onMarkSold}
           onOpenDialog={onOpenDialog}
         />
       </div>
@@ -212,8 +212,24 @@ export default function MyPropertiesPage() {
           propertyID={selectedPropertyId}
           propertyCategory={selectedPropertyCategory}
           onDashboard={onDashboard}
-          onMarkSold={onMarkSold}
           onClose={handleCloseDialog}
+        />
+      )}
+
+      {isDialogOpen(MARK_RENTED_ACTION_DIALOG_ID) && (
+        <ActionDialog
+          id={MARK_RENTED_ACTION_DIALOG_ID}
+          title="Mark as rented out"
+          prompt="Are you sure you want to mark this property as Rented out?"
+          confirmLabel="Yes, mark as rented!"
+          colour="red"
+          requireComment={false}
+          onConfirm={handleDeactivatingProperty}
+          // onSuccess={async () => await refetch()}
+          onClose={() => {
+            closeDialog(MARK_RENTED_ACTION_DIALOG_ID);
+            if (isMobile) dispatch(setHideStickyNavBar(false));
+          }}
         />
       )}
     </section>

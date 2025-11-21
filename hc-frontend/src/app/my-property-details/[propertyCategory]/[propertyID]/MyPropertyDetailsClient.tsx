@@ -52,6 +52,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 
 import { Button } from "@/base-components";
+import { MARK_RENTED_ACTION_DIALOG_ID } from "@/common/constants";
 import {
   BHK_TYPE_OPTIONS,
   DRINKING_PREFERENCE_OPTIONS,
@@ -179,8 +180,6 @@ const AmenitiesMap = {
   "Pool Table": { label: "Pool Table", icon: <PoolTableIcon /> },
   "First Aid Kit": { label: "First Aid Kit", icon: <FirstAidKitIcon /> },
 };
-
-const ACTION_DIALOG_ID = "mark-as-action-dialog-id";
 
 export function MyPropertyDetailsClient({
   propertyCategory,
@@ -1042,7 +1041,7 @@ export function MyPropertyDetailsClient({
               <div className="flex justify-end py-0 ml-auto">
                 <button
                   className="flex items-center gap-2 px-4 py-2 text-green-500 border border-green-500 rounded-lg"
-                  onClick={() => openDialog(ACTION_DIALOG_ID)}
+                  onClick={() => openDialog(MARK_RENTED_ACTION_DIALOG_ID)}
                 >
                   <Stamp size={20} />{" "}
                   {property?.propertyCategory === PropertyCategory.RESALE
@@ -1078,7 +1077,7 @@ export function MyPropertyDetailsClient({
             <button
               type="submit"
               className="flex items-center gap-2 px-6 py-3 text-green-500 border border-green-500 rounded-xl hover:bg-green-600 hover:text-white disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300"
-              onClick={() => openDialog(ACTION_DIALOG_ID)}
+              onClick={() => openDialog(MARK_RENTED_ACTION_DIALOG_ID)}
             >
               <Stamp size={20} />{" "}
               {property?.propertyCategory === PropertyCategory.RESALE
@@ -1100,9 +1099,9 @@ export function MyPropertyDetailsClient({
         thumbnailPosition="bottom"
       />
 
-      {isDialogOpen(ACTION_DIALOG_ID) && (
+      {isDialogOpen(MARK_RENTED_ACTION_DIALOG_ID) && (
         <ActionDialog
-          id={ACTION_DIALOG_ID}
+          id={MARK_RENTED_ACTION_DIALOG_ID}
           title="Mark as rented out"
           prompt="Are you sure you want to mark this property as Rented out?"
           confirmLabel="Yes, mark as rented!"
@@ -1110,7 +1109,7 @@ export function MyPropertyDetailsClient({
           requireComment={false}
           onConfirm={handleDeactivatingProperty}
           onSuccess={async () => await refetch()}
-          onClose={() => closeDialog(ACTION_DIALOG_ID)}
+          onClose={() => closeDialog(MARK_RENTED_ACTION_DIALOG_ID)}
         />
       )}
     </>
