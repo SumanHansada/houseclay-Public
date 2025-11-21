@@ -184,6 +184,7 @@ const ReportListingDialog: React.FC<ReportListingDialogProps> = ({
             </button>
             <button
               type="submit"
+              form={FORM_ID}
               disabled={!formik.isValid || formik.isSubmitting}
               className="flex-1 px-6 py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
