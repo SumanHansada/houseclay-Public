@@ -3,6 +3,10 @@
 import { CircleCheck, Ellipsis } from "lucide-react";
 import Link from "next/link";
 
+import {
+  BHK_TYPE_OPTIONS,
+  getOptionLabel,
+} from "@/common/dataConstants/options";
 import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { formatINRCurrency, pascalCase } from "@/common/utils";
 import { Column, DataTable } from "@/components/DataTable";
@@ -18,13 +22,14 @@ export function PropertyTable({
   onDashboard: (propertyCategory: string, propertyId: string) => void;
   onMarkSold: (propertyId: string) => void;
 }) {
+  // getOptionLabel(BHK_TYPE_OPTIONS, prop.bhkType);
   const columns: Column<UserOwnedProperties>[] = [
     {
       key: "propertyName",
       label: "Property",
       render: (prop) => {
         const propertyLink = `/my-property-details/${prop.propertyCategory?.toLowerCase()}/${prop.propertyID}`;
-        const propertyTitle = `${prop.bhkType} in ${prop.locationOrSocietyName} for ${pascalCase(prop.propertyCategory)}`;
+        const propertyTitle = `${getOptionLabel(BHK_TYPE_OPTIONS, prop.bhkType)} in ${prop.locationOrSocietyName} for ${pascalCase(prop.propertyCategory)}`;
         return (
           <Link
             href={propertyLink}
@@ -61,7 +66,7 @@ export function PropertyTable({
         const month = date.toLocaleString("en-US", { month: "short" });
         const year = date.getFullYear();
         return (
-          <span className="whitespace-nowrap text-gray-700">
+          <span className="text-gray-700 whitespace-nowrap">
             {day}-{month}-{year}
           </span>
         );
@@ -86,7 +91,7 @@ export function PropertyTable({
             <span>Active</span>
           </div>
         ) : (
-          <span className="text-gray-500 px-1">Inactive</span>
+          <span className="px-1 text-gray-500">Inactive</span>
         ),
     },
     {
@@ -127,7 +132,7 @@ export function PropertyTable({
         >
           <button
             type="button"
-            className="inline-flex items-center justify-center rounded-md p-1 hover:bg-gray-100"
+            className="inline-flex items-center justify-center p-1 rounded-md hover:bg-gray-100"
             aria-label="Actions"
           >
             <Ellipsis size={24} />
@@ -138,7 +143,7 @@ export function PropertyTable({
   ];
 
   return (
-    <div className="bg-white overflow-x-auto">
+    <div className="overflow-x-auto bg-white">
       <DataTable
         columns={columns}
         data={properties}

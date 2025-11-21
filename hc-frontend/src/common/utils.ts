@@ -163,6 +163,7 @@ export const getDateKey = (isoString: string): string => {
 export const fileDataFromUrl = (url: string) => {
   const pathname = new URL(url).pathname;
   const name = pathname.split("/").pop()!;
+  // const name = url;
   const ext = name.split(".").pop()!.toLowerCase();
 
   const mime =
