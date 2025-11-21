@@ -1,47 +1,53 @@
 import { X } from "lucide-react";
 
 import { Button } from "@/base-components";
-import { MARK_RENTED_ACTION_DIALOG_ID } from "@/common/constants";
+import { PropertyStatus } from "@/common/enums";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { useDialog } from "@/providers/DialogContextProvider";
 
 interface MyPropertyActionsDialogProps {
   id: string;
   propertyID: string;
+  propertyState: string;
   propertyCategory: string;
   onDashboard: (propertyCategory: string, propertyId: string) => void;
-  onClose: () => void;
+  onMarkAsRented: (propertyId: string) => void;
+  onClose: (isTransitioning: boolean) => void;
 }
 
 const MyPropertyActionsDialog: React.FC<MyPropertyActionsDialogProps> = ({
   id,
   propertyID,
+  propertyState,
   propertyCategory,
   onDashboard,
+  onMarkAsRented,
   onClose,
 }) => {
   const { isMobile } = useDeviceContext();
-  const { openDialog } = useDialog();
 
   if (!isMobile) return null;
 
+  const handleCloseWithoutTransition = () => {
+    onClose(false);
+  };
+
   const handleDashboard = () => {
     onDashboard(propertyCategory, propertyID);
-    onClose();
+    handleCloseWithoutTransition();
   };
 
   const handleMarkSold = () => {
-    openDialog(MARK_RENTED_ACTION_DIALOG_ID);
-    onClose();
+    onMarkAsRented(propertyID);
+    onClose(true);
   };
 
   return (
     <Dialog
       id={id}
       type="bottom-sheet"
-      onClose={onClose}
+      onClose={handleCloseWithoutTransition}
       width={100}
       entryAnimation="animate-slide-in-bottom"
       exitAnimation="animate-slide-out-bottom"
@@ -54,7 +60,7 @@ const MyPropertyActionsDialog: React.FC<MyPropertyActionsDialogProps> = ({
               variant="secondary"
               size="custom"
               className="p-1 rounded-full"
-              onClick={onClose}
+              onClick={handleCloseWithoutTransition}
             >
               <X size={24} />
             </Button>
@@ -69,12 +75,14 @@ const MyPropertyActionsDialog: React.FC<MyPropertyActionsDialogProps> = ({
           >
             Dashboard
           </button>
-          <button
-            className="w-full px-5 py-3 text-left hover:bg-gray-50"
-            onClick={handleMarkSold}
-          >
-            Mark property as sold
-          </button>
+          {propertyState === PropertyStatus.INACTIVE ? null : (
+            <button
+              className="w-full px-5 py-3 text-left hover:bg-gray-50"
+              onClick={handleMarkSold}
+            >
+              Mark property as rented
+            </button>
+          )}
         </div>
       </DialogContent>
     </Dialog>

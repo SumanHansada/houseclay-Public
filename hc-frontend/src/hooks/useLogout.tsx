@@ -1,5 +1,6 @@
 "use client";
 
+import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 
 import { apiSlice, useLogoutMutation } from "@/store/apiSlice";
@@ -15,6 +16,7 @@ export function useLogout() {
   const logout = async () => {
     try {
       const logoutResponse = await logoutMutation().unwrap();
+      toast.success("Logged out successfully");
       console.log(logoutResponse);
     } catch (err) {
       console.error("Logout API failed:", err);

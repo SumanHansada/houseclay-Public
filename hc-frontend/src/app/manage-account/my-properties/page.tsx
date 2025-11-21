@@ -2,7 +2,7 @@
 
 import { Check, ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
@@ -36,8 +36,9 @@ export default function MyPropertiesPage() {
   const [selectedFilterCategory, setSelectedFilterCategory] =
     useState<PropertyCategory>(PropertyCategory.NONE);
   const [onlyActive, setOnlyActive] = useState(false);
-  const [selectedPropertyId, setSelectedPropertyId] = useState("");
   const [selectedPropertyCategory, setSelectedPropertyCategory] = useState("");
+  const [selectedPropertySate, setSelectedPropertySate] = useState("");
+  const selectedPropertyIdRef = useRef("");
   const { isDialogOpen, openDialog, closeDialog } = useDialog();
   const dispatch = useDispatch();
 
@@ -75,28 +76,44 @@ export default function MyPropertiesPage() {
 
   const onDashboard = (category: string, id: string) => {
     router.push(`/my-property-details/${category?.toLowerCase()}/${id}`);
-    console.log("Redirect to my-properties-details for: ", id);
   };
 
-  const onOpenDialog = (propertyCategory: string, propertyId: string) => {
-    setSelectedPropertyId(propertyId);
+  const onOpenDialog = (
+    propertyCategory: string,
+    propertyId: string,
+    propertyState: string,
+  ) => {
+    selectedPropertyIdRef.current = propertyId;
     setSelectedPropertyCategory(propertyCategory);
+    setSelectedPropertySate(propertyState);
     openDialog(PROPERTY_ACTIONS_DIALOG_ID);
-    console.log("Open dialog for:", selectedPropertyId);
   };
 
-  const handleCloseDialog = () => {
+  const handleMarkAsRented = (propertyId: string) => {
+    selectedPropertyIdRef.current = propertyId;
+    openDialog(MARK_RENTED_ACTION_DIALOG_ID);
+  };
+
+  const handleCloseDialog = (isTransitioning: boolean) => {
     closeDialog(PROPERTY_ACTIONS_DIALOG_ID);
     dispatch(setHideStickyNavBar(false));
-    setSelectedPropertyId("");
+    if (isTransitioning) return;
+    selectedPropertyIdRef.current = "";
     setSelectedPropertyCategory("");
+    setSelectedPropertySate("");
   };
 
   const handleDeactivatingProperty = async () => {
-    const response = await deactivatingProperty({
-      propertyID: selectedPropertyId,
-    }).unwrap();
-    console.log(response);
+    try {
+      const response = await deactivatingProperty({
+        propertyID: selectedPropertyIdRef.current,
+      }).unwrap();
+      console.log(response);
+      // Reset after success
+      selectedPropertyIdRef.current = "";
+    } catch (error) {
+      console.error("Error marking property as rented:", error);
+    }
   };
 
   if (userDetailLoading) {
@@ -194,6 +211,7 @@ export default function MyPropertiesPage() {
         <PropertyTable
           properties={filteredProperties}
           onDashboard={onDashboard}
+          onMarkAsRented={handleMarkAsRented}
         />
       </div>
 
@@ -203,15 +221,18 @@ export default function MyPropertiesPage() {
           items={filteredProperties}
           onDashboard={onDashboard}
           onOpenDialog={onOpenDialog}
+          onMarkAsRented={handleMarkAsRented}
         />
       </div>
 
       {isDialogOpen(PROPERTY_ACTIONS_DIALOG_ID) && (
         <MyPropertyActionsDialog
           id={PROPERTY_ACTIONS_DIALOG_ID}
-          propertyID={selectedPropertyId}
+          propertyID={selectedPropertyIdRef.current}
+          propertyState={selectedPropertySate}
           propertyCategory={selectedPropertyCategory}
           onDashboard={onDashboard}
+          onMarkAsRented={handleMarkAsRented}
           onClose={handleCloseDialog}
         />
       )}
@@ -229,6 +250,8 @@ export default function MyPropertiesPage() {
           onClose={() => {
             closeDialog(MARK_RENTED_ACTION_DIALOG_ID);
             if (isMobile) dispatch(setHideStickyNavBar(false));
+            selectedPropertyIdRef.current = "";
+            setSelectedPropertyCategory("");
           }}
         />
       )}

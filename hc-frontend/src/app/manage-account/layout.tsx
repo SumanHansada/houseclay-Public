@@ -43,14 +43,19 @@ export default function ManageProfileLayout({
     },
   );
 
-  if (!isAuthenticated) {
-    router.push("/login");
-  }
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.replace("/login");
+    }
+  }, [isAuthenticated, router]);
 
-  if (isError && error && "status" in error && error.status === 401) {
-    logout();
-    router.replace("/");
-  }
+  // Handle 401 errors
+  useEffect(() => {
+    if (isError && error && "status" in error && error.status === 401) {
+      logout();
+      router.replace("/login");
+    }
+  }, [isError, error, logout, router]);
 
   useEffect(() => {
     dispatch(setUserDetailLoading(isLoading || isFetching));
@@ -98,6 +103,10 @@ export default function ManageProfileLayout({
       dispatch(setHideFooter(false));
     }
   }, [dispatch, isMobile]);
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <>

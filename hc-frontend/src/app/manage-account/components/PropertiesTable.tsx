@@ -3,7 +3,6 @@
 import { CircleCheck, Clock, Ellipsis } from "lucide-react";
 import Link from "next/link";
 
-import { MARK_RENTED_ACTION_DIALOG_ID } from "@/common/constants";
 import {
   BHK_TYPE_OPTIONS,
   getOptionLabel,
@@ -12,18 +11,17 @@ import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { formatINRCurrency, pascalCase } from "@/common/utils";
 import { Column, DataTable } from "@/components/DataTable";
 import { UserOwnedProperties } from "@/interfaces/User";
-import { useDialog } from "@/providers/DialogContextProvider";
 import { Popover } from "@/utility-components";
 
 export function PropertyTable({
   properties,
   onDashboard,
+  onMarkAsRented,
 }: {
   properties: UserOwnedProperties[];
   onDashboard: (propertyCategory: string, propertyId: string) => void;
+  onMarkAsRented: (propertyId: string) => void;
 }) {
-  const { openDialog } = useDialog();
-
   const columns: Column<UserOwnedProperties>[] = [
     {
       key: "propertyName",
@@ -104,7 +102,7 @@ export function PropertyTable({
       key: "action",
       label: "Action",
       className: "w-20 text-center",
-      render: (item) => (
+      render: (prop) => (
         <Popover
           id="manage-account-popover"
           trigger="click"
@@ -117,22 +115,24 @@ export function PropertyTable({
                 type="button"
                 className="block w-full px-3 py-2 text-left hover:bg-gray-100"
                 onClick={() => {
-                  onDashboard(item.propertyCategory, item.propertyID);
+                  onDashboard(prop.propertyCategory, prop.propertyID);
                   close();
                 }}
               >
                 Open Dashboard
               </button>
-              <button
-                type="button"
-                className="block w-full px-3 py-2 text-left hover:bg-gray-100"
-                onClick={() => {
-                  openDialog(MARK_RENTED_ACTION_DIALOG_ID);
-                  close();
-                }}
-              >
-                Mark as Sold/Rented
-              </button>
+              {prop.propertyState === PropertyStatus.INACTIVE ? null : (
+                <button
+                  type="button"
+                  className="block w-full px-3 py-2 text-left hover:bg-gray-100"
+                  onClick={() => {
+                    onMarkAsRented(prop.propertyID);
+                    close();
+                  }}
+                >
+                  Mark as Rented
+                </button>
+              )}
             </div>
           )}
         >

@@ -16,10 +16,16 @@ export function PropertyCardList({
   items,
   onDashboard,
   onOpenDialog,
+  onMarkAsRented,
 }: {
   items: UserOwnedProperties[];
   onDashboard: (propertyCategory: string, propertyId: string) => void;
-  onOpenDialog: (propertyCategory: string, propertyId: string) => void;
+  onOpenDialog: (
+    propertyCategory: string,
+    propertyId: string,
+    propertyState: string,
+  ) => void;
+  onMarkAsRented?: (propertyId: string) => void;
 }) {
   // backend guarantees items are already sorted
   const groupedProperties = useMemo<GroupedProperties[]>(() => {
@@ -57,6 +63,7 @@ export function PropertyCardList({
                 property={property}
                 onDashboard={onDashboard}
                 onOpenDialog={onOpenDialog}
+                onMarkAsRented={onMarkAsRented}
               />
             ))}
           </div>
