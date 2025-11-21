@@ -1064,14 +1064,14 @@ export function MyPropertyDetailsClient({
 
       {/* Mobile Footer Section */}
       <MobileFooter>
-        <div className="flex justify-end w-full">
-          {/* <button
-          type="button"
-          className="flex items-center gap-2 px-6 py-3 text-gray-700 bg-gray-100 border border-gray-300 rounded-xl hover:bg-gray-50 disabled:bg-gray-300 disabled:cursor-not-allowed"
-          onClick={handleEdit}
-        >
-          <EditIcon size={20} /> Edit
-        </button> */}
+        <div className="flex justify-between w-full">
+          <button
+            type="button"
+            className="flex items-center gap-2 px-6 py-3 text-gray-700 bg-gray-100 border border-gray-300 rounded-xl hover:bg-gray-50 disabled:bg-gray-300 disabled:cursor-not-allowed"
+            onClick={handleEdit}
+          >
+            <EditIcon size={20} /> Edit
+          </button>
 
           {property?.propertyState === PropertyStatus.INACTIVE ? null : (
             <button
