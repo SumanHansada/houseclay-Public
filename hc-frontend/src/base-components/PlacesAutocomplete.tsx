@@ -70,6 +70,8 @@ const PlacesAutocompleteBase = ({
   const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const [focusedIndex, setFocusedIndex] = useState(-1);
 
+  const activeOptionRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     const checkGoogleMapsLoaded = async () => {
       if (window.google?.maps?.places) {
@@ -255,6 +257,18 @@ const PlacesAutocompleteBase = ({
     setFocusedIndex(-1);
   }, [predictions]);
 
+  // Scroll active option into view
+  useEffect(() => {
+    if (!showDropdown) return;
+    if (focusedIndex < 0) return;
+
+    if (activeOptionRef.current) {
+      activeOptionRef.current.scrollIntoView({
+        block: "nearest",
+      });
+    }
+  }, [focusedIndex, showDropdown]);
+
   return (
     <div className={containerClassName}>
       {label && (
@@ -300,6 +314,7 @@ const PlacesAutocompleteBase = ({
             <div
               key={prediction.placeId}
               id={`${id}-option-${index}`}
+              ref={index === focusedIndex ? activeOptionRef : null}
               className={`${dropdownItemClassName} ${index === focusedIndex ? "bg-gray-100" : ""}`}
               onClick={() => selectPrediction(prediction)}
               role="option"
