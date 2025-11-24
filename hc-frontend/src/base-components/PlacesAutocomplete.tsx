@@ -1,17 +1,11 @@
 "use client";
 
+import { BENGALURU_BOUNDS } from "@/utils/geoBounds";
 import "../app/google-places-autocomplete.css";
 
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { MapPin } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-
-const BENGALURU_BOUNDS = {
-  south: 12.834,
-  west: 77.46,
-  north: 13.139,
-  east: 77.743,
-};
 
 interface PlacesAutocompleteProps {
   label?: string;
@@ -312,7 +306,7 @@ const PlacesAutocompleteBase = ({
               aria-selected={index === focusedIndex}
               tabIndex={-1}
             >
-              <span className="text-gray-500 mr-2">
+              <span className="mr-2 text-gray-500">
                 <MapPin size={20} />
               </span>
               <div>
