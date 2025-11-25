@@ -111,9 +111,9 @@ const MastHeadMobile: React.FC = () => {
       {/* Tagline */}
       <div className="flex justify-center items-center">
         <div className="flex items-center gap-2">
-          <span className="text-xl font-bold font-inter">No Middleman,</span>
+          <span className="text-xl font-bold font-inter">Stop Searching</span>
           <span className="text-xl font-nunito text-red-500 ">
-            Just Connects
+            Start Connecting
           </span>
         </div>
       </div>

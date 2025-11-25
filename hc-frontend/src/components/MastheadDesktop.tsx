@@ -29,10 +29,10 @@ const MastHeadDesktop = () => {
         {/* Headings */}
         <div className="max-w-md mb-8">
           <h1 className="xl:text-6xl lg:text-5xl text-5xl font-bold text-gray-900 mb-2">
-            No Middlemen
+            Stop Searching
           </h1>
           <h2 className="xl:text-5xl lg:text-4xl text-4xl text-gray-800">
-            Just Connects
+            Start Connecting
           </h2>
         </div>
 
