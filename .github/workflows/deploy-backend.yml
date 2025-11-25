@@ -16,6 +16,19 @@ jobs:
     env:
       PROJECT_PATH: hc-backend/backend
       TARGET_JAR: hc-backend/backend/target/backend-0.0.1-SNAPSHOT.jar
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DATABASE_USERNAME: ${{secrets.DATABASE_USERNAME}}
+      DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+      ELASTIC_SEARCH_URL: ${{secrets.ELASTIC_SEARCH_URL}}
+      RAZORPAY_KEY: ${{secrets.RAZORPAY_KEY}}
+      RAZORPAY_SECRET: ${{secrets.RAZORPAY_SECRET}}
+      S3_BUCKET: ${{secrets.S3_BUCKET}}
+      AWS_REGION: ${{secrets.AWS_REGION}}
+      AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY}}
+      AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY}}
+      MSG91_AUTH_KEY: ${{secrets.MSG91_AUTH_KEY}}
+      OTP_SIGN_KEY: ${{secrets.OTP_SIGN_KEY}}
+      OTP_HASH_KEY: ${{secrets.OTP_HASH_KEY}}
 
     steps:
       - name: Checkout repository
