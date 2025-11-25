@@ -67,17 +67,6 @@ public class PropertyController {
         PaginatedResponse<PropertyCardDTO> results = searchService.searchNearbyWithFilters(
                 propertySearchRequestDTO, page, size
         );
-        Map<String, ResponseCookie> cookies;
-        try {
-            cookies = cookieService.generateSignedCookies();
-            return ResponseEntity.ok()
-                    .header("Set-Cookie", cookies.get("CloudFront-Policy").toString())
-                    .header("Set-Cookie", cookies.get("CloudFront-Signature").toString())
-                    .header("Set-Cookie", cookies.get("CloudFront-Key-Pair-Id").toString())
-                    .body(results);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         return ResponseEntity.ok(results);
     }
 }
