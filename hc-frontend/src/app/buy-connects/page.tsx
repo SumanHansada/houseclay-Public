@@ -4,7 +4,7 @@ import { ChevronLeft, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { use, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
@@ -64,6 +64,7 @@ export default function BuyConnectsPage() {
   const { isDialogOpen, closeDialog, openDialog, closeAllDialogs } =
     useDialog();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { userDetail } = useSelector((state: RootState) => state.user);
   const [paymentStatus, setPaymentStatus] = useState<PaymentVerificationStatus>(
     PaymentVerificationStatus.VERIFYING,
   );
@@ -204,10 +205,11 @@ export default function BuyConnectsPage() {
         description: `Purchase of ${connectsToBuy} Connects`,
         order_id: response.orderId,
         handler: handlePaymentSuccess,
-        // prefill: {
-        //   name: "User Name",
-        //   email: "user.email@example.com",
-        // },
+        prefill: {
+          name: userDetail?.name || "Houseclay User",
+          email: userDetail?.emailID || "",
+          contact: userDetail?.phoneNo || "",
+        },
       };
 
       const rzp = new Razorpay(options);
