@@ -11,4 +11,5 @@ public class RentPropertyDTO extends PropertyDTO {
     private String preferredTenant;
     private Boolean petsAllowed;
     private Boolean nonVegAllowed;
+    private String ownershipType;
 }

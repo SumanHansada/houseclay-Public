@@ -19,7 +19,6 @@ public class PropertyMapper {
             dto.setPriceNegotiable(sale.getPriceNegotiable());
             dto.setUnderLoan(sale.getUnderLoan());
             dto.setPrice(sale.getPrice());
-            dto.setBalcony(sale.getBalcony());
             dto.setKhataCertificate(sale.getKhataCertificate());
             dto.setSaleDeed(sale.getSaleDeed());
             dto.setPropertyTax(sale.getPropertyTax());
@@ -34,6 +33,7 @@ public class PropertyMapper {
             dto.setPreferredTenant(rent.getPreferredTenant());
             dto.setPetsAllowed(rent.getPetsAllowed());
             dto.setNonVegAllowed(rent.getNonVegAllowed());
+            dto.setOwnershipType(rent.getOwnershipType());
             return dto;
         } else if (property instanceof FlatmateProperty flatmate) {
             FlatmatePropertyDTO dto = new FlatmatePropertyDTO();
@@ -46,6 +46,7 @@ public class PropertyMapper {
             dto.setAttachedBalcony(flatmate.getAttachedBalcony());
             dto.setSmokingPreference(flatmate.getSmokingPreference());
             dto.setDrinkingPreference(flatmate.getDrinkingPreference());
+            dto.setNonVegAllowed(flatmate.isNonVegAllowed());
             return dto;
         } else {
             PropertyDTO dto = new PropertyDTO();
@@ -155,6 +156,7 @@ public class PropertyMapper {
         target.setCoverImage(source.getCoverImage());
         target.setAmenities(source.getAmenities());
         target.setPreferredTenants(source.getPreferredTenants());
+        target.setBalcony(source.getBalcony());
         target.setPropertyCategory(PropertyUtils.getPropertyCategory(source));
     }
 

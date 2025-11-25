@@ -27,7 +27,7 @@ public class PropertySearchMapper {
         PropertyUserSearchDTO dto = new PropertyUserSearchDTO();
         dto.setProperty(toPropertySearchDTO(property));
         if (user != null) {
-            dto.setOwner(OwnerMapper.toOwnerDetailDTO(user));
+            dto.setOwner(OwnerMapper.toOwnerDetailDTO(user, property));
         }
         dto.setReported(isReported);
         dto.setPropertyOwner(isOwner);

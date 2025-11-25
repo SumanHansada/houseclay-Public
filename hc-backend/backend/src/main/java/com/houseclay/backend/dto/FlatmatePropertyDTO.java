@@ -12,4 +12,5 @@ public class FlatmatePropertyDTO extends PropertyDTO {
     private Boolean attachedBalcony;
     private String smokingPreference;
     private String drinkingPreference;
+    private Boolean nonVegAllowed;
 }

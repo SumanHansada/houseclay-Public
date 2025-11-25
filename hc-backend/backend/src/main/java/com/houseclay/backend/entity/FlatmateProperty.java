@@ -16,4 +16,5 @@ public class FlatmateProperty extends Property {
     private Boolean attachedBalcony;
     private String smokingPreference;
     private String drinkingPreference;
+    private boolean nonVegAllowed;
 }

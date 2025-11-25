@@ -30,6 +30,7 @@ public class PropertyDTO {
     private Double builtUpArea;
     private String facing;
     private String bhkType;
+    private Long balcony;
     private Integer bathrooms;
     private Integer floor;
     private Integer totalFloors;
@@ -47,6 +48,7 @@ public class PropertyDTO {
     private String parking;
     private Timestamp availableFrom;
     private PropertyState propertyState;
+    private String secondaryPhoneNumber;
     private List<String> images;
     private List<String> amenities;
     private List<String> preferredTenants;

@@ -7,4 +7,5 @@ public class OwnerDetailDTO {
     String name;
     String phoneNo;
     String emailID;
+    String secondaryPhoneNo;
 }

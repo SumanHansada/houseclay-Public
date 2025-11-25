@@ -44,6 +44,7 @@ public class Property {
     @Column(length = 1000)
     private String description;
 
+    private Long balcony;
     private String city;
     private String locationOrSocietyName;
     private String landmark;
@@ -59,6 +60,7 @@ public class Property {
     private PropertyState propertyState;
     private String coverImage;
     private Long score;
+    private String secondaryPhoneNumber;
 
     @ElementCollection
     private List<String> images;

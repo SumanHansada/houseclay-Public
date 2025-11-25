@@ -142,7 +142,7 @@ public class PropertyUserService {
         }
         User owner = property.getOwner();
         PropertyContactDTO contactDTO = new PropertyContactDTO();
-        contactDTO.setOwner(OwnerMapper.toOwnerDetailDTO(owner));
+        contactDTO.setOwner(OwnerMapper.toOwnerDetailDTO(owner, property));
         contactDTO.setConnectBal(user.getConnectBal());
         return contactDTO;
     }

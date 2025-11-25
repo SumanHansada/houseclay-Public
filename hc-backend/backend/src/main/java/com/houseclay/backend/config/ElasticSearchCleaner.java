@@ -25,10 +25,10 @@ public class ElasticSearchCleaner implements ApplicationRunner {
     }
 
     private void deleteIndex(String indexName) throws Exception {
-        DeleteByQueryResponse response = client.deleteByQuery(d -> d
-                .index(indexName)
-                .query(q -> q.matchAll(m -> m))
-        );
-        System.out.println("Deleted documents count: " + response.deleted());
+//        DeleteByQueryResponse response = client.deleteByQuery(d -> d
+//                .index(indexName)
+//                .query(q -> q.matchAll(m -> m))
+//        );
+//        System.out.println("Deleted documents count: " + response.deleted());
     }
 }
