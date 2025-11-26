@@ -101,6 +101,12 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
+  // Dynamically get lat/lon from current params or fallback to Bengaluru
+  const currentLat =
+    searchParams.get("lat") || BENGALURU_LOCATION.lat.toString();
+  const currentLon =
+    searchParams.get("lon") || BENGALURU_LOCATION.lng.toString();
+
   const onLogin = () => {
     closeAllDialogs();
     dispatch(setAuthStep(AuthStep.NONE));
@@ -143,7 +149,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
         <div className="flex justify-between items-center w-full text-sm">
           <nav className="hidden md:flex xl:gap-8 lg:gap-6 md:gap-5 gap-3 text-gray-800 text-base">
             <Link
-              href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=rent`}
+              href={`/property-search?lat=${currentLat}&lon=${currentLon}&propertyCategory=rent`}
               data-category="rent"
               data-active={
                 searchParams.get("propertyCategory") === "rent" ||
@@ -157,7 +163,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
               Rent
             </Link>
             <Link
-              href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=flatmate`}
+              href={`/property-search?lat=${currentLat}&lon=${currentLon}&propertyCategory=flatmate`}
               data-category="flatmate"
               data-active={
                 searchParams.get("propertyCategory") === "flatmate"
