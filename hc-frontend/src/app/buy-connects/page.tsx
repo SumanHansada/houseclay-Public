@@ -4,7 +4,7 @@ import { ChevronLeft, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { use, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
@@ -41,6 +41,7 @@ import { SvgIcon } from "@/utility-components";
 import { Tab, TabContent, TabHeader, Tabs } from "@/utility-components/Tabs";
 
 const MINIMUM_CUSTOM_CONNECTS = 1;
+const MAXIMUM_CUSTOM_CONNECTS = 50;
 const CUSTOM_CONNECT_PRICE = 99;
 const BUNDLE_VALIDITY_DAYS = 60;
 const RAZORPAY_KEY = "REDACTED_RAZORPAY_KEY_ID";
@@ -186,7 +187,9 @@ export default function BuyConnectsPage() {
   };
 
   const handleProceedToPay = async () => {
-    if (!agreedToTerms || connectsToBuy < MINIMUM_CUSTOM_CONNECTS) return;
+    if (!canProceedToPay) {
+      return;
+    }
 
     if (isDialogOpen("connects-price-breakdown-dialog")) {
       handleCloseDialog();
@@ -234,6 +237,11 @@ export default function BuyConnectsPage() {
     closeDialog("verify-connects-dialog");
     router.push("/manage-account/connects");
   };
+
+  const canProceedToPay =
+    agreedToTerms &&
+    connectsToBuy >= MINIMUM_CUSTOM_CONNECTS &&
+    connectsToBuy <= MAXIMUM_CUSTOM_CONNECTS;
 
   return (
     <>
@@ -297,18 +305,28 @@ export default function BuyConnectsPage() {
                         label="Enter Connects to buy"
                         value={customConnects}
                         onChange={setCustomConnects}
-                        min={0}
+                        min={MINIMUM_CUSTOM_CONNECTS}
+                        max={MAXIMUM_CUSTOM_CONNECTS}
                         required
                         className="mb-3"
                       />
 
                       {/* Error Message */}
-                      {customConnects < MINIMUM_CUSTOM_CONNECTS && (
+                      {customConnects <= MINIMUM_CUSTOM_CONNECTS && (
                         <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
                           <p className="text-sm">
                             A minimum of{" "}
                             <strong>{MINIMUM_CUSTOM_CONNECTS} Connect</strong>{" "}
                             is required to proceed.
+                          </p>
+                        </div>
+                      )}
+                      {customConnects >= MAXIMUM_CUSTOM_CONNECTS && (
+                        <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                          <p className="text-sm">
+                            A maximum of{" "}
+                            <strong>{MAXIMUM_CUSTOM_CONNECTS} Connects</strong>{" "}
+                            can be purchased at a time.
                           </p>
                         </div>
                       )}
@@ -438,15 +456,11 @@ export default function BuyConnectsPage() {
                     <button
                       onClick={isAuthenticated ? handleProceedToPay : onLogin}
                       className={`flex px-8 py-3 rounded-xl ${
-                        agreedToTerms &&
-                        connectsToBuy >= MINIMUM_CUSTOM_CONNECTS
+                        canProceedToPay
                           ? "bg-red-500 text-white hover:bg-red-600"
                           : "bg-gray-300 text-gray-500 cursor-not-allowed"
                       }`}
-                      disabled={
-                        !agreedToTerms ||
-                        connectsToBuy < MINIMUM_CUSTOM_CONNECTS
-                      }
+                      disabled={!canProceedToPay}
                     >
                       Proceed to Pay
                     </button>
@@ -526,18 +540,28 @@ export default function BuyConnectsPage() {
                   label="Enter Connects to buy"
                   value={customConnects}
                   onChange={setCustomConnects}
-                  min={0}
+                  min={MINIMUM_CUSTOM_CONNECTS}
+                  max={MAXIMUM_CUSTOM_CONNECTS}
                   required
                   className="mb-3 w-full"
                 />
 
                 {/* Error Message */}
-                {customConnects < MINIMUM_CUSTOM_CONNECTS && (
+                {customConnects <= MINIMUM_CUSTOM_CONNECTS && (
                   <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
                     <p className="text-sm">
                       A minimum of{" "}
                       <strong>{MINIMUM_CUSTOM_CONNECTS} Connect</strong> is
                       required to proceed.
+                    </p>
+                  </div>
+                )}
+                {customConnects >= MAXIMUM_CUSTOM_CONNECTS && (
+                  <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-sm">
+                      A maximum of{" "}
+                      <strong>{MAXIMUM_CUSTOM_CONNECTS} Connects</strong> can be
+                      purchased at a time.
                     </p>
                   </div>
                 )}
@@ -609,12 +633,12 @@ export default function BuyConnectsPage() {
           </div>
           <button
             className={`text-center px-6 py-3 border rounded-xl w-full transition duration-200 ${
-              agreedToTerms && connectsToBuy >= MINIMUM_CUSTOM_CONNECTS
+              canProceedToPay
                 ? "bg-red-500 border-red-500 text-white hover:bg-red-600"
                 : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
             }`}
             onClick={() => openDialog("connects-price-breakdown-dialog")}
-            disabled={!agreedToTerms || connectsToBuy < MINIMUM_CUSTOM_CONNECTS}
+            disabled={!canProceedToPay}
           >
             Price Breakdown
           </button>

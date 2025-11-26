@@ -1,11 +1,12 @@
 "use client";
 
-import { BENGALURU_BOUNDS, LatLngBounds } from "@/utils/geoBounds";
 import "../app/google-places-autocomplete.css";
 
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { MapPin } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+
+import { BENGALURU_BOUNDS, LatLngBounds } from "@/utils/geoBounds";
 
 interface PlacesAutocompleteProps {
   label?: string;

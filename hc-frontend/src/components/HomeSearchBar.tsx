@@ -9,9 +9,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { PlacesAutocomplete } from "@/base-components";
 import { resetPropertySearch, setLocation } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
+import { BENGALURU_BOUNDS, isWithinBounds } from "@/utils/geoBounds";
 
 import Dropdown from "./Dropdown";
-import { BENGALURU_BOUNDS, isWithinBounds } from "@/utils/geoBounds";
 
 const cityLatLngMapping: Record<string, { lat: number; lng: number }> = {
   Bengaluru: { lat: 12.9716, lng: 77.5946 },

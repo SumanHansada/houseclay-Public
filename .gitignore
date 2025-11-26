@@ -23,3 +23,6 @@
 
 # misc
 .DS_Store
+
+# VS Code workspace and settings (personal/editor-specific)
+monorepo.code-workspace

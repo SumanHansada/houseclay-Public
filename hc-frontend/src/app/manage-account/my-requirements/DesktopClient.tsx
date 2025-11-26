@@ -10,6 +10,7 @@ import {
   FormRadioGroup,
 } from "@/form-components";
 import { MyRequirementsFormValues } from "@/interfaces/ManageAccount";
+import { BENGALURU_BOUNDS, isWithinBounds } from "@/utils/geoBounds";
 
 import {
   bhkTypeOptions,
@@ -20,7 +21,6 @@ import {
   resaleBudgetOptions,
   userTypeOptions,
 } from "./options";
-import { BENGALURU_BOUNDS, isWithinBounds } from "@/utils/geoBounds";
 
 interface DesktopProps {
   editMode: boolean;
