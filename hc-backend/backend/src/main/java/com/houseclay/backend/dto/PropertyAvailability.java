@@ -4,5 +4,5 @@ public enum PropertyAvailability {
     IMMEDIATE,
     WITHIN_15,
     WITHIN_30,
-    WITHIN_60
+    ABOVE_30
 }

@@ -104,20 +104,33 @@ public class SearchService {
         }
 
         if (request.getPropertyAvailability() != null) {
-            long offsetMillis = 0L;
             switch (request.getPropertyAvailability()) {
-                case IMMEDIATE: offsetMillis = Duration.ofMinutes(1).toMillis(); break;
-                case WITHIN_15: offsetMillis = Duration.ofDays(15).toMillis(); break;
-                case WITHIN_30: offsetMillis = Duration.ofDays(30).toMillis(); break;
-                case WITHIN_60: offsetMillis = Duration.ofDays(60).toMillis(); break;
+                case IMMEDIATE: filters.add(Query.of(q -> q
+                        .range(r -> r
+                                .field("availableFrom")
+                                .lt(JsonData.of(System.currentTimeMillis() + Duration.ofMinutes(1).toMillis()))
+                        )
+                )); break;
+                case WITHIN_15: filters.add(Query.of(q -> q
+                        .range(r -> r
+                                .field("availableFrom")
+                                .lt(JsonData.of(System.currentTimeMillis() + Duration.ofDays(15).toMillis()))
+                        )
+                )); break;
+                case WITHIN_30: filters.add(Query.of(q -> q
+                        .range(r -> r
+                                .field("availableFrom")
+                                .lt(JsonData.of(System.currentTimeMillis() + Duration.ofDays(30).toMillis()))
+                        )
+                )); break;
+                case ABOVE_30: filters.add(Query.of(q -> q
+                        .range(r -> r
+                                .field("availableFrom")
+                                .gt(JsonData.of(System.currentTimeMillis() + Duration.ofDays(30).toMillis()))
+                        )
+                )); break;
+                default: break;
             }
-            long cutoff = System.currentTimeMillis() + offsetMillis;
-            filters.add(Query.of(q -> q
-                    .range(r -> r
-                            .field("availableFrom")
-                            .lt(JsonData.of(cutoff))
-                    )
-            ));
         }
 
         if (request.getAmenities() != null && !request.getAmenities().isEmpty()) {
