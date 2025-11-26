@@ -43,6 +43,13 @@ jobs:
           npm run build:prod
           EOF
 
+      # Invalidate Cloudfront cache
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id E3S9Z7NQXV8BFM \
+            --paths "/*"
+
       # Frontend server
       - name: Start hc-frontend on Houseclay Host
         run: |
