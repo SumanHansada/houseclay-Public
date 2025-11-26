@@ -96,9 +96,7 @@ const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
   };
 
   const handleVerifyAndContinue = () => {
-    // run the api
     const otp = otpCode.join("");
-    console.log("Email is Verified - OTP: " + otpCode);
     onSubmit(otp);
   };
 
@@ -121,7 +119,7 @@ const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
               <Button
                 variant="secondary"
                 size="custom"
-                className="rounded-full p-1"
+                className="p-1 rounded-full"
                 onClick={onClose}
               >
                 <X size={24} />
@@ -131,10 +129,10 @@ const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
         )}
       </DialogHeader>
       <DialogContent>
-        <div className="w-full flex flex-col justify-center gap-4 p-6 max-md:h-full">
+        <div className="flex flex-col justify-center w-full gap-4 p-6 max-md:h-full">
           {/* Form header */}
           <div className="max-md:text-center">
-            <h1 className="text-2xl mb-1 max-md:hidden">
+            <h1 className="mb-1 text-2xl max-md:hidden">
               Verify Your email address
             </h1>
             <p className="text-gray-700 md:text-sm">
@@ -145,6 +143,29 @@ const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
 
           {/* Form fields */}
           <div className="flex flex-col gap-4">
+            {/* Hidden input for Android & iOS OTP autofill */}
+            <input
+              type="text"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              style={{
+                position: "absolute",
+                left: "-9999px",
+                opacity: 0,
+                pointerEvents: "none",
+              }}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\D/g, "").slice(0, 4);
+                if (value.length === 4) {
+                  const digits = value.split("");
+                  setOtpCode(digits);
+                  // Focus the last input
+                  if (inputRefs[3].current) {
+                    inputRefs[3].current.focus();
+                  }
+                }
+              }}
+            />
             <div className="flex gap-2 max-md:mx-auto">
               <input
                 id="otp-1"
@@ -163,6 +184,7 @@ const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
                 id="otp-2"
                 type="text"
                 inputMode="numeric"
+                autoComplete="one-time-code"
                 ref={inputRefs[1]}
                 value={otpCode[1]}
                 onChange={(e) => handleChange(1, e.target.value)}
@@ -174,6 +196,7 @@ const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
                 id="otp-3"
                 type="text"
                 inputMode="numeric"
+                autoComplete="one-time-code"
                 ref={inputRefs[2]}
                 value={otpCode[2]}
                 onChange={(e) => handleChange(2, e.target.value)}
@@ -185,6 +208,7 @@ const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
                 id="otp-4"
                 type="text"
                 inputMode="numeric"
+                autoComplete="one-time-code"
                 ref={inputRefs[3]}
                 value={otpCode[3]}
                 onChange={(e) => handleChange(3, e.target.value)}
@@ -198,7 +222,7 @@ const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
             <div className="max-md:text-center">
               <span className="text-gray-500">Didn&apos;t receive code?</span>
               &nbsp;
-              <button className="text-red-500 font-medium underline">
+              <button className="font-medium text-red-500 underline">
                 Resend
               </button>
             </div>
@@ -206,10 +230,10 @@ const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
         </div>
       </DialogContent>
       <DialogFooter>
-        <div className="flex w-full justify-between md:justify-end md:gap-3">
+        <div className="flex justify-between w-full md:justify-end md:gap-3">
           <button
             type="button"
-            className="border rounded-lg py-3 px-4"
+            className="px-4 py-3 border rounded-lg"
             onClick={onClose}
           >
             Cancel

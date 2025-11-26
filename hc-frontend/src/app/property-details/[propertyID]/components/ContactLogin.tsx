@@ -269,7 +269,7 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
           <Button
             variant="secondary"
             size="custom"
-            className="absolute top-2 right-2 rounded-full p-1"
+            className="absolute p-1 rounded-full top-2 right-2"
             onClick={onClose}
           >
             <X size={24} />
@@ -290,15 +290,15 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
           </div>
         )}
         {/* Right pane (form) - takes remaining width */}
-        <div className="flex flex-1 h-full px-8 mx-auto relative mt-10 mb-6">
+        <div className="relative flex flex-1 h-full px-8 mx-auto mt-10 mb-6">
           {authStep === AuthStep.PHONE && (
-            <div className="w-full flex flex-col align-center justify-center gap-8">
+            <div className="flex flex-col justify-center w-full gap-8 align-center">
               {/* Form header */}
               <div className="max-md:hidden">
-                <h1 className="text-lg lg:text-xl xl:text-2xl 2xl:text-3xl mb-3 text-black ">
+                <h1 className="mb-3 text-lg text-black lg:text-xl xl:text-2xl 2xl:text-3xl ">
                   Unlock Owner Details
                 </h1>
-                <p className="text-gray-600 text-sm">
+                <p className="text-sm text-gray-600">
                   You&apos;re one step away from connecting with the property
                   owner. Use 1 Connect to view their contact information.
                 </p>
@@ -307,7 +307,7 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
               {/* Form fields */}
               <div className="space-y-1 lg:space-y-2 xl:space-y-3 2xl:space-y-4">
                 <div>
-                  <div className="md:hidden mb-6">
+                  <div className="mb-6 md:hidden">
                     <span className="text-2xl font-bold">No spam, </span>
                     <span className="text-2xl font-medium">just updates.</span>
                     <p className="text-lg text-gray-700">
@@ -318,7 +318,7 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
                   </div>
                   <label
                     htmlFor="phone"
-                    className="block text-base font-normal text-gray-700 mb-2"
+                    className="block mb-2 text-base font-normal text-gray-700"
                   >
                     Phone Number
                   </label>
@@ -333,7 +333,7 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
                 </div>
 
                 {/* Info box */}
-                <div className="md:hidden text-gray-400 mb-3">
+                <div className="mb-3 text-gray-400 md:hidden">
                   We&apos;ll text you to confirm your number.
                 </div>
 
@@ -348,18 +348,18 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
                 </button>
 
                 {/* Privacy policy */}
-                <div className="md:hidden text-gray-500 text-sm">
+                <div className="text-sm text-gray-500 md:hidden">
                   By continuing to use this service, you agree to our{" "}
                   <Link
                     href="/terms-and-conditions"
-                    className="text-gray-700 underline font-bold"
+                    className="font-bold text-gray-700 underline"
                   >
                     Terms of Service
                   </Link>{" "}
                   and{" "}
                   <Link
                     href="/privacy-policy"
-                    className="text-gray-700 underline font-bold"
+                    className="font-bold text-gray-700 underline"
                   >
                     Privacy Policy
                   </Link>
@@ -368,7 +368,7 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
             </div>
           )}
           {authStep === AuthStep.CREATE_USER && (
-            <div className="w-full flex flex-col align-center justify-center gap-2">
+            <div className="flex flex-col justify-center w-full gap-2 align-center">
               {/* Form header */}
               <div className="flex flex-col gap-1 mb-2">
                 <h1 className="text-2xl text-black ">
@@ -393,7 +393,7 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
                   />
                   <label
                     htmlFor="phone"
-                    className="block text-base font-normal text-gray-700 mt-2"
+                    className="block mt-2 text-base font-normal text-gray-700"
                   >
                     Email Address<span className="text-red-600">*</span>
                   </label>
@@ -402,11 +402,11 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
                     placeholder="Enter email address"
                     value={emailID}
                     onChange={(e) => dispatch(setEmailID(e.target.value))}
-                    className="px-2 py-2 w-full border border-gray-300 rounded-lg"
+                    className="w-full px-2 py-2 border border-gray-300 rounded-lg"
                   />
                   <label
                     htmlFor="phone"
-                    className="block text-base font-normal text-gray-700 mt-2"
+                    className="block mt-2 text-base font-normal text-gray-700"
                   >
                     Name<span className="text-red-600">*</span>
                   </label>
@@ -416,7 +416,7 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
                     required
                     value={name}
                     onChange={(e) => dispatch(setName(e.target.value))}
-                    className="px-2 py-2 w-full border border-gray-300 rounded-lg mb-2"
+                    className="w-full px-2 py-2 mb-2 border border-gray-300 rounded-lg"
                   />
                 </div>
                 {/* Continue button */}
@@ -436,13 +436,13 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
             </div>
           )}
           {authStep === AuthStep.OTP && (
-            <div className="w-full flex flex-col align-center justify-center gap-6">
+            <div className="flex flex-col justify-center w-full gap-6 align-center">
               {/* Form header */}
               <div>
-                <h1 className="text-2xl mb-1 text-black max-md:hidden">
+                <h1 className="mb-1 text-2xl text-black max-md:hidden">
                   Unlock Owner Details
                 </h1>
-                <div className="md:hidden mb-6">
+                <div className="mb-6 md:hidden">
                   <span className="text-2xl font-bold">No spam, </span>
                   <span className="text-2xl font-medium">just updates.</span>
                   <p className="text-lg text-gray-700">
@@ -450,13 +450,36 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
                     owner. Use 1 Connect to view their contact information
                   </p>
                 </div>
-                <p className="text-gray-600 text-sm">
+                <p className="text-sm text-gray-600">
                   We&apos;ve sent a 4-digit OTP to your phone number: {phoneNo}
                 </p>
               </div>
 
               {/* Form fields */}
               <div className="flex flex-col gap-5">
+                {/* Hidden input for Android & iOS OTP autofill */}
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  style={{
+                    position: "absolute",
+                    left: "-9999px",
+                    opacity: 0,
+                    pointerEvents: "none",
+                  }}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, "").slice(0, 4);
+                    if (value.length === 4) {
+                      const digits = value.split("");
+                      setOtpCode(digits);
+                      // Focus the last input
+                      if (inputRefs[3].current) {
+                        inputRefs[3].current.focus();
+                      }
+                    }
+                  }}
+                />
                 <div className="flex gap-2">
                   <input
                     id="otp-1"
@@ -475,6 +498,7 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
                     id="otp-2"
                     type="text"
                     inputMode="numeric"
+                    autoComplete="one-time-code"
                     ref={inputRefs[1]}
                     value={otpCode[1]}
                     onChange={(e) => handleChange(1, e.target.value)}
@@ -486,6 +510,7 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
                     id="otp-3"
                     type="text"
                     inputMode="numeric"
+                    autoComplete="one-time-code"
                     ref={inputRefs[2]}
                     value={otpCode[2]}
                     onChange={(e) => handleChange(2, e.target.value)}
@@ -497,6 +522,7 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
                     id="otp-4"
                     type="text"
                     inputMode="numeric"
+                    autoComplete="one-time-code"
                     ref={inputRefs[3]}
                     value={otpCode[3]}
                     onChange={(e) => handleChange(3, e.target.value)}
@@ -530,7 +556,7 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
                       <button
                         type="button"
                         onClick={handleResendOtp}
-                        className="text-red-500 font-medium underline"
+                        className="font-medium text-red-500 underline"
                       >
                         Resend
                       </button>

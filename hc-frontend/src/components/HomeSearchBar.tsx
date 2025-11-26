@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { PlacesAutocomplete } from "@/base-components";
 import { resetPropertySearch, setLocation } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
+import { BENGALURU_BOUNDS, isWithinBounds } from "@/utils/geoBounds";
 
 import Dropdown from "./Dropdown";
 
@@ -72,16 +73,10 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
     city?: string;
   }) => {
     if (value.city) {
-      const selectedCity = value.city.toLowerCase();
-      const isCityAllowed =
-        CITY_OPTIONS[0].label.toLowerCase() === selectedCity;
-      if (!isCityAllowed) {
-        toast.error(
-          `Please select a location within ${CITY_OPTIONS[0].label}`,
-          {
-            duration: 5000,
-          },
-        );
+      if (!isWithinBounds(value.latitude, value.longitude, BENGALURU_BOUNDS)) {
+        toast.error("Please select a location within Bengaluru", {
+          duration: 5000,
+        });
         dispatch(
           setLocation({
             ...location,
@@ -122,12 +117,12 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
   return (
     <div
       ref={containerRef}
-      className="flex pl-4 pr-2 rounded-full border border-gray-200 bg-white shadow-lg inset-shadow-xs justify-between items-center md:h-16 h-14"
+      className="flex items-center justify-between pl-4 pr-2 bg-white border border-gray-200 rounded-full shadow-lg inset-shadow-xs md:h-16 h-14"
     >
       {/* City */}
       <div className="w-1/4 px-3 py-2 border-r border-gray-200 max-md:hidden">
-        <div className="text-sm font-medium text-gray-900 mb-1">City</div>
-        <div className="text-gray-500 text-sm flex items-center">
+        <div className="mb-1 text-sm font-medium text-gray-900">City</div>
+        <div className="flex items-center text-sm text-gray-500">
           <div className="w-full">
             <Dropdown
               options={CITY_OPTIONS}
@@ -141,7 +136,7 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
       </div>
 
       {/* Location */}
-      <div className="w-3/4 max-md:w-full max-md:flex-1 md:px-3 px-2 md:py-2 py-1 border-gray-200">
+      <div className="w-3/4 px-2 py-1 border-gray-200 max-md:w-full max-md:flex-1 md:px-3 md:py-2">
         <PlacesAutocomplete
           id={id}
           name="location"
@@ -161,14 +156,14 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
       {/* Search Button */}
       <button
         aria-label="search-properties-mobile"
-        className="bg-red-500 flex items-center justify-center rounded-full p-3 shadow-xl md:hidden"
+        className="flex items-center justify-center p-3 bg-red-500 rounded-full shadow-xl md:hidden"
         onClick={handleSearch}
       >
         <Search size={20} className="text-white fill-red-500" />
       </button>
       <button
         aria-label="search-properties"
-        className="bg-red-500 flex items-center justify-center rounded-full p-3 shadow-xl max-md:hidden"
+        className="flex items-center justify-center p-3 bg-red-500 rounded-full shadow-xl max-md:hidden"
         onClick={handleSearch}
         onMouseEnter={handlePrefetch}
         onFocus={handlePrefetch}

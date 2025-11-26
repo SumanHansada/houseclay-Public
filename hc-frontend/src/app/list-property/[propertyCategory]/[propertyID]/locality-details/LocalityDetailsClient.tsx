@@ -20,6 +20,7 @@ import {
   getLocalityDetailsErrors,
   getLocalityDetailsTouched,
 } from "@/utils/formHelpers";
+import { BENGALURU_BOUNDS, isWithinBounds } from "@/utils/geoBounds";
 
 const localitySchema = Yup.object().shape({
   localityDetails: Yup.object().shape({
@@ -55,15 +56,12 @@ const LocalityDetailsClient: React.FC = () => {
     city?: string;
   }) => {
     if (location.city && values.localityDetails?.city) {
-      const selectedCity = location.city;
-      const isCityAllowed = values.localityDetails.city === selectedCity;
-      if (!isCityAllowed) {
-        toast.error(
-          `Please select a location within ${values.localityDetails.city}`,
-          {
-            duration: 5000,
-          },
-        );
+      if (
+        !isWithinBounds(location.latitude, location.longitude, BENGALURU_BOUNDS)
+      ) {
+        toast.error(`Please select a location within Bengaluru`, {
+          duration: 5000,
+        });
         setFieldValue("localityDetails.city", "");
         setFieldValue("localityDetails.latitude", 0);
         setFieldValue("localityDetails.longitude", 0);
@@ -169,12 +167,12 @@ const LocalityDetailsClient: React.FC = () => {
   return (
     <>
       <div className="mb-8">
-        <h1 className="text-2xl md:text-3xl text-gray-800">
+        <h1 className="text-2xl text-gray-800 md:text-3xl">
           Provide location details
         </h1>
       </div>
       <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
+        <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2 xl:grid-cols-3">
           <div className="col-span-1">
             <FormSelectDropdown
               label="City"
@@ -227,7 +225,7 @@ const LocalityDetailsClient: React.FC = () => {
       </div>
       <div className="mt-8">
         <h3 className="text-2xl text-gray-800">Pin your location on the Map</h3>
-        <p className="text-gray-400 mt-2 flex gap-2">
+        <p className="flex gap-2 mt-2 text-gray-400">
           <MapPin />{" "}
           <span>
             Set property location by using search box and move the map
@@ -242,7 +240,7 @@ const LocalityDetailsClient: React.FC = () => {
             lng: values.localityDetails?.longitude || 77.5946,
           }}
           zoom={12}
-          className="h-full w-full border rounded-xl shadow-lg"
+          className="w-full h-full border shadow-lg rounded-xl"
           key={`${values.localityDetails?.latitude || 0}-${values.localityDetails?.longitude || 0}`}
         />
       </div>

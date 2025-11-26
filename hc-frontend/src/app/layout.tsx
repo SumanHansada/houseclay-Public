@@ -48,7 +48,7 @@ export default function RootLayout({
         <title>Houseclay</title>
         <meta
           name="description"
-          content="Houseclay - No Middleman, Just Connects"
+          content="Houseclay - Stop Searching. Start Connecting."
         />
         <meta name="application-name" content="Houseclay" />
 

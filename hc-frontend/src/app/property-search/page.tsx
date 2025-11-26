@@ -59,6 +59,7 @@ import {
 } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
 import { ImageWithLoader } from "@/utility-components";
+import { BENGALURU_BOUNDS, isWithinBounds } from "@/utils/geoBounds";
 
 // normalize & validate category from URL
 function getUrlCategory(sp: ReadonlyURLSearchParams): PropertyCategory {
@@ -244,9 +245,13 @@ export default function PropertySearchPage() {
   }) => {
     // Update URL with new location coordinates
     if (selectedLocation.city) {
-      const selectedCity = selectedLocation.city.toLowerCase();
-      const isCityAllowed = "bengaluru" === selectedCity;
-      if (!isCityAllowed) {
+      if (
+        !isWithinBounds(
+          selectedLocation.latitude,
+          selectedLocation.longitude,
+          BENGALURU_BOUNDS,
+        )
+      ) {
         toast.error(`Please select a location within Bengaluru`, {
           duration: 5000,
         });
@@ -429,10 +434,10 @@ export default function PropertySearchPage() {
       <section
         className={`py-2 px-4 fixed top-0 left-0 right-0 z-50 h-[55px] border-b border-gray-200 bg-white flex gap-2 justify-center items-center w-full md:hidden`}
       >
-        <button className="rounded-full md:border-none items-center justify-center">
+        <button className="items-center justify-center rounded-full md:border-none">
           <ChevronLeft onClick={() => router.back()} size={25} />
         </button>
-        <div className="flex items-center h-10 bg-gray-100 w-full pl-3 pr-1 py-1 border-none rounded-full">
+        <div className="flex items-center w-full h-10 py-1 pl-3 pr-1 bg-gray-100 border-none rounded-full">
           <PlacesAutocomplete
             id="location-search-mobile"
             name="location"
@@ -452,7 +457,7 @@ export default function PropertySearchPage() {
           leftIcon={<SlidersHorizontal size={16} />}
           variant="outline"
           size="sm"
-          className="h-10 text-black text-sm bg-gray-100 rounded-full p-2 border-none"
+          className="h-10 p-2 text-sm text-black bg-gray-100 border-none rounded-full"
           onClick={() => openDialog(PROPERTY_FILTERS_DIALOG_ID)}
           buttonTextClassName="hidden"
         >
@@ -463,7 +468,7 @@ export default function PropertySearchPage() {
           leftIcon={<ArrowDownWideNarrow size={20} />}
           variant="outline"
           size="sm"
-          className="h-10 text-black text-sm bg-gray-100 rounded-full p-1 border-none"
+          className="h-10 p-1 text-sm text-black bg-gray-100 border-none rounded-full"
           onClick={() => openDialog(SORT_FILTERS_DIALOG_ID)}
           buttonTextClassName="hidden"
         >
@@ -472,8 +477,8 @@ export default function PropertySearchPage() {
       </section>
 
       {/* Desktop */}
-      <section className="fixed z-50 flex w-full xl:gap-16 border-b bg-white border-gray-200 lg:gap-8 md:gap-0 gap-0  xl:px-24 md:px-12 px-12 max-md:pt-4 max-md:pb-8 h-16 max-md:hidden">
-        <div className="flex justify-between items-center border-gray-200 w-full gap-4">
+      <section className="fixed z-50 flex w-full h-16 gap-0 px-12 bg-white border-b border-gray-200 xl:gap-16 lg:gap-8 md:gap-0 xl:px-24 md:px-12 max-md:pt-4 max-md:pb-8 max-md:hidden">
+        <div className="flex items-center justify-between w-full gap-4 border-gray-200">
           <div className="flex-1 flex items-center min-h-[46px] w-full p-1 border border-gray-300 rounded-xl bg-white">
             <PlacesAutocomplete
               id="location-search-desktop"
@@ -486,13 +491,13 @@ export default function PropertySearchPage() {
               containerClassName="w-full relative"
             />
             <button
-              className="p-2 rounded-full bg-gray-100"
+              className="p-2 bg-gray-100 rounded-full"
               onClick={handleSearch}
             >
               <SearchIcon size={20} />
             </button>
           </div>
-          <div className="flex items-center gap-2 flex-row">
+          <div className="flex flex-row items-center gap-2">
             {/* Category */}
             <SelectDropdown
               options={[
@@ -602,13 +607,13 @@ export default function PropertySearchPage() {
       </section>
 
       <section className="w-full md:pt-[64px] bg-gray-50 relative max-md:pb-12">
-        <div className="min-h-screen bg-gray-50 pb-10 xl:px-24 md:px-12 px-6">
+        <div className="min-h-screen px-6 pb-10 bg-gray-50 xl:px-24 md:px-12">
           {/* Header Bar */}
           <div className="">
             <div className="flex flex-col gap-4 py-6">
               {/* Filter/Search Bar */}
               <div>
-                <p className="text-gray-500 text-sm">
+                <p className="text-sm text-gray-500">
                   {properties.length}{" "}
                   {searchState.propertyCategory === PropertyCategory.FLATMATE
                     ? "Single occupancy rooms for Rent"
@@ -623,13 +628,13 @@ export default function PropertySearchPage() {
           {/* Property List */}
           <div className="mx-auto">
             {isLoading ? (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+              <div className="grid gap-6 mt-6 md:grid-cols-2 lg:grid-cols-3">
                 {/* {Array.from({ length: 6 }).map((_, i) => (
                   <P key={i} />
                 ))} */}
               </div>
             ) : properties.length === 0 ? (
-              <div className="flex flex-col items-center justify-center w-11/12 md:w-2/3 lg:w-1/2 mx-auto gap-3">
+              <div className="flex flex-col items-center justify-center w-11/12 gap-3 mx-auto md:w-2/3 lg:w-1/2">
                 <div className="relative w-11/12 md:w-3/4 lg:w-2/3 aspect-[295/230]">
                   <ImageWithLoader
                     src="/optimizedIcons/large/no-results-found.svg"
@@ -638,18 +643,18 @@ export default function PropertySearchPage() {
                   />
                 </div>
                 <div className="text-center md:px-4">
-                  <h1 className="text-xl md:text-2xl font-semibold">
+                  <h1 className="text-xl font-semibold md:text-2xl">
                     No Results Found
                   </h1>
                   {/* Commented my-requirements code for now */}
-                  {/* <p className="md:text-lg text-balance text-gray-600">
+                  {/* <p className="text-gray-600 md:text-lg text-balance">
                     Don&apos;t worry, we can still get you the dream house fill
                     up the requirements below and we will get back to you.
                   </p> */}
                 </div>
                 {/* <Link
                   href="/manage-account/my-requirements"
-                  className="px-6 py-2 rounded-md border border-red-500 md:text-lg hover:bg-red-50"
+                  className="px-6 py-2 border border-red-500 rounded-md md:text-lg hover:bg-red-50"
                 >
                   Fill Requirements
                 </Link> */}

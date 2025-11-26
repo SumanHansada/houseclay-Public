@@ -283,8 +283,7 @@ export const apiSlice = createApi({
       { propertyId: string; payload: { reportType: string; comment: string } }
     >({
       query: ({ propertyId, payload }) => ({
-        url: "/property/user/report-property",
-        params: { propertyId: propertyId },
+        url: `/property/user/report-property/${propertyId}`,
         method: "POST",
         body: payload,
         headers: {

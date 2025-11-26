@@ -10,6 +10,7 @@ import {
   FormRadioGroup,
 } from "@/form-components";
 import { MyRequirementsFormValues } from "@/interfaces/ManageAccount";
+import { BENGALURU_BOUNDS, isWithinBounds } from "@/utils/geoBounds";
 
 import {
   bhkTypeOptions,
@@ -42,7 +43,6 @@ export function DesktopClient({
   const isFlatmate = isTenant && values.lookingForARoom === "yes";
   const budgetOptions = isTenant ? rentBudgetOptions : resaleBudgetOptions;
 
-  const cityAllowed = "Bengaluru";
   const onLocationSelect = (location: {
     latitude: number;
     longitude: number;
@@ -50,11 +50,11 @@ export function DesktopClient({
     address?: string;
     city?: string;
   }) => {
-    if (location.city && cityAllowed) {
-      const selectedCity = location.city;
-      const isCityAllowed = cityAllowed === selectedCity;
-      if (!isCityAllowed) {
-        toast.error(`Please select a location within ${cityAllowed}`, {
+    if (location.city) {
+      if (
+        !isWithinBounds(location.latitude, location.longitude, BENGALURU_BOUNDS)
+      ) {
+        toast.error("Please select a location within Bengaluru", {
           duration: 5000,
         });
         setFieldValue("locationSearch", "");
@@ -73,11 +73,11 @@ export function DesktopClient({
   return (
     <>
       {/* Header */}
-      <div className="border-b-2 pb-2 mb-8 flex justify-between items-center">
+      <div className="flex items-center justify-between pb-2 mb-8 border-b-2">
         <h1 className="text-2xl font-medium">My Requirements</h1>
         <button
           type="button"
-          className="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-sm disabled:bg-gray-300 disabled:cursor-not-allowed"
+          className="px-5 py-2 text-white bg-red-500 rounded-lg shadow-sm hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
           onClick={() => setEditMode(true)}
           disabled={editMode}
         >
@@ -100,7 +100,7 @@ export function DesktopClient({
 
         {/* Locations (Places input + chips) */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block mb-1 text-sm font-medium text-gray-700">
             Locations
           </label>
 
@@ -128,7 +128,7 @@ export function DesktopClient({
             {values.locations.map((loc) => (
               <span
                 key={loc}
-                className="inline-flex items-center gap-1 px-2 py-1 bg-red-500 text-white text-sm rounded-md"
+                className="inline-flex items-center gap-1 px-2 py-1 text-sm text-white bg-red-500 rounded-md"
               >
                 {loc}
                 {editMode && (
@@ -180,7 +180,7 @@ export function DesktopClient({
         />
 
         {/* BHK */}
-        <div className="flex flex-col gap-2 w-4/5">
+        <div className="flex flex-col w-4/5 gap-2">
           <FormRadioGroup
             name="bhkType"
             label="BHK Type"
@@ -226,7 +226,7 @@ export function DesktopClient({
 
         {/* Actions */}
         {editMode ? (
-          <footer className="mt-6 border-t-2 pt-4 shadow-sm text-lg flex items-center justify-between">
+          <footer className="flex items-center justify-between pt-4 mt-6 text-lg border-t-2 shadow-sm">
             <button
               type="button"
               className="px-5 py-2 border rounded-lg shadow-sm hover:bg-gray-50"
@@ -250,7 +250,7 @@ export function DesktopClient({
               <button
                 type="submit"
                 onClick={() => setFieldValue("locationSearch", "")}
-                className="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-sm"
+                className="px-5 py-2 text-white bg-red-500 rounded-lg shadow-sm hover:bg-red-600"
               >
                 Save
               </button>
