@@ -109,11 +109,13 @@ const MastHeadMobile: React.FC = () => {
       </div>
 
       {/* Tagline */}
-      <div className="flex justify-center items-center">
+      <div className="flex flex-col justify-center items-center">
         <div className="flex items-center gap-2">
-          <span className="text-xl font-bold font-inter">Stop Searching</span>
-          <span className="text-xl font-nunito text-red-500 ">
-            Start Connecting
+          <span className="text-xl font-bold font-inter text-nowrap">
+            Stop Searching.
+          </span>
+          <span className="text-xl font-nunito text-red-500 text-nowrap">
+            Start Connecting.
           </span>
         </div>
       </div>

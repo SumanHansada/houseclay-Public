@@ -506,18 +506,6 @@ const PlacesAutocompleteBase = ({
                     {prediction.secondaryText}
                   </div>
                 </div>
-
-                {/* <span className="mr-2 text-gray-500">
-                  <MapPin size={20} />
-                </span>
-                <div>
-                  <div className="text-sm font-medium">
-                    {prediction.mainText}
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    {prediction.secondaryText}
-                  </div>
-                </div> */}
               </div>
             );
           })}

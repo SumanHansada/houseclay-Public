@@ -28,11 +28,9 @@ const MastHeadDesktop = () => {
       <div className="absolute h-full flex flex-col justify-center xl:pl-40 lg:pl-14 pl-14 xl:w-7/12 lg:w-7/12 md:w-4/5 w-4/5">
         {/* Headings */}
         <div className="max-w-md mb-8">
-          <h1 className="xl:text-6xl lg:text-5xl text-5xl font-bold text-gray-900 mb-2">
-            Stop Searching
-          </h1>
-          <h2 className="xl:text-5xl lg:text-4xl text-4xl text-gray-800">
-            Start Connecting
+          <h2 className="flex xl:text-4xl lg:text-4xl text-4xl max-lg:flex-col text-gray-800 mb-1 gap-2">
+            <span className="font-semibold text-nowrap">Stop Searching.</span>
+            <span className="text-red-500 text-nowrap">Start Connecting.</span>
           </h2>
         </div>
 
