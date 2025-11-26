@@ -17,9 +17,10 @@ import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.core.*;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 
 @Service
@@ -99,6 +100,23 @@ public class SearchService {
         if (request.getIsExclusive() != null && request.getIsExclusive()) {
             filters.add(Query.of(q -> q
                     .term(t -> t.field("isExclusive").value(true))
+            ));
+        }
+
+        if (request.getPropertyAvailability() != null) {
+            long offsetMillis = 0L;
+            switch (request.getPropertyAvailability()) {
+                case IMMEDIATE: offsetMillis = Duration.ofMinutes(1).toMillis(); break;
+                case WITHIN_15: offsetMillis = Duration.ofDays(15).toMillis(); break;
+                case WITHIN_30: offsetMillis = Duration.ofDays(30).toMillis(); break;
+                case WITHIN_60: offsetMillis = Duration.ofDays(60).toMillis(); break;
+            }
+            long cutoff = System.currentTimeMillis() + offsetMillis;
+            filters.add(Query.of(q -> q
+                    .range(r -> r
+                            .field("availableFrom")
+                            .lt(JsonData.of(cutoff))
+                    )
             ));
         }
 
@@ -182,7 +200,7 @@ public class SearchService {
     private <T> PaginatedResponse<PropertyCardDTO> mapPage(
             SearchHits<T> hits,
             Pageable pageable,
-            java.util.function.Function<SearchHit<T>, PropertyCardDTO> mapper
+            Function<SearchHit<T>, PropertyCardDTO> mapper
     ) {
         // Convert to a SearchPage to get total easily
         SearchPage<T> page = SearchHitSupport.searchPageFor(hits, pageable);

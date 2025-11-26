@@ -27,6 +27,7 @@ public class PropertySearchRequestDTO {
     private String propertyType;
     private String parking;
     private Boolean isExclusive;
+    private PropertyAvailability propertyAvailability;
 
     private Double minPrice;
     private Double maxPrice;
