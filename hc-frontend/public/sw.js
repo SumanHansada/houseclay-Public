@@ -50,25 +50,9 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Cache-first strategy for static assets (JS, CSS, images, etc.)
-  event.respondWith(
-    caches.match(request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(request).then((response) => {
-        // Don't cache non-successful responses
-        if (!response || response.status !== 200 || response.type !== "basic") {
-          return response;
-        }
-        const responseToCache = response.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(request, responseToCache);
-        });
-        return response;
-      });
-    }),
-  );
+  // Network-only strategy for static assets (JS, CSS, images, etc.)
+  // Don't cache - always fetch fresh from network
+  event.respondWith(fetch(request));
 });
 
 // Activate event - clean up old caches
