@@ -61,6 +61,7 @@ const ImageWithLoader = memo(function ImageWithLoader({
           className={`object-cover ${className ?? ""} ${isLoading ? "opacity-0" : "opacity-100"} transition-opacity duration-300`}
           onLoad={handleLoad}
           onError={handleError}
+          unoptimized
           {...rest}
         />
       )}
