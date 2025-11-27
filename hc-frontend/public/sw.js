@@ -17,12 +17,56 @@ self.addEventListener("install", (event) => {
   );
 });
 
-// Fetch event - serve from cache when offline
+// Fetch event - network-first for navigation, cache-first for static assets
 self.addEventListener("fetch", (event) => {
+  const { request } = event;
+  const url = new URL(request.url);
+
+  // Skip non-GET requests and external domains
+  if (request.method !== "GET" || url.origin !== self.location.origin) {
+    return;
+  }
+
+  // Network-first strategy for navigation requests (HTML pages)
+  if (
+    request.mode === "navigate" ||
+    request.headers.get("accept")?.includes("text/html")
+  ) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          // Clone the response before caching
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(request, responseToCache);
+          });
+          return response;
+        })
+        .catch(() => {
+          // Fall back to cache if network fails
+          return caches.match(request);
+        }),
+    );
+    return;
+  }
+
+  // Cache-first strategy for static assets (JS, CSS, images, etc.)
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      // Return cached version or fetch from network
-      return response || fetch(event.request);
+    caches.match(request).then((cachedResponse) => {
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      return fetch(request).then((response) => {
+        // Don't cache non-successful responses
+        if (!response || response.status !== 200 || response.type !== "basic") {
+          return response;
+        }
+        const responseToCache = response.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(request, responseToCache);
+        });
+        return response;
+      });
     }),
   );
 });
