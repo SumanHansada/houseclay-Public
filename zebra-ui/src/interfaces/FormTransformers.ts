@@ -380,7 +380,7 @@ export const transformPropertyFormToFormValues = (
     };
     additionalInfo = {
       whoWillShowProperty: apiData.whoWillShowProperty,
-      secondaryPhoneNumber: apiData.secondaryPhoneNumber,
+      secondaryPhoneNumber: apiData.secondaryPhoneNumber ?? undefined,
     };
   } else if (isFlatmateForm(apiData)) {
     flatmateDetails = {
@@ -402,7 +402,7 @@ export const transformPropertyFormToFormValues = (
     };
     additionalInfo = {
       whoWillShowProperty: apiData.whoWillShowProperty,
-      secondaryPhoneNumber: apiData.secondaryPhoneNumber,
+      secondaryPhoneNumber: apiData.secondaryPhoneNumber ?? undefined,
     };
   } else if (isResaleForm(apiData)) {
     resaleDetails = {
@@ -422,7 +422,7 @@ export const transformPropertyFormToFormValues = (
       khataCertificate: apiData.khataCertificate,
       saleDeed: apiData.saleDeed,
       propertyTax: apiData.propertyTax,
-      secondaryPhoneNumber: apiData.secondaryPhoneNumber,
+      secondaryPhoneNumber: apiData.secondaryPhoneNumber ?? undefined,
     };
   }
 

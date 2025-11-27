@@ -113,9 +113,16 @@ export const WHO_WILL_SHOW_PROPERTY_OPTIONS: BaseOption[] = [
 
 export const BATHROOM_OPTIONS = generateNumericOptions({ min: 1, max: 6 });
 
+export const BALCONY_OPTIONS = generateNumericOptions({
+  max: 6,
+  addZeroOption: true,
+  zeroOptionLabel: "No Balcony",
+});
+
 export const FLOOR_NUMERIC_OPTIONS = generateNumericOptions({
   max: 50,
-  includeGround: true,
+  addZeroOption: true,
+  zeroOptionLabel: "Ground",
 });
 
 export const TOTAL_FLOORS_NUMERIC_OPTIONS = generateNumericOptions({
