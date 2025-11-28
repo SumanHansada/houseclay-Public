@@ -67,6 +67,13 @@ export const transformToRentForm = (
 
   // At this point, we know localityDetails exists due to hasLocalityDetails check
   const locality = localityDetails!;
+  console.warn("Rent additionalInfo - ", additionalInfo);
+  console.warn(
+    "isRentAdditionalInfo(additionalInfo) - ",
+    isRentAdditionalInfo(additionalInfo!),
+    ", hasAdditionalInfo(values) - ",
+    hasAdditionalInfo(values),
+  );
 
   return {
     propertyID,
@@ -351,8 +358,10 @@ export const transformPropertyFormToFormValues = (
   };
 
   // Extract images with cover flag
-  const propertyImages = processPropertyImages(apiData.images);
-  const coverImage = `${CDN_BASE_URL}/${apiData.coverImage}`;
+  const propertyImages =
+    apiData.images.length > 0 ? processPropertyImages(apiData.images) : [];
+  const coverImage =
+    apiData.images.length > 0 ? `${CDN_BASE_URL}/${apiData.coverImage}` : "";
   const images: PropertyImage[] = propertyImages.map((url: string) => ({
     id: `photo-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
     file: fileDataFromUrl(url),

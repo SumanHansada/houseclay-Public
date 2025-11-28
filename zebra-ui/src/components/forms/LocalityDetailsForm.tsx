@@ -16,6 +16,7 @@ import {
   getLocalityDetailsErrors,
   getLocalityDetailsTouched,
 } from "@/utils/formHelpers";
+import { BENGALURU_BOUNDS, isWithinBounds } from "@/utils/geoBounds";
 
 interface LocalityDetailsFormProps {
   disabled: boolean;
@@ -41,9 +42,9 @@ const LocalityDetailsForm: React.FC<LocalityDetailsFormProps> = ({
     city?: string;
   }) => {
     if (location.city && values.localityDetails?.city) {
-      const selectedCity = location.city;
-      const isCityAllowed = values.localityDetails.city === selectedCity;
-      if (!isCityAllowed) {
+      if (
+        !isWithinBounds(location.latitude, location.longitude, BENGALURU_BOUNDS)
+      ) {
         toast.error(
           `Please select a location within ${values.localityDetails.city}`,
           {
