@@ -77,6 +77,11 @@ export const POWER_BACKUP_OPTIONS: BaseOption[] = [
   { value: "no", label: "No" },
 ];
 
+export const ROOM_TYPE_OPTIONS: BaseOption[] = [
+  { value: "single", label: "Single" },
+  { value: "shared", label: "Shared" },
+];
+
 export const PARKING_OPTIONS: BaseOption[] = [
   { value: "both", label: "Both" },
   { value: "2-wheeler", label: "2 Wheeler" },

@@ -161,6 +161,7 @@ export const getFlatmateDetailsErrors = (errors: FormikErrors<FormValues>) =>
         maintenanceCharges?: string;
         depositCharges?: string;
         availableFrom?: string;
+        roomType?: string;
         furnishing?: string;
         waterSupply?: string;
         powerBackup?: string;
@@ -184,6 +185,7 @@ export const getFlatmateDetailsTouched = (touched: FormikTouched<FormValues>) =>
         maintenanceCharges?: boolean;
         depositCharges?: boolean;
         availableFrom?: boolean;
+        roomType?: boolean;
         furnishing?: boolean;
         waterSupply?: boolean;
         powerBackup?: boolean;

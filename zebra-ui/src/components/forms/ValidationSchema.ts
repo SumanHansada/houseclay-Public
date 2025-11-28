@@ -88,6 +88,7 @@ const createValidationSchema = (propertyCategory: PropertyCategory) => {
               (value) => parseFloat(value || "0") > 0,
             ),
           availableFrom: Yup.string().required("Available from is required"),
+          roomType: Yup.string().required("Room type is required"),
           furnishing: Yup.string().required("Furnishing is required"),
           waterSupply: Yup.string().required("Water supply is required"),
           powerBackup: Yup.string().required("Power backup is required"),

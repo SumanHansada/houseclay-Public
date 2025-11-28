@@ -23,6 +23,7 @@ export interface FlatmateForm {
   maintenanceCharges?: number;
   depositCharges?: number;
   availableFrom: string;
+  roomType: string;
   furnishing: string;
   waterSupply: string;
   powerBackup: string;

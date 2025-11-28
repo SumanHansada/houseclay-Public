@@ -21,6 +21,7 @@ import {
   FURNISHING_OPTIONS,
   PARKING_OPTIONS,
   POWER_BACKUP_OPTIONS,
+  ROOM_TYPE_OPTIONS,
   SMOKING_PREFERENCE_OPTIONS,
   WATER_SUPPLY_OPTIONS,
   YES_NO_OPTIONS,
@@ -105,24 +106,34 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
             />
           </div>
           <div className="col-span-1">
-            <FormSelectDropdown
-              label="Parking"
-              name="flatmateDetails.parking"
-              id="flatmateDetails.parking"
-              options={PARKING_OPTIONS}
-              required={true}
-              placeholder="Select Parking"
-              aria-describedby={
-                flatmateDetailsErrors?.parking &&
-                flatmateDetailsTouched?.parking
-                  ? "flatmateDetails.parking-error"
-                  : undefined
-              }
+            <FormCurrencyField
+              name="flatmateDetails.depositCharges"
+              id="flatmateDetails.depositCharges"
+              label="Deposit"
+              prefix={<IndianRupee size={20} />}
+              required
               disabled={disabled}
             />
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormSelectDropdown
+              label="Room Type"
+              name="flatmateDetails.roomType"
+              id="flatmateDetails.roomType"
+              options={ROOM_TYPE_OPTIONS}
+              required={true}
+              placeholder="Select room type"
+              aria-describedby={
+                flatmateDetailsErrors?.roomType &&
+                flatmateDetailsTouched?.roomType
+                  ? "flatmateDetails.roomType-error"
+                  : undefined
+              }
+              disabled={disabled}
+            />
+          </div>
           <div className="col-span-1">
             <FormCurrencyField
               name="flatmateDetails.maintenanceCharges"
@@ -130,16 +141,6 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
               label="Maintenance Charges"
               prefix={<IndianRupee size={20} />}
               suffix="/month"
-              required
-              disabled={disabled}
-            />
-          </div>
-          <div className="col-span-1">
-            <FormCurrencyField
-              name="flatmateDetails.depositCharges"
-              id="flatmateDetails.depositCharges"
-              label="Deposit"
-              prefix={<IndianRupee size={20} />}
               required
               disabled={disabled}
             />
@@ -259,6 +260,48 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
+            <FormRadioGroup
+              name="flatmateDetails.attachedBalcony"
+              label="Attached Balcony"
+              columns={2}
+              options={YES_NO_OPTIONS}
+              required
+              horizontal
+              disabled={disabled}
+            />
+          </div>
+          <div className="col-span-1">
+            <FormRadioGroup
+              name="flatmateDetails.attachedBathroom"
+              label="Attached Bathroom"
+              columns={2}
+              options={YES_NO_OPTIONS}
+              required
+              horizontal
+              disabled={disabled}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormSelectDropdown
+              label="Parking"
+              name="flatmateDetails.parking"
+              id="flatmateDetails.parking"
+              options={PARKING_OPTIONS}
+              required={true}
+              placeholder="Select Parking"
+              aria-describedby={
+                flatmateDetailsErrors?.parking &&
+                flatmateDetailsTouched?.parking
+                  ? "flatmateDetails.parking-error"
+                  : undefined
+              }
+              disabled={disabled}
+            />
+          </div>
+          <div className="col-span-1">
             <FormSelectDropdown
               label="Water Supply"
               name="flatmateDetails.waterSupply"
@@ -289,30 +332,6 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
                   ? "flatmateDetails.powerBackup-error"
                   : undefined
               }
-              disabled={disabled}
-            />
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="col-span-1">
-            <FormRadioGroup
-              name="flatmateDetails.attachedBathroom"
-              label="Attached Bathroom"
-              columns={2}
-              options={YES_NO_OPTIONS}
-              required
-              horizontal
-              disabled={disabled}
-            />
-          </div>
-          <div className="col-span-1">
-            <FormRadioGroup
-              name="flatmateDetails.attachedBalcony"
-              label="Attached Balcony"
-              columns={2}
-              options={YES_NO_OPTIONS}
-              required
-              horizontal
               disabled={disabled}
             />
           </div>

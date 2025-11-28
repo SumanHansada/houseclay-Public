@@ -4,6 +4,7 @@ import { BaseRentalDetails } from "./RentalDetails";
 export interface FlatmateDetails extends BaseRentalDetails {
   depositCharges?: number;
   tenantType: string;
+  roomType: string;
   attachedBathroom: boolean;
   attachedBalcony: boolean;
   smokingPreference: string;
