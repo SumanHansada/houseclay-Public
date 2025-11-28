@@ -79,12 +79,11 @@ export default function PropertyDetailsLayout({
     // --- Update propertyDetails slice ---
     dispatch(setPropertyDetailsFromApi(propertyDetailsRaw));
     try {
-      console.log("Property Details - useEffect:", propertyDetailsRaw);
+      console.log("Property Details - raw data: ", propertyDetailsRaw);
       const apiPropertyData = propertyDetailsRaw.property;
       if (!apiPropertyData) {
         return;
       }
-      console.log("apiPropertyData: ", apiPropertyData);
 
       if (apiPropertyData) {
         // Transform API response to FormValues

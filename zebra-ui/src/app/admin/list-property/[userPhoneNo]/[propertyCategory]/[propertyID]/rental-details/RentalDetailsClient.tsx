@@ -21,6 +21,8 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import {
+  BALCONY_OPTIONS,
+  BATHROOM_OPTIONS,
   FURNISHING_OPTIONS,
   PARKING_OPTIONS,
   POWER_BACKUP_OPTIONS,
@@ -101,6 +103,8 @@ const rentalSchema = Yup.object().shape({
       .of(Yup.string())
       .required("Preferred tenant is required")
       .min(1, "Select at least one preferred tenant"),
+    bathrooms: Yup.number().required("Bathroom(s) is required"),
+    balcony: Yup.number().required("Balcony(s) is required"),
     waterSupply: Yup.string().required("Water supply is required"),
     powerBackup: Yup.string().required("Power backup is required"),
     parking: Yup.string().required("Parking is required"),
@@ -283,6 +287,43 @@ export const RentalDetailsClient: React.FC = () => {
             withIcons={true}
             required
           />
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
+          <div className="col-span-1">
+            <FormSelectDropdown
+              label="Balcony(s)"
+              name="rentalDetails.balcony"
+              id="rentalDetails.balcony"
+              options={BALCONY_OPTIONS}
+              optionsType="number"
+              required
+              placeholder="Select Balcony(s)"
+              aria-describedby={
+                rentalDetailsErrors?.balcony && rentalDetailsTouched?.balcony
+                  ? "rentalDetails.balcony-error"
+                  : undefined
+              }
+            />
+          </div>
+
+          <div className="col-span-1">
+            <FormSelectDropdown
+              label="Bathroom(s)"
+              name="rentalDetails.bathrooms"
+              id="rentalDetails.bathrooms"
+              options={BATHROOM_OPTIONS}
+              optionsType="number"
+              required
+              placeholder="Select Bathroom(s)"
+              aria-describedby={
+                rentalDetailsErrors?.bathrooms &&
+                rentalDetailsTouched?.bathrooms
+                  ? "rentalDetails.bathrooms-error"
+                  : undefined
+              }
+            />
+          </div>
         </div>
         <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
           <div className="col-span-1">

@@ -63,7 +63,6 @@ const createValidationSchema = (propertyCategory: PropertyCategory) => {
               },
             ),
           totalFloors: Yup.number().required("Total floors is required"),
-          bathrooms: Yup.number().required("Bathroom is required"),
         }),
 
         flatmateDetails: Yup.object().shape({
@@ -179,7 +178,6 @@ const createValidationSchema = (propertyCategory: PropertyCategory) => {
         propertyDetails: Yup.object().shape({
           propertyType: Yup.string().required("Property type is required"),
           builtUpArea: Yup.number().required("Built up area is required"),
-          // .positive("Area must be positive"),
           facing: Yup.string().required("Facing is required"),
           bhkType: Yup.string().required("BHK type is required"),
           ownershipType: Yup.string().required("Ownership type is required"),
@@ -197,7 +195,6 @@ const createValidationSchema = (propertyCategory: PropertyCategory) => {
             ),
           totalFloors: Yup.number().required("Total floors is required"),
           floorType: Yup.string().required("Floor type is required"),
-          bathrooms: Yup.number().required("Bathrooms is required"),
         }),
 
         rentalDetails: Yup.object().shape({
@@ -221,6 +218,8 @@ const createValidationSchema = (propertyCategory: PropertyCategory) => {
             .of(Yup.string())
             .required("Preferred tenant is required")
             .min(1, "Select at least one preferred tenant"),
+          bathrooms: Yup.number().required("Bathrooms is required"),
+          balcony: Yup.number().required("Balcony is required"),
           waterSupply: Yup.string().required("Water supply is required"),
           powerBackup: Yup.string().required("Power backup is required"),
           parking: Yup.string().required("Parking is required"),

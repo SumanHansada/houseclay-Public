@@ -61,7 +61,6 @@ export const getPropertyDetailsErrors = (errors: FormikErrors<FormValues>) =>
         totalFloors?: string;
         floorType?: string;
         description?: string;
-        bathrooms?: string;
       }
     | undefined;
 
@@ -78,7 +77,6 @@ export const getPropertyDetailsTouched = (touched: FormikTouched<FormValues>) =>
         totalFloors?: boolean;
         floorType?: boolean;
         description?: boolean;
-        bathrooms?: boolean;
       }
     | undefined;
 
@@ -91,6 +89,8 @@ export const getRentalDetailsErrors = (errors: FormikErrors<FormValues>) =>
         rentNegotiable?: string;
         availableFrom?: string;
         preferredTenants?: string;
+        bathrooms?: string;
+        balcony?: string;
         waterSupply?: string;
         powerBackup?: string;
         furnishing?: string;
@@ -109,6 +109,8 @@ export const getRentalDetailsTouched = (touched: FormikTouched<FormValues>) =>
         rentNegotiable?: boolean;
         availableFrom?: boolean;
         preferredTenants?: boolean;
+        bathrooms?: boolean;
+        balcony?: boolean;
         waterSupply?: boolean;
         powerBackup?: boolean;
         furnishing?: boolean;

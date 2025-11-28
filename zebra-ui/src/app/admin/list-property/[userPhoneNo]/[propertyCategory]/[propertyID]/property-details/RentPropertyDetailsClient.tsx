@@ -52,7 +52,6 @@ const propertySchema = Yup.object({
       ),
     totalFloors: Yup.number().required("Total floors is required"),
     floorType: Yup.string().required("Floor type is required"),
-    bathrooms: Yup.number().required("Bathroom is required"),
   }),
 });
 
@@ -191,24 +190,8 @@ const RentPropertyDetailsClient: React.FC = () => {
           />
         </div>
 
-        {/* BATHROOMS, OWNERSHIP, AGE */}
+        {/* OWNERSHIP, AGE, FloorType */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          <FormSelectDropdown
-            label="Bathrooms"
-            name="propertyDetails.bathrooms"
-            id="propertyDetails.bathrooms"
-            options={BATHROOM_OPTIONS}
-            optionsType="number"
-            required
-            placeholder="Select Bathrooms"
-            aria-describedby={
-              propertyDetailsErrors?.bathrooms &&
-              propertyDetailsTouched?.bathrooms
-                ? "propertyDetails.bathrooms-error"
-                : undefined
-            }
-          />
-
           <FormSelectDropdown
             label="Ownership Type"
             name="propertyDetails.ownershipType"
@@ -238,10 +221,25 @@ const RentPropertyDetailsClient: React.FC = () => {
                 : undefined
             }
           />
+
+          <FormSelectDropdown
+            label="Floor Type"
+            name="propertyDetails.floorType"
+            id="floorType"
+            options={FLOOR_TYPE_OPTIONS}
+            required
+            placeholder="Select floor type"
+            aria-describedby={
+              propertyDetailsErrors?.floorType &&
+              propertyDetailsTouched?.floorType
+                ? "floorType-error"
+                : undefined
+            }
+          />
         </div>
 
-        {/* FLOOR, TOTAL FLOOR, FLOOR TYPE */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {/* FLOOR, TOTAL FLOOR */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormSelectDropdown
             label="Total Floor"
             name="propertyDetails.totalFloors"
@@ -269,21 +267,6 @@ const RentPropertyDetailsClient: React.FC = () => {
             aria-describedby={
               propertyDetailsErrors?.floor && propertyDetailsTouched?.floor
                 ? "propertyDetails.floor-error"
-                : undefined
-            }
-          />
-
-          <FormSelectDropdown
-            label="Floor Type"
-            name="propertyDetails.floorType"
-            id="floorType"
-            options={FLOOR_TYPE_OPTIONS}
-            required
-            placeholder="Select floor type"
-            aria-describedby={
-              propertyDetailsErrors?.floorType &&
-              propertyDetailsTouched?.floorType
-                ? "floorType-error"
                 : undefined
             }
           />

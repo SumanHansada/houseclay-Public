@@ -68,12 +68,6 @@ export const transformToRentForm = (
   // At this point, we know localityDetails exists due to hasLocalityDetails check
   const locality = localityDetails!;
   console.warn("Rent additionalInfo - ", additionalInfo);
-  console.warn(
-    "isRentAdditionalInfo(additionalInfo) - ",
-    isRentAdditionalInfo(additionalInfo!),
-    ", hasAdditionalInfo(values) - ",
-    hasAdditionalInfo(values),
-  );
 
   return {
     propertyID,
@@ -83,7 +77,6 @@ export const transformToRentForm = (
     builtUpArea: propertyDetails.builtUpArea,
     facing: propertyDetails.facing,
     bhkType: propertyDetails.bhkType,
-    bathrooms: propertyDetails.bathrooms,
     ownershipType: propertyDetails.ownershipType,
     propertyAge: propertyDetails.propertyAge,
     floor: propertyDetails.floor,
@@ -103,6 +96,8 @@ export const transformToRentForm = (
     rentNegotiable: rentalDetails.rentNegotiable,
     availableFrom: rentalDetails.availableFrom,
     preferredTenants: rentalDetails.preferredTenants,
+    bathrooms: rentalDetails.bathrooms,
+    balcony: rentalDetails.balcony,
     waterSupply: rentalDetails.waterSupply,
     powerBackup: rentalDetails.powerBackup,
     furnishing: rentalDetails.furnishing,
@@ -251,7 +246,6 @@ export const transformToFlatmateForm = (
     builtUpArea: propertyDetails.builtUpArea,
     facing: propertyDetails.facing,
     bhkType: propertyDetails.bhkType,
-    bathrooms: propertyDetails.bathrooms,
     floor: propertyDetails.floor,
     totalFloors: propertyDetails.totalFloors,
     description: propertyDetails.description,
@@ -380,6 +374,8 @@ export const transformPropertyFormToFormValues = (
       rentNegotiable: apiData.rentNegotiable,
       availableFrom: apiData.availableFrom,
       preferredTenants: apiData.preferredTenants,
+      bathrooms: apiData.bathrooms,
+      balcony: apiData.balcony,
       waterSupply: apiData.waterSupply,
       powerBackup: apiData.powerBackup,
       furnishing: apiData.furnishing,
