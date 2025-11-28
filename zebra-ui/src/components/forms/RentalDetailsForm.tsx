@@ -98,6 +98,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
       </div>
 
       <div>
+        {/* Rent, Rent Negotiable */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <FormCurrencyField
@@ -124,6 +125,8 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
             />
           </div>
         </div>
+
+        {/* Maintenance, Deposit */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <FormCurrencyField
@@ -146,6 +149,8 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
             />
           </div>
         </div>
+
+        {/* Available From, Furnishing */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <FormCalendarField
@@ -175,6 +180,8 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
             />
           </div>
         </div>
+
+        {/* Preferred Tenants */}
         <div className="mb-6">
           <FormCheckbox
             name="rentalDetails.preferredTenants"
@@ -208,7 +215,25 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
           />
         </div>
 
+        {/* Balcony, Bathrooms */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormSelectDropdown
+              label="Balcony(s)"
+              name="rentalDetails.balcony"
+              id="rentalDetails.balcony"
+              options={BALCONY_OPTIONS}
+              optionsType="number"
+              required
+              placeholder="Select balcony(s)"
+              aria-describedby={
+                rentalDetailsErrors?.balcony && rentalDetailsTouched?.balcony
+                  ? "rentalDetails.balcony-error"
+                  : undefined
+              }
+              disabled={disabled}
+            />
+          </div>
           <div className="col-span-1">
             <FormSelectDropdown
               label="Bathroom(s)"
@@ -217,7 +242,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
               options={BATHROOM_OPTIONS}
               optionsType="number"
               required
-              placeholder="Select Bathroom(s)"
+              placeholder="Select bathroom(s)"
               aria-describedby={
                 rentalDetailsErrors?.bathrooms &&
                 rentalDetailsTouched?.bathrooms
@@ -227,25 +252,9 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
               disabled={disabled}
             />
           </div>
-          <div className="col-span-1">
-            <FormSelectDropdown
-              label="Balcony(s)"
-              name="rentalDetails.balcony"
-              id="rentalDetails.balcony"
-              options={BALCONY_OPTIONS}
-              optionsType="number"
-              required
-              placeholder="Select Balcony(s)"
-              aria-describedby={
-                rentalDetailsErrors?.balcony && rentalDetailsTouched?.balcony
-                  ? "rentalDetails.balcony-error"
-                  : undefined
-              }
-              disabled={disabled}
-            />
-          </div>
         </div>
 
+        {/* Water Supply, Power Backup */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <FormSelectDropdown
@@ -282,6 +291,8 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
             />
           </div>
         </div>
+
+        {/* Parking, Non Veg Allowed */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <FormSelectDropdown
@@ -312,6 +323,8 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
           </div>
         </div>
       </div>
+
+      {/* Amenities */}
       <div className="mb-8">
         <h1 className="text-2xl text-gray-800">
           Select the available amenities

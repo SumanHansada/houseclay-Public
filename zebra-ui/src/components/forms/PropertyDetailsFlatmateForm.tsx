@@ -105,25 +105,8 @@ const PropertyDetailsFlatmateForm: React.FC<
         />
       </div>
 
-      {/* BATHROOMS, FLOOR, TOTAL FLOOR */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        <FormSelectDropdown
-          label="Bathrooms"
-          name="propertyDetails.bathrooms"
-          id="propertyDetails.bathrooms"
-          options={BATHROOM_OPTIONS}
-          optionsType="number"
-          required
-          placeholder="Select Bathrooms"
-          aria-describedby={
-            propertyDetailsErrors?.bathrooms &&
-            propertyDetailsTouched?.bathrooms
-              ? "propertyDetails.bathrooms-error"
-              : undefined
-          }
-          disabled={disabled}
-        />
-
+      {/* FLOOR, TOTAL FLOOR */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <FormSelectDropdown
           label="Total Floor"
           name="propertyDetails.totalFloors"

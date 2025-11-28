@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import {
-  BATHROOM_OPTIONS,
   BHK_TYPE_OPTIONS,
   FACING_OPTIONS,
   FLOOR_NUMERIC_OPTIONS,

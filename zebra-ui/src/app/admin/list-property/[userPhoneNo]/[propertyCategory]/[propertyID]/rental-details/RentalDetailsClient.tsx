@@ -298,7 +298,7 @@ export const RentalDetailsClient: React.FC = () => {
               options={BALCONY_OPTIONS}
               optionsType="number"
               required
-              placeholder="Select Balcony(s)"
+              placeholder="Select balcony(s)"
               aria-describedby={
                 rentalDetailsErrors?.balcony && rentalDetailsTouched?.balcony
                   ? "rentalDetails.balcony-error"
@@ -315,7 +315,7 @@ export const RentalDetailsClient: React.FC = () => {
               options={BATHROOM_OPTIONS}
               optionsType="number"
               required
-              placeholder="Select Bathroom(s)"
+              placeholder="Select bathroom(s)"
               aria-describedby={
                 rentalDetailsErrors?.bathrooms &&
                 rentalDetailsTouched?.bathrooms

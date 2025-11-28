@@ -18,6 +18,8 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import {
+  BALCONY_OPTIONS,
+  BATHROOM_OPTIONS,
   DRINKING_PREFERENCE_OPTIONS,
   FURNISHING_OPTIONS,
   PARKING_OPTIONS,
@@ -101,6 +103,8 @@ const flatmateSchema = Yup.object().shape({
     parking: Yup.string().required("Parking is required"),
     nonVegAllowed: Yup.boolean().required("Non veg allowed is required"),
     tenantType: Yup.string().required("Preferred tenant is required"),
+    bathrooms: Yup.number().required("Bathroom(s) is required"),
+    balcony: Yup.number().required("Balcony(s) is required"),
     attachedBathroom: Yup.boolean().required("Attached bathroom is required"),
     attachedBalcony: Yup.boolean().required("Attached balcony is required"),
     smokingPreference: Yup.string().required("Smoking preference is required"),
@@ -308,6 +312,64 @@ export const FlatmateDetailsClient: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <FormSelectDropdown
+              label="Balcony(s)"
+              name="flatmateDetails.balcony"
+              id="flatmateDetails.balcony"
+              options={BALCONY_OPTIONS}
+              optionsType="number"
+              required
+              placeholder="Select balcony(s)"
+              aria-describedby={
+                flatmateDetailsErrors?.balcony &&
+                flatmateDetailsTouched?.balcony
+                  ? "flatmateDetails.balcony-error"
+                  : undefined
+              }
+            />
+          </div>
+          <div className="col-span-1">
+            <FormSelectDropdown
+              label="Bathroom(s)"
+              name="flatmateDetails.bathrooms"
+              id="flatmateDetails.bathrooms"
+              options={BATHROOM_OPTIONS}
+              optionsType="number"
+              required
+              placeholder="Select bathroom(s)"
+              aria-describedby={
+                flatmateDetailsErrors?.bathrooms &&
+                flatmateDetailsTouched?.bathrooms
+                  ? "flatmateDetails.bathrooms-error"
+                  : undefined
+              }
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormRadioGroup
+              name="flatmateDetails.attachedBalcony"
+              label="Attached Balcony"
+              columns={2}
+              options={YES_NO_OPTIONS}
+              required
+              horizontal
+            />
+          </div>
+          <div className="col-span-1">
+            <FormRadioGroup
+              name="flatmateDetails.attachedBathroom"
+              label="Attached Bathroom"
+              columns={2}
+              options={YES_NO_OPTIONS}
+              required
+              horizontal
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormSelectDropdown
               label="Water Supply"
               name="flatmateDetails.waterSupply"
               id="flatmateDetails.waterSupply"
@@ -336,28 +398,6 @@ export const FlatmateDetailsClient: React.FC = () => {
                   ? "flatmateDetails.powerBackup-error"
                   : undefined
               }
-            />
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="col-span-1">
-            <FormRadioGroup
-              name="flatmateDetails.attachedBathroom"
-              label="Attached Bathroom"
-              columns={2}
-              options={YES_NO_OPTIONS}
-              required
-              horizontal
-            />
-          </div>
-          <div className="col-span-1">
-            <FormRadioGroup
-              name="flatmateDetails.attachedBalcony"
-              label="Attached Balcony"
-              columns={2}
-              options={YES_NO_OPTIONS}
-              required
-              horizontal
             />
           </div>
         </div>

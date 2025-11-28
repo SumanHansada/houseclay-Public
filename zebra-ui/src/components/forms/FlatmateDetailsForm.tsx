@@ -15,6 +15,8 @@ import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 
 import {
+  BALCONY_OPTIONS,
+  BATHROOM_OPTIONS,
   DRINKING_PREFERENCE_OPTIONS,
   FURNISHING_OPTIONS,
   PARKING_OPTIONS,
@@ -215,6 +217,46 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
             disabled={disabled}
           />
         </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormSelectDropdown
+              label="Balcony(s)"
+              name="flatmateDetails.balcony"
+              id="flatmateDetails.balcony"
+              options={BALCONY_OPTIONS}
+              optionsType="number"
+              required
+              placeholder="Select balcony(s)"
+              aria-describedby={
+                flatmateDetailsErrors?.balcony &&
+                flatmateDetailsTouched?.balcony
+                  ? "flatmateDetails.balcony-error"
+                  : undefined
+              }
+              disabled={disabled}
+            />
+          </div>
+          <div className="col-span-1">
+            <FormSelectDropdown
+              label="Bathroom(s)"
+              name="flatmateDetails.bathrooms"
+              id="flatmateDetails.bathrooms"
+              options={BATHROOM_OPTIONS}
+              optionsType="number"
+              required
+              placeholder="Select bathroom(s)"
+              aria-describedby={
+                flatmateDetailsErrors?.bathrooms &&
+                flatmateDetailsTouched?.bathrooms
+                  ? "flatmateDetails.bathrooms-error"
+                  : undefined
+              }
+              disabled={disabled}
+            />
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <FormSelectDropdown

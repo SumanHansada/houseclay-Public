@@ -267,6 +267,8 @@ export const transformToFlatmateForm = (
     nonVegAllowed: flatmateDetails.nonVegAllowed,
     amenities: flatmateDetails.amenities,
     tenantType: flatmateDetails.tenantType,
+    bathrooms: flatmateDetails.bathrooms,
+    balcony: flatmateDetails.balcony,
     attachedBathroom: flatmateDetails.attachedBathroom,
     attachedBalcony: flatmateDetails.attachedBalcony,
     smokingPreference: flatmateDetails.smokingPreference,

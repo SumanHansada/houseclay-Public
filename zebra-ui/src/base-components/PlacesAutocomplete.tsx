@@ -216,12 +216,7 @@ const PlacesAutocompleteBase = ({
               "primaryType",
             ],
             region: "IN",
-            locationRestriction: {
-              south: BENGALURU_BOUNDS.south,
-              west: BENGALURU_BOUNDS.west,
-              north: BENGALURU_BOUNDS.north,
-              east: BENGALURU_BOUNDS.east,
-            },
+            locationRestriction: BENGALURU_BOUNDS,
             maxResultCount: 8,
           });
 
@@ -313,7 +308,7 @@ const PlacesAutocompleteBase = ({
             longText: string;
             types: string[];
           }[];
-          console.log(`Component: ${components}`);
+          console.log("Address Components:", components);
 
           // 1. Extract City (Locality)
           const cityComponent = components.find((c) =>

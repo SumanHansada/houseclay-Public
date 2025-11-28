@@ -168,6 +168,8 @@ export const getFlatmateDetailsErrors = (errors: FormikErrors<FormValues>) =>
         nonVegAllowed?: string;
         amenities?: string;
         tenantType?: string;
+        bathrooms?: string;
+        balcony?: string;
         attachedBathroom?: string;
         attachedBalcony?: string;
         smokingPreference?: string;
@@ -189,6 +191,8 @@ export const getFlatmateDetailsTouched = (touched: FormikTouched<FormValues>) =>
         nonVegAllowed?: boolean;
         amenities?: boolean;
         tenantType?: boolean;
+        bathrooms?: boolean;
+        balcony?: boolean;
         attachedBathroom?: boolean;
         attachedBalcony?: boolean;
         smokingPreference?: boolean;
