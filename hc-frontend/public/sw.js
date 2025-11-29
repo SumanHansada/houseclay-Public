@@ -1,72 +1,20 @@
-// Service Worker for Houseclay PWA
-const CACHE_NAME = "houseclay-v1";
-const urlsToCache = [
-  "/",
-  "/manifest.json",
-  "/web-app-manifest-192x192.png",
-  "/web-app-manifest-512x512.png",
-];
+// Minimal Service Worker for PWA Install Prompt
+// This service worker does NO caching - it only enables the beforeinstallprompt event
 
-// Install event - cache resources
+// Install event - do nothing, just satisfy the requirement
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log("Opened cache");
-      return cache.addAll(urlsToCache);
-    }),
-  );
+  // Skip waiting to activate immediately
+  self.skipWaiting();
 });
 
-// Fetch event - network-first for navigation, cache-first for static assets
-self.addEventListener("fetch", (event) => {
-  const { request } = event;
-  const url = new URL(request.url);
-
-  // Skip non-GET requests and external domains
-  if (request.method !== "GET" || url.origin !== self.location.origin) {
-    return;
-  }
-
-  // Network-first strategy for navigation requests (HTML pages)
-  if (
-    request.mode === "navigate" ||
-    request.headers.get("accept")?.includes("text/html")
-  ) {
-    event.respondWith(
-      fetch(request)
-        .then((response) => {
-          // Clone the response before caching
-          const responseToCache = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(request, responseToCache);
-          });
-          return response;
-        })
-        .catch(() => {
-          // Fall back to cache if network fails
-          return caches.match(request);
-        }),
-    );
-    return;
-  }
-
-  // Network-only strategy for static assets (JS, CSS, images, etc.)
-  // Don't cache - always fetch fresh from network
-  event.respondWith(fetch(request));
-});
-
-// Activate event - clean up old caches
+// Activate event - do nothing
 self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            console.log("Deleting old cache:", cacheName);
-            return caches.delete(cacheName);
-          }
-        }),
-      );
-    }),
-  );
+  // Take control of all pages immediately
+  event.waitUntil(self.clients.claim());
+});
+
+// Fetch event - always go to network, never cache
+self.addEventListener("fetch", (event) => {
+  // Just pass through to network - no caching at all
+  event.respondWith(fetch(event.request));
 });

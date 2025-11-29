@@ -4,6 +4,8 @@ import { AnimatePresence } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 
+import { PWAInstallHandler } from "@/components/PWAInstallHandler";
+
 import { DeviceContextProvider } from "./DeviceContextProvider";
 import { DialogContextProvider } from "./DialogContextProvider";
 import QueryProvider from "./QueryProvider";
@@ -40,6 +42,7 @@ const Providers: React.FC<ProvidersProps> = ({ children }) => {
         <DeviceContextProvider>
           <DialogContextProvider>
             <SkeletonProvider>
+              <PWAInstallHandler />
               <AnimatePresence mode="wait">{children}</AnimatePresence>
               <Toaster
                 position={toasterPosition}

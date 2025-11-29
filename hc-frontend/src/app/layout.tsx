@@ -302,7 +302,7 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
 
-        {/* Service Worker Registration */}
+        {/* Service Worker Registration - Required for beforeinstallprompt event */}
         <Script
           id="sw-registration"
           strategy="afterInteractive"
