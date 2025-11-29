@@ -7,14 +7,7 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
 
-// Activate event - do nothing
+// Activate event - take control of all pages immediately
 self.addEventListener("activate", (event) => {
-  // Take control of all pages immediately
   event.waitUntil(self.clients.claim());
-});
-
-// Fetch event - always go to network, never cache
-self.addEventListener("fetch", (event) => {
-  // Just pass through to network - no caching at all
-  event.respondWith(fetch(event.request));
 });
