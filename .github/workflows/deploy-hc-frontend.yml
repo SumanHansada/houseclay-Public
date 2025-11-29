@@ -37,8 +37,14 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.FRONTEND_HOST }} << EOF
           cd /home/ec2-user/hc-frontend
           rm -f .env.local
+          
           echo "NEXT_PUBLIC_HOUSECLAY_API_BASE_URL=$EC2_HOST" >> .env.local
           echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY" >> .env.local
+
+          # 🔥 CLEAR ALL NEXT.js BUILD CACHES
+          rm -rf .next
+          rm -rf node_modules/.cache
+          
           npm install
           npm run build:prod
           EOF
