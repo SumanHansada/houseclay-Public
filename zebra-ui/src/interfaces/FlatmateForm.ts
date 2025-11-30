@@ -35,8 +35,8 @@ export interface FlatmateForm {
   balcony?: number;
   attachedBathroom: boolean;
   attachedBalcony: boolean;
-  smokingPreference: string;
-  drinkingPreference: string;
+  smokingPreference: boolean;
+  drinkingPreference: boolean;
   // Images
   images: string[];
   coverImage?: string;

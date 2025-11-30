@@ -7,6 +7,6 @@ export interface FlatmateDetails extends BaseRentalDetails {
   roomType: string;
   attachedBathroom: boolean;
   attachedBalcony: boolean;
-  smokingPreference: string;
-  drinkingPreference: string;
+  smokingPreference: boolean;
+  drinkingPreference: boolean;
 }

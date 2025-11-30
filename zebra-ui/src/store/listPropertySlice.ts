@@ -115,8 +115,8 @@ const getInitialData = (
           balcony: undefined,
           attachedBathroom: false,
           attachedBalcony: false,
-          smokingPreference: "",
-          drinkingPreference: "",
+          smokingPreference: false,
+          drinkingPreference: false,
         },
       };
 

@@ -17,12 +17,10 @@ import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 import {
   BALCONY_OPTIONS,
   BATHROOM_OPTIONS,
-  DRINKING_PREFERENCE_OPTIONS,
   FURNISHING_OPTIONS,
   PARKING_OPTIONS,
   POWER_BACKUP_OPTIONS,
   ROOM_TYPE_OPTIONS,
-  SMOKING_PREFERENCE_OPTIONS,
   WATER_SUPPLY_OPTIONS,
   YES_NO_OPTIONS,
 } from "@/common/constants/options/normalOptions";
@@ -342,7 +340,7 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
               name="flatmateDetails.smokingPreference"
               label="Smoking Allowed"
               columns={2}
-              options={SMOKING_PREFERENCE_OPTIONS}
+              options={YES_NO_OPTIONS}
               required
               horizontal
               disabled={disabled}
@@ -353,7 +351,7 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
               name="flatmateDetails.drinkingPreference"
               label="Drinking Allowed"
               columns={2}
-              options={DRINKING_PREFERENCE_OPTIONS}
+              options={YES_NO_OPTIONS}
               required
               horizontal
               disabled={disabled}

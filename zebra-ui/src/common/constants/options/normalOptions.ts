@@ -89,16 +89,6 @@ export const PARKING_OPTIONS: BaseOption[] = [
   { value: "none", label: "None" },
 ];
 
-export const SMOKING_PREFERENCE_OPTIONS: BaseOption[] = [
-  { value: "not-allowed", label: "Not Allowed" },
-  { value: "allowed", label: "Allowed" },
-];
-
-export const DRINKING_PREFERENCE_OPTIONS: BaseOption[] = [
-  { value: "no", label: "No" },
-  { value: "occasionally", label: "Occasionally" },
-];
-
 export const KHATA_CERTIFICATE_OPTIONS: BaseOption[] = [
   { value: "a-Khata", label: "Yes, A-Khata" },
   {
@@ -143,8 +133,8 @@ export const YES_NO_OPTIONS: BaseOption<boolean>[] = [
 // Property Search
 export const PROPERTY_AVAILABILITY: BaseOption[] = [
   { label: "Any", value: "Any" },
-  { label: "Immediate", value: "Immediate" },
-  { label: "Within 15 Days", value: "Within 15 Days" },
-  { label: "Within 30 Days", value: "Within 30 Days" },
-  { label: "After 45 Days", value: "After 45 Days" },
+  { label: "Immediate", value: "IMMEDIATE" },
+  { label: "Within 15 Days", value: "WITHIN_15" },
+  { label: "Within 30 Days", value: "WITHIN_30" },
+  { label: "Above 30 Days", value: "ABOVE_30" },
 ];

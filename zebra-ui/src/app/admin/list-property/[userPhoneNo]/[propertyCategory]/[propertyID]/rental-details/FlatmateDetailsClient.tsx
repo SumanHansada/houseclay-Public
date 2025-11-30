@@ -20,12 +20,10 @@ import * as Yup from "yup";
 import {
   BALCONY_OPTIONS,
   BATHROOM_OPTIONS,
-  DRINKING_PREFERENCE_OPTIONS,
   FURNISHING_OPTIONS,
   PARKING_OPTIONS,
   POWER_BACKUP_OPTIONS,
   ROOM_TYPE_OPTIONS,
-  SMOKING_PREFERENCE_OPTIONS,
   WATER_SUPPLY_OPTIONS,
   YES_NO_OPTIONS,
 } from "@/common/constants/options/normalOptions";
@@ -109,8 +107,8 @@ const flatmateSchema = Yup.object().shape({
     balcony: Yup.number().required("Balcony(s) is required"),
     attachedBathroom: Yup.boolean().required("Attached bathroom is required"),
     attachedBalcony: Yup.boolean().required("Attached balcony is required"),
-    smokingPreference: Yup.string().required("Smoking preference is required"),
-    drinkingPreference: Yup.string().required(
+    smokingPreference: Yup.boolean().required("Smoking preference is required"),
+    drinkingPreference: Yup.boolean().required(
       "Drinking preference is required",
     ),
     amenities: Yup.array().of(Yup.string()).required("Amenities are required"),
@@ -425,7 +423,7 @@ export const FlatmateDetailsClient: React.FC = () => {
               name="flatmateDetails.smokingPreference"
               label="Smoking Allowed"
               columns={2}
-              options={SMOKING_PREFERENCE_OPTIONS}
+              options={YES_NO_OPTIONS}
               required
               horizontal
             />
@@ -435,7 +433,7 @@ export const FlatmateDetailsClient: React.FC = () => {
               name="flatmateDetails.drinkingPreference"
               label="Drinking Allowed"
               columns={2}
-              options={DRINKING_PREFERENCE_OPTIONS}
+              options={YES_NO_OPTIONS}
               required
               horizontal
             />
