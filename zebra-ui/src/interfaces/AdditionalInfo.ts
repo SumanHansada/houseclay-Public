@@ -25,31 +25,3 @@ export type AdditionalInfo =
   | RentAdditionalInfo
   | FlatmateAdditionalInfo
   | ResaleAdditionalInfo;
-
-// Type guards
-export const isRentAdditionalInfo = (
-  info: AdditionalInfo,
-): info is RentAdditionalInfo => {
-  return !("khataCertificate" in info) && !("flatmateDetails" in info);
-};
-
-export const isFlatmateAdditionalInfo = (
-  info: AdditionalInfo,
-): info is FlatmateAdditionalInfo => {
-  return !("khataCertificate" in info) && "flatmateDetails" in info;
-};
-
-export const isResaleAdditionalInfo = (
-  info: AdditionalInfo,
-): info is ResaleAdditionalInfo => {
-  return (
-    "khataCertificate" in info && "saleDeed" in info && "propertyTax" in info
-  );
-};
-
-// Legacy type guard for backward compatibility
-export const isRentFlatmateAdditionalInfo = (
-  info: AdditionalInfo,
-): info is RentAdditionalInfo | FlatmateAdditionalInfo => {
-  return !("khataCertificate" in info);
-};

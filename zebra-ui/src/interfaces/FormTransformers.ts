@@ -3,9 +3,9 @@ import { PropertyCategory } from "@/common/enums";
 import { fileDataFromUrl, processPropertyImages } from "@/common/utils";
 
 import {
-  isFlatmateAdditionalInfo,
-  isRentAdditionalInfo,
-  isResaleAdditionalInfo,
+  FlatmateAdditionalInfo,
+  RentAdditionalInfo,
+  ResaleAdditionalInfo,
 } from "./AdditionalInfo";
 import { FlatmateForm } from "./FlatmateForm";
 import {
@@ -67,7 +67,7 @@ export const transformToRentForm = (
 
   // At this point, we know localityDetails exists due to hasLocalityDetails check
   const locality = localityDetails!;
-  console.warn("Rent additionalInfo - ", additionalInfo);
+  const rentAdditionalInfo = additionalInfo as RentAdditionalInfo;
 
   return {
     propertyID,
@@ -108,12 +108,10 @@ export const transformToRentForm = (
     images: images.map((img) => img.url),
     // Additional info
     whoWillShowProperty:
-      hasAdditionalInfo(values) &&
-      additionalInfo &&
-      isRentAdditionalInfo(additionalInfo)
-        ? additionalInfo.whoWillShowProperty
+      hasAdditionalInfo(values) && rentAdditionalInfo
+        ? rentAdditionalInfo.whoWillShowProperty
         : undefined,
-    secondaryPhoneNumber: additionalInfo?.secondaryPhoneNumber,
+    secondaryPhoneNumber: rentAdditionalInfo?.secondaryPhoneNumber,
   };
 };
 
@@ -151,6 +149,7 @@ export const transformToResaleForm = (
 
   // At this point, we know localityDetails exists due to hasLocalityDetails check
   const locality = localityDetails!;
+  const resaleAdditionalInfo = additionalInfo as ResaleAdditionalInfo;
 
   return {
     propertyID,
@@ -188,24 +187,18 @@ export const transformToResaleForm = (
     images: images.map((img) => img.url),
     // Additional info
     khataCertificate:
-      hasAdditionalInfo(values) &&
-      additionalInfo &&
-      isResaleAdditionalInfo(additionalInfo)
-        ? additionalInfo.khataCertificate
+      hasAdditionalInfo(values) && resaleAdditionalInfo
+        ? resaleAdditionalInfo.khataCertificate
         : "",
     saleDeed:
-      hasAdditionalInfo(values) &&
-      additionalInfo &&
-      isResaleAdditionalInfo(additionalInfo)
-        ? additionalInfo.saleDeed
+      hasAdditionalInfo(values) && resaleAdditionalInfo
+        ? resaleAdditionalInfo.saleDeed
         : false,
     propertyTax:
-      hasAdditionalInfo(values) &&
-      additionalInfo &&
-      isResaleAdditionalInfo(additionalInfo)
-        ? additionalInfo.propertyTax
+      hasAdditionalInfo(values) && resaleAdditionalInfo
+        ? resaleAdditionalInfo.propertyTax
         : false,
-    secondaryPhoneNumber: additionalInfo?.secondaryPhoneNumber,
+    secondaryPhoneNumber: resaleAdditionalInfo?.secondaryPhoneNumber,
   };
 };
 
@@ -237,6 +230,7 @@ export const transformToFlatmateForm = (
 
   // At this point, we know localityDetails exists due to hasLocalityDetails check
   const locality = localityDetails!;
+  const flatmateAdditionalInfo = additionalInfo as FlatmateAdditionalInfo;
 
   return {
     propertyID,
@@ -278,12 +272,10 @@ export const transformToFlatmateForm = (
     images: images.map((img) => img.url),
     // Additional info
     whoWillShowProperty:
-      hasAdditionalInfo(values) &&
-      additionalInfo &&
-      isFlatmateAdditionalInfo(additionalInfo)
-        ? additionalInfo.whoWillShowProperty
+      hasAdditionalInfo(values) && flatmateAdditionalInfo
+        ? flatmateAdditionalInfo.whoWillShowProperty
         : undefined,
-    secondaryPhoneNumber: additionalInfo?.secondaryPhoneNumber,
+    secondaryPhoneNumber: flatmateAdditionalInfo?.secondaryPhoneNumber,
   };
 };
 
