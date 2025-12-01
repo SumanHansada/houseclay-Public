@@ -3,9 +3,9 @@ import { PropertyCategory } from "@/common/enums";
 import { fileDataFromUrl, processPropertyImages } from "@/common/utils";
 
 import {
-  isFlatmateAdditionalInfo,
-  isRentAdditionalInfo,
-  isResaleAdditionalInfo,
+  FlatmateAdditionalInfo,
+  RentAdditionalInfo,
+  ResaleAdditionalInfo,
 } from "./AdditionalInfo";
 import { FlatmateForm } from "./FlatmateForm";
 import {
@@ -67,6 +67,7 @@ export const transformToRentForm = (
 
   // At this point, we know localityDetails exists due to hasLocalityDetails check
   const locality = localityDetails!;
+  const rentAdditionalInfo = additionalInfo as RentAdditionalInfo;
 
   return {
     propertyID,
@@ -106,12 +107,10 @@ export const transformToRentForm = (
     images: images.map((img) => img.url),
     // Additional info
     whoWillShowProperty:
-      hasAdditionalInfo(values) &&
-      additionalInfo &&
-      isRentAdditionalInfo(additionalInfo)
-        ? additionalInfo.whoWillShowProperty
+      hasAdditionalInfo(values) && rentAdditionalInfo
+        ? rentAdditionalInfo.whoWillShowProperty
         : undefined,
-    secondaryPhoneNumber: additionalInfo?.secondaryPhoneNumber,
+    secondaryPhoneNumber: rentAdditionalInfo?.secondaryPhoneNumber,
   };
 };
 
@@ -149,6 +148,7 @@ export const transformToResaleForm = (
 
   // At this point, we know localityDetails exists due to hasLocalityDetails check
   const locality = localityDetails!;
+  const resaleAdditionalInfo = additionalInfo as ResaleAdditionalInfo;
 
   return {
     propertyID,
@@ -186,24 +186,18 @@ export const transformToResaleForm = (
     images: images.map((img) => img.url),
     // Additional info
     khataCertificate:
-      hasAdditionalInfo(values) &&
-      additionalInfo &&
-      isResaleAdditionalInfo(additionalInfo)
-        ? additionalInfo.khataCertificate
+      hasAdditionalInfo(values) && resaleAdditionalInfo
+        ? resaleAdditionalInfo.khataCertificate
         : "",
     saleDeed:
-      hasAdditionalInfo(values) &&
-      additionalInfo &&
-      isResaleAdditionalInfo(additionalInfo)
-        ? additionalInfo.saleDeed
+      hasAdditionalInfo(values) && resaleAdditionalInfo
+        ? resaleAdditionalInfo.saleDeed
         : false,
     propertyTax:
-      hasAdditionalInfo(values) &&
-      additionalInfo &&
-      isResaleAdditionalInfo(additionalInfo)
-        ? additionalInfo.propertyTax
+      hasAdditionalInfo(values) && resaleAdditionalInfo
+        ? resaleAdditionalInfo.propertyTax
         : false,
-    secondaryPhoneNumber: additionalInfo?.secondaryPhoneNumber,
+    secondaryPhoneNumber: resaleAdditionalInfo?.secondaryPhoneNumber,
   };
 };
 
@@ -235,6 +229,7 @@ export const transformToFlatmateForm = (
 
   // At this point, we know localityDetails exists due to hasLocalityDetails check
   const locality = localityDetails!;
+  const flatmateAdditionalInfo = additionalInfo as FlatmateAdditionalInfo;
 
   return {
     propertyID,
@@ -274,12 +269,10 @@ export const transformToFlatmateForm = (
     images: images.map((img) => img.url),
     // Additional info
     whoWillShowProperty:
-      hasAdditionalInfo(values) &&
-      additionalInfo &&
-      isFlatmateAdditionalInfo(additionalInfo)
-        ? additionalInfo.whoWillShowProperty
+      hasAdditionalInfo(values) && flatmateAdditionalInfo
+        ? flatmateAdditionalInfo.whoWillShowProperty
         : undefined,
-    secondaryPhoneNumber: additionalInfo?.secondaryPhoneNumber,
+    secondaryPhoneNumber: flatmateAdditionalInfo?.secondaryPhoneNumber,
   };
 };
 
@@ -351,15 +344,16 @@ export const transformPropertyFormToFormValues = (
   };
 
   // Extract images with cover flag
-  const propertyImages = processPropertyImages(apiData.images);
-  const coverImage = `${CDN_BASE_URL}/${apiData.coverImage}`;
-  const images: PropertyImage[] = propertyImages.map((image: string) => {
+  const propertyImages =
+    apiData.images.length > 0 ? processPropertyImages(apiData.images) : [];
+  const coverImage =
+    apiData.images.length > 0 ? `${CDN_BASE_URL}/${apiData.coverImage}` : "";
+  const images: PropertyImage[] = propertyImages.map((url: string) => {
     return {
       id: `photo-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
-      // file: fileDataFromUrl(url),
-      file: fileDataFromUrl(image),
-      url: image,
-      isCover: image === coverImage,
+      file: fileDataFromUrl(url),
+      url: url,
+      isCover: url === coverImage,
     };
   });
 
@@ -383,7 +377,7 @@ export const transformPropertyFormToFormValues = (
     };
     additionalInfo = {
       whoWillShowProperty: apiData.whoWillShowProperty,
-      secondaryPhoneNumber: apiData.secondaryPhoneNumber,
+      secondaryPhoneNumber: apiData.secondaryPhoneNumber ?? undefined,
     };
   } else if (isFlatmateForm(apiData)) {
     flatmateDetails = {
@@ -405,7 +399,7 @@ export const transformPropertyFormToFormValues = (
     };
     additionalInfo = {
       whoWillShowProperty: apiData.whoWillShowProperty,
-      secondaryPhoneNumber: apiData.secondaryPhoneNumber,
+      secondaryPhoneNumber: apiData.secondaryPhoneNumber ?? undefined,
     };
   } else if (isResaleForm(apiData)) {
     resaleDetails = {
@@ -425,7 +419,7 @@ export const transformPropertyFormToFormValues = (
       khataCertificate: apiData.khataCertificate,
       saleDeed: apiData.saleDeed,
       propertyTax: apiData.propertyTax,
-      secondaryPhoneNumber: apiData.secondaryPhoneNumber,
+      secondaryPhoneNumber: apiData.secondaryPhoneNumber ?? undefined,
     };
   }
 
