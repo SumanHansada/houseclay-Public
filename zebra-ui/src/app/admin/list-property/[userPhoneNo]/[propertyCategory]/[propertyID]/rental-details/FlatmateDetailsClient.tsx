@@ -18,11 +18,12 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import {
-  DRINKING_PREFERENCE_OPTIONS,
+  BALCONY_OPTIONS,
+  BATHROOM_OPTIONS,
   FURNISHING_OPTIONS,
   PARKING_OPTIONS,
   POWER_BACKUP_OPTIONS,
-  SMOKING_PREFERENCE_OPTIONS,
+  ROOM_TYPE_OPTIONS,
   WATER_SUPPLY_OPTIONS,
   YES_NO_OPTIONS,
 } from "@/common/constants/options/normalOptions";
@@ -95,16 +96,19 @@ const flatmateSchema = Yup.object().shape({
         (value) => parseFloat(value || "0") > 0,
       ),
     availableFrom: Yup.string().required("Available from is required"),
+    roomType: Yup.string().required("Room type is required"),
     furnishing: Yup.string().required("Furnishing is required"),
     waterSupply: Yup.string().required("Water supply is required"),
     powerBackup: Yup.string().required("Power backup is required"),
     parking: Yup.string().required("Parking is required"),
     nonVegAllowed: Yup.boolean().required("Non veg allowed is required"),
     tenantType: Yup.string().required("Preferred tenant is required"),
+    bathrooms: Yup.number().required("Bathroom(s) is required"),
+    balcony: Yup.number().required("Balcony(s) is required"),
     attachedBathroom: Yup.boolean().required("Attached bathroom is required"),
     attachedBalcony: Yup.boolean().required("Attached balcony is required"),
-    smokingPreference: Yup.string().required("Smoking preference is required"),
-    drinkingPreference: Yup.string().required(
+    smokingPreference: Yup.boolean().required("Smoking preference is required"),
+    drinkingPreference: Yup.boolean().required(
       "Drinking preference is required",
     ),
     amenities: Yup.array().of(Yup.string()).required("Amenities are required"),
@@ -198,23 +202,33 @@ export const FlatmateDetailsClient: React.FC = () => {
             />
           </div>
           <div className="col-span-1">
-            <FormSelectDropdown
-              label="Parking"
-              name="flatmateDetails.parking"
-              id="flatmateDetails.parking"
-              options={PARKING_OPTIONS}
-              required={true}
-              placeholder="Select Parking"
-              aria-describedby={
-                flatmateDetailsErrors?.parking &&
-                flatmateDetailsTouched?.parking
-                  ? "flatmateDetails.parking-error"
-                  : undefined
-              }
+            <FormCurrencyField
+              name="flatmateDetails.depositCharges"
+              id="flatmateDetails.depositCharges"
+              label="Deposit"
+              placeholder="Enter deposit"
+              prefix={<IndianRupee size={20} />}
+              required
             />
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormSelectDropdown
+              label="Room Type"
+              name="flatmateDetails.roomType"
+              id="flatmateDetails.roomType"
+              options={ROOM_TYPE_OPTIONS}
+              required={true}
+              placeholder="Select room type"
+              aria-describedby={
+                flatmateDetailsErrors?.roomType &&
+                flatmateDetailsTouched?.roomType
+                  ? "flatmateDetails.roomType-error"
+                  : undefined
+              }
+            />
+          </div>
           <div className="col-span-1">
             <FormCurrencyField
               name="flatmateDetails.maintenanceCharges"
@@ -223,16 +237,6 @@ export const FlatmateDetailsClient: React.FC = () => {
               placeholder="Enter maintenance charges"
               prefix={<IndianRupee size={20} />}
               suffix="/month"
-              required
-            />
-          </div>
-          <div className="col-span-1">
-            <FormCurrencyField
-              name="flatmateDetails.depositCharges"
-              id="flatmateDetails.depositCharges"
-              label="Deposit"
-              placeholder="Enter deposit"
-              prefix={<IndianRupee size={20} />}
               required
             />
           </div>
@@ -308,6 +312,80 @@ export const FlatmateDetailsClient: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <FormSelectDropdown
+              label="Balcony(s)"
+              name="flatmateDetails.balcony"
+              id="flatmateDetails.balcony"
+              options={BALCONY_OPTIONS}
+              optionsType="number"
+              required
+              placeholder="Select balcony(s)"
+              aria-describedby={
+                flatmateDetailsErrors?.balcony &&
+                flatmateDetailsTouched?.balcony
+                  ? "flatmateDetails.balcony-error"
+                  : undefined
+              }
+            />
+          </div>
+          <div className="col-span-1">
+            <FormSelectDropdown
+              label="Bathroom(s)"
+              name="flatmateDetails.bathrooms"
+              id="flatmateDetails.bathrooms"
+              options={BATHROOM_OPTIONS}
+              optionsType="number"
+              required
+              placeholder="Select bathroom(s)"
+              aria-describedby={
+                flatmateDetailsErrors?.bathrooms &&
+                flatmateDetailsTouched?.bathrooms
+                  ? "flatmateDetails.bathrooms-error"
+                  : undefined
+              }
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormRadioGroup
+              name="flatmateDetails.attachedBalcony"
+              label="Attached Balcony"
+              columns={2}
+              options={YES_NO_OPTIONS}
+              required
+              horizontal
+            />
+          </div>
+          <div className="col-span-1">
+            <FormRadioGroup
+              name="flatmateDetails.attachedBathroom"
+              label="Attached Bathroom"
+              columns={2}
+              options={YES_NO_OPTIONS}
+              required
+              horizontal
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormSelectDropdown
+              label="Parking"
+              name="flatmateDetails.parking"
+              id="flatmateDetails.parking"
+              options={PARKING_OPTIONS}
+              required={true}
+              placeholder="Select Parking"
+              aria-describedby={
+                flatmateDetailsErrors?.parking &&
+                flatmateDetailsTouched?.parking
+                  ? "flatmateDetails.parking-error"
+                  : undefined
+              }
+            />
+          </div>
+          <div className="col-span-1">
+            <FormSelectDropdown
               label="Water Supply"
               name="flatmateDetails.waterSupply"
               id="flatmateDetails.waterSupply"
@@ -342,32 +420,10 @@ export const FlatmateDetailsClient: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <FormRadioGroup
-              name="flatmateDetails.attachedBathroom"
-              label="Attached Bathroom"
-              columns={2}
-              options={YES_NO_OPTIONS}
-              required
-              horizontal
-            />
-          </div>
-          <div className="col-span-1">
-            <FormRadioGroup
-              name="flatmateDetails.attachedBalcony"
-              label="Attached Balcony"
-              columns={2}
-              options={YES_NO_OPTIONS}
-              required
-              horizontal
-            />
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="col-span-1">
-            <FormRadioGroup
               name="flatmateDetails.smokingPreference"
               label="Smoking Allowed"
               columns={2}
-              options={SMOKING_PREFERENCE_OPTIONS}
+              options={YES_NO_OPTIONS}
               required
               horizontal
             />
@@ -377,7 +433,7 @@ export const FlatmateDetailsClient: React.FC = () => {
               name="flatmateDetails.drinkingPreference"
               label="Drinking Allowed"
               columns={2}
-              options={DRINKING_PREFERENCE_OPTIONS}
+              options={YES_NO_OPTIONS}
               required
               horizontal
             />

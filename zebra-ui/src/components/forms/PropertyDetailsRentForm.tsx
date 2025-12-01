@@ -1,7 +1,6 @@
 import { useFormikContext } from "formik";
 
 import {
-  BATHROOM_OPTIONS,
   BHK_TYPE_OPTIONS,
   FACING_OPTIONS,
   FLOOR_NUMERIC_OPTIONS,
@@ -105,25 +104,8 @@ const PropertyDetailsRentForm: React.FC<PropertyDetailsRentFormProps> = ({
         />
       </div>
 
-      {/* BATHROOMS, OWNERSHIP, AGE */}
+      {/* OWNERSHIP, AGE, FloorType */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        <FormSelectDropdown
-          label="Bathrooms"
-          name="propertyDetails.bathrooms"
-          id="propertyDetails.bathrooms"
-          options={BATHROOM_OPTIONS}
-          optionsType="number"
-          required
-          placeholder="Select Bathrooms"
-          aria-describedby={
-            propertyDetailsErrors?.bathrooms &&
-            propertyDetailsTouched?.bathrooms
-              ? "propertyDetails.bathrooms-error"
-              : undefined
-          }
-          disabled={disabled}
-        />
-
         <FormSelectDropdown
           label="Ownership Type"
           name="propertyDetails.ownershipType"
@@ -155,10 +137,26 @@ const PropertyDetailsRentForm: React.FC<PropertyDetailsRentFormProps> = ({
           }
           disabled={disabled}
         />
+
+        <FormSelectDropdown
+          label="Floor Type"
+          name="propertyDetails.floorType"
+          id="floorType"
+          options={FLOOR_TYPE_OPTIONS}
+          required
+          placeholder="Select floor type"
+          aria-describedby={
+            propertyDetailsErrors?.floorType &&
+            propertyDetailsTouched?.floorType
+              ? "floorType-error"
+              : undefined
+          }
+          disabled={disabled}
+        />
       </div>
 
       {/* FLOOR, TOTAL FLOOR, FLOOR TYPE */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <FormSelectDropdown
           label="Total Floor"
           name="propertyDetails.totalFloors"
@@ -187,22 +185,6 @@ const PropertyDetailsRentForm: React.FC<PropertyDetailsRentFormProps> = ({
           aria-describedby={
             propertyDetailsErrors?.floor && propertyDetailsTouched?.floor
               ? "propertyDetails.floor-error"
-              : undefined
-          }
-          disabled={disabled}
-        />
-
-        <FormSelectDropdown
-          label="Floor Type"
-          name="propertyDetails.floorType"
-          id="floorType"
-          options={FLOOR_TYPE_OPTIONS}
-          required
-          placeholder="Select floor type"
-          aria-describedby={
-            propertyDetailsErrors?.floorType &&
-            propertyDetailsTouched?.floorType
-              ? "floorType-error"
               : undefined
           }
           disabled={disabled}

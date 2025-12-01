@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import {
-  BATHROOM_OPTIONS,
   BHK_TYPE_OPTIONS,
   FACING_OPTIONS,
   FLOOR_NUMERIC_OPTIONS,
@@ -46,7 +45,6 @@ const propertySchema = Yup.object({
         },
       ),
     totalFloors: Yup.number().required("Total floors is required"),
-    bathrooms: Yup.number().required("Bathroom is required"),
   }),
 });
 
@@ -185,24 +183,8 @@ const FlatmatePropertyDetailsClient: React.FC = () => {
           />
         </div>
 
-        {/* BATHROOMS, FLOOR, TOTAL FLOOR */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          <FormSelectDropdown
-            label="Bathrooms"
-            name="propertyDetails.bathrooms"
-            id="propertyDetails.bathrooms"
-            options={BATHROOM_OPTIONS}
-            optionsType="number"
-            required
-            placeholder="Select bathrooms"
-            aria-describedby={
-              propertyDetailsErrors?.bathrooms &&
-              propertyDetailsTouched?.bathrooms
-                ? "propertyDetails.bathrooms-error"
-                : undefined
-            }
-          />
-
+        {/* FLOOR, TOTAL FLOOR */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormSelectDropdown
             label="Total Floor"
             name="propertyDetails.totalFloors"

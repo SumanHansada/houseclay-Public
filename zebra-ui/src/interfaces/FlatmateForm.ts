@@ -9,7 +9,6 @@ export interface FlatmateForm {
   builtUpArea?: number;
   facing: string;
   bhkType: string;
-  bathrooms?: number;
   floor?: number;
   totalFloors?: number;
   description: string;
@@ -24,6 +23,7 @@ export interface FlatmateForm {
   maintenanceCharges?: number;
   depositCharges?: number;
   availableFrom: string;
+  roomType: string;
   furnishing: string;
   waterSupply: string;
   powerBackup: string;
@@ -31,10 +31,12 @@ export interface FlatmateForm {
   nonVegAllowed: boolean;
   amenities: string[];
   tenantType: string;
+  bathrooms?: number;
+  balcony?: number;
   attachedBathroom: boolean;
   attachedBalcony: boolean;
-  smokingPreference: string;
-  drinkingPreference: string;
+  smokingPreference: boolean;
+  drinkingPreference: boolean;
   // Images
   images: string[];
   coverImage?: string;

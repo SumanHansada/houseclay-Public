@@ -15,11 +15,12 @@ import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 
 import {
-  DRINKING_PREFERENCE_OPTIONS,
+  BALCONY_OPTIONS,
+  BATHROOM_OPTIONS,
   FURNISHING_OPTIONS,
   PARKING_OPTIONS,
   POWER_BACKUP_OPTIONS,
-  SMOKING_PREFERENCE_OPTIONS,
+  ROOM_TYPE_OPTIONS,
   WATER_SUPPLY_OPTIONS,
   YES_NO_OPTIONS,
 } from "@/common/constants/options/normalOptions";
@@ -103,24 +104,34 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
             />
           </div>
           <div className="col-span-1">
-            <FormSelectDropdown
-              label="Parking"
-              name="flatmateDetails.parking"
-              id="flatmateDetails.parking"
-              options={PARKING_OPTIONS}
-              required={true}
-              placeholder="Select Parking"
-              aria-describedby={
-                flatmateDetailsErrors?.parking &&
-                flatmateDetailsTouched?.parking
-                  ? "flatmateDetails.parking-error"
-                  : undefined
-              }
+            <FormCurrencyField
+              name="flatmateDetails.depositCharges"
+              id="flatmateDetails.depositCharges"
+              label="Deposit"
+              prefix={<IndianRupee size={20} />}
+              required
               disabled={disabled}
             />
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormSelectDropdown
+              label="Room Type"
+              name="flatmateDetails.roomType"
+              id="flatmateDetails.roomType"
+              options={ROOM_TYPE_OPTIONS}
+              required={true}
+              placeholder="Select room type"
+              aria-describedby={
+                flatmateDetailsErrors?.roomType &&
+                flatmateDetailsTouched?.roomType
+                  ? "flatmateDetails.roomType-error"
+                  : undefined
+              }
+              disabled={disabled}
+            />
+          </div>
           <div className="col-span-1">
             <FormCurrencyField
               name="flatmateDetails.maintenanceCharges"
@@ -128,16 +139,6 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
               label="Maintenance Charges"
               prefix={<IndianRupee size={20} />}
               suffix="/month"
-              required
-              disabled={disabled}
-            />
-          </div>
-          <div className="col-span-1">
-            <FormCurrencyField
-              name="flatmateDetails.depositCharges"
-              id="flatmateDetails.depositCharges"
-              label="Deposit"
-              prefix={<IndianRupee size={20} />}
               required
               disabled={disabled}
             />
@@ -215,7 +216,89 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
             disabled={disabled}
           />
         </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormSelectDropdown
+              label="Balcony(s)"
+              name="flatmateDetails.balcony"
+              id="flatmateDetails.balcony"
+              options={BALCONY_OPTIONS}
+              optionsType="number"
+              required
+              placeholder="Select balcony(s)"
+              aria-describedby={
+                flatmateDetailsErrors?.balcony &&
+                flatmateDetailsTouched?.balcony
+                  ? "flatmateDetails.balcony-error"
+                  : undefined
+              }
+              disabled={disabled}
+            />
+          </div>
+          <div className="col-span-1">
+            <FormSelectDropdown
+              label="Bathroom(s)"
+              name="flatmateDetails.bathrooms"
+              id="flatmateDetails.bathrooms"
+              options={BATHROOM_OPTIONS}
+              optionsType="number"
+              required
+              placeholder="Select bathroom(s)"
+              aria-describedby={
+                flatmateDetailsErrors?.bathrooms &&
+                flatmateDetailsTouched?.bathrooms
+                  ? "flatmateDetails.bathrooms-error"
+                  : undefined
+              }
+              disabled={disabled}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormRadioGroup
+              name="flatmateDetails.attachedBalcony"
+              label="Attached Balcony"
+              columns={2}
+              options={YES_NO_OPTIONS}
+              required
+              horizontal
+              disabled={disabled}
+            />
+          </div>
+          <div className="col-span-1">
+            <FormRadioGroup
+              name="flatmateDetails.attachedBathroom"
+              label="Attached Bathroom"
+              columns={2}
+              options={YES_NO_OPTIONS}
+              required
+              horizontal
+              disabled={disabled}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormSelectDropdown
+              label="Parking"
+              name="flatmateDetails.parking"
+              id="flatmateDetails.parking"
+              options={PARKING_OPTIONS}
+              required={true}
+              placeholder="Select Parking"
+              aria-describedby={
+                flatmateDetailsErrors?.parking &&
+                flatmateDetailsTouched?.parking
+                  ? "flatmateDetails.parking-error"
+                  : undefined
+              }
+              disabled={disabled}
+            />
+          </div>
           <div className="col-span-1">
             <FormSelectDropdown
               label="Water Supply"
@@ -254,34 +337,10 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <FormRadioGroup
-              name="flatmateDetails.attachedBathroom"
-              label="Attached Bathroom"
-              columns={2}
-              options={YES_NO_OPTIONS}
-              required
-              horizontal
-              disabled={disabled}
-            />
-          </div>
-          <div className="col-span-1">
-            <FormRadioGroup
-              name="flatmateDetails.attachedBalcony"
-              label="Attached Balcony"
-              columns={2}
-              options={YES_NO_OPTIONS}
-              required
-              horizontal
-              disabled={disabled}
-            />
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="col-span-1">
-            <FormRadioGroup
               name="flatmateDetails.smokingPreference"
               label="Smoking Allowed"
               columns={2}
-              options={SMOKING_PREFERENCE_OPTIONS}
+              options={YES_NO_OPTIONS}
               required
               horizontal
               disabled={disabled}
@@ -292,7 +351,7 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
               name="flatmateDetails.drinkingPreference"
               label="Drinking Allowed"
               columns={2}
-              options={DRINKING_PREFERENCE_OPTIONS}
+              options={YES_NO_OPTIONS}
               required
               horizontal
               disabled={disabled}

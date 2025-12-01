@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------
-   String helpers
+  String helpers
    ------------------------------------------------------------------ */
 
 /** Supported case styles for `formatCase`. */
@@ -91,7 +91,7 @@ export const getInitials = (fullName: string | undefined) => {
 };
 
 /* --------------------------------------------------------------------
-   Enum helpers
+  Enum helpers
    ------------------------------------------------------------------ */
 
 type StringEnum = Record<string, string>;
@@ -141,7 +141,7 @@ export function ensureEnumValue<E extends StringEnum>({
 }
 
 /* --------------------------------------------------------------------
-   File helpers
+  File helpers
    ------------------------------------------------------------------ */
 
 import { FileData } from "@/interfaces/FileData";
@@ -169,7 +169,7 @@ export function fileDataFromUrl(url: string): FileData {
 }
 
 /* --------------------------------------------------------------------
-   Date helpers
+  Date helpers
    ------------------------------------------------------------------ */
 
 /**

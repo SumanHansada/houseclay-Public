@@ -15,8 +15,8 @@ export interface OptionWithIcon<T extends OptionValue = string>
 interface NumericOptionConfig {
   min?: number;
   max: number;
-  includeGround?: boolean;
-  groundLabel?: string;
+  addZeroOption?: boolean;
+  zeroOptionLabel?: string;
   prefix?: string;
   suffix?: string;
 }
@@ -27,8 +27,8 @@ export const generateNumericOptions = (
   const {
     min = 1,
     max,
-    includeGround = false,
-    groundLabel = "Ground",
+    addZeroOption = false,
+    zeroOptionLabel = "None",
     prefix = "",
     suffix = "",
   } = config;
@@ -36,8 +36,8 @@ export const generateNumericOptions = (
   const options: BaseOption<number>[] = [];
 
   // Add ground option if needed
-  if (includeGround) {
-    options.push({ value: 0, label: groundLabel });
+  if (addZeroOption) {
+    options.push({ value: 0, label: zeroOptionLabel });
   }
 
   // Generate numeric options

@@ -9,6 +9,8 @@ export interface BaseRentalDetails {
   parking: string;
   nonVegAllowed: boolean;
   amenities: string[];
+  bathrooms?: number;
+  balcony?: number;
 }
 
 // Extended rental details specific to RENT

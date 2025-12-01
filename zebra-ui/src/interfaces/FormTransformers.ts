@@ -3,9 +3,9 @@ import { PropertyCategory } from "@/common/enums";
 import { fileDataFromUrl, processPropertyImages } from "@/common/utils";
 
 import {
-  isFlatmateAdditionalInfo,
-  isRentAdditionalInfo,
-  isResaleAdditionalInfo,
+  FlatmateAdditionalInfo,
+  RentAdditionalInfo,
+  ResaleAdditionalInfo,
 } from "./AdditionalInfo";
 import { FlatmateForm } from "./FlatmateForm";
 import {
@@ -67,6 +67,7 @@ export const transformToRentForm = (
 
   // At this point, we know localityDetails exists due to hasLocalityDetails check
   const locality = localityDetails!;
+  const rentAdditionalInfo = additionalInfo as RentAdditionalInfo;
 
   return {
     propertyID,
@@ -76,7 +77,6 @@ export const transformToRentForm = (
     builtUpArea: propertyDetails.builtUpArea,
     facing: propertyDetails.facing,
     bhkType: propertyDetails.bhkType,
-    bathrooms: propertyDetails.bathrooms,
     ownershipType: propertyDetails.ownershipType,
     propertyAge: propertyDetails.propertyAge,
     floor: propertyDetails.floor,
@@ -96,6 +96,8 @@ export const transformToRentForm = (
     rentNegotiable: rentalDetails.rentNegotiable,
     availableFrom: rentalDetails.availableFrom,
     preferredTenants: rentalDetails.preferredTenants,
+    bathrooms: rentalDetails.bathrooms,
+    balcony: rentalDetails.balcony,
     waterSupply: rentalDetails.waterSupply,
     powerBackup: rentalDetails.powerBackup,
     furnishing: rentalDetails.furnishing,
@@ -106,12 +108,10 @@ export const transformToRentForm = (
     images: images.map((img) => img.url),
     // Additional info
     whoWillShowProperty:
-      hasAdditionalInfo(values) &&
-      additionalInfo &&
-      isRentAdditionalInfo(additionalInfo)
-        ? additionalInfo.whoWillShowProperty
+      hasAdditionalInfo(values) && rentAdditionalInfo
+        ? rentAdditionalInfo.whoWillShowProperty
         : undefined,
-    secondaryPhoneNumber: additionalInfo?.secondaryPhoneNumber,
+    secondaryPhoneNumber: rentAdditionalInfo?.secondaryPhoneNumber,
   };
 };
 
@@ -149,6 +149,7 @@ export const transformToResaleForm = (
 
   // At this point, we know localityDetails exists due to hasLocalityDetails check
   const locality = localityDetails!;
+  const resaleAdditionalInfo = additionalInfo as ResaleAdditionalInfo;
 
   return {
     propertyID,
@@ -186,24 +187,18 @@ export const transformToResaleForm = (
     images: images.map((img) => img.url),
     // Additional info
     khataCertificate:
-      hasAdditionalInfo(values) &&
-      additionalInfo &&
-      isResaleAdditionalInfo(additionalInfo)
-        ? additionalInfo.khataCertificate
+      hasAdditionalInfo(values) && resaleAdditionalInfo
+        ? resaleAdditionalInfo.khataCertificate
         : "",
     saleDeed:
-      hasAdditionalInfo(values) &&
-      additionalInfo &&
-      isResaleAdditionalInfo(additionalInfo)
-        ? additionalInfo.saleDeed
+      hasAdditionalInfo(values) && resaleAdditionalInfo
+        ? resaleAdditionalInfo.saleDeed
         : false,
     propertyTax:
-      hasAdditionalInfo(values) &&
-      additionalInfo &&
-      isResaleAdditionalInfo(additionalInfo)
-        ? additionalInfo.propertyTax
+      hasAdditionalInfo(values) && resaleAdditionalInfo
+        ? resaleAdditionalInfo.propertyTax
         : false,
-    secondaryPhoneNumber: additionalInfo?.secondaryPhoneNumber,
+    secondaryPhoneNumber: resaleAdditionalInfo?.secondaryPhoneNumber,
   };
 };
 
@@ -235,6 +230,7 @@ export const transformToFlatmateForm = (
 
   // At this point, we know localityDetails exists due to hasLocalityDetails check
   const locality = localityDetails!;
+  const flatmateAdditionalInfo = additionalInfo as FlatmateAdditionalInfo;
 
   return {
     propertyID,
@@ -244,7 +240,6 @@ export const transformToFlatmateForm = (
     builtUpArea: propertyDetails.builtUpArea,
     facing: propertyDetails.facing,
     bhkType: propertyDetails.bhkType,
-    bathrooms: propertyDetails.bathrooms,
     floor: propertyDetails.floor,
     totalFloors: propertyDetails.totalFloors,
     description: propertyDetails.description,
@@ -259,6 +254,7 @@ export const transformToFlatmateForm = (
     maintenanceCharges: flatmateDetails.maintenanceCharges,
     depositCharges: flatmateDetails.depositCharges,
     availableFrom: flatmateDetails.availableFrom,
+    roomType: flatmateDetails.roomType,
     furnishing: flatmateDetails.furnishing,
     waterSupply: flatmateDetails.waterSupply,
     powerBackup: flatmateDetails.powerBackup,
@@ -266,6 +262,8 @@ export const transformToFlatmateForm = (
     nonVegAllowed: flatmateDetails.nonVegAllowed,
     amenities: flatmateDetails.amenities,
     tenantType: flatmateDetails.tenantType,
+    bathrooms: flatmateDetails.bathrooms,
+    balcony: flatmateDetails.balcony,
     attachedBathroom: flatmateDetails.attachedBathroom,
     attachedBalcony: flatmateDetails.attachedBalcony,
     smokingPreference: flatmateDetails.smokingPreference,
@@ -274,12 +272,10 @@ export const transformToFlatmateForm = (
     images: images.map((img) => img.url),
     // Additional info
     whoWillShowProperty:
-      hasAdditionalInfo(values) &&
-      additionalInfo &&
-      isFlatmateAdditionalInfo(additionalInfo)
-        ? additionalInfo.whoWillShowProperty
+      hasAdditionalInfo(values) && flatmateAdditionalInfo
+        ? flatmateAdditionalInfo.whoWillShowProperty
         : undefined,
-    secondaryPhoneNumber: additionalInfo?.secondaryPhoneNumber,
+    secondaryPhoneNumber: flatmateAdditionalInfo?.secondaryPhoneNumber,
   };
 };
 
@@ -351,8 +347,10 @@ export const transformPropertyFormToFormValues = (
   };
 
   // Extract images with cover flag
-  const propertyImages = processPropertyImages(apiData.images);
-  const coverImage = `${CDN_BASE_URL}/${apiData.coverImage}`;
+  const propertyImages =
+    apiData.images.length > 0 ? processPropertyImages(apiData.images) : [];
+  const coverImage =
+    apiData.images.length > 0 ? `${CDN_BASE_URL}/${apiData.coverImage}` : "";
   const images: PropertyImage[] = propertyImages.map((url: string) => ({
     id: `photo-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
     file: fileDataFromUrl(url),
@@ -371,6 +369,8 @@ export const transformPropertyFormToFormValues = (
       rentNegotiable: apiData.rentNegotiable,
       availableFrom: apiData.availableFrom,
       preferredTenants: apiData.preferredTenants,
+      bathrooms: apiData.bathrooms,
+      balcony: apiData.balcony,
       waterSupply: apiData.waterSupply,
       powerBackup: apiData.powerBackup,
       furnishing: apiData.furnishing,
@@ -380,7 +380,7 @@ export const transformPropertyFormToFormValues = (
     };
     additionalInfo = {
       whoWillShowProperty: apiData.whoWillShowProperty,
-      secondaryPhoneNumber: apiData.secondaryPhoneNumber,
+      secondaryPhoneNumber: apiData.secondaryPhoneNumber ?? undefined,
     };
   } else if (isFlatmateForm(apiData)) {
     flatmateDetails = {
@@ -388,6 +388,7 @@ export const transformPropertyFormToFormValues = (
       maintenanceCharges: apiData.maintenanceCharges,
       depositCharges: apiData.depositCharges,
       availableFrom: apiData.availableFrom,
+      roomType: apiData.roomType,
       furnishing: apiData.furnishing,
       waterSupply: apiData.waterSupply,
       powerBackup: apiData.powerBackup,
@@ -395,6 +396,8 @@ export const transformPropertyFormToFormValues = (
       nonVegAllowed: apiData.nonVegAllowed,
       amenities: apiData.amenities,
       tenantType: apiData.tenantType,
+      bathrooms: apiData.bathrooms,
+      balcony: apiData.balcony,
       attachedBathroom: apiData.attachedBathroom,
       attachedBalcony: apiData.attachedBalcony,
       smokingPreference: apiData.smokingPreference,
@@ -402,7 +405,7 @@ export const transformPropertyFormToFormValues = (
     };
     additionalInfo = {
       whoWillShowProperty: apiData.whoWillShowProperty,
-      secondaryPhoneNumber: apiData.secondaryPhoneNumber,
+      secondaryPhoneNumber: apiData.secondaryPhoneNumber ?? undefined,
     };
   } else if (isResaleForm(apiData)) {
     resaleDetails = {
@@ -422,7 +425,7 @@ export const transformPropertyFormToFormValues = (
       khataCertificate: apiData.khataCertificate,
       saleDeed: apiData.saleDeed,
       propertyTax: apiData.propertyTax,
-      secondaryPhoneNumber: apiData.secondaryPhoneNumber,
+      secondaryPhoneNumber: apiData.secondaryPhoneNumber ?? undefined,
     };
   }
 

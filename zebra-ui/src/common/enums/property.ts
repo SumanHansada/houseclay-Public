@@ -39,7 +39,7 @@ export enum BadgeTypeEnum {
 export enum PropertyStatus {
   PENDING = "PENDING_VERIFICATION",
   VERIFIED = "ACTIVE",
-  REPORT = "REPORT",
+  REPORT = "PENDING_RE_VERIFICATION",
   INACTIVE = "INACTIVE",
 }
 

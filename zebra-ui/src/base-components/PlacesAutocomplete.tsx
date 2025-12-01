@@ -6,12 +6,7 @@ import { APIProvider } from "@vis.gl/react-google-maps";
 import { MapPin } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-const BENGALURU_BOUNDS = {
-  south: 12.834,
-  west: 77.46,
-  north: 13.139,
-  east: 77.743,
-};
+import { BENGALURU_BOUNDS, LatLngBounds } from "@/utils/geoBounds";
 
 interface PlacesAutocompleteProps {
   label?: string;
@@ -47,7 +42,80 @@ interface PlacePrediction {
   placeId: string;
   latitude?: number;
   longitude?: number;
+  types?: string[];
+  primaryType?: string;
+  isPriority?: boolean;
+  isArea?: boolean;
 }
+
+// Property-related types that should be prioritized
+const PRIORITY_TYPES = [
+  "apartment_building",
+  "apartment_complex",
+  "condominium_complex",
+  "housing_complex",
+  "premise",
+  "subpremise",
+];
+
+const AREA_TYPES = [
+  "locality",
+  "sublocality",
+  "sublocality_level_1",
+  "sublocality_level_2",
+];
+
+// Label Logic should prefer Primary Type
+const getTypeLabel = (
+  types?: string[],
+  primaryType?: string,
+): string | null => {
+  // If primary type exists, use it (formatted)
+  if (primaryType) {
+    // Custom overrides for specific technical names if needed
+    if (
+      primaryType === "premise" ||
+      primaryType === "subpremise" ||
+      primaryType === "apartment_building" ||
+      primaryType === "apartment_complex" ||
+      primaryType === "condominium_complex" ||
+      primaryType === "housing_complex"
+    )
+      return "Society";
+  }
+
+  // Fallback logic if primaryType is missing
+  if (!types || types.length === 0) return null;
+  const typeSet = new Set(types);
+
+  if (
+    typeSet.has("premise") ||
+    typeSet.has("subpremise") ||
+    typeSet.has("apartment_building") ||
+    typeSet.has("apartment_complex") ||
+    typeSet.has("condominium_complex") ||
+    typeSet.has("housing_complex")
+  )
+    return "Society";
+  if (
+    typeSet.has("locality") ||
+    typeSet.has("sublocality") ||
+    typeSet.has("sublocality_level_1") ||
+    typeSet.has("sublocality_level_2")
+  )
+    return "Area";
+  // if (typeSet.has("shopping_mall")) return "Shopping Mall";
+  // if (typeSet.has("store")) return "Store";
+  // if (typeSet.has("restaurant")) return "Restaurant";
+  // if (typeSet.has("cafe")) return "Cafe";
+  // if (typeSet.has("school")) return "School";
+  // if (typeSet.has("university")) return "University";
+  // if (typeSet.has("hospital")) return "Hospital";
+  // if (typeSet.has("park")) return "Park";
+  // if (typeSet.has("establishment")) return "Establishment";
+
+  return null;
+};
 
 const PlacesAutocompleteBase = ({
   label,
@@ -65,7 +133,7 @@ const PlacesAutocompleteBase = ({
   containerClassName = "w-full relative",
   labelClassName = "block text-sm font-medium text-gray-700 mb-1",
   inputClassName = "w-full p-3 border rounded-xl",
-  dropdownClassName = "absolute z-10 mt-1 py-1 w-full bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-auto",
+  dropdownClassName = "absolute z-10 mt-2 py-1 w-full bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-auto",
   dropdownItemClassName = "py-1 px-3 hover:bg-gray-100 cursor-pointer flex items-center",
   errorClassName = "mt-1 text-sm text-red-600",
 }: PlacesAutocompleteProps) => {
@@ -73,24 +141,27 @@ const PlacesAutocompleteBase = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const [predictions, setPredictions] = useState<PlacePrediction[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const [focusedIndex, setFocusedIndex] = useState(-1);
+
+  const loadTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const searchTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
+
+  const activeOptionRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const checkGoogleMapsLoaded = async () => {
       if (window.google?.maps?.places) {
         setIsLoaded(true);
       } else {
-        timeoutRef.current = setTimeout(checkGoogleMapsLoaded, 250);
+        loadTimeoutRef.current = setTimeout(checkGoogleMapsLoaded, 250);
       }
     };
 
     checkGoogleMapsLoaded();
 
     return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+      if (loadTimeoutRef.current) clearTimeout(loadTimeoutRef.current);
+      if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
     };
   }, []);
 
@@ -101,67 +172,103 @@ const PlacesAutocompleteBase = ({
     const newValue = e.target.value;
     onChange(newValue);
 
-    if (newValue.length > 2 && isLoaded) {
-      try {
-        const places = (await google.maps.importLibrary("places")) as unknown;
-        // Type guard or cast to the expected type
-        const placeLib = places as {
-          Place: {
-            searchByText: (args: {
-              textQuery: string;
-              fields: string[];
-              region: string;
-              locationRestriction: {
-                south: number;
-                west: number;
-                north: number;
-                east: number;
-              };
-            }) => Promise<{
-              places?: {
-                id: string;
-                displayName?: string;
-                formattedAddress?: string;
-                location: {
-                  lat: () => number;
-                  lng: () => number;
-                };
-              }[];
-            }>;
-          };
-        };
-        const result = await placeLib.Place.searchByText({
-          textQuery: newValue,
-          fields: ["id", "displayName", "formattedAddress", "location"],
-          region: "IN",
-          locationRestriction: {
-            south: BENGALURU_BOUNDS.south,
-            west: BENGALURU_BOUNDS.west,
-            north: BENGALURU_BOUNDS.north,
-            east: BENGALURU_BOUNDS.east,
-          },
-        });
+    // Clear any existing timeout
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
 
-        if (result.places && result.places.length > 0) {
-          const formattedPredictions = result.places.map((place) => ({
-            id: place.id,
-            mainText: place.displayName || "",
-            secondaryText: place.formattedAddress || "",
-            placeId: place.id,
-            latitude: place.location.lat(),
-            longitude: place.location.lng(),
-          }));
-          setPredictions(formattedPredictions);
-          setShowDropdown(true);
-        } else {
+    if (newValue.length > 2 && isLoaded) {
+      searchTimeoutRef.current = setTimeout(async () => {
+        try {
+          const places = (await google.maps.importLibrary("places")) as unknown;
+          // Type guard or cast to the expected type
+          const placeLib = places as {
+            Place: {
+              searchByText: (args: {
+                textQuery: string;
+                fields: string[];
+                region: string;
+                locationRestriction: LatLngBounds;
+                maxResultCount?: number;
+              }) => Promise<{
+                places?: {
+                  id: string;
+                  displayName?: string;
+                  formattedAddress?: string;
+                  location: {
+                    lat: () => number;
+                    lng: () => number;
+                  };
+                  types?: string[];
+                  primaryType?: string;
+                }[];
+              }>;
+            };
+          };
+          const result = await placeLib.Place.searchByText({
+            textQuery: newValue,
+            fields: [
+              "id",
+              "displayName",
+              "formattedAddress",
+              "location",
+              "types",
+              "primaryType",
+            ],
+            region: "IN",
+            locationRestriction: BENGALURU_BOUNDS,
+            maxResultCount: 8,
+          });
+
+          if (result.places && result.places.length > 0) {
+            const formattedPredictions = result.places.map((place) => {
+              const types = place.types || [];
+              const isPriority = types.some((type) =>
+                PRIORITY_TYPES.includes(type),
+              );
+              const isArea = types.some((type) => AREA_TYPES.includes(type));
+
+              return {
+                id: place.id,
+                mainText: place.displayName || "",
+                secondaryText: place.formattedAddress || "",
+                placeId: place.id,
+                latitude: place.location.lat(),
+                longitude: place.location.lng(),
+                types: types,
+                primaryType: place.primaryType,
+                isPriority: isPriority,
+                isArea: isArea,
+              };
+            });
+
+            // Sort predictions: priority items (Society) first, then areas, then rest
+            formattedPredictions.sort((a, b) => {
+              // Society first
+              if (a.isPriority && !b.isPriority) return -1;
+              if (!a.isPriority && b.isPriority) return 1;
+
+              // Then areas (among non-societies)
+              if (!a.isPriority && !b.isPriority) {
+                if (a.isArea && !b.isArea) return -1;
+                if (!a.isArea && b.isArea) return 1;
+              }
+
+              return 0;
+            });
+
+            setPredictions(formattedPredictions);
+            setShowDropdown(true);
+          } else {
+            setPredictions([]);
+            setShowDropdown(false);
+          }
+        } catch (error) {
+          console.error("Error getting place suggestions:", error);
           setPredictions([]);
           setShowDropdown(false);
         }
-      } catch (error) {
-        console.error("Error getting place suggestions:", error);
-        setPredictions([]);
-        setShowDropdown(false);
-      }
+      }, 200); // Debounce delay - 200ms
     } else {
       setPredictions([]);
       setShowDropdown(false);
@@ -184,24 +291,67 @@ const PlacesAutocompleteBase = ({
           "location",
           "displayName",
           "addressComponents",
+          "types",
+          "primaryType",
         ],
       });
 
       if (result.place) {
         const placeData = result.place;
         onChange(placeData.displayName || "");
+
         let city = "";
+        let sublocality = "";
+        let pincode = "";
         if (placeData.addressComponents) {
-          for (const component of placeData.addressComponents) {
-            const componentType = component.types[0];
-            if (
-              componentType === "locality" ||
-              componentType === "administrative_area_level_1"
-            ) {
-              city = component.longText;
-              break;
-            }
+          const components = placeData.addressComponents as {
+            longText: string;
+            types: string[];
+          }[];
+          console.log("Address Components:", components);
+
+          // 1. Extract City (Locality)
+          const cityComponent = components.find((c) =>
+            c.types.includes("locality"),
+          );
+          if (cityComponent) city = cityComponent.longText;
+
+          // 2. Extract Sublocality - STRICT PRIORITY
+          // Find Level 1
+          const subLoc1 = components.find((c) =>
+            c.types.includes("sublocality_level_1"),
+          );
+          // Find Level 2
+          const subLoc2 = components.find((c) =>
+            c.types.includes("sublocality_level_2"),
+          );
+          // Find Generic
+          const subLocGeneric = components.find((c) =>
+            c.types.includes("sublocality"),
+          );
+
+          // Apply Priority: 1 > 2 > Generic
+          if (subLoc1) {
+            sublocality = subLoc1.longText;
+          } else if (subLoc2) {
+            sublocality = subLoc2.longText;
+          } else if (subLocGeneric) {
+            sublocality = subLocGeneric.longText;
           }
+
+          // 3. Extract Pincode
+          const pincodeComponent = components.find((c) =>
+            c.types.includes("postal_code"),
+          );
+          if (pincodeComponent) pincode = pincodeComponent.longText;
+
+          console.log("Extracted data:", {
+            city,
+            sublocality,
+            pincode,
+            types: placeData.types,
+            primaryType: placeData.primaryType,
+          });
         }
 
         if (placeData.location && onLocationSelect) {
@@ -261,6 +411,18 @@ const PlacesAutocompleteBase = ({
     setFocusedIndex(-1);
   }, [predictions]);
 
+  // Scroll active option into view
+  useEffect(() => {
+    if (!showDropdown) return;
+    if (focusedIndex < 0) return;
+
+    if (activeOptionRef.current) {
+      activeOptionRef.current.scrollIntoView({
+        block: "nearest",
+      });
+    }
+  }, [focusedIndex, showDropdown]);
+
   return (
     <div className={containerClassName}>
       {label && (
@@ -302,27 +464,47 @@ const PlacesAutocompleteBase = ({
           id={`${id}-listbox`}
           aria-label="Location suggestions"
         >
-          {predictions.map((prediction, index) => (
-            <div
-              key={prediction.placeId}
-              id={`${id}-option-${index}`}
-              className={`${dropdownItemClassName} ${index === focusedIndex ? "bg-gray-100" : ""}`}
-              onClick={() => selectPrediction(prediction)}
-              role="option"
-              aria-selected={index === focusedIndex}
-              tabIndex={-1}
-            >
-              <span className="text-gray-500 mr-2">
-                <MapPin size={20} />
-              </span>
-              <div>
-                <div className="text-sm font-medium">{prediction.mainText}</div>
-                <div className="text-xs text-gray-500">
-                  {prediction.secondaryText}
+          {predictions.map((prediction, index) => {
+            const typeLabel = getTypeLabel(
+              prediction.types,
+              prediction.primaryType,
+            );
+
+            return (
+              <div
+                key={prediction.placeId}
+                id={`${id}-option-${index}`}
+                ref={index === focusedIndex ? activeOptionRef : null}
+                className={`${dropdownItemClassName} ${index === focusedIndex ? "bg-gray-100" : ""}`}
+                onClick={() => selectPrediction(prediction)}
+                role="option"
+                aria-selected={index === focusedIndex}
+                tabIndex={-1}
+              >
+                <div className="flex flex-col w-full gap-0.5">
+                  <div className="flex items-center w-full gap-1">
+                    <span className="mt-0.5 text-gray-500 flex-shrink-0">
+                      <MapPin size={16} />
+                    </span>
+                    <div className="flex items-center w-11/12 gap-2">
+                      <div className="text-sm font-medium truncate">
+                        {prediction.mainText}
+                      </div>
+                      {typeLabel && (
+                        <span className="text-xs px-2 py-0.5 bg-red-50 text-red-700 rounded-full whitespace-nowrap flex-shrink-0">
+                          {typeLabel}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="text-xs text-gray-500 truncate">
+                    {prediction.secondaryText}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 

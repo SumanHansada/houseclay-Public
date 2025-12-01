@@ -9,7 +9,6 @@ export interface RentForm {
   builtUpArea?: number;
   facing: string;
   bhkType: string;
-  bathrooms?: number;
   ownershipType: string;
   propertyAge: string;
   floor?: number;
@@ -29,6 +28,8 @@ export interface RentForm {
   rentNegotiable: boolean;
   availableFrom: string;
   preferredTenants: string[];
+  bathrooms?: number;
+  balcony?: number;
   waterSupply: string;
   powerBackup: string;
   furnishing: string;

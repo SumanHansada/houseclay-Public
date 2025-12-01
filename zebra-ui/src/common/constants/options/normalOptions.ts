@@ -77,21 +77,16 @@ export const POWER_BACKUP_OPTIONS: BaseOption[] = [
   { value: "no", label: "No" },
 ];
 
+export const ROOM_TYPE_OPTIONS: BaseOption[] = [
+  { value: "single", label: "Single" },
+  { value: "shared", label: "Shared" },
+];
+
 export const PARKING_OPTIONS: BaseOption[] = [
   { value: "both", label: "Both" },
   { value: "2-wheeler", label: "2 Wheeler" },
   { value: "4-wheeler", label: "4 Wheeler" },
   { value: "none", label: "None" },
-];
-
-export const SMOKING_PREFERENCE_OPTIONS: BaseOption[] = [
-  { value: "not-allowed", label: "Not Allowed" },
-  { value: "allowed", label: "Allowed" },
-];
-
-export const DRINKING_PREFERENCE_OPTIONS: BaseOption[] = [
-  { value: "no", label: "No" },
-  { value: "occasionally", label: "Occasionally" },
 ];
 
 export const KHATA_CERTIFICATE_OPTIONS: BaseOption[] = [
@@ -113,9 +108,16 @@ export const WHO_WILL_SHOW_PROPERTY_OPTIONS: BaseOption[] = [
 
 export const BATHROOM_OPTIONS = generateNumericOptions({ min: 1, max: 6 });
 
+export const BALCONY_OPTIONS = generateNumericOptions({
+  max: 6,
+  addZeroOption: true,
+  zeroOptionLabel: "No Balcony",
+});
+
 export const FLOOR_NUMERIC_OPTIONS = generateNumericOptions({
   max: 50,
-  includeGround: true,
+  addZeroOption: true,
+  zeroOptionLabel: "Ground",
 });
 
 export const TOTAL_FLOORS_NUMERIC_OPTIONS = generateNumericOptions({
@@ -131,8 +133,8 @@ export const YES_NO_OPTIONS: BaseOption<boolean>[] = [
 // Property Search
 export const PROPERTY_AVAILABILITY: BaseOption[] = [
   { label: "Any", value: "Any" },
-  { label: "Immediate", value: "Immediate" },
-  { label: "Within 15 Days", value: "Within 15 Days" },
-  { label: "Within 30 Days", value: "Within 30 Days" },
-  { label: "After 45 Days", value: "After 45 Days" },
+  { label: "Immediate", value: "IMMEDIATE" },
+  { label: "Within 15 Days", value: "WITHIN_15" },
+  { label: "Within 30 Days", value: "WITHIN_30" },
+  { label: "Above 30 Days", value: "ABOVE_30" },
 ];

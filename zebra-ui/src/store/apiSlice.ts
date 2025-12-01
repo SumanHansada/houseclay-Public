@@ -139,13 +139,17 @@ export const apiSlice = createApi({
       },
       { phoneNo: string; comment: string }
     >({
-      query: ({ phoneNo, comment }) => ({
-        url: `/admin/tag-broker?phoneNo=${phoneNo}&comment=${comment}`,
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }),
+      query: ({ phoneNo, comment }) => {
+        const raw = safeDecode(phoneNo).trim();
+        return {
+          url: "/admin/tag-broker",
+          params: { phoneNo: raw, comment: comment },
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+      },
     }),
 
     // ──────────────── LEADS ────────────────

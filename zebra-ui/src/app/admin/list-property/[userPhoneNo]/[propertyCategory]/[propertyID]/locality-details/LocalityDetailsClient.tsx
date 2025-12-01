@@ -20,6 +20,7 @@ import {
   getLocalityDetailsErrors,
   getLocalityDetailsTouched,
 } from "@/utils/formHelpers";
+import { BENGALURU_BOUNDS, isWithinBounds } from "@/utils/geoBounds";
 
 const localitySchema = Yup.object().shape({
   localityDetails: Yup.object().shape({
@@ -55,15 +56,12 @@ const LocalityDetailsClient: React.FC = () => {
     city?: string;
   }) => {
     if (location.city && values.localityDetails?.city) {
-      const selectedCity = location.city;
-      const isCityAllowed = values.localityDetails.city === selectedCity;
-      if (!isCityAllowed) {
-        toast.error(
-          `Please select a location within ${values.localityDetails.city}`,
-          {
-            duration: 5000,
-          },
-        );
+      if (
+        !isWithinBounds(location.latitude, location.longitude, BENGALURU_BOUNDS)
+      ) {
+        toast.error(`Please select a location within Bengaluru`, {
+          duration: 5000,
+        });
         setFieldValue("localityDetails.city", "");
         setFieldValue("localityDetails.latitude", 0);
         setFieldValue("localityDetails.longitude", 0);
@@ -155,8 +153,11 @@ const LocalityDetailsClient: React.FC = () => {
       Lucknow: { lat: 26.8467, lng: 80.9462 },
     };
 
-    // Set default latitude and longitude based on selected city
-    if (selectedCity) {
+    // Set default latitude and longitude based on selected city *only if not already set*
+    if (
+      selectedCity &&
+      (!values.localityDetails?.latitude || !values.localityDetails?.longitude)
+    ) {
       const defaultLatLng = cityLatLngMapping[selectedCity] || {
         lat: 0,
         lng: 0,
