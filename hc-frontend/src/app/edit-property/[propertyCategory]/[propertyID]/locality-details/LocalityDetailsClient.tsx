@@ -156,8 +156,11 @@ const LocalityDetailsClient: React.FC = () => {
       Lucknow: { lat: 26.8467, lng: 80.9462 },
     };
 
-    // Set default latitude and longitude based on selected city
-    if (selectedCity) {
+    // Set default latitude and longitude based on selected city *only if not already set*
+    if (
+      selectedCity &&
+      (!values.localityDetails?.latitude || !values.localityDetails?.longitude)
+    ) {
       const defaultLatLng = cityLatLngMapping[selectedCity] || {
         lat: 0,
         lng: 0,

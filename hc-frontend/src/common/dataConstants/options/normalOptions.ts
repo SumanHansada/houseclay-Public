@@ -115,7 +115,8 @@ export const BATHROOM_OPTIONS = generateNumericOptions({ min: 1, max: 6 });
 
 export const FLOOR_NUMERIC_OPTIONS = generateNumericOptions({
   max: 50,
-  includeGround: true,
+  addZeroOption: true,
+  zeroOptionLabel: "Ground",
 });
 
 export const TOTAL_FLOORS_NUMERIC_OPTIONS = generateNumericOptions({
@@ -131,8 +132,8 @@ export const YES_NO_OPTIONS: BaseOption<boolean>[] = [
 // Property Search
 export const PROPERTY_AVAILABILITY: BaseOption[] = [
   { label: "Any", value: "Any" },
-  { label: "Immediate", value: "Immediate" },
-  { label: "Within 15 Days", value: "Within 15 Days" },
-  { label: "Within 30 Days", value: "Within 30 Days" },
-  { label: "After 45 Days", value: "After 45 Days" },
+  { label: "Immediate", value: "IMMEDIATE" },
+  { label: "Within 15 Days", value: "WITHIN_15" },
+  { label: "Within 30 Days", value: "WITHIN_30" },
+  { label: "Above 30 Days", value: "ABOVE_30" },
 ];

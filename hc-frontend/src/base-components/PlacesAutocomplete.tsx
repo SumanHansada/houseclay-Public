@@ -216,12 +216,7 @@ const PlacesAutocompleteBase = ({
               "primaryType",
             ],
             region: "IN",
-            locationRestriction: {
-              south: BENGALURU_BOUNDS.south,
-              west: BENGALURU_BOUNDS.west,
-              north: BENGALURU_BOUNDS.north,
-              east: BENGALURU_BOUNDS.east,
-            },
+            locationRestriction: BENGALURU_BOUNDS,
             maxResultCount: 8,
           });
 
