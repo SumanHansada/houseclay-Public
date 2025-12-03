@@ -27,8 +27,8 @@ import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 import WifiIconSvg from "public/icons/amenities/wifi.svg";
 
 import {
-  BALCONY_OPTIONS,
-  BATHROOM_OPTIONS,
+  BALCONY_NUMERIC_OPTIONS,
+  BATHROOM_NUMERIC_OPTIONS,
   FURNISHING_OPTIONS,
   PARKING_OPTIONS,
   POWER_BACKUP_OPTIONS,
@@ -231,7 +231,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
               label="Balcony(s)"
               name="rentalDetails.balcony"
               id="rentalDetails.balcony"
-              options={BALCONY_OPTIONS}
+              options={BALCONY_NUMERIC_OPTIONS}
               optionsType="number"
               required
               placeholder="Select balcony(s)"
@@ -248,7 +248,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
               label="Bathroom(s)"
               name="rentalDetails.bathrooms"
               id="rentalDetails.bathrooms"
-              options={BATHROOM_OPTIONS}
+              options={BATHROOM_NUMERIC_OPTIONS}
               optionsType="number"
               required
               placeholder="Select bathroom(s)"

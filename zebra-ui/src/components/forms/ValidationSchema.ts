@@ -95,14 +95,8 @@ const createValidationSchema = (propertyCategory: PropertyCategory) => {
           parking: Yup.string().required("Parking is required"),
           nonVegAllowed: Yup.boolean().required("Non veg allowed is required"),
           tenantType: Yup.string().required("Preferred tenant is required"),
-          bathrooms: Yup.number().required("Bathrooms is required"),
-          balcony: Yup.number().required("Balcony is required"),
-          attachedBathroom: Yup.boolean().required(
-            "Attached bathroom is required",
-          ),
-          attachedBalcony: Yup.boolean().required(
-            "Attached balcony is required",
-          ),
+          bathroomType: Yup.string().required("Bathrooms is required"),
+          balconyType: Yup.string().required("Balcony is required"),
           smokingPreference: Yup.string().required(
             "Smoking preference is required",
           ),

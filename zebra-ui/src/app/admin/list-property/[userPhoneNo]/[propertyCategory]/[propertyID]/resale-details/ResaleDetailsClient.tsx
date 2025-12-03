@@ -30,6 +30,8 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import {
+  BALCONY_NUMERIC_OPTIONS,
+  BATHROOM_NUMERIC_OPTIONS,
   FURNISHING_OPTIONS,
   PARKING_OPTIONS,
   POWER_BACKUP_OPTIONS,
@@ -190,20 +192,39 @@ const ResaleDetailsClient: React.FC = () => {
             />
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
           <div className="col-span-1">
-            <FormNumberField
-              name="resaleDetails.bathrooms"
-              id="resaleDetails.bathrooms"
-              label="Bathroom(s)"
+            <FormSelectDropdown
+              label="Balcony(s)"
+              name="rentalDetails.balcony"
+              id="rentalDetails.balcony"
+              options={BALCONY_NUMERIC_OPTIONS}
+              optionsType="number"
               required
+              placeholder="Select balcony(s)"
+              aria-describedby={
+                resaleDetailsErrors?.balcony && resaleDetailsTouched?.balcony
+                  ? "rentalDetails.balcony-error"
+                  : undefined
+              }
             />
           </div>
+
           <div className="col-span-1">
-            <FormNumberField
-              name="resaleDetails.balcony"
-              id="resaleDetails.balcony"
-              label="Balcony"
+            <FormSelectDropdown
+              label="Bathroom(s)"
+              name="rentalDetails.bathrooms"
+              id="rentalDetails.bathrooms"
+              options={BATHROOM_NUMERIC_OPTIONS}
+              optionsType="number"
+              required
+              placeholder="Select bathroom(s)"
+              aria-describedby={
+                resaleDetailsErrors?.bathrooms &&
+                resaleDetailsTouched?.bathrooms
+                  ? "rentalDetails.bathrooms-error"
+                  : undefined
+              }
             />
           </div>
         </div>

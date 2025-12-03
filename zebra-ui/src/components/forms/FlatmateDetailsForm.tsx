@@ -24,8 +24,8 @@ import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 
 import {
-  BALCONY_OPTIONS,
-  BATHROOM_OPTIONS,
+  BALCONY_TYPE_OPTIONS,
+  BATHROOM_TYPE_OPTIONS,
   FURNISHING_OPTIONS,
   PARKING_OPTIONS,
   POWER_BACKUP_OPTIONS,
@@ -229,17 +229,16 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <FormSelectDropdown
-              label="Balcony(s)"
-              name="flatmateDetails.balcony"
-              id="flatmateDetails.balcony"
-              options={BALCONY_OPTIONS}
-              optionsType="number"
-              required
-              placeholder="Select balcony(s)"
+              label="Bathroom Type"
+              name="flatmateDetails.bathroomType"
+              id="flatmateDetails.bathroomType"
+              options={BATHROOM_TYPE_OPTIONS}
+              required={true}
+              placeholder="Select bathroom type"
               aria-describedby={
-                flatmateDetailsErrors?.balcony &&
-                flatmateDetailsTouched?.balcony
-                  ? "flatmateDetails.balcony-error"
+                flatmateDetailsErrors?.bathroomType &&
+                flatmateDetailsTouched?.bathroomType
+                  ? "flatmateDetails.bathroomType-error"
                   : undefined
               }
               disabled={disabled}
@@ -247,44 +246,18 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
           </div>
           <div className="col-span-1">
             <FormSelectDropdown
-              label="Bathroom(s)"
-              name="flatmateDetails.bathrooms"
-              id="flatmateDetails.bathrooms"
-              options={BATHROOM_OPTIONS}
-              optionsType="number"
-              required
-              placeholder="Select bathroom(s)"
+              label="Balcony Type"
+              name="flatmateDetails.balconyType"
+              id="flatmateDetails.balconyType"
+              options={BALCONY_TYPE_OPTIONS}
+              required={true}
+              placeholder="Select balcony type"
               aria-describedby={
-                flatmateDetailsErrors?.bathrooms &&
-                flatmateDetailsTouched?.bathrooms
-                  ? "flatmateDetails.bathrooms-error"
+                flatmateDetailsErrors?.balconyType &&
+                flatmateDetailsTouched?.balconyType
+                  ? "flatmateDetails.balconyType-error"
                   : undefined
               }
-              disabled={disabled}
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="col-span-1">
-            <FormRadioGroup
-              name="flatmateDetails.attachedBalcony"
-              label="Attached Balcony"
-              columns={2}
-              options={YES_NO_OPTIONS}
-              required
-              horizontal
-              disabled={disabled}
-            />
-          </div>
-          <div className="col-span-1">
-            <FormRadioGroup
-              name="flatmateDetails.attachedBathroom"
-              label="Attached Bathroom"
-              columns={2}
-              options={YES_NO_OPTIONS}
-              required
-              horizontal
               disabled={disabled}
             />
           </div>
