@@ -7,8 +7,8 @@ import { Column, DataTable } from "@/components/DataTable";
 import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
 import { PaginationFooter } from "@/components/PaginationFooter";
 import { useLocalPagination } from "@/hooks/useLocalPagination";
-import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 import { PropertyReportDetails } from "@/interfaces/api";
+import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 
 export default function ReportUsersPage() {
   const router = useRouter();

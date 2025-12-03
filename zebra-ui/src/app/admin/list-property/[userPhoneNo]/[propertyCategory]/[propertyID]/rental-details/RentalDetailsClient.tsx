@@ -1,7 +1,16 @@
 "use client";
 
 import { useFormikContext } from "formik";
-import { IndianRupee } from "lucide-react";
+import {
+  BedSingle,
+  Blocks,
+  BrushCleaning,
+  CloudHail,
+  Dam,
+  Headset,
+  IndianRupee,
+  Landmark,
+} from "lucide-react";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
 import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
 import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
@@ -452,6 +461,41 @@ export const RentalDetailsClient: React.FC = () => {
               value: "First Aid Kit",
               label: "First Aid Kit",
               icon: <FirstAidKitIcon />,
+            },
+            {
+              value: "Intercom",
+              label: "Intercom",
+              icon: <Headset size={24} strokeWidth={1.5} />,
+            },
+            {
+              value: "Sewage Treatment",
+              label: "Sewage Treatment",
+              icon: <Dam size={24} strokeWidth={1.5} />,
+            },
+            {
+              value: "House Keeping",
+              label: "House Keeping",
+              icon: <BrushCleaning size={24} strokeWidth={1.5} />,
+            },
+            {
+              value: "Rain Water Harvesting",
+              label: "Rain Water Harvesting",
+              icon: <CloudHail size={24} strokeWidth={1.5} />,
+            },
+            {
+              value: "Children Play Area",
+              label: "Children Play Area",
+              icon: <Blocks size={24} strokeWidth={1.5} />,
+            },
+            {
+              value: "Guest Room",
+              label: "Guest Room",
+              icon: <BedSingle size={24} strokeWidth={1.5} />,
+            },
+            {
+              value: "Community Hall",
+              label: "Community Hall",
+              icon: <Landmark size={24} strokeWidth={1.5} />,
             },
           ]}
           withIcons={true}
