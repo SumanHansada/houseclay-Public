@@ -2,7 +2,7 @@
 
 import { Form, Formik, FormikProvider } from "formik";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { PropertyCategory } from "@/common/enums";
@@ -73,7 +73,9 @@ export default function DetailsPage() {
   );
 
   // Combined Schema
-  const validationSchema = createValidationSchema(propertyCategory);
+  const validationSchema = useMemo(() => {
+    return createValidationSchema(propertyCategory);
+  }, [propertyCategory]);
 
   // Ensure proper form initialization with all required fields
   const getInitialValues = (): FormValues => {
@@ -88,10 +90,12 @@ export default function DetailsPage() {
       resaleDetails: data.resaleDetails,
       flatmateDetails: data.flatmateDetails,
       additionalInfo: data.additionalInfo,
+      noPhotos:
+        data.noPhotos ?? (data.images ? data.images.length === 0 : true),
     };
   };
 
-  const initialValues = getInitialValues();
+  const initialValues = useMemo(() => getInitialValues(), [formState?.data]);
   // console.log("<-- Details Page (All Forms) -->");
 
   // Ref to store submitted values for chaining
@@ -544,7 +548,7 @@ export default function DetailsPage() {
         }}
         validateOnChange={true}
         validateOnBlur={true}
-        enableReinitialize={true}
+        enableReinitialize={!editMode}
       >
         {(formik) => (
           <Form>

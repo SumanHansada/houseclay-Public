@@ -68,7 +68,12 @@ export default function PropertyDetailsLayout({
     error,
   } = useGetPropertyByIdQuery(
     { propertyID: propertyIDParam },
-    { skip: !propertyIDParam, refetchOnMountOrArgChange: true },
+    {
+      // skip: !propertyIDParam,
+      refetchOnMountOrArgChange: true,
+      refetchOnReconnect: true,
+      refetchOnFocus: true,
+    },
   );
   console.log("propertyDetailsRaw: ", propertyDetailsRaw);
 

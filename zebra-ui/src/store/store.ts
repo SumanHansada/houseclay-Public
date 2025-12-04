@@ -115,7 +115,6 @@ const persistedPropertySearchReducer = persistReducer(
 export function makeStore() {
   return configureStore({
     reducer: {
-      app: appReducer,
       adminAuth: persistedAdminAuthReducer,
       listProperty: persistedListPropertyReducer,
       editProperty: persistedEditPropertyReducer,
