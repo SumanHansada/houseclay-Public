@@ -175,6 +175,6 @@ const Example = () => {
 
 ```html
 <main
-  class="mx-auto my-0 pt-14 max-md:pb-16 flex-1 flex flex-wrap justify-center"
+  class="mx-auto my-0 pt-14 max-md:pb-16 flex-1 flex flex-col justify-center"
 ></main>
 ```

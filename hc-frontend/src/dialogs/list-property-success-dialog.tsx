@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
 
 import { PropertyCategory } from "@/common/enums";
 import {
@@ -13,7 +12,6 @@ import {
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { setHideStickyNavBar } from "@/store/appSlice";
 import { SvgIcon } from "@/utility-components";
 
 interface ListPropertySuccessDialogProps {
@@ -30,11 +28,9 @@ const ListPropertySuccessDialog: React.FC<ListPropertySuccessDialogProps> = ({
   const { closeDialog } = useDialog();
   const { isMobile } = useDeviceContext();
   const router = useRouter();
-  const dispatch = useDispatch();
 
   const handleClose = () => {
     closeDialog(id);
-    dispatch(setHideStickyNavBar(false));
   };
 
   const handlePreviewListing = async () => {

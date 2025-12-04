@@ -26,9 +26,6 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
   defaultActive = "home",
 }) => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
-  const hideStickyNavbar = useSelector(
-    (state: RootState) => state.app.hideStickyNavBar,
-  );
   const [activeTab, setActiveTab] = useState<string>(defaultActive);
   const connectBal = useSelector((state: RootState) =>
     isAuthenticated ? state.user.userDetail.connectBal : 0,
@@ -77,12 +74,8 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
     setActiveTab(id);
   };
 
-  if (hideStickyNavbar) {
-    return null;
-  }
-
   return (
-    <nav className="fixed animate-slide-in-bottom bottom-0 left-0 right-0 pb-safe-bottom bg-white border-t  border-gray-200 shadow-md z-50 w-full md:hidden ">
+    <nav className="fixed animate-slide-in-bottom bottom-0 left-0 right-0 pb-safe-bottom bg-white border-t  border-gray-200 shadow-md z-49 w-full md:hidden ">
       <ul className="flex items-center justify-between px-4 py-2 max-w-7xl mx-auto">
         {navItems.map((item) => (
           <li key={item.id}>

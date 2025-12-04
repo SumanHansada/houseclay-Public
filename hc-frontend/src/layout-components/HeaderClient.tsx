@@ -14,7 +14,6 @@ import { ActionDialog } from "@/dialogs/action-dialog";
 import { useLogout } from "@/hooks/useLogout";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { setHideStickyNavBar } from "@/store/appSlice";
 import { setAuthStep } from "@/store/authSlice";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
 import { Popover } from "@/utility-components";
@@ -79,7 +78,6 @@ export const InfoTipZeroBalance: React.FC = () => (
 );
 
 const HeaderClient: React.FC<HeaderClientProps> = () => {
-  const hideHeader = useSelector((state: RootState) => state.app.hideHeader);
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated,
   );
@@ -122,10 +120,6 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
     await logout();
     router.replace("/");
   };
-
-  if (hideHeader) {
-    return null;
-  }
 
   return (
     <>
@@ -291,7 +285,6 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
           onConfirm={onLogout}
           onClose={() => {
             closeDialog(ACTION_DIALOG_ID);
-            dispatch(setHideStickyNavBar(false));
           }}
         />
       )}

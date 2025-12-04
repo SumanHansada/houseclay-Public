@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
 
 import Advantages from "@/components/Advantages";
 import Neighbourhoods from "@/components/Neighborhoods";
@@ -16,11 +15,6 @@ import {
   usePopularNeighbourhoodsQuery,
   useStandoutsQuery,
 } from "@/store/apiSlice";
-import {
-  setHideFooter,
-  setHideHeader,
-  setHideStickyNavBar,
-} from "@/store/appSlice";
 
 interface ClientPageProps {
   testimonials: Testimonial[];
@@ -28,7 +22,6 @@ interface ClientPageProps {
 
 export default function ClientPage({ testimonials }: ClientPageProps) {
   const { isDialogOpen, closeDialog } = useDialog();
-  const dispatch = useDispatch();
 
   const { data: neighbourhoodData } = usePopularNeighbourhoodsQuery(undefined, {
     refetchOnMountOrArgChange: 30,
@@ -58,13 +51,6 @@ export default function ClientPage({ testimonials }: ClientPageProps) {
       );
     }
   }, [standoutProperties.length, isDialogOpen, closeDialog]);
-
-  // Initialize app state
-  useEffect(() => {
-    dispatch(setHideHeader(false));
-    dispatch(setHideFooter(false));
-    dispatch(setHideStickyNavBar(false));
-  }, [dispatch]);
 
   return (
     <>

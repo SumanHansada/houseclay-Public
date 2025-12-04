@@ -30,11 +30,6 @@ import {
   usePresignedUrlsMutation,
   usePropertyUpdateMutation,
 } from "@/store/apiSlice";
-import {
-  setHideFooter,
-  setHideHeader,
-  setHideStickyNavBar,
-} from "@/store/appSlice";
 import { resetDelete } from "@/store/deleteFromS3Slice";
 import {
   clearFormData,
@@ -247,18 +242,6 @@ export default function EditPropertyTypeLayout({
   };
 
   const initialValues = getInitialValues();
-
-  useEffect(() => {
-    if (isMobile) {
-      dispatch(setHideHeader(true));
-      dispatch(setHideFooter(true));
-      dispatch(setHideStickyNavBar(true));
-    } else {
-      dispatch(setHideHeader(false));
-      dispatch(setHideFooter(false));
-      dispatch(setHideStickyNavBar(false));
-    }
-  }, [dispatch, isMobile]);
 
   // Set propertyID in Redux state when component mounts
   useEffect(() => {

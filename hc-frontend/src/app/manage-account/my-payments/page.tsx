@@ -2,14 +2,12 @@
 
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
 import { PaymentFilterStatus } from "@/common/enums";
 import { MobileHeader } from "@/layout-components";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { setHideStickyNavBar } from "@/store/appSlice";
 import { RootState } from "@/store/store";
 
 import { TransactionCardList } from "../components/TransactionCardList";
@@ -24,8 +22,6 @@ const filterOptions = [
 
 export default function MyPaymentsPage() {
   const router = useRouter();
-  const { isMobile } = useDeviceContext();
-  const dispatch = useDispatch();
   const [selectedFilter, setSelectedFilter] = useState<PaymentFilterStatus>(
     PaymentFilterStatus.ALL,
   );
@@ -48,14 +44,6 @@ export default function MyPaymentsPage() {
       return true;
     });
   }, [externalPayments, selectedFilter]);
-
-  useEffect(() => {
-    if (isMobile) {
-      dispatch(setHideStickyNavBar(false));
-    } else {
-      dispatch(setHideStickyNavBar(true));
-    }
-  }, [isMobile, dispatch]);
 
   // const onDownload = (id: string) => {
   //   console.log("Download Invoice: ", id);

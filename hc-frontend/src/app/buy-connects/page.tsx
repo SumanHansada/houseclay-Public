@@ -4,7 +4,7 @@ import { ChevronLeft, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
@@ -29,11 +29,6 @@ import {
   useCreateOrderMutation,
   useVerifyPaymentMutation,
 } from "@/store/apiSlice";
-import {
-  setHideFooter,
-  setHideHeader,
-  setHideStickyNavBar,
-} from "@/store/appSlice";
 import { setAuthStep, setLoginFromBuyConnects } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 import { setConnectBal } from "@/store/userSlice";
@@ -132,18 +127,6 @@ export default function BuyConnectsPage() {
   const handleCloseDialog = () => {
     closeDialog("connects-price-breakdown-dialog");
   };
-
-  useEffect(() => {
-    if (isMobile) {
-      dispatch(setHideHeader(true));
-      dispatch(setHideFooter(true));
-      dispatch(setHideStickyNavBar(true));
-    } else {
-      dispatch(setHideHeader(false));
-      dispatch(setHideFooter(false));
-      dispatch(setHideStickyNavBar(false));
-    }
-  }, [dispatch, isMobile]);
 
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Razorpay = (window as any).Razorpay;

@@ -2,14 +2,12 @@
 
 import { X } from "lucide-react";
 import React from "react";
-import { useDispatch } from "react-redux";
 
 import { Button } from "@/base-components";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { setHideStickyNavBar } from "@/store/appSlice";
 import { SvgIcon } from "@/utility-components";
 
 interface UpgradePropertyDialogProps {
@@ -20,12 +18,10 @@ const UpgradePropertyDialog: React.FC<UpgradePropertyDialogProps> = ({
   id,
 }) => {
   const { isMobile } = useDeviceContext();
-  const dispatch = useDispatch();
   const { closeDialog } = useDialog();
 
   const handleClose = () => {
     closeDialog("upgrade-property-dialog");
-    dispatch(setHideStickyNavBar(false));
   };
 
   return (

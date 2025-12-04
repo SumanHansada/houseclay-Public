@@ -10,9 +10,7 @@ import { ACCOUNT_NAV } from "@/common/dataConstants/navbar";
 import { AccountNavList } from "@/components/AccountNavList";
 import { useLogout } from "@/hooks/useLogout";
 import { Footer } from "@/layout-components";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useGetUserDetailQuery } from "@/store/apiSlice";
-import { setHideFooter, setHideHeader } from "@/store/appSlice";
 import { setShortlistedProperties } from "@/store/shortlistPropertySlice";
 import { RootState } from "@/store/store";
 import {
@@ -30,7 +28,6 @@ export default function ManageProfileLayout({
   const router = useRouter();
   const dispatch = useDispatch();
   const { logout } = useLogout();
-  const { isMobile } = useDeviceContext();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   const { data, isLoading, isFetching, isError, error } = useGetUserDetailQuery(
@@ -93,16 +90,6 @@ export default function ManageProfileLayout({
       : [];
     dispatch(setShortlistedProperties(shortlist));
   }, [dispatch, isError, error, data]);
-
-  useEffect(() => {
-    if (isMobile) {
-      dispatch(setHideHeader(true));
-      dispatch(setHideFooter(true));
-    } else {
-      dispatch(setHideHeader(false));
-      dispatch(setHideFooter(false));
-    }
-  }, [dispatch, isMobile]);
 
   if (!isAuthenticated) {
     return null;

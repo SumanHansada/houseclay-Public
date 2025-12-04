@@ -9,7 +9,6 @@ import { PropertyCategory } from "@/common/enums";
 import { generateUUID } from "@/common/utils";
 import { FindFlatmatesDialog } from "@/dialogs";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { setHideStickyNavBar } from "@/store/appSlice";
 import {
   setPropertyCategory as setListPropertyCategory,
   setPropertyID,
@@ -247,7 +246,6 @@ const MastHeadMobile: React.FC = () => {
           }}
           onClose={() => {
             closeDialog(FIND_FLATMATES_DIALOG_ID);
-            setHideStickyNavBar(false);
           }}
         />
       )}

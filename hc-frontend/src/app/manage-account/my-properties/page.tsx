@@ -2,8 +2,8 @@
 
 import { Check, ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useMemo, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
 import { MARK_RENTED_ACTION_DIALOG_ID } from "@/common/constants";
@@ -11,10 +11,8 @@ import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { MyPropertyActionsDialog } from "@/dialogs";
 import { ActionDialog } from "@/dialogs/action-dialog";
 import { MobileHeader } from "@/layout-components";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useDeactivatePropertyMutation } from "@/store/apiSlice";
-import { setHideStickyNavBar } from "@/store/appSlice";
 import { RootState } from "@/store/store";
 
 import { PropertyTable } from "../components/PropertiesTable";
@@ -32,7 +30,6 @@ const PROPERTY_ACTIONS_DIALOG_ID = "property-actions-dialog";
 
 export default function MyPropertiesPage() {
   const router = useRouter();
-  const { isMobile } = useDeviceContext();
   const [selectedFilterCategory, setSelectedFilterCategory] =
     useState<PropertyCategory>(PropertyCategory.NONE);
   const [onlyActive, setOnlyActive] = useState(false);
@@ -40,7 +37,6 @@ export default function MyPropertiesPage() {
   const [selectedPropertySate, setSelectedPropertySate] = useState("");
   const selectedPropertyIdRef = useRef("");
   const { isDialogOpen, openDialog, closeDialog } = useDialog();
-  const dispatch = useDispatch();
 
   const [deactivatingProperty] = useDeactivatePropertyMutation();
 
@@ -66,14 +62,6 @@ export default function MyPropertiesPage() {
     });
   }, [ownedProperties, selectedFilterCategory, onlyActive]);
 
-  useEffect(() => {
-    if (isMobile) {
-      dispatch(setHideStickyNavBar(false));
-    } else {
-      dispatch(setHideStickyNavBar(true));
-    }
-  }, [isMobile, dispatch]);
-
   const onDashboard = (category: string, id: string) => {
     router.push(`/my-property-details/${category?.toLowerCase()}/${id}`);
   };
@@ -96,7 +84,6 @@ export default function MyPropertiesPage() {
 
   const handleCloseDialog = (isTransitioning: boolean) => {
     closeDialog(PROPERTY_ACTIONS_DIALOG_ID);
-    dispatch(setHideStickyNavBar(false));
     if (isTransitioning) return;
     selectedPropertyIdRef.current = "";
     setSelectedPropertyCategory("");
@@ -249,7 +236,6 @@ export default function MyPropertiesPage() {
           // onSuccess={async () => await refetch()}
           onClose={() => {
             closeDialog(MARK_RENTED_ACTION_DIALOG_ID);
-            if (isMobile) dispatch(setHideStickyNavBar(false));
             selectedPropertyIdRef.current = "";
             setSelectedPropertyCategory("");
           }}

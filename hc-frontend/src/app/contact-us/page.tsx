@@ -3,20 +3,13 @@
 import { Form, Formik } from "formik";
 import { ChevronLeft, Mail, PhoneCall } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
 import * as Yup from "yup";
 
 import { Button } from "@/base-components";
 import { HOUSECLAY_SUPPORT } from "@/common/constants";
 import { FormPhoneField, FormTextArea, FormTextField } from "@/form-components";
 import { Footer, MobileHeader } from "@/layout-components";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import {
-  setHideFooter,
-  setHideHeader,
-  setHideStickyNavBar,
-} from "@/store/appSlice";
 import { ImageWithLoader } from "@/utility-components";
 
 interface ContactUsFormValues {
@@ -47,20 +40,6 @@ export default function ContactUsPage() {
   const [savedValues, setSavedValues] =
     useState<ContactUsFormValues>(initialValues);
   const router = useRouter();
-  const { isMobile } = useDeviceContext();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (isMobile) {
-      dispatch(setHideHeader(true));
-      dispatch(setHideFooter(true));
-      dispatch(setHideStickyNavBar(false));
-    } else {
-      dispatch(setHideHeader(false));
-      dispatch(setHideFooter(false));
-      dispatch(setHideStickyNavBar(true));
-    }
-  }, [isMobile, dispatch]);
 
   return (
     <>

@@ -2,29 +2,13 @@
 
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 
 import { Button } from "@/base-components";
 import { Footer, MobileHeader } from "@/layout-components";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { setHideFooter, setHideHeader } from "@/store/appSlice";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
 
 export default function AboutUsPage() {
   const router = useRouter();
-  const { isMobile } = useDeviceContext();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (isMobile) {
-      dispatch(setHideHeader(true));
-      dispatch(setHideFooter(true));
-    } else {
-      dispatch(setHideHeader(false));
-      dispatch(setHideFooter(false));
-    }
-  }, [isMobile, dispatch]);
 
   return (
     <>

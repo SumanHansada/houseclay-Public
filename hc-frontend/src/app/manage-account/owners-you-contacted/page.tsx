@@ -2,15 +2,13 @@
 
 import { Check, ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
 import { BadgeType, PropertyCategory, PropertyStatus } from "@/common/enums";
 import Properties from "@/components/Properties";
 import { MobileHeader } from "@/layout-components";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { setHideStickyNavBar } from "@/store/appSlice";
 import { RootState } from "@/store/store";
 
 import Loading from "./loading";
@@ -23,8 +21,6 @@ const filterOptions = [
 ];
 
 export default function OwnersContactedPage() {
-  const { isMobile } = useDeviceContext();
-  const dispatch = useDispatch();
   const [selectedFilterCategory, setSelectedFilterCategory] =
     useState<PropertyCategory>(PropertyCategory.NONE);
   const [onlyAvailable, setOnlyAvailable] = useState(false);
@@ -58,14 +54,6 @@ export default function OwnersContactedPage() {
       return true;
     });
   }, [contactedProperties, selectedFilterCategory, onlyAvailable]);
-
-  useEffect(() => {
-    if (isMobile) {
-      dispatch(setHideStickyNavBar(false));
-    } else {
-      dispatch(setHideStickyNavBar(true));
-    }
-  }, [isMobile, dispatch]);
 
   const handleCardClick = (e: React.MouseEvent, propertyID: string) => {
     e.stopPropagation();

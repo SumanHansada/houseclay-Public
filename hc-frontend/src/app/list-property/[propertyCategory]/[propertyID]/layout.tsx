@@ -24,11 +24,6 @@ import {
   usePresignedUrlsMutation,
   usePropertyAddMutation,
 } from "@/store/apiSlice";
-import {
-  setHideFooter,
-  setHideHeader,
-  setHideStickyNavBar,
-} from "@/store/appSlice";
 import { clearFormData, setFileURLMap } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 import { resetUpload } from "@/store/uploadToS3Slice";
@@ -183,18 +178,6 @@ export default function ListPropertyTypeLayout({
   };
 
   const initialValues = getInitialValues();
-
-  useEffect(() => {
-    if (isMobile) {
-      dispatch(setHideHeader(true));
-      dispatch(setHideFooter(true));
-      dispatch(setHideStickyNavBar(true));
-    } else {
-      dispatch(setHideHeader(false));
-      dispatch(setHideFooter(false));
-      dispatch(setHideStickyNavBar(false));
-    }
-  }, [dispatch, isMobile]);
 
   const setRoute = (stepSlug: string) => {
     const route = `/list-property/${propertyCategory.toLowerCase()}/${propertyID}/${stepSlug}`;

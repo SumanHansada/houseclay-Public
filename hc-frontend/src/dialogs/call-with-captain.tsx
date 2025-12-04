@@ -2,7 +2,6 @@
 
 import { X } from "lucide-react";
 import React from "react";
-import { useDispatch } from "react-redux";
 
 import { Button } from "@/base-components";
 import {
@@ -14,7 +13,6 @@ import {
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { setHideStickyNavBar } from "@/store/appSlice";
 import { SvgIcon } from "@/utility-components";
 
 interface CallWithCaptainDialogProps {
@@ -26,11 +24,9 @@ const CallWithCaptainDialog: React.FC<CallWithCaptainDialogProps> = ({
 }) => {
   const { isMobile } = useDeviceContext();
   const { closeDialog } = useDialog();
-  const dispatch = useDispatch();
 
   const handleClose = () => {
     closeDialog("call-with-captain-dialog");
-    dispatch(setHideStickyNavBar(true));
   };
 
   return (

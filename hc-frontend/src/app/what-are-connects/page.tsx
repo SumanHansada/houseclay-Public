@@ -2,17 +2,9 @@
 
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 
 import { Button } from "@/base-components";
 import { Footer, MobileFooter, MobileHeader } from "@/layout-components";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import {
-  setHideFooter,
-  setHideHeader,
-  setHideStickyNavBar,
-} from "@/store/appSlice";
 
 import HeroSection from "./components/HeroSection";
 import HowToUseConnectsClient from "./components/HowToUseConnectsClient";
@@ -20,21 +12,7 @@ import WhatAreConnects from "./components/WhatAreConnects";
 import WhyChooseConnectsClient from "./components/WhyChooseConnectsClient";
 
 export default function WhatAreConnectsPage() {
-  const { isMobile } = useDeviceContext();
-  const dispatch = useDispatch();
   const router = useRouter();
-
-  useEffect(() => {
-    if (isMobile) {
-      dispatch(setHideHeader(true));
-      dispatch(setHideFooter(true));
-      dispatch(setHideStickyNavBar(true));
-    } else {
-      dispatch(setHideHeader(false));
-      dispatch(setHideFooter(false));
-      dispatch(setHideStickyNavBar(false));
-    }
-  }, [dispatch, isMobile]);
 
   return (
     <>

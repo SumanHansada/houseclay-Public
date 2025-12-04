@@ -2,40 +2,18 @@
 
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 
 import { Button } from "@/base-components";
 import Carousel2D from "@/components/Carousel2D";
 // data
 import TESTIMONIALS_DATA from "@/data/TestimonialsData.json";
 import { Footer, MobileHeader } from "@/layout-components";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import {
-  setHideFooter,
-  setHideHeader,
-  setHideStickyNavBar,
-} from "@/store/appSlice";
 import { ImageWithLoader } from "@/utility-components";
 
 import { TestimonialCard } from "./components/TestimonialCard";
 
 export default function TestimonialsPage() {
   const router = useRouter();
-  const { isMobile } = useDeviceContext();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (isMobile) {
-      dispatch(setHideHeader(true));
-      dispatch(setHideFooter(true));
-      dispatch(setHideStickyNavBar(false));
-    } else {
-      dispatch(setHideHeader(false));
-      dispatch(setHideFooter(false));
-      dispatch(setHideStickyNavBar(true));
-    }
-  }, [isMobile, dispatch]);
 
   return (
     <>

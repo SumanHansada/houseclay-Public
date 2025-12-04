@@ -4,7 +4,6 @@ import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 import { apiSlice } from "./apiSlice";
-import appReducer from "./appSlice";
 import authReducer from "./authSlice";
 import deleteFromS3SliceReducer from "./deleteFromS3Slice";
 import editPropertyReducer from "./editPropertySlice";
@@ -114,7 +113,6 @@ const persistedUserReducer = persistReducer(userPersistConfig, userReducer);
 export function makeStore() {
   return configureStore({
     reducer: {
-      app: appReducer,
       auth: persistedAuthReducer,
       user: persistedUserReducer,
       listProperty: persistedListPropertyReducer,

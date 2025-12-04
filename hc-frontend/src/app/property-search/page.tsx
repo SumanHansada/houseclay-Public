@@ -42,11 +42,6 @@ import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useGetPropertiesByLocationQuery } from "@/store/apiSlice";
 import {
-  setHideFooter,
-  setHideHeader,
-  setHideStickyNavBar,
-} from "@/store/appSlice";
-import {
   setAvailability,
   setBhkType,
   setExclusiveFilter,
@@ -357,17 +352,6 @@ export default function PropertySearchPage() {
       images: property.images.length ? property.images : [],
     })) as PropertySearch[];
   }, [data, error]);
-
-  useEffect(() => {
-    if (isMobile) {
-      dispatch(setHideStickyNavBar(false));
-      dispatch(setHideHeader(true));
-      dispatch(setHideFooter(true));
-    } else {
-      dispatch(setHideHeader(false));
-      dispatch(setHideFooter(false));
-    }
-  }, [dispatch, isMobile]);
 
   const { openDialog, closeDialog, isDialogOpen } = useDialog();
 
@@ -686,13 +670,11 @@ export default function PropertySearchPage() {
           id={PROPERTY_FILTERS_DIALOG_ID}
           onClose={() => {
             closeDialog(PROPERTY_FILTERS_DIALOG_ID);
-            dispatch(setHideStickyNavBar(false));
           }}
           onReset={() => {}}
           onApply={() => {
             isFilterDialogChange.current = true;
             closeDialog(PROPERTY_FILTERS_DIALOG_ID);
-            dispatch(setHideStickyNavBar(false));
             handleSearch();
           }}
         />
@@ -706,7 +688,6 @@ export default function PropertySearchPage() {
           onSelect={(token) => onSortChange(token)}
           onClose={() => {
             closeDialog(SORT_FILTERS_DIALOG_ID);
-            dispatch(setHideStickyNavBar(false));
           }}
         />
       )}

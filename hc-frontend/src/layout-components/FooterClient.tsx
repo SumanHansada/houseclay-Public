@@ -10,15 +10,10 @@ import { RootState } from "@/store/store";
 import { SvgIcon } from "@/utility-components";
 
 const FooterClient: React.FC = () => {
-  const hideFooter = useSelector((state: RootState) => state.app.hideFooter);
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { openDialog, closeAllDialogs } = useDialog();
   const searchParams = useSearchParams();
   const pathname = usePathname();
-
-  if (hideFooter) {
-    return null;
-  }
 
   const onLogin = () => {
     closeAllDialogs();

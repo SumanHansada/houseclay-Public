@@ -41,9 +41,9 @@ import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 import WifiIconSvg from "public/icons/amenities/wifi.svg";
 import BalconyIconSvg from "public/icons/common/balcony.svg";
 import BuildUpAreaIconSvg from "public/icons/common/build-up-area.svg";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import { Button, PlacesAutocomplete } from "@/base-components";
 import {
@@ -76,11 +76,6 @@ import {
   useGetAuthenticatedPropertyByIdQuery,
   useGetPublicPropertyByIdQuery,
 } from "@/store/apiSlice";
-import {
-  setHideFooter,
-  setHideHeader,
-  setHideStickyNavBar,
-} from "@/store/appSlice";
 import { RootState } from "@/store/store";
 import { PhotoGallery, SvgIcon } from "@/utility-components";
 import { GoogleMapsDirection } from "@/utility-components";
@@ -229,20 +224,7 @@ export function PropertyDetailsClient({
   const [showDirections, setShowDirections] = useState(false);
   const router = useRouter();
   const { isMobile } = useDeviceContext();
-  const dispatch = useDispatch();
   const { isDialogOpen, closeDialog, openDialog } = useDialog();
-
-  useEffect(() => {
-    if (isMobile) {
-      dispatch(setHideStickyNavBar(true));
-      dispatch(setHideHeader(true));
-      dispatch(setHideFooter(true));
-    } else {
-      dispatch(setHideStickyNavBar(true));
-      dispatch(setHideHeader(false));
-      dispatch(setHideFooter(false));
-    }
-  }, [dispatch, isMobile]);
 
   const isLoading = isAuthenticated ? isAuthLoading : isPublicLoading;
 
@@ -1523,7 +1505,6 @@ export function PropertyDetailsClient({
           propertyId={propertyID}
           onClose={async () => {
             closeDialog("report-listing-dialog");
-            dispatch(setHideStickyNavBar(true));
             await refetchAuthPropertyDetails();
           }}
         />

@@ -16,7 +16,6 @@ import {
   useLazyGetUserInfoQuery,
   useVerifyEmailMutation,
 } from "@/store/apiSlice";
-import { setHideStickyNavBar } from "@/store/appSlice";
 import { RootState } from "@/store/store";
 import { setConnectBal, setEmailVerified } from "@/store/userSlice";
 
@@ -108,7 +107,6 @@ export default function MyProfilePage() {
 
   const closeVerificationDialog = () => {
     closeDialog(EMAIL_VERIFICATION_DIALOG_ID);
-    dispatch(setHideStickyNavBar(false));
   };
 
   const handleSubmit = async (
@@ -198,7 +196,6 @@ export default function MyProfilePage() {
           id={EMAIL_VERIFICATION_SUCCESS_DIALOG_ID}
           onClose={() => {
             closeDialog(EMAIL_VERIFICATION_SUCCESS_DIALOG_ID);
-            dispatch(setHideStickyNavBar(false));
           }}
         />
       )}

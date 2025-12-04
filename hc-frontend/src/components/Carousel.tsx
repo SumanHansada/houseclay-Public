@@ -1,6 +1,8 @@
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { ImageWithLoader } from "@/utility-components";
+
 export default function Carousel(props: { images: string[] }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
@@ -76,7 +78,7 @@ export default function Carousel(props: { images: string[] }) {
                     width: `calc(${100 / slidesPerView}% - ${((slidesPerView - 1) * 16) / slidesPerView}px)`,
                   }}
                 >
-                  <img
+                  <ImageWithLoader
                     src={img}
                     alt={`Slide ${index + 1}`}
                     className="w-full aspect-[4/3] object-cover rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer"

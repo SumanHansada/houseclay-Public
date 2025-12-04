@@ -2,38 +2,17 @@
 
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useState } from "react";
 
 import { Button } from "@/base-components";
 import { default as ACCORDION_DATA } from "@/data/SupportAccordionData.json";
 import { Footer, MobileHeader } from "@/layout-components";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import {
-  setHideFooter,
-  setHideHeader,
-  setHideStickyNavBar,
-} from "@/store/appSlice";
 
 import { Accordion } from "../manage-account/components/Accordion";
 
 export default function FrequentlyAskedQuestionPage() {
   const [openKey, setOpenKey] = useState<string | null>(null);
   const router = useRouter();
-  const { isMobile } = useDeviceContext();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (isMobile) {
-      dispatch(setHideHeader(true));
-      dispatch(setHideFooter(true));
-      dispatch(setHideStickyNavBar(false));
-    } else {
-      dispatch(setHideHeader(false));
-      dispatch(setHideFooter(false));
-      dispatch(setHideStickyNavBar(true));
-    }
-  }, [isMobile, dispatch]);
 
   return (
     <>

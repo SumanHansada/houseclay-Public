@@ -23,7 +23,6 @@ import { AccountNavList } from "@/components/AccountNavList";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { useLogout } from "@/hooks/useLogout";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { setHideStickyNavBar } from "@/store/appSlice";
 import { setAuthStep, setLoginFromAddProperty } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
@@ -61,8 +60,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
 
   const handleCloseDialog = useCallback(() => {
     closeDialog(id);
-    dispatch(setHideStickyNavBar(false));
-  }, [dispatch, closeDialog, id]);
+  }, [closeDialog, id]);
 
   const onLogin = () => {
     dispatch(setLoginFromAddProperty(true));
@@ -86,7 +84,6 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
       onLogin();
     } else {
       router.push("/list-property");
-      dispatch(setHideStickyNavBar(true));
     }
   };
 

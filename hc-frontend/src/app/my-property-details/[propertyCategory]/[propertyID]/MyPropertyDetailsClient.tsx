@@ -47,9 +47,8 @@ import SecurityIconSvg from "public/icons/amenities/security.svg";
 import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
 import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 import WifiIconSvg from "public/icons/amenities/wifi.svg";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import React from "react";
-import { useDispatch } from "react-redux";
 
 import { Button } from "@/base-components";
 import { MARK_RENTED_ACTION_DIALOG_ID } from "@/common/constants";
@@ -81,16 +80,12 @@ import {
 import Carousel2D from "@/components/Carousel2D";
 import { ActionDialog } from "@/dialogs/action-dialog";
 import { Footer, MobileFooter, MobileHeader } from "@/layout-components";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useDeactivatePropertyMutation,
   useGenerateLeadMutation,
   useGetMyPropertyByIdQuery,
 } from "@/store/apiSlice";
-import { setHideHeader } from "@/store/appSlice";
-import { setHideFooter } from "@/store/appSlice";
-import { setHideStickyNavBar } from "@/store/appSlice";
 import {
   FullscreenPhotoViewer,
   ImageWithLoader,
@@ -186,8 +181,6 @@ export function MyPropertyDetailsClient({
   propertyID,
 }: MyPropertyDetailsClientProps): React.ReactElement {
   const router = useRouter();
-  const dispatch = useDispatch();
-  const { isMobile } = useDeviceContext();
   const searchParams = useSearchParams();
   const [deactivatingProperty] = useDeactivatePropertyMutation();
   const {
@@ -286,18 +279,6 @@ export function MyPropertyDetailsClient({
       `/edit-property/${propertyCategory.toLowerCase()}/${propertyID}`,
     );
   };
-
-  useEffect(() => {
-    if (isMobile) {
-      dispatch(setHideHeader(true));
-      dispatch(setHideFooter(true));
-      dispatch(setHideStickyNavBar(true));
-    } else {
-      dispatch(setHideHeader(false));
-      dispatch(setHideFooter(false));
-      dispatch(setHideStickyNavBar(false));
-    }
-  }, [dispatch, isMobile]);
 
   const handleImageClick = (imgUrl: string, index: number) => {
     setSelectedImage(imgUrl);

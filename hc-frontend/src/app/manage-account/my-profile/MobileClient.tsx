@@ -3,15 +3,12 @@
 import { Form, useFormikContext } from "formik";
 import { ChevronLeft, CircleAlert, CircleCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 
 import { Button } from "@/base-components";
 import { getInitials } from "@/common/utils";
 import { FormPhoneField, FormTextField } from "@/form-components";
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
 import { MobileFooter, MobileHeader } from "@/layout-components";
-import { setHideStickyNavBar } from "@/store/appSlice";
 
 import { EmailVerifyIncentive } from "../components/EmailVerifyIncentive";
 
@@ -67,14 +64,6 @@ export function MobileClient({
   const router = useRouter();
   const { values, resetForm, initialValues } =
     useFormikContext<MyProfileFormValues>();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(setHideStickyNavBar(editMode));
-    return () => {
-      dispatch(setHideStickyNavBar(false));
-    };
-  }, [dispatch, editMode]);
 
   const handleCancel = () => {
     resetForm({ values: initialValues });

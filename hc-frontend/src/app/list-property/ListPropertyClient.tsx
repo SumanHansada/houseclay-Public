@@ -28,11 +28,6 @@ import {
   useGenerateOtpMutation,
   useLazyCheckUserQuery,
 } from "@/store/apiSlice";
-import {
-  setHideFooter,
-  setHideHeader,
-  setHideStickyNavBar,
-} from "@/store/appSlice";
 import { setAuthStep, setLoginFromAddProperty } from "@/store/authSlice";
 import { clearFormData, setPropertyID } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
@@ -69,16 +64,7 @@ const ListPropertyClient = () => {
   useEffect(() => {
     dispatch(setAuthStep(AuthStep.PHONE));
     dispatch(clearFormData());
-    if (isMobile) {
-      dispatch(setHideHeader(true));
-      dispatch(setHideFooter(true));
-      dispatch(setHideStickyNavBar(true));
-    } else {
-      dispatch(setHideHeader(false));
-      dispatch(setHideFooter(false));
-      dispatch(setHideStickyNavBar(false));
-    }
-  }, [dispatch, isMobile]);
+  }, [dispatch]);
 
   const goToHomePage = () => {
     router.back();
