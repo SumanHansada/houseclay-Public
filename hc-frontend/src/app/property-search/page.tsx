@@ -441,7 +441,7 @@ export default function PropertySearchPage() {
           leftIcon={<SlidersHorizontal size={16} />}
           variant="outline"
           size="sm"
-          className="h-10 p-2 text-sm text-black bg-gray-100 border-none rounded-full"
+          className="h-10 text-sm text-black bg-gray-100 border-none rounded-full"
           onClick={() => openDialog(PROPERTY_FILTERS_DIALOG_ID)}
           buttonTextClassName="hidden"
         >
@@ -449,10 +449,10 @@ export default function PropertySearchPage() {
         </Button>
 
         <Button
-          leftIcon={<ArrowDownWideNarrow size={20} />}
+          leftIcon={<ArrowDownWideNarrow size={16} />}
           variant="outline"
           size="sm"
-          className="h-10 p-1 text-sm text-black bg-gray-100 border-none rounded-full"
+          className="h-10 text-sm text-black bg-gray-100 border-none rounded-full"
           onClick={() => openDialog(SORT_FILTERS_DIALOG_ID)}
           buttonTextClassName="hidden"
         >

@@ -1,8 +1,15 @@
-import { Check, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useMemo } from "react";
 
-import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
+import { Button } from "@/base-components";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+} from "@/components/Dialog";
 import { SortToken } from "@/interfaces/PropertySearchSortFilter";
+import { MobileHeader } from "@/layout-components";
 
 interface SortOption {
   value: SortToken;
@@ -31,64 +38,89 @@ const SortFiltersDialog: React.FC<SortFiltersDialogProps> = ({
       id={id}
       type="bottom-sheet"
       onClose={onClose}
-      width={100}
+      height={50}
       entryAnimation="animate-slide-in-bottom"
       exitAnimation="animate-slide-out-bottom"
     >
-      <DialogHeader>
-        <div className="relative flex h-full w-full items-center justify-center">
-          {/* Title: Centered and only visible on mobile */}
-          <h1 className="text-lg text-center truncate font-medium md:hidden">
-            Sort Filters
-          </h1>
-
-          {/* Close Button: Repositions itself based on screen size */}
-          <button
-            aria-label="Close"
-            onClick={onClose}
-            className="absolute p-1 right-0 top-1/2 -translate-y-1/2 rounded-full border border-gray-200"
-          >
-            <X size={20} />
-          </button>
-        </div>
+      <DialogHeader className="-mx-4">
+        <MobileHeader className="relative">
+          <MobileHeader.Title>Sort Filters</MobileHeader.Title>
+          <MobileHeader.RightAction>
+            <Button
+              variant="secondary"
+              size="custom"
+              className="rounded-full p-1"
+              onClick={onClose}
+            >
+              <X size={24} />
+            </Button>
+          </MobileHeader.RightAction>
+        </MobileHeader>
       </DialogHeader>
       <DialogContent>
-        <ul
-          role="radiogroup"
-          aria-label="Sort options"
-          className="divide-y divide-gray-200"
-        >
+        <ul role="radiogroup" aria-label="Sort options" className="px-4 py-4">
           {options.map((opt) => {
             const isActive = opt.value === selected;
+            const radioId = `${id}-${opt.value}`;
             return (
               <li key={opt.value}>
-                <button
-                  type="button"
-                  role="radio"
-                  aria-checked={isActive}
-                  onClick={() => {
-                    onSelect(opt.value);
-                    onClose();
-                  }}
-                  className={`w-full flex items-center justify-between px-4 py-3 text-left
-                    ${isActive ? "bg-red-50" : "bg-white"} focus:outline-none`}
-                >
-                  <span
-                    className={`${isActive ? "text-red-700 font-medium" : "text-gray-900"}`}
+                <div className="focus-within:ring-1 focus-within:rounded-lg focus-within:ring-red-500">
+                  <label
+                    htmlFor={radioId}
+                    className={`w-full flex items-center  rounded-lg justify-between px-4 py-3 text-left cursor-pointer
+                      ${isActive ? "border bg-red-50 border-red-500" : "border-none"} focus:outline-none`}
                   >
-                    {opt.label}
-                  </span>
-                  {isActive ? (
-                    <Check className="shrink-0" size={18} />
-                  ) : (
-                    <span className="h-4 w-4 rounded-full border border-gray-300" />
-                  )}
-                </button>
+                    <span
+                      className={`${isActive ? "text-red-600 font-medium" : "text-gray-900"}`}
+                    >
+                      {opt.label}
+                    </span>
+                    <div
+                      className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                        isActive ? "border-red-500 bg-white" : "border-gray-300"
+                      }`}
+                    >
+                      {isActive && (
+                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                      )}
+                    </div>
+                  </label>
+                  <input
+                    type="radio"
+                    id={radioId}
+                    name={`${id}-sort-option`}
+                    checked={isActive}
+                    onChange={() => {
+                      onSelect(opt.value);
+                    }}
+                    className="sr-only"
+                  />
+                </div>
               </li>
             );
           })}
         </ul>
       </DialogContent>
+      <DialogFooter className="border-t">
+        <div className="flex border-gray-200 w-full justify-between gap-4">
+          <Button
+            variant="outline"
+            size="md"
+            className="flex items-center w-full gap-2 px-4 py-3 rounded-xl border border-gray-300 text-gray-500 bg-white hover:bg-gray-100"
+            onClick={onClose}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            className="px-4 py-3 rounded-xl w-full bg-red-500 text-white hover:bg-red-600 transition-colors"
+            onClick={onClose}
+          >
+            Apply
+          </Button>
+        </div>
+      </DialogFooter>
     </Dialog>
   );
 };
