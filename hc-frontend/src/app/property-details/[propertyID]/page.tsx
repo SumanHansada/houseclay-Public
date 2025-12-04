@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { WEBSITE_BASE_URL } from "@/common/constants";
+import { CDN_BASE_URL, WEBSITE_BASE_URL } from "@/common/constants";
 import {
   BHK_TYPE_OPTIONS,
   getOptionLabel,
@@ -47,7 +47,9 @@ export async function generateMetadata({
   try {
     const propertyData =
       await ServerAPIService.getPublicPropertyByID(propertyID);
+    console.log("Property Data", propertyData);
     property = resolvePropertyFromResponse(propertyData);
+    console.log("Property", property);
   } catch (_error) {
     // Ignore metadata fetch failures; fall back to defaults
     console.error("Error fetching property data", _error);
@@ -71,7 +73,8 @@ export async function generateMetadata({
   const locationSummary = [location, city].filter(Boolean).join(", ");
   const description = [title, locationSummary].filter(Boolean).join(" | ");
 
-  const imageUrl = property?.images?.[0];
+  const imageUrl = `${CDN_BASE_URL}/${property?.images?.[0]}`;
+  console.log("Image Url", imageUrl);
   const pageUrl = `${WEBSITE_BASE_URL}/property-details/${propertyID}`;
 
   return {

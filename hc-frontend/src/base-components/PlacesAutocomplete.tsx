@@ -308,7 +308,6 @@ const PlacesAutocompleteBase = ({
             longText: string;
             types: string[];
           }[];
-          console.log(`Component: ${components}`);
 
           // 1. Extract City (Locality)
           const cityComponent = components.find((c) =>
