@@ -51,7 +51,7 @@ export default function ReportUsersPage() {
       render: (reportDetails) => <span>{reportDetails.user.phoneNo}</span>,
     },
     {
-      key: "blacklisted",
+      key: "reportType",
       label: "Report Type",
       render: (reportDetails) => <span>{reportDetails.reportType}</span>,
     },

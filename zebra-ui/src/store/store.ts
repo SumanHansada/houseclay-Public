@@ -5,7 +5,6 @@ import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 
 import { default as adminAuthReducer } from "./adminAuthSlice";
 import { apiSlice } from "./apiSlice";
-import { default as appReducer } from "./appSlice";
 import { default as deleteFromS3SliceReducer } from "./deleteFromS3Slice";
 import { default as editPropertyReducer } from "./editPropertySlice";
 import { default as listPropertyReducer } from "./listPropertySlice";
