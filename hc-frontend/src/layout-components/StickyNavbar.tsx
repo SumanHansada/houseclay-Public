@@ -49,7 +49,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
     },
     {
       id: "home",
-      icon: <RemoteSvg src={houseClayHomeSvg} className="w-5 h-5" />,
+      icon: <RemoteSvg src={houseClayHomeSvg} className="w-6 h-6" />,
       label: "Home",
       href: "/",
     },
@@ -77,7 +77,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
       <ul className="flex items-center justify-between px-4 py-2 max-w-7xl mx-auto">
         {navItems.map((item) => {
           const isActive =
-            (pathname && pathname === item.href) ||
+            (pathname && pathname === item.href.split("?")[0]) ||
             (!pathname && activeTab === item.id);
 
           return (
@@ -90,7 +90,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
               >
                 <div
                   className={`p-1 flex relative justify-center items-center ${
-                    isActive && item.id !== "connects"
+                    isActive
                       ? "text-red-500 border-red-500 stroke-red-500 fill-red-500"
                       : "text-gray-500"
                   }`}

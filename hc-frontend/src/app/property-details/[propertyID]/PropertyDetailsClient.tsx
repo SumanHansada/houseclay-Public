@@ -8,6 +8,7 @@ import {
   Building2,
   ChevronLeft,
   Compass,
+  CornerUpRight,
   Eye,
   Flag,
   Heart,
@@ -1315,7 +1316,7 @@ export function PropertyDetailsClient({
                   disabled={!origin}
                   className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
-                  Get Directions
+                  <CornerUpRight size={20} />
                 </button>
               </div>
               <div className="w-full h-96 rounded-lg overflow-hidden">

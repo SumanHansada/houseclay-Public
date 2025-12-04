@@ -1,9 +1,9 @@
-<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="24" height="24" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g opacity="1">
 <path d="M11 14.3333H13.3333" stroke="currentColor" stroke-width="0.818182" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M7.00014 14.3333H9.00014" stroke="currentColor" stroke-width="0.818182" stroke-linecap="round" stroke-linejoin="round"/>
 <rect x="11.6667" y="8.33337" width="2" height="2" rx="1" fill="currentColor"/>
 <rect x="6.33356" y="8.33337" width="2" height="2" rx="1" fill="currentColor"/>
-<path d="M7 11.8621V18.7001C7 18.8657 6.86574 19 6.70013 19H1.29987C1.13426 19 1 18.8657 1 18.7001V7.97333C1 7.88132 1.04225 7.79439 1.1146 7.73754L9.51064 1.14065C9.61646 1.05751 9.76472 1.05504 9.87324 1.13463L18.8775 7.73773C18.9545 7.79421 19 7.88402 19 7.97954V18.7001C19 18.8657 18.8657 19 18.7001 19H13.2999C13.1343 19 13 18.8657 13 18.7001V11.8621" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M7 11.8621V18.7001C7 18.8657 6.86574 19 6.70013 19H1.29987C1.13426 19 1 18.8657 1 18.7001V7.97333C1 7.88132 1.04225 7.79439 1.1146 7.73754L9.51064 1.14065C9.61646 1.05751 9.76472 1.05504 9.87324 1.13463L18.8775 7.73773C18.9545 7.79421 19 7.88402 19 7.97954V18.7001C19 18.8657 18.8657 19 18.7001 19H13.2999C13.1343 19 13 18.8657 13 18.7001V11.8621" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
 </svg>
