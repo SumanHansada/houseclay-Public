@@ -8,5 +8,6 @@ export { default as GoogleMapsDirection } from "./GoogleMapsDirection";
 export { default as ImageWithLoader } from "./ImageWithLoader";
 export { default as PhotoGallery } from "./PhotoGallery";
 export { default as Popover } from "./Popover";
+export { default as RemoteSvg } from "./RemoteSvg";
 export { default as SvgIcon } from "./SvgIcon";
 export { NonTab, Tab, TabContent, TabHeader, default as Tabs } from "./Tabs";

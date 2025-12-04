@@ -1,11 +1,14 @@
-import bannerBackground from "public/images/banner-background.webp";
 import { useDispatch, useSelector } from "react-redux";
 
+import { CDN_BASE_URL } from "@/common/constants";
 import { PropertyCategory } from "@/common/enums";
 import HomeSearchBar from "@/components/HomeSearchBar";
 import { setPropertyCategory } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
 import { ImageWithLoader } from "@/utility-components";
+
+const bannerBackgroundURL =
+  CDN_BASE_URL + "/public/images/banner-background.webp";
 
 const MastHeadDesktop = () => {
   const propertyCategory = useSelector(
@@ -17,7 +20,7 @@ const MastHeadDesktop = () => {
     <>
       <div className="absolute inset-0">
         <ImageWithLoader
-          src={bannerBackground.src}
+          src={bannerBackgroundURL}
           alt="Banner Background"
           fill
           className="object-cover object-right"

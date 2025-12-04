@@ -1,12 +1,10 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
-// import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 // import bannerBackgroundMobile from "public/images/banner-background-mobile.webp";
-import bannerPeopleMobile from "public/images/banner-people-mobile.webp";
 import { useDispatch, useSelector } from "react-redux";
 
-import { BENGALURU_LOCATION } from "@/common/constants";
+import { BENGALURU_LOCATION, CDN_BASE_URL } from "@/common/constants";
 import { PropertyCategory } from "@/common/enums";
 import { generateUUID } from "@/common/utils";
 import { FindFlatmatesDialog } from "@/dialogs";
@@ -42,6 +40,9 @@ const ZeroPercent = dynamic(
 ) as React.FC<React.SVGProps<SVGSVGElement>>;
 
 const FIND_FLATMATES_DIALOG_ID = "find-flatmates-dialog";
+
+const bannerPeopleMobileURL =
+  CDN_BASE_URL + "/public/images/banner-people-mobile.webp";
 
 const MastHeadMobile: React.FC = () => {
   const dispatch = useDispatch();
@@ -203,7 +204,7 @@ const MastHeadMobile: React.FC = () => {
         <div className="rounded-2xl p-5 relative overflow-hidden w-full">
           <div className="absolute inset-0 pointer-events-none">
             <ImageWithLoader
-              src={bannerPeopleMobile.src}
+              src={bannerPeopleMobileURL}
               alt="Banner People"
               fill
               className="object-cover object-right"

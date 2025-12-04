@@ -1,13 +1,12 @@
 "use client";
 
 import { Heart, Search, UserRound } from "lucide-react";
-import HouseClayHomeSvg from "public/icons/houseclay-home.svg";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
-import { EXPLORE_LOCATION } from "@/common/constants";
+import { CDN_BASE_URL, EXPLORE_LOCATION } from "@/common/constants";
 import { RootState } from "@/store/store";
-import { SvgIcon } from "@/utility-components";
+import { RemoteSvg, SvgIcon } from "@/utility-components";
 
 type NavItem = {
   id: string;
@@ -21,6 +20,8 @@ interface StickyNavbarProps {
   defaultActive?: string;
 }
 
+const houseClayHomeSvg = CDN_BASE_URL + "/public/icons/houseclay-home.svg";
+
 const StickyNavbar: React.FC<StickyNavbarProps> = ({
   defaultActive = "home",
 }) => {
@@ -29,9 +30,6 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
     (state: RootState) => state.app.hideStickyNavBar,
   );
   const [activeTab, setActiveTab] = useState<string>(defaultActive);
-  const HouseClayHome = HouseClayHomeSvg as React.FC<
-    React.SVGProps<SVGSVGElement>
-  >;
   const connectBal = useSelector((state: RootState) =>
     isAuthenticated ? state.user.userDetail.connectBal : 0,
   );
@@ -51,7 +49,12 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
     },
     {
       id: "home",
-      icon: <HouseClayHome width={20} height={20} />,
+      icon: (
+        <RemoteSvg
+          src={houseClayHomeSvg}
+          className="w-5 h-5 [&_svg]:w-5 [&_svg]:h-5"
+        />
+      ),
       label: "Home",
       href: "/",
     },
