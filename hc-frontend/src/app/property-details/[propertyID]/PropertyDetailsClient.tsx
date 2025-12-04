@@ -25,6 +25,7 @@ import {
   Sofa,
   SquareStar,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
 import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
@@ -300,7 +301,6 @@ export function PropertyDetailsClient({
     : "N/A";
 
   const propertyImages = processPropertyImages(property?.images);
-  console.log(propertyImages);
 
   const handleShare = async () => {
     try {
@@ -868,15 +868,15 @@ export function PropertyDetailsClient({
                         <div className="flex">
                           {owner?.phoneNo && (
                             <div className="flex w-full mt-4 gap-2">
-                              <a
+                              <Link
                                 href={`tel:${owner?.phoneNo}`}
-                                className="flex items-center justify-center w-1/2 gap-2 border rounded-lg py-2 bg-red-500 hover:bg-red-600"
+                                className="flex items-center justify-center flex-1 gap-2 border rounded-lg py-2 bg-red-500 hover:bg-red-600"
                               >
                                 <PhoneCall size={20} className="text-white" />
                                 <span className="text-white">Call Owner</span>
-                              </a>
-                              <a
-                                className="flex items-center justify-center w-1/2 gap-1 border rounded-lg py-2 hover:bg-green-600 bg-green-500"
+                              </Link>
+                              <Link
+                                className="flex items-center justify-center flex-1 gap-1 border rounded-lg py-2 hover:bg-green-600 bg-green-500"
                                 href={`https://wa.me/${owner?.phoneNo}`}
                                 target="_blank"
                                 rel="noreferrer"
@@ -888,7 +888,7 @@ export function PropertyDetailsClient({
                                   className="text-white"
                                 />
                                 <span className="text-white">WhatsApp</span>
-                              </a>
+                              </Link>
                             </div>
                           )}
                         </div>

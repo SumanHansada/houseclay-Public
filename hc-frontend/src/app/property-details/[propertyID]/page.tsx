@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { CDN_BASE_URL, WEBSITE_BASE_URL } from "@/common/constants";
+import { WEBSITE_BASE_URL } from "@/common/constants";
 import {
   BHK_TYPE_OPTIONS,
   getOptionLabel,
@@ -18,17 +18,6 @@ type PropertyData = {
   propertyCategory?: string;
   city?: string;
   images?: string[];
-};
-
-const buildImageUrl = (image?: string | null) => {
-  if (!image) {
-    return undefined;
-  }
-
-  const imagePart = image
-    .split("?")[0]
-    .split("https://houseclay.s3.ap-south-1.amazonaws.com/")[1];
-  return `${CDN_BASE_URL}/${imagePart}`;
 };
 
 const resolvePropertyFromResponse = (
@@ -82,7 +71,7 @@ export async function generateMetadata({
   const locationSummary = [location, city].filter(Boolean).join(", ");
   const description = [title, locationSummary].filter(Boolean).join(" | ");
 
-  const imageUrl = buildImageUrl(property?.images?.[0]);
+  const imageUrl = property?.images?.[0];
   const pageUrl = `${WEBSITE_BASE_URL}/property-details/${propertyID}`;
 
   return {
@@ -94,8 +83,14 @@ export async function generateMetadata({
     openGraph: {
       title,
       description: description || undefined,
-      url: CDN_BASE_URL,
+      url: pageUrl,
       type: "website",
+      images: imageUrl ? [{ url: imageUrl }] : undefined,
+    },
+    twitter: {
+      title,
+      card: "summary_large_image",
+      description: description || undefined,
       images: imageUrl ? [{ url: imageUrl }] : undefined,
     },
   };

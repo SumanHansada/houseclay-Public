@@ -1,6 +1,7 @@
 "use client";
 
 import { Lightbulb, Mail, Phone, PhoneCall, UserRound, X } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
@@ -81,7 +82,7 @@ export const UnlockOwnerDetails = ({
   };
 
   const renderConfirm = () => (
-    <div className="px-8 space-y-8 max-md:pt-36">
+    <div className="px-6 space-y-8 max-md:pt-36">
       <div className="space-y-1 mt-5">
         <h1 className="text-2xl max-md:hidden">Unlock Owner Details</h1>
         <h1 className="text-2xl md:hidden">
@@ -192,15 +193,15 @@ export const UnlockOwnerDetails = ({
           <div className="flex">
             {apiResponse?.owner.phoneNo && (
               <div className="flex w-full mt-4 gap-2">
-                <a
+                <Link
                   href={`tel:${apiResponse.owner.phoneNo}`}
-                  className="flex items-center justify-center w-1/2 gap-2 border border-red-500 rounded-lg py-2 hover:bg-red-100"
+                  className="flex items-center justify-center flex-1 gap-2 border border-red-500 rounded-lg py-2 hover:bg-red-100"
                 >
                   <PhoneCall size={20} className="text-red-500" />
                   <span>Call Owner</span>
-                </a>
-                <a
-                  className="flex items-center justify-center w-1/2 gap-1 border border-green-500 rounded-lg py-2 hover:bg-green-100"
+                </Link>
+                <Link
+                  className="flex items-center justify-center flex-1 gap-1 border border-green-500 rounded-lg py-2 hover:bg-green-100"
                   href={`https://wa.me/${apiResponse.owner.phoneNo}`}
                   target="_blank"
                   rel="noreferrer"
@@ -212,7 +213,7 @@ export const UnlockOwnerDetails = ({
                     className="text-green-500"
                   />
                   WhatsApp
-                </a>
+                </Link>
               </div>
             )}
           </div>
@@ -220,7 +221,7 @@ export const UnlockOwnerDetails = ({
       </section>
 
       {/* Mobile */}
-      <section className="md:hidden px-8 pt-32">
+      <section className="md:hidden px-6 pt-32">
         <div className="space-y-2 mb-4">
           <h1 className="text-2xl">
             <b>Owner Details</b> Unlocked Successfully!
@@ -281,15 +282,15 @@ export const UnlockOwnerDetails = ({
           <div className="flex">
             {apiResponse?.owner.phoneNo && (
               <div className="flex w-full mt-4 gap-2">
-                <a
+                <Link
                   href={`tel:${apiResponse.owner.phoneNo}`}
-                  className="flex items-center justify-center w-1/2 gap-2 border border-red-500 rounded-lg py-2 hover:bg-red-100"
+                  className="flex items-center justify-center flex-1 gap-2 border border-red-500 rounded-lg py-2 hover:bg-red-100"
                 >
                   <PhoneCall size={20} className="text-red-500" />
                   <span>Call Owner</span>
-                </a>
-                <a
-                  className="flex items-center justify-center w-1/2 gap-1 border border-green-500 rounded-lg py-2 hover:bg-green-100"
+                </Link>
+                <Link
+                  className="flex items-center justify-center flex-1 gap-1 border border-green-500 rounded-lg py-2 hover:bg-green-100"
                   href={`https://wa.me/${apiResponse.owner.phoneNo}`}
                   target="_blank"
                   rel="noreferrer"
@@ -301,7 +302,7 @@ export const UnlockOwnerDetails = ({
                     className="text-green-500"
                   />
                   WhatsApp
-                </a>
+                </Link>
               </div>
             )}
           </div>
@@ -311,7 +312,7 @@ export const UnlockOwnerDetails = ({
   );
 
   const renderError = () => (
-    <div className="px-8 space-y-6">
+    <div className="px-6 space-y-6">
       <div className="space-y-1 mt-5">
         <h1 className="text-2xl">{errorMeta?.title ?? "Couldn't unlock"}</h1>
         <p className="text-gray-700">
