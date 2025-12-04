@@ -1,6 +1,8 @@
 "use client";
 
 import { Heart, Search, UserRound } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -26,6 +28,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
   defaultActive = "home",
 }) => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const pathname = usePathname();
   const [activeTab, setActiveTab] = useState<string>(defaultActive);
   const connectBal = useSelector((state: RootState) =>
     isAuthenticated ? state.user.userDetail.connectBal : 0,
@@ -46,12 +49,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
     },
     {
       id: "home",
-      icon: (
-        <RemoteSvg
-          src={houseClayHomeSvg}
-          className="w-5 h-5 [&_svg]:w-5 [&_svg]:h-5"
-        />
-      ),
+      icon: <RemoteSvg src={houseClayHomeSvg} className="w-5 h-5" />,
       label: "Home",
       href: "/",
     },
@@ -75,37 +73,49 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
   };
 
   return (
-    <nav className="fixed animate-slide-in-bottom bottom-0 left-0 right-0 pb-safe-bottom bg-white border-t  border-gray-200 shadow-md z-49 w-full md:hidden ">
+    <nav className="fixed bottom-0 left-0 right-0 pb-safe-bottom bg-white border-t  border-gray-200 shadow-md z-49 w-full md:hidden ">
       <ul className="flex items-center justify-between px-4 py-2 max-w-7xl mx-auto">
-        {navItems.map((item) => (
-          <li key={item.id}>
-            <a
-              href={item.href}
-              className="flex flex-col items-center justify-center relative"
-              onClick={() => handleNavClick(item.id)}
-              aria-current={activeTab === item.id ? "page" : undefined}
-            >
-              <div
-                className={`p-1 flex relative justify-center items-center ${activeTab === item.id && item.id !== "connects" ? "text-red-500 border-red-500 stroke-red-500 fill-red-500" : "text-gray-500"}`}
+        {navItems.map((item) => {
+          const isActive =
+            (pathname && pathname === item.href) ||
+            (!pathname && activeTab === item.id);
+
+          return (
+            <li key={item.id}>
+              <Link
+                href={item.href}
+                className="flex flex-col items-center justify-center relative"
+                onClick={() => handleNavClick(item.id)}
+                aria-current={isActive ? "page" : undefined}
               >
-                {item.icon}
-                {item.badge != null && (
-                  <div
-                    className="absolute top-0 right-0 -mt-0.5 -mr-0.5 bg-red-500 text-white text-xxs rounded-full w-4 h-4 min-w-fit px-1 flex items-center justify-center"
-                    aria-label={`${item.badge} connects`}
-                  >
-                    {item.badge}
-                  </div>
-                )}
-              </div>
-              <span
-                className={`text-xs ${activeTab === item.id ? "text-red-500" : "text-gray-500"}`}
-              >
-                {item.label}
-              </span>
-            </a>
-          </li>
-        ))}
+                <div
+                  className={`p-1 flex relative justify-center items-center ${
+                    isActive && item.id !== "connects"
+                      ? "text-red-500 border-red-500 stroke-red-500 fill-red-500"
+                      : "text-gray-500"
+                  }`}
+                >
+                  {item.icon}
+                  {item.badge != null && (
+                    <div
+                      className="absolute top-0 right-0 -mt-0.5 -mr-0.5 bg-red-500 text-white text-xxs rounded-full w-4 h-4 min-w-fit px-1 flex items-center justify-center"
+                      aria-label={`${item.badge} connects`}
+                    >
+                      {item.badge}
+                    </div>
+                  )}
+                </div>
+                <span
+                  className={`text-xs ${
+                    isActive ? "text-red-500" : "text-gray-500"
+                  }`}
+                >
+                  {item.label}
+                </span>
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </nav>
   );
