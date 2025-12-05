@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class CookieUtils {
 
-    public static final long COOKIE_MAX_AGE = 7 * 60 * 60 ;
+    public static final long COOKIE_MAX_AGE = 168 * 60 * 60 ;
 
     public static String extractTokenFromCookie(HttpServletRequest request, String cookieName) {
         if (request.getCookies() == null) return null;
