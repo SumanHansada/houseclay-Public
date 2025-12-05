@@ -5,7 +5,7 @@ import { Inter } from "next/font/google";
 import { Nunito } from "next/font/google";
 import Script from "next/script";
 
-import { Header, StickyNavbar } from "@/layout-components";
+import { Header, PageTransition, StickyNavbar } from "@/layout-components";
 import CommonDialogs from "@/layout-components/CommonDialogs";
 import Providers from "@/providers/Providers";
 
@@ -284,16 +284,21 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${nutino.variable}`}>
         <Providers>
-          <div className="min-h-screen">
-            <Header />
-            <main className="mx-auto my-0 pt-14 max-md:pb-16 flex-1 flex flex-col justify-center">
-              <>
-                {children}
-                <CommonDialogs />
-              </>
-            </main>
-            <StickyNavbar />
-          </div>
+          <PageTransition
+            transitionType="slideRight"
+            backTransitionType="slideLeft"
+          >
+            <div className="min-h-screen">
+              <Header />
+              <main className="mx-auto my-0 pt-14 max-md:pb-16 flex-1 flex flex-col justify-center">
+                <>
+                  {children}
+                  <CommonDialogs />
+                </>
+              </main>
+              <StickyNavbar />
+            </div>
+          </PageTransition>
         </Providers>
         {/* Razorpay checkout script */}
         <Script

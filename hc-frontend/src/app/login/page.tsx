@@ -95,7 +95,7 @@ export default function LoginPage() {
                 <input
                   id="terms"
                   type="checkbox"
-                  className="w-4 h-4 text-red-500 border-gray-300 rounded focus:ring-red-500 accent-red-500"
+                  className="w-6 h-6 text-red-500 border-gray-300 rounded focus:ring-red-500 accent-red-500"
                   checked={acceptTerms}
                   onChange={(e) => setAcceptTerms(e.target.checked)}
                 />

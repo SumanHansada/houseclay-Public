@@ -105,7 +105,7 @@ const ListPropertyStepper: React.FC<ListPropertyStepperProps> = ({
             </Button>
           </MobileHeader.RightAction>
         </MobileHeader>
-        <div className="h-[2px] fixed w-full bg-gray-200 mt-auto z-50">
+        <div className="h-[2px] fixed top-14 w-full bg-gray-200 mt-auto z-50">
           <div
             className="h-[2px] bg-red-500 absolute top-0 left-0 transition-all duration-300"
             style={{ width: `${calculateProgressPercent()}%` }}
