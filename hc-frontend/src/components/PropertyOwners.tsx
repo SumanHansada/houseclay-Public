@@ -1,6 +1,9 @@
-import Image from "next/image";
 import Link from "next/link";
 
+import { CDN_BASE_URL } from "@/common/constants";
+import { ImageWithLoader } from "@/utility-components";
+
+const ownersImageUrl = CDN_BASE_URL + "/public/images/owners.webp";
 const PropertyOwners: React.FC = () => {
   return (
     <div className="mx-auto xl:px-28 lg:px-14 md:px-14 px-6 py-20 flex flex-col md:flex-row items-center justify-between bg-white">
@@ -28,8 +31,8 @@ const PropertyOwners: React.FC = () => {
 
       {/* Right Side - Image Content */}
       <div className="flex flex-1 justify-between items-center">
-        <Image
-          src={"/images/owners.webp"}
+        <ImageWithLoader
+          src={ownersImageUrl}
           alt="Property Owners"
           height={500}
           width={500}

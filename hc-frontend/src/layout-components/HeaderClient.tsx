@@ -4,7 +4,6 @@
 import { Menu, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import CoinSvg from "public/icons/coin.svg";
 import { useDispatch, useSelector } from "react-redux";
 
 import { BENGALURU_LOCATION } from "@/common/constants";
@@ -29,8 +28,6 @@ type User = {
 export interface HeaderClientProps {
   user?: User;
 }
-
-const Coin = CoinSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 export const InfoTipLogin: React.FC = () => (
   <div className="flex items-center w-full px-4 py-2 gap-4">
@@ -219,7 +216,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
                 className="flex items-center xl:px-4 lg:px-3 md:px-2 px-2 py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100"
                 aria-label={`Connects Balance ${connectBal} Connects`}
               >
-                <Coin height={20} width={20} />
+                <SvgIcon iconSize="medium" name="coin" size={20} />
                 <span>{connectBal}</span>
               </Link>
             </Popover>

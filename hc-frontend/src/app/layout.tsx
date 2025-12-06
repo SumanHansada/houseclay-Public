@@ -284,21 +284,21 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${nutino.variable}`}>
         <Providers>
-          <PageTransition
-            transitionType="slideRight"
-            backTransitionType="slideLeft"
-          >
-            <div className="min-h-screen">
-              <Header />
+          <div className="min-h-screen">
+            <Header />
+            <PageTransition
+              transitionType="slideRight"
+              backTransitionType="slideLeft"
+            >
               <main className="mx-auto my-0 pt-14 max-md:pb-16 flex-1 flex flex-col justify-center">
                 <>
                   {children}
                   <CommonDialogs />
                 </>
               </main>
-              <StickyNavbar />
-            </div>
-          </PageTransition>
+            </PageTransition>
+            <StickyNavbar />
+          </div>
         </Providers>
         {/* Razorpay checkout script */}
         <Script
