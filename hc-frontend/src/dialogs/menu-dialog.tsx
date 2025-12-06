@@ -15,7 +15,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
-import { BENGALURU_LOCATION } from "@/common/constants";
+import { BENGALURU_LOCATION, CDN_BASE_URL } from "@/common/constants";
 import { ACCOUNT_NAV } from "@/common/dataConstants/navbar";
 import { AuthStep } from "@/common/enums";
 import { shimmer, toBase64 } from "@/common/utils";
@@ -37,6 +37,8 @@ const VerifiedTenants = VerifiedTenantsSvg as React.FC<
 interface MenuDialogProps {
   id: string;
 }
+
+const propertyImgUrl = CDN_BASE_URL + "/public/images/property.webp";
 
 const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
@@ -171,7 +173,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
               </div>
             </div>
             <ImageWithLoader
-              src="/images/property.webp"
+              src={propertyImgUrl}
               alt="Property"
               loading="lazy"
               placeholder="blur"
