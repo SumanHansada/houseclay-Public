@@ -1,10 +1,17 @@
 import { Suspense } from "react";
 
+import { PropertyCategory } from "@/common/enums";
+
 import AdditionalInfoClient from "./AdditionalInfoClient";
 import AdditionalInfoLoading from "./loading";
 
-// Force dynamic rendering to avoid server component issues
-export const dynamic = "force-dynamic";
+export async function generateStaticParams() {
+  return [
+    { propertyCategory: PropertyCategory.RENT.toLowerCase() },
+    { propertyCategory: PropertyCategory.RESALE.toLowerCase() },
+    { propertyCategory: PropertyCategory.FLATMATE.toLowerCase() },
+  ];
+}
 
 // Error boundary component
 function AdditionalInfoErrorBoundary({

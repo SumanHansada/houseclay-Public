@@ -107,7 +107,7 @@ const ListPropertyClient = () => {
     }
     const uuid = generateUUID();
     dispatch(setPropertyID(uuid));
-    const url = `/list-property/${propertyCategory.toLowerCase()}/${uuid}/property-details`;
+    const url = `/list-property/${propertyCategory.toLowerCase()}/property-details`;
     console.log("Navigating to URL:", url);
     router.push(url);
   };

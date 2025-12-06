@@ -1,10 +1,17 @@
 import { Suspense } from "react";
 
+import { PropertyCategory } from "@/common/enums";
+
 import PropertyDetailsLoading from "./loading";
 import PropertyDetailsClient from "./PropertyDetailsClient";
 
-// Enable static generation with revalidation
-export const revalidate = 3600; // Revalidate every hour
+export async function generateStaticParams() {
+  return [
+    { propertyCategory: PropertyCategory.RENT.toLowerCase() },
+    { propertyCategory: PropertyCategory.RESALE.toLowerCase() },
+    { propertyCategory: PropertyCategory.FLATMATE.toLowerCase() },
+  ];
+}
 
 // Error boundary component
 function PropertyDetailsErrorBoundary({

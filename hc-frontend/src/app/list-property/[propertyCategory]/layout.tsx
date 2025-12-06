@@ -29,7 +29,7 @@ import { RootState } from "@/store/store";
 import { resetUpload } from "@/store/uploadToS3Slice";
 import { ImageWithLoader } from "@/utility-components";
 
-import ListPropertyStepper from "../../components/ListPropertyStepper";
+import ListPropertyStepper from "../components/ListPropertyStepper";
 
 type FinalizationStage = "idle" | "uploading" | "posting";
 
@@ -46,10 +46,14 @@ export default function ListPropertyTypeLayout({
   const { openDialog, isDialogOpen, closeDialog } = useDialog();
   const { isMobile } = useDeviceContext();
 
-  // Extract propertyCategory and propertyID from URL params
+  // Extract propertyCategory from URL params
   const pathSegments = pathname.split("/");
   const propertyCategory = pathSegments[2]?.toUpperCase() as PropertyCategory;
-  const propertyID = pathSegments[3];
+
+  // Get propertyID from Redux state
+  const propertyID = useSelector(
+    (state: RootState) => state.listProperty.propertyID,
+  );
 
   // Get upload state to monitor completion
   const uploadState = useSelector((state: RootState) => state.uploadToS3);
@@ -180,7 +184,7 @@ export default function ListPropertyTypeLayout({
   const initialValues = getInitialValues();
 
   const setRoute = (stepSlug: string) => {
-    const route = `/list-property/${propertyCategory.toLowerCase()}/${propertyID}/${stepSlug}`;
+    const route = `/list-property/${propertyCategory.toLowerCase()}/${stepSlug}`;
     router.push(route);
   };
 
