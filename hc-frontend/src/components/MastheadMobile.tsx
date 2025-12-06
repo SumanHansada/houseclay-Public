@@ -15,7 +15,6 @@ import {
 } from "@/store/listPropertySlice";
 import { setPropertyCategory as setSearchPropertyCategory } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
-import { ImageWithLoader } from "@/utility-components";
 
 import HomeSearchBar from "./HomeSearchBar";
 
@@ -202,14 +201,19 @@ const MastHeadMobile: React.FC = () => {
       <div className="relative w-full flex justify-center">
         <div className="rounded-2xl p-5 relative overflow-hidden w-full">
           <div className="absolute inset-0 pointer-events-none">
-            <ImageWithLoader
+            <img
               src={bannerPeopleMobileURL}
               alt="Banner People"
-              fill
-              className="object-cover object-right"
-              sizes="100vw"
               fetchPriority="high"
-              priority
+              decoding="async"
+              style={{
+                position: "absolute",
+                inset: "0",
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: "right",
+              }}
             />
           </div>
           <div className="w-full relative">

@@ -5,7 +5,6 @@ import { PropertyCategory } from "@/common/enums";
 import HomeSearchBar from "@/components/HomeSearchBar";
 import { setPropertyCategory } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
-import { ImageWithLoader } from "@/utility-components";
 
 const bannerBackgroundURL =
   CDN_BASE_URL + "/public/images/banner-background.webp";
@@ -19,13 +18,17 @@ const MastHeadDesktop = () => {
   return (
     <>
       <div className="absolute inset-0">
-        <ImageWithLoader
+        <img
           src={bannerBackgroundURL}
           alt="Banner Background"
-          fill
-          className="object-cover object-right"
           fetchPriority="high"
-          priority
+          decoding="async"
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "right",
+          }}
         />
       </div>
       <div className="absolute h-full flex flex-col justify-center xl:pl-40 lg:pl-14 pl-14 xl:w-7/12 lg:w-7/12 md:w-4/5 w-4/5">

@@ -63,6 +63,20 @@ export default function RootLayout({
         />
         <link rel="preconnect" href="https://maps.googleapis.com" />
 
+        <link
+          rel="preload"
+          as="image"
+          href="https://cdn.houseclay.com/public/images/banner-background.webp"
+          fetchPriority="high"
+        />
+
+        <link
+          rel="preload"
+          as="image"
+          href="https://cdn.houseclay.com/public/images/banner-people-mobile.webp"
+          fetchPriority="high"
+        />
+
         {/* Critical meta tags - must come before splash screens */}
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
