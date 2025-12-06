@@ -36,6 +36,9 @@ const PropertyOwners: React.FC = () => {
           alt="Property Owners"
           height={500}
           width={500}
+          loading="lazy"
+          decoding="async"
+          fetchPriority="low"
           className="my-0 mx-auto"
         />
       </div>

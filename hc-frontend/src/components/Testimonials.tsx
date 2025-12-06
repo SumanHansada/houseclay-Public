@@ -40,8 +40,11 @@ export const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({
             <Image
               src={testimonial.avatar}
               alt={testimonial.name}
-              className="h-full w-full object-cover"
               fill
+              className="h-full w-full object-cover"
+              loading="lazy"
+              fetchPriority="low"
+              decoding="async"
             />
           </div>
           <span className="font-medium">{testimonial.name}</span>
