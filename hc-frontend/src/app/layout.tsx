@@ -55,6 +55,14 @@ export default function RootLayout({
         {/* PWA Manifest */}
         <link rel="manifest" href="/manifest.json" />
 
+        {/* Preconnect to CDN and Google Maps API */}
+        <link rel="preconnect" href="https://cdn.houseclay.com" />
+        <link
+          rel="preconnect"
+          href="https://checkout-static-next.razorpay.com"
+        />
+        <link rel="preconnect" href="https://maps.googleapis.com" />
+
         {/* Critical meta tags - must come before splash screens */}
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
