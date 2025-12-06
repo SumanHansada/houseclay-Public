@@ -326,13 +326,13 @@ export default function RootLayout({
         <Script
           defer
           src="https://checkout.razorpay.com/v1/checkout.js"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
 
         {/* Service Worker Registration - Required for beforeinstallprompt event */}
         <Script
           id="sw-registration"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `
               if ('serviceWorker' in navigator) {
