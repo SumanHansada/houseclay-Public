@@ -93,7 +93,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
     if (pathname !== initialPathRef.current) {
       closeDialog(id);
     }
-  }, [pathname, handleCloseDialog]);
+  }, [pathname, closeDialog, id]);
 
   return (
     <Dialog

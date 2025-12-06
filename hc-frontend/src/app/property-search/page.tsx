@@ -102,7 +102,7 @@ export default function PropertySearchPage() {
     if (urlCategory !== searchState.propertyCategory) {
       dispatch(setPropertyCategory(urlCategory));
     }
-  }, [dispatch, urlCategory]);
+  }, [dispatch, urlCategory, searchState.propertyCategory]);
 
   // Parse BHK selections from comma-separated Redux string
   const bhkSelectedValues = useMemo<string[]>(

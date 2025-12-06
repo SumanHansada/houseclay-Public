@@ -7,12 +7,15 @@ export const HOUSECLAY_SUPPORT = {
   phone: "+91 7892014327",
 };
 
-// media links
+// Media links
 export const SOCIAL_MEDIA_LINKS = {
   facebook: "https://www.facebook.com/profile.php?id=61568620051028",
   instagram: "https://www.instagram.com/houseclaydotcom",
   linkedin: "https://in.linkedin.com/company/houseclay",
 };
+
+// Including country code
+export const validPhoneNoLength = 8;
 
 export const BENGALURU_LOCATION = { lat: 12.9716, lng: 77.5946 };
 
