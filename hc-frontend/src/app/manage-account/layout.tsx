@@ -1,14 +1,11 @@
 "use client";
 
-import type { SerializedError } from "@reduxjs/toolkit";
-import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { useRouter } from "next/navigation";
 import { type ReactNode, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { ACCOUNT_NAV } from "@/common/dataConstants/navbar";
 import { AccountNavList } from "@/components/AccountNavList";
-import { useLogout } from "@/hooks/useLogout";
 import { Footer } from "@/layout-components";
 import { useGetUserDetailQuery } from "@/store/apiSlice";
 import { setShortlistedProperties } from "@/store/shortlistPropertySlice";
@@ -19,6 +16,7 @@ import {
   setUserDetailError,
   setUserDetailLoading,
 } from "@/store/userSlice";
+import { getErrorMessage } from "@/utils/rtkQueryHelpers";
 
 export default function ManageProfileLayout({
   children,
@@ -27,7 +25,6 @@ export default function ManageProfileLayout({
 }) {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { logout } = useLogout();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   const { data, isLoading, isFetching, isError, error } = useGetUserDetailQuery(
@@ -46,21 +43,13 @@ export default function ManageProfileLayout({
     }
   }, [isAuthenticated, router]);
 
-  // Handle 401 errors
-  useEffect(() => {
-    if (isError && error && "status" in error && error.status === 401) {
-      logout();
-      router.replace("/login");
-    }
-  }, [isError, error, logout, router]);
-
   useEffect(() => {
     dispatch(setUserDetailLoading(isLoading || isFetching));
   }, [dispatch, isLoading, isFetching]);
 
   useEffect(() => {
     if (isError) {
-      const msg = extractErrorMessage(error);
+      const msg = getErrorMessage(error);
       dispatch(setUserDetailError(msg));
     }
     const user = data?.user;
@@ -115,15 +104,4 @@ export default function ManageProfileLayout({
       <div className="w-full h-full md:hidden">{children}</div>
     </>
   );
-}
-
-function extractErrorMessage(
-  err: FetchBaseQueryError | SerializedError | undefined,
-): string {
-  if (!err) return "Unknown error";
-  if ("status" in err) {
-    const data = (err.data ?? {}) as { message?: string; error?: string };
-    return data.message || data.error || `HTTP ${String(err.status)}`;
-  }
-  return err.message ?? "Request failed";
 }

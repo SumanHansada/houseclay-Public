@@ -30,10 +30,13 @@ export default function LoginPage() {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      logout();
-    }
-    dispatch(setAuthStep(AuthStep.PHONE));
+    const handleInit = async () => {
+      if (isAuthenticated) {
+        await logout();
+      }
+      dispatch(setAuthStep(AuthStep.PHONE));
+    };
+    handleInit();
   }, []);
 
   const handleLoginClick = async () => {

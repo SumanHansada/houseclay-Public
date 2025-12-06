@@ -140,12 +140,8 @@ export default function MyProfilePage() {
     }
   };
 
-  if (userDetailLoading) {
+  if (userDetailLoading || userDetailError) {
     return <Loading />;
-  }
-
-  if (userDetailError) {
-    return <div>Error loading profile: {userDetailError}</div>;
   }
 
   return (

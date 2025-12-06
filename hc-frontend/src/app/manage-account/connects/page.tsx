@@ -9,11 +9,20 @@ import { MobileFooter, MobileHeader } from "@/layout-components";
 import { RootState } from "@/store/store";
 import { SvgIcon } from "@/utility-components";
 
+import Loading from "./loading";
+
 export default function ConnectsPage() {
   const router = useRouter();
+  const { userDetailLoading, userDetailError } = useSelector(
+    (state: RootState) => state.user,
+  );
   const connectBalance = useSelector(
     (state: RootState) => state.user.userDetail.connectBal,
   );
+
+  if (userDetailLoading || userDetailError) {
+    return <Loading />;
+  }
 
   return (
     <>

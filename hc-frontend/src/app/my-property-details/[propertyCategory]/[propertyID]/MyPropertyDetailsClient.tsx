@@ -186,6 +186,7 @@ export function MyPropertyDetailsClient({
   const {
     data: propertyDataRaw,
     isLoading: isPropertyLoading,
+    isError,
     refetch,
   } = useGetMyPropertyByIdQuery(propertyID, {
     // skip: !propertyID,
@@ -311,7 +312,7 @@ export function MyPropertyDetailsClient({
     console.log(response);
   };
 
-  if (isPropertyLoading) {
+  if (isPropertyLoading || isError) {
     return <PropertyDetailsLoading />;
   }
 
