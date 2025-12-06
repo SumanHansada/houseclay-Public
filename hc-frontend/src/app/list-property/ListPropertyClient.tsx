@@ -113,8 +113,10 @@ const ListPropertyClient = () => {
   };
 
   const handlePrefetch = () => {
-    if (propertyCategory) {
-      const url = `/list-property/${propertyCategory.toLowerCase()}`;
+    // Only prefetch protected routes if user is authenticated
+    // Prefetching protected routes without auth can cache redirects
+    if (propertyCategory && isAuthenticated) {
+      const url = `/list-property/${propertyCategory.toLowerCase()}/property-details`;
       router.prefetch(url);
     }
   };
