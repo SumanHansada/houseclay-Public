@@ -56,6 +56,7 @@ public class Property {
     private String powerBackup;
     private String parking;
     private Integer bathrooms;
+    private String whoWillShowProperty;
     private Timestamp availableFrom;
     private PropertyState propertyState;
     private String coverImage;

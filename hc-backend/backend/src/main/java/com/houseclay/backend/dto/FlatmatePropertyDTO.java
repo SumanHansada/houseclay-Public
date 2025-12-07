@@ -8,10 +8,10 @@ public class FlatmatePropertyDTO extends PropertyDTO {
     private Double maintenanceCharges;
     private Double depositCharges;
     private String tenantType;
-    private Boolean attachedBathroom;
-    private Boolean attachedBalcony;
     private String smokingPreference;
     private String drinkingPreference;
     private Boolean nonVegAllowed;
     private String roomType;
+    private String bathroomType;
+    private String balconyType;
 }

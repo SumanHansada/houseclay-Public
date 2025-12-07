@@ -42,12 +42,12 @@ public class PropertyMapper {
             dto.setMaintenanceCharges(flatmate.getMaintenanceCharges());
             dto.setDepositCharges(flatmate.getDepositCharges());
             dto.setTenantType(flatmate.getTenantType());
-            dto.setAttachedBathroom(flatmate.getAttachedBathroom());
-            dto.setAttachedBalcony(flatmate.getAttachedBalcony());
             dto.setSmokingPreference(flatmate.getSmokingPreference());
             dto.setDrinkingPreference(flatmate.getDrinkingPreference());
             dto.setNonVegAllowed(flatmate.isNonVegAllowed());
             dto.setRoomType(flatmate.getRoomType());
+            dto.setBalconyType(flatmate.getBalconyType());
+            dto.setBathroomType(flatmate.getBathroomType());
             return dto;
         } else {
             PropertyDTO dto = new PropertyDTO();
@@ -82,12 +82,12 @@ public class PropertyMapper {
             flatmate.setMaintenanceCharges(flatmateDTO.getMaintenanceCharges());
             flatmate.setDepositCharges(flatmateDTO.getDepositCharges());
             flatmate.setTenantType(flatmateDTO.getTenantType());
-            flatmate.setAttachedBathroom(flatmateDTO.getAttachedBathroom());
-            flatmate.setAttachedBalcony(flatmateDTO.getAttachedBalcony());
             flatmate.setSmokingPreference(flatmateDTO.getSmokingPreference());
             flatmate.setDrinkingPreference(flatmateDTO.getDrinkingPreference());
             flatmate.setRoomType(flatmateDTO.getRoomType());
             flatmate.setNonVegAllowed(flatmateDTO.getNonVegAllowed());
+            flatmate.setBalconyType(flatmateDTO.getBalconyType());
+            flatmate.setBathroomType(flatmateDTO.getBathroomType());
         } else {
             // Base case (for generic PropertyDTO or mismatched types)
             copyBaseFields(dto, target);
@@ -160,6 +160,7 @@ public class PropertyMapper {
         target.setAmenities(source.getAmenities());
         target.setPreferredTenants(source.getPreferredTenants());
         target.setBalcony(source.getBalcony());
+        target.setWhoWillShowProperty(source.getWhoWillShowProperty());
         target.setPropertyCategory(PropertyUtils.getPropertyCategory(source));
     }
 
@@ -194,6 +195,7 @@ public class PropertyMapper {
         target.setAmenities(source.getAmenities());
         target.setBalcony(source.getBalcony());
         target.setPreferredTenants(source.getPreferredTenants());
+        target.setWhoWillShowProperty(source.getWhoWillShowProperty());
     }
 
 }

@@ -127,6 +127,8 @@ public class UserMapper {
                         .collect(Collectors.toList())
         );
 
+        dto.getExternalPayments().sort(Comparator.comparing(UserExternalPaymentDTO::getCreatedAt));
+
         return dto;
     }
 

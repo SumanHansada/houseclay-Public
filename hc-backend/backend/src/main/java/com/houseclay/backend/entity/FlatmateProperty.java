@@ -12,10 +12,10 @@ public class FlatmateProperty extends Property {
     private Double maintenanceCharges;
     private Double depositCharges;
     private String tenantType;
-    private Boolean attachedBathroom;
-    private Boolean attachedBalcony;
     private String smokingPreference;
     private String drinkingPreference;
     private boolean nonVegAllowed;
     private String roomType;
+    private String bathroomType;
+    private String balconyType;
 }

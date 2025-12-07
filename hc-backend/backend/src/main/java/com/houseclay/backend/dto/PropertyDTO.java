@@ -46,6 +46,7 @@ public class PropertyDTO {
     private String waterSupply;
     private String powerBackup;
     private String parking;
+    private String whoWillShowProperty;
     private Timestamp availableFrom;
     private PropertyState propertyState;
     private String secondaryPhoneNumber;
