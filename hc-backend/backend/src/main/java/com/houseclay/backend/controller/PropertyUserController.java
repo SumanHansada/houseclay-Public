@@ -6,7 +6,6 @@ import com.houseclay.backend.entity.Property;
 import com.houseclay.backend.entity.User;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.mapper.PropertyDetailMapper;
-import com.houseclay.backend.mapper.PropertySearchMapper;
 import com.houseclay.backend.service.PropertyUserService;
 import com.houseclay.backend.service.ShortlistPropertyService;
 import com.houseclay.backend.service.ViewPropertyService;

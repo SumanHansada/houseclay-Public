@@ -1,5 +1,6 @@
 package com.houseclay.backend.controller;
 
+import com.houseclay.backend.dto.UserEditDTO;
 import com.houseclay.backend.dto.UserLoginResponseDTO;
 import com.houseclay.backend.entity.LeadCategory;
 import com.houseclay.backend.entity.User;
@@ -59,18 +60,22 @@ public class UserController {
 
     @GetMapping("/check-user")
     public ResponseEntity<Map<String, Object>> checkUserExists(@RequestParam String phoneNo) {
-
-        if (userService.doesUserExist(phoneNo)) {
-            return ResponseEntity.ok(Map.of(
-                    "message", "User exists",
-                    "exists", true
-            ));
-        } else {
+        User user = userService.doesUserExist(phoneNo);
+        if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
                     "error", "User not found",
                     "exists", false
             ));
+        } else if (user.isBlacklisted()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of(
+                    "error", "User is blacklisted",
+                    "exists", true
+            ));
         }
+        return ResponseEntity.ok(Map.of(
+                "message", "User exists",
+                "exists", true
+        ));
     }
 
     @RequestMapping (method = RequestMethod.POST, value = "/logout",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -138,6 +143,20 @@ public class UserController {
             throw new RuntimeException(e);
         }
         catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateUser(@RequestAttribute("authenticatedUser") User user, @RequestBody UserEditDTO userEditDTO) {
+        try {
+            userService.userUpdate(user, userEditDTO);
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "User updated successfully");
+            return ResponseEntity.ok(response);
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }

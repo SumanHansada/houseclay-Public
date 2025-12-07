@@ -105,6 +105,8 @@ public class UserMapper {
                         .collect(Collectors.toList())
         );
 
+        dto.getOwnedProperties().sort(Comparator.comparing(OwnedPropertyDTO::getUpdatedOn));
+
         dto.setShortlistedProperties(
                 user.getPropertyActions().stream()
                         .filter(action -> Objects.equals(action.getUserActionType(), UserActionType.SHORTLIST))

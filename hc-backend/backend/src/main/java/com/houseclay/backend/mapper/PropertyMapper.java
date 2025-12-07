@@ -47,6 +47,7 @@ public class PropertyMapper {
             dto.setSmokingPreference(flatmate.getSmokingPreference());
             dto.setDrinkingPreference(flatmate.getDrinkingPreference());
             dto.setNonVegAllowed(flatmate.isNonVegAllowed());
+            dto.setRoomType(flatmate.getRoomType());
             return dto;
         } else {
             PropertyDTO dto = new PropertyDTO();
@@ -62,7 +63,6 @@ public class PropertyMapper {
             sale.setPriceNegotiable(saleDTO.getPriceNegotiable());
             sale.setUnderLoan(saleDTO.getUnderLoan());
             sale.setPrice(saleDTO.getPrice());
-            sale.setBalcony(saleDTO.getBalcony());
             sale.setKhataCertificate(saleDTO.getKhataCertificate());
             sale.setSaleDeed(saleDTO.getSaleDeed());
             sale.setPropertyTax(saleDTO.getPropertyTax());
@@ -75,6 +75,7 @@ public class PropertyMapper {
             rent.setPreferredTenant(rentDTO.getPreferredTenant());
             rent.setPetsAllowed(rentDTO.getPetsAllowed());
             rent.setNonVegAllowed(rentDTO.getNonVegAllowed());
+            rent.setOwnershipType(rentDTO.getOwnershipType());
         } else if (dto instanceof FlatmatePropertyDTO flatmateDTO && target instanceof FlatmateProperty flatmate) {
             copyBaseFields(flatmateDTO, flatmate);
             flatmate.setRent(flatmateDTO.getRent());
@@ -85,6 +86,8 @@ public class PropertyMapper {
             flatmate.setAttachedBalcony(flatmateDTO.getAttachedBalcony());
             flatmate.setSmokingPreference(flatmateDTO.getSmokingPreference());
             flatmate.setDrinkingPreference(flatmateDTO.getDrinkingPreference());
+            flatmate.setRoomType(flatmateDTO.getRoomType());
+            flatmate.setNonVegAllowed(flatmateDTO.getNonVegAllowed());
         } else {
             // Base case (for generic PropertyDTO or mismatched types)
             copyBaseFields(dto, target);
@@ -189,6 +192,7 @@ public class PropertyMapper {
         target.setImages(source.getImages());
         target.setCoverImage(source.getCoverImage());
         target.setAmenities(source.getAmenities());
+        target.setBalcony(source.getBalcony());
         target.setPreferredTenants(source.getPreferredTenants());
     }
 

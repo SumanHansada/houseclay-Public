@@ -1,5 +1,6 @@
 package com.houseclay.backend.service;
 
+import com.houseclay.backend.dto.UserEditDTO;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.mapper.UserMapper;
@@ -105,6 +106,17 @@ public class UserService {
         userRepository.save(user);
         connectManagementService.addEmailVerificationConnect(user.getPhoneNo());
     }
+
+    public void userUpdate(User user, UserEditDTO userEditDTO) throws Exception {
+        Optional<User> optionalUser = userRepository.findById(user.getPhoneNo());
+        if(optionalUser.isEmpty()) {
+            throw new APIException("Invalid user", HttpStatus.BAD_REQUEST);
+        }
+        user = optionalUser.get();
+        user.setName(userEditDTO.getName());
+        user.setEmailID(user.getEmailID());
+        userRepository.save(user);
+    }
     
     public ResponseEntity<?> buildLogoutResponse() {
         // Clear the cookie by setting maxAge to 0
@@ -121,9 +133,9 @@ public class UserService {
                 .body(Map.of("message", "Logout successful"));
     }
 
-    public boolean doesUserExist(String phoneNo) {
+    public User doesUserExist(String phoneNo) {
         Optional<User> userOpt = userRepository.findById(phoneNo);
-        return userOpt.isPresent();
+        return userOpt.orElse(null);
     }
 
     public ResponseEntity<?> buildLoginResponse(User user, String token) {
