@@ -12,8 +12,8 @@ public class FlatmateProperty extends Property {
     private Double maintenanceCharges;
     private Double depositCharges;
     private String tenantType;
-    private String smokingPreference;
-    private String drinkingPreference;
+    private Boolean smokingPreference;
+    private Boolean drinkingPreference;
     private boolean nonVegAllowed;
     private String roomType;
     private String bathroomType;
