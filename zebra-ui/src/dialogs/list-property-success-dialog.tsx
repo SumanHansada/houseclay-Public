@@ -3,6 +3,7 @@
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+import { listPropertySuccessIconURL } from "@/common/constants/cdnURL";
 import { PropertyCategory } from "@/common/enums";
 import {
   Dialog,
@@ -12,7 +13,7 @@ import {
 } from "@/components/Dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { SvgIcon } from "@/utility-components";
+import RemoteSvg from "@/utility-components/RemoteSvg";
 
 interface ListPropertySuccessDialogProps {
   id: string;
@@ -73,7 +74,7 @@ export const ListPropertySuccessDialog: React.FC<
         <div className="flex flex-col items-center justify-center text-center px-6 pb-2 pt-6 gap-4">
           <div className="relative overflow-hidden rounded-lg">
             <div className="absolute inset-0 shadow-[inset_0_0_25px_25px_rgba(255,255,255,0.8)] z-20"></div>
-            <SvgIcon iconSize="large" name="list-property-success" size={270} />
+            <RemoteSvg src={listPropertySuccessIconURL} />
           </div>
           {!isMobile && (
             <h2 className="text-3xl text-gray-800">Congratulations!</h2>

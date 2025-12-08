@@ -18,7 +18,7 @@ const fetchSvg = async (url: string): Promise<string> => {
     throw new Error(`Failed to fetch SVG: ${res.statusText}`);
   }
 
-  const svgText = await res.text();
+  let svgText = await res.text();
   const ct = res.headers.get("content-type") || "";
 
   console.debug(
@@ -33,10 +33,21 @@ const fetchSvg = async (url: string): Promise<string> => {
     );
   }
 
+  // TODO:
+  // Server Side: Go to your S3 bucket/CDN settings, select the files, edit metadata, and set Content-Type to image/svg+xml
   // Warn on unexpected content-type but don't fail (for trusted sources)
-  if (!ct.includes("image/svg+xml")) {
-    console.warn(`Unexpected content-type for SVG: ${ct}. Proceeding anyway.`);
-  }
+  // if (!ct.includes("image/svg+xml")) {
+  //   console.warn(
+  //     `Unexpected content-type for SVG[${url}]: ${ct}. Proceeding anyway.`,
+  //   );
+  // }
+
+  /**
+   * FIX: Remove internal clip-paths
+   * Many automated exports include restrictive clip-paths (like starting at 0.5px)
+   * that cut off the icon edges. We strip the attribute to reveal the full icon.
+   */
+  svgText = svgText.replace(/clip-path="url\(.*?\)"/g, "");
 
   return svgText;
 };
@@ -47,7 +58,7 @@ const fetchSvg = async (url: string): Promise<string> => {
  * NOTE: Only use with trusted SVG sources.
  */
 const RemoteSvg: React.FC<RemoteSvgProps> = ({ src, className }) => {
-  const { data: svg, error } = useQuery({
+  const { data: rawSvg, error } = useQuery({
     queryKey: ["remote-svg", src],
     queryFn: () => fetchSvg(src),
     staleTime: Infinity, // SVGs don't change, cache forever
@@ -60,10 +71,10 @@ const RemoteSvg: React.FC<RemoteSvgProps> = ({ src, className }) => {
     return null;
   }
 
-  if (!svg) return null;
+  if (!rawSvg) return null;
 
   return (
-    <span className={className} dangerouslySetInnerHTML={{ __html: svg }} />
+    <span className={className} dangerouslySetInnerHTML={{ __html: rawSvg }} />
   );
 };
 

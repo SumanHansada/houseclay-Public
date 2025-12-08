@@ -1,5 +1,21 @@
 import { CDN_BASE_URL } from ".";
 
+export const houseclayIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/houseclay.svg`;
+export const rentIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/rent.svg`;
+export const flatmateIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/flatmates.svg`;
+export const resaleIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/resale.svg`;
+export const listPropertySuccessIconURL = `${CDN_BASE_URL}/public/optimizedIcons/large/list-property-success.svg`;
+
+// Form Icons
+export const femaleIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/female.svg`;
+export const maleIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/male.svg`;
+export const vegIconURL = `${CDN_BASE_URL}/public/optimizedIcons/large/veg.svg`;
+export const nonVegIconURL = `${CDN_BASE_URL}/public/optimizedIcons/large/non-veg.svg`;
+export const familyIconURL = `${CDN_BASE_URL}/public/optimizedIcons/large/family.svg`;
+export const coupleIconURL = `${CDN_BASE_URL}/public/optimizedIcons/large/couple.svg`;
+export const companyIconURL = `${CDN_BASE_URL}/public/optimizedIcons/large/company.svg`;
+export const bachelorIconURL = `${CDN_BASE_URL}/public/optimizedIcons/large/bachelor.svg`;
+
 // Amenities
 export const liftIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/lift.svg`;
 export const clubhouseIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/clubhouse.svg`;

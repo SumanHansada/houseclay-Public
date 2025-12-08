@@ -11,18 +11,27 @@ import {
   IndianRupee,
   Landmark,
 } from "lucide-react";
-import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
-import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
-import FireExtinguisherIconSvg from "public/icons/amenities/fire-extinguisher.svg";
-import FirstAidKitIconSvg from "public/icons/amenities/first-aid-kit.svg";
-import GymIconSvg from "public/icons/amenities/gym.svg";
-import LiftIconSvg from "public/icons/amenities/lift.svg";
-import OutdoorDiningAreaIconSvg from "public/icons/amenities/outdoor-dining-area.svg";
-import ParkingSpaceIconSvg from "public/icons/amenities/parking-space.svg";
-import PoolTableIconSvg from "public/icons/amenities/pool-table.svg";
-import SecurityIconSvg from "public/icons/amenities/security.svg";
-import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
 
+import {
+  clubhouseIconURL,
+  dedicatedWorkspaceIconURL,
+  femaleIconURL,
+  fireExtinguisherIconURL,
+  firstAidKitIconURL,
+  gymIconURL,
+  liftIconURL,
+  maleIconURL,
+  nonVegIconURL,
+  outdoorDiningAreaIconURL,
+  parkingSpaceIconURL,
+  poolTableIconURL,
+  securityIconURL,
+  smokeAlarmIconURL,
+  swimmingPoolIconURL,
+  twentyFourXSevenIconURL,
+  vegIconURL,
+  wifiIconURL,
+} from "@/common/constants/cdnURL";
 import {
   BALCONY_TYPE_OPTIONS,
   BATHROOM_TYPE_OPTIONS,
@@ -42,39 +51,11 @@ import {
   FormSelectDropdown,
 } from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
-import { SvgIcon } from "@/utility-components";
+import RemoteSvg from "@/utility-components/RemoteSvg";
 import {
   getFlatmateDetailsErrors,
   getFlatmateDetailsTouched,
 } from "@/utils/formHelpers";
-
-const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const ClubhouseIcon = ClubhouseIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const GymIcon = GymIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const OutdoorDiningAreaIcon = OutdoorDiningAreaIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const FireExtinguisherIcon = FireExtinguisherIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const SwimmingPoolIcon = SwimmingPoolIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const SecurityIcon = SecurityIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const ParkingSpaceIcon = ParkingSpaceIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const DedicatedWorkspaceIcon = DedicatedWorkspaceIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const PoolTableIcon = PoolTableIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const FirstAidKitIcon = FirstAidKitIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
 
 interface FlatmateDetailsFormProps {
   disabled: boolean;
@@ -191,12 +172,12 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
               {
                 value: FLATMATE_PREFERRED_TENANTS.FEMALE,
                 label: "Female",
-                icon: <SvgIcon name="female" iconSize="medium" size={75} />,
+                icon: <RemoteSvg src={femaleIconURL} />,
               },
               {
                 value: FLATMATE_PREFERRED_TENANTS.MALE,
                 label: "Male",
-                icon: <SvgIcon name="male" iconSize="medium" size={75} />,
+                icon: <RemoteSvg src={maleIconURL} />,
               },
             ]}
             withIcons={true}
@@ -212,12 +193,12 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
               {
                 value: false,
                 label: "Veg",
-                icon: <SvgIcon name="veg" iconSize="large" size={68} />,
+                icon: <RemoteSvg src={vegIconURL} />,
               },
               {
                 value: true,
                 label: "Non-Veg",
-                icon: <SvgIcon name="non-veg" iconSize="large" size={68} />,
+                icon: <RemoteSvg src={nonVegIconURL} />,
               },
             ]}
             withIcons={true}
@@ -349,67 +330,75 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
           name="flatmateDetails.amenities"
           columns={4}
           options={[
-            { value: "Lift", label: "Lift", icon: <LiftIcon /> },
+            {
+              value: "Lift",
+              label: "Lift",
+              icon: <RemoteSvg src={liftIconURL} />,
+            },
             {
               value: "Clubhouse",
               label: "Club house",
-              icon: <ClubhouseIcon />,
+              icon: <RemoteSvg src={clubhouseIconURL} />,
             },
-            { value: "Gym", label: "Gym", icon: <GymIcon /> },
+            {
+              value: "Gym",
+              label: "Gym",
+              icon: <RemoteSvg src={gymIconURL} />,
+            },
             {
               value: "Outdoor Dining Area",
               label: "Outdoor Dining Area",
-              icon: <OutdoorDiningAreaIcon />,
+              icon: <RemoteSvg src={outdoorDiningAreaIconURL} />,
             },
             {
               value: "Fire Extinguisher",
               label: "Fire Extinguisher",
-              icon: <FireExtinguisherIcon />,
+              icon: <RemoteSvg src={fireExtinguisherIconURL} />,
             },
             {
               value: "Smoke Alarm",
               label: "Smoke Alarm",
-              icon: <SvgIcon name="smoke-alarm" iconSize="medium" size={28} />,
+              icon: <RemoteSvg src={smokeAlarmIconURL} />,
             },
             {
               value: "Swimming Pool",
               label: "Swimming Pool",
-              icon: <SwimmingPoolIcon />,
+              icon: <RemoteSvg src={swimmingPoolIconURL} />,
             },
             {
               value: "24/7 Power",
               label: "24/7 Power",
-              icon: <SvgIcon name="24x7-power" iconSize="small" size={28} />,
+              icon: <RemoteSvg src={twentyFourXSevenIconURL} />,
             },
             {
               value: "Security",
               label: "Security",
-              icon: <SecurityIcon />,
+              icon: <RemoteSvg src={securityIconURL} />,
             },
             {
               value: "Visitor Parking",
               label: "Visitor Parking",
-              icon: <ParkingSpaceIcon />,
+              icon: <RemoteSvg src={parkingSpaceIconURL} />,
             },
             {
               value: "Dedicated Workspace",
               label: "Dedicated Workspace",
-              icon: <DedicatedWorkspaceIcon />,
+              icon: <RemoteSvg src={dedicatedWorkspaceIconURL} />,
             },
             {
               value: "Wifi",
               label: "Wifi",
-              icon: <SvgIcon name="wifi" iconSize="small" size={28} />,
+              icon: <RemoteSvg src={wifiIconURL} />,
             },
             {
               value: "Pool Table",
               label: "Pool Table",
-              icon: <PoolTableIcon />,
+              icon: <RemoteSvg src={poolTableIconURL} />,
             },
             {
               value: "First Aid Kit",
               label: "First Aid Kit",
-              icon: <FirstAidKitIcon />,
+              icon: <RemoteSvg src={firstAidKitIconURL} />,
             },
             {
               value: "Intercom",

@@ -18,10 +18,13 @@ import * as Yup from "yup";
 import {
   clubhouseIconURL,
   dedicatedWorkspaceIconURL,
+  femaleIconURL,
   fireExtinguisherIconURL,
   firstAidKitIconURL,
   gymIconURL,
   liftIconURL,
+  maleIconURL,
+  nonVegIconURL,
   outdoorDiningAreaIconURL,
   parkingSpaceIconURL,
   poolTableIconURL,
@@ -29,6 +32,7 @@ import {
   smokeAlarmIconURL,
   swimmingPoolIconURL,
   twentyFourXSevenIconURL,
+  vegIconURL,
   wifiIconURL,
 } from "@/common/constants/cdnURL";
 import {
@@ -52,7 +56,6 @@ import {
 import { FormValues } from "@/interfaces/FormValues";
 import { setFlatmateDetails, setFormValidity } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
-import { SvgIcon } from "@/utility-components";
 import RemoteSvg from "@/utility-components/RemoteSvg";
 import {
   getFlatmateDetailsErrors,
@@ -262,12 +265,12 @@ export const FlatmateDetailsClient: React.FC = () => {
               {
                 value: FLATMATE_PREFERRED_TENANTS.FEMALE,
                 label: "Female",
-                icon: <SvgIcon name="female" iconSize="medium" size={75} />,
+                icon: <RemoteSvg src={femaleIconURL} />,
               },
               {
                 value: FLATMATE_PREFERRED_TENANTS.MALE,
                 label: "Male",
-                icon: <SvgIcon name="male" iconSize="medium" size={75} />,
+                icon: <RemoteSvg src={maleIconURL} />,
               },
             ]}
             withIcons={true}
@@ -282,12 +285,12 @@ export const FlatmateDetailsClient: React.FC = () => {
               {
                 value: false,
                 label: "Veg",
-                icon: <SvgIcon name="veg" iconSize="large" size={68} />,
+                icon: <RemoteSvg src={vegIconURL} />,
               },
               {
                 value: true,
                 label: "Non-Veg",
-                icon: <SvgIcon name="non-veg" iconSize="large" size={68} />,
+                icon: <RemoteSvg src={nonVegIconURL} />,
               },
             ]}
             withIcons={true}

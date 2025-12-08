@@ -16,8 +16,12 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import {
+  bachelorIconURL,
   clubhouseIconURL,
+  companyIconURL,
+  coupleIconURL,
   dedicatedWorkspaceIconURL,
+  familyIconURL,
   fireExtinguisherIconURL,
   firstAidKitIconURL,
   gymIconURL,
@@ -51,7 +55,6 @@ import {
 import { FormValues } from "@/interfaces/FormValues";
 import { setFormValidity, setRentalDetails } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
-import { SvgIcon } from "@/utility-components";
 import RemoteSvg from "@/utility-components/RemoteSvg";
 import {
   getRentalDetailsErrors,
@@ -243,22 +246,22 @@ export const RentalDetailsClient: React.FC = () => {
               {
                 value: RENT_PREFERRED_TENANTS.FAMILY,
                 label: "Family",
-                icon: <SvgIcon iconSize="large" name="family" size={68} />,
+                icon: <RemoteSvg src={familyIconURL} />,
               },
               {
                 value: RENT_PREFERRED_TENANTS.COMPANY,
                 label: "Company",
-                icon: <SvgIcon iconSize="large" name="company" size={68} />,
+                icon: <RemoteSvg src={companyIconURL} />,
               },
               {
                 value: RENT_PREFERRED_TENANTS.BACHELOR,
                 label: "Bachelor",
-                icon: <SvgIcon iconSize="large" name="bachelor" size={68} />,
+                icon: <RemoteSvg src={bachelorIconURL} />,
               },
               {
                 value: RENT_PREFERRED_TENANTS.COUPLE,
                 label: "Couple",
-                icon: <SvgIcon iconSize="large" name="couple" size={68} />,
+                icon: <RemoteSvg src={coupleIconURL} />,
               },
             ]}
             withIcons={true}

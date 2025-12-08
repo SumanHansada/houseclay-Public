@@ -6,10 +6,11 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
+import { houseclayIconURL } from "@/common/constants/cdnURL";
 import ActionMenu from "@/components/ActionMenu";
 import { useAdminLogout } from "@/hooks/useAdminLogout";
 import { RootState } from "@/store/store";
-import { SvgIcon } from "@/utility-components";
+import RemoteSvg from "@/utility-components/RemoteSvg";
 
 const Header: React.FC = () => {
   const { isAuthenticated } = useSelector(
@@ -29,7 +30,7 @@ const Header: React.FC = () => {
       {/* Logo and App Name */}
       <div className="flex items-center gap-2">
         <Link href="/" className="flex items-center gap-1">
-          <SvgIcon name="houseclay" iconSize="small" size={25} />
+          <RemoteSvg src={houseclayIconURL} className="size-6" />
           <span className="text-red-600 text-lg font-nunito font-bold">
             ZEBRA | Houseclay
           </span>
