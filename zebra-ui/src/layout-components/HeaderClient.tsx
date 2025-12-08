@@ -23,7 +23,7 @@ const Header: React.FC = () => {
     if (!isAuthenticated) {
       router.replace("/login");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, router]);
 
   return (
     <header className="flex fixed top-0 left-0 right-0 bg-white z-50 justify-between w-full items-center py-2 shadow-sm px-8 h-16">

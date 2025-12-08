@@ -111,7 +111,7 @@ export default function VerifyPropertyLayout({
     } catch (error) {
       console.error("Error transforming property data to form values:", error);
     }
-  }, [propertyDetailsRaw, isLoadingProperty, dispatch]);
+  }, [propertyDetailsRaw, isLoadingProperty, propertyIDParam, dispatch]);
 
   if (isLoadingProperty || isError) {
     return (

@@ -82,7 +82,7 @@ export default function VerifyPropertyDetailsPage() {
   }, [propertyCategory]);
 
   // Ensure proper form initialization with all required fields
-  const getInitialValues = (): FormValues => {
+  const initialValues = useMemo((): FormValues => {
     const data = formState?.data || {};
 
     // Ensure all required fields are present
@@ -97,9 +97,7 @@ export default function VerifyPropertyDetailsPage() {
       noPhotos:
         data.noPhotos ?? (data.images ? data.images.length === 0 : true),
     };
-  };
-
-  const initialValues = useMemo(() => getInitialValues(), [formState?.data]);
+  }, [formState?.data]);
   // console.log("<-- Details Page (All Forms) -->");
 
   // Ref to store submitted values for chaining

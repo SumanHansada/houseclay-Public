@@ -93,7 +93,10 @@ const LocalityDetailsForm: React.FC<LocalityDetailsFormProps> = ({
     };
 
     // Set default latitude and longitude based on selected city
-    if (selectedCity) {
+    if (
+      selectedCity &&
+      (!values.localityDetails?.latitude || !values.localityDetails?.longitude)
+    ) {
       const defaultLatLng = cityLatLngMapping[selectedCity] || {
         lat: 0,
         lng: 0,
@@ -101,7 +104,12 @@ const LocalityDetailsForm: React.FC<LocalityDetailsFormProps> = ({
       setFieldValue("localityDetails.latitude", defaultLatLng.lat);
       setFieldValue("localityDetails.longitude", defaultLatLng.lng);
     }
-  }, [selectedCity, setFieldValue]);
+  }, [
+    selectedCity,
+    setFieldValue,
+    values.localityDetails?.latitude,
+    values.localityDetails?.longitude,
+  ]);
 
   return (
     <div className="space-y-6">
