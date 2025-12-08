@@ -11,6 +11,8 @@ import Properties from "@/components/Properties";
 import { MobileHeader } from "@/layout-components";
 import { RootState } from "@/store/store";
 
+import Loading from "./loading";
+
 const filterOptions = [
   { label: "All", value: PropertyCategory.NONE },
   // { label: "Resale", value: PropertyCategory.RESALE },
@@ -27,6 +29,9 @@ export default function ShortlistsPage() {
 
   const { shortlistedProperties } = useSelector(
     (state: RootState) => state.shortlist,
+  );
+  const { userDetailLoading, userDetailError } = useSelector(
+    (state: RootState) => state.user,
   );
 
   const filteredProperties = useMemo(() => {
@@ -46,6 +51,10 @@ export default function ShortlistsPage() {
     e.stopPropagation();
     router.push(`/property-details/${propertyID}`);
   };
+
+  if (userDetailLoading || userDetailError) {
+    return <Loading />;
+  }
 
   return (
     <section>

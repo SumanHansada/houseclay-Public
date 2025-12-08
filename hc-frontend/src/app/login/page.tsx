@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { validPhoneNoLength } from "@/common/constants";
 import { AuthStep, ErrorStatus } from "@/common/enums";
 import LazyPhoneInput from "@/components/LazyPhoneInput";
 import { useLogout } from "@/hooks/useLogout";
@@ -30,14 +31,18 @@ export default function LoginPage() {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      logout();
-    }
-    dispatch(setAuthStep(AuthStep.PHONE));
+    const handleInit = async () => {
+      if (isAuthenticated) {
+        await logout();
+      }
+      dispatch(setAuthStep(AuthStep.PHONE));
+    };
+    handleInit();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLoginClick = async () => {
-    if (acceptTerms && phoneNo.substring(2)) {
+    if (acceptTerms && phoneNo.substring(validPhoneNoLength)) {
       try {
         const checkUserResponse = await triggerCheckUser({
           phoneNo,
@@ -119,8 +124,10 @@ export default function LoginPage() {
 
               <div className="flex flex-col items-center">
                 <button
-                  className={`w-full px-6 py-3 text-base text-white rounded-md  ${!acceptTerms || !phoneNo.substring(2) ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
-                  disabled={!acceptTerms || !phoneNo.substring(2)}
+                  className={`w-full px-6 py-3 text-base text-white rounded-md  ${!acceptTerms || !phoneNo.substring(validPhoneNoLength) ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
+                  disabled={
+                    !acceptTerms || !phoneNo.substring(validPhoneNoLength)
+                  }
                   onClick={handleLoginClick}
                 >
                   Login

@@ -103,12 +103,8 @@ export default function MyPropertiesPage() {
     }
   };
 
-  if (userDetailLoading) {
+  if (userDetailLoading || userDetailError) {
     return <Loading />;
-  }
-
-  if (userDetailError) {
-    return <div>Error loading properties: {userDetailError}</div>;
   }
 
   return (

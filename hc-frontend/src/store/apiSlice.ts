@@ -1,6 +1,5 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 
-import { BASE_API_URL } from "@/common/constants";
 import { PropertyCategory } from "@/common/enums";
 import { ConnectsBundle } from "@/interfaces/ConnectsBundle";
 import { PropertyForm } from "@/interfaces/PropertyForm";
@@ -8,13 +7,11 @@ import {
   GetUserDetailResponse,
   PropertyCardWithImages,
 } from "@/interfaces/User";
+import { baseQueryWithAuth } from "@/utils/rtkQueryHelpers";
 
 export const apiSlice = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({
-    baseUrl: BASE_API_URL,
-    credentials: "include", // Required for HTTP-only cookies
-  }),
+  baseQuery: baseQueryWithAuth,
   tagTypes: ["User"],
   endpoints: (builder) => ({
     login: builder.mutation<

@@ -2,12 +2,14 @@
 
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { ShieldCheck, X } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
 import { CDN_BASE_URL } from "@/common/constants";
+import { validPhoneNoLength } from "@/common/constants";
 import {
   AuthStep,
   ErrorStatus,
@@ -112,7 +114,6 @@ const ListPropertyClient = () => {
     const uuid = generateUUID();
     dispatch(setPropertyID(uuid));
     const url = `/list-property/${propertyCategory.toLowerCase()}/property-details`;
-    console.log("Navigating to URL:", url);
     router.push(url);
   };
 
@@ -142,7 +143,7 @@ const ListPropertyClient = () => {
   };
 
   const handlePostYourPropertyClick = async () => {
-    if (acceptTerms && phoneNo.substring(2)) {
+    if (acceptTerms && phoneNo.substring(validPhoneNoLength)) {
       try {
         const checkUserResponse = await triggerCheckUser({
           phoneNo,
@@ -234,7 +235,7 @@ const ListPropertyClient = () => {
                     <input
                       id="terms"
                       type="checkbox"
-                      className="w-6 h-6 text-red-500 border-gray-300 rounded focus:ring-red-500 accent-red-500"
+                      className="w-5 h-5 text-red-500 border-gray-300 rounded focus:ring-red-500 accent-red-500 hover:cursor-pointer"
                       checked={acceptTerms}
                       onChange={(e) => setAcceptTerms(e.target.checked)}
                     />
@@ -242,24 +243,32 @@ const ListPropertyClient = () => {
                       htmlFor="terms"
                       className="ml-2 text-sm text-gray-700"
                     >
-                      I accept the{" "}
-                      <a href="#" className="text-gray-700 underline">
+                      I agree to{" "}
+                      <Link
+                        href="/terms-and-conditions"
+                        className="text-gray-700 hover:underline"
+                      >
                         Terms & Conditions
-                      </a>{" "}
+                      </Link>{" "}
                       &{" "}
-                      <a href="#" className="text-gray-700 underline">
+                      <Link
+                        href="/privacy-policy"
+                        className="text-gray-700 hover:underline"
+                      >
                         Privacy Policy
-                      </a>
+                      </Link>
                     </label>
                   </div>
 
                   <div className="flex flex-col items-center">
                     <button
-                      className={`w-full px-6 py-3 text-base text-white rounded-md  ${!acceptTerms || !phoneNo.substring(2) ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
-                      disabled={!acceptTerms || !phoneNo.substring(2)}
+                      className={`w-full px-6 py-3 text-base text-white rounded-md  ${!acceptTerms || !phoneNo.substring(validPhoneNoLength) ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
+                      disabled={
+                        !acceptTerms || !phoneNo.substring(validPhoneNoLength)
+                      }
                       onClick={handlePostYourPropertyClick}
                     >
-                      Post Your Property – It&apos;s free
+                      Post Your Property - It&apos;s free
                     </button>
 
                     <p className="mt-2 text-base text-center text-gray-500">

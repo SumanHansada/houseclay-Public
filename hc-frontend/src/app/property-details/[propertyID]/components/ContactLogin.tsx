@@ -8,6 +8,7 @@ import { PhoneInput } from "react-international-phone";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
+import { validPhoneNoLength } from "@/common/constants";
 import { AuthStep } from "@/common/enums";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import {
@@ -340,9 +341,9 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
                 {/* Continue button */}
                 <button
                   type="submit"
-                  className={`w-full text-white py-3 px-4 rounded-lg ${!phoneNo.substring(8) ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
+                  className={`w-full text-white py-3 px-4 rounded-lg ${!phoneNo.substring(validPhoneNoLength) ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
                   onClick={handleCheckUser}
-                  disabled={!phoneNo.substring(8)}
+                  disabled={!phoneNo.substring(validPhoneNoLength)}
                 >
                   Continue
                 </button>
@@ -422,10 +423,10 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
                 {/* Continue button */}
                 <button
                   type="submit"
-                  className={`w-full text-white py-3 px-4 rounded-lg ${!phoneNo.substring(2) || !emailIDRegex.test(emailID) || !name ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
+                  className={`w-full text-white py-3 px-4 rounded-lg ${!phoneNo.substring(validPhoneNoLength) || !emailIDRegex.test(emailID) || !name ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
                   onClick={handleCreateUser}
                   disabled={
-                    !phoneNo.substring(2) ||
+                    !phoneNo.substring(validPhoneNoLength) ||
                     !emailIDRegex.test(emailID) ||
                     !name
                   }

@@ -60,12 +60,8 @@ export default function OwnersContactedPage() {
     router.push(`/property-details/${propertyID}`);
   };
 
-  if (userDetailLoading) {
+  if (userDetailLoading || userDetailError) {
     return <Loading />;
-  }
-
-  if (userDetailError) {
-    return <div>Error loading properties: {userDetailError}</div>;
   }
 
   return (

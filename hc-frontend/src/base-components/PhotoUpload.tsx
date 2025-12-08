@@ -118,7 +118,7 @@ const PhotoUpload: React.FC<PhotoUploadProps> = ({
       };
 
       return {
-        id: `photo-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        id: `photo-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
         file: fileData,
         url: URL.createObjectURL(file),
         isCover: photos.length === 0 && index === 0, // Only set first photo as cover if there were no photos before

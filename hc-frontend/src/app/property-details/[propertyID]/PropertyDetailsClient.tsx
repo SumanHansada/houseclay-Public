@@ -209,12 +209,7 @@ export function PropertyDetailsClient({
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return publicPropertyData as any;
-  }, [
-    isAuthenticated,
-    authenticatedPropertyData,
-    publicPropertyData,
-    isAuthenticated,
-  ]);
+  }, [isAuthenticated, authenticatedPropertyData, publicPropertyData]);
 
   const { toggleShortlist, isShortlisted } = useShortlist();
   const shortlistStatus = isShortlisted(propertyID);
@@ -300,6 +295,7 @@ export function PropertyDetailsClient({
     ? `${property?.balcony} ${property?.balcony > 1 ? "Balconies" : "Balcony"}`
     : "N/A";
 
+  const propertyTitle = `${bhkType} in ${property?.locationOrSocietyName} for ${pascalCase(property?.propertyCategory)} in ${property?.city}`;
   const propertyImages = processPropertyImages(property?.images);
 
   const handleShare = async () => {
@@ -309,8 +305,8 @@ export function PropertyDetailsClient({
       // Check if Web Share API is supported
       if (navigator.share && isMobile) {
         await navigator.share({
-          title: property?.title || "Property Details",
-          text: `Check out this property: ${property?.title || "Property"}`,
+          title: `${propertyTitle ?? "Property Details"}`,
+          text: `Check out this property: ${propertyTitle}`,
           url: propertyUrl,
         });
       } else {
@@ -486,8 +482,7 @@ export function PropertyDetailsClient({
             </div>
             <div>
               <h1 className="text-2xl text-gray-900 flex items-center gap-2">
-                {bhkType} in {property?.locationOrSocietyName} for{" "}
-                {pascalCase(property?.propertyCategory)} in {property?.city}
+                {propertyTitle}
               </h1>
             </div>
             <div className="flex items-center gap-2 text-gray-500 text-base mt-2">

@@ -52,12 +52,8 @@ export default function MyPaymentsPage() {
   // console.log("externalPayments: ", externalPayments);
   // console.log("filteredPayments: ", filteredPayments);
 
-  if (userDetailLoading) {
+  if (userDetailLoading || userDetailError) {
     return <Loading />;
-  }
-
-  if (userDetailError) {
-    return <div>Error loading payments: {userDetailError}</div>;
   }
 
   return (
