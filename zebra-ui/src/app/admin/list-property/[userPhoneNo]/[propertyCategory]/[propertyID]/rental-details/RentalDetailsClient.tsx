@@ -11,24 +11,26 @@ import {
   IndianRupee,
   Landmark,
 } from "lucide-react";
-import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
-import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
-import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
-import FireExtinguisherIconSvg from "public/icons/amenities/fire-extinguisher.svg";
-import FirstAidKitIconSvg from "public/icons/amenities/first-aid-kit.svg";
-import GymIconSvg from "public/icons/amenities/gym.svg";
-import LiftIconSvg from "public/icons/amenities/lift.svg";
-import OutdoorDiningAreaIconSvg from "public/icons/amenities/outdoor-dining-area.svg";
-import ParkingSpaceIconSvg from "public/icons/amenities/parking-space.svg";
-import PoolTableIconSvg from "public/icons/amenities/pool-table.svg";
-import SecurityIconSvg from "public/icons/amenities/security.svg";
-import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
-import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
-import WifiIconSvg from "public/icons/amenities/wifi.svg";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
+import {
+  clubhouseIconURL,
+  dedicatedWorkspaceIconURL,
+  fireExtinguisherIconURL,
+  firstAidKitIconURL,
+  gymIconURL,
+  liftIconURL,
+  outdoorDiningAreaIconURL,
+  parkingSpaceIconURL,
+  poolTableIconURL,
+  securityIconURL,
+  smokeAlarmIconURL,
+  swimmingPoolIconURL,
+  twentyFourXSevenIconURL,
+  wifiIconURL,
+} from "@/common/constants/cdnURL";
 import {
   BALCONY_NUMERIC_OPTIONS,
   BATHROOM_NUMERIC_OPTIONS,
@@ -50,45 +52,11 @@ import { FormValues } from "@/interfaces/FormValues";
 import { setFormValidity, setRentalDetails } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 import { SvgIcon } from "@/utility-components";
+import RemoteSvg from "@/utility-components/RemoteSvg";
 import {
   getRentalDetailsErrors,
   getRentalDetailsTouched,
 } from "@/utils/formHelpers";
-
-const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const ClubhouseIcon = ClubhouseIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const GymIcon = GymIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const OutdoorDiningAreaIcon = OutdoorDiningAreaIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const FireExtinguisherIcon = FireExtinguisherIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const SmokeAlarmIcon = SmokeAlarmIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const SwimmingPoolIcon = SwimmingPoolIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const TwentyFourSevenPowerIcon = TwentyFourSevenPowerIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const SecurityIcon = SecurityIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const ParkingSpaceIcon = ParkingSpaceIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const DedicatedWorkspaceIcon = DedicatedWorkspaceIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const WifiIcon = WifiIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const PoolTableIcon = PoolTableIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const FirstAidKitIcon = FirstAidKitIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
 
 const rentalSchema = Yup.object().shape({
   rentalDetails: Yup.object().shape({
@@ -404,63 +372,75 @@ export const RentalDetailsClient: React.FC = () => {
           name="rentalDetails.amenities"
           columns={4}
           options={[
-            { value: "Lift", label: "Lift", icon: <LiftIcon /> },
+            {
+              value: "Lift",
+              label: "Lift",
+              icon: <RemoteSvg src={liftIconURL} />,
+            },
             {
               value: "Clubhouse",
               label: "Club house",
-              icon: <ClubhouseIcon />,
+              icon: <RemoteSvg src={clubhouseIconURL} />,
             },
-            { value: "Gym", label: "Gym", icon: <GymIcon /> },
+            {
+              value: "Gym",
+              label: "Gym",
+              icon: <RemoteSvg src={gymIconURL} />,
+            },
             {
               value: "Outdoor Dining Area",
               label: "Outdoor Dining Area",
-              icon: <OutdoorDiningAreaIcon />,
+              icon: <RemoteSvg src={outdoorDiningAreaIconURL} />,
             },
             {
               value: "Fire Extinguisher",
               label: "Fire Extinguisher",
-              icon: <FireExtinguisherIcon />,
+              icon: <RemoteSvg src={fireExtinguisherIconURL} />,
             },
             {
               value: "Smoke Alarm",
               label: "Smoke Alarm",
-              icon: <SmokeAlarmIcon />,
+              icon: <RemoteSvg src={smokeAlarmIconURL} />,
             },
             {
               value: "Swimming Pool",
               label: "Swimming Pool",
-              icon: <SwimmingPoolIcon />,
+              icon: <RemoteSvg src={swimmingPoolIconURL} />,
             },
             {
               value: "24/7 Power",
               label: "24/7 Power",
-              icon: <TwentyFourSevenPowerIcon />,
+              icon: <RemoteSvg src={twentyFourXSevenIconURL} />,
             },
             {
               value: "Security",
               label: "Security",
-              icon: <SecurityIcon />,
+              icon: <RemoteSvg src={securityIconURL} />,
             },
             {
               value: "Visitor Parking",
               label: "Visitor Parking",
-              icon: <ParkingSpaceIcon />,
+              icon: <RemoteSvg src={parkingSpaceIconURL} />,
             },
             {
               value: "Dedicated Workspace",
               label: "Dedicated Workspace",
-              icon: <DedicatedWorkspaceIcon />,
+              icon: <RemoteSvg src={dedicatedWorkspaceIconURL} />,
             },
-            { value: "Wifi", label: "Wifi", icon: <WifiIcon /> },
+            {
+              value: "Wifi",
+              label: "Wifi",
+              icon: <RemoteSvg src={wifiIconURL} />,
+            },
             {
               value: "Pool Table",
               label: "Pool Table",
-              icon: <PoolTableIcon />,
+              icon: <RemoteSvg src={poolTableIconURL} />,
             },
             {
               value: "First Aid Kit",
               label: "First Aid Kit",
-              icon: <FirstAidKitIcon />,
+              icon: <RemoteSvg src={firstAidKitIconURL} />,
             },
             {
               value: "Intercom",
