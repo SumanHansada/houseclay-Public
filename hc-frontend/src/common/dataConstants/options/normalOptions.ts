@@ -77,6 +77,11 @@ export const POWER_BACKUP_OPTIONS: BaseOption[] = [
   { value: "no", label: "No" },
 ];
 
+export const ROOM_TYPE_OPTIONS: BaseOption[] = [
+  { value: "single", label: "Single" },
+  { value: "shared", label: "Shared" },
+];
+
 export const PARKING_OPTIONS: BaseOption[] = [
   { value: "both", label: "Both" },
   { value: "2-wheeler", label: "2 Wheeler" },
@@ -84,14 +89,16 @@ export const PARKING_OPTIONS: BaseOption[] = [
   { value: "none", label: "None" },
 ];
 
-export const SMOKING_PREFERENCE_OPTIONS: BaseOption[] = [
-  { value: "not-allowed", label: "Not Allowed" },
-  { value: "allowed", label: "Allowed" },
+export const BATHROOM_TYPE_OPTIONS: BaseOption[] = [
+  { value: "attached", label: "Attached" },
+  { value: "shared", label: "Shared" },
+  { value: "dedicated", label: "Dedicated" },
 ];
 
-export const DRINKING_PREFERENCE_OPTIONS: BaseOption[] = [
-  { value: "no", label: "No" },
-  { value: "occasionally", label: "Occasionally" },
+export const BALCONY_TYPE_OPTIONS: BaseOption[] = [
+  { value: "attached", label: "Attached" },
+  { value: "shared", label: "Shared" },
+  { value: "no-balcony", label: "No Balcony" },
 ];
 
 export const KHATA_CERTIFICATE_OPTIONS: BaseOption[] = [
@@ -111,7 +118,16 @@ export const WHO_WILL_SHOW_PROPERTY_OPTIONS: BaseOption[] = [
   { value: "friend-neighbour", label: "Friend/Neighbour will show" },
 ];
 
-export const BATHROOM_OPTIONS = generateNumericOptions({ min: 1, max: 6 });
+export const BATHROOM_NUMERIC_OPTIONS = generateNumericOptions({
+  min: 1,
+  max: 6,
+});
+
+export const BALCONY_NUMERIC_OPTIONS = generateNumericOptions({
+  max: 6,
+  addZeroOption: true,
+  zeroOptionLabel: "No Balcony",
+});
 
 export const FLOOR_NUMERIC_OPTIONS = generateNumericOptions({
   max: 50,

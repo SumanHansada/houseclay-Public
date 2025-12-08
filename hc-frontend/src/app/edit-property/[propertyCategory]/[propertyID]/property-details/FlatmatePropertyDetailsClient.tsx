@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import {
-  BATHROOM_OPTIONS,
   BHK_TYPE_OPTIONS,
   FACING_OPTIONS,
   FLOOR_NUMERIC_OPTIONS,
@@ -46,7 +45,6 @@ const propertySchema = Yup.object({
         },
       ),
     totalFloors: Yup.number().required("Total floors is required"),
-    bathrooms: Yup.number().required("Bathroom is required"),
   }),
 });
 
@@ -161,7 +159,6 @@ const FlatmatePropertyDetailsClient: React.FC = () => {
             name="propertyDetails.facing"
             id="propertyDetails.facing"
             options={FACING_OPTIONS}
-            optionsType="string"
             required
             placeholder="Select facing direction"
             aria-describedby={
@@ -177,7 +174,7 @@ const FlatmatePropertyDetailsClient: React.FC = () => {
             id="propertyDetails.bhkType"
             options={BHK_TYPE_OPTIONS}
             required
-            placeholder="Select BHK Type"
+            placeholder="Select BHK type"
             aria-describedby={
               propertyDetailsErrors?.bhkType && propertyDetailsTouched?.bhkType
                 ? "propertyDetails.bhkType-error"
@@ -186,20 +183,19 @@ const FlatmatePropertyDetailsClient: React.FC = () => {
           />
         </div>
 
-        {/* BATHROOMS, FLOOR, TOTAL FLOOR */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {/* FLOOR, TOTAL FLOOR */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormSelectDropdown
-            label="Bathrooms"
-            name="propertyDetails.bathrooms"
-            id="propertyDetails.bathrooms"
-            options={BATHROOM_OPTIONS}
+            label="Floor"
+            name="propertyDetails.floor"
+            id="propertyDetails.floor"
+            options={FLOOR_NUMERIC_OPTIONS}
             optionsType="number"
             required
-            placeholder="Select Bathrooms"
+            placeholder="Select floor"
             aria-describedby={
-              propertyDetailsErrors?.bathrooms &&
-              propertyDetailsTouched?.bathrooms
-                ? "propertyDetails.bathrooms-error"
+              propertyDetailsErrors?.floor && propertyDetailsTouched?.floor
+                ? "propertyDetails.floor-error"
                 : undefined
             }
           />
@@ -216,21 +212,6 @@ const FlatmatePropertyDetailsClient: React.FC = () => {
               propertyDetailsErrors?.totalFloors &&
               propertyDetailsTouched?.totalFloors
                 ? "totalFloors-error"
-                : undefined
-            }
-          />
-
-          <FormSelectDropdown
-            label="Floor"
-            name="propertyDetails.floor"
-            id="propertyDetails.floor"
-            options={FLOOR_NUMERIC_OPTIONS}
-            optionsType="number"
-            required
-            placeholder="Select floor"
-            aria-describedby={
-              propertyDetailsErrors?.floor && propertyDetailsTouched?.floor
-                ? "propertyDetails.floor-error"
                 : undefined
             }
           />

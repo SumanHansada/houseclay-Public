@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { PropertyCategory } from "@/common/enums";
 import { AdditionalInfo } from "@/interfaces/AdditionalInfo";
-import { FlatmateDetails } from "@/interfaces/FlatmatesDetails";
+import { FlatmateDetails } from "@/interfaces/FlatmateDetails";
 import { FormValues } from "@/interfaces/FormValues";
 import { LocalityDetails } from "@/interfaces/LocalityDetails";
 import { PropertyDetails } from "@/interfaces/PropertyDetails";
@@ -28,11 +28,10 @@ const getInitialData = (
   propertyCategory: PropertyCategory,
 ): Partial<FormValues> => {
   const basePropertyDetails = {
-    propertyType: "Apartment",
+    propertyType: "",
     builtUpArea: undefined,
     facing: "",
     bhkType: "",
-    bathrooms: undefined,
     ownershipType: "",
     propertyAge: "",
     floor: undefined,
@@ -74,6 +73,8 @@ const getInitialData = (
           availableFrom: "",
           furnishing: "",
           preferredTenants: [],
+          balcony: undefined,
+          bathrooms: undefined,
           waterSupply: "",
           powerBackup: "",
           parking: "",
@@ -114,6 +115,7 @@ const getInitialData = (
           maintenanceCharges: 0,
           depositCharges: 0,
           availableFrom: "",
+          roomType: "",
           furnishing: "",
           waterSupply: "",
           powerBackup: "",
@@ -121,10 +123,10 @@ const getInitialData = (
           nonVegAllowed: false,
           amenities: [],
           tenantType: "",
-          attachedBathroom: false,
-          attachedBalcony: false,
-          smokingPreference: "",
-          drinkingPreference: "",
+          balconyType: "",
+          bathroomType: "",
+          smokingPreference: false,
+          drinkingPreference: false,
         },
       };
 

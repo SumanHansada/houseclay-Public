@@ -1,7 +1,7 @@
 import { PropertyCategory } from "@/common/enums";
 
 import { AdditionalInfo } from "./AdditionalInfo";
-import { FlatmateDetails } from "./FlatmatesDetails";
+import { FlatmateDetails } from "./FlatmateDetails";
 import { LocalityDetails } from "./LocalityDetails";
 import { PropertyDetails } from "./PropertyDetails";
 import { PropertyImage } from "./PropertyImage";

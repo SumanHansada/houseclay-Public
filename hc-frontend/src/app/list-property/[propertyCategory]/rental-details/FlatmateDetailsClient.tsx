@@ -1,28 +1,47 @@
 "use client";
 
 import { useFormikContext } from "formik";
-import { IndianRupee } from "lucide-react";
-import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
-import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
-import FireExtinguisherIconSvg from "public/icons/amenities/fire-extinguisher.svg";
-import FirstAidKitIconSvg from "public/icons/amenities/first-aid-kit.svg";
-import GymIconSvg from "public/icons/amenities/gym.svg";
-import LiftIconSvg from "public/icons/amenities/lift.svg";
-import OutdoorDiningAreaIconSvg from "public/icons/amenities/outdoor-dining-area.svg";
-import ParkingSpaceIconSvg from "public/icons/amenities/parking-space.svg";
-import PoolTableIconSvg from "public/icons/amenities/pool-table.svg";
-import SecurityIconSvg from "public/icons/amenities/security.svg";
-import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
+import {
+  BedSingle,
+  Blocks,
+  BrushCleaning,
+  CloudHail,
+  Dam,
+  Headset,
+  IndianRupee,
+  Landmark,
+} from "lucide-react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import {
-  DRINKING_PREFERENCE_OPTIONS,
+  clubhouseIconURL,
+  dedicatedWorkspaceIconURL,
+  femaleIconURL,
+  fireExtinguisherIconURL,
+  firstAidKitIconURL,
+  gymIconURL,
+  liftIconURL,
+  maleIconURL,
+  nonVegIconURL,
+  outdoorDiningAreaIconURL,
+  parkingSpaceIconURL,
+  poolTableIconURL,
+  securityIconURL,
+  smokeAlarmIconURL,
+  swimmingPoolIconURL,
+  twentyFourXSevenIconURL,
+  vegIconURL,
+  wifiIconURL,
+} from "@/common/dataConstants/cdnURL";
+import {
+  BALCONY_TYPE_OPTIONS,
+  BATHROOM_TYPE_OPTIONS,
   FURNISHING_OPTIONS,
   PARKING_OPTIONS,
   POWER_BACKUP_OPTIONS,
-  SMOKING_PREFERENCE_OPTIONS,
+  ROOM_TYPE_OPTIONS,
   WATER_SUPPLY_OPTIONS,
   YES_NO_OPTIONS,
 } from "@/common/dataConstants/options";
@@ -37,39 +56,11 @@ import {
 import { FormValues } from "@/interfaces/FormValues";
 import { setFlatmateDetails, setFormValidity } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
-import { SvgIcon } from "@/utility-components";
+import RemoteSvg from "@/utility-components/RemoteSvg";
 import {
   getFlatmateDetailsErrors,
   getFlatmateDetailsTouched,
 } from "@/utils/formHelpers";
-
-const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const ClubhouseIcon = ClubhouseIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const GymIcon = GymIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const OutdoorDiningAreaIcon = OutdoorDiningAreaIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const FireExtinguisherIcon = FireExtinguisherIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const SwimmingPoolIcon = SwimmingPoolIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const SecurityIcon = SecurityIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const ParkingSpaceIcon = ParkingSpaceIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const DedicatedWorkspaceIcon = DedicatedWorkspaceIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const PoolTableIcon = PoolTableIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const FirstAidKitIcon = FirstAidKitIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
 
 const flatmateSchema = Yup.object().shape({
   flatmateDetails: Yup.object().shape({
@@ -95,16 +86,17 @@ const flatmateSchema = Yup.object().shape({
         (value) => parseFloat(value || "0") > 0,
       ),
     availableFrom: Yup.string().required("Available from is required"),
+    roomType: Yup.string().required("Room type is required"),
     furnishing: Yup.string().required("Furnishing is required"),
     waterSupply: Yup.string().required("Water supply is required"),
     powerBackup: Yup.string().required("Power backup is required"),
     parking: Yup.string().required("Parking is required"),
     nonVegAllowed: Yup.boolean().required("Non veg allowed is required"),
     tenantType: Yup.string().required("Preferred tenant is required"),
-    attachedBathroom: Yup.boolean().required("Attached bathroom is required"),
-    attachedBalcony: Yup.boolean().required("Attached balcony is required"),
-    smokingPreference: Yup.string().required("Smoking preference is required"),
-    drinkingPreference: Yup.string().required(
+    bathroomType: Yup.string().required("Bathroom type is required"),
+    balconyType: Yup.string().required("Balcony type is required"),
+    smokingPreference: Yup.boolean().required("Smoking preference is required"),
+    drinkingPreference: Yup.boolean().required(
       "Drinking preference is required",
     ),
     amenities: Yup.array().of(Yup.string()).required("Amenities are required"),
@@ -198,23 +190,33 @@ export const FlatmateDetailsClient: React.FC = () => {
             />
           </div>
           <div className="col-span-1">
-            <FormSelectDropdown
-              label="Parking"
-              name="flatmateDetails.parking"
-              id="flatmateDetails.parking"
-              options={PARKING_OPTIONS}
-              required={true}
-              placeholder="Select Parking"
-              aria-describedby={
-                flatmateDetailsErrors?.parking &&
-                flatmateDetailsTouched?.parking
-                  ? "flatmateDetails.parking-error"
-                  : undefined
-              }
+            <FormCurrencyField
+              name="flatmateDetails.depositCharges"
+              id="flatmateDetails.depositCharges"
+              label="Deposit"
+              placeholder="Enter deposit"
+              prefix={<IndianRupee size={20} />}
+              required
             />
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormSelectDropdown
+              label="Room Type"
+              name="flatmateDetails.roomType"
+              id="flatmateDetails.roomType"
+              options={ROOM_TYPE_OPTIONS}
+              required={true}
+              placeholder="Select room type"
+              aria-describedby={
+                flatmateDetailsErrors?.roomType &&
+                flatmateDetailsTouched?.roomType
+                  ? "flatmateDetails.roomType-error"
+                  : undefined
+              }
+            />
+          </div>
           <div className="col-span-1">
             <FormCurrencyField
               name="flatmateDetails.maintenanceCharges"
@@ -223,16 +225,6 @@ export const FlatmateDetailsClient: React.FC = () => {
               placeholder="Enter maintenance charges"
               prefix={<IndianRupee size={20} />}
               suffix="/month"
-              required
-            />
-          </div>
-          <div className="col-span-1">
-            <FormCurrencyField
-              name="flatmateDetails.depositCharges"
-              id="flatmateDetails.depositCharges"
-              label="Deposit"
-              placeholder="Enter deposit"
-              prefix={<IndianRupee size={20} />}
               required
             />
           </div>
@@ -273,12 +265,12 @@ export const FlatmateDetailsClient: React.FC = () => {
               {
                 value: FLATMATE_PREFERRED_TENANTS.FEMALE,
                 label: "Female",
-                icon: <SvgIcon name="female" iconSize="medium" size={75} />,
+                icon: <RemoteSvg src={femaleIconURL} />,
               },
               {
                 value: FLATMATE_PREFERRED_TENANTS.MALE,
                 label: "Male",
-                icon: <SvgIcon name="male" iconSize="medium" size={75} />,
+                icon: <RemoteSvg src={maleIconURL} />,
               },
             ]}
             withIcons={true}
@@ -293,12 +285,12 @@ export const FlatmateDetailsClient: React.FC = () => {
               {
                 value: false,
                 label: "Veg",
-                icon: <SvgIcon name="veg" iconSize="large" size={68} />,
+                icon: <RemoteSvg src={vegIconURL} />,
               },
               {
                 value: true,
                 label: "Non-Veg",
-                icon: <SvgIcon name="non-veg" iconSize="large" size={68} />,
+                icon: <RemoteSvg src={nonVegIconURL} />,
               },
             ]}
             withIcons={true}
@@ -306,6 +298,57 @@ export const FlatmateDetailsClient: React.FC = () => {
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormSelectDropdown
+              label="Bathroom Type"
+              name="flatmateDetails.bathroomType"
+              id="flatmateDetails.bathroomType"
+              options={BATHROOM_TYPE_OPTIONS}
+              required={true}
+              placeholder="Select bathroom type"
+              aria-describedby={
+                flatmateDetailsErrors?.bathroomType &&
+                flatmateDetailsTouched?.bathroomType
+                  ? "flatmateDetails.bathroomType-error"
+                  : undefined
+              }
+            />
+          </div>
+          <div className="col-span-1">
+            <FormSelectDropdown
+              label="Balcony Type"
+              name="flatmateDetails.balconyType"
+              id="flatmateDetails.balconyType"
+              options={BALCONY_TYPE_OPTIONS}
+              required={true}
+              placeholder="Select balcony type"
+              aria-describedby={
+                flatmateDetailsErrors?.balconyType &&
+                flatmateDetailsTouched?.balconyType
+                  ? "flatmateDetails.balconyType-error"
+                  : undefined
+              }
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-6 mb-6">
+          <div className="col-span-1">
+            <FormSelectDropdown
+              label="Parking"
+              name="flatmateDetails.parking"
+              id="flatmateDetails.parking"
+              options={PARKING_OPTIONS}
+              required={true}
+              placeholder="Select Parking"
+              aria-describedby={
+                flatmateDetailsErrors?.parking &&
+                flatmateDetailsTouched?.parking
+                  ? "flatmateDetails.parking-error"
+                  : undefined
+              }
+            />
+          </div>
           <div className="col-span-1">
             <FormSelectDropdown
               label="Water Supply"
@@ -342,32 +385,10 @@ export const FlatmateDetailsClient: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="col-span-1">
             <FormRadioGroup
-              name="flatmateDetails.attachedBathroom"
-              label="Attached Bathroom"
-              columns={2}
-              options={YES_NO_OPTIONS}
-              required
-              horizontal
-            />
-          </div>
-          <div className="col-span-1">
-            <FormRadioGroup
-              name="flatmateDetails.attachedBalcony"
-              label="Attached Balcony"
-              columns={2}
-              options={YES_NO_OPTIONS}
-              required
-              horizontal
-            />
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="col-span-1">
-            <FormRadioGroup
               name="flatmateDetails.smokingPreference"
               label="Smoking Allowed"
               columns={2}
-              options={SMOKING_PREFERENCE_OPTIONS}
+              options={YES_NO_OPTIONS}
               required
               horizontal
             />
@@ -377,7 +398,7 @@ export const FlatmateDetailsClient: React.FC = () => {
               name="flatmateDetails.drinkingPreference"
               label="Drinking Allowed"
               columns={2}
-              options={DRINKING_PREFERENCE_OPTIONS}
+              options={YES_NO_OPTIONS}
               required
               horizontal
             />
@@ -392,67 +413,110 @@ export const FlatmateDetailsClient: React.FC = () => {
           name="flatmateDetails.amenities"
           columns={4}
           options={[
-            { value: "Lift", label: "Lift", icon: <LiftIcon /> },
+            {
+              value: "Lift",
+              label: "Lift",
+              icon: <RemoteSvg src={liftIconURL} />,
+            },
             {
               value: "Clubhouse",
               label: "Club house",
-              icon: <ClubhouseIcon />,
+              icon: <RemoteSvg src={clubhouseIconURL} />,
             },
-            { value: "Gym", label: "Gym", icon: <GymIcon /> },
+            {
+              value: "Gym",
+              label: "Gym",
+              icon: <RemoteSvg src={gymIconURL} />,
+            },
             {
               value: "Outdoor Dining Area",
               label: "Outdoor Dining Area",
-              icon: <OutdoorDiningAreaIcon />,
+              icon: <RemoteSvg src={outdoorDiningAreaIconURL} />,
             },
             {
               value: "Fire Extinguisher",
               label: "Fire Extinguisher",
-              icon: <FireExtinguisherIcon />,
+              icon: <RemoteSvg src={fireExtinguisherIconURL} />,
             },
             {
               value: "Smoke Alarm",
               label: "Smoke Alarm",
-              icon: <SvgIcon name="smoke-alarm" iconSize="medium" size={28} />,
+              icon: <RemoteSvg src={smokeAlarmIconURL} />,
             },
             {
               value: "Swimming Pool",
               label: "Swimming Pool",
-              icon: <SwimmingPoolIcon />,
+              icon: <RemoteSvg src={swimmingPoolIconURL} />,
             },
             {
               value: "24/7 Power",
               label: "24/7 Power",
-              icon: <SvgIcon name="24x7-power" iconSize="small" size={28} />,
+              icon: <RemoteSvg src={twentyFourXSevenIconURL} />,
             },
             {
               value: "Security",
               label: "Security",
-              icon: <SecurityIcon />,
+              icon: <RemoteSvg src={securityIconURL} />,
             },
             {
               value: "Visitor Parking",
               label: "Visitor Parking",
-              icon: <ParkingSpaceIcon />,
+              icon: <RemoteSvg src={parkingSpaceIconURL} />,
             },
             {
               value: "Dedicated Workspace",
               label: "Dedicated Workspace",
-              icon: <DedicatedWorkspaceIcon />,
+              icon: <RemoteSvg src={dedicatedWorkspaceIconURL} />,
             },
             {
               value: "Wifi",
               label: "Wifi",
-              icon: <SvgIcon name="wifi" iconSize="small" size={28} />,
+              icon: <RemoteSvg src={wifiIconURL} />,
             },
             {
               value: "Pool Table",
               label: "Pool Table",
-              icon: <PoolTableIcon />,
+              icon: <RemoteSvg src={poolTableIconURL} />,
             },
             {
               value: "First Aid Kit",
               label: "First Aid Kit",
-              icon: <FirstAidKitIcon />,
+              icon: <RemoteSvg src={firstAidKitIconURL} />,
+            },
+            {
+              value: "Intercom",
+              label: "Intercom",
+              icon: <Headset size={24} strokeWidth={1.5} />,
+            },
+            {
+              value: "Sewage Treatment",
+              label: "Sewage Treatment",
+              icon: <Dam size={24} strokeWidth={1.5} />,
+            },
+            {
+              value: "House Keeping",
+              label: "House Keeping",
+              icon: <BrushCleaning size={24} strokeWidth={1.5} />,
+            },
+            {
+              value: "Rain Water Harvesting",
+              label: "Rain Water Harvesting",
+              icon: <CloudHail size={24} strokeWidth={1.5} />,
+            },
+            {
+              value: "Children Play Area",
+              label: "Children Play Area",
+              icon: <Blocks size={24} strokeWidth={1.5} />,
+            },
+            {
+              value: "Guest Room",
+              label: "Guest Room",
+              icon: <BedSingle size={24} strokeWidth={1.5} />,
+            },
+            {
+              value: "Community Hall",
+              label: "Community Hall",
+              icon: <Landmark size={24} strokeWidth={1.5} />,
             },
           ]}
           withIcons={true}

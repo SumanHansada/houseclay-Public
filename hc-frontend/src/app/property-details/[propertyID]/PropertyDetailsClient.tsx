@@ -5,18 +5,25 @@ import { motion } from "framer-motion";
 import {
   Bath,
   BedDouble,
+  BedSingle,
+  Blocks,
+  BrushCleaning,
   Building2,
   ChevronLeft,
+  CloudHail,
   Compass,
   CornerUpRight,
+  Dam,
   Eye,
   Flag,
+  Headset,
   Heart,
   Hourglass,
   House,
   HousePlus,
   Icon,
   KeyRound,
+  Landmark,
   MapPin,
   ParkingCircle,
   Phone,
@@ -27,27 +34,29 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
-import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
-import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
-import FireExtinguisherIconSvg from "public/icons/amenities/fire-extinguisher.svg";
-import FirstAidKitIconSvg from "public/icons/amenities/first-aid-kit.svg";
-import GymIconSvg from "public/icons/amenities/gym.svg";
-import LiftIconSvg from "public/icons/amenities/lift.svg";
-import OutdoorDiningAreaIconSvg from "public/icons/amenities/outdoor-dining-area.svg";
-import ParkingSpaceIconSvg from "public/icons/amenities/parking-space.svg";
-import PoolTableIconSvg from "public/icons/amenities/pool-table.svg";
-import SecurityIconSvg from "public/icons/amenities/security.svg";
-import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
-import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
-import WifiIconSvg from "public/icons/amenities/wifi.svg";
-import BalconyIconSvg from "public/icons/common/balcony.svg";
-import BuildUpAreaIconSvg from "public/icons/common/build-up-area.svg";
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
 import { Button, PlacesAutocomplete } from "@/base-components";
+import {
+  balconyIconURL,
+  builtUpAreaIconURL,
+  clubhouseIconURL,
+  dedicatedWorkspaceIconURL,
+  fireExtinguisherIconURL,
+  firstAidKitIconURL,
+  gymIconURL,
+  liftIconURL,
+  outdoorDiningAreaIconURL,
+  parkingSpaceIconURL,
+  poolTableIconURL,
+  securityIconURL,
+  smokeAlarmIconURL,
+  swimmingPoolIconURL,
+  twentyFourXSevenIconURL,
+  wifiIconURL,
+} from "@/common/dataConstants/cdnURL";
 import {
   BHK_TYPE_OPTIONS,
   FACING_OPTIONS,
@@ -79,76 +88,84 @@ import {
   useGetPublicPropertyByIdQuery,
 } from "@/store/apiSlice";
 import { RootState } from "@/store/store";
-import { PhotoGallery, SvgIcon } from "@/utility-components";
+import { PhotoGallery, RemoteSvg, SvgIcon } from "@/utility-components";
 import { GoogleMapsDirection } from "@/utility-components";
 
 import Loading from "./loading";
 
-const BalconyIcon = BalconyIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const BuildUpAreaIcon = BuildUpAreaIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const ParkingSpaceIcon = ParkingSpaceIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-
-// Amenity Icons
-const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const ClubhouseIcon = ClubhouseIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const GymIcon = GymIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const OutdoorDiningAreaIcon = OutdoorDiningAreaIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const FireExtinguisherIcon = FireExtinguisherIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const SmokeAlarmIcon = SmokeAlarmIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const SwimmingPoolIcon = SwimmingPoolIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const TwentyFourSevenPowerIcon = TwentyFourSevenPowerIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const SecurityIcon = SecurityIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const DedicatedWorkspaceIcon = DedicatedWorkspaceIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const WifiIcon = WifiIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const PoolTableIcon = PoolTableIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const FirstAidKitIcon = FirstAidKitIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-
 const AmenitiesMap = {
-  Lift: { label: "Lift", icon: <LiftIcon /> },
-  Clubhouse: { label: "Club house", icon: <ClubhouseIcon /> },
-  Gym: { label: "Gym", icon: <GymIcon /> },
+  Lift: { label: "Lift", icon: <RemoteSvg src={liftIconURL} /> },
+  Clubhouse: {
+    label: "Club house",
+    icon: <RemoteSvg src={clubhouseIconURL} />,
+  },
+  Gym: { label: "Gym", icon: <RemoteSvg src={gymIconURL} /> },
   "Outdoor Dining Area": {
     label: "Outdoor Dining Area",
-    icon: <OutdoorDiningAreaIcon />,
+    icon: <RemoteSvg src={outdoorDiningAreaIconURL} />,
   },
   "Fire Extinguisher": {
     label: "Fire Extinguisher",
-    icon: <FireExtinguisherIcon />,
+    icon: <RemoteSvg src={fireExtinguisherIconURL} />,
   },
-  "Smoke Alarm": { label: "Smoke Alarm", icon: <SmokeAlarmIcon /> },
-  "Swimming Pool": { label: "Swimming Pool", icon: <SwimmingPoolIcon /> },
-  "24/7 Power": { label: "24/7 Power", icon: <TwentyFourSevenPowerIcon /> },
-  Security: { label: "Security", icon: <SecurityIcon /> },
-  "Visitor Parking": { label: "Visitor Parking", icon: <ParkingSpaceIcon /> },
+  "Smoke Alarm": {
+    label: "Smoke Alarm",
+    icon: <RemoteSvg src={smokeAlarmIconURL} />,
+  },
+  "Swimming Pool": {
+    label: "Swimming Pool",
+    icon: <RemoteSvg src={swimmingPoolIconURL} />,
+  },
+  "24/7 Power": {
+    label: "24/7 Power",
+    icon: <RemoteSvg src={twentyFourXSevenIconURL} />,
+  },
+  Security: { label: "Security", icon: <RemoteSvg src={securityIconURL} /> },
+  "Visitor Parking": {
+    label: "Visitor Parking",
+    icon: <RemoteSvg src={parkingSpaceIconURL} />,
+  },
   "Dedicated Workspace": {
     label: "Dedicated Workspace",
-    icon: <DedicatedWorkspaceIcon />,
+    icon: <RemoteSvg src={dedicatedWorkspaceIconURL} />,
   },
-  Wifi: { label: "Wifi", icon: <WifiIcon /> },
-  "Pool Table": { label: "Pool Table", icon: <PoolTableIcon /> },
-  "First Aid Kit": { label: "First Aid Kit", icon: <FirstAidKitIcon /> },
+  Wifi: { label: "Wifi", icon: <RemoteSvg src={wifiIconURL} /> },
+  "Pool Table": {
+    label: "Pool Table",
+    icon: <RemoteSvg src={poolTableIconURL} />,
+  },
+  "First Aid Kit": {
+    label: "First Aid Kit",
+    icon: <RemoteSvg src={firstAidKitIconURL} />,
+  },
+  Intercom: {
+    label: "Intercom",
+    icon: <Headset size={24} strokeWidth={1.5} />,
+  },
+  "Sewage Treatment": {
+    label: "Sewage Treatment",
+    icon: <Dam size={24} strokeWidth={1.5} />,
+  },
+  "House Keeping": {
+    label: "House Keeping",
+    icon: <BrushCleaning size={24} strokeWidth={1.5} />,
+  },
+  "Rain Water Harvesting": {
+    label: "Rain Water Harvesting",
+    icon: <CloudHail size={24} strokeWidth={1.5} />,
+  },
+  "Children Play Area": {
+    label: "Children Play Area",
+    icon: <Blocks size={24} strokeWidth={1.5} />,
+  },
+  "Guest Room": {
+    label: "Guest Room",
+    icon: <BedSingle size={24} strokeWidth={1.5} />,
+  },
+  "Community Hall": {
+    label: "Community Hall",
+    icon: <Landmark size={24} strokeWidth={1.5} />,
+  },
 };
 
 const CONTACT_LOGIN_DIALOG_ID = "contact-owner-login-dialog";
@@ -761,7 +778,7 @@ export function PropertyDetailsClient({
                   <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                     <div className="flex-col">
                       <div className="p-0.5">
-                        <BalconyIcon />
+                        <RemoteSvg src={balconyIconURL} />
                       </div>
                     </div>
                     <div className="flex-col">
@@ -777,7 +794,7 @@ export function PropertyDetailsClient({
                   <div className="flex w-full justify-start items-start gap-2 text-gray-600 pl-2">
                     <div className="flex-col">
                       <div className="p-0.5">
-                        <BuildUpAreaIcon />
+                        <RemoteSvg src={builtUpAreaIconURL} />
                       </div>
                     </div>
                     <div className="flex-col">
@@ -1017,7 +1034,7 @@ export function PropertyDetailsClient({
                 <div className="flex w-full justify-start items-start gap-2 text-gray-600">
                   <div className="flex-col">
                     <div className="p-0.5">
-                      <BalconyIcon />
+                      <RemoteSvg src={balconyIconURL} />
                     </div>
                   </div>
                   <div className="flex-col">
@@ -1033,7 +1050,7 @@ export function PropertyDetailsClient({
                 <div className="flex w-full justify-start items-start gap-2 text-gray-600 pl-2">
                   <div className="flex-col">
                     <div className="p-0.5">
-                      <BuildUpAreaIcon />
+                      <RemoteSvg src={builtUpAreaIconURL} />
                     </div>
                   </div>
                   <div className="flex-col">

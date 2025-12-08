@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { PropertyCategory, PropertyListingType } from "@/common/enums";
 import { AdditionalInfo } from "@/interfaces/AdditionalInfo";
-import { FlatmateDetails } from "@/interfaces/FlatmatesDetails";
+import { FlatmateDetails } from "@/interfaces/FlatmateDetails";
 import { FormValues } from "@/interfaces/FormValues";
 import { ListPropertyState } from "@/interfaces/ListPropertyState";
 import { LocalityDetails } from "@/interfaces/LocalityDetails";
@@ -20,7 +20,6 @@ const getInitialData = (
     builtUpArea: undefined,
     facing: "",
     bhkType: "",
-    bathrooms: undefined,
     ownershipType: "",
     propertyAge: "",
     floor: undefined,
@@ -62,6 +61,8 @@ const getInitialData = (
           availableFrom: "",
           furnishing: "",
           preferredTenants: [],
+          bathrooms: undefined,
+          balcony: undefined,
           waterSupply: "",
           powerBackup: "",
           parking: "",
@@ -102,6 +103,7 @@ const getInitialData = (
           maintenanceCharges: undefined,
           depositCharges: undefined,
           availableFrom: "",
+          roomType: "",
           furnishing: "",
           waterSupply: "",
           powerBackup: "",
@@ -109,10 +111,10 @@ const getInitialData = (
           nonVegAllowed: false,
           amenities: [],
           tenantType: "",
-          attachedBathroom: false,
-          attachedBalcony: false,
-          smokingPreference: "",
-          drinkingPreference: "",
+          bathroomType: "",
+          balconyType: "",
+          smokingPreference: false,
+          drinkingPreference: false,
         },
       };
 

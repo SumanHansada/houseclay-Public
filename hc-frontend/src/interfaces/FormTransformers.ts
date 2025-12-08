@@ -77,7 +77,6 @@ export const transformToRentForm = (
     builtUpArea: propertyDetails.builtUpArea,
     facing: propertyDetails.facing,
     bhkType: propertyDetails.bhkType,
-    bathrooms: propertyDetails.bathrooms,
     ownershipType: propertyDetails.ownershipType,
     propertyAge: propertyDetails.propertyAge,
     floor: propertyDetails.floor,
@@ -97,6 +96,8 @@ export const transformToRentForm = (
     rentNegotiable: rentalDetails.rentNegotiable,
     availableFrom: rentalDetails.availableFrom,
     preferredTenants: rentalDetails.preferredTenants,
+    bathrooms: rentalDetails.bathrooms,
+    balcony: rentalDetails.balcony,
     waterSupply: rentalDetails.waterSupply,
     powerBackup: rentalDetails.powerBackup,
     furnishing: rentalDetails.furnishing,
@@ -239,7 +240,6 @@ export const transformToFlatmateForm = (
     builtUpArea: propertyDetails.builtUpArea,
     facing: propertyDetails.facing,
     bhkType: propertyDetails.bhkType,
-    bathrooms: propertyDetails.bathrooms,
     floor: propertyDetails.floor,
     totalFloors: propertyDetails.totalFloors,
     description: propertyDetails.description,
@@ -254,6 +254,7 @@ export const transformToFlatmateForm = (
     maintenanceCharges: flatmateDetails.maintenanceCharges,
     depositCharges: flatmateDetails.depositCharges,
     availableFrom: flatmateDetails.availableFrom,
+    roomType: flatmateDetails.roomType,
     furnishing: flatmateDetails.furnishing,
     waterSupply: flatmateDetails.waterSupply,
     powerBackup: flatmateDetails.powerBackup,
@@ -261,8 +262,8 @@ export const transformToFlatmateForm = (
     nonVegAllowed: flatmateDetails.nonVegAllowed,
     amenities: flatmateDetails.amenities,
     tenantType: flatmateDetails.tenantType,
-    attachedBathroom: flatmateDetails.attachedBathroom,
-    attachedBalcony: flatmateDetails.attachedBalcony,
+    bathroomType: flatmateDetails.bathroomType,
+    balconyType: flatmateDetails.balconyType,
     smokingPreference: flatmateDetails.smokingPreference,
     drinkingPreference: flatmateDetails.drinkingPreference,
     // Images
@@ -315,7 +316,6 @@ export const transformPropertyFormToFormValues = (
         builtUpArea: apiData.builtUpArea,
         facing: apiData.facing,
         bhkType: apiData.bhkType,
-        bathrooms: apiData.bathrooms,
         floor: apiData.floor,
         totalFloors: apiData.totalFloors,
         description: apiData.description,
@@ -348,14 +348,12 @@ export const transformPropertyFormToFormValues = (
     apiData.images.length > 0 ? processPropertyImages(apiData.images) : [];
   const coverImage =
     apiData.images.length > 0 ? `${CDN_BASE_URL}/${apiData.coverImage}` : "";
-  const images: PropertyImage[] = propertyImages.map((url: string) => {
-    return {
-      id: `photo-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
-      file: fileDataFromUrl(url),
-      url: url,
-      isCover: url === coverImage,
-    };
-  });
+  const images: PropertyImage[] = propertyImages.map((url: string) => ({
+    id: `photo-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+    file: fileDataFromUrl(url),
+    url: url,
+    isCover: url === coverImage,
+  }));
 
   // Extract category-specific details
   let rentalDetails, resaleDetails, flatmateDetails, additionalInfo;
@@ -368,6 +366,8 @@ export const transformPropertyFormToFormValues = (
       rentNegotiable: apiData.rentNegotiable,
       availableFrom: apiData.availableFrom,
       preferredTenants: apiData.preferredTenants,
+      bathrooms: apiData.bathrooms,
+      balcony: apiData.balcony,
       waterSupply: apiData.waterSupply,
       powerBackup: apiData.powerBackup,
       furnishing: apiData.furnishing,
@@ -385,6 +385,7 @@ export const transformPropertyFormToFormValues = (
       maintenanceCharges: apiData.maintenanceCharges,
       depositCharges: apiData.depositCharges,
       availableFrom: apiData.availableFrom,
+      roomType: apiData.roomType,
       furnishing: apiData.furnishing,
       waterSupply: apiData.waterSupply,
       powerBackup: apiData.powerBackup,
@@ -392,8 +393,8 @@ export const transformPropertyFormToFormValues = (
       nonVegAllowed: apiData.nonVegAllowed,
       amenities: apiData.amenities,
       tenantType: apiData.tenantType,
-      attachedBathroom: apiData.attachedBathroom,
-      attachedBalcony: apiData.attachedBalcony,
+      bathroomType: apiData.bathroomType,
+      balconyType: apiData.balconyType,
       smokingPreference: apiData.smokingPreference,
       drinkingPreference: apiData.drinkingPreference,
     };
