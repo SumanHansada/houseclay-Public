@@ -184,7 +184,11 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
             >
               Buy Connects
             </Link>
-            <Link href="/about-us" className="hover:text-red-600 py-2">
+            <Link
+              href="/about-us"
+              data-active={pathname === "/about-us" ? "true" : "false"}
+              className="relative hover:text-red-600 py-2 nav-link"
+            >
               About Us
             </Link>
           </nav>

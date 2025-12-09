@@ -19,6 +19,7 @@ interface PageTransitionProps {
   backTransitionType?: TransitionType;
   duration?: number;
   className?: string;
+  disabled?: boolean;
 }
 
 // Transition variants for different animation types
@@ -66,6 +67,7 @@ const PageTransition: React.FC<PageTransitionProps> = ({
   backTransitionType,
   duration = 0.3,
   className = "",
+  disabled = false,
 }) => {
   const pathname = usePathname();
   const [isBackNavigation, setIsBackNavigation] = useState(false);
@@ -97,6 +99,11 @@ const PageTransition: React.FC<PageTransitionProps> = ({
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
   }, []);
+
+  // If disabled, render children without animation
+  if (disabled) {
+    return <div className={className}>{children}</div>;
+  }
 
   const activeTransitionType =
     isBackNavigation && backTransitionType

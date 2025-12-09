@@ -5,8 +5,9 @@ import { Inter } from "next/font/google";
 import { Nunito } from "next/font/google";
 import Script from "next/script";
 
-import { Header, PageTransition, StickyNavbar } from "@/layout-components";
+import { Header, StickyNavbar } from "@/layout-components";
 import CommonDialogs from "@/layout-components/CommonDialogs";
+import ConditionalPageTransition from "@/layout-components/ConditionalPageTransition";
 import Providers from "@/providers/Providers";
 
 // const geistSans = Geist({
@@ -308,9 +309,10 @@ export default function RootLayout({
         <Providers>
           <div className="min-h-screen">
             <Header />
-            <PageTransition
+            <ConditionalPageTransition
               transitionType="slideRight"
               backTransitionType="slideLeft"
+              skipTransitionPaths={["/manage-account"]}
             >
               <main className="mx-auto my-0 pt-14 max-md:pb-16 flex-1 flex flex-col justify-center">
                 <>
@@ -318,7 +320,7 @@ export default function RootLayout({
                   <CommonDialogs />
                 </>
               </main>
-            </PageTransition>
+            </ConditionalPageTransition>
             <StickyNavbar />
           </div>
         </Providers>

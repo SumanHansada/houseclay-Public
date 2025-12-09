@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { ACCOUNT_NAV } from "@/common/dataConstants/navbar";
 import { AccountNavList } from "@/components/AccountNavList";
-import { Footer } from "@/layout-components";
+import { Footer, PageTransition } from "@/layout-components";
 import { useGetUserDetailQuery } from "@/store/apiSlice";
 import { setShortlistedProperties } from "@/store/shortlistPropertySlice";
 import { RootState } from "@/store/store";
@@ -94,14 +94,28 @@ export default function ManageProfileLayout({
             <aside className="md:w-[320px] lg:w-[380px] xl:w-[460px]">
               <AccountNavList items={ACCOUNT_NAV} iconSize={36} />
             </aside>
-            <section className="w-full overflow-y-auto">{children}</section>
+            <section className="w-full overflow-y-auto">
+              <PageTransition
+                transitionType="slideRight"
+                backTransitionType="slideLeft"
+              >
+                {children}
+              </PageTransition>
+            </section>
           </div>
         </div>
         <Footer />
       </div>
 
       {/* Mobile */}
-      <div className="w-full h-full md:hidden">{children}</div>
+      <div className="w-full h-full md:hidden">
+        <PageTransition
+          transitionType="slideRight"
+          backTransitionType="slideLeft"
+        >
+          {children}
+        </PageTransition>
+      </div>
     </>
   );
 }
