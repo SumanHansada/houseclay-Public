@@ -11,7 +11,7 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import VerifiedTenantsSvg from "public/icons/verified-tenants.svg";
 import ZeroPercentRedSvg from "public/icons/zero-percent-red.svg";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
@@ -47,7 +47,6 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
   const { logout } = useLogout();
   const dispatch = useDispatch();
   const pathname = usePathname();
-  const initialPathRef = useRef(pathname);
   const searchParams = useSearchParams();
 
   const [quickLinksExpanded, setQuickLinksExpanded] = useState(true);
@@ -88,12 +87,6 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
       router.push("/list-property");
     }
   };
-
-  useEffect(() => {
-    if (pathname !== initialPathRef.current) {
-      closeDialog(id);
-    }
-  }, [pathname, closeDialog, id]);
 
   return (
     <Dialog
@@ -196,6 +189,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
           {isAuthenticated && (
             <AccountNavList
               items={ACCOUNT_NAV}
+              onItemSelect={onNavClick}
               iconSize={44}
               variant="mobile"
             />
