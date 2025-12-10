@@ -195,6 +195,7 @@ public class PropertyMapper {
         target.setAmenities(source.getAmenities());
         target.setBalcony(source.getBalcony());
         target.setPreferredTenants(source.getPreferredTenants());
+        target.setSecondaryPhoneNumber(source.getSecondaryPhoneNumber());
         target.setWhoWillShowProperty(source.getWhoWillShowProperty());
     }
 
