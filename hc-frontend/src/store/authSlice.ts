@@ -6,7 +6,6 @@ interface AuthState {
   isAuthenticated: boolean;
   authStep: AuthStep;
   loginFromAddProperty: boolean;
-  loginFromBuyConnects: boolean;
   loginFromLoginPage: boolean;
 }
 
@@ -14,7 +13,6 @@ const initialState: AuthState = {
   isAuthenticated: false,
   authStep: AuthStep.NONE,
   loginFromAddProperty: false,
-  loginFromBuyConnects: false,
   loginFromLoginPage: false,
 };
 
@@ -37,9 +35,6 @@ const authSlice = createSlice({
     setLoginFromAddProperty: (state, action: PayloadAction<boolean>) => {
       state.loginFromAddProperty = action.payload;
     },
-    setLoginFromBuyConnects: (state, action: PayloadAction<boolean>) => {
-      state.loginFromBuyConnects = action.payload;
-    },
     setLoginFromLoginPage: (state, action: PayloadAction<boolean>) => {
       state.loginFromLoginPage = action.payload;
     },
@@ -48,7 +43,6 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.authStep = AuthStep.NONE;
       state.loginFromAddProperty = false;
-      state.loginFromBuyConnects = false;
     },
   },
 });
@@ -57,7 +51,6 @@ export const {
   setAuthStep,
   clearAuthStep,
   setLoginFromAddProperty,
-  setLoginFromBuyConnects,
   setLoginFromLoginPage,
   setIsAuthenticated,
   clearIsAuthenticated,

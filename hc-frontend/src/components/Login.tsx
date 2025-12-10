@@ -21,7 +21,6 @@ import {
   setAuthStep,
   setIsAuthenticated,
   setLoginFromAddProperty,
-  setLoginFromBuyConnects,
   setLoginFromLoginPage,
 } from "@/store/authSlice";
 import { RootState } from "@/store/store";
@@ -41,12 +40,9 @@ import LazyPhoneInput from "./LazyPhoneInput";
 const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const Login = ({ onClose }: { onClose: () => void }) => {
-  const {
-    authStep,
-    loginFromAddProperty,
-    loginFromBuyConnects,
-    loginFromLoginPage,
-  } = useSelector((state: RootState) => state.auth);
+  const { authStep, loginFromAddProperty, loginFromLoginPage } = useSelector(
+    (state: RootState) => state.auth,
+  );
   const { name, emailID, phoneNo } = useSelector(
     (state: RootState) => state.user.userDetail,
   );
@@ -166,17 +162,13 @@ const Login = ({ onClose }: { onClose: () => void }) => {
         }
       }
       dispatch(setAuthStep(AuthStep.LOGGED_IN));
-      // closeDialog("login-dialog");
       onClose();
-      if (loginFromBuyConnects) {
-        router.push("/buy-connects");
-        dispatch(setLoginFromBuyConnects(false));
+      if (loginFromLoginPage) {
+        router.replace("/");
+        dispatch(setLoginFromLoginPage(false));
       } else if (loginFromAddProperty) {
         router.push("/list-property");
         dispatch(setLoginFromAddProperty(false));
-      } else if (loginFromLoginPage) {
-        router.replace("/");
-        dispatch(setLoginFromLoginPage(false));
       }
     } catch (err) {
       console.error(err);

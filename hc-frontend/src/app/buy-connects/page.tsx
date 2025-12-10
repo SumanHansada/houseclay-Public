@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/base-components";
 import NumberField from "@/base-components/NumberField";
 import RadioGroup from "@/base-components/RadioGroup";
-import { AuthStep, PaymentVerificationStatus } from "@/common/enums";
+import { PaymentVerificationStatus } from "@/common/enums";
 import Carousel3D from "@/components/Carousel3D";
 import ConnectsBundleCard from "@/components/ConnectsBundleCard";
 import {
@@ -29,7 +29,6 @@ import {
   useCreateOrderMutation,
   useVerifyPaymentMutation,
 } from "@/store/apiSlice";
-import { setAuthStep, setLoginFromBuyConnects } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 import { setConnectBal } from "@/store/userSlice";
 import { SvgIcon } from "@/utility-components";
@@ -144,8 +143,6 @@ export default function BuyConnectsPage() {
 
   const onLogin = () => {
     closeAllDialogs();
-    dispatch(setAuthStep(AuthStep.NONE));
-    dispatch(setLoginFromBuyConnects(true));
     openDialog("login-dialog");
   };
 
