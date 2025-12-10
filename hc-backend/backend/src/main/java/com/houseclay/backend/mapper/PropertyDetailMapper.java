@@ -9,6 +9,7 @@ public class PropertyDetailMapper {
 
     public static PropertyDetailDTO toPropertyDetailDTO(Property property) {
         PropertyDetailDTO detailDTO = new PropertyDetailDTO();
+        detailDTO.setSecondaryPhoneNumber(property.getSecondaryPhoneNumber());
         detailDTO.setProperty(PropertyMapper.toBasicDTO(property));
         copyAdditionalFields(property, detailDTO);
         return detailDTO;

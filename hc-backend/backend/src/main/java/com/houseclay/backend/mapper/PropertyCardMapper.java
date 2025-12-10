@@ -21,6 +21,10 @@ public class PropertyCardMapper {
             dto.setPropertyCategory(PropertyCategory.RENT);
         } else if (propertyDocument instanceof FlatmateDocument flatmate) {
             dto.setRent(flatmate.getRent());
+            dto.setRoomType(flatmate.getRoomType());
+            dto.setTenantType(flatmate.getTenantType());
+            dto.setBathroomType(flatmate.getBathroomType());
+            dto.setBalconyType(flatmate.getBalconyType());
             dto.setPropertyCategory(PropertyCategory.FLATMATE);
         }
         return dto;
@@ -35,6 +39,10 @@ public class PropertyCardMapper {
             dto.setRent(rent.getRent());
         } else if (property instanceof FlatmateProperty flatmate) {
             dto.setRent(flatmate.getRent());
+            dto.setRoomType(flatmate.getRoomType());
+            dto.setTenantType(flatmate.getTenantType());
+            dto.setBathroomType(flatmate.getBathroomType());
+            dto.setBalconyType(flatmate.getBalconyType());
         }
         return dto;
     }

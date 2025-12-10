@@ -40,6 +40,10 @@ public class PropertyElasticService {
             FlatmateDocument flatmateDocument = new FlatmateDocument();
             copyBaseFields(property, flatmateDocument);
             flatmateDocument.setRent(flatmate.getRent());
+            flatmateDocument.setTenantType(flatmate.getTenantType());
+            flatmateDocument.setBalconyType(flatmate.getBalconyType());
+            flatmateDocument.setBathroomType(flatmate.getBathroomType());
+            flatmateDocument.setRoomType(flatmate.getRoomType());
             flatmateDocumentRepository.save(flatmateDocument);
         }
     }

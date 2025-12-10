@@ -8,4 +8,8 @@ import org.springframework.data.elasticsearch.annotations.Document;
 public class FlatmateDocument extends PropertyDocument {
 
     private Double rent;
+    private String tenantType;
+    private String roomType;
+    private String bathroomType;
+    private String balconyType;
 }

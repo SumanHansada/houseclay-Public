@@ -21,6 +21,14 @@ public class PropertyCardDTO {
     private Double rent;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Double price;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String tenantType;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String roomType;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String bathroomType;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String balconyType;
     private String city;
     private String locationOrSocietyName;
     private String landmark;
