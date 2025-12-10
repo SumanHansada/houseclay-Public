@@ -1,14 +1,14 @@
 import { CDN_BASE_URL } from "../constants";
 
 export const houseclayIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/houseclay.svg`;
-export const rentIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/rent.svg`;
-export const flatmateIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/flatmates.svg`;
-export const resaleIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/resale.svg`;
 export const listPropertySuccessIconURL = `${CDN_BASE_URL}/public/optimizedIcons/large/list-property-success.svg`;
 export const builtUpAreaIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/build-up-area.svg`;
 export const balconyIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/balcony.svg`;
 
 // Form Icons
+export const rentIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/rent.svg`;
+export const flatmateIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/flatmates.svg`;
+export const resaleIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/resale.svg`;
 export const femaleIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/female.svg`;
 export const maleIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/male.svg`;
 export const vegIconURL = `${CDN_BASE_URL}/public/optimizedIcons/large/veg.svg`;
