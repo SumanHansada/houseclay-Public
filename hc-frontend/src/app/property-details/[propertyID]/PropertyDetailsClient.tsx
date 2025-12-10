@@ -1,6 +1,5 @@
 "use client";
 
-import { floorPlan } from "@lucide/lab";
 import { motion } from "framer-motion";
 import {
   Bath,
@@ -23,9 +22,8 @@ import {
   Hourglass,
   House,
   HousePlus,
-  Icon,
+  Info,
   InspectionPanel,
-  KeyRound,
   Landmark,
   MapPin,
   ParkingCircle,
@@ -89,7 +87,11 @@ import {
   pascalCase,
   processPropertyImages,
 } from "@/common/utils";
-import { ContactOwnerLoginDialog, PhotoGalleryDialog } from "@/dialogs";
+import {
+  ContactOwnerLoginDialog,
+  MonthlyChargesDialog,
+  PhotoGalleryDialog,
+} from "@/dialogs";
 import ReportListingDialog from "@/dialogs/report-listing-dialog";
 import UnlockOwnerDetailsDialog from "@/dialogs/unlock-owner-details-dialog";
 import { useShortlist } from "@/hooks/useShortlist";
@@ -102,10 +104,15 @@ import {
   useGetPublicPropertyByIdQuery,
 } from "@/store/apiSlice";
 import { RootState } from "@/store/store";
-import { PhotoGallery, RemoteSvg, SvgIcon } from "@/utility-components";
+import {
+  PhotoGallery,
+  Popover,
+  RemoteSvg,
+  SvgIcon,
+} from "@/utility-components";
 import { GoogleMapsDirection } from "@/utility-components";
 
-import { DetailRow } from "./components/DetailRow";
+import { PropertyDetailItem } from "./components/PropertyDetailItem";
 import Loading from "./loading";
 
 const AmenitiesMap = {
@@ -416,8 +423,6 @@ export function PropertyDetailsClient({
     nonVegAllowed,
   } = commonDerivations;
 
-  console.log(maintenance);
-
   const {
     balconyType,
     propertyAge,
@@ -457,14 +462,14 @@ export function PropertyDetailsClient({
           leftFields: [],
           rightFields: [
             { label: "Furnishing", value: furnishingStatus, icon: Sofa },
+            { label: "Flooring", value: flooring, icon: InspectionPanel },
+            { label: "Non-Veg Allowed", value: nonVegAllowed, icon: Utensils },
+            { label: "Property Age", value: propertyAge, icon: Hourglass },
             {
               label: "Preferred Tenants",
               value: preferredTenants,
               icon: Users,
             },
-            { label: "Flooring", value: flooring, icon: InspectionPanel },
-            { label: "Non-Veg Allowed", value: nonVegAllowed, icon: Utensils },
-            { label: "Property Age", value: propertyAge, icon: Hourglass },
           ],
         };
       case PropertyCategory.FLATMATE:
@@ -488,7 +493,7 @@ export function PropertyDetailsClient({
 
   const categoryFields = getCategorySpecificFields();
 
-  const leftColumnData = [
+  const propertyDetailLeftColumn = [
     // Common fields
     { label: "Property Type", value: propertyType, icon: House },
     { label: "Facing", value: propertyFacing, icon: Compass },
@@ -504,7 +509,7 @@ export function PropertyDetailsClient({
     ...categoryFields.leftFields,
   ];
 
-  const rightColumnData = [
+  const propertyDetailRightColumn = [
     // Category-specific fields
     ...categoryFields.rightFields,
   ];
@@ -544,6 +549,11 @@ export function PropertyDetailsClient({
         .split(/[.!?] +/)
         .filter((sentence: string) => sentence.trim().length > 0)
     : [];
+
+  const propertyDetailRowCount = Math.max(
+    propertyDetailLeftColumn.length,
+    propertyDetailRightColumn.length,
+  );
 
   return (
     <>
@@ -637,9 +647,7 @@ export function PropertyDetailsClient({
               {/* Breadcrumb */}
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <House size={16} className="text-gray-500" />
-                <span>
-                  Properties for {pascalCase(property?.propertyCategory)}
-                </span>
+                <span>Properties for {pascalCase(propertyCategory)}</span>
                 <span className="text-gray-400">›</span>
                 <span>{property?.city}</span>
                 <span className="text-gray-400">›</span>
@@ -735,11 +743,12 @@ export function PropertyDetailsClient({
             <section className="md:w-1/2 lg:w-3/5 2xl:w-3/4 max-md:w-full">
               {/* Property Details Grid */}
               <section className="bg-white p-6">
+                {/* Other Details */}
                 <div className="grid grid-cols-2 gap-6">
-                  {/* Left Column - Property type, Age of building, Facing, Flooring */}
+                  {/* Left Column */}
                   <div className="space-y-4">
-                    {leftColumnData.map((item, index) => (
-                      <DetailRow
+                    {propertyDetailLeftColumn.map((item, index) => (
+                      <PropertyDetailItem
                         key={item.label + index}
                         icon={item.icon}
                         label={item.label}
@@ -748,10 +757,10 @@ export function PropertyDetailsClient({
                     ))}
                   </div>
 
-                  {/* Right Column - Bathrooms, Furnishing, Floor*/}
+                  {/* Right Column */}
                   <div className="space-y-4">
-                    {rightColumnData.map((item, index) => (
-                      <DetailRow
+                    {propertyDetailRightColumn.map((item, index) => (
+                      <PropertyDetailItem
                         key={item.label + index}
                         icon={item.icon}
                         label={item.label}
@@ -1010,7 +1019,7 @@ export function PropertyDetailsClient({
                   ) : null}
                 </div>
 
-                {/* Parking, Available from */}
+                {/* Rent - Parking, Available from, Flatmate - Furnishing, Available from */}
                 <div className="grid grid-cols-2 gap-4 justify-items-center items-center mb-4 divide-x">
                   {propertyCategory === PropertyCategory.RENT ? (
                     <div className="flex w-full justify-start items-start gap-2 text-gray-600">
@@ -1072,8 +1081,23 @@ export function PropertyDetailsClient({
                       <div className="text-gray-600">
                         {catBasedPriceOrRentTag}
                       </div>
-                      <div className="text-gray-900 font-semibold font-nunito text-base">
+                      <div className="text-gray-900 font-semibold font-nunito text-base flex items-center gap-1">
                         {formattedPriceOrRentAmount}
+                        <Popover
+                          id="maintenance-info-tip"
+                          trigger="hover"
+                          align="start"
+                          content={
+                            <div className="p-2 rounded-md bg-white border shadow-md text-sm">
+                              Maintenance: {maintenance}
+                            </div>
+                          }
+                        >
+                          <Info
+                            size={16}
+                            className="text-gray-600 hover:cursor-pointer"
+                          />
+                        </Popover>
                       </div>
                     </div>
                     <div className="flex w-full justify-start items-start gap-2 text-gray-600 pl-2">
@@ -1219,89 +1243,183 @@ export function PropertyDetailsClient({
           <section className="flex-col w-full xl:gap-16 lg:gap-8 md:gap-0 gap-0 max-md:pt-4 md:hidden">
             {/* Property Details Section */}
             <section className="border rounded-xl shadow-md px-4 py-6">
+              {/* Rent - Beds and Baths, Flatmate - Room Type, Bathroom Type */}
               <div className="grid grid-cols-2 gap-2 justify-items-center items-center divide-x mb-2">
-                <div className="flex w-full justify-start items-start gap-2 text-gray-600">
-                  <div className="flex-col">
-                    <div className="p-0.5">
-                      <BedDouble size={20} />
+                {propertyCategory === PropertyCategory.RENT ? (
+                  <div className="flex w-full justify-start items-start gap-2 text-gray-600">
+                    <div className="flex-col">
+                      <div className="p-0.5">
+                        <BedDouble size={20} />
+                      </div>
+                    </div>
+                    <div className="flex-col">
+                      <div className="flex gap-2 items-center font-nunito text-xs">
+                        No. of Bedroom
+                      </div>
+                      <div className="text-gray-900 font-semibold font-nunito text-sm">
+                        {bedrooms}
+                      </div>
                     </div>
                   </div>
-                  <div className="flex-col">
-                    <div className="flex gap-2 items-center font-nunito text-xs">
-                      No. of Bedroom
+                ) : propertyCategory === PropertyCategory.FLATMATE ? (
+                  <div className="flex w-full justify-start items-start gap-2 text-gray-600">
+                    <div className="flex-col">
+                      <div className="p-0.5">
+                        <BedDouble size={20} />
+                      </div>
                     </div>
-                    <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {bedrooms}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex w-full justify-start items-start gap-2 text-gray-600 pl-2">
-                  <div className="flex-col">
-                    <div className="p-0.5">
-                      <Bath size={20} />
-                    </div>
-                  </div>
-                  <div className="flex-col">
-                    <div className="flex gap-2 items-center font-nunito text-xs">
-                      No. of Bathroom
-                    </div>
-                    <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {bathrooms}
+                    <div className="flex-col">
+                      <div className="flex gap-2 items-center font-nunito text-xs">
+                        Room Type
+                      </div>
+                      <div className="text-gray-900 font-semibold font-nunito text-sm">
+                        {roomType} Room
+                      </div>
                     </div>
                   </div>
-                </div>
+                ) : null}
+
+                {propertyCategory === PropertyCategory.RENT ? (
+                  <div className="flex w-full justify-start items-start gap-2 text-gray-600 pl-2">
+                    <div className="flex-col">
+                      <div className="p-0.5">
+                        <Bath size={20} />
+                      </div>
+                    </div>
+                    <div className="flex-col">
+                      <div className="flex gap-2 items-center font-nunito text-xs">
+                        No. of Bathroom
+                      </div>
+                      <div className="text-gray-900 font-semibold font-nunito text-sm">
+                        {bathrooms}
+                      </div>
+                    </div>
+                  </div>
+                ) : propertyCategory === PropertyCategory.FLATMATE ? (
+                  <div className="flex w-full justify-start items-start gap-2 text-gray-600 pl-2">
+                    <div className="flex-col">
+                      <div className="p-0.5">
+                        <Bath size={20} />
+                      </div>
+                    </div>
+                    <div className="flex-col">
+                      <div className="flex gap-2 items-center font-nunito text-xs">
+                        Bathroom Type
+                      </div>
+                      <div className="text-gray-900 font-semibold font-nunito text-sm">
+                        {bathroomType}
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
               </div>
 
+              {/* Rent - Balcony, Builtup area, Flatmate - Balcony Type, Non Veg Allowed */}
               <div className="grid grid-cols-2 gap-2 justify-items-center items-center divide-x mb-2">
-                <div className="flex w-full justify-start items-start gap-2 text-gray-600">
-                  <div className="flex-col">
-                    <div className="p-0.5">
-                      <RemoteSvg src={balconyIconURL} />
+                {propertyCategory === PropertyCategory.RENT ? (
+                  <div className="flex w-full justify-start items-start gap-2 text-gray-600">
+                    <div className="flex-col">
+                      <div className="p-0.5">
+                        <RemoteSvg src={balconyIconURL} />
+                      </div>
+                    </div>
+                    <div className="flex-col">
+                      <div className="flex gap-2 items-center font-nunito text-xs">
+                        No. of Balcony
+                      </div>
+                      <div className="text-gray-900 font-semibold font-nunito text-sm">
+                        {balcony}
+                      </div>
                     </div>
                   </div>
-                  <div className="flex-col">
-                    <div className="flex gap-2 items-center font-nunito text-xs">
-                      No. of Balcony
+                ) : propertyCategory === PropertyCategory.FLATMATE ? (
+                  <div className="flex w-full justify-start items-start gap-2 text-gray-600">
+                    <div className="flex-col">
+                      <div className="p-0.5">
+                        <RemoteSvg src={balconyIconURL} />
+                      </div>
                     </div>
-                    <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {balcony}
+                    <div className="flex-col">
+                      <div className="flex gap-2 items-center font-nunito text-xs">
+                        Balcony Type
+                      </div>
+                      <div className="text-gray-900 font-semibold font-nunito text-sm">
+                        {balconyType}
+                      </div>
                     </div>
                   </div>
-                </div>
+                ) : null}
 
-                <div className="flex w-full justify-start items-start gap-2 text-gray-600 pl-2">
-                  <div className="flex-col">
-                    <div className="p-0.5">
-                      <RemoteSvg src={builtUpAreaIconURL} />
+                {propertyCategory === PropertyCategory.RENT ? (
+                  <div className="flex w-full justify-start items-start gap-2 text-gray-600 pl-2">
+                    <div className="flex-col">
+                      <div className="p-0.5">
+                        <RemoteSvg src={builtUpAreaIconURL} />
+                      </div>
+                    </div>
+                    <div className="flex-col">
+                      <div className="flex gap-2 items-center font-nunito text-xs">
+                        Builtup Area
+                      </div>
+                      <div className="text-gray-900 font-semibold font-nunito text-sm">
+                        {property?.builtUpArea} Sq. Ft
+                      </div>
                     </div>
                   </div>
-                  <div className="flex-col">
-                    <div className="flex gap-2 items-center font-nunito text-xs">
-                      Builtup Area
+                ) : propertyCategory === PropertyCategory.FLATMATE ? (
+                  <div className="flex w-full justify-start items-start gap-2 text-gray-600 pl-2">
+                    <div className="flex-col">
+                      <div className="p-0.5">
+                        <Utensils size={20} />
+                      </div>
                     </div>
-                    <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {property?.builtUpArea} Sq. Ft
+                    <div className="flex-col">
+                      <div className="flex gap-2 items-center font-nunito text-xs">
+                        Non-Veg Allowed
+                      </div>
+                      <div className="text-gray-900 font-semibold font-nunito text-sm">
+                        {nonVegAllowed}
+                      </div>
                     </div>
                   </div>
-                </div>
+                ) : null}
               </div>
 
+              {/* Rent - Parking, Available from, Flatmate - Furnishing, Available from */}
               <div className="grid grid-cols-2 gap-2 justify-items-center items-center divide-x mb-2">
-                <div className="flex w-full justify-start items-start gap-2 text-gray-600">
-                  <div className="flex-col">
-                    <div className="p-0.5">
-                      <ParkingCircle size={20} />
+                {propertyCategory === PropertyCategory.RENT ? (
+                  <div className="flex w-full justify-start items-start gap-2 text-gray-600">
+                    <div className="flex-col">
+                      <div className="p-0.5">
+                        <ParkingCircle size={20} />
+                      </div>
+                    </div>
+                    <div className="flex-col">
+                      <div className="flex gap-2 items-center font-nunito text-xs">
+                        Parking
+                      </div>
+                      <div className="text-gray-900 font-semibold font-nunito text-sm">
+                        {parking}
+                      </div>
                     </div>
                   </div>
-                  <div className="flex-col">
-                    <div className="flex gap-2 items-center font-nunito text-xs">
-                      Parking
+                ) : propertyCategory === PropertyCategory.FLATMATE ? (
+                  <div className="flex w-full justify-start items-start gap-2 text-gray-600">
+                    <div className="flex-col">
+                      <div className="p-0.5">
+                        <Sofa size={20} />
+                      </div>
                     </div>
-                    <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {parking}
+                    <div className="flex-col">
+                      <div className="flex gap-2 items-center font-nunito text-xs">
+                        Furnishing
+                      </div>
+                      <div className="text-gray-900 font-semibold font-nunito text-sm">
+                        {furnishingStatus}
+                      </div>
                     </div>
                   </div>
-                </div>
+                ) : null}
 
                 <div className="flex w-full justify-start items-start gap-2 text-gray-600 pl-2">
                   <div className="flex-col">
@@ -1343,126 +1461,46 @@ export function PropertyDetailsClient({
             </section>
 
             {/* Property Details Grid */}
-            <section className="bg-white px-4 py-6 border rounded-xl shadow-md">
-              <h2 className="text-xl mb-4">Other Details</h2>
-              <div className="grid grid-cols-2 gap-2 divide-x mb-2">
-                {/* Left Column */}
-                <div className="flex w-full justify-start items-start gap-2 text-gray-600">
-                  <div className="flex-col">
-                    <div className="p-0.5">
-                      <House size={20} className="text-gray-600" />
-                    </div>
-                  </div>
-                  <div className="flex-col">
-                    <div className="flex gap-2 items-center font-nunito text-xs">
-                      Property Type
-                    </div>
-                    <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {propertyType}
-                    </div>
-                  </div>
-                </div>
+            <section className="bg-white rounded-xl shadow-md overflow-hidden">
+              <div className="p-4 md:p-6">
+                {/* Other details */}
+                <h2 className="text-xl mb-4 font-semibold">Other Details</h2>
 
-                <div className="flex w-full justify-start items-start gap-2 text-gray-600 pl-2">
-                  <div className="flex-col">
-                    <div className="p-0.5">
-                      <Hourglass size={20} className="text-gray-600" />
-                    </div>
-                  </div>
-                  <div className="flex-col">
-                    <div className="flex gap-2 items-center font-nunito text-xs">
-                      Age of Building
-                    </div>
-                    <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {propertyAge}
-                    </div>
-                  </div>
-                </div>
-              </div>
+                <div className="flex flex-col gap-2 md:gap-6">
+                  {Array.from({ length: propertyDetailRowCount }).map(
+                    (_, index) => {
+                      const leftItem = propertyDetailLeftColumn[index];
+                      const rightItem = propertyDetailRightColumn[index];
 
-              <div className="grid grid-cols-2 gap-2 divide-x mb-2">
-                <div className="flex w-full justify-start items-start gap-2 text-gray-600">
-                  <div className="flex-col">
-                    <div className="p-0.5">
-                      <Compass size={20} className="text-gray-600" />
-                    </div>
-                  </div>
-                  <div className="flex-col">
-                    <div className="flex gap-2 items-center font-nunito text-xs">
-                      Facing
-                    </div>
-                    <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {propertyFacing}
-                    </div>
-                  </div>
-                </div>
+                      return (
+                        <div key={index} className="grid grid-cols-2 pb-2">
+                          {/* LEFT COLUMN ITEM */}
+                          <div className="border-r border-gray-100 pr-2">
+                            {leftItem ? (
+                              <PropertyDetailItem
+                                icon={leftItem.icon}
+                                label={leftItem.label}
+                                value={leftItem.value}
+                              />
+                            ) : (
+                              <div className="h-full" />
+                            )}
+                          </div>
 
-                <div className="flex w-full justify-start items-start gap-2 text-gray-600 pl-2">
-                  <div className="flex-col">
-                    <div className="p-0.5">
-                      <Building2 size={20} className="text-gray-600" />
-                    </div>
-                  </div>
-                  <div className="flex-col">
-                    <div className="flex gap-2 items-center font-nunito text-xs">
-                      Floor
-                    </div>
-                    <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {propertyFloor}/{totalFloors}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 divide-x mb-2">
-                <div className="flex w-full justify-start items-start gap-2 text-gray-600">
-                  <div className="flex-col">
-                    <div className="p-0.5">
-                      <KeyRound size={20} className="text-gray-600" />
-                    </div>
-                  </div>
-                  <div className="flex-col">
-                    <div className="flex gap-2 items-center font-nunito text-xs">
-                      Bathrooms
-                    </div>
-                    <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {bathrooms}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex w-full justify-start items-start gap-2 text-gray-600 pl-2">
-                  <div className="flex-col">
-                    <div className="p-0.5">
-                      <Sofa size={20} className="text-gray-600" />
-                    </div>
-                  </div>
-                  <div className="flex-col">
-                    <div className="flex gap-2 items-center font-nunito text-xs">
-                      Furnishing Status
-                    </div>
-                    <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {furnishingStatus}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 divide-x mb-2">
-                <div className="flex w-full justify-start items-start gap-2 text-gray-600">
-                  <div className="flex-col">
-                    <div className="p-0.5">
-                      <Icon iconNode={floorPlan} size={20} />
-                    </div>
-                  </div>
-                  <div className="flex-col">
-                    <div className="flex gap-2 items-center font-nunito text-xs">
-                      Flooring
-                    </div>
-                    <div className="text-gray-900 font-semibold font-nunito text-sm">
-                      {pascalCase(property?.floorType)}
-                    </div>
-                  </div>
+                          {/* RIGHT COLUMN ITEM */}
+                          <div className="pl-3">
+                            {rightItem && (
+                              <PropertyDetailItem
+                                icon={rightItem.icon}
+                                label={rightItem.label}
+                                value={rightItem.value}
+                              />
+                            )}
+                          </div>
+                        </div>
+                      );
+                    },
+                  )}
                 </div>
               </div>
             </section>
@@ -1644,7 +1682,14 @@ export function PropertyDetailsClient({
           <div className="flex flex-col justify-evenly items-start w-1/3">
             <div className="flex items-center gap-2">
               <div className="text-gray-600">{catBasedPriceOrRentTag}</div>
-              <div className="text-gray-900">{formattedPriceOrRentAmount}</div>
+              <div className="text-gray-900 flex gap-1 items-center">
+                {formattedPriceOrRentAmount}
+                <Info
+                  size={16}
+                  className="text-gray-600 hover:cursor-pointer"
+                  onClick={() => openDialog("monthly-charges-dialog")}
+                />
+              </div>
             </div>
 
             <div className="flex items-center gap-2">
@@ -1712,11 +1757,6 @@ export function PropertyDetailsClient({
       {isDialogOpen(CONTACT_LOGIN_DIALOG_ID) && (
         <ContactOwnerLoginDialog
           id={CONTACT_LOGIN_DIALOG_ID}
-          // onSuccess={async () => {
-          //   if (authenticatedPropertyData) {
-          //     await refetchAuthPropertyDetails();
-          //   }
-          // }}
           onClose={() => closeDialog(CONTACT_LOGIN_DIALOG_ID)}
         />
       )}
@@ -1730,6 +1770,16 @@ export function PropertyDetailsClient({
             closeDialog(UNLOCK_DETAILS_DIALOG_ID);
             await refetchAuthPropertyDetails();
           }}
+        />
+      )}
+
+      {/* Monthly Charges mobile dialog */}
+      {isDialogOpen("monthly-charges-dialog") && (
+        <MonthlyChargesDialog
+          id="monthly-charges-dialog"
+          rent={formattedPriceOrRentAmount}
+          maintenance={maintenance}
+          onClose={() => closeDialog("monthly-charges-dialog")}
         />
       )}
 

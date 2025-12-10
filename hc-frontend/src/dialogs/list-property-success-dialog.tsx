@@ -35,21 +35,9 @@ const ListPropertySuccessDialog: React.FC<ListPropertySuccessDialogProps> = ({
 
   const handlePreviewListing = async () => {
     closeDialog(id);
-    // router.push(
-    //   `/my-property-details/${propertyCategory.toLowerCase()}/${propertyID}`,
-    // );
     const previewUrl = `/my-property-details/${propertyCategory.toLowerCase()}/${propertyID}?from=list-property`;
     router.push(previewUrl);
   };
-
-  // const handleEditProperty = async () => {
-  //   closeDialog(id);
-  //   // router.push(
-  //   //   `/edit-property/${propertyCategory.toLowerCase()}/${propertyID}`,
-  //   // );
-  //   const previewUrl = `/edit-property/${propertyCategory.toLowerCase()}/${propertyID}?from=list-property`;
-  //   router.push(previewUrl);
-  // };
 
   return (
     <Dialog
@@ -90,12 +78,6 @@ const ListPropertySuccessDialog: React.FC<ListPropertySuccessDialogProps> = ({
       <DialogFooter>
         {/* Action buttons */}
         <div className="flex w-full">
-          {/* <button
-            onClick={handleEditProperty}
-            className="w-full py-3 text-black border font-medium rounded-lg hover:bg-red-600 hover:text-white transition duration-200"
-          >
-            Edit
-          </button> */}
           <button
             onClick={handlePreviewListing}
             className="w-full py-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200"
