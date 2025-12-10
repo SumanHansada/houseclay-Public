@@ -23,6 +23,10 @@ export interface PropertyCardWithImages {
   builtUpArea: number;
   bhkType: string;
   bathrooms?: number;
+  tenantType: string | null;
+  roomType: string | null;
+  bathroomType: string | null;
+  balconyType: string | null;
   rent: number | null;
   furnishing: string;
   price: number | null;

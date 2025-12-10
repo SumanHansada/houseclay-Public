@@ -90,14 +90,14 @@ export const PARKING_OPTIONS: BaseOption[] = [
 ];
 
 export const BATHROOM_TYPE_OPTIONS: BaseOption[] = [
-  { value: "attached", label: "Attached" },
-  { value: "shared", label: "Shared" },
-  { value: "dedicated", label: "Dedicated" },
+  { value: "attached", label: "Attached Bathroom" },
+  { value: "dedicated", label: "Dedicated Bathroom" },
+  { value: "shared", label: "Shared Bathroom" },
 ];
 
 export const BALCONY_TYPE_OPTIONS: BaseOption[] = [
-  { value: "attached", label: "Attached" },
-  { value: "shared", label: "Shared" },
+  { value: "attached", label: "Attached Balcony" },
+  { value: "shared", label: "Shared Balcony" },
   { value: "no-balcony", label: "No Balcony" },
 ];
 

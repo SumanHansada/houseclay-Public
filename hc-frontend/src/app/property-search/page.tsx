@@ -409,11 +409,6 @@ export default function PropertySearchPage() {
     router.push(`/property-search?${params.toString()}`);
   };
 
-  // const handleCardClick = (e: React.MouseEvent, property: PropertySearch) => {
-  //   e.stopPropagation();
-  //   router.push(`/property-details/${property.propertyID}`);
-  // };
-
   return (
     <>
       {/* Mobile */}
@@ -660,9 +655,6 @@ export default function PropertySearchPage() {
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         (property as any).badgeType as BadgeType | undefined
                       }
-                      // onClick={(e: React.MouseEvent) =>
-                      //   handleCardClick(e, property)
-                      // }
                       showCarouselDots={false}
                     />
                   </Link>

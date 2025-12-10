@@ -1,15 +1,17 @@
-// pages/index.js
 import { motion } from "framer-motion";
 import { Crown, Heart, MapPin, Star } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
+  BATHROOM_TYPE_OPTIONS,
   BHK_TYPE_OPTIONS,
   FURNISHING_OPTIONS,
   getOptionLabel,
+  PREFERRED_TENANTS_OPTIONS,
   PROPERTY_TYPE_OPTIONS,
+  ROOM_TYPE_OPTIONS,
 } from "@/common/dataConstants/options";
-import { BadgeType } from "@/common/enums";
+import { BadgeType, PropertyCategory } from "@/common/enums";
 import { formatINRCurrency, processPropertyImages } from "@/common/utils";
 import { useShortlist } from "@/hooks/useShortlist";
 import { PropertySearch } from "@/interfaces/PropertySearch";
@@ -41,6 +43,10 @@ const Properties: React.FC<PropertiesProps> = ({
   const [isShortlistedProperty, setIsShortlistedProperty] =
     useState(shortlistStatus);
 
+  const propertyCategory = useMemo(
+    () => property?.propertyCategory ?? PropertyCategory.RENT,
+    [property],
+  );
   const propertyType = getOptionLabel(
     PROPERTY_TYPE_OPTIONS,
     property.propertyType,
@@ -49,6 +55,19 @@ const Properties: React.FC<PropertiesProps> = ({
   const furnishing = getOptionLabel(FURNISHING_OPTIONS, property.furnishing);
   const formattedPriceOrRentAmount = formatINRCurrency(
     property?.price || property?.rent || 0,
+  );
+  const tenantType = getOptionLabel(
+    PREFERRED_TENANTS_OPTIONS.FLATMATE,
+    property.tenantType,
+  );
+  const roomType = getOptionLabel(ROOM_TYPE_OPTIONS, property.roomType);
+  const bathroomType = getOptionLabel(
+    BATHROOM_TYPE_OPTIONS,
+    property.bathroomType,
+  );
+  const balconyType = getOptionLabel(
+    BATHROOM_TYPE_OPTIONS,
+    property.balconyType,
   );
 
   const bedrooms = bhkType
@@ -130,6 +149,7 @@ const Properties: React.FC<PropertiesProps> = ({
         <motion.button
           className={`absolute top-2 right-2 bg-gray-50/30 rounded-full p-2 shadow-md ${isShortlistedProperty ? "text-pink-500" : "text-gray-500"}`}
           onClick={async (e) => {
+            e.preventDefault();
             e.stopPropagation();
             const newStatus = await toggleShortlist(
               property as PropertyCardWithImages,
@@ -175,7 +195,11 @@ const Properties: React.FC<PropertiesProps> = ({
       <div className="flex-col mt-4">
         <div className="flex justify-between items-center mb-2 gap-8">
           <p className="text-black text-xs border border-gray-200 py-1 px-1.5 rounded-full bg-gray-100 text-nowrap">
-            {propertyType}
+            {propertyCategory === PropertyCategory.RENT
+              ? propertyType
+              : propertyCategory === PropertyCategory.FLATMATE
+                ? `${roomType} Room for ${tenantType}`
+                : null}
           </p>
           <p className="text-gray-500 text-xs truncate">
             {property.locationOrSocietyName}
@@ -183,16 +207,26 @@ const Properties: React.FC<PropertiesProps> = ({
         </div>
 
         <div className="flex justify-between items-center mb-2">
-          <p className="font-medium text-xs">
-            {bedrooms} | {bathrooms} | {furnishing}
-          </p>
+          {propertyCategory === PropertyCategory.RENT ? (
+            <p className="font-medium text-xs">
+              {bedrooms} | {bathrooms} | {furnishing}
+            </p>
+          ) : propertyCategory === PropertyCategory.FLATMATE ? (
+            <p className="font-medium text-xs">
+              {bedrooms} | {bathroomType} | {balconyType}
+            </p>
+          ) : null}
           <p className="font-bold">{formattedPriceOrRentAmount}</p>
         </div>
 
         <div className="flex justify-between items-center text-xs">
-          <p className="text-gray-600">
-            Buildup Area {property.builtUpArea} Sq. Ft
-          </p>
+          {propertyCategory === PropertyCategory.RENT ? (
+            <p className="text-gray-600">
+              Buildup Area {property.builtUpArea} Sq. Ft
+            </p>
+          ) : propertyCategory === PropertyCategory.FLATMATE ? (
+            <p className="text-gray-600">{furnishing}</p>
+          ) : null}
         </div>
 
         <div className="mt-2 text-xs text-gray-500 flex items-center">
