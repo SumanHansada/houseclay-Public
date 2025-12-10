@@ -56,8 +56,7 @@ const MastHeadMobile: React.FC = () => {
     const uuid = generateUUID();
     dispatch(setPropertyID(uuid));
     dispatch(setListPropertyCategory(PropertyCategory.FLATMATE));
-    const url = `/list-property/${PropertyCategory.FLATMATE.toLowerCase()}/${uuid}/property-details`;
-    console.log("Navigating to URL:", url);
+    const url = `/list-property/${PropertyCategory.FLATMATE.toLowerCase()}/property-details`;
     router.push(url);
   };
 
