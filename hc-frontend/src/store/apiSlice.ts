@@ -232,6 +232,12 @@ export const apiSlice = createApi({
         ) {
           searchParams.append("amenities", filters.amenities.join(","));
         }
+        if (filters.availability) {
+          searchParams.append(
+            "propertyAvailability",
+            filters.availability.toString(),
+          );
+        }
         if (filters.exclusive === true)
           searchParams.append("exclusive", "true");
         if (filters.sortFields)

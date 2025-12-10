@@ -151,5 +151,5 @@ export const PROPERTY_AVAILABILITY: BaseOption[] = [
   { label: "Immediate", value: "IMMEDIATE" },
   { label: "Within 15 Days", value: "WITHIN_15" },
   { label: "Within 30 Days", value: "WITHIN_30" },
-  { label: "Above 30 Days", value: "ABOVE_30" },
+  { label: "After 30 Days", value: "ABOVE_30" },
 ];
