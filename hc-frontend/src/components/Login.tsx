@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/base-components";
 import { validPhoneNoLength } from "@/common/constants";
 import { AuthStep } from "@/common/enums";
+import { AuthUserDetail } from "@/interfaces/User";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import {
   useGenerateOtpMutation,
@@ -31,11 +32,12 @@ import {
   setName,
   setPhoneNo,
   setUserDetail,
-  UserDetail,
 } from "@/store/userSlice";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
+import { getErrorMessage } from "@/utils/rtkQueryHelpers";
 
 import LazyPhoneInput from "./LazyPhoneInput";
+import Spinner from "./Spinner";
 
 const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -57,6 +59,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
 
   const [otpCode, setOtpCode] = useState<string[]>(["", "", "", ""]);
   const [timeLeft, setTimeLeft] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const ref1 = useRef<HTMLInputElement>(null);
   const ref2 = useRef<HTMLInputElement>(null);
@@ -94,73 +97,71 @@ const Login = ({ onClose }: { onClose: () => void }) => {
   };
 
   const handleCheckUser = async () => {
+    if (isLoading) return;
+    setIsLoading(true);
     try {
       const checkUserResponse = await triggerCheckUser({ phoneNo }).unwrap();
       console.log("Check User Response:", checkUserResponse);
       dispatch(setCheckUser(checkUserResponse));
-      const otpResponse = await generateOtp({ phoneNo });
+      const otpResponse = await generateOtp({ phoneNo }).unwrap();
       console.log("OTP Response:", otpResponse);
-      if (otpResponse.data) {
-        dispatch(setAuthStep(AuthStep.OTP));
-      }
-    } catch (err) {
-      console.error("Login Error:", err);
+      dispatch(setAuthStep(AuthStep.OTP));
+    } catch (err: unknown) {
+      console.error("Check User Error:", err);
+      toast.error(getErrorMessage(err));
       dispatch(clearCheckUser());
       dispatch(setAuthStep(AuthStep.CREATE_USER));
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleCreateUser = async () => {
+    if (isLoading) return;
+    if (
+      !phoneNo ||
+      !phoneNo.substring(validPhoneNoLength) ||
+      !emailIDRegex.test(emailID) ||
+      !name
+    )
+      return;
+    setIsLoading(true);
     try {
-      if (!phoneNo) return;
-      if (!emailIDRegex.test(emailID)) return;
-      if (!name) return;
-      const otpResponse = await generateOtp({ phoneNo });
+      const otpResponse = await generateOtp({ phoneNo }).unwrap();
       console.log("OTP Response:", otpResponse);
-      if (otpResponse.data) {
-        dispatch(setAuthStep(AuthStep.OTP));
-      }
-    } catch (err) {
-      console.log(err);
+      dispatch(setAuthStep(AuthStep.OTP));
+    } catch (err: unknown) {
+      console.error("Create User Error:", err);
+      toast.error(getErrorMessage(err));
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleVerifyAndContinue = async () => {
+    if (isLoading || !isVerifyEnabled) return;
+    setIsLoading(true);
     try {
+      let userData: AuthUserDetail;
       if (!checkUser) {
-        if (!phoneNo) return;
-        if (!emailIDRegex.test(emailID)) return;
-        if (!name) return;
         const registerResponse = await register({
           phoneNo,
           name,
           emailID,
           otpCode: otpCode.join(""),
-        });
-        if (registerResponse.data) {
-          dispatch(setIsAuthenticated(true));
-          dispatch(setUserDetail(registerResponse.data));
-        } else {
-          toast.error("Registration failed! Wrong OTP code");
-          setOtpCode(["", "", "", ""]);
-          throw new Error("Registration failed");
-        }
+        }).unwrap();
+        console.warn("Register Response:", registerResponse);
+        userData = registerResponse;
       } else {
-        if (!phoneNo) return;
-        if (!otpCode.join()) return;
         const loginResponse = await login({
           phoneNo,
           otpCode: otpCode.join(""),
-        });
-        if (loginResponse.data) {
-          dispatch(setIsAuthenticated(true));
-          dispatch(setUserDetail(loginResponse?.data as UserDetail));
-        } else {
-          toast.error("Login failed! Wrong OTP code");
-          setOtpCode(["", "", "", ""]);
-          throw new Error("Login failed");
-        }
+        }).unwrap();
+        console.warn("Login Response:", loginResponse);
+        userData = loginResponse as AuthUserDetail;
       }
+      dispatch(setIsAuthenticated(true));
+      dispatch(setUserDetail(userData));
       dispatch(setAuthStep(AuthStep.LOGGED_IN));
       onClose();
       if (loginFromLoginPage) {
@@ -170,8 +171,15 @@ const Login = ({ onClose }: { onClose: () => void }) => {
         router.push("/list-property");
         dispatch(setLoginFromAddProperty(false));
       }
-    } catch (err) {
-      console.error(err);
+    } catch (err: unknown) {
+      console.error("Verify Error:", err);
+      toast.error(getErrorMessage(err));
+      setOtpCode(["", "", "", ""]);
+      if (inputRefs[0].current) {
+        inputRefs[0].current.focus();
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -180,7 +188,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
       dispatch(setAuthStep(AuthStep.PHONE));
     }
     // Focus the first input when component mounts
-    if (inputRefs[0].current) {
+    if (authStep === AuthStep.OTP && inputRefs[0].current) {
       inputRefs[0].current.focus();
     }
     if (authStep === AuthStep.OTP) {
@@ -203,14 +211,17 @@ const Login = ({ onClose }: { onClose: () => void }) => {
   }, [dispatch, loginFromAddProperty, loginFromLoginPage]);
 
   const handleResendOtp = async () => {
-    if (timeLeft > 0 || !phoneNo) return;
+    if (timeLeft > 0 || !phoneNo || isLoading) return;
     try {
-      const otpResponse = await generateOtp({ phoneNo });
-      if (otpResponse.data) {
-        startTimer();
-      }
-    } catch (err) {
+      const otpResponse = await generateOtp({ phoneNo }).unwrap();
+      console.warn("Resend OTP Response:", otpResponse);
+      startTimer();
+      toast.success("OTP resent successfully!");
+    } catch (err: unknown) {
       console.error("Resend OTP Error:", err);
+      toast.error(getErrorMessage(err));
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -274,6 +285,10 @@ const Login = ({ onClose }: { onClose: () => void }) => {
   };
 
   const isVerifyEnabled = otpCode.every((digit) => digit && digit !== "");
+
+  const getButtonContent = (text: string) => (
+    <>{isLoading ? <Spinner size="sm" /> : text}</>
+  );
 
   return (
     <>
@@ -347,11 +362,11 @@ const Login = ({ onClose }: { onClose: () => void }) => {
                 {/* Continue button */}
                 <button
                   type="submit"
-                  className={`w-full text-white py-3 px-4 rounded-lg ${!phoneNo.substring(validPhoneNoLength) ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
+                  className={`w-full text-white py-3 px-4 rounded-lg ${!phoneNo.substring(validPhoneNoLength) || isLoading ? "bg-red-300 cursor-not-allowed" : "bg-red-500 hover:bg-red-600"}`}
                   onClick={handleCheckUser}
-                  disabled={!phoneNo.substring(validPhoneNoLength)}
+                  disabled={!phoneNo.substring(validPhoneNoLength) || isLoading}
                 >
-                  Continue
+                  {getButtonContent("Continue")}
                 </button>
 
                 {/* Privacy policy */}
@@ -430,15 +445,23 @@ const Login = ({ onClose }: { onClose: () => void }) => {
                 {/* Continue button */}
                 <button
                   type="submit"
-                  className={`w-full text-white py-3 px-4 rounded-lg ${!phoneNo.substring(validPhoneNoLength) || !emailIDRegex.test(emailID) || !name ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
+                  className={`w-full text-white py-3 px-4 rounded-lg ${
+                    !phoneNo.substring(validPhoneNoLength) ||
+                    !emailIDRegex.test(emailID) ||
+                    !name ||
+                    isLoading
+                      ? "bg-red-300 cursor-not-allowed"
+                      : "bg-red-500 hover:bg-red-600"
+                  }`}
                   onClick={handleCreateUser}
                   disabled={
                     !phoneNo.substring(validPhoneNoLength) ||
                     !emailIDRegex.test(emailID) ||
-                    !name
+                    !name ||
+                    isLoading
                   }
                 >
-                  Continue
+                  {getButtonContent("Continue")}
                 </button>
               </div>
             </div>
@@ -493,6 +516,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
                     onPaste={handlePaste}
                     className={`w-12 h-12 text-center text-xl font-medium border-2 ${otpCode[0] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
                     maxLength={1}
+                    disabled={isLoading}
                   />
                   <input
                     id="otp-2"
@@ -505,6 +529,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
                     onKeyDown={(e) => handleKeyDown(1, e)}
                     className={`w-12 h-12 text-center text-xl font-medium border-2 ${otpCode[1] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
                     maxLength={1}
+                    disabled={isLoading}
                   />
                   <input
                     id="otp-3"
@@ -517,6 +542,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
                     onKeyDown={(e) => handleKeyDown(2, e)}
                     className={`w-12 h-12 text-center text-xl font-medium border-2 ${otpCode[2] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
                     maxLength={1}
+                    disabled={isLoading}
                   />
                   <input
                     id="otp-4"
@@ -529,6 +555,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
                     onKeyDown={(e) => handleKeyDown(3, e)}
                     className={`w-12 h-12 text-center text-xl font-medium border-2 ${otpCode[3] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
                     maxLength={1}
+                    disabled={isLoading}
                   />
                 </div>
 
@@ -550,11 +577,13 @@ const Login = ({ onClose }: { onClose: () => void }) => {
                   {/* Verify Button */}
                   <button
                     type="submit"
-                    className={`w-full text-white py-3 px-4 rounded-lg ${isVerifyEnabled ? "bg-red-500 hover:bg-red-600" : "bg-red-300"}`}
+                    className={`w-full text-white py-3 px-4 rounded-lg ${isVerifyEnabled && !isLoading ? "bg-red-500 hover:bg-red-600" : "bg-red-300 cursor-not-allowed"}`}
                     onClick={handleVerifyAndContinue}
-                    disabled={!isVerifyEnabled}
+                    disabled={!isVerifyEnabled || isLoading}
                   >
-                    {checkUser ? "Verify" : "Verify and Continue"}
+                    {getButtonContent(
+                      checkUser ? "Verify" : "Verify and Continue",
+                    )}
                   </button>
                 </div>
 
@@ -570,7 +599,12 @@ const Login = ({ onClose }: { onClose: () => void }) => {
                       <button
                         type="button"
                         onClick={handleResendOtp}
-                        className="text-red-500 font-medium underline"
+                        disabled={isLoading}
+                        className={`font-medium underline ${
+                          isLoading
+                            ? "text-gray-400 cursor-not-allowed"
+                            : "text-red-500"
+                        }`}
                       >
                         Resend
                       </button>

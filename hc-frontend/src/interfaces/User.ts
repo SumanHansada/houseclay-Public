@@ -1,5 +1,13 @@
 import { PropertyCategory, PropertyStatus } from "@/common/enums";
 
+export interface AuthUserDetail {
+  name: string;
+  emailID: string;
+  phoneNo: string;
+  connectBal: number;
+  avatarUrl: string | null;
+}
+
 export interface UserOwnedProperties {
   propertyID: string;
   propertyCategory: PropertyCategory;

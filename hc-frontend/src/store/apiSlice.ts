@@ -4,6 +4,7 @@ import { PropertyCategory } from "@/common/enums";
 import { ConnectsBundle } from "@/interfaces/ConnectsBundle";
 import { PropertyForm } from "@/interfaces/PropertyForm";
 import {
+  AuthUserDetail,
   GetUserDetailResponse,
   PropertyCardWithImages,
 } from "@/interfaces/User";
@@ -15,14 +16,7 @@ export const apiSlice = createApi({
   tagTypes: ["User"],
   endpoints: (builder) => ({
     login: builder.mutation<
-      | {
-          name: string;
-          emailID: string;
-          connectBal: number;
-          avatarUrl: string | null;
-          phoneNo: string;
-        }
-      | string,
+      AuthUserDetail | string,
       { phoneNo: string; otpCode: string } // Request body type
     >({
       query: (data) => {
@@ -42,13 +36,7 @@ export const apiSlice = createApi({
       },
     }),
     register: builder.mutation<
-      {
-        name: string;
-        emailID: string;
-        connectBal: number;
-        avatarUrl: string | null;
-        phoneNo: string;
-      },
+      AuthUserDetail,
       { phoneNo: string; name: string; emailID: string; otpCode: string } // Request body type
     >({
       query: (data) => {
