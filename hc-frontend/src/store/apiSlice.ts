@@ -64,12 +64,17 @@ export const apiSlice = createApi({
       { exists: boolean; message: string }, // Response type
       { phoneNo: string } // Query parameter type
     >({
-      query: ({ phoneNo }) => {
-        return {
-          url: `/user/check-user?phoneNo=${encodeURIComponent(phoneNo)}`,
-          method: "GET",
-        };
-      },
+      query: ({ phoneNo }) => ({
+        url: `/user/check-user?phoneNo=${encodeURIComponent(phoneNo)}`,
+        method: "GET",
+      }),
+    }),
+    updateUser: builder.mutation<unknown, { name: string; email: string }>({
+      query: (data) => ({
+        url: "/user/update",
+        method: "PUT",
+        body: data,
+      }),
     }),
     getUserInfo: builder.query<
       {
@@ -376,6 +381,7 @@ export const {
   useGenerateOtpMutation,
   useCheckUserQuery,
   useLazyCheckUserQuery,
+  useUpdateUserMutation,
   useGetUserInfoQuery,
   useLazyGetUserInfoQuery,
   useLogoutMutation,

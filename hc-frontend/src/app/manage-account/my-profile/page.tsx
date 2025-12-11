@@ -2,6 +2,7 @@
 
 import { Formik, FormikHelpers } from "formik";
 import { useEffect, useMemo, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
@@ -14,10 +15,12 @@ import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useGenerateOtpEmailMutation,
   useLazyGetUserInfoQuery,
+  useUpdateUserMutation,
   useVerifyEmailMutation,
 } from "@/store/apiSlice";
 import { RootState } from "@/store/store";
-import { setConnectBal, setEmailVerified } from "@/store/userSlice";
+import { setEmailVerified, setUserDetail } from "@/store/userSlice";
+import { getErrorMessage } from "@/utils/rtkQueryHelpers";
 
 import { DesktopClient } from "./DesktopClient";
 import Loading from "./loading";
@@ -26,7 +29,13 @@ import { MobileClient } from "./MobileClient";
 const validationSchema = Yup.object({
   name: Yup.string().required("Name is required"),
   phoneNumber: Yup.string().required("Phone is required"),
-  email: Yup.string().email("Invalid email").required("Email is required"),
+  email: Yup.string()
+    .email("Invalid email")
+    .matches(
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      "Invalid email format",
+    )
+    .required("Email is required"),
 });
 
 const EMAIL_VERIFICATION_DIALOG_ID = "email-verification-dialog";
@@ -41,6 +50,7 @@ export default function MyProfilePage() {
   );
   const emailVerificationTokenRef = useRef("");
 
+  const [updateUser] = useUpdateUserMutation();
   const [getUserInfo] = useLazyGetUserInfoQuery();
   const [generateEmailOTP] = useGenerateOtpEmailMutation();
   const [verifyEmailOTP] = useVerifyEmailMutation();
@@ -60,12 +70,16 @@ export default function MyProfilePage() {
   const [currentFormValues, setCurrentFormValues] =
     useState<MyProfileFormValues>(initialValues);
   const [editMode, setEditMode] = useState(false);
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [verificationLoading, setVerificationLoading] = useState(false);
 
   useEffect(() => {
     setCurrentFormValues(initialValues);
   }, [initialValues]);
 
   const handleEmailOtpGeneration = async () => {
+    if (verificationLoading) return;
+    setVerificationLoading(true);
     try {
       const response = await generateEmailOTP().unwrap();
       console.log("generate otp response: ", response);
@@ -75,9 +89,13 @@ export default function MyProfilePage() {
         openDialog(EMAIL_VERIFICATION_DIALOG_ID);
       } else {
         console.warn("Empty token from API");
+        toast.error("Failed to generate OTP. Please try again.");
       }
-    } catch (err) {
+    } catch (err: unknown) {
       console.error("Error generating OTP:", err);
+      toast.error(getErrorMessage(err));
+    } finally {
+      setVerificationLoading(false);
     }
   };
 
@@ -85,6 +103,8 @@ export default function MyProfilePage() {
     if (!emailVerificationTokenRef.current) {
       throw new Error("No token available. Please request a new OTP.");
     }
+    if (verificationLoading) return;
+    setVerificationLoading(true);
     try {
       const response = await verifyEmailOTP({
         token: emailVerificationTokenRef.current,
@@ -96,12 +116,14 @@ export default function MyProfilePage() {
       dispatch(setEmailVerified(true));
       const userInfoResponse = await getUserInfo().unwrap();
       if (userInfoResponse) {
-        dispatch(setConnectBal(userInfoResponse?.connectBal));
+        dispatch(setUserDetail(userInfoResponse));
       }
       openDialog(EMAIL_VERIFICATION_SUCCESS_DIALOG_ID);
-    } catch (error) {
-      console.error("Failed to verify email:", error);
-      throw error;
+    } catch (err: unknown) {
+      console.error("Failed to verify email:", err);
+      toast.error(getErrorMessage(err));
+    } finally {
+      setVerificationLoading(false);
     }
   };
 
@@ -113,30 +135,33 @@ export default function MyProfilePage() {
     values: MyProfileFormValues,
     helpers: FormikHelpers<MyProfileFormValues>,
   ) => {
+    if (profileLoading) return;
+    setProfileLoading(true);
     try {
-      // const updatedData = {
-      //   name: values.name,
-      //   phoneNo: values.phoneNumber,
-      //   email: values.email,
-      //   onWhatsApp: values.onWhatsapp,
-      // };
+      const updatedData = {
+        name: values.name,
+        email: values.email,
+      };
 
-      // TODO: Call API to update user profile
-      // const result = await updateUserProfile(updatedData).unwrap();
-      // dispatch(updateUserInfo({
-      //   name: result.name,
-      //   phoneNo: result.phoneNo,
-      //   emailID: result.email,
-      //   onWhatsApp: result.onWhatsApp,
-      // }));
+      const result = await updateUser(updatedData).unwrap();
+      console.warn("Update user result: ", result);
+      dispatch(
+        setUserDetail({
+          name: values.name,
+          emailID: values.email,
+        }),
+      );
 
       setCurrentFormValues(values);
       helpers.resetForm({ values });
       setEditMode(false);
-      console.log("Profile updated successfully: " + currentFormValues);
-    } catch (error) {
-      console.error("Failed to update profile:", error);
+      toast.success("Profile updated successfully!");
+    } catch (err: unknown) {
+      console.error("Failed to update profile:", err);
+      toast.error(getErrorMessage(err));
       helpers.setStatus({ error: "Failed to update profile" });
+    } finally {
+      setProfileLoading(false);
     }
   };
 
@@ -155,7 +180,7 @@ export default function MyProfilePage() {
         enableReinitialize={true}
         key={`${currentFormValues.name}-${currentFormValues.email}-${currentFormValues.phoneNumber}`} // Force re-render when values change
       >
-        {() => (
+        {({ isSubmitting, dirty }) => (
           <>
             {/* Desktop */}
             <section className="max-md:hidden">
@@ -163,6 +188,8 @@ export default function MyProfilePage() {
                 editMode={editMode}
                 setEditMode={setEditMode}
                 onVerifyEmail={handleEmailOtpGeneration}
+                updatingProfile={profileLoading || isSubmitting}
+                noChanges={!dirty}
               />
             </section>
 
@@ -172,6 +199,8 @@ export default function MyProfilePage() {
                 editMode={editMode}
                 setEditMode={setEditMode}
                 onVerifyEmail={handleEmailOtpGeneration}
+                updatingProfile={profileLoading || isSubmitting}
+                noChanges={!dirty}
               />
             </section>
           </>
@@ -184,6 +213,7 @@ export default function MyProfilePage() {
           emailToVerify={userDetail.emailID}
           onSubmit={handleEmailVerificationSubmit}
           onClose={closeVerificationDialog}
+          verificationLoading={verificationLoading}
         />
       )}
 

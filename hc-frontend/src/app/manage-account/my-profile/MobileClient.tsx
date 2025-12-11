@@ -1,11 +1,12 @@
 "use client";
 
 import { Form, useFormikContext } from "formik";
-import { ChevronLeft, CircleAlert, CircleCheck } from "lucide-react";
+import { ChevronLeft, CircleAlert, CircleCheck, SquarePen } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/base-components";
 import { getInitials } from "@/common/utils";
+import Spinner from "@/components/Spinner";
 import { FormPhoneField, FormTextField } from "@/form-components";
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
 import { MobileFooter, MobileHeader } from "@/layout-components";
@@ -17,6 +18,8 @@ interface MobileClientProps {
   setEditMode: (v: boolean) => void;
   onBack?: () => void;
   onVerifyEmail: () => void;
+  updatingProfile: boolean;
+  noChanges: boolean;
 }
 
 function VerifiedBadge({ isVerified }: { isVerified: boolean }) {
@@ -60,6 +63,8 @@ export function MobileClient({
   editMode,
   setEditMode,
   onVerifyEmail,
+  updatingProfile,
+  noChanges,
 }: MobileClientProps) {
   const router = useRouter();
   const { values, resetForm, initialValues } =
@@ -69,6 +74,10 @@ export function MobileClient({
     resetForm({ values: initialValues });
     setEditMode(false);
   };
+
+  const getButtonContent = (text: string) => (
+    <>{updatingProfile ? <Spinner size="sm" /> : text}</>
+  );
 
   return (
     <>
@@ -85,7 +94,7 @@ export function MobileClient({
           </Button>
         </MobileHeader.LeftAction>
         <MobileHeader.Title>My Profile</MobileHeader.Title>
-        {/* {!editMode ? (
+        {!editMode ? (
           <MobileHeader.RightAction>
             <Button
               variant="secondary"
@@ -96,7 +105,7 @@ export function MobileClient({
               <SquarePen size={24} className="p-0.5" />
             </Button>
           </MobileHeader.RightAction>
-        ) : null} */}
+        ) : null}
       </MobileHeader>
 
       <div className="md:hidden">
@@ -211,9 +220,10 @@ export function MobileClient({
 
               <button
                 type="submit"
-                className="px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl"
+                className={`px-4 py-3 text-white rounded-xl ${updatingProfile || noChanges ? "disabled:cursor-not-allowed disabled:bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
+                disabled={updatingProfile || noChanges}
               >
-                Save
+                {getButtonContent(noChanges ? "No Changes" : "Save Changes")}
               </button>
             </MobileFooter>
           </Form>

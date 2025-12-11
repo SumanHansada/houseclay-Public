@@ -30,7 +30,7 @@ export interface PropertyCardWithImages {
   propertyType: string;
   builtUpArea: number;
   bhkType: string;
-  bathrooms?: number;
+  bathrooms: number | null;
   tenantType: string | null;
   roomType: string | null;
   bathroomType: string | null;
