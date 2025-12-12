@@ -1,5 +1,5 @@
 import { useField } from "formik";
-import React from "react";
+import React, { useCallback } from "react";
 
 import PhotoUpload from "@/base-components/PhotoUpload";
 import { PropertyImage } from "@/interfaces/PropertyImage";
@@ -33,15 +33,21 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
   const [noPhotosField, noPhotosMeta, noPhotosHelpers] =
     useField<boolean>(noPhotosName);
 
-  // Enhanced onChange handler that also clears noPhotos when photos are added
-  const handlePhotosChange = (newPhotos: PropertyImage[]) => {
-    helpers.setValue(newPhotos);
+  // Enhanced onChange handler with proper async handling
+  const handlePhotosChange = useCallback(
+    (newPhotos: PropertyImage[]) => {
+      // Use setTimeout to ensure state updates complete before validation
+      setTimeout(() => {
+        helpers.setValue(newPhotos, true); // true = validate
 
-    // Clear noPhotos field when photos are added
-    if (newPhotos.length > 0 && noPhotosField.value) {
-      noPhotosHelpers.setValue(false);
-    }
-  };
+        // Clear noPhotos field when photos are added
+        if (newPhotos.length > 0 && noPhotosField.value) {
+          noPhotosHelpers.setValue(false, false); // false = don't validate yet
+        }
+      }, 0);
+    },
+    [helpers, noPhotosField.value, noPhotosHelpers],
+  );
 
   const handleNoPhotosChange = (value: boolean) => {
     noPhotosHelpers.setValue(value);
@@ -55,7 +61,10 @@ const FormPhotoUpload: React.FC<FormPhotoUploadProps> = ({
       noPhotosName={noPhotosName}
       value={field.value || []}
       onChange={handlePhotosChange}
-      onBlur={() => helpers.setTouched(true)}
+      onBlur={() => {
+        // Delay blur to ensure onChange completes first
+        setTimeout(() => helpers.setTouched(true), 50);
+      }}
       error={meta.touched && meta.error ? meta.error : ""}
       noPhotosValue={noPhotosField.value}
       onNoPhotosChange={handleNoPhotosChange}

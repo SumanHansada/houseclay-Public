@@ -15,6 +15,7 @@ import { transformPropertyFormToFormValues } from "@/interfaces/FormTransformers
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 import {
+  clearFormData,
   setFormData,
   setPropertyCategory,
   setPropertyID,
@@ -34,7 +35,7 @@ export default function VerifyPropertyLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { propertyID } = useParams() as {
+  const { propertyID: propertyIDParam } = useParams() as {
     propertyID: string;
   };
   const router = useRouter();
@@ -46,31 +47,42 @@ export default function VerifyPropertyLayout({
     (state: RootState) => state.editProperty.propertyCategory,
   );
 
+  useEffect(() => {
+    dispatch(clearFormData());
+
+    // Cleanup on unmount
+    return () => {
+      dispatch(clearFormData());
+    };
+  }, [propertyIDParam, dispatch]);
+
   const {
-    data: propertyDetails,
+    data: propertyDetailsRaw,
     isLoading: isLoadingProperty,
     isError,
     error,
   } = useGetPropertyByIdQuery(
-    { propertyID: propertyID },
-    { skip: !propertyID, refetchOnMountOrArgChange: true },
+    { propertyID: propertyIDParam },
+    {
+      // skip: !propertyID,
+      refetchOnMountOrArgChange: true,
+      refetchOnReconnect: true,
+      refetchOnFocus: true,
+    },
   );
-  // console.log("propertyDetails: ", propertyDetails);
 
   // Populate form data when existing property data is loaded
   useEffect(() => {
-    if (!propertyDetails || isLoadingProperty) return;
+    if (!propertyDetailsRaw || isLoadingProperty) return;
 
-    // --- Update propertyDetails slice ---
-    dispatch(setPropertyDetailsFromApi(propertyDetails));
+    // --- Update propertyDetailsRaw slice ---
+    dispatch(setPropertyDetailsFromApi(propertyDetailsRaw));
     try {
-      // const propertyData = data;
-      console.log("Property Details - useEffect:", propertyDetails);
-      const apiPropertyData = propertyDetails.property;
+      console.log("Property Details - raw data: ", propertyDetailsRaw);
+      const apiPropertyData = propertyDetailsRaw.property;
       if (!apiPropertyData) {
         return;
       }
-      console.log("apiPropertyData: ", apiPropertyData);
 
       if (apiPropertyData) {
         // Transform API response to FormValues
@@ -78,6 +90,9 @@ export default function VerifyPropertyLayout({
 
         // Set property category
         dispatch(setPropertyCategory(apiPropertyData.propertyCategory));
+
+        // Set propertyID
+        dispatch(setPropertyID(propertyIDParam));
 
         // Set form data
         dispatch(setFormData({ data: formValues }));
@@ -96,14 +111,7 @@ export default function VerifyPropertyLayout({
     } catch (error) {
       console.error("Error transforming property data to form values:", error);
     }
-  }, [propertyDetails, isLoadingProperty, dispatch]);
-
-  // Set propertyID in Redux state when component mounts
-  useEffect(() => {
-    if (propertyID) {
-      dispatch(setPropertyID(propertyID));
-    }
-  }, [propertyID, dispatch]);
+  }, [propertyDetailsRaw, isLoadingProperty, propertyIDParam, dispatch]);
 
   if (isLoadingProperty || isError) {
     return (
@@ -125,7 +133,7 @@ export default function VerifyPropertyLayout({
 
   const handleTabChange = (tab: string) => {
     router.push(
-      `/admin/property-details/${propertyCategory.toLowerCase()}/${propertyID}/${tab}`,
+      `/admin/property-details/${propertyCategory.toLowerCase()}/${propertyIDParam}/${tab}`,
     );
   };
 

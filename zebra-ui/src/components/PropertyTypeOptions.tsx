@@ -1,18 +1,14 @@
-import FlatmatesSvg from "public/icons/flatmates.svg";
-import RentSvg from "public/icons/rent.svg";
 import { useDispatch, useSelector } from "react-redux";
 
+import { flatmateIconURL, rentIconURL } from "@/common/constants/cdnURL";
 import { PropertyCategory } from "@/common/enums";
 import { MobileFooter } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { setPropertyCategory } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
+import RemoteSvg from "@/utility-components/RemoteSvg";
 
 import PropertyTypeOption from "./PropertyTypeOption";
-
-const Rent = RentSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-// const Resale = ResaleSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const Flatmates = FlatmatesSvg as React.FC<React.SVGProps<SVGSVGElement>>;
 
 interface PropertyTypeOptionsProps {
   onBack?: () => void;
@@ -35,19 +31,19 @@ const PropertyTypeOptions = ({
     {
       id: "rent",
       label: "Rent",
-      icon: <Rent />,
+      icon: <RemoteSvg src={rentIconURL} />,
       type: PropertyCategory.RENT,
     },
     // {
     //   id: "resale",
     //   label: "Resale",
-    //   icon: <Resale />,
+    //   icon: <RemoteSvg src={resaleIconURL} className="size-full" />,
     //   type: PropertyCategory.RESALE,
     // },
     {
-      id: "flatmates",
-      label: "Flatmates",
-      icon: <Flatmates />,
+      id: "flatmate",
+      label: "Flatmate",
+      icon: <RemoteSvg src={flatmateIconURL} />,
       type: PropertyCategory.FLATMATE,
     },
   ];

@@ -2,12 +2,9 @@
 
 import { FocusTrap } from "focus-trap-react";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { setHideStickyNavBar } from "@/store/appSlice";
-import { RootState } from "@/store/store";
 
 interface DialogProps {
   id: string;
@@ -21,18 +18,14 @@ interface DialogProps {
   disableOverlayClick?: boolean; // New prop to disable overlay click
 }
 
-const getDialogStyles = (
-  type: string,
-  isMobile?: boolean,
-  hideStickyFooter?: boolean,
-): string => {
+const getDialogStyles = (type: string, isMobile?: boolean): string => {
   switch (type) {
     case "fullscreen":
       return `fixed inset-0 bg-white flex flex-col ${
         isMobile ? "h-auto" : "rounded-lg max-h-[calc(100svh-4rem)]"
       }`;
     case "bottom-sheet":
-      return `fixed ${hideStickyFooter ? "bottom-0" : "bottom-[4rem]"} bg-white rounded-t-xl ${
+      return `fixed bottom-0 bg-white rounded-t-xl ${
         isMobile ? "w-full h-auto" : "hidden"
       }`;
     case "card":
@@ -46,14 +39,12 @@ const getDialogStyles = (
   }
 };
 
-const overlayStyles = (type: string, hideStickyFooter?: boolean): string => {
+const overlayStyles = (type: string): string => {
   switch (type) {
     case "fullscreen":
       return `fixed inset-0 bg-black bg-opacity-25`;
     case "bottom-sheet":
-      return `fixed inset-x-0 top-0 bg-black bg-opacity-25 ${
-        hideStickyFooter ? "bottom-0" : "bottom-[4rem]"
-      }`; // Stop overlay at sticky footer for mobile
+      return `fixed inset-0 bg-black bg-opacity-25`;
     default:
       return `fixed inset-0 bg-black bg-opacity-25`;
   }
@@ -74,12 +65,8 @@ export const Dialog: React.FC<DialogProps> = ({
   const isOpen = isDialogOpen(id);
   const isClosing = isDialogClosing(id);
   const { isMobile } = useDeviceContext();
-  const dispatch = useDispatch();
-  const hideStickyFooter = useSelector(
-    (state: RootState) => state.app.hideStickyNavBar,
-  );
   const [shouldRender, setShouldRender] = useState(isOpen);
-  const dialogOverlayStyles = overlayStyles(type, hideStickyFooter);
+  const dialogOverlayStyles = overlayStyles(type);
 
   useEffect(() => {
     if (isOpen) {
@@ -89,14 +76,6 @@ export const Dialog: React.FC<DialogProps> = ({
       setShouldRender(false);
     }
   }, [isOpen, isClosing]);
-
-  useEffect(() => {
-    if (isMobile && type === "fullscreen") {
-      dispatch(setHideStickyNavBar(true));
-    } else if (isMobile && type === "bottom-sheet") {
-      dispatch(setHideStickyNavBar(true));
-    }
-  }, [isMobile, type, dispatch]);
 
   useEffect(() => {
     if (isOpen) {
@@ -120,7 +99,7 @@ export const Dialog: React.FC<DialogProps> = ({
     }
   };
 
-  const dialogStyles = getDialogStyles(type, isMobile, hideStickyFooter);
+  const dialogStyles = getDialogStyles(type, isMobile);
 
   return (
     <FocusTrap

@@ -1,22 +1,12 @@
 "use client";
 
 import { SearchIcon, SlidersHorizontal } from "lucide-react";
-// import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Autocomplete, Button, SelectDropdown } from "@/base-components";
 import { PropertyCategory } from "@/common/enums";
 import SearchFilterDialog from "@/dialogs/search-filters-dialog";
-// import { PropertySearch } from "@/interfaces/PropertySearch";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
-// import { useGetPropertiesByLocationQuery } from "@/store/apiSlice";
-import {
-  setHideFooter,
-  setHideHeader,
-  setHideStickyNavBar,
-} from "@/store/appSlice";
 import {
   setPropertyBhk,
   setPropertyCategory,
@@ -89,18 +79,7 @@ export const SearchAndFilterBar: React.FC = () => {
   //   })) as PropertySearch[];
   // }, [data, error]);
 
-  const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (isMobile) {
-      dispatch(setHideHeader(true));
-      dispatch(setHideFooter(true));
-    } else {
-      dispatch(setHideHeader(false));
-      dispatch(setHideFooter(false));
-    }
-  }, [dispatch, isMobile]);
 
   const { openDialog, closeDialog, isDialogOpen } = useDialog();
 
@@ -311,12 +290,10 @@ export const SearchAndFilterBar: React.FC = () => {
           id="property-filters"
           onClose={() => {
             closeDialog("property-filters");
-            dispatch(setHideStickyNavBar(false));
           }}
           onReset={() => {}}
           onApply={() => {
             closeDialog("property-filters");
-            dispatch(setHideStickyNavBar(false));
             handleSearch();
           }}
         />

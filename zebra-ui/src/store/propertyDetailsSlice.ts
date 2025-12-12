@@ -1,6 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { GetPropertyByIdResponse } from "@/interfaces/api";
+import {
+  GetPropertyByIdResponse,
+  PropertyReportDetails,
+} from "@/interfaces/api";
 import { PropertyUpdate } from "@/interfaces/PropertyUpdate";
 import { UserInfo } from "@/interfaces/User";
 
@@ -14,7 +17,7 @@ export interface PropertyDetails {
   viewUsers: UserInfo[];
   shortlistUsers: UserInfo[];
   contactUsers: UserInfo[];
-  reportUsers: UserInfo[];
+  reportUsers: PropertyReportDetails[];
 }
 
 interface PropertyDetailsState {
@@ -94,7 +97,7 @@ const propertyDetailsSlice = createSlice({
       state.propertyDetails.contactUsers = action.payload;
     },
 
-    setReportUsers: (state, action: PayloadAction<UserInfo[]>) => {
+    setReportUsers: (state, action: PayloadAction<PropertyReportDetails[]>) => {
       state.propertyDetails.reportUsers = action.payload;
     },
 

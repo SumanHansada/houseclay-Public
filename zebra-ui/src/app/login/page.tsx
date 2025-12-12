@@ -5,11 +5,12 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
+import { houseclayIconURL } from "@/common/constants/cdnURL";
 import { FormTextField } from "@/form-components";
 import { authFailure, authStarted, authSuccess } from "@/store/adminAuthSlice";
 import { useLoginMutation } from "@/store/apiSlice";
 import { RootState } from "@/store/store";
-import { SvgIcon } from "@/utility-components";
+import RemoteSvg from "@/utility-components/RemoteSvg";
 import { toErrorMessage } from "@/utils/rtkError";
 
 const loginSchema = Yup.object().shape({
@@ -58,7 +59,7 @@ export default function AdminLogin() {
     >
       <div className="flex flex-col items-center justify-center mx-auto w-4/5 md:w-2/3 lg:w-3/5 xl:w-1/2 2xl:w-2/5">
         <div className="flex items-center mb-4 gap-1">
-          <SvgIcon name="houseclay" iconSize="small" size={25} />
+          <RemoteSvg src={houseclayIconURL} className="size-7" />
           <span className="text-red-500 text-2xl font-nunito font-bold">
             ZEBRA | houseclay
           </span>

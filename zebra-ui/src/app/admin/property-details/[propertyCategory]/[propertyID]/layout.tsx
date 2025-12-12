@@ -68,9 +68,13 @@ export default function PropertyDetailsLayout({
     error,
   } = useGetPropertyByIdQuery(
     { propertyID: propertyIDParam },
-    { skip: !propertyIDParam, refetchOnMountOrArgChange: true },
+    {
+      // skip: !propertyIDParam,
+      refetchOnMountOrArgChange: true,
+      refetchOnReconnect: true,
+      refetchOnFocus: true,
+    },
   );
-  console.log("propertyDetailsRaw: ", propertyDetailsRaw);
 
   // Populate form data when existing property data is loaded
   useEffect(() => {
@@ -158,6 +162,7 @@ export default function PropertyDetailsLayout({
         </TabHeader>
       </Tabs>
       <div className="flex-1 overflow-auto">{children}</div>
+
       {/* Upload Dialog */}
       {isDialogOpen("upload-photos-dialog") && (
         <UploadPhotosDialog id="upload-photos-dialog" />

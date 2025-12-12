@@ -5,8 +5,8 @@ export interface FlatmateDetails extends BaseRentalDetails {
   depositCharges?: number;
   tenantType: string;
   roomType: string;
-  attachedBathroom: boolean;
-  attachedBalcony: boolean;
+  bathroomType: string;
+  balconyType: string;
   smokingPreference: boolean;
   drinkingPreference: boolean;
 }

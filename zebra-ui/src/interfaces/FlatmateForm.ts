@@ -31,10 +31,8 @@ export interface FlatmateForm {
   nonVegAllowed: boolean;
   amenities: string[];
   tenantType: string;
-  bathrooms?: number;
-  balcony?: number;
-  attachedBathroom: boolean;
-  attachedBalcony: boolean;
+  bathroomType: string;
+  balconyType: string;
   smokingPreference: boolean;
   drinkingPreference: boolean;
   // Images

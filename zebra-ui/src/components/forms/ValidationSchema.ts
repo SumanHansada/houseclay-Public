@@ -1,43 +1,58 @@
 import * as Yup from "yup";
 
 import { PropertyCategory } from "@/common/enums";
+import { PropertyImage } from "@/interfaces/PropertyImage";
+
+const baseSchema = {
+  // Locality Details
+  localityDetails: Yup.object().shape({
+    city: Yup.string().required("City is required"),
+    locationOrSocietyName: Yup.string().required("Location is required"),
+    latitude: Yup.number()
+      .required("Latitude is required")
+      .min(-90, "Latitude must be >= -90")
+      .max(90, "Latitude must be <= 90"),
+    longitude: Yup.number()
+      .required("Longitude is required")
+      .min(-180, "Longitude must be >= -180")
+      .max(180, "Longitude must be <= 180"),
+  }),
+
+  // Gallery
+  images: Yup.array()
+    .of(
+      Yup.object().shape({
+        file: Yup.object().optional(),
+        id: Yup.string().required(),
+        url: Yup.string().required(),
+        isCover: Yup.boolean().required(),
+      }),
+    )
+    .test(
+      "photos-or-checkbox",
+      "Please confirm that you don't have photos or upload at least one photo",
+      function (value) {
+        const parent = this.parent as {
+          noPhotos?: boolean;
+          images?: PropertyImage[];
+        };
+
+        // Get images from both value and parent as fallback
+        const images = Array.isArray(value)
+          ? value
+          : Array.isArray(parent.images)
+            ? parent.images
+            : [];
+        const noPhotos = parent.noPhotos;
+
+        // Form is valid if there are images OR noPhotos is checked
+        return images.length > 0 || noPhotos === true;
+      },
+    ),
+  noPhotos: Yup.boolean(),
+};
 
 const createValidationSchema = (propertyCategory: PropertyCategory) => {
-  const baseSchema = {
-    // Locality Details
-    localityDetails: Yup.object().shape({
-      city: Yup.string().required("City is required"),
-      locationOrSocietyName: Yup.string().required("Location is required"),
-      latitude: Yup.number()
-        .required("Latitude is required")
-        .min(-90, "Latitude must be >= -90")
-        .max(90, "Latitude must be <= 90"),
-      longitude: Yup.number()
-        .required("Longitude is required")
-        .min(-180, "Longitude must be >= -180")
-        .max(180, "Longitude must be <= 180"),
-    }),
-
-    // Gallery
-    images: Yup.array()
-      .of(
-        Yup.object().shape({
-          file: Yup.object().optional(),
-          id: Yup.string().required(),
-          url: Yup.string().required(),
-          isCover: Yup.boolean().required(),
-        }),
-      )
-      .test(
-        "photos-or-checkbox",
-        "Please upload at least one photo or confirm no photos",
-        function (value) {
-          const { noPhotos } = this.parent;
-          return (value && value.length > 0) || noPhotos === true;
-        },
-      ),
-  };
-
   // Schema based on category
   switch (propertyCategory) {
     case PropertyCategory.FLATMATE:
@@ -95,14 +110,8 @@ const createValidationSchema = (propertyCategory: PropertyCategory) => {
           parking: Yup.string().required("Parking is required"),
           nonVegAllowed: Yup.boolean().required("Non veg allowed is required"),
           tenantType: Yup.string().required("Preferred tenant is required"),
-          bathrooms: Yup.number().required("Bathrooms is required"),
-          balcony: Yup.number().required("Balcony is required"),
-          attachedBathroom: Yup.boolean().required(
-            "Attached bathroom is required",
-          ),
-          attachedBalcony: Yup.boolean().required(
-            "Attached balcony is required",
-          ),
+          bathroomType: Yup.string().required("Bathrooms is required"),
+          balconyType: Yup.string().required("Balcony is required"),
           smokingPreference: Yup.string().required(
             "Smoking preference is required",
           ),

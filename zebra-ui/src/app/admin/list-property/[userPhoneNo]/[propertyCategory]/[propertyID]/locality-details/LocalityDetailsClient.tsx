@@ -165,7 +165,12 @@ const LocalityDetailsClient: React.FC = () => {
       setFieldValue("localityDetails.latitude", defaultLatLng.lat);
       setFieldValue("localityDetails.longitude", defaultLatLng.lng);
     }
-  }, [selectedCity, setFieldValue]);
+  }, [
+    selectedCity,
+    setFieldValue,
+    values.localityDetails?.latitude,
+    values.localityDetails?.longitude,
+  ]);
 
   return (
     <>

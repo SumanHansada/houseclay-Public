@@ -6,9 +6,8 @@ import React from "react";
 import { Column, DataTable } from "@/components/DataTable";
 import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
 import { PaginationFooter } from "@/components/PaginationFooter";
-import { RenderUserStatus } from "@/components/status/RenderUserStatus";
 import { useLocalPagination } from "@/hooks/useLocalPagination";
-import { UserInfo } from "@/interfaces/User";
+import { PropertyReportDetails } from "@/interfaces/api";
 import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 
 export default function ReportUsersPage() {
@@ -35,21 +34,33 @@ export default function ReportUsersPage() {
   const viewProfile = (phoneNo: string) =>
     router.push(`/admin/user-details/${phoneNo}`);
 
-  const columns: Column<UserInfo>[] = [
-    { key: "name", label: "Name", accessor: "name" },
-    { key: "email", label: "Email", accessor: "email" },
-    { key: "phoneNo", label: "Phone No.", accessor: "phoneNo" },
+  const columns: Column<PropertyReportDetails>[] = [
     {
-      key: "blacklisted",
-      label: "Status",
-      render: (user) => <RenderUserStatus isBlacklisted={user.blacklisted} />,
+      key: "name",
+      label: "Name",
+      render: (reportDetails) => <span>{reportDetails.user.name}</span>,
+    },
+    {
+      key: "email",
+      label: "Email",
+      render: (reportDetails) => <span>{reportDetails.user.email}</span>,
+    },
+    {
+      key: "phoneNo",
+      label: "Phone No.",
+      render: (reportDetails) => <span>{reportDetails.user.phoneNo}</span>,
+    },
+    {
+      key: "reportType",
+      label: "Report Type",
+      render: (reportDetails) => <span>{reportDetails.reportType}</span>,
     },
     {
       key: "action",
       label: "Action",
-      render: (user) => (
+      render: (reportDetails) => (
         <IconButtonWithTooltip
-          onClick={() => viewProfile(user.phoneNo)}
+          onClick={() => viewProfile(reportDetails.user.phoneNo)}
           Icon={Eye}
           tooltipActive={true}
           tooltip="View Profile"
@@ -63,10 +74,10 @@ export default function ReportUsersPage() {
       <div className="flex-1 flex flex-col bg-gray-100 py-8 px-16">
         <div className="bg-white shadow-sm rounded-xl p-5 flex flex-col gap-4 h-full">
           <h2 className="text-3xl">Report Users</h2>
-          <DataTable<UserInfo>
+          <DataTable<PropertyReportDetails>
             columns={columns}
             data={paginatedRows}
-            getRowId={(u) => u.phoneNo}
+            getRowId={(reportDetails) => reportDetails.reportId.toString()}
           />
         </div>
       </div>

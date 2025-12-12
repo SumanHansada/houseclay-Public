@@ -4,24 +4,21 @@ import { PropertyCategory, PropertyDetailsTabEnum } from "@/common/enums";
 
 type Params = { propertyCategory: string; propertyID: string };
 
-export default function Page({ params }: { params: Params }) {
-  const paramID = (params.propertyID ?? "").trim();
-  const paramCategory = (params.propertyCategory ?? "").trim().toUpperCase();
+export default async function Page({ params }: { params: Promise<Params> }) {
+  const { propertyID, propertyCategory } = await params;
 
-  const propertyCategory =
-    (Object.values(PropertyCategory) as PropertyCategory[]).find(
-      (val) => val.toUpperCase() === paramCategory,
-    ) ?? null;
+  const paramID = (propertyID ?? "").trim();
+  const paramCategory = (propertyCategory ?? "").trim().toUpperCase();
 
-  if (
-    !paramID ||
-    propertyCategory === null ||
-    propertyCategory === PropertyCategory.NONE
-  ) {
+  const validCategory = (Object.values(PropertyCategory) as string[]).find(
+    (val) => val.toUpperCase() === paramCategory,
+  );
+
+  if (!paramID || !validCategory || validCategory === PropertyCategory.NONE) {
     redirect("/admin/dashboard");
   }
 
   redirect(
-    `/admin/property-details/${propertyCategory}/${paramID}/${PropertyDetailsTabEnum.DETAILS}`,
+    `/admin/property-details/${validCategory}/${paramID}/${PropertyDetailsTabEnum.DETAILS}`,
   );
 }

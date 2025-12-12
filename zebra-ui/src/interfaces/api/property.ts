@@ -1,3 +1,5 @@
+import { ReportStatus } from "@/common/enums";
+
 import { PropertyForm } from "../PropertyForm";
 import { PropertyInfo } from "../PropertyInfo";
 import { PropertyUpdate } from "../PropertyUpdate";
@@ -12,16 +14,23 @@ interface ResponseMeta {
 
 export type PropertyResponse = ResponseMeta & PropertyForm;
 
+export interface PropertyReportDetails {
+  reportId: number;
+  reportType: ReportStatus;
+  reportTime: string;
+  user: UserInfo;
+}
+
 // useGetPropertyByIdQuery()
-export type GetPropertyByIdResponse = {
+export interface GetPropertyByIdResponse {
   property: PropertyResponse;
   propertyUpdates: PropertyUpdate[];
   owner: UserInfo;
   viewUsers: UserInfo[];
   shortlistUsers: UserInfo[];
   contactUsers: UserInfo[];
-  reportUsers: UserInfo[];
-};
+  reportUsers: PropertyReportDetails[];
+}
 
 // useGetPropertiesQuery()
 export interface GetAllPropertiesResponse {
