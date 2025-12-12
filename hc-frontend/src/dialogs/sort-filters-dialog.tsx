@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { useMemo } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/base-components";
 import {
@@ -8,7 +8,7 @@ import {
   DialogFooter,
   DialogHeader,
 } from "@/components/Dialog";
-import { SortToken } from "@/interfaces/PropertySearchSortFilter";
+import { SORT_OPTIONS, SortToken } from "@/interfaces/PropertySearchSortFilter";
 import { MobileHeader } from "@/layout-components";
 
 interface SortOption {
@@ -20,7 +20,7 @@ interface SortFiltersDialogProps {
   id: string;
   onClose: () => void;
   options: SortOption[];
-  selectedToken?: SortToken | "";
+  selectedToken?: SortToken;
   onSelect: (token: SortToken) => void;
 }
 
@@ -31,7 +31,23 @@ const SortFiltersDialog: React.FC<SortFiltersDialogProps> = ({
   selectedToken,
   onSelect,
 }) => {
-  const selected = useMemo(() => selectedToken ?? "", [selectedToken]);
+  const [selectedOption, setSelectedOption] = useState(
+    selectedToken || SORT_OPTIONS[0].value,
+  ); // Default to first option if none selected (i.e., "NONE")
+
+  const selectedRef = useRef<HTMLLIElement>(null);
+
+  // If present auto scroll to selected option
+  useEffect(() => {
+    if (selectedRef.current && selectedToken) {
+      // Only if selected
+      selectedRef.current.scrollIntoView({
+        block: "nearest",
+        behavior: "smooth",
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Dialog
@@ -60,10 +76,10 @@ const SortFiltersDialog: React.FC<SortFiltersDialogProps> = ({
       <DialogContent>
         <ul role="radiogroup" aria-label="Sort options" className="px-4 py-4">
           {options.map((opt) => {
-            const isActive = opt.value === selected;
+            const isActive = opt.value === selectedOption;
             const radioId = `${id}-${opt.value}`;
             return (
-              <li key={opt.value}>
+              <li key={opt.value} ref={isActive ? selectedRef : undefined}>
                 <div className="focus-within:ring-1 focus-within:rounded-lg focus-within:ring-red-500">
                   <label
                     htmlFor={radioId}
@@ -90,9 +106,7 @@ const SortFiltersDialog: React.FC<SortFiltersDialogProps> = ({
                     id={radioId}
                     name={`${id}-sort-option`}
                     checked={isActive}
-                    onChange={() => {
-                      onSelect(opt.value);
-                    }}
+                    onChange={() => setSelectedOption(opt.value)}
                     className="sr-only"
                   />
                 </div>
@@ -115,7 +129,10 @@ const SortFiltersDialog: React.FC<SortFiltersDialogProps> = ({
             variant="primary"
             size="md"
             className="px-4 py-3 rounded-xl w-full bg-red-500 text-white hover:bg-red-600 transition-colors"
-            onClick={onClose}
+            onClick={() => {
+              onSelect(selectedOption as SortToken);
+              onClose();
+            }}
           >
             Apply
           </Button>

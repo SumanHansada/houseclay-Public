@@ -4,7 +4,6 @@ export interface BasePropertyDetails {
   builtUpArea?: number;
   facing: string;
   bhkType: string;
-  bathrooms?: number;
   floor?: number;
   totalFloors?: number;
   description: string;
@@ -18,9 +17,7 @@ export interface RentPropertyDetails extends BasePropertyDetails {
 }
 
 // Extended property details for RESALE
-export interface ResalePropertyDetails
-  extends BasePropertyDetails,
-    Omit<BasePropertyDetails, "bathrooms"> {
+export interface ResalePropertyDetails extends BasePropertyDetails {
   ownershipType: string;
   propertyAge: string;
   floorType: string;

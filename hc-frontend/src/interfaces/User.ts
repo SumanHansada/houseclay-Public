@@ -1,5 +1,13 @@
 import { PropertyCategory, PropertyStatus } from "@/common/enums";
 
+export interface AuthUserDetail {
+  name: string;
+  emailID: string;
+  phoneNo: string;
+  connectBal: number;
+  avatarUrl: string | null;
+}
+
 export interface UserOwnedProperties {
   propertyID: string;
   propertyCategory: PropertyCategory;
@@ -22,7 +30,11 @@ export interface PropertyCardWithImages {
   propertyType: string;
   builtUpArea: number;
   bhkType: string;
-  bathrooms?: number;
+  bathrooms: number | null;
+  tenantType: string | null;
+  roomType: string | null;
+  bathroomType: string | null;
+  balconyType: string | null;
   rent: number | null;
   furnishing: string;
   price: number | null;

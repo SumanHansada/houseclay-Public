@@ -4,18 +4,23 @@ import {
   BanknoteArrowUp,
   Bath,
   BedDouble,
+  BedSingle,
+  Blocks,
   BrushCleaning,
   Building2,
   ChevronLeft,
   Cigarette,
   CircleParking,
   ClipboardPen,
+  CloudHail,
+  Dam,
   DoorOpen,
   Droplets,
   Drumstick,
   EditIcon,
   Flower2,
   HandCoins,
+  Headset,
   Hourglass,
   House,
   Landmark,
@@ -33,28 +38,29 @@ import {
   Wine,
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
-import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
-import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
-import FireExtinguisherIconSvg from "public/icons/amenities/fire-extinguisher.svg";
-import FirstAidKitIconSvg from "public/icons/amenities/first-aid-kit.svg";
-import GymIconSvg from "public/icons/amenities/gym.svg";
-import LiftIconSvg from "public/icons/amenities/lift.svg";
-import OutdoorDiningAreaIconSvg from "public/icons/amenities/outdoor-dining-area.svg";
-import ParkingSpaceIconSvg from "public/icons/amenities/parking-space.svg";
-import PoolTableIconSvg from "public/icons/amenities/pool-table.svg";
-import SecurityIconSvg from "public/icons/amenities/security.svg";
-import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
-import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
-import WifiIconSvg from "public/icons/amenities/wifi.svg";
 import { useState } from "react";
 import React from "react";
 
 import { Button } from "@/base-components";
 import { MARK_RENTED_ACTION_DIALOG_ID } from "@/common/constants";
 import {
+  clubhouseIconURL,
+  dedicatedWorkspaceIconURL,
+  fireExtinguisherIconURL,
+  firstAidKitIconURL,
+  gymIconURL,
+  liftIconURL,
+  outdoorDiningAreaIconURL,
+  parkingSpaceIconURL,
+  poolTableIconURL,
+  securityIconURL,
+  smokeAlarmIconURL,
+  swimmingPoolIconURL,
+  twentyFourXSevenIconURL,
+  wifiIconURL,
+} from "@/common/dataConstants/cdnURL";
+import {
   BHK_TYPE_OPTIONS,
-  DRINKING_PREFERENCE_OPTIONS,
   FACING_OPTIONS,
   FLOOR_NUMERIC_OPTIONS,
   FURNISHING_OPTIONS,
@@ -64,9 +70,9 @@ import {
   PREFERRED_TENANTS_OPTIONS,
   PROPERTY_AGE_OPTIONS,
   PROPERTY_TYPE_OPTIONS,
-  SMOKING_PREFERENCE_OPTIONS,
   TOTAL_FLOORS_NUMERIC_OPTIONS,
   WATER_SUPPLY_OPTIONS,
+  YES_NO_OPTIONS,
 } from "@/common/dataConstants/options";
 import { LeadCategory, PropertyCategory, PropertyStatus } from "@/common/enums";
 import {
@@ -90,6 +96,7 @@ import {
   FullscreenPhotoViewer,
   ImageWithLoader,
   NonTab,
+  RemoteSvg,
   Tab,
   TabContent,
   TabHeader,
@@ -115,65 +122,79 @@ type PropertyData = {
   contactUsers?: any[];
 };
 
-const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const ClubhouseIcon = ClubhouseIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const GymIcon = GymIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const OutdoorDiningAreaIcon = OutdoorDiningAreaIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const FireExtinguisherIcon = FireExtinguisherIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const SmokeAlarmIcon = SmokeAlarmIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const SwimmingPoolIcon = SwimmingPoolIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const TwentyFourSevenPowerIcon = TwentyFourSevenPowerIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const SecurityIcon = SecurityIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const ParkingSpaceIcon = ParkingSpaceIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const DedicatedWorkspaceIcon = DedicatedWorkspaceIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const WifiIcon = WifiIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const PoolTableIcon = PoolTableIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const FirstAidKitIcon = FirstAidKitIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-
 const AmenitiesMap = {
-  Lift: { label: "Lift", icon: <LiftIcon /> },
-  Clubhouse: { label: "Club house", icon: <ClubhouseIcon /> },
-  Gym: { label: "Gym", icon: <GymIcon /> },
+  Lift: { label: "Lift", icon: <RemoteSvg src={liftIconURL} /> },
+  Clubhouse: {
+    label: "Club house",
+    icon: <RemoteSvg src={clubhouseIconURL} />,
+  },
+  Gym: { label: "Gym", icon: <RemoteSvg src={gymIconURL} /> },
   "Outdoor Dining Area": {
     label: "Outdoor Dining Area",
-    icon: <OutdoorDiningAreaIcon />,
+    icon: <RemoteSvg src={outdoorDiningAreaIconURL} />,
   },
   "Fire Extinguisher": {
     label: "Fire Extinguisher",
-    icon: <FireExtinguisherIcon />,
+    icon: <RemoteSvg src={fireExtinguisherIconURL} />,
   },
-  "Smoke Alarm": { label: "Smoke Alarm", icon: <SmokeAlarmIcon /> },
-  "Swimming Pool": { label: "Swimming Pool", icon: <SwimmingPoolIcon /> },
-  "24/7 Power": { label: "24/7 Power", icon: <TwentyFourSevenPowerIcon /> },
-  Security: { label: "Security", icon: <SecurityIcon /> },
-  "Visitor Parking": { label: "Visitor Parking", icon: <ParkingSpaceIcon /> },
+  "Smoke Alarm": {
+    label: "Smoke Alarm",
+    icon: <RemoteSvg src={smokeAlarmIconURL} />,
+  },
+  "Swimming Pool": {
+    label: "Swimming Pool",
+    icon: <RemoteSvg src={swimmingPoolIconURL} />,
+  },
+  "24/7 Power": {
+    label: "24/7 Power",
+    icon: <RemoteSvg src={twentyFourXSevenIconURL} />,
+  },
+  Security: { label: "Security", icon: <RemoteSvg src={securityIconURL} /> },
+  "Visitor Parking": {
+    label: "Visitor Parking",
+    icon: <RemoteSvg src={parkingSpaceIconURL} />,
+  },
   "Dedicated Workspace": {
     label: "Dedicated Workspace",
-    icon: <DedicatedWorkspaceIcon />,
+    icon: <RemoteSvg src={dedicatedWorkspaceIconURL} />,
   },
-  Wifi: { label: "Wifi", icon: <WifiIcon /> },
-  "Pool Table": { label: "Pool Table", icon: <PoolTableIcon /> },
-  "First Aid Kit": { label: "First Aid Kit", icon: <FirstAidKitIcon /> },
+  Wifi: { label: "Wifi", icon: <RemoteSvg src={wifiIconURL} /> },
+  "Pool Table": {
+    label: "Pool Table",
+    icon: <RemoteSvg src={poolTableIconURL} />,
+  },
+  "First Aid Kit": {
+    label: "First Aid Kit",
+    icon: <RemoteSvg src={firstAidKitIconURL} />,
+  },
+  Intercom: {
+    label: "Intercom",
+    icon: <Headset size={24} strokeWidth={1.5} />,
+  },
+  "Sewage Treatment": {
+    label: "Sewage Treatment",
+    icon: <Dam size={24} strokeWidth={1.5} />,
+  },
+  "House Keeping": {
+    label: "House Keeping",
+    icon: <BrushCleaning size={24} strokeWidth={1.5} />,
+  },
+  "Rain Water Harvesting": {
+    label: "Rain Water Harvesting",
+    icon: <CloudHail size={24} strokeWidth={1.5} />,
+  },
+  "Children Play Area": {
+    label: "Children Play Area",
+    icon: <Blocks size={24} strokeWidth={1.5} />,
+  },
+  "Guest Room": {
+    label: "Guest Room",
+    icon: <BedSingle size={24} strokeWidth={1.5} />,
+  },
+  "Community Hall": {
+    label: "Community Hall",
+    icon: <Landmark size={24} strokeWidth={1.5} />,
+  },
 };
 
 export function MyPropertyDetailsClient({
@@ -232,11 +253,11 @@ export function MyPropertyDetailsClient({
     property?.preferredTenants,
   ).join(", ");
   const smokingPreference = getOptionLabel(
-    SMOKING_PREFERENCE_OPTIONS,
+    YES_NO_OPTIONS,
     property?.smokingPreference,
   );
   const drinkingPreference = getOptionLabel(
-    DRINKING_PREFERENCE_OPTIONS,
+    YES_NO_OPTIONS,
     property?.drinkingPreference,
   );
 

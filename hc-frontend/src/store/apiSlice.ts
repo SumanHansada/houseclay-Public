@@ -4,6 +4,7 @@ import { PropertyCategory } from "@/common/enums";
 import { ConnectsBundle } from "@/interfaces/ConnectsBundle";
 import { PropertyForm } from "@/interfaces/PropertyForm";
 import {
+  AuthUserDetail,
   GetUserDetailResponse,
   PropertyCardWithImages,
 } from "@/interfaces/User";
@@ -15,14 +16,7 @@ export const apiSlice = createApi({
   tagTypes: ["User"],
   endpoints: (builder) => ({
     login: builder.mutation<
-      | {
-          name: string;
-          emailID: string;
-          connectBal: number;
-          avatarUrl: string | null;
-          phoneNo: string;
-        }
-      | string,
+      AuthUserDetail | string,
       { phoneNo: string; otpCode: string } // Request body type
     >({
       query: (data) => {
@@ -42,13 +36,7 @@ export const apiSlice = createApi({
       },
     }),
     register: builder.mutation<
-      {
-        name: string;
-        emailID: string;
-        connectBal: number;
-        avatarUrl: string | null;
-        phoneNo: string;
-      },
+      AuthUserDetail,
       { phoneNo: string; name: string; emailID: string; otpCode: string } // Request body type
     >({
       query: (data) => {
@@ -76,12 +64,17 @@ export const apiSlice = createApi({
       { exists: boolean; message: string }, // Response type
       { phoneNo: string } // Query parameter type
     >({
-      query: ({ phoneNo }) => {
-        return {
-          url: `/user/check-user?phoneNo=${encodeURIComponent(phoneNo)}`,
-          method: "GET",
-        };
-      },
+      query: ({ phoneNo }) => ({
+        url: `/user/check-user?phoneNo=${encodeURIComponent(phoneNo)}`,
+        method: "GET",
+      }),
+    }),
+    updateUser: builder.mutation<unknown, { name: string; email: string }>({
+      query: (data) => ({
+        url: "/user/update",
+        method: "PUT",
+        body: data,
+      }),
     }),
     getUserInfo: builder.query<
       {
@@ -231,6 +224,12 @@ export const apiSlice = createApi({
           filters.amenities.length > 0
         ) {
           searchParams.append("amenities", filters.amenities.join(","));
+        }
+        if (filters.availability) {
+          searchParams.append(
+            "propertyAvailability",
+            filters.availability.toString(),
+          );
         }
         if (filters.exclusive === true)
           searchParams.append("exclusive", "true");
@@ -382,6 +381,7 @@ export const {
   useGenerateOtpMutation,
   useCheckUserQuery,
   useLazyCheckUserQuery,
+  useUpdateUserMutation,
   useGetUserInfoQuery,
   useLazyGetUserInfoQuery,
   useLogoutMutation,

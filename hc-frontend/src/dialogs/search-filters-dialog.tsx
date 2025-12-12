@@ -4,11 +4,17 @@ import {
   Bath,
   BedSingle,
   Binoculars,
+  Blocks,
+  BrushCleaning,
   CalendarDays,
   CarFront,
+  CloudHail,
+  Dam,
   Gem,
+  Headset,
   Home,
   IndianRupee,
+  Landmark,
   Mars,
   RefreshCcw,
   Salad,
@@ -16,27 +22,26 @@ import {
   Venus,
   X,
 } from "lucide-react";
-import TwentyFourSevenPowerIconSvg from "public/icons/amenities/24x7-power.svg";
-// import BBQGrillIconSvg from "public/icons/amenities/bbq-grill.svg";
-import ClubhouseIconSvg from "public/icons/amenities/clubhouse.svg";
-import DedicatedWorkspaceIconSvg from "public/icons/amenities/dedicated-workspace.svg";
-import FireExtinguisherIconSvg from "public/icons/amenities/fire-extinguisher.svg";
-import FirstAidKitIconSvg from "public/icons/amenities/first-aid-kit.svg";
-// import GatedSecurityIconSvg from "public/icons/amenities/gated-security.svg";
-import GymIconSvg from "public/icons/amenities/gym.svg";
-import LiftIconSvg from "public/icons/amenities/lift.svg";
-import OutdoorDiningAreaIconSvg from "public/icons/amenities/outdoor-dining-area.svg";
-import ParkingSpaceIconSvg from "public/icons/amenities/parking-space.svg";
-// import PoolIconSvg from "public/icons/amenities/pool.svg";
-import PoolTableIconSvg from "public/icons/amenities/pool-table.svg";
-import SecurityIconSvg from "public/icons/amenities/security.svg";
-import SmokeAlarmIconSvg from "public/icons/amenities/smoke-alarm.svg";
-import SwimmingPoolIconSvg from "public/icons/amenities/swimming-pool.svg";
-import WifiIconSvg from "public/icons/amenities/wifi.svg";
 import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button, Checkbox, RadioGroup, RangeSlider } from "@/base-components";
+import {
+  clubhouseIconURL,
+  dedicatedWorkspaceIconURL,
+  fireExtinguisherIconURL,
+  firstAidKitIconURL,
+  gymIconURL,
+  liftIconURL,
+  outdoorDiningAreaIconURL,
+  parkingSpaceIconURL,
+  poolTableIconURL,
+  securityIconURL,
+  smokeAlarmIconURL,
+  swimmingPoolIconURL,
+  twentyFourXSevenIconURL,
+  wifiIconURL,
+} from "@/common/dataConstants/cdnURL";
 import {
   BHK_TYPE_OPTIONS,
   FURNISHING_OPTIONS,
@@ -76,6 +81,7 @@ import {
 import { RootState } from "@/store/store";
 import {
   ImageWithLoader,
+  RemoteSvg,
   SvgIcon,
   Tab,
   TabContent,
@@ -90,64 +96,79 @@ interface SearchFiltersDialogProps {
   onApply: () => void;
 }
 
-const LiftIcon = LiftIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const ClubhouseIcon = ClubhouseIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const GymIcon = GymIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const OutdoorDiningAreaIcon = OutdoorDiningAreaIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-// const GatedSecurityIcon = GatedSecurityIconSvg as React.FC<
-//   React.SVGProps<SVGSVGElement>
-// >;
-// const PoolIcon = PoolIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const FireExtinguisherIcon = FireExtinguisherIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const SmokeAlarmIcon = SmokeAlarmIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const SwimmingPoolIcon = SwimmingPoolIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const TwentyFourSevenPowerIcon = TwentyFourSevenPowerIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const SecurityIcon = SecurityIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const ParkingSpaceIcon = ParkingSpaceIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const DedicatedWorkspaceIcon = DedicatedWorkspaceIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const WifiIcon = WifiIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-// const BBQGrillIcon = BBQGrillIconSvg as React.FC<React.SVGProps<SVGSVGElement>>;
-const PoolTableIcon = PoolTableIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const FirstAidKitIcon = FirstAidKitIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-
 const amenities = [
-  { label: "Lift", icon: <LiftIcon /> },
-  { label: "Club house", icon: <ClubhouseIcon /> },
-  { label: "Gym", icon: <GymIcon /> },
-  { label: "Outdoor Dining Area", icon: <OutdoorDiningAreaIcon /> },
-  // { label: "Gated Security", icon: <GatedSecurityIcon /> },
-  // { label: "Pool", icon: <PoolIcon /> },
-  { label: "Fire Extinguisher", icon: <FireExtinguisherIcon /> },
-  { label: "Smoke Alarm", icon: <SmokeAlarmIcon /> },
-  { label: "Swimming Pool", icon: <SwimmingPoolIcon /> },
-  { label: "24/7 Power", icon: <TwentyFourSevenPowerIcon /> },
-  { label: "Security", icon: <SecurityIcon /> },
-  { label: "Visitor Parking", icon: <ParkingSpaceIcon /> },
-  { label: "Dedicated Workspace", icon: <DedicatedWorkspaceIcon /> },
-  { label: "Wifi", icon: <WifiIcon /> },
-  // { label: "BBQ Grill", icon: <BBQGrillIcon /> },
-  { label: "Pool Table", icon: <PoolTableIcon /> },
-  { label: "First Aid Kit", icon: <FirstAidKitIcon /> },
+  { label: "Lift", icon: <RemoteSvg src={liftIconURL} /> },
+  {
+    label: "Club house",
+    icon: <RemoteSvg src={clubhouseIconURL} />,
+  },
+  { label: "Gym", icon: <RemoteSvg src={gymIconURL} /> },
+  {
+    label: "Outdoor Dining Area",
+    icon: <RemoteSvg src={outdoorDiningAreaIconURL} />,
+  },
+  {
+    label: "Fire Extinguisher",
+    icon: <RemoteSvg src={fireExtinguisherIconURL} />,
+  },
+  {
+    label: "Smoke Alarm",
+    icon: <RemoteSvg src={smokeAlarmIconURL} />,
+  },
+  {
+    label: "Swimming Pool",
+    icon: <RemoteSvg src={swimmingPoolIconURL} />,
+  },
+  {
+    label: "24/7 Power",
+    icon: <RemoteSvg src={twentyFourXSevenIconURL} />,
+  },
+  { label: "Security", icon: <RemoteSvg src={securityIconURL} /> },
+  {
+    label: "Visitor Parking",
+    icon: <RemoteSvg src={parkingSpaceIconURL} />,
+  },
+  {
+    label: "Dedicated Workspace",
+    icon: <RemoteSvg src={dedicatedWorkspaceIconURL} />,
+  },
+  { label: "Wifi", icon: <RemoteSvg src={wifiIconURL} /> },
+  {
+    label: "Pool Table",
+    icon: <RemoteSvg src={poolTableIconURL} />,
+  },
+  {
+    label: "First Aid Kit",
+    icon: <RemoteSvg src={firstAidKitIconURL} />,
+  },
+  {
+    label: "Intercom",
+    icon: <Headset size={24} strokeWidth={1.5} />,
+  },
+  {
+    label: "Sewage Treatment",
+    icon: <Dam size={24} strokeWidth={1.5} />,
+  },
+  {
+    label: "House Keeping",
+    icon: <BrushCleaning size={24} strokeWidth={1.5} />,
+  },
+  {
+    label: "Rain Water Harvesting",
+    icon: <CloudHail size={24} strokeWidth={1.5} />,
+  },
+  {
+    label: "Children Play Area",
+    icon: <Blocks size={24} strokeWidth={1.5} />,
+  },
+  {
+    label: "Guest Room",
+    icon: <BedSingle size={24} strokeWidth={1.5} />,
+  },
+  {
+    label: "Community Hall",
+    icon: <Landmark size={24} strokeWidth={1.5} />,
+  },
 ];
 
 const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
@@ -204,7 +225,6 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
   };
 
   const handleTabChange = (value: string) => {
-    console.log("handleTabChange: ", value);
     dispatch(setLookingFor(value as string));
     dispatch(setPropertyCategory(value as PropertyCategory));
   };

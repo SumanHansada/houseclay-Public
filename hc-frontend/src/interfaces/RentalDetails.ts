@@ -13,6 +13,8 @@ export interface BaseRentalDetails {
 
 // Extended rental details specific to RENT
 export interface RentalDetails extends BaseRentalDetails {
+  bathrooms?: number;
+  balcony?: number;
   rentNegotiable: boolean;
   deposit?: number;
   preferredTenants: string[];

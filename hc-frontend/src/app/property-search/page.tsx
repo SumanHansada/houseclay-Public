@@ -6,6 +6,7 @@ import {
   SearchIcon,
   SlidersHorizontal,
 } from "lucide-react";
+import Link from "next/link";
 import {
   ReadonlyURLSearchParams,
   useRouter,
@@ -102,7 +103,8 @@ export default function PropertySearchPage() {
     if (urlCategory !== searchState.propertyCategory) {
       dispatch(setPropertyCategory(urlCategory));
     }
-  }, [dispatch, urlCategory, searchState.propertyCategory]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, urlCategory]);
 
   // Parse BHK selections from comma-separated Redux string
   const bhkSelectedValues = useMemo<string[]>(
@@ -407,11 +409,6 @@ export default function PropertySearchPage() {
     router.push(`/property-search?${params.toString()}`);
   };
 
-  const handleCardClick = (e: React.MouseEvent, property: PropertySearch) => {
-    e.stopPropagation();
-    router.push(`/property-details/${property.propertyID}`);
-  };
-
   return (
     <>
       {/* Mobile */}
@@ -646,18 +643,21 @@ export default function PropertySearchPage() {
             ) : (
               <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
                 {properties.map((property, idx) => (
-                  <Properties
+                  <Link
                     key={`${property.propertyID}-${idx}`}
-                    property={property}
-                    badgeType={
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      (property as any).badgeType as BadgeType | undefined
-                    }
-                    onClick={(e: React.MouseEvent) =>
-                      handleCardClick(e, property)
-                    }
-                    showCarouselDots={false}
-                  />
+                    href={`/property-details/${property.propertyID}`}
+                    prefetch={false}
+                    className="block"
+                  >
+                    <Properties
+                      property={property}
+                      badgeType={
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        (property as any).badgeType as BadgeType | undefined
+                      }
+                      showCarouselDots={false}
+                    />
+                  </Link>
                 ))}
               </div>
             )}
@@ -684,7 +684,7 @@ export default function PropertySearchPage() {
         <SortFiltersDialog
           id={SORT_FILTERS_DIALOG_ID}
           options={SORT_OPTIONS as { value: SortToken; label: string }[]}
-          selectedToken={selectedSortToken ?? ""}
+          selectedToken={selectedSortToken}
           onSelect={(token) => onSortChange(token)}
           onClose={() => {
             closeDialog(SORT_FILTERS_DIALOG_ID);

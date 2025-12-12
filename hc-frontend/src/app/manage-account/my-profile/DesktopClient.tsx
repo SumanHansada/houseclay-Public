@@ -4,6 +4,7 @@ import { Form, useFormikContext } from "formik";
 import { CircleAlert, CircleCheck } from "lucide-react";
 
 import { getInitials } from "@/common/utils";
+import Spinner from "@/components/Spinner";
 import { FormPhoneField, FormTextField } from "@/form-components";
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
 
@@ -13,12 +14,16 @@ interface DesktopClientProps {
   editMode: boolean;
   setEditMode: (v: boolean) => void;
   onVerifyEmail: () => void;
+  updatingProfile: boolean;
+  noChanges: boolean;
 }
 
 export function DesktopClient({
   editMode,
   setEditMode,
   onVerifyEmail,
+  updatingProfile,
+  noChanges,
 }: DesktopClientProps) {
   const { values, resetForm, initialValues } =
     useFormikContext<MyProfileFormValues>();
@@ -28,19 +33,23 @@ export function DesktopClient({
     setEditMode(false);
   };
 
+  const getButtonContent = (text: string) => (
+    <>{updatingProfile ? <Spinner size="sm" /> : text}</>
+  );
+
   return (
     <>
       {/* Page title - commented edit functionality */}
-      <div className="border-b-2 pb-2 flex items-center mb-8">
+      <div className="border-b-2 pb-2 flex items-center justify-between mb-8">
         <h1 className="text-2xl font-medium">My Profile</h1>
-        {/* <button
+        <button
           type="button"
           className="md:px-5 md:py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-sm disabled:cursor-not-allowed disabled:bg-gray-300"
           onClick={() => setEditMode(true)}
           disabled={editMode}
         >
-          Edit
-        </button> */}
+          Edit Profile
+        </button>
       </div>
 
       <div className="flex flex-col lg:flex-row lg:gap-6 xl:gap-10 2xl:gap-20 space-y-8 lg:space-y-0">
@@ -164,9 +173,10 @@ export function DesktopClient({
               </button>
               <button
                 type="submit"
-                className="px-3 py-1 md:px-5 md:py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-sm"
+                className={`px-3 py-1 md:px-5 md:py-2 text-white rounded-lg shadow-sm ${updatingProfile || noChanges ? "disabled:cursor-not-allowed disabled:bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
+                disabled={updatingProfile || noChanges}
               >
-                Save
+                {getButtonContent(noChanges ? "No Changes" : "Save Changes")}
               </button>
             </footer>
           ) : null}

@@ -54,7 +54,6 @@ export default function LoginPage() {
         if (otpResponse.data) {
           dispatch(setAuthStep(AuthStep.OTP));
         }
-        dispatch(setLoginFromLoginPage(true));
       } catch (error) {
         const e = error as FetchBaseQueryError;
         console.error("Login Error:", e);
@@ -62,6 +61,7 @@ export default function LoginPage() {
           dispatch(setAuthStep(AuthStep.CREATE_USER));
         }
       }
+      dispatch(setLoginFromLoginPage(true));
       openDialog("login-dialog");
     }
   };
@@ -100,7 +100,7 @@ export default function LoginPage() {
                 <input
                   id="terms"
                   type="checkbox"
-                  className="w-6 h-6 text-red-500 border-gray-300 rounded focus:ring-red-500 accent-red-500"
+                  className="w-5 h-5 text-red-500 border-gray-300 rounded focus:ring-red-500 accent-red-500 hover:cursor-pointer"
                   checked={acceptTerms}
                   onChange={(e) => setAcceptTerms(e.target.checked)}
                 />

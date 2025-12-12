@@ -7,6 +7,7 @@ export { default as FindFlatmatesDialog } from "./find-flatmates-dialog";
 export { default as ListPropertySuccessDialog } from "./list-property-success-dialog";
 export { default as LoginDialog } from "./login-dialog";
 export { default as MenuDialog } from "./menu-dialog";
+export { default as MonthlyChargesDialog } from "./monthly-charges-dialog";
 export { default as MyPropertyActionsDialog } from "./my-property-actions";
 export { default as PhotoGalleryDialog } from "./photo-gallery-dialog";
 export { default as ReportListingDialog } from "./report-listing-dialog";

@@ -10,6 +10,7 @@ import {
   DialogFooter,
   DialogHeader,
 } from "@/components/Dialog";
+import Spinner from "@/components/Spinner";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 
@@ -18,6 +19,7 @@ interface EmailVerificationDialogProps {
   emailToVerify: string;
   onSubmit: (otp: string) => void;
   onClose: () => void;
+  verificationLoading: boolean;
 }
 
 const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
@@ -25,6 +27,7 @@ const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
   emailToVerify,
   onSubmit,
   onClose,
+  verificationLoading,
 }) => {
   const { isMobile } = useDeviceContext();
   const [otpCode, setOtpCode] = useState<string[]>(["", "", "", ""]);
@@ -101,6 +104,10 @@ const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
   };
 
   const isVerifyEnabled = otpCode.every((digit) => digit && digit !== "");
+
+  const getButtonContent = (text: string) => (
+    <>{verificationLoading ? <Spinner size="sm" /> : text}</>
+  );
 
   return (
     <Dialog
@@ -241,11 +248,11 @@ const EmailVerificationDialog: React.FC<EmailVerificationDialogProps> = ({
           {/* Verify Button */}
           <button
             type="submit"
-            className={`w-fit text-white py-3 px-4 rounded-lg ${isVerifyEnabled ? "bg-red-500 hover:bg-red-600" : "bg-red-300"}`}
+            className={`w-fit text-white py-3 px-4 rounded-lg ${!isVerifyEnabled || verificationLoading ? "bg-red-300 cursor-not-allowed" : "bg-red-500 hover:bg-red-600"}`}
             onClick={handleVerifyAndContinue}
-            disabled={!isVerifyEnabled}
+            disabled={!isVerifyEnabled || verificationLoading}
           >
-            Verify and Continue
+            {getButtonContent("Verify & Continue")}
           </button>
         </div>
       </DialogFooter>
