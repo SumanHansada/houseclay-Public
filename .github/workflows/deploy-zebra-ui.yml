@@ -23,7 +23,7 @@ jobs:
           chmod 600 zebra_key.pem
           rsync -az --delete -e "ssh -o StrictHostKeyChecking=no -i zebra_key.pem" zebra-ui ec2-user@${{ secrets.ZEBRA_HOST }}:/home/ec2-user/
 
-      - name: Install pm2 on Zebra Host
+      - name: Install  pm2 on Zebra Host
         run: |
           ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.ZEBRA_HOST }} << EOF
           sudo npm install -g pm2
