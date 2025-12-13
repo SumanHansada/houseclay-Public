@@ -80,7 +80,15 @@ export default function ReverifyPropertyLayout({
     try {
       // const propertyData = data;
       console.log("Property Details - raw data: ", propertyDetailsRaw);
-      const apiPropertyData = propertyDetailsRaw.property;
+      let apiPropertyData = propertyDetailsRaw.property;
+      if (apiPropertyData) {
+        apiPropertyData = {
+          ...apiPropertyData,
+          secondaryPhoneNumber:
+            propertyDetailsRaw.secondaryPhoneNumber ?? undefined,
+        };
+      }
+
       if (!apiPropertyData) {
         return;
       }

@@ -84,7 +84,15 @@ export default function PropertyDetailsLayout({
     dispatch(setPropertyDetailsFromApi(propertyDetailsRaw));
     try {
       console.log("Property Details - raw data: ", propertyDetailsRaw);
-      const apiPropertyData = propertyDetailsRaw.property;
+      let apiPropertyData = propertyDetailsRaw.property;
+      if (apiPropertyData) {
+        apiPropertyData = {
+          ...apiPropertyData,
+          secondaryPhoneNumber:
+            propertyDetailsRaw.secondaryPhoneNumber ?? undefined,
+        };
+      }
+
       if (!apiPropertyData) {
         return;
       }

@@ -24,6 +24,7 @@ export interface PropertyReportDetails {
 // useGetPropertyByIdQuery()
 export interface GetPropertyByIdResponse {
   property: PropertyResponse;
+  secondaryPhoneNumber: string | null;
   propertyUpdates: PropertyUpdate[];
   owner: UserInfo;
   viewUsers: UserInfo[];
