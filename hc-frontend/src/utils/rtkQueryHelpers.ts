@@ -47,7 +47,7 @@ export const baseQueryWithAuth: BaseQueryFn<
   const statusCode =
     typeof res.error?.status === "number" ? res.error.status : undefined;
 
-  if ((statusCode === 401 || statusCode === 403) && !isLogoutCall) {
+  if (statusCode === 401 && !isLogoutCall) {
     // 1) Ask backend to clear the HttpOnly cookie (no throw; returns {data|error})
     await rawBaseQuery({ url: "/user/logout", method: "POST" }, api, extra);
 
@@ -96,7 +96,7 @@ export function getErrorMessage(error: unknown): string {
   if ("message" in error) {
     const serializedError = error as SerializedError;
     if (typeof serializedError.message === "string") {
-      return serializedError.message; // TS now narrows to string (no undefined)
+      return serializedError.message;
     }
   }
 

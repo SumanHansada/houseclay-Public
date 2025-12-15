@@ -31,7 +31,7 @@ export default function FrequentlyAskedQuestionPage() {
       </MobileHeader>
       <section
         aria-labelledby="faq-title faq-title-mobile"
-        className="space-y-12 md:space-y-24 xl:w-1/2 lg:w-2/3 md:w-3/4 md:py-20 max-md:px-8 pb-16 pt-12"
+        className="space-y-12 md:space-y-24 xl:w-1/2 lg:w-2/3 md:w-3/4 md:py-20 max-md:px-8 pb-16 pt-12 mx-auto"
       >
         <div className="mx-auto w-11/12 text-center">
           {/* Desktop visible title */}

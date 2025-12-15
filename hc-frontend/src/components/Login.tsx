@@ -1,5 +1,6 @@
 "use client";
 
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -12,6 +13,7 @@ import { validPhoneNoLength } from "@/common/constants";
 import { AuthStep } from "@/common/enums";
 import { AuthUserDetail } from "@/interfaces/User";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
+import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useGenerateOtpMutation,
   useLazyCheckUserQuery,
@@ -56,6 +58,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
   const dispatch = useDispatch();
   const { isMobile } = useDeviceContext();
   const router = useRouter();
+  const { closeAllDialogs } = useDialog();
 
   const [otpCode, setOtpCode] = useState<string[]>(["", "", "", ""]);
   const [timeLeft, setTimeLeft] = useState(0);
@@ -108,9 +111,33 @@ const Login = ({ onClose }: { onClose: () => void }) => {
       dispatch(setAuthStep(AuthStep.OTP));
     } catch (err: unknown) {
       console.error("Check User Error:", err);
-      toast.error(getErrorMessage(err));
       dispatch(clearCheckUser());
-      dispatch(setAuthStep(AuthStep.CREATE_USER));
+      if (
+        err &&
+        typeof err === "object" &&
+        "status" in err &&
+        typeof (err as FetchBaseQueryError).status === "number"
+      ) {
+        const status = (err as FetchBaseQueryError).status;
+        const data = (err as FetchBaseQueryError).data;
+
+        let errorMessage = "Unknown error";
+        if (data && typeof data === "object") {
+          const typedData = data as { error?: string; message?: string };
+          errorMessage = typedData.error || typedData.message || errorMessage;
+        }
+        console.error(`HTTP ${status}: ${errorMessage}`);
+        // Handle Blacklisted(403) or other specific status codes
+        if (status === 403) {
+          toast.error("Something went wrong!\n Please try again later.");
+          closeAllDialogs();
+          router.replace("/");
+        }
+        dispatch(setAuthStep(AuthStep.CREATE_USER));
+      } else {
+        // Non-HTTP error (e.g., network failure)
+        dispatch(setAuthStep(AuthStep.CREATE_USER));
+      }
     } finally {
       setIsLoading(false);
     }
