@@ -68,7 +68,7 @@ public class UserController {
             ));
         } else if (user.isBlacklisted()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of(
-                    "error", "User is blacklisted",
+                    "error", "User not found",
                     "exists", true
             ));
         }

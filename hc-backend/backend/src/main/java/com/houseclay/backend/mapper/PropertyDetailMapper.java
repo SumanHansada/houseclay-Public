@@ -52,6 +52,7 @@ public class PropertyDetailMapper {
         dto.setReportType(reportProperty.getReportType());
         dto.setReportTime(reportProperty.getReportTime());
         dto.setUser(UserMapper.toDTO(reportProperty.getUser()));
+        dto.setComment(reportProperty.getComment());
         return dto;
     }
 

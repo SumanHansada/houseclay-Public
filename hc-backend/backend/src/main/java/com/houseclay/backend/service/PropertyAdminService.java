@@ -58,6 +58,7 @@ public class PropertyAdminService {
         PropertyMapper.toBasicEntity(propertyDTO, property);
         property.setPropertyState(PropertyState.PENDING_VERIFICATION);
         property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, admin, "updated by admin", PropertyUpdateType.UPDATE));
+        propertyElasticService.deletePropertyInElastic(property);
         return propertyRepository.save(property);
     }
 

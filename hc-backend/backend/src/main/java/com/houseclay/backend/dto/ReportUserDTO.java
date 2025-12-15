@@ -11,4 +11,5 @@ public class ReportUserDTO {
     private ReportType reportType;
     private Timestamp reportTime;
     private UserDTO user;
+    private String comment;
 }
