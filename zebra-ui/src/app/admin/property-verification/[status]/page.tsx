@@ -8,6 +8,8 @@ import { VerifyPropertyStatusEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
 import { DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/PaginationFooter";
+import { VerifySeededButton } from "@/components/seeder/VerifySeededButton";
+import Spinner from "@/components/Spinner";
 import { useStatusBasedPropertyFetch } from "@/hooks/useStatusBasedPropertyFetch";
 import { PropertyInfo } from "@/interfaces/PropertyInfo";
 import { buildPropertyColumns } from "@/utils/table/buildPropertyColumns";
@@ -26,6 +28,7 @@ const PropertyVerificationTablePage: React.FC = () => {
   const {
     data: paginatedPropertyData,
     isLoading,
+    isFetching,
     isError,
     error,
   } = useStatusBasedPropertyFetch({
@@ -34,13 +37,24 @@ const PropertyVerificationTablePage: React.FC = () => {
     size: ROWS_PER_PAGE,
   });
 
-  if (isLoading || isError || !paginatedPropertyData) {
+  // Initial Hard Loading State
+  if (isLoading) {
     return (
       <AsyncFallback
         isLoading={isLoading}
-        isError={isError || !paginatedPropertyData}
+        isError={false}
+        loadingMessage="Loading properties..."
+      />
+    );
+  }
+
+  // Error State
+  if (isError || !paginatedPropertyData) {
+    return (
+      <AsyncFallback
+        isLoading={false}
+        isError={true}
         error={error}
-        loadingMessage="Loading all properties…"
         errorMessage="Failed to fetch Properties."
       />
     );
@@ -95,7 +109,7 @@ const PropertyVerificationTablePage: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full bg-white shadow-sm rounded-xl">
-      {/* Top section with Title and Status buttons */}
+      {/* Header Section - Title and Status buttons */}
       <div className="p-4 border-b border-gray-200">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl">
@@ -103,7 +117,13 @@ const PropertyVerificationTablePage: React.FC = () => {
               ? "Properties to be Verified"
               : "Properties to be Re-verified"}
           </h1>
+
           <div className="flex gap-3 items-center">
+            {/* NEW SEED BUTTON */}
+            {status === VerifyPropertyStatusEnum.VERIFY && true && (
+              <VerifySeededButton />
+            )}
+
             <h1 className="text-2xl font-medium">Status:</h1>
             <button
               className={`py-2 px-3 rounded-xl border border-red-500 ${
@@ -133,14 +153,29 @@ const PropertyVerificationTablePage: React.FC = () => {
         </div>
       </div>
 
-      {/* overflow-y-auto ensures only the table scrolls if content is too long */}
-      <div className="flex-1 px-4 py-2 overflow-y-auto">
-        <DataTable
-          columns={columns}
-          data={rows}
-          getRowId={(prop) => prop.propertyID}
-          noDataMessage="No properties found for this status."
-        />
+      {/* Table Section with IsFetching Overlay */}
+      <div className="flex-1 px-4 py-2 overflow-y-auto relative min-h-[400px]">
+        {/* THE FIX: Overlay for pagination transition */}
+        {isFetching && (
+          <div className="absolute inset-0 z-10 bg-white/60 flex items-center justify-center backdrop-blur-[1px]">
+            <Spinner size="lg" />
+          </div>
+        )}
+
+        <div
+          className={
+            isFetching
+              ? "opacity-40 transition-opacity"
+              : "opacity-100 transition-opacity"
+          }
+        >
+          <DataTable
+            columns={columns}
+            data={rows}
+            getRowId={(prop) => prop.propertyID}
+            noDataMessage="No properties found for this status."
+          />
+        </div>
       </div>
 
       {/* Bottom section with Pagination */}
