@@ -9,6 +9,7 @@ import {
   PropertyCardWithImages,
 } from "@/interfaces/User";
 import { baseQueryWithAuth } from "@/utils/rtkQueryHelpers";
+import { PropertySearch } from "@/interfaces/PropertySearch";
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -193,16 +194,36 @@ export const apiSlice = createApi({
     }),
 
     getPropertiesByLocation: builder.query<
-      unknown,
+      {
+        items: PropertySearch[];
+        hasNext: boolean;
+        page: number;
+        totalElements: number;
+      },
       Record<string, string | number | boolean | string[] | PropertyCategory>
     >({
       query: (params) => {
-        const { latitude, longitude, propertyCategory, ...filters } = params;
+        const {
+          latitude,
+          longitude,
+          propertyCategory,
+          page = 0,
+          ...filters
+        } = params;
         const searchParams = new URLSearchParams({
           lat: latitude.toString(),
           lon: longitude.toString(),
           propertyCategory: propertyCategory.toString(),
+          page: page.toString(),
+          // Define your batch size here
+          size: "16",
         });
+        if (params.page !== undefined) {
+          searchParams.append("page", params.page.toString());
+        }
+        if (params.size !== undefined) {
+          searchParams.append("size", params.size.toString());
+        }
 
         // Add optional filters
         if (filters.propertyType)
@@ -239,6 +260,32 @@ export const apiSlice = createApi({
           searchParams.append("sortOrder", filters.sortOrder.toString());
 
         return `/property/search?${searchParams.toString()}`;
+      },
+
+      // Only use the filters/location for the cache key, ignore the 'page' number.
+      // This ensures page 0 and page 1 share the same Redux state entry.
+      serializeQueryArgs: ({ queryArgs }) => {
+        const { page, ...newQueryArgs } = queryArgs;
+        return newQueryArgs;
+      },
+
+      // Combine incoming data with existing data
+      merge: (currentCache, newItems, { arg }) => {
+        if (arg.page === 0) {
+          // If it's a fresh search (page 0), replace everything
+          return newItems;
+        }
+        // Otherwise, append new items to the existing list
+        currentCache.items.push(...newItems.items);
+        // Update metadata
+        currentCache.page = newItems.page;
+        currentCache.hasNext = newItems.hasNext;
+        currentCache.totalElements = newItems.totalElements;
+      },
+
+      // Refetch when the page arg changes
+      forceRefetch({ currentArg, previousArg }) {
+        return currentArg?.page !== previousArg?.page;
       },
     }),
     generateLead: builder.mutation<
