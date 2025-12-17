@@ -3,6 +3,7 @@ import { Crown, Heart, MapPin, Star } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
+  BALCONY_TYPE_OPTIONS,
   BATHROOM_TYPE_OPTIONS,
   BHK_TYPE_OPTIONS,
   FURNISHING_OPTIONS,
@@ -66,7 +67,7 @@ const Properties: React.FC<PropertiesProps> = ({
     property.bathroomType,
   );
   const balconyType = getOptionLabel(
-    BATHROOM_TYPE_OPTIONS,
+    BALCONY_TYPE_OPTIONS,
     property.balconyType,
   );
 

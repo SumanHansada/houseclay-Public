@@ -3,6 +3,7 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 import { PropertyCategory } from "@/common/enums";
 import { ConnectsBundle } from "@/interfaces/ConnectsBundle";
 import { PropertyForm } from "@/interfaces/PropertyForm";
+import { PropertySearch } from "@/interfaces/PropertySearch";
 import {
   AuthUserDetail,
   GetUserDetailResponse,
@@ -193,15 +194,30 @@ export const apiSlice = createApi({
     }),
 
     getPropertiesByLocation: builder.query<
-      unknown,
+      {
+        items: PropertySearch[];
+        hasNext: boolean;
+        page: number;
+        totalElements: number;
+      },
       Record<string, string | number | boolean | string[] | PropertyCategory>
     >({
       query: (params) => {
-        const { latitude, longitude, propertyCategory, ...filters } = params;
+        const {
+          latitude,
+          longitude,
+          propertyCategory,
+          page = 0,
+          // Default page size to 16
+          size = 16,
+          ...filters
+        } = params;
         const searchParams = new URLSearchParams({
           lat: latitude.toString(),
           lon: longitude.toString(),
           propertyCategory: propertyCategory.toString(),
+          page: page.toString(),
+          size: size.toString(),
         });
 
         // Add optional filters
@@ -239,6 +255,32 @@ export const apiSlice = createApi({
           searchParams.append("sortOrder", filters.sortOrder.toString());
 
         return `/property/search?${searchParams.toString()}`;
+      },
+
+      // Only use the filters/location for the cache key, ignore the 'page' number.
+      // This ensures page 0 and page 1 share the same Redux state entry.
+      serializeQueryArgs: ({ queryArgs }) => {
+        const { page: _page, ...newQueryArgs } = queryArgs;
+        return newQueryArgs;
+      },
+
+      // Combine incoming data with existing data
+      merge: (currentCache, newItems, { arg }) => {
+        if (arg.page === 0) {
+          // If it's a fresh search (page 0), replace everything
+          return newItems;
+        }
+        // Otherwise, append new items to the existing list
+        currentCache.items.push(...newItems.items);
+        // Update metadata
+        currentCache.page = newItems.page;
+        currentCache.hasNext = newItems.hasNext;
+        currentCache.totalElements = newItems.totalElements;
+      },
+
+      // Refetch when the page arg changes
+      forceRefetch({ currentArg, previousArg }) {
+        return currentArg?.page !== previousArg?.page;
       },
     }),
     generateLead: builder.mutation<

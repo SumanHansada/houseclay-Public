@@ -12,7 +12,7 @@ import {
   useRouter,
   useSearchParams,
 } from "next/navigation";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -83,6 +83,8 @@ export default function PropertySearchPage() {
   const dispatch = useDispatch();
   const urlCategory = getUrlCategory(searchParams);
   const isFilterDialogChange = useRef(false);
+  const [page, setPage] = useState(0);
+  const { openDialog, closeDialog, isDialogOpen } = useDialog();
 
   const location = searchState.location;
   const locationSearch = location?.name || "";
@@ -105,6 +107,11 @@ export default function PropertySearchPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, urlCategory]);
+
+  // Whenever the URL search params change, we want to start fresh.
+  useEffect(() => {
+    setPage(0);
+  }, [searchParams]);
 
   // Parse BHK selections from comma-separated Redux string
   const bhkSelectedValues = useMemo<string[]>(
@@ -303,6 +310,7 @@ export default function PropertySearchPage() {
       latitude: Number(lat),
       longitude: Number(lon),
       propertyCategory: propertyCategory || PropertyCategory.RENT,
+      page: page,
     };
 
     // Add optional filters from URL params
@@ -332,15 +340,25 @@ export default function PropertySearchPage() {
     return query;
   };
 
-  const { data, isLoading, error } = useGetPropertiesByLocationQuery(
-    shouldFetch
-      ? buildQueryParams()
-      : { latitude: 0, longitude: 0, propertyCategory: PropertyCategory.RENT },
-    {
-      skip: !shouldFetch,
-      refetchOnMountOrArgChange: true,
-    },
-  );
+  const { data, isLoading, isFetching, error } =
+    useGetPropertiesByLocationQuery(
+      shouldFetch
+        ? buildQueryParams()
+        : {
+            latitude: 0,
+            longitude: 0,
+            propertyCategory: PropertyCategory.RENT,
+          },
+      {
+        skip: !shouldFetch,
+      },
+    );
+
+  // Helper to load next page
+  const handleLoadMore = () => {
+    if (!data?.hasNext) return;
+    setPage((prev) => prev + 1);
+  };
 
   // Memoize property list
   const properties: PropertySearch[] = useMemo(() => {
@@ -354,8 +372,6 @@ export default function PropertySearchPage() {
       images: property.images.length ? property.images : [],
     })) as PropertySearch[];
   }, [data, error]);
-
-  const { openDialog, closeDialog, isDialogOpen } = useDialog();
 
   const handleSearch = () => {
     // Build URL params from searchState (only supported filters)
@@ -411,7 +427,7 @@ export default function PropertySearchPage() {
 
   return (
     <>
-      {/* Mobile */}
+      {/* Mobile - Search and Filter Bar (Overlaps Header)*/}
       <section
         className={`py-2 px-4 fixed top-0 left-0 right-0 z-50 h-[55px] border-b border-gray-200 bg-white flex gap-2 justify-center items-center w-full md:hidden`}
       >
@@ -457,7 +473,7 @@ export default function PropertySearchPage() {
         </Button>
       </section>
 
-      {/* Desktop */}
+      {/* Desktop - Search and Filter Bar (Below Header) */}
       <section className="fixed top-14 z-50 flex w-full h-16 gap-0 px-12 bg-white border-b border-gray-200 xl:gap-16 lg:gap-8 md:gap-0 xl:px-24 md:px-12 max-md:pt-4 max-md:pb-8 max-md:hidden">
         <div className="flex items-center justify-between w-full gap-4 border-gray-200">
           <div className="flex-1 flex items-center min-h-[46px] w-full p-1 border border-gray-300 rounded-xl bg-white">
@@ -587,28 +603,32 @@ export default function PropertySearchPage() {
         </div>
       </section>
 
-      <section className="w-full md:pt-[64px] bg-gray-50 relative max-md:pb-12">
-        <div className="min-h-screen px-6 pb-10 bg-gray-50 xl:px-24 md:px-12">
-          {/* Header Bar */}
-          <div className="">
-            <div className="flex flex-col gap-4 py-6">
-              {/* Filter/Search Bar */}
-              <div>
-                <p className="text-sm text-gray-500">
-                  {properties.length}{" "}
-                  {searchState.propertyCategory === PropertyCategory.FLATMATE
-                    ? "Single occupancy rooms for Rent"
-                    : searchState.propertyCategory === PropertyCategory.RENT
-                      ? "Properties for Rent"
-                      : "Properties for Sale"}
-                </p>
-              </div>
+      {/* Main Content */}
+      <section className="w-full md:pt-[64px] md:bg-gray-50 relative">
+        <div className="min-h-[580px] px-6 pb-10 md:bg-gray-50 xl:px-24 md:px-12">
+          {/* Info Bar */}
+          <div className="flex flex-col gap-4 py-6">
+            {/* Properties Count */}
+            <div className="flex items-center justify-between gap-4">
+              <p className="text-sm text-gray-500">
+                {properties.length}{" "}
+                {searchState.propertyCategory === PropertyCategory.FLATMATE
+                  ? "Single occupancy rooms for Rent"
+                  : searchState.propertyCategory === PropertyCategory.RENT
+                    ? "Properties for Rent"
+                    : "Properties for Sale"}
+              </p>
+
+              {/* TEST - Seed Properties Button (Set to true to render the button) */}
+              {/* <div className="flex items-center gap-2">
+                {!true ? <SeedPropertiesButton /> : null}
+              </div> */}
             </div>
           </div>
 
           {/* Property List */}
           <div className="mx-auto">
-            {isLoading ? (
+            {isLoading && page === 0 ? (
               <div className="grid gap-6 mt-6 md:grid-cols-2 lg:grid-cols-3">
                 {/* {Array.from({ length: 6 }).map((_, i) => (
                   <P key={i} />
@@ -641,24 +661,39 @@ export default function PropertySearchPage() {
                 </Link> */}
               </div>
             ) : (
-              <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
-                {properties.map((property, idx) => (
-                  <Link
-                    key={`${property.propertyID}-${idx}`}
-                    href={`/property-details/${property.propertyID}`}
-                    prefetch={false}
-                    className="block"
-                  >
-                    <Properties
-                      property={property}
-                      badgeType={
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        (property as any).badgeType as BadgeType | undefined
-                      }
-                      showCarouselDots={false}
-                    />
-                  </Link>
-                ))}
+              <div className="flex-1">
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
+                  {properties.map((property, idx) => (
+                    <Link
+                      key={`${property.propertyID}-${idx}`}
+                      href={`/property-details/${property.propertyID}`}
+                      prefetch={false}
+                      className="block"
+                    >
+                      <Properties
+                        property={property}
+                        badgeType={
+                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          (property as any).badgeType as BadgeType | undefined
+                        }
+                        showCarouselDots={false}
+                      />
+                    </Link>
+                  ))}
+                </div>
+
+                {data?.hasNext && (
+                  <div className="flex justify-center w-full mt-10 mb-6">
+                    <Button
+                      variant="primary"
+                      onClick={handleLoadMore}
+                      isLoading={isFetching}
+                      className="px-6 py-3 min-w-40 rounded-xl"
+                    >
+                      Load More
+                    </Button>
+                  </div>
+                )}
               </div>
             )}
           </div>
