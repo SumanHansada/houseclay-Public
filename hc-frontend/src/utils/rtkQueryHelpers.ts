@@ -63,36 +63,49 @@ export const baseQueryWithAuth: BaseQueryFn<
 
 /**
  * Extracts a human-readable error message from an RTK Query error (FetchBaseQueryError or SerializedError).
- * Prioritizes backend response data (e.g., { message: "..." } or { error: "..." }), then status code,
- * then serialized message, with safe fallbacks.
+ * Prioritizes backend response data (e.g., { message: "..." } or { error: "..." }), then plain-string bodies (PARSING_ERROR),
+ * then status code, then serialized message, with safe fallbacks.
  * @param error - The RTK Query error object (unknown type, but handles FetchBaseQueryError | SerializedError).
- * @returns A formatted string message (e.g., "Invalid credentials" or "HTTP error 500").
+ * @returns A formatted string message (e.g., "Invalid OTP Code" or "User not found").
  */
 export function getErrorMessage(error: unknown): string {
-  if (!error || !(error instanceof Object)) {
+  if (!error || typeof error !== "object") {
     return "Unknown error occurred";
   }
 
-  // Check for FetchBaseQueryError (HTTP/network errors)
+  // Handle "PARSING_ERROR" (When backend returns plain string instead of JSON)
+  if ("status" in error && error.status === "PARSING_ERROR") {
+    // We cast to a specific shape because RTK Query doesn't export a named type for this specific state
+    const parsingError = error as {
+      status: "PARSING_ERROR";
+      originalStatus: number;
+      data: string;
+      error: string;
+    };
+
+    // Return the raw string (e.g., "Invalid OTP Code")
+    return parsingError.data || "Request failed";
+  }
+
+  // Handle standard FetchBaseQueryError (JSON response with HTTP error status)
   if (
     "status" in error &&
     typeof (error as FetchBaseQueryError).status === "number"
   ) {
     const fetchError = error as FetchBaseQueryError;
-    const status = fetchError.status;
     const data = fetchError.data;
 
-    // Safely extract message from data (assume common shapes like { message: string } or { error: string })
     if (data && typeof data === "object") {
       const typedData = data as { message?: string; error?: string };
       if (typedData.message) return typedData.message;
       if (typedData.error) return typedData.error;
     }
 
-    return `HTTP error ${status}`;
+    // Fallback if JSON exists but has no message/error field
+    return `HTTP error ${fetchError.status}`;
   }
 
-  // Check for SerializedError (general async errors)
+  // Handle SerializedError (General async/network errors)
   if ("message" in error) {
     const serializedError = error as SerializedError;
     if (typeof serializedError.message === "string") {
@@ -100,6 +113,5 @@ export function getErrorMessage(error: unknown): string {
     }
   }
 
-  // Fallback
   return "Request failed. Please try again.";
 }

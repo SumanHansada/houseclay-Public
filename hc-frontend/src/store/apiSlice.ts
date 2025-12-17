@@ -3,13 +3,13 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 import { PropertyCategory } from "@/common/enums";
 import { ConnectsBundle } from "@/interfaces/ConnectsBundle";
 import { PropertyForm } from "@/interfaces/PropertyForm";
+import { PropertySearch } from "@/interfaces/PropertySearch";
 import {
   AuthUserDetail,
   GetUserDetailResponse,
   PropertyCardWithImages,
 } from "@/interfaces/User";
 import { baseQueryWithAuth } from "@/utils/rtkQueryHelpers";
-import { PropertySearch } from "@/interfaces/PropertySearch";
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -208,6 +208,8 @@ export const apiSlice = createApi({
           longitude,
           propertyCategory,
           page = 0,
+          // Default page size to 16
+          size = 16,
           ...filters
         } = params;
         const searchParams = new URLSearchParams({
@@ -215,15 +217,8 @@ export const apiSlice = createApi({
           lon: longitude.toString(),
           propertyCategory: propertyCategory.toString(),
           page: page.toString(),
-          // Define your batch size here
-          size: "16",
+          size: size.toString(),
         });
-        if (params.page !== undefined) {
-          searchParams.append("page", params.page.toString());
-        }
-        if (params.size !== undefined) {
-          searchParams.append("size", params.size.toString());
-        }
 
         // Add optional filters
         if (filters.propertyType)
@@ -265,7 +260,7 @@ export const apiSlice = createApi({
       // Only use the filters/location for the cache key, ignore the 'page' number.
       // This ensures page 0 and page 1 share the same Redux state entry.
       serializeQueryArgs: ({ queryArgs }) => {
-        const { page, ...newQueryArgs } = queryArgs;
+        const { page: _page, ...newQueryArgs } = queryArgs;
         return newQueryArgs;
       },
 

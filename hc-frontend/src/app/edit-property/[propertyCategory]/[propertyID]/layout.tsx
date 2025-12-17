@@ -261,11 +261,18 @@ export default function EditPropertyTypeLayout({
         const apiPropertyData = propertyData.property;
 
         if (apiPropertyData) {
+          const mergedPropertyData = {
+            ...apiPropertyData,
+            secondaryPhoneNumber:
+              propertyData.secondaryPhoneNumber ?? undefined,
+          };
+
           // Transform API response to FormValues
-          const formValues = transformPropertyFormToFormValues(apiPropertyData);
+          const formValues =
+            transformPropertyFormToFormValues(mergedPropertyData);
 
           // Set property category
-          dispatch(setPropertyCategory(apiPropertyData.propertyCategory));
+          dispatch(setPropertyCategory(mergedPropertyData.propertyCategory));
 
           // Set form data
           dispatch(setFormData({ data: formValues }));

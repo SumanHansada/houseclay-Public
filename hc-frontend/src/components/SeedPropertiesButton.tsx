@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/base-components";
-import { usePropertyAddMutation } from "@/store/apiSlice";
 import toast from "react-hot-toast";
+
+import { Button } from "@/base-components";
 import { PropertyCategory } from "@/common/enums";
 import { FlatmateForm } from "@/interfaces/FlatmateForm";
+import { usePropertyAddMutation } from "@/store/apiSlice";
 
 // 1. The static base payload (based on your JSON)
 const BASE_PAYLOAD: Omit<FlatmateForm, "propertyID" | "description"> = {
