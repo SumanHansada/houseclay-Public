@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import React from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
-import { PaginationFooter } from "@/components/PaginationFooter";
+import { PaginationFooter } from "@/components/Pagination";
 import { RenderPaymentStatus } from "@/components/status/RenderPaymentStatus";
 import { useLocalPagination } from "@/hooks/useLocalPagination";
 import { UserExternalPayment } from "@/interfaces/User";

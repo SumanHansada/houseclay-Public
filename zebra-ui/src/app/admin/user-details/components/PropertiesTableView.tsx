@@ -2,7 +2,7 @@
 import React from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
-import { PaginationFooter } from "@/components/PaginationFooter";
+import { PaginationFooter } from "@/components/Pagination";
 import { useLocalPagination } from "@/hooks/useLocalPagination";
 
 interface PropertiesTableViewProps<

@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { VerifyPropertyStatusEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
 import { DataTable } from "@/components/DataTable";
-import { PaginationFooter } from "@/components/PaginationFooter";
+import { PaginationFooter } from "@/components/Pagination";
 import { VerifySeededButton } from "@/components/seeder/VerifySeededButton";
 import Spinner from "@/components/Spinner";
 import { useStatusBasedPropertyFetch } from "@/hooks/useStatusBasedPropertyFetch";
@@ -119,10 +119,10 @@ const PropertyVerificationTablePage: React.FC = () => {
           </h1>
 
           <div className="flex gap-3 items-center">
-            {/* NEW SEED BUTTON */}
-            {status === VerifyPropertyStatusEnum.VERIFY && true && (
+            {/* TEST - Verify Seeded Button */}
+            {/* {status === VerifyPropertyStatusEnum.VERIFY && !true && (
               <VerifySeededButton />
-            )}
+            )} */}
 
             <h1 className="text-2xl font-medium">Status:</h1>
             <button
@@ -155,7 +155,7 @@ const PropertyVerificationTablePage: React.FC = () => {
 
       {/* Table Section with IsFetching Overlay */}
       <div className="flex-1 px-4 py-2 overflow-y-auto relative min-h-[400px]">
-        {/* THE FIX: Overlay for pagination transition */}
+        {/* Overlay for pagination transition */}
         {isFetching && (
           <div className="absolute inset-0 z-10 bg-white/60 flex items-center justify-center backdrop-blur-[1px]">
             <Spinner size="lg" />

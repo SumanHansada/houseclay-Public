@@ -5,7 +5,7 @@ import React from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
 import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
-import { PaginationFooter } from "@/components/PaginationFooter";
+import { PaginationFooter } from "@/components/Pagination";
 import { useLocalPagination } from "@/hooks/useLocalPagination";
 import { PropertyReportDetails } from "@/interfaces/api";
 import { useGetPropertyByIdQuery } from "@/store/apiSlice";

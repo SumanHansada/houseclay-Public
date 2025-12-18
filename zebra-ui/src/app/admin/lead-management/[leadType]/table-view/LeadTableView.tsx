@@ -6,7 +6,7 @@ import { useState } from "react";
 import { LeadQueryParamEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
 import { Column, DataTable } from "@/components/DataTable";
-import { PaginationFooter } from "@/components/PaginationFooter";
+import { PaginationFooter } from "@/components/Pagination";
 import { RenderLeadStatus } from "@/components/status/RenderLeadStatus";
 import { Lead, LeadType } from "@/interfaces/Lead";
 import { useGetLeadsQuery } from "@/store/apiSlice";

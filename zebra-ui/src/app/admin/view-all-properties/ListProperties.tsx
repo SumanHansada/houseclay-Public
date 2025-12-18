@@ -1,11 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import AsyncFallback from "@/components/AsyncFallback";
 import { DataTable } from "@/components/DataTable";
-import { PaginationFooter } from "@/components/PaginationFooter";
+import { Pagination } from "@/components/Pagination";
 import { SearchAndFilterBar } from "@/components/SearchAndFilterBar";
 import { PropertyInfo } from "@/interfaces/PropertyInfo";
 import { useGetPropertiesQuery } from "@/store/apiSlice";
@@ -13,6 +13,7 @@ import {
   buildPropertyColumns,
   createDefaultPropertyActions,
 } from "@/utils/table/buildPropertyColumns";
+import Spinner from "@/components/Spinner";
 
 interface SerializedPropertyRow extends PropertyInfo {
   _serial: number;
@@ -24,9 +25,11 @@ export const ListProperties = () => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Fetch paginated properties
   const {
     data: paginatedPropertyData,
     isLoading,
+    isFetching,
     isError,
     error,
   } = useGetPropertiesQuery(
@@ -39,24 +42,37 @@ export const ListProperties = () => {
     },
   );
 
-  if (isLoading || isError || !paginatedPropertyData) {
+  const { content: propertyList = [], totalPages = 0 } =
+    paginatedPropertyData || {};
+
+  useEffect(() => {
+    if (totalPages > 0 && currentPage > totalPages) {
+      setCurrentPage(1);
+    }
+  }, [totalPages, currentPage]);
+
+  // Initial Hard Loading State
+  if (isLoading) {
     return (
       <AsyncFallback
         isLoading={isLoading}
-        isError={isError || !paginatedPropertyData}
-        error={error}
-        loadingMessage="Loading all properties…"
-        errorMessage="Failed to fetch Properties."
+        isError={false}
+        loadingMessage="Loading properties..."
       />
     );
   }
 
-  const {
-    content: propertyList,
-    totalPages,
-    first: isFirst,
-    last: isLast,
-  } = paginatedPropertyData;
+  // Error State
+  if (isError || !paginatedPropertyData) {
+    return (
+      <AsyncFallback
+        isLoading={false}
+        isError={true}
+        error={error}
+        errorMessage="Failed to fetch Properties."
+      />
+    );
+  }
 
   const rows: SerializedPropertyRow[] = propertyList.map(
     (propertyInfo, index) => ({
@@ -65,26 +81,12 @@ export const ListProperties = () => {
     }),
   );
 
-  const goToPage = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
-  const nextPage = () => !isLast && setCurrentPage((p) => p + 1);
-  const prevPage = () => !isFirst && setCurrentPage((p) => p - 1);
-  const viewPropertyDetails = (
-    propertyCategory: string,
-    propertyID: string,
-  ) => {
-    router.push(
-      `/admin/property-details/${propertyCategory.toLowerCase()}/${propertyID}`,
-    );
-  };
-
   const columns = buildPropertyColumns(
     createDefaultPropertyActions({
       onView: (row) =>
-        viewPropertyDetails(row.propertyCategory, row.propertyID),
+        router.push(
+          `/admin/property-details/${row.propertyCategory.toLowerCase()}/${row.propertyID}`,
+        ),
     }),
   );
 
@@ -92,32 +94,54 @@ export const ListProperties = () => {
     <div className="flex flex-col h-[calc(100vh-4rem)]">
       <div className="flex flex-col flex-1 h-full">
         {/* Sticky top filter bar */}
-        <div className="sticky top-0 z-10 border border-b-gray-200 shadow-sm px-16 py-2">
+        <div className="sticky top-0 z-10 bg-white border border-b-gray-200 shadow-sm px-8 py-4">
           <SearchAndFilterBar />
         </div>
 
         {/* Table area */}
-        <div className="flex flex-1 bg-gray-100 py-6 px-16">
-          <div className="flex flex-col flex-1 bg-white shadow-sm rounded-xl p-4 gap-4">
-            <h1 className="text-2xl font-medium">All Listed Properties</h1>
-            <DataTable
-              columns={columns}
-              data={rows}
-              getRowId={(prop) => prop.propertyID}
-            />
+        <div className="flex flex-1 bg-gray-50 p-8 overflow-hidden">
+          <div className="flex flex-col flex-1 bg-white shadow-sm rounded-xl border border-gray-200 relative overflow-hidden">
+            {/* Blocks interaction with table while fetching */}
+            {isFetching && (
+              <div className="absolute inset-0 z-20 bg-white/50 flex items-center justify-center backdrop-blur-sm transition-all duration-300">
+                <div className="bg-white p-4 rounded-full shadow-lg border flex items-center justify-center">
+                  <Spinner size="lg" />
+                </div>
+              </div>
+            )}
+
+            <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+              <h1 className="text-xl font-semibold text-gray-800">
+                All Listed Properties
+              </h1>
+              <span className="text-sm text-gray-500">
+                Page {currentPage} of {totalPages}
+              </span>
+            </div>
+
+            <div className="flex-1 overflow-auto">
+              <div
+                className={
+                  isFetching ? "opacity-50 pointer-events-none" : "opacity-100"
+                }
+              >
+                <DataTable
+                  columns={columns}
+                  data={rows}
+                  getRowId={(prop) => prop.propertyID}
+                />
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Sticky bottom pagination */}
-        <div className="sticky bottom-0 z-10 border border-t-gray-200 shadow-sm">
-          <PaginationFooter
+        <div className="sticky bottom-0 z-10 bg-white border-t border-gray-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] py-4 px-8">
+          <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            isFirst={isFirst}
-            isLast={isLast}
-            goToPage={goToPage}
-            nextPage={nextPage}
-            prevPage={prevPage}
+            onPageChange={(page) => setCurrentPage(page)}
+            isLoading={isFetching}
           />
         </div>
       </div>

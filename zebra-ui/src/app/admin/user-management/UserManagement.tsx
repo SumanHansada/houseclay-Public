@@ -7,12 +7,13 @@ import React, { useEffect, useState } from "react";
 import AsyncFallback from "@/components/AsyncFallback";
 import { Column, DataTable } from "@/components/DataTable";
 import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
-import { PaginationFooter } from "@/components/PaginationFooter";
+// import { PaginationFooter } from "@/components/PaginationFooter";
 import { RenderUserStatus } from "@/components/status/RenderUserStatus";
 import { TitleAndSearchBar } from "@/components/TitleAndSearchBar";
 import { UserInfo } from "@/interfaces/User";
 import { useGetUserByPhoneNoQuery, useGetUsersQuery } from "@/store/apiSlice";
 import { createTestIdFactory } from "@/utils/testIds";
+import Spinner from "@/components/Spinner";
 
 const ROWS_PER_PAGE = 10;
 const userManagementTestIds = createTestIdFactory("User Management");
@@ -27,6 +28,7 @@ export const UsersManagement = () => {
   const {
     data: paginatedUserData,
     isLoading,
+    isFetching: isFetchingUsers,
     isError,
     error,
   } = useGetUsersQuery(
@@ -41,18 +43,15 @@ export const UsersManagement = () => {
     },
   );
 
-  const {
-    data: currentUser,
-    isFetching: isSearching,
-    isError: isSearchError,
-  } = useGetUserByPhoneNoQuery(
-    {
-      phoneNo: searchValue,
-    },
-    {
-      skip: !searchValue,
-    },
-  );
+  const { data: currentUser, isFetching: isSearching } =
+    useGetUserByPhoneNoQuery(
+      {
+        phoneNo: searchValue,
+      },
+      {
+        skip: !searchValue,
+      },
+    );
 
   useEffect(() => {
     if (currentUser) {
@@ -63,13 +62,24 @@ export const UsersManagement = () => {
     }
   }, [currentUser, isSearching, searchValue]);
 
-  if (isSearching || isLoading || isError || !paginatedUserData) {
+  // Initial Hard Loading State
+  if (isLoading) {
     return (
       <AsyncFallback
         isLoading={isLoading}
-        isError={isError || isSearchError || !paginatedUserData}
+        isError={false}
+        loadingMessage="Loading users..."
+      />
+    );
+  }
+
+  // Error State
+  if (isError || !paginatedUserData) {
+    return (
+      <AsyncFallback
+        isLoading={false}
+        isError={true}
         error={error}
-        loadingMessage="Loading all users…"
         errorMessage="Failed to fetch Users."
       />
     );
@@ -153,23 +163,37 @@ export const UsersManagement = () => {
 
         {/* Table area */}
         <div className="flex flex-1 bg-gray-100 py-8 px-16">
-          <div className="flex flex-col flex-1 bg-white shadow-sm rounded-xl p-6">
-            <DataTable
-              columns={columns}
-              data={filteredUsers}
-              getRowId={(user) => user.phoneNo}
-              noDataMessage={
-                searchValue && !searchResult && !isSearching
-                  ? "No such user exists."
-                  : "No User Data Found!"
+          <div className="flex flex-col flex-1 bg-white shadow-sm rounded-xl p-6 relative">
+            {/* Overlay for pagination transition */}
+            {(isFetchingUsers || isSearching) && (
+              <div className="absolute inset-0 z-10 bg-white/60 flex items-center justify-center backdrop-blur-[1px]">
+                <Spinner size="lg" />
+              </div>
+            )}
+            <div
+              className={
+                isFetchingUsers || isSearching
+                  ? "opacity-40 transition-opacity"
+                  : "opacity-100 transition-opacity"
               }
-            />
+            >
+              <DataTable
+                columns={columns}
+                data={filteredUsers}
+                getRowId={(user) => user.phoneNo}
+                noDataMessage={
+                  searchValue && !searchResult && !isSearching
+                    ? "No such user exists."
+                    : "No User Data Found!"
+                }
+              />
+            </div>
           </div>
         </div>
 
         {/* Sticky bottom pagination */}
         <div className="sticky bottom-0 z-10 border border-t-gray-200 shadow-sm">
-          <PaginationFooter
+          {/* <PaginationFooter
             currentPage={currentPage}
             totalPages={totalPages}
             isFirst={isFirst}
@@ -177,7 +201,7 @@ export const UsersManagement = () => {
             goToPage={goToPage}
             nextPage={nextPage}
             prevPage={prevPage}
-          />
+          /> */}
         </div>
       </div>
     </div>
