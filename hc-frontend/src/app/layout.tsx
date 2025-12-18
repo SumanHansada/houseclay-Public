@@ -312,7 +312,11 @@ export default function RootLayout({
             <ConditionalPageTransition
               transitionType="slideRight"
               backTransitionType="slideLeft"
-              skipTransitionPaths={["/manage-account"]}
+              skipTransitionPaths={[
+                "/manage-account",
+                "/list-property",
+                "/edit-property",
+              ]}
             >
               <main className="mx-auto my-0 pt-14 max-md:pb-16 flex-1 flex flex-col justify-center">
                 <>

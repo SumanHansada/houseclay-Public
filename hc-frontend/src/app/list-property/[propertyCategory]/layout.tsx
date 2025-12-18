@@ -17,8 +17,7 @@ import { useS3Uploader } from "@/hooks/useS3Uploader";
 import { transformFormValuesToPropertyForm } from "@/interfaces/FormTransformers";
 import { FormValues } from "@/interfaces/FormValues";
 import { PropertyImage } from "@/interfaces/PropertyImage";
-import { MobileFooter } from "@/layout-components";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
+import { MobileFooter, PageTransition } from "@/layout-components";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   usePresignedUrlsMutation,
@@ -29,7 +28,8 @@ import { RootState } from "@/store/store";
 import { resetUpload } from "@/store/uploadToS3Slice";
 import { ImageWithLoader } from "@/utility-components";
 
-import ListPropertyStepper from "../components/ListPropertyStepper";
+import ListPropertyDesktopStepper from "../components/ListPropertyDesktopStepper";
+import ListPropertyMobileStepper from "../components/ListPropertyMobileStepper";
 
 type FinalizationStage = "idle" | "uploading" | "posting";
 
@@ -44,7 +44,6 @@ export default function ListPropertyTypeLayout({
   const uploadFiles = useS3Uploader();
   const router = useRouter();
   const { openDialog, isDialogOpen, closeDialog } = useDialog();
-  const { isMobile } = useDeviceContext();
 
   // Extract propertyCategory from URL params
   const pathSegments = pathname.split("/");
@@ -407,18 +406,6 @@ export default function ListPropertyTypeLayout({
     void runPost();
   }, [finalizationStage, handlePostProperty]);
 
-  const renderStepper = () => {
-    return (
-      <ListPropertyStepper
-        currentStep={currentStep}
-        completedSteps={completedSteps}
-        propertyCategory={propertyCategory}
-        isMobile={isMobile}
-        onClose={goToHomePage}
-      />
-    );
-  };
-
   const goToHomePage = () => {
     // Clear form data when user navigates away
     dispatch(clearFormData());
@@ -428,10 +415,14 @@ export default function ListPropertyTypeLayout({
   return (
     <>
       {/* Mobile stepper is now handled inside ListPropertyStepper */}
-      {isMobile && renderStepper()}
+      <ListPropertyMobileStepper
+        currentStep={currentStep}
+        propertyCategory={propertyCategory}
+        onClose={goToHomePage}
+      />
       <div className="flex w-full h-full top-14">
         {/* Background SVG behind left section only */}
-        <div className="left-0 top-14 bottom-0 z-40 w-[33.33%] fixed  bg-gray-50 max-md:hidden">
+        <aside className="left-0 top-14 bottom-0 w-1/3 fixed  bg-gray-50 max-md:hidden">
           <ImageWithLoader
             src="/images/property-add-graphic.svg"
             alt="Property Graphic"
@@ -441,27 +432,37 @@ export default function ListPropertyTypeLayout({
           />
           {/* Left side - Steps navigation */}
           <div className="absolute right-8 top-12 flex flex-col z-50">
-            {!isMobile && renderStepper()}
+            <ListPropertyDesktopStepper
+              currentStep={currentStep}
+              completedSteps={completedSteps}
+              propertyCategory={propertyCategory}
+            />
           </div>
-        </div>
-        <div className="container right-0 ml-[33.33%] max-md:ml-auto pt-4 md:pt-12 pb-20 mx-auto xl:px-28 lg:px-14 md:px-8 px-6">
-          <div className="flex flex-col">
-            <Formik
-              initialValues={initialValues}
-              onSubmit={(values) => {
-                console.log("Submit all data:", values);
-                // send to backend
-              }}
-              validateOnChange={false}
-              validateOnBlur={false}
-            >
-              {(formik) => (
-                <Form>
-                  <FormikProvider value={formik}>{children}</FormikProvider>
-                </Form>
-              )}
-            </Formik>
-          </div>
+        </aside>
+
+        <div className="right-0 ml-[33.33%] w-full max-md:ml-auto pt-4 md:pt-12 pb-20 mx-auto xl:px-28 lg:px-14 md:px-8 px-6">
+          <PageTransition
+            transitionType="slideRight"
+            backTransitionType="slideLeft"
+          >
+            <div className="flex flex-col">
+              <Formik
+                initialValues={initialValues}
+                onSubmit={(values) => {
+                  console.log("Submit all data:", values);
+                  // send to backend
+                }}
+                validateOnChange={false}
+                validateOnBlur={false}
+              >
+                {(formik) => (
+                  <Form>
+                    <FormikProvider value={formik}>{children}</FormikProvider>
+                  </Form>
+                )}
+              </Formik>
+            </div>
+          </PageTransition>
           <div className="fixed bottom-0 left-0 ml-[33.33%] max-md:hidden right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
             <button
               type="button"
@@ -488,45 +489,45 @@ export default function ListPropertyTypeLayout({
               )}
             </button>
           </div>
-          <MobileFooter>
-            <div className="md:hidden flex w-full justify-between">
-              <button
-                type="button"
-                className="text-center px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50  disabled:bg-gray-300 disabled:cursor-not-allowed transition duration-200"
-                onClick={handleBack}
-              >
-                Back
-              </button>
-
-              <button
-                type="submit"
-                className="text-center px-6 py-3 border border-red-500 bg-red-500 text-white rounded-xl hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300 transition duration-200"
-                disabled={!isFormValid || isAddingProperty}
-                onClick={handleSaveAndNext}
-              >
-                {currentStep === ListPropertyFormStep.ADDITIONAL_INFO ? (
-                  isAddingProperty ? (
-                    <Spinner size="sm" />
-                  ) : (
-                    "List Property"
-                  )
-                ) : (
-                  "Save & Continue"
-                )}
-              </button>
-            </div>
-          </MobileFooter>
         </div>
-
-        {/* Success Dialog */}
-        {isDialogOpen("list-property-success-dialog") && (
-          <ListPropertySuccessDialog
-            id="list-property-success-dialog"
-            propertyID={propertyID}
-            propertyCategory={propertyCategory}
-          />
-        )}
       </div>
+      <MobileFooter>
+        <div className="md:hidden flex w-full justify-between">
+          <button
+            type="button"
+            className="text-center px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50  disabled:bg-gray-300 disabled:cursor-not-allowed transition duration-200"
+            onClick={handleBack}
+          >
+            Back
+          </button>
+
+          <button
+            type="submit"
+            className="text-center px-6 py-3 border border-red-500 bg-red-500 text-white rounded-xl hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300 transition duration-200"
+            disabled={!isFormValid || isAddingProperty}
+            onClick={handleSaveAndNext}
+          >
+            {currentStep === ListPropertyFormStep.ADDITIONAL_INFO ? (
+              isAddingProperty ? (
+                <Spinner size="sm" />
+              ) : (
+                "List Property"
+              )
+            ) : (
+              "Save & Continue"
+            )}
+          </button>
+        </div>
+      </MobileFooter>
+
+      {/* Success Dialog */}
+      {isDialogOpen("list-property-success-dialog") && (
+        <ListPropertySuccessDialog
+          id="list-property-success-dialog"
+          propertyID={propertyID}
+          propertyCategory={propertyCategory}
+        />
+      )}
     </>
   );
 }
