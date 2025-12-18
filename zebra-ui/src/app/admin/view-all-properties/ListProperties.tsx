@@ -7,13 +7,13 @@ import AsyncFallback from "@/components/AsyncFallback";
 import { DataTable } from "@/components/DataTable";
 import { Pagination } from "@/components/Pagination";
 import { SearchAndFilterBar } from "@/components/SearchAndFilterBar";
+import Spinner from "@/components/Spinner";
 import { PropertyInfo } from "@/interfaces/PropertyInfo";
 import { useGetPropertiesQuery } from "@/store/apiSlice";
 import {
   buildPropertyColumns,
   createDefaultPropertyActions,
 } from "@/utils/table/buildPropertyColumns";
-import Spinner from "@/components/Spinner";
 
 interface SerializedPropertyRow extends PropertyInfo {
   _serial: number;
@@ -25,7 +25,7 @@ export const ListProperties = () => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Fetch paginated properties
+  // Get All Properties (Paginated)
   const {
     data: paginatedPropertyData,
     isLoading,

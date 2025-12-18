@@ -8,7 +8,6 @@ import { VerifyPropertyStatusEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
 import { DataTable } from "@/components/DataTable";
 import { PaginationFooter } from "@/components/Pagination";
-import { VerifySeededButton } from "@/components/seeder/VerifySeededButton";
 import Spinner from "@/components/Spinner";
 import { useStatusBasedPropertyFetch } from "@/hooks/useStatusBasedPropertyFetch";
 import { PropertyInfo } from "@/interfaces/PropertyInfo";
