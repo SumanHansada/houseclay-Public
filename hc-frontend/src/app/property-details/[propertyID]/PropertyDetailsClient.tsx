@@ -55,13 +55,14 @@ import {
   liftIconURL,
   outdoorDiningAreaIconURL,
   parkingSpaceIconURL,
+  placeholderIconURL,
   poolTableIconURL,
   securityIconURL,
   smokeAlarmIconURL,
   swimmingPoolIconURL,
   twentyFourXSevenIconURL,
   wifiIconURL,
-} from "@/common/dataConstants/cdnURL";
+} from "@/common/cdnURLs";
 import {
   BALCONY_TYPE_OPTIONS,
   BATHROOM_TYPE_OPTIONS,
@@ -629,11 +630,7 @@ export function PropertyDetailsClient({
             />
           ) : (
             <div className="w-full h-60 flex flex-col items-center justify-center bg-gray-100">
-              <SvgIcon
-                iconSize="medium"
-                name="property-placeholder-icon"
-                size={80}
-              />
+              <RemoteSvg src={placeholderIconURL} className="w-20" />
               <p className="text-gray-500">No images available</p>
             </div>
           )}
@@ -727,11 +724,7 @@ export function PropertyDetailsClient({
               />
             ) : (
               <div className="w-full h-96 flex flex-col items-center justify-center bg-gray-100">
-                <SvgIcon
-                  iconSize="medium"
-                  name="property-placeholder-icon"
-                  size={120}
-                />
+                <RemoteSvg src={placeholderIconURL} className="w-32" />
                 <p className="text-gray-500 text-xl">No images available</p>
               </div>
             )}

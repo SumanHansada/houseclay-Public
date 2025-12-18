@@ -1,6 +1,11 @@
 "use client";
 
-import { SvgIcon } from "@/utility-components";
+import {
+  directOwnerAccessImageURL,
+  exclusiveListingImageURL,
+  payAsYouGoImageURL,
+} from "@/common/cdnURLs";
+import { RemoteSvg } from "@/utility-components";
 
 const Advantages: React.FC = () => {
   return (
@@ -14,14 +19,14 @@ const Advantages: React.FC = () => {
       </div>
       <div className="flex flex-wrap xl:gap-12 lg:gap-6 gap-6 justify-between">
         <div className="flex flex-1 flex-col bg-white rounded-3xl  border border-gray-200 shadow-lg xl:px-12 lg:px-6 px-3 py-6 justify-between items-center gap-4">
-          <SvgIcon iconSize="medium" name="direct-owner-access" size={150} />
+          <RemoteSvg src={directOwnerAccessImageURL} className="w-40" />
           <h1 className="font-bold text-center">Direct Owner Access</h1>
           <p className="text-center">
             Skip the brokers — connect straight to property owners with ease.
           </p>
         </div>
         <div className="flex flex-1 flex-col bg-white rounded-3xl border border-gray-200 shadow-lg xl:px-12 lg:px-6 px-3  py-6 justify-between items-center gap-4">
-          <SvgIcon iconSize="large" name="pay-as-you-go" size={150} />
+          <RemoteSvg src={payAsYouGoImageURL} className="w-40" />
           <h1 className="font-bold text-center">Pay-As-You-Go</h1>
           <p className="text-center">
             Buy connects only when you need them. No subscriptions, no hidden
@@ -29,7 +34,7 @@ const Advantages: React.FC = () => {
           </p>
         </div>
         <div className="flex flex-1 flex-col bg-white rounded-3xl border border-gray-200 shadow-lg xl:px-12 lg:px-6 px-3 py-6 justify-between items-center gap-4">
-          <SvgIcon iconSize="medium" name="exclusive-listings" size={160} />
+          <RemoteSvg src={exclusiveListingImageURL} className="w-40" />
           <h1 className="font-bold text-center">Exclusive Listings</h1>
           <p className="text-center">
             Access properties you won&apos;t find anywhere else, only on

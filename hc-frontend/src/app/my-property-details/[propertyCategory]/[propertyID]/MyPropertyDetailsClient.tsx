@@ -42,7 +42,6 @@ import { useState } from "react";
 import React from "react";
 
 import { Button } from "@/base-components";
-import { MARK_RENTED_ACTION_DIALOG_ID } from "@/common/constants";
 import {
   clubhouseIconURL,
   dedicatedWorkspaceIconURL,
@@ -58,7 +57,8 @@ import {
   swimmingPoolIconURL,
   twentyFourXSevenIconURL,
   wifiIconURL,
-} from "@/common/dataConstants/cdnURL";
+} from "@/common/cdnURLs";
+import { MARK_RENTED_ACTION_DIALOG_ID } from "@/common/constants";
 import {
   BHK_TYPE_OPTIONS,
   FACING_OPTIONS,

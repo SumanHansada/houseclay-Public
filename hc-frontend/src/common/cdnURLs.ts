@@ -1,7 +1,17 @@
-import { CDN_BASE_URL } from "../constants";
+import { CDN_BASE_URL } from "./constants";
 
+export const coinIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/coin.svg`;
 export const houseclayIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/houseclay.svg`;
+export const placeholderImageURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/property-placeholder.svg`;
+export const placeholderIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/property-placeholder-icon.svg`;
+
+export const directOwnerAccessImageURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/direct-owner-access.svg`;
+export const payAsYouGoImageURL = `${CDN_BASE_URL}/public/optimizedIcons/large/pay-as-you-go.svg`;
+export const exclusiveListingImageURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/exclusive-listings.svg`;
+
+export const propertyAddGraphicURL = `${CDN_BASE_URL}/public/images/property-add-graphic.webp`;
 export const listPropertySuccessIconURL = `${CDN_BASE_URL}/public/optimizedIcons/large/list-property-success.svg`;
+
 export const builtUpAreaIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/build-up-area.svg`;
 export const balconyIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/balcony.svg`;
 

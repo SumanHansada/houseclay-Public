@@ -158,6 +158,7 @@ const Properties: React.FC<PropertiesProps> = ({
             setIsShortlistedProperty(newStatus);
           }}
           whileTap={{ scale: 0.95 }}
+          aria-label="Shortlist Property"
         >
           {/* Heart icon with scale animation */}
           <motion.div

@@ -2,7 +2,9 @@
 import Image, { ImageProps } from "next/image";
 import { memo, useState } from "react";
 
-import SvgIcon from "./SvgIcon";
+import { placeholderImageURL } from "@/common/cdnURLs";
+
+import RemoteSvg from "./RemoteSvg";
 
 interface ImageWithLoaderProps extends Omit<ImageProps, "src" | "alt"> {
   src: string;
@@ -69,12 +71,10 @@ const ImageWithLoader = memo(function ImageWithLoader({
       {/* Error state */}
       {hasError && (
         <div className="absolute inset-0 bg-gray-200 rounded-xl flex flex-col gap-2 items-center justify-center">
-          <SvgIcon
-            iconSize="medium"
-            name="property-placeholder-icon"
-            size={80}
+          <RemoteSvg
+            src={placeholderImageURL}
+            className="w-full h-full absolute inset-0 object-cover"
           />
-          <div className="text-gray-500 text-sm">Failed to load image</div>
         </div>
       )}
     </div>

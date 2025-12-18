@@ -34,7 +34,7 @@ import {
   twentyFourXSevenIconURL,
   vegIconURL,
   wifiIconURL,
-} from "@/common/dataConstants/cdnURL";
+} from "@/common/cdnURLs";
 import {
   BALCONY_TYPE_OPTIONS,
   BATHROOM_TYPE_OPTIONS,

@@ -41,7 +41,7 @@ import {
   swimmingPoolIconURL,
   twentyFourXSevenIconURL,
   wifiIconURL,
-} from "@/common/dataConstants/cdnURL";
+} from "@/common/cdnURLs";
 import {
   BHK_TYPE_OPTIONS,
   FURNISHING_OPTIONS,

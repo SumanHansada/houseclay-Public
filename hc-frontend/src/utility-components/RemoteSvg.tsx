@@ -73,9 +73,29 @@ const RemoteSvg: React.FC<RemoteSvgProps> = ({ src, className }) => {
 
   if (!rawSvg) return null;
 
-  return (
-    <span className={className} dangerouslySetInnerHTML={{ __html: rawSvg }} />
-  );
+  // Apply className directly to the SVG element
+  let processedSvg = rawSvg;
+  if (className) {
+    // Find the opening <svg> tag and inject className
+    processedSvg = processedSvg.replace(/<svg([^>]*)>/, (match, attributes) => {
+      // Check if class attribute already exists
+      const classMatch = attributes.match(/class=["']([^"']*)["']/);
+      if (classMatch) {
+        // Merge with existing class
+        const existingClasses = classMatch[1];
+        const mergedClasses = `${existingClasses} ${className}`.trim();
+        return `<svg${attributes.replace(
+          /class=["'][^"']*["']/,
+          `class="${mergedClasses}"`,
+        )}>`;
+      } else {
+        // Add new class attribute
+        return `<svg${attributes} class="${className}">`;
+      }
+    });
+  }
+
+  return <span dangerouslySetInnerHTML={{ __html: processedSvg }} />;
 };
 
 export default RemoteSvg;

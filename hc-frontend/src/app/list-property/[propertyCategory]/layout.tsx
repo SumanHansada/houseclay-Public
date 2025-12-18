@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { propertyAddGraphicURL } from "@/common/cdnURLs";
 import {
   ListPropertyFormStep,
   ListPropertyRouteStep,
@@ -424,11 +425,10 @@ export default function ListPropertyTypeLayout({
         {/* Background SVG behind left section only */}
         <aside className="left-0 top-14 bottom-0 w-1/3 fixed  bg-gray-50 max-md:hidden">
           <ImageWithLoader
-            src="/images/property-add-graphic.svg"
+            src={propertyAddGraphicURL}
             alt="Property Graphic"
             fill
             className="w-full h-full object-cover max-xl:hidden"
-            priority
           />
           {/* Left side - Steps navigation */}
           <div className="absolute right-8 top-12 flex flex-col z-50">

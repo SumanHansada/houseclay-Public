@@ -1,8 +1,9 @@
 "use client";
 import { motion } from "framer-motion";
-import Image from "next/image";
 
+import { coinIconURL } from "@/common/cdnURLs";
 import { ConnectsBundle } from "@/interfaces/ConnectsBundle";
+import { RemoteSvg } from "@/utility-components";
 
 interface ConnectsBundleProps {
   bundle: ConnectsBundle;
@@ -76,7 +77,7 @@ export default function ConnectsBundleCard({
         {bundle.subTitle}
       </h2>
       <div className="flex items-center gap-1 rounded-full mb-2 md:mb-4">
-        <Image src="/icons/coin.svg" alt="coin" width={24} height={24} />
+        <RemoteSvg src={coinIconURL} className="w-6 h-6" />
         <span className="flex font-medium text-white text-xxs md:text-sm">
           {bundle.connects} Connects
         </span>

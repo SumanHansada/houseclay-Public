@@ -30,7 +30,7 @@ import {
   swimmingPoolIconURL,
   twentyFourXSevenIconURL,
   wifiIconURL,
-} from "@/common/dataConstants/cdnURL";
+} from "@/common/cdnURLs";
 import {
   BALCONY_NUMERIC_OPTIONS,
   BATHROOM_NUMERIC_OPTIONS,
