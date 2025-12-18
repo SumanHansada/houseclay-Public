@@ -5,6 +5,7 @@ export const houseclayIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/hou
 export const houseclayHomeIconURL = `${CDN_BASE_URL}/public/icons/houseclay-home.svg`;
 export const placeholderImageURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/property-placeholder.svg`;
 export const placeholderIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/property-placeholder-icon.svg`;
+export const propertyImageURL = `${CDN_BASE_URL}/public/images/property.webp`;
 
 export const directOwnerAccessImageURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/direct-owner-access.svg`;
 export const payAsYouGoImageURL = `${CDN_BASE_URL}/public/optimizedIcons/large/pay-as-you-go.svg`;

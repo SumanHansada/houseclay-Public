@@ -33,7 +33,7 @@ const HeroSection = () => (
       <div className="relative aspect-[16/9] md:hidden rounded-xl shadow-lg overflow-hidden">
         <ImageWithLoader
           src="/images/banner-what-are-connects-mobile.webp"
-          alt="Property Graphic"
+          alt="What are connects"
           fill
           className="object-center rounded-xl shadow-lg"
           sizes="100vw"

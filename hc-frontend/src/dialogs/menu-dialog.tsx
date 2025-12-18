@@ -15,10 +15,10 @@ import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
-import { BENGALURU_LOCATION, CDN_BASE_URL } from "@/common/constants";
+import { propertyImageURL } from "@/common/cdnURLs";
+import { BENGALURU_LOCATION } from "@/common/constants";
 import { ACCOUNT_NAV } from "@/common/dataConstants/navbar";
 import { AuthStep } from "@/common/enums";
-import { shimmer, toBase64 } from "@/common/utils";
 import { AccountNavList } from "@/components/AccountNavList";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { MobileHeader } from "@/layout-components";
@@ -37,8 +37,6 @@ const VerifiedTenants = VerifiedTenantsSvg as React.FC<
 interface MenuDialogProps {
   id: string;
 }
-
-const propertyImgUrl = CDN_BASE_URL + "/public/images/property.webp";
 
 const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
@@ -106,7 +104,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
           <MobileHeader.RightAction>
             {isAuthenticated ? null : (
               <button
-                className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100 text-center text-sm"
+                className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-xl border-orange-600 text-orange-600 hover:bg-gray-100 text-center text-sm"
                 onClick={onLogin}
               >
                 Log In
@@ -116,12 +114,13 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
         </MobileHeader>
       </DialogHeader>
       <DialogContent>
-        <div className="px-6 py-4 flex flex-col gap-8">
+        <div className="px-6 py-4 flex flex-col gap-8 pt-14">
           {/* Profile Section */}
           {isAuthenticated && (
             <Link
               href="/manage-account/my-profile"
               className="flex items-center p-4 gap-4 border border-gray-200 rounded-full shadow-lg inset-shadow-xs"
+              onClick={onNavClick}
             >
               <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-white">
                 <UserRound size={32} />
@@ -156,14 +155,12 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
               </div>
             </div>
             <ImageWithLoader
-              src={propertyImgUrl}
+              src={propertyImageURL}
               alt="Property"
               loading="lazy"
-              placeholder="blur"
               height={100}
               width={100}
               className="!absolute items-end right-0 bottom-0 scale-125"
-              blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(300, 400))}`}
             />
           </div>
           {/* Connects Balance */}
