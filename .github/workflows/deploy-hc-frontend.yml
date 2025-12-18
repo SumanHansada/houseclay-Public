@@ -43,7 +43,7 @@ jobs:
 
           # 🔥 CLEAR ALL NEXT.js BUILD CACHES
           rm -rf .next
-          rm -rf node_modules
+          rm -rf node_modules/.cache
           
           npm install
           npm run build:prod
