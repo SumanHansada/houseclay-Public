@@ -2,6 +2,7 @@ import { CDN_BASE_URL } from "./constants";
 
 export const coinIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/coin.svg`;
 export const houseclayIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/houseclay.svg`;
+export const houseclayHomeIconURL = `${CDN_BASE_URL}/public/icons/houseclay-home.svg`;
 export const placeholderImageURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/property-placeholder.svg`;
 export const placeholderIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/property-placeholder-icon.svg`;
 

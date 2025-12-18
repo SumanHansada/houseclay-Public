@@ -6,9 +6,9 @@ import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
-import { CDN_BASE_URL, EXPLORE_LOCATION } from "@/common/constants";
+import { EXPLORE_LOCATION } from "@/common/constants";
 import { RootState } from "@/store/store";
-import { RemoteSvg, SvgIcon } from "@/utility-components";
+import { SvgIcon } from "@/utility-components";
 
 type NavItem = {
   id: string;
@@ -21,8 +21,6 @@ type NavItem = {
 interface StickyNavbarProps {
   defaultActive?: string;
 }
-
-const houseClayHomeSvg = CDN_BASE_URL + "/public/icons/houseclay-home.svg";
 
 const StickyNavbar: React.FC<StickyNavbarProps> = ({
   defaultActive = "home",
@@ -49,7 +47,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
     },
     {
       id: "home",
-      icon: <RemoteSvg src={houseClayHomeSvg} className="w-6 h-6" />,
+      icon: <SvgIcon iconSize="small" name="houseclay-home" size={25} />,
       label: "Home",
       href: "/",
     },

@@ -113,7 +113,7 @@ const Properties: React.FC<PropertiesProps> = ({
           src={propertyImages[currentImageIndex]}
           alt={`Property ${property?.propertyID}`}
           fill
-          className="rounded-xl"
+          className="rounded-xl bg-gray-200"
           loading="lazy"
         />
 

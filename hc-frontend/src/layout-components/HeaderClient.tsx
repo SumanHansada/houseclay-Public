@@ -245,7 +245,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
       </header>
 
       {/* Mobile Header */}
-      <header className="fixed top-0 left-0 right-0 bg-white z-40 border-b border-gray-200 flex justify-between w-full px-4 py-2 shadow-sm md:hidden">
+      <header className="fixed top-0 left-0 right-0 h-14 bg-white z-40 border-b border-gray-200 flex justify-between w-full px-4 py-2 shadow-sm md:hidden">
         {/* Left Section - Logo */}
         <div className="flex items-center gap-2">
           <Menu role="button" onClick={onMenuClick} />
@@ -256,23 +256,14 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
             </span>
           </Link>
         </div>
-        <div className="text-sm">
-          {isAuthenticated ? (
-            <button
-              className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100 text-center"
-              onClick={() => openDialog(ACTION_DIALOG_ID)}
-            >
-              Logout
-            </button>
-          ) : (
-            <button
-              className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100 text-center"
-              onClick={onLogin}
-            >
-              Log In
-            </button>
-          )}
-        </div>
+        {isAuthenticated ? null : (
+          <button
+            className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100 text-center text-sm"
+            onClick={onLogin}
+          >
+            Log In
+          </button>
+        )}
       </header>
 
       {isMobile && isDialogOpen(ACTION_DIALOG_ID) && (

@@ -150,7 +150,7 @@ export const DialogHeader: React.FC<{
 }> = ({ children, className = "" }) => {
   return (
     <div
-      className={`relative ${children ? "h-14 border-b border-gray-200 flex max-md:px-4 max-md:py-2 max-md:items-center max-md:justify-center md:px-6 md:py-4 md:items-start md:justify-start" : ""} ${className}`}
+      className={`relative ${children ? "h-14 border-b border-gray-200 flex max-md:px-4 max-md:py-2 max-md:shadow-sm max-md:items-center max-md:justify-center md:px-6 md:py-4 md:items-start md:justify-start" : ""} ${className}`}
     >
       {children}
     </div>

@@ -1,8 +1,7 @@
 import "./globals.css";
 
 import { Viewport } from "next";
-import { Inter } from "next/font/google";
-import { Nunito } from "next/font/google";
+import { Inter, Nunito } from "next/font/google";
 import Script from "next/script";
 
 import { Header, StickyNavbar } from "@/layout-components";
@@ -35,6 +34,8 @@ const nutino = Nunito({
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
   viewportFit: "cover", // very  important you know this
 };
 

@@ -21,7 +21,7 @@ import { AuthStep } from "@/common/enums";
 import { shimmer, toBase64 } from "@/common/utils";
 import { AccountNavList } from "@/components/AccountNavList";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
-import { useLogout } from "@/hooks/useLogout";
+import { MobileHeader } from "@/layout-components";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setAuthStep, setLoginFromAddProperty } from "@/store/authSlice";
 import { RootState } from "@/store/store";
@@ -44,7 +44,6 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const router = useRouter();
   const { openDialog, closeDialog } = useDialog();
-  const { logout } = useLogout();
   const dispatch = useDispatch();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -70,11 +69,6 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
     openDialog("login-dialog");
   };
 
-  const onLogout = () => {
-    logout();
-    router.replace("/");
-  };
-
   const onNavClick = () => {
     handleCloseDialog();
   };
@@ -97,33 +91,29 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
       exitAnimation="animate-slide-out-left"
     >
       <DialogHeader>
-        <div className={`flex justify-between items-center w-full`}>
-          <Button
-            variant="secondary"
-            size="custom"
-            className="rounded-full p-1"
-            onClick={handleCloseDialog}
-          >
-            <X size={24} />
-          </Button>
-          <div className="text-sm">
-            {isAuthenticated ? (
+        <MobileHeader>
+          <MobileHeader.LeftAction>
+            <Button
+              variant="secondary"
+              size="custom"
+              className="rounded-full p-1"
+              onClick={handleCloseDialog}
+            >
+              <X size={24} />
+            </Button>
+          </MobileHeader.LeftAction>
+          <MobileHeader.Title>Menu</MobileHeader.Title>
+          <MobileHeader.RightAction>
+            {isAuthenticated ? null : (
               <button
-                className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100 text-center"
-                onClick={onLogout}
-              >
-                Logout
-              </button>
-            ) : (
-              <button
-                className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100 text-center"
+                className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-md border-orange-600 text-orange-600 hover:bg-gray-100 text-center text-sm"
                 onClick={onLogin}
               >
                 Log In
               </button>
             )}
-          </div>
-        </div>
+          </MobileHeader.RightAction>
+        </MobileHeader>
       </DialogHeader>
       <DialogContent>
         <div className="px-6 py-4 flex flex-col gap-8">
