@@ -21,15 +21,15 @@
   ],
   "screenshots": [
     {
-      "src": "/screenshots/mobile-home.png",
+      "src": "/screenshots/mobile-home.jpg",
       "sizes": "1080x1920",
-      "type": "image/png",
+      "type": "image/jpg",
       "form_factor": "narrow"
     },
     {
-      "src": "/screenshots/desktop-home.png",
+      "src": "/screenshots/desktop-home.jpg",
       "sizes": "1920x1080",
-      "type": "image/png",
+      "type": "image/jpg",
       "form_factor": "wide"
     }
   ],
