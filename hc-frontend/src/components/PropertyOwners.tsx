@@ -9,7 +9,7 @@ const PropertyOwners: React.FC = () => {
     <div className="mx-auto xl:px-28 lg:px-14 md:px-14 px-6 py-20 flex flex-col md:flex-row items-center justify-between bg-white">
       {/* Left Side - Text Content */}
       <div className="flex-col flex-1 text-left items-center">
-        <span className="bg-red-50 text-red-600 px-4 py-2 rounded-full text-sm ">
+        <span className="bg-red-50 text-red-700 px-4 py-2 rounded-full text-sm ">
           For Property Owners
         </span>
         <h1 className="text-3xl font-bold mt-4">

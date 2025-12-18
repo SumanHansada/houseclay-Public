@@ -56,7 +56,7 @@ export default function TestimonialsPage() {
             </h1>
           </div>
         </section>
-        <h2 className="text-gray-900 text-lg xl:text-xl w-2/3 xl:w-2/5 mx-auto text-center py-16">
+        <h2 className="text-gray-600 text-lg xl:text-xl w-2/3 xl:w-2/5 mx-auto text-center py-16">
           Our users success stories reflect our commitment to delivering
           excellent service, transparency, and value.
         </h2>

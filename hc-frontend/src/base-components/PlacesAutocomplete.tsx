@@ -453,6 +453,7 @@ const PlacesAutocompleteBase = ({
         aria-activedescendant={
           focusedIndex >= 0 ? `${id}-option-${focusedIndex}` : undefined
         }
+        aria-label={name}
         disabled={disabled}
       />
 

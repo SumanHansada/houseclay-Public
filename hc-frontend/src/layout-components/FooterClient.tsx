@@ -211,7 +211,7 @@ const FooterClient: React.FC = () => {
 
         {/* Bottom footer with logo and copyright */}
         <div className="py-4 flex flex-row justify-between items-center">
-          <div className="text-gray-400 text-sm">
+          <div className="text-gray-600 text-sm">
             © 2025 Elevensquare Technologies Pvt Ltd. All right reserved.
           </div>
           <div className="flex">
@@ -219,7 +219,7 @@ const FooterClient: React.FC = () => {
               <li>
                 <Link
                   href="/privacy-policy"
-                  className="text-gray-400 hover:text-red-500"
+                  className="text-gray-600 hover:text-red-500"
                 >
                   Privacy Policy
                 </Link>
@@ -227,7 +227,7 @@ const FooterClient: React.FC = () => {
               <li>
                 <Link
                   href="/terms-and-conditions"
-                  className="text-gray-400 hover:text-red-500"
+                  className="text-gray-600 hover:text-red-500"
                 >
                   Terms & Conditions
                 </Link>

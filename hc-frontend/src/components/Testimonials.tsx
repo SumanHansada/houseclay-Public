@@ -87,7 +87,7 @@ export const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
         <h2 className="mb-4 text-4xl max-md:text-xl font-bold text-gray-900">
           Sign up and become part of a vibrant community of 5,000+ flatwappers.
         </h2>
-        <p className="mx-auto max-w-3xl text-lg max-md:text-base font-thin font-nunito text-gray-400">
+        <p className="mx-auto max-w-3xl text-lg max-md:text-base font-thin font-nunito text-gray-600">
           Our users success stories reflect our commitment to delivering
           excellent service, transparency, and value.
         </p>

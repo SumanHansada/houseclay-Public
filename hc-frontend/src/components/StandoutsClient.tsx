@@ -39,7 +39,7 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
               <Link
                 href="/standouts"
                 prefetch
-                className="border border-red-500 text-red-500 px-4 py-2 rounded-md"
+                className="border border-red-600 text-red-600 px-4 py-2 rounded-md"
               >
                 View All Standouts
               </Link>

@@ -219,7 +219,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       {/* Selected value display */}
       <div
         className={`flex items-center ${dropdownClass} ${
-          disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+          disabled ? "opacity-60 cursor-not-allowed" : "cursor-pointer"
         }`}
         onClick={() => !disabled && setIsOpen(!isOpen)}
         onKeyDown={disabled ? undefined : handleToggleKeyDown}
@@ -233,7 +233,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       >
         <span
           aria-label="city-dropdown-selected"
-          className={`text-gray-700 ${selectedLabelClass}`}
+          className={`text-gray-900 ${selectedLabelClass}`}
         >
           {selected.label}
         </span>

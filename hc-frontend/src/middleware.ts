@@ -4,6 +4,13 @@ import { NextResponse } from "next/server";
 // List of paths that don't require authentication
 const publicPaths = ["/", "/login", "/signup", "/buy-connects"];
 
+// Mapping of base list-property category URLs to their detail routes
+const listPropertyBaseRedirects: Record<string, string> = {
+  "/list-property/rent": "/list-property/rent/property-details",
+  "/list-property/resale": "/list-property/resale/property-details",
+  "/list-property/flatmate": "/list-property/flatmate/property-details",
+};
+
 export function middleware(request: NextRequest) {
   const start = performance.now();
   const token = request.cookies.get("token")?.value;
@@ -17,6 +24,14 @@ export function middleware(request: NextRequest) {
   // If user has token and tries to access login/signup, redirect to home
   if (token && pathname === "/login") {
     return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  // Redirect base list-property category URLs to their property-details routes
+  const listPropertyRedirectTarget = listPropertyBaseRedirects[pathname];
+  if (listPropertyRedirectTarget) {
+    return NextResponse.redirect(
+      new URL(listPropertyRedirectTarget, request.url),
+    );
   }
 
   // Redirect /manage-account to /manage-account/my-profile
