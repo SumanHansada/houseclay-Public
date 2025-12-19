@@ -8,7 +8,7 @@ import {
   createDefaultPropertyActions,
 } from "@/utils/table/buildPropertyColumns";
 
-import { PropertiesTableView } from "../../components/PropertiesTableView";
+import { PaginatedPropertiesTable } from "../../components/PaginatedPropertiesTable";
 
 interface SerializedPropertyRow extends PropertyInfo {
   _serial: number;
@@ -17,9 +17,12 @@ interface SerializedPropertyRow extends PropertyInfo {
 const ShortlistedPropertiesPage: React.FC = () => {
   const router = useRouter();
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
-  const { data } = useGetUserByPhoneNoQuery({ phoneNo: userPhoneNo });
+  const { data, isLoading } = useGetUserByPhoneNoQuery({
+    phoneNo: userPhoneNo,
+  });
 
-  const { shortlistedProperties } = data!.user;
+  // parent layout already ensures data is present
+  const { shortlistedProperties = [] } = data!.user;
 
   const rows: SerializedPropertyRow[] = shortlistedProperties.map(
     (propertyInfo, index) => ({
@@ -46,10 +49,11 @@ const ShortlistedPropertiesPage: React.FC = () => {
 
   return (
     <div className="h-full">
-      <PropertiesTableView
+      <PaginatedPropertiesTable
         tableTitle="Shortlisted Properties"
         columns={columns}
         rows={rows}
+        isLoading={isLoading}
       />
     </div>
   );

@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import React from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
-import { PaginationFooter } from "@/components/Pagination";
+import { Pagination } from "@/components/Pagination";
 import { RenderPaymentStatus } from "@/components/status/RenderPaymentStatus";
 import { useLocalPagination } from "@/hooks/useLocalPagination";
 import { UserExternalPayment } from "@/interfaces/User";
@@ -17,25 +17,20 @@ interface RowType extends UserExternalPayment {
 const PaymentHistory: React.FC = () => {
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
 
-  const { data } = useGetUserByPhoneNoQuery({ phoneNo: userPhoneNo });
+  const { data, isLoading } = useGetUserByPhoneNoQuery({
+    phoneNo: userPhoneNo,
+  });
 
-  const { externalPayments } = data!.user;
+  // parent layout already ensures data is present
+  const { externalPayments = [] } = data!.user;
 
   const rows: RowType[] = externalPayments.map((paymentInfo, index) => ({
     ...paymentInfo,
     _serial: index + 1,
   }));
 
-  const {
-    currentPage,
-    paginatedRows,
-    totalPages,
-    isFirst,
-    isLast,
-    goToPage,
-    nextPage,
-    prevPage,
-  } = useLocalPagination(rows, 10);
+  const { currentPage, paginatedRows, totalPages, goToPage } =
+    useLocalPagination(rows, 10);
 
   const columns: Column<RowType>[] = [
     {
@@ -96,14 +91,11 @@ const PaymentHistory: React.FC = () => {
           </div>
         </div>
         <div className="sticky bottom-0 z-10 border-t border-gray-200 bg-white">
-          <PaginationFooter
+          <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            isFirst={isFirst}
-            isLast={isLast}
-            goToPage={goToPage}
-            nextPage={nextPage}
-            prevPage={prevPage}
+            onPageChange={goToPage}
+            isLoading={isLoading}
           />
         </div>
       </div>

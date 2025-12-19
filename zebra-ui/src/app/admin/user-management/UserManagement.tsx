@@ -2,18 +2,18 @@
 
 import { Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import AsyncFallback from "@/components/AsyncFallback";
 import { Column, DataTable } from "@/components/DataTable";
 import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
 import { Pagination } from "@/components/Pagination";
-import { RenderUserStatus } from "@/components/status/RenderUserStatus";
 import { SearchBar } from "@/components/SearchBar";
+import Spinner from "@/components/Spinner";
+import { RenderUserStatus } from "@/components/status/RenderUserStatus";
 import { UserInfo } from "@/interfaces/User";
 import { useGetUserByPhoneNoQuery, useGetUsersQuery } from "@/store/apiSlice";
 import { createTestIdFactory } from "@/utils/testIds";
-import Spinner from "@/components/Spinner";
 
 const ROWS_PER_PAGE = 12;
 const userManagementTestIds = createTestIdFactory("User Management");

@@ -9,7 +9,7 @@ import {
   createDefaultPropertyActions,
 } from "@/utils/table/buildPropertyColumns";
 
-import { PropertiesTableView } from "../../components/PropertiesTableView";
+import { PaginatedPropertiesTable } from "../../components/PaginatedPropertiesTable";
 
 export interface SerializedPropertyRow extends PropertyInfo {
   _serial: number;
@@ -37,9 +37,12 @@ const extraCols: Column<CustomizedPropertyRow>[] = [
 const ReportedPropertiesPage: React.FC = () => {
   const router = useRouter();
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
-  const { data } = useGetUserByPhoneNoQuery({ phoneNo: userPhoneNo });
+  const { data, isLoading } = useGetUserByPhoneNoQuery({
+    phoneNo: userPhoneNo,
+  });
 
-  const { reportProperties } = data!.user;
+  // parent layout already ensures data is present
+  const { reportProperties = [] } = data!.user;
 
   const rows: CustomizedPropertyRow[] = reportProperties.map(
     (reportPropertyInfo, index) => ({
@@ -76,10 +79,11 @@ const ReportedPropertiesPage: React.FC = () => {
 
   return (
     <div className="h-full">
-      <PropertiesTableView
+      <PaginatedPropertiesTable
         tableTitle="Reported Properties"
         columns={columns}
         rows={rows}
+        isLoading={isLoading}
       />
     </div>
   );

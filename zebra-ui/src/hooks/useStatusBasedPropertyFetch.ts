@@ -17,12 +17,18 @@ export function useStatusBasedPropertyFetch({
 }: StatusFetchParams) {
   const verify = useGetPropertiesToVerifyQuery(
     { page, size },
-    { skip: status !== VerifyPropertyStatusEnum.VERIFY },
+    {
+      skip: status !== VerifyPropertyStatusEnum.VERIFY,
+      refetchOnMountOrArgChange: true,
+    },
   );
 
   const reverify = useGetPropertiesToReverifyQuery(
     { page, size },
-    { skip: status !== VerifyPropertyStatusEnum.REVERIFY },
+    {
+      skip: status !== VerifyPropertyStatusEnum.REVERIFY,
+      refetchOnMountOrArgChange: true,
+    },
   );
 
   return status === VerifyPropertyStatusEnum.VERIFY ? verify : reverify;

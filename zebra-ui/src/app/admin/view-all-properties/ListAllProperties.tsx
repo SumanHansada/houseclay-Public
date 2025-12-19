@@ -21,7 +21,7 @@ interface SerializedPropertyRow extends PropertyInfo {
 
 const ROWS_PER_PAGE = 12;
 
-export const ListProperties = () => {
+export const ListAllProperties = () => {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
 

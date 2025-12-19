@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { VerifyPropertyStatusEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
 import { DataTable } from "@/components/DataTable";
-import { PaginationFooter } from "@/components/Pagination";
+import { Pagination } from "@/components/Pagination";
 import Spinner from "@/components/Spinner";
 import { useStatusBasedPropertyFetch } from "@/hooks/useStatusBasedPropertyFetch";
 import { PropertyInfo } from "@/interfaces/PropertyInfo";
@@ -59,12 +59,7 @@ const PropertyVerificationTablePage: React.FC = () => {
     );
   }
 
-  const {
-    content: allProperties,
-    totalPages,
-    first: isFirst,
-    last: isLast,
-  } = paginatedPropertyData;
+  const { content: allProperties, totalPages } = paginatedPropertyData;
 
   const rows: SerializedPropertyRow[] = allProperties.map(
     (propertyInfo, index) => ({
@@ -78,8 +73,6 @@ const PropertyVerificationTablePage: React.FC = () => {
       setCurrentPage(page);
     }
   };
-  const nextPage = () => !isLast && setCurrentPage((p) => p + 1);
-  const prevPage = () => !isFirst && setCurrentPage((p) => p - 1);
   const viewPropertyDetails = (
     propertyCategory: string,
     propertyID: string,
@@ -107,87 +100,94 @@ const PropertyVerificationTablePage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-white shadow-sm rounded-xl">
-      {/* Header Section - Title and Status buttons */}
-      <div className="p-4 border-b border-gray-200">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl">
-            {status === VerifyPropertyStatusEnum.VERIFY
-              ? "Properties to be Verified"
-              : "Properties to be Re-verified"}
-          </h1>
+    <div className="flex flex-col h-full">
+      {/* Main Content Area - Matches ListAll's gray bg and padding */}
+      <div className="flex-1 flex flex-col bg-gray-50 p-8 overflow-hidden">
+        {/* White Card Container - Matches ListAll's structure */}
+        <div className="flex flex-col flex-1 bg-white shadow-sm rounded-xl border border-gray-200 relative overflow-hidden">
+          {/* Blocks interaction with table while fetching - Matches ListAll overlay */}
+          {isFetching && (
+            <div className="absolute inset-0 z-20 bg-white/50 flex items-center justify-center backdrop-blur-sm transition-all duration-300">
+              <div className="bg-white p-4 rounded-full shadow-lg border flex items-center justify-center">
+                <Spinner size="lg" />
+              </div>
+            </div>
+          )}
 
-          <div className="flex gap-3 items-center">
-            {/* TEST - Verify Seeded Button */}
-            {/* {status === VerifyPropertyStatusEnum.VERIFY && !true && (
-              <VerifySeededButton />
-            )} */}
+          {/* Header Section - Title, page info, and status buttons; matches ListAll header with added buttons */}
+          <div className="px-6 py-3 border-b border-gray-100 flex justify-between items-center">
+            <div className="flex items-center gap-4">
+              <h1 className="text-2xl font-semibold text-gray-800">
+                {status === VerifyPropertyStatusEnum.VERIFY
+                  ? "Properties to be Verified"
+                  : "Properties to be Re-verified"}
+              </h1>
+              <span className="text-sm text-gray-500">
+                Page {currentPage} of {totalPages}
+              </span>
+            </div>
 
-            <h1 className="text-2xl font-medium">Status:</h1>
-            <button
-              className={`py-2 px-3 rounded-xl border border-red-500 ${
-                status === VerifyPropertyStatusEnum.VERIFY
-                  ? "bg-red-500 text-white"
-                  : "bg-white text-red-500"
-              }`}
-              onClick={() =>
-                handleStatusChange(VerifyPropertyStatusEnum.VERIFY)
+            {/* Status Toggle Buttons - Flex for alignment */}
+            <div className="flex gap-3 items-center">
+              {/* TEST - Verify Seeded Button */}
+              {/* {status === VerifyPropertyStatusEnum.VERIFY && !true && (
+                <VerifySeededButton />
+              )} */}
+
+              <h1 className="text-2xl font-medium">Status:</h1>
+              <button
+                className={`py-2 px-3 rounded-xl border border-red-500 ${
+                  status === VerifyPropertyStatusEnum.VERIFY
+                    ? "bg-red-500 text-white"
+                    : "bg-white text-red-500"
+                }`}
+                onClick={() =>
+                  handleStatusChange(VerifyPropertyStatusEnum.VERIFY)
+                }
+              >
+                Pending
+              </button>
+              <button
+                className={`py-2 px-3 rounded-xl border border-red-500 ${
+                  status === VerifyPropertyStatusEnum.REVERIFY
+                    ? "bg-red-500 text-white"
+                    : "bg-white text-red-500"
+                }`}
+                onClick={() =>
+                  handleStatusChange(VerifyPropertyStatusEnum.REVERIFY)
+                }
+              >
+                Reported
+              </button>
+            </div>
+          </div>
+
+          {/* Table Wrapper - Matches ListAll's flex-1 overflow-auto */}
+          <div className="flex-1 overflow-auto">
+            {/* Opacity Wrapper for Fetching - Matches ListAll */}
+            <div
+              className={
+                isFetching ? "opacity-50 pointer-events-none" : "opacity-100"
               }
             >
-              Pending
-            </button>
-            <button
-              className={`py-2 px-3 rounded-xl border border-red-500 ${
-                status === VerifyPropertyStatusEnum.REVERIFY
-                  ? "bg-red-500 text-white"
-                  : "bg-white text-red-500"
-              }`}
-              onClick={() =>
-                handleStatusChange(VerifyPropertyStatusEnum.REVERIFY)
-              }
-            >
-              Reported
-            </button>
+              <DataTable
+                columns={columns}
+                data={rows}
+                getRowId={(prop) => prop.propertyID}
+                noDataMessage="No properties found for this status."
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Table Section with IsFetching Overlay */}
-      <div className="flex-1 px-4 py-2 overflow-y-auto relative min-h-[400px]">
-        {/* Overlay for pagination transition */}
-        {isFetching && (
-          <div className="absolute inset-0 z-10 bg-white/60 flex items-center justify-center backdrop-blur-[1px]">
-            <Spinner size="lg" />
-          </div>
-        )}
-
-        <div
-          className={
-            isFetching
-              ? "opacity-40 transition-opacity"
-              : "opacity-100 transition-opacity"
-          }
-        >
-          <DataTable
-            columns={columns}
-            data={rows}
-            getRowId={(prop) => prop.propertyID}
-            noDataMessage="No properties found for this status."
-          />
-        </div>
-      </div>
-
-      {/* Bottom section with Pagination */}
-      <div className="border-t border-gray-200">
-        <PaginationFooter
+      {/* Sticky Bottom Pagination - Matches ListAll exactly */}
+      <div className="sticky bottom-0 z-10 border-t border-gray-200 bg-white py-4 px-8 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+        <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
-          isFirst={isFirst}
-          isLast={isLast}
-          goToPage={goToPage}
-          nextPage={nextPage}
-          prevPage={prevPage}
-          footerPadding="px-4 py-2"
+          onPageChange={goToPage}
+          isLoading={isFetching}
         />
       </div>
     </div>
