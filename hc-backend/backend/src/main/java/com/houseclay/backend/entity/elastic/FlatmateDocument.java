@@ -12,4 +12,6 @@ public class FlatmateDocument extends PropertyDocument {
     private String roomType;
     private String bathroomType;
     private String balconyType;
+    private Boolean nonVegAllowed;
+
 }

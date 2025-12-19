@@ -32,8 +32,14 @@ public class PropertySearchRequestDTO {
     private Double minPrice;
     private Double maxPrice;
 
-    private String preferredTenant;
+    private String preferredTenants;
     private List<String> amenities;
+
+    private String tenantType;
+    private Boolean nonVegAllowed;
+    private String bathroomType;
+    private String balconyType;
+    private String roomType;
 
     private SortFields sortFields;
     private SortOrder sortOrder;

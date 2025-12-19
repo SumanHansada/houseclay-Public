@@ -85,9 +85,9 @@ public class SearchService {
             ));
         }
 
-        if (request.getPreferredTenant() != null && !request.getPreferredTenant().isEmpty()) {
+        if (request.getPreferredTenants() != null && !request.getPreferredTenants().isEmpty()) {
             filters.add(Query.of(q -> q
-                    .term(t -> t.field("preferredTenant.keyword").value(request.getPreferredTenant()))
+                    .term(t -> t.field("preferredTenant.keyword").value(request.getPreferredTenants()))
             ));
         }
 
@@ -102,6 +102,37 @@ public class SearchService {
                     .term(t -> t.field("isExclusive").value(true))
             ));
         }
+
+        if (request.getTenantType() != null && !request.getTenantType().isEmpty()) {
+            filters.add(Query.of(q -> q
+                    .term(t -> t.field("tenantType.keyword").value(request.getTenantType()))
+            ));
+        }
+
+        if (request.getBathroomType() != null && !request.getBathroomType().isEmpty()) {
+            filters.add(Query.of(q -> q
+                    .term(t -> t.field("bathroomType.keyword").value(request.getBathroomType()))
+            ));
+        }
+
+        if (request.getBalconyType() != null && !request.getBalconyType().isEmpty()) {
+            filters.add(Query.of(q -> q
+                    .term(t -> t.field("balconyType.keyword").value(request.getBalconyType()))
+            ));
+        }
+
+        if (request.getRoomType() != null && !request.getRoomType().isEmpty()) {
+            filters.add(Query.of(q -> q
+                    .term(t -> t.field("roomType.keyword").value(request.getRoomType()))
+            ));
+        }
+
+        if (request.getNonVegAllowed() != null && request.getNonVegAllowed()) {
+            filters.add(Query.of(q -> q
+                    .term(t -> t.field("nonVegAllowed").value(true))
+            ));
+        }
+
 
         if (request.getPropertyAvailability() != null) {
             switch (request.getPropertyAvailability()) {

@@ -44,6 +44,7 @@ public class PropertyElasticService {
             flatmateDocument.setBalconyType(flatmate.getBalconyType());
             flatmateDocument.setBathroomType(flatmate.getBathroomType());
             flatmateDocument.setRoomType(flatmate.getRoomType());
+            flatmateDocument.setNonVegAllowed(flatmate.isNonVegAllowed());
             flatmateDocumentRepository.save(flatmateDocument);
         }
     }
