@@ -268,7 +268,7 @@ const PlacesAutocompleteBase = ({
           setPredictions([]);
           setShowDropdown(false);
         }
-      }, 200); // Debounce delay - 200ms
+      }, 150); // Debounce delay - 150ms
     } else {
       setPredictions([]);
       setShowDropdown(false);

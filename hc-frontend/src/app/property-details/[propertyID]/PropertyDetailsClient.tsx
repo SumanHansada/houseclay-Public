@@ -71,13 +71,12 @@ import {
   FLOOR_NUMERIC_OPTIONS,
   FURNISHING_OPTIONS,
   getOptionLabel,
-  getOptionLabels,
   PARKING_OPTIONS,
   POWER_BACKUP_OPTIONS,
-  PREFERRED_TENANTS_OPTIONS,
   PROPERTY_AGE_OPTIONS,
   PROPERTY_TYPE_OPTIONS,
   ROOM_TYPE_OPTIONS,
+  TENANT_TYPE_OPTIONS,
   TOTAL_FLOORS_NUMERIC_OPTIONS,
   WATER_SUPPLY_OPTIONS,
 } from "@/common/dataConstants/options";
@@ -340,10 +339,7 @@ export function PropertyDetailsClient({
       case PropertyCategory.FLATMATE:
         return {
           roomType: getOptionLabel(ROOM_TYPE_OPTIONS, property?.roomType),
-          tenantType: getOptionLabel(
-            PREFERRED_TENANTS_OPTIONS.FLATMATE,
-            property?.tenantType,
-          ),
+          tenantType: getOptionLabel(TENANT_TYPE_OPTIONS, property?.tenantType),
           balconyType: getOptionLabel(
             BALCONY_TYPE_OPTIONS,
             property?.balconyType,
@@ -370,15 +366,11 @@ export function PropertyDetailsClient({
             propertyCategory !== PropertyCategory.FLATMATE
               ? `${property?.balcony || 0} ${property?.balcony > 1 ? "Balconies" : "Balcony"}`
               : "",
-          // rentNegotiable: property?.rentNegotiable ? "Yes" : "No",
-          // ownershipType: getOptionLabel(
-          //   OWNERSHIP_TYPE_OPTIONS,
-          //   property?.ownershipType,
-          // ),
-          preferredTenants: getOptionLabels(
-            PREFERRED_TENANTS_OPTIONS.RENT,
-            property?.preferredTenants,
-          ).join(", "),
+          preferredTenants: property?.preferredTenants
+            ? property.preferredTenants
+                .map((value: string) => pascalCase(value))
+                .join(", ")
+            : "N/A",
         };
       default:
         return {};
@@ -417,7 +409,6 @@ export function PropertyDetailsClient({
     bedrooms,
     builtUpArea,
     availableFrom,
-    // TODO: show maintenance charges on hover
     maintenance,
     waterSupply,
     powerBackup,

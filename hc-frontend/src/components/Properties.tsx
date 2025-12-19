@@ -8,9 +8,9 @@ import {
   BHK_TYPE_OPTIONS,
   FURNISHING_OPTIONS,
   getOptionLabel,
-  PREFERRED_TENANTS_OPTIONS,
   PROPERTY_TYPE_OPTIONS,
   ROOM_TYPE_OPTIONS,
+  TENANT_TYPE_OPTIONS,
 } from "@/common/dataConstants/options";
 import { BadgeType, PropertyCategory } from "@/common/enums";
 import { formatINRCurrency, processPropertyImages } from "@/common/utils";
@@ -57,10 +57,7 @@ const Properties: React.FC<PropertiesProps> = ({
   const formattedPriceOrRentAmount = formatINRCurrency(
     property?.price || property?.rent || 0,
   );
-  const tenantType = getOptionLabel(
-    PREFERRED_TENANTS_OPTIONS.FLATMATE,
-    property.tenantType,
-  );
+  const tenantType = getOptionLabel(TENANT_TYPE_OPTIONS, property.tenantType);
   const roomType = getOptionLabel(ROOM_TYPE_OPTIONS, property.roomType);
   const bathroomType = getOptionLabel(
     BATHROOM_TYPE_OPTIONS,

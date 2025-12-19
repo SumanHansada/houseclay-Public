@@ -65,9 +65,7 @@ import {
   FLOOR_NUMERIC_OPTIONS,
   FURNISHING_OPTIONS,
   getOptionLabel,
-  getOptionLabels,
   PARKING_OPTIONS,
-  PREFERRED_TENANTS_OPTIONS,
   PROPERTY_AGE_OPTIONS,
   PROPERTY_TYPE_OPTIONS,
   TOTAL_FLOORS_NUMERIC_OPTIONS,
@@ -248,10 +246,11 @@ export function MyPropertyDetailsClient({
     WATER_SUPPLY_OPTIONS,
     property?.waterSupply,
   );
-  const preferredTenants = getOptionLabels(
-    PREFERRED_TENANTS_OPTIONS.RENT,
-    property?.preferredTenants,
-  ).join(", ");
+  const preferredTenants = property?.preferredTenants
+    ? property.preferredTenants
+        .map((value: string) => pascalCase(value))
+        .join(", ")
+    : "N/A";
   const smokingPreference = getOptionLabel(
     YES_NO_OPTIONS,
     property?.smokingPreference,

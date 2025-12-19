@@ -7,7 +7,10 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
 import { PlacesAutocomplete } from "@/base-components";
-import { resetPropertySearch, setLocation } from "@/store/propertySearchSlice";
+import {
+  resetPropertySearchSlice,
+  setLocation,
+} from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
 import { BENGALURU_BOUNDS, isWithinBounds } from "@/utils/geoBounds";
 
@@ -49,7 +52,7 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
   const handleSearch = () => {
     if (location && location.latitude && location.longitude) {
       // Reset all filters before making a new search
-      dispatch(resetPropertySearch());
+      dispatch(resetPropertySearchSlice());
 
       router.push(
         `/property-search?lat=${location.latitude}&lon=${location.longitude}&propertyCategory=${propertyCategory.toLowerCase()}`,
@@ -88,7 +91,7 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
       }
     }
 
-    dispatch(resetPropertySearch());
+    dispatch(resetPropertySearchSlice());
     dispatch(setLocation(value));
 
     router.push(
