@@ -15,7 +15,7 @@ const initialState: PropertySearchFilter = {
   availability: "Any",
 
   // filter dialog
-  nonVegAllowed: "",
+  nonVegAllowed: null as boolean | null,
   preferredTenants: "",
   roomType: "",
   bathroomType: "",
@@ -44,7 +44,7 @@ const onlyResetFilters = (state: PropertySearchFilter) => {
   state.availability = "Any";
 
   // Reset filter dialog states to initial values
-  state.nonVegAllowed = "";
+  state.nonVegAllowed = null;
   state.preferredTenants = "";
   state.roomType = "";
   state.bathroomType = "";
@@ -96,7 +96,7 @@ const propertySearchSlice = createSlice({
     },
 
     // filter dialog
-    setNonVegAllowed: (state, action: PayloadAction<string>) => {
+    setNonVegAllowed: (state, action: PayloadAction<boolean | null>) => {
       state.nonVegAllowed = action.payload;
     },
     setPreferredTenants: (state, action: PayloadAction<string>) => {

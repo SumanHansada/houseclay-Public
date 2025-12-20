@@ -14,6 +14,7 @@ import { useLogout } from "@/hooks/useLogout";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setAuthStep } from "@/store/authSlice";
+import { resetPropertySearchFilters } from "@/store/propertySearchSlice";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
 import { Popover } from "@/utility-components";
 
@@ -150,6 +151,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
                   : "false"
               }
               className="relative hover:text-red-600 py-2 nav-link"
+              onClick={() => dispatch(resetPropertySearchFilters())}
             >
               Rent
             </Link>
@@ -162,6 +164,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
                   : "false"
               }
               className="relative hover:text-red-600 py-2 nav-link"
+              onClick={() => dispatch(resetPropertySearchFilters())}
             >
               Rooms
             </Link>

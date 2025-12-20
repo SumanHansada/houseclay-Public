@@ -329,7 +329,7 @@ export default function PropertySearchPage() {
     const bhkType = searchParams.get("bhkType");
     const tenantType = searchParams.get("tenantType");
     const preferredTenants = searchParams.get("preferredTenants");
-    const nonVegAllowed = searchParams.get("nonVegAllowed");
+    const nonVegAllowedStr = searchParams.get("nonVegAllowed");
     const roomType = searchParams.get("roomType");
     const bathroomType = searchParams.get("bathroomType");
     const balconyType = searchParams.get("balconyType");
@@ -357,11 +357,17 @@ export default function PropertySearchPage() {
       }
     }
 
+    if (nonVegAllowedStr !== null) {
+      if (nonVegAllowedStr === "true" || nonVegAllowedStr === "1") {
+        query.nonVegAllowed = true;
+      } else if (nonVegAllowedStr === "false" || nonVegAllowedStr === "0") {
+        query.nonVegAllowed = false;
+      }
+    }
     if (propertyType) query.propertyType = propertyType;
     if (bhkType) query.bhkType = bhkType;
     if (tenantType) query.tenantType = tenantType;
     if (preferredTenants) query.preferredTenants = preferredTenants;
-    if (nonVegAllowed) query.nonVegAllowed = nonVegAllowed;
     if (roomType) query.roomType = roomType;
     if (bathroomType) query.bathroomType = bathroomType;
     if (balconyType) query.balconyType = balconyType;
@@ -410,18 +416,18 @@ export default function PropertySearchPage() {
     })) as PropertySearch[];
   }, [data, error]);
 
-  const handleSearch = () => {
+  const handleSearch = (dialogSelectedCategory?: PropertyCategory) => {
     // Build URL params from searchState (only supported filters)
     const params = new URLSearchParams();
 
     // Required params (lat, lon, propertyCategory)
     if (lat) params.set("lat", lat);
     if (lon) params.set("lon", lon);
-    if (searchState.propertyCategory) {
-      params.set(
-        "propertyCategory",
-        searchState.propertyCategory.toLowerCase(),
-      );
+
+    const effectiveCategory =
+      dialogSelectedCategory ?? searchState.propertyCategory;
+    if (effectiveCategory) {
+      params.set("propertyCategory", effectiveCategory.toLowerCase());
     }
 
     // Optional filters (only add if not empty)
@@ -452,7 +458,7 @@ export default function PropertySearchPage() {
     if (searchState.tenantType && searchState.tenantType !== "") {
       params.set("tenantType", String(searchState.tenantType));
     }
-    if (searchState.nonVegAllowed && searchState.nonVegAllowed !== "") {
+    if (searchState.nonVegAllowed !== null) {
       params.set("nonVegAllowed", String(searchState.nonVegAllowed));
     }
     if (searchState.roomType && searchState.roomType !== "") {
@@ -514,7 +520,7 @@ export default function PropertySearchPage() {
             containerClassName="w-full relative"
             inputClassName="h-10 bg-gray-100 w-full border-none outline-none"
           />
-          <button className="p-2 rounded-full" onClick={handleSearch}>
+          <button className="p-2 rounded-full" onClick={() => handleSearch()}>
             <SearchIcon size={20} />
           </button>
         </div>
@@ -558,7 +564,7 @@ export default function PropertySearchPage() {
             />
             <button
               className="p-2 bg-gray-100 rounded-full"
-              onClick={handleSearch}
+              onClick={() => handleSearch()}
             >
               <SearchIcon size={20} />
             </button>
@@ -812,10 +818,10 @@ export default function PropertySearchPage() {
             closeDialog(PROPERTY_FILTERS_DIALOG_ID);
           }}
           onReset={() => {}}
-          onApply={() => {
+          onApply={(dialogSelectedCategory?: PropertyCategory) => {
             isFilterDialogChange.current = true;
             closeDialog(PROPERTY_FILTERS_DIALOG_ID);
-            handleSearch();
+            handleSearch(dialogSelectedCategory);
           }}
         />
       )}

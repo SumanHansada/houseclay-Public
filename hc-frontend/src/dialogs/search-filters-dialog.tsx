@@ -18,7 +18,7 @@ import {
   Venus,
   X,
 } from "lucide-react";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button, Checkbox, RadioGroup } from "@/base-components";
@@ -90,7 +90,7 @@ interface SearchFiltersDialogProps {
   id: string;
   onClose: () => void;
   onReset: () => void;
-  onApply: () => void;
+  onApply: (dialogSelectedCategory?: PropertyCategory) => void;
 }
 
 const amenities = [
@@ -197,13 +197,17 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
     bhkType,
   } = useSelector((state: RootState) => state.propertySearch);
 
+  const [currentPropertyCategory, setCurrentPropertyCategory] = useState(
+    propertyCategory ?? PropertyCategory.RENT,
+  );
+
   const activePriceRange =
-    propertyCategory === PropertyCategory.FLATMATE
+    currentPropertyCategory === PropertyCategory.FLATMATE
       ? priceRangeForFlatmate
       : priceRangeForRent;
 
   const activePriceOptions =
-    propertyCategory === PropertyCategory.FLATMATE
+    currentPropertyCategory === PropertyCategory.FLATMATE
       ? FLATMATE_PRICE_OPTIONS
       : RENT_PRICE_OPTIONS;
 
@@ -230,10 +234,15 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
     onReset();
   };
 
+  const handleSubmit = () => {
+    dispatch(setPropertyCategory(currentPropertyCategory as PropertyCategory));
+    onApply(currentPropertyCategory as PropertyCategory);
+  };
+
   const handleTabChange = (value: string) => {
     // TODO: is it better to have category specific resets?
     handleReset();
-    dispatch(setPropertyCategory(value as PropertyCategory));
+    setCurrentPropertyCategory(value as PropertyCategory);
   };
 
   return (
@@ -280,13 +289,13 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
       <DialogContent>
         <div className="flex flex-col gap-6 px-6 py-2">
           {/* Looking For */}
-          {propertyCategory !== PropertyCategory.RESALE && (
+          {currentPropertyCategory !== PropertyCategory.RESALE && (
             <div>
               <div className="flex items-center gap-2 mb-2 text-lg">
                 <Binoculars size={20} /> Looking For
               </div>
               <Tabs
-                defaultActive={propertyCategory}
+                defaultActive={currentPropertyCategory}
                 onTabChange={handleTabChange}
               >
                 <TabHeader tabsClassName="justify-between border rounded-xl p-2 w-full flex gap-2">
@@ -802,9 +811,9 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                         ]}
                         withIcons={true}
                         horizontal
-                        value={nonVegAllowed}
+                        value={nonVegAllowed === null ? "" : nonVegAllowed}
                         onChange={(value) =>
-                          dispatch(setNonVegAllowed(value as string))
+                          dispatch(setNonVegAllowed(value as boolean))
                         }
                       />
                     </div>
@@ -904,7 +913,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
             </div>
           )}
 
-          {propertyCategory === PropertyCategory.RESALE && (
+          {currentPropertyCategory === PropertyCategory.RESALE && (
             <div>
               {/* Property Type */}
               <div>
@@ -1163,7 +1172,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
             variant="primary"
             size="md"
             className="max-md:w-full px-4 py-3 rounded-xl bg-red-500 text-white hover:bg-red-600 transition-colors"
-            onClick={onApply}
+            onClick={handleSubmit}
           >
             Show Results
           </Button>

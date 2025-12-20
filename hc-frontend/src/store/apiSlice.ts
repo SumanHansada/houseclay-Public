@@ -231,11 +231,12 @@ export const apiSlice = createApi({
           searchParams.append("bhkType", filters.bhkType.toString());
         if (filters.tenantType)
           searchParams.append("tenantType", filters.tenantType.toString());
-        if (filters.nonVegAllowed)
+        if (filters.nonVegAllowed !== undefined) {
           searchParams.append(
             "nonVegAllowed",
-            filters.nonVegAllowed.toString(),
+            filters.nonVegAllowed ? "true" : "false",
           );
+        }
         if (filters.roomType)
           searchParams.append("roomType", filters.roomType.toString());
         if (filters.bathroomType)

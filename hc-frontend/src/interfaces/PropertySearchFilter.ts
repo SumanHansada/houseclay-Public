@@ -12,7 +12,7 @@ export interface PropertySearchFilter {
   availability: string;
 
   // Filter Dialog
-  nonVegAllowed: string;
+  nonVegAllowed: boolean | null;
   preferredTenants: string;
   roomType: string;
   bathroomType: string;
