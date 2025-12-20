@@ -685,35 +685,39 @@ export default function PropertySearchPage() {
           <div className="flex flex-col gap-4 py-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4">
               {/* Left Side: Always visible count */}
-              <p className="text-sm text-gray-500 text-left md:text-right max-md:px-1">
-                {properties.length} out of {data?.totalElements}{" "}
-                {(() => {
-                  const count = properties.length;
-                  const isPlural = count !== 1;
-                  switch (searchState.propertyCategory) {
-                    case PropertyCategory.FLATMATE:
-                      return isPlural ? "Rooms for Rent" : "Room for Rent";
-                    case PropertyCategory.RENT:
-                      return isPlural
-                        ? "Properties for Rent"
-                        : "Property for Rent";
-                    default:
-                      return isPlural
-                        ? "Properties for Sale"
-                        : "Property for Sale";
-                  }
-                })()}
-              </p>
+              {properties.length > 0 ? (
+                <p className="text-sm text-gray-500 text-left md:text-right">
+                  {properties.length} out of {data?.totalElements}{" "}
+                  {(() => {
+                    const count = properties.length;
+                    const isPlural = count !== 1;
+                    switch (searchState.propertyCategory) {
+                      case PropertyCategory.FLATMATE:
+                        return isPlural ? "Rooms for Rent" : "Room for Rent";
+                      case PropertyCategory.RENT:
+                        return isPlural
+                          ? "Properties for Rent"
+                          : "Property for Rent";
+                      default:
+                        return isPlural
+                          ? "Properties for Sale"
+                          : "Property for Sale";
+                    }
+                  })()}
+                </p>
+              ) : (
+                <p className="h-0 w-0 invisible">Placeholder</p>
+              )}
 
               {/* Right Side: Location or Placeholder (Invisible is for left side logic) */}
               <div className="flex items-center gap-2 min-w-0">
                 {searchState.confirmedLocationName &&
                 searchState.confirmedLocationName !== "" ? (
                   <>
-                    <span className="text-xs md:text-sm text-gray-700 hidden md:inline">
-                      Showing Results for:
+                    <span className="text-sm text-gray-700 inline text-nowrap">
+                      Showing in:
                     </span>
-                    <span className="px-2 py-0.5 md:py-1 rounded-full bg-gray-200 text-xs md:text-sm truncate max-w-xs">
+                    <span className="px-2 py-0.5 md:py-1 rounded-full bg-gray-200 text-xs md:text-sm truncate max-w-64 md:max-w-xs">
                       {searchState.confirmedLocationName}
                     </span>
                   </>

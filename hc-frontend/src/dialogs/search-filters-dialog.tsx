@@ -589,7 +589,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                     </div>
                     <RadioGroup
                       name="priceRange"
-                      columns={3}
+                      columns={2}
                       options={activePriceOptions.map(({ value, label }) => ({
                         value,
                         label,
