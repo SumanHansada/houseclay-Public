@@ -221,18 +221,36 @@ export const apiSlice = createApi({
         });
 
         // Add optional filters
+        if (filters.minPrice !== undefined && filters.minPrice !== null)
+          searchParams.append("minPrice", filters.minPrice.toString());
+        if (filters.maxPrice)
+          searchParams.append("maxPrice", filters.maxPrice.toString());
         if (filters.propertyType)
           searchParams.append("propertyType", filters.propertyType.toString());
         if (filters.bhkType)
           searchParams.append("bhkType", filters.bhkType.toString());
-        if (filters.preferredTenant)
+        if (filters.tenantType)
+          searchParams.append("tenantType", filters.tenantType.toString());
+        if (filters.nonVegAllowed !== undefined) {
           searchParams.append(
-            "preferredTenant",
-            filters.preferredTenant.toString(),
+            "nonVegAllowed",
+            filters.nonVegAllowed ? "true" : "false",
+          );
+        }
+        if (filters.roomType)
+          searchParams.append("roomType", filters.roomType.toString());
+        if (filters.bathroomType)
+          searchParams.append("bathroomType", filters.bathroomType.toString());
+        if (filters.balconyType)
+          searchParams.append("balconyType", filters.balconyType.toString());
+        if (filters.preferredTenants)
+          searchParams.append(
+            "preferredTenants",
+            filters.preferredTenants.toString(),
           );
         if (filters.furnishing)
           searchParams.append("furnishing", filters.furnishing.toString());
-        if (filters.parking !== undefined)
+        if (filters.parking)
           searchParams.append("parking", filters.parking.toString());
         if (
           filters.amenities &&

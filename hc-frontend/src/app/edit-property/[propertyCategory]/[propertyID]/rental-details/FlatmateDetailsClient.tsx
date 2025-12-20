@@ -45,7 +45,7 @@ import {
   WATER_SUPPLY_OPTIONS,
   YES_NO_OPTIONS,
 } from "@/common/dataConstants/options";
-import { FLATMATE_PREFERRED_TENANTS } from "@/common/enums";
+import { TenantTypeValue } from "@/common/enums";
 import {
   FormCalendarField,
   FormCheckbox,
@@ -263,12 +263,12 @@ export const FlatmateDetailsClient: React.FC = () => {
             columns={2}
             options={[
               {
-                value: FLATMATE_PREFERRED_TENANTS.FEMALE,
+                value: TenantTypeValue.FEMALE,
                 label: "Female",
                 icon: <RemoteSvg src={femaleIconURL} />,
               },
               {
-                value: FLATMATE_PREFERRED_TENANTS.MALE,
+                value: TenantTypeValue.MALE,
                 label: "Male",
                 icon: <RemoteSvg src={maleIconURL} />,
               },

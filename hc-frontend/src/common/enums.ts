@@ -101,21 +101,21 @@ export enum ConnectBundleTitle {
   CUSTOM_CONNECTS = "Custom Connects",
 }
 
-export enum PROPERTY_TYPES {
+export enum PropertyTypeValue {
   APARTMENT = "apartment",
   VILLA = "villa",
   HOUSE = "house",
   BUILDING = "building",
 }
 
-export enum RENT_PREFERRED_TENANTS {
+export enum PreferredTenantValue {
   FAMILY = "family",
   COMPANY = "company",
   BACHELOR = "bachelor",
   COUPLE = "couple",
 }
 
-export enum FLATMATE_PREFERRED_TENANTS {
+export enum TenantTypeValue {
   MALE = "male",
   FEMALE = "female",
 }

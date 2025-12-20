@@ -1,19 +1,23 @@
-import { PROPERTY_TYPES } from "@/common/enums";
+import {
+  PreferredTenantValue,
+  PropertyTypeValue,
+  TenantTypeValue,
+} from "@/common/enums";
 
-import { BaseOption, generateNumericOptions } from "./optionUtils";
+import { BaseOption, generateNumericOptions, PriceOption } from "./optionUtils";
 
 export const PROPERTY_TYPE_OPTIONS: BaseOption[] = [
-  { value: PROPERTY_TYPES.APARTMENT, label: "Apartment" },
-  { value: PROPERTY_TYPES.VILLA, label: "Community Villa" },
-  { value: PROPERTY_TYPES.HOUSE, label: "Independent House" },
-  { value: PROPERTY_TYPES.BUILDING, label: "Standalone Building" },
+  { value: PropertyTypeValue.APARTMENT, label: "Apartment" },
+  { value: PropertyTypeValue.VILLA, label: "Community Villa" },
+  { value: PropertyTypeValue.HOUSE, label: "Independent House" },
+  { value: PropertyTypeValue.BUILDING, label: "Standalone Building" },
 ];
 
 export const PROPERTY_TYPE_SHORT_OPTIONS: BaseOption[] = [
-  { value: PROPERTY_TYPES.APARTMENT, label: "Apartment" },
-  { value: PROPERTY_TYPES.VILLA, label: "Villa" },
-  { value: PROPERTY_TYPES.HOUSE, label: "House" },
-  { value: PROPERTY_TYPES.BUILDING, label: "Building" },
+  { value: PropertyTypeValue.APARTMENT, label: "Apartment" },
+  { value: PropertyTypeValue.VILLA, label: "Villa" },
+  { value: PropertyTypeValue.HOUSE, label: "House" },
+  { value: PropertyTypeValue.BUILDING, label: "Building" },
 ];
 
 export const FACING_OPTIONS: BaseOption[] = [
@@ -101,6 +105,18 @@ export const BALCONY_TYPE_OPTIONS: BaseOption[] = [
   { value: "no-balcony", label: "No Balcony" },
 ];
 
+export const PREFERRED_TENANTS_OPTIONS: BaseOption[] = [
+  { value: PreferredTenantValue.FAMILY, label: "Family" },
+  { value: PreferredTenantValue.BACHELOR, label: "Bachelor" },
+  { value: PreferredTenantValue.COMPANY, label: "Company" },
+  { value: PreferredTenantValue.COUPLE, label: "Couple" },
+];
+
+export const TENANT_TYPE_OPTIONS: BaseOption[] = [
+  { value: TenantTypeValue.MALE, label: "Male" },
+  { value: TenantTypeValue.FEMALE, label: "Female" },
+];
+
 export const KHATA_CERTIFICATE_OPTIONS: BaseOption[] = [
   { value: "a-Khata", label: "Yes, A-Khata" },
   {
@@ -147,9 +163,28 @@ export const YES_NO_OPTIONS: BaseOption<boolean>[] = [
 
 // Property Search
 export const PROPERTY_AVAILABILITY: BaseOption[] = [
-  { label: "Any", value: "Any" },
-  { label: "Immediate", value: "IMMEDIATE" },
-  { label: "Within 15 Days", value: "WITHIN_15" },
-  { label: "Within 30 Days", value: "WITHIN_30" },
-  { label: "After 30 Days", value: "ABOVE_30" },
+  { value: "Any", label: "Any" },
+  { value: "IMMEDIATE", label: "Immediate" },
+  { value: "WITHIN_15", label: "Within 15 Days" },
+  { value: "WITHIN_30", label: "Within 30 Days" },
+  { value: "ABOVE_30", label: "After 30 Days" },
+];
+
+export const RENT_PRICE_OPTIONS: PriceOption[] = [
+  { value: "0-30000", label: "Under 30k", min: 0, max: 30000 },
+  { value: "30000-60000", label: "30k to 60k", min: 30000, max: 60000 },
+  { value: "60000-90000", label: "60k to 90k", min: 60000, max: 90000 },
+  {
+    value: "90000-max",
+    label: "90k & Above",
+    min: 90000,
+    max: 1000000,
+  },
+];
+
+export const FLATMATE_PRICE_OPTIONS: PriceOption[] = [
+  { value: "0-10000", label: "Under 10k", min: 0, max: 10000 },
+  { value: "10000-20000", label: "10k to 20k", min: 10000, max: 20000 },
+  { value: "20000-30000", label: "20k to 30k", min: 20000, max: 30000 },
+  { value: "30000-max", label: "30k & Above", min: 30000, max: 1000000 },
 ];

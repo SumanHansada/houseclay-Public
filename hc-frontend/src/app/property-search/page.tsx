@@ -24,9 +24,9 @@ import {
 } from "@/base-components";
 import {
   BHK_TYPE_OPTIONS,
-  PREFERRED_TENANTS_OPTIONS,
   PROPERTY_AVAILABILITY,
   PROPERTY_TYPE_SHORT_OPTIONS,
+  TENANT_TYPE_OPTIONS,
 } from "@/common/dataConstants/options";
 import { BadgeType, PropertyCategory } from "@/common/enums";
 import Properties from "@/components/Properties";
@@ -43,8 +43,10 @@ import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useGetPropertiesByLocationQuery } from "@/store/apiSlice";
 import {
+  resetPropertySearchFilters,
   setAvailability,
   setBhkType,
+  setConfirmedLocationName,
   setExclusiveFilter,
   setLocation,
   setPropertyCategory,
@@ -130,12 +132,13 @@ export default function PropertySearchPage() {
   const onCategoryChange = (raw: string | number | boolean) => {
     const cat = String(raw).toUpperCase() as PropertyCategory;
     dispatch(setPropertyCategory(cat));
+    dispatch(resetPropertySearchFilters());
 
     // when switching category, drop irrelevant filter from URL/state
     replaceQuery((q) => {
       q.set("propertyCategory", cat.toLowerCase());
       if (cat === PropertyCategory.RENT) {
-        q.delete("preferredTenant");
+        q.delete("tenantType");
         dispatch(setTenantType(""));
       } else if (cat === PropertyCategory.FLATMATE) {
         q.delete("bhkType");
@@ -169,14 +172,14 @@ export default function PropertySearchPage() {
     });
   };
 
-  const onPreferredTenantChange = (raw: string | number | boolean) => {
+  const onTenantTypeChange = (raw: string | number | boolean) => {
     const val = String(raw);
     dispatch(setTenantType(val));
     replaceQuery((q) => {
-      if (val) {
-        q.set("preferredTenant", val);
+      if (val && val !== "") {
+        q.set("tenantType", val);
       } else {
-        q.delete("preferredTenant");
+        q.delete("tenantType");
       }
     });
   };
@@ -265,11 +268,13 @@ export default function PropertySearchPage() {
             name: "",
           }),
         );
+        dispatch(setConfirmedLocationName(""));
         return;
       }
     }
 
     dispatch(setLocation(selectedLocation));
+    dispatch(setConfirmedLocationName(selectedLocation.name || ""));
 
     const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.set("lat", selectedLocation.latitude.toString());
@@ -281,6 +286,10 @@ export default function PropertySearchPage() {
 
   // Handle location input change
   const handleLocationChange = (value: string) => {
+    if (!value || value.trim() === "") {
+      dispatch(setConfirmedLocationName(""));
+    }
+
     // Update the location name in Redux state
     if (location) {
       dispatch(
@@ -314,9 +323,16 @@ export default function PropertySearchPage() {
     };
 
     // Add optional filters from URL params
+    const minPriceStr = searchParams.get("minPrice");
+    const maxPriceStr = searchParams.get("maxPrice");
     const propertyType = searchParams.get("propertyType");
     const bhkType = searchParams.get("bhkType");
-    const preferredTenant = searchParams.get("preferredTenant");
+    const tenantType = searchParams.get("tenantType");
+    const preferredTenants = searchParams.get("preferredTenants");
+    const nonVegAllowedStr = searchParams.get("nonVegAllowed");
+    const roomType = searchParams.get("roomType");
+    const bathroomType = searchParams.get("bathroomType");
+    const balconyType = searchParams.get("balconyType");
     const availability = searchParams.get("availability");
     const furnishing = searchParams.get("furnishing");
     const parking = searchParams.get("parking");
@@ -325,13 +341,40 @@ export default function PropertySearchPage() {
     const sortFields = searchParams.get("sortFields");
     const sortOrder = searchParams.get("sortOrder");
 
+    // Tamper protection: Validate minPrice and maxPrice from URL
+    if (minPriceStr !== null && maxPriceStr !== null) {
+      const minNum = Number(minPriceStr);
+      const maxNum = Number(maxPriceStr);
+      if (!isNaN(minNum) && !isNaN(maxNum)) {
+        // Bounds
+        const clampedMin = Math.max(0, minNum);
+        const clampedMax = Math.min(1000000, maxNum);
+
+        if (clampedMin <= clampedMax) {
+          query.minPrice = clampedMin;
+          query.maxPrice = clampedMax;
+        }
+      }
+    }
+
+    if (nonVegAllowedStr !== null) {
+      if (nonVegAllowedStr === "true" || nonVegAllowedStr === "1") {
+        query.nonVegAllowed = true;
+      } else if (nonVegAllowedStr === "false" || nonVegAllowedStr === "0") {
+        query.nonVegAllowed = false;
+      }
+    }
     if (propertyType) query.propertyType = propertyType;
     if (bhkType) query.bhkType = bhkType;
-    if (preferredTenant) query.preferredTenant = preferredTenant;
+    if (tenantType) query.tenantType = tenantType;
+    if (preferredTenants) query.preferredTenants = preferredTenants;
+    if (roomType) query.roomType = roomType;
+    if (bathroomType) query.bathroomType = bathroomType;
+    if (balconyType) query.balconyType = balconyType;
     if (availability && availability !== "Any")
       query.availability = availability;
     if (furnishing) query.furnishing = furnishing;
-    if (parking) query.parking = parking === "true";
+    if (parking) query.parking = parking;
     if (amenities) query.amenities = amenities.split(",");
     if (exclusive) query.exclusive = exclusive === "true" || exclusive === "1";
     if (sortFields) query.sortFields = sortFields;
@@ -373,21 +416,39 @@ export default function PropertySearchPage() {
     })) as PropertySearch[];
   }, [data, error]);
 
-  const handleSearch = () => {
+  const handleSearch = (dialogSelectedCategory?: PropertyCategory) => {
     // Build URL params from searchState (only supported filters)
     const params = new URLSearchParams();
 
     // Required params (lat, lon, propertyCategory)
     if (lat) params.set("lat", lat);
     if (lon) params.set("lon", lon);
-    if (searchState.propertyCategory) {
-      params.set(
-        "propertyCategory",
-        searchState.propertyCategory.toLowerCase(),
-      );
+
+    const effectiveCategory =
+      dialogSelectedCategory ?? searchState.propertyCategory;
+    if (effectiveCategory) {
+      params.set("propertyCategory", effectiveCategory.toLowerCase());
     }
 
     // Optional filters (only add if not empty)
+    let targetMin: number | null = null;
+    let targetMax: number | null = null;
+
+    if (searchState.propertyCategory === PropertyCategory.FLATMATE) {
+      if (searchState.priceRangeForFlatmate) {
+        [targetMin, targetMax] = searchState.priceRangeForFlatmate;
+      }
+    } else {
+      if (searchState.priceRangeForRent) {
+        [targetMin, targetMax] = searchState.priceRangeForRent;
+      }
+    }
+
+    // Only append to URL if we found valid numbers
+    if (targetMin !== null && targetMax !== null) {
+      params.set("minPrice", String(targetMin));
+      params.set("maxPrice", String(targetMax));
+    }
     if (searchState.propertyType && searchState.propertyType !== "") {
       params.set("propertyType", String(searchState.propertyType));
     }
@@ -395,16 +456,30 @@ export default function PropertySearchPage() {
       params.set("bhkType", String(searchState.bhkType));
     }
     if (searchState.tenantType && searchState.tenantType !== "") {
-      params.set("preferredTenant", String(searchState.tenantType));
+      params.set("tenantType", String(searchState.tenantType));
     }
-
+    if (searchState.nonVegAllowed !== null) {
+      params.set("nonVegAllowed", String(searchState.nonVegAllowed));
+    }
+    if (searchState.roomType && searchState.roomType !== "") {
+      params.set("roomType", String(searchState.roomType));
+    }
+    if (searchState.bathroomType && searchState.bathroomType !== "") {
+      params.set("bathroomType", String(searchState.bathroomType));
+    }
+    if (searchState.balconyType && searchState.balconyType !== "") {
+      params.set("balconyType", String(searchState.balconyType));
+    }
     if (searchState.availability && searchState.availability !== "Any") {
-      params.set("availability", searchState.availability);
+      params.set("availability", String(searchState.availability));
+    }
+    if (searchState.preferredTenants && searchState.preferredTenants !== "") {
+      params.set("preferredTenants", String(searchState.preferredTenants));
     }
     if (searchState.furnishing && searchState.furnishing !== "") {
-      params.set("furnishing", searchState.furnishing);
+      params.set("furnishing", String(searchState.furnishing));
     }
-    if (searchState.parking !== undefined && searchState.parking !== "") {
+    if (searchState.parking && searchState.parking !== "") {
       params.set("parking", String(searchState.parking));
     }
     if (searchState.amenities && searchState.amenities.length > 0) {
@@ -445,7 +520,7 @@ export default function PropertySearchPage() {
             containerClassName="w-full relative"
             inputClassName="h-10 bg-gray-100 w-full border-none outline-none"
           />
-          <button className="p-2 rounded-full" onClick={handleSearch}>
+          <button className="p-2 rounded-full" onClick={() => handleSearch()}>
             <SearchIcon size={20} />
           </button>
         </div>
@@ -489,7 +564,7 @@ export default function PropertySearchPage() {
             />
             <button
               className="p-2 bg-gray-100 rounded-full"
-              onClick={handleSearch}
+              onClick={() => handleSearch()}
             >
               <SearchIcon size={20} />
             </button>
@@ -532,10 +607,10 @@ export default function PropertySearchPage() {
               onChange={onTypeChange}
               size="sm"
               dropdownWidth="full"
-              containerClassName="relative w-36 max-xl:hidden"
+              containerClassName="relative w-36 max-2xl:hidden"
             />
 
-            {/* Rent: BHK | Flatmate: Preferred Tenant */}
+            {/* Rent: BHK | Flatmate: Tenant Type */}
             {searchState.propertyCategory === PropertyCategory.RENT ? (
               <MultiSelectDropdown
                 options={BHK_TYPE_OPTIONS}
@@ -552,12 +627,12 @@ export default function PropertySearchPage() {
               />
             ) : (
               <SelectDropdown
-                options={PREFERRED_TENANTS_OPTIONS.FLATMATE}
-                name="preferred-tenant"
-                id="preferred-tenant"
+                options={[{ value: "", label: "Both" }, ...TENANT_TYPE_OPTIONS]}
+                name="tenant-type"
+                id="tenant-type"
                 value={searchState.tenantType}
-                placeholder="Preferred tenant"
-                onChange={onPreferredTenantChange}
+                placeholder="Tenant Type"
+                onChange={onTenantTypeChange}
                 size="sm"
                 dropdownWidth="full"
                 containerClassName="relative w-40 max-xl:hidden"
@@ -574,7 +649,7 @@ export default function PropertySearchPage() {
               onChange={onAvailabilityChange}
               size="sm"
               dropdownWidth="full"
-              containerClassName="relative w-36 max-xl:hidden"
+              containerClassName="relative w-40 max-lg:hidden"
             />
 
             {/* Sort */}
@@ -608,18 +683,58 @@ export default function PropertySearchPage() {
         <div className="min-h-[580px] px-6 pb-10 md:bg-gray-50 xl:px-24 md:px-12">
           {/* Info Bar */}
           <div className="flex flex-col gap-4 py-6">
-            {/* Properties Count */}
-            <div className="flex items-center justify-between gap-4">
-              <p className="text-sm text-gray-500">
-                {properties.length}{" "}
-                {searchState.propertyCategory === PropertyCategory.FLATMATE
-                  ? "Single occupancy rooms for Rent"
-                  : searchState.propertyCategory === PropertyCategory.RENT
-                    ? "Properties for Rent"
-                    : "Properties for Sale"}
-              </p>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4">
+              {/* Left Side: Always visible count */}
+              {properties.length > 0 ? (
+                <p className="text-sm text-gray-500 text-left md:text-right">
+                  {properties.length} out of {data?.totalElements}{" "}
+                  {(() => {
+                    const count = properties.length;
+                    const isPlural = count !== 1;
+                    switch (searchState.propertyCategory) {
+                      case PropertyCategory.FLATMATE:
+                        return isPlural ? "Rooms for Rent" : "Room for Rent";
+                      case PropertyCategory.RENT:
+                        return isPlural
+                          ? "Properties for Rent"
+                          : "Property for Rent";
+                      default:
+                        return isPlural
+                          ? "Properties for Sale"
+                          : "Property for Sale";
+                    }
+                  })()}
+                </p>
+              ) : (
+                <p className="h-0 w-0 invisible">Placeholder</p>
+              )}
 
-              {/* TEST - Seed Properties Button (Set to true to render the button) */}
+              {/* Right Side: Location or Placeholder (Invisible is for left side logic) */}
+              <div className="flex items-center gap-2 min-w-0">
+                {searchState.confirmedLocationName &&
+                searchState.confirmedLocationName !== "" ? (
+                  <>
+                    <span className="text-sm text-gray-700 inline text-nowrap">
+                      Showing in:
+                    </span>
+                    <span className="px-2 py-0.5 md:py-1 rounded-full bg-gray-200 text-xs md:text-sm truncate max-w-64 md:max-w-xs">
+                      {searchState.confirmedLocationName}
+                    </span>
+                  </>
+                ) : (
+                  // Placeholder to maintain space and alignment - in case we want to place the location on left and count on right
+                  <div className="h-0 w-0 md:w-auto md:h-8 invisible">
+                    <span className="text-xs md:text-sm">
+                      Showing Results for:
+                    </span>
+                    <span className="px-3 py-1 rounded-full bg-gray-200">
+                      Placeholder
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* TEST - Seed Properties Button */}
               {/* <div className="flex items-center gap-2">
                 {!true ? <SeedPropertiesButton /> : null}
               </div> */}
@@ -707,10 +822,10 @@ export default function PropertySearchPage() {
             closeDialog(PROPERTY_FILTERS_DIALOG_ID);
           }}
           onReset={() => {}}
-          onApply={() => {
+          onApply={(dialogSelectedCategory?: PropertyCategory) => {
             isFilterDialogChange.current = true;
             closeDialog(PROPERTY_FILTERS_DIALOG_ID);
-            handleSearch();
+            handleSearch(dialogSelectedCategory);
           }}
         />
       )}

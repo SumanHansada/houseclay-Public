@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 
-import { BENGALURU_LOCATION } from "@/common/constants";
+import { EXPLORE_LOCATION } from "@/common/constants";
 import { AuthStep } from "@/common/enums";
 import { UserDropdown } from "@/components/UserDropdown";
 import { ActionDialog } from "@/dialogs/action-dialog";
@@ -14,6 +14,7 @@ import { useLogout } from "@/hooks/useLogout";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setAuthStep } from "@/store/authSlice";
+import { resetPropertySearchFilters } from "@/store/propertySearchSlice";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
 import { Popover } from "@/utility-components";
 
@@ -97,10 +98,8 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
   const router = useRouter();
 
   // Dynamically get lat/lon from current params or fallback to Bengaluru
-  const currentLat =
-    searchParams.get("lat") || BENGALURU_LOCATION.lat.toString();
-  const currentLon =
-    searchParams.get("lon") || BENGALURU_LOCATION.lng.toString();
+  const currentLat = searchParams.get("lat") || EXPLORE_LOCATION.lat.toString();
+  const currentLon = searchParams.get("lon") || EXPLORE_LOCATION.lng.toString();
 
   const onLogin = () => {
     closeAllDialogs();
@@ -150,6 +149,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
                   : "false"
               }
               className="relative hover:text-red-600 py-2 nav-link"
+              onClick={() => dispatch(resetPropertySearchFilters())}
             >
               Rent
             </Link>
@@ -162,6 +162,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
                   : "false"
               }
               className="relative hover:text-red-600 py-2 nav-link"
+              onClick={() => dispatch(resetPropertySearchFilters())}
             >
               Rooms
             </Link>
@@ -187,7 +188,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
             <Link
               href="/about-us"
               data-active={pathname === "/about-us" ? "true" : "false"}
-              className="relative hover:text-red-600 py-2 nav-link"
+              className="relative hover:text-red-600 py-2 nav-link hidden lg:block"
             >
               About Us
             </Link>

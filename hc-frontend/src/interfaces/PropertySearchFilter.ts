@@ -2,26 +2,30 @@ import { PropertyCategory } from "@/common/enums";
 import { Location } from "@/interfaces/Location";
 
 export interface PropertySearchFilter {
-  // Basic Filters
+  // Quick Filters
   location: Location | null;
-  propertyType: string | number | boolean;
+  confirmedLocationName: string;
   propertyCategory: PropertyCategory;
-  tenantType: string | number | boolean;
+  propertyType: string;
+  tenantType: string;
   bhkType: string;
-  // propertyBhk: string | number | boolean;  // not using - repeated
-  // tenant: string;                          // not using - repeated
   availability: string;
-  // New filter states
-  lookingFor: string;
-  propertyTypeFilter: string;
-  foodPref: string;
+
+  // Filter Dialog
+  nonVegAllowed: boolean | null;
+  preferredTenants: string;
+  roomType: string;
   bathroomType: string;
+  balconyType: string;
   furnishing: string;
   amenities: string[];
   parking: string;
-  priceRangeForRent: [number, number];
-  priceRangeForBuy: [number, number];
+  priceRangeForRent: [number, number] | null;
+  priceRangeForFlatmate: [number, number] | null;
+  priceRangeForBuy: [number, number] | null;
   exclusive: boolean;
+
+  // Sorting
   sortFields: string;
   sortOrder: string;
 }

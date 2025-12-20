@@ -8,9 +8,9 @@ import {
   BHK_TYPE_OPTIONS,
   FURNISHING_OPTIONS,
   getOptionLabel,
-  PREFERRED_TENANTS_OPTIONS,
   PROPERTY_TYPE_OPTIONS,
   ROOM_TYPE_OPTIONS,
+  TENANT_TYPE_OPTIONS,
 } from "@/common/dataConstants/options";
 import { BadgeType, PropertyCategory } from "@/common/enums";
 import { formatINRCurrency, processPropertyImages } from "@/common/utils";
@@ -57,10 +57,7 @@ const Properties: React.FC<PropertiesProps> = ({
   const formattedPriceOrRentAmount = formatINRCurrency(
     property?.price || property?.rent || 0,
   );
-  const tenantType = getOptionLabel(
-    PREFERRED_TENANTS_OPTIONS.FLATMATE,
-    property.tenantType,
-  );
+  const tenantType = getOptionLabel(TENANT_TYPE_OPTIONS, property.tenantType);
   const roomType = getOptionLabel(ROOM_TYPE_OPTIONS, property.roomType);
   const bathroomType = getOptionLabel(
     BATHROOM_TYPE_OPTIONS,
@@ -72,7 +69,7 @@ const Properties: React.FC<PropertiesProps> = ({
   );
 
   const bedrooms = bhkType
-    ? bhkType === "Studio" || bhkType === "1-bhk"
+    ? bhkType === "studio" || bhkType === "1-bhk"
       ? "1 Bed"
       : `${bhkType.split("BHK")[0]} Beds`
     : "N/A";
@@ -215,7 +212,8 @@ const Properties: React.FC<PropertiesProps> = ({
             </p>
           ) : propertyCategory === PropertyCategory.FLATMATE ? (
             <p className="font-medium text-xs">
-              {bedrooms} | {bathroomType} | {balconyType}
+              {getOptionLabel(BHK_TYPE_OPTIONS, bhkType)} | {bathroomType} |{" "}
+              {balconyType}
             </p>
           ) : null}
           <p className="font-bold">{formattedPriceOrRentAmount}</p>

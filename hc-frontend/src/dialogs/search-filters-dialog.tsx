@@ -2,16 +2,12 @@
 
 import {
   Bath,
+  BedDouble,
   BedSingle,
   Binoculars,
-  Blocks,
-  BrushCleaning,
   CalendarDays,
   CarFront,
-  CloudHail,
-  Dam,
   Gem,
-  Headset,
   Home,
   IndianRupee,
   Landmark,
@@ -22,38 +18,36 @@ import {
   Venus,
   X,
 } from "lucide-react";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Button, Checkbox, RadioGroup, RangeSlider } from "@/base-components";
+import { Button, Checkbox, RadioGroup } from "@/base-components";
 import {
+  balconyIconURL,
   clubhouseIconURL,
-  dedicatedWorkspaceIconURL,
-  fireExtinguisherIconURL,
-  firstAidKitIconURL,
   gymIconURL,
   liftIconURL,
-  outdoorDiningAreaIconURL,
   parkingSpaceIconURL,
-  poolTableIconURL,
   securityIconURL,
-  smokeAlarmIconURL,
   swimmingPoolIconURL,
   twentyFourXSevenIconURL,
-  wifiIconURL,
 } from "@/common/cdnURLs";
 import {
+  BALCONY_TYPE_OPTIONS,
+  BATHROOM_TYPE_OPTIONS,
   BHK_TYPE_OPTIONS,
+  FLATMATE_PRICE_OPTIONS,
   FURNISHING_OPTIONS,
   PARKING_OPTIONS,
   PROPERTY_AVAILABILITY,
-  YES_NO_OPTIONS,
+  RENT_PRICE_OPTIONS,
+  ROOM_TYPE_OPTIONS,
 } from "@/common/dataConstants/options";
 import {
-  FLATMATE_PREFERRED_TENANTS,
-  PROPERTY_TYPES,
+  PreferredTenantValue,
   PropertyCategory,
-  RENT_PREFERRED_TENANTS,
+  PropertyTypeValue,
+  TenantTypeValue,
 } from "@/common/enums";
 import {
   Dialog,
@@ -63,19 +57,22 @@ import {
 } from "@/components/Dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import {
-  resetPropertySearch,
+  resetPropertySearchFilters,
   setAmenities,
   setAvailability,
+  setBalconyType,
   setBathroomType,
   setBhkType,
-  setFoodPref,
   setFurnishing,
-  setLookingFor,
+  setNonVegAllowed,
   setParking,
+  setPreferredTenants,
   setPriceRangeForBuy,
+  setPriceRangeForFlatmate,
   setPriceRangeForRent,
   setPropertyCategory,
   setPropertyType,
+  setRoomType,
   setTenantType,
 } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
@@ -93,7 +90,7 @@ interface SearchFiltersDialogProps {
   id: string;
   onClose: () => void;
   onReset: () => void;
-  onApply: () => void;
+  onApply: (dialogSelectedCategory?: PropertyCategory) => void;
 }
 
 const amenities = [
@@ -103,18 +100,6 @@ const amenities = [
     icon: <RemoteSvg src={clubhouseIconURL} />,
   },
   { label: "Gym", icon: <RemoteSvg src={gymIconURL} /> },
-  {
-    label: "Outdoor Dining Area",
-    icon: <RemoteSvg src={outdoorDiningAreaIconURL} />,
-  },
-  {
-    label: "Fire Extinguisher",
-    icon: <RemoteSvg src={fireExtinguisherIconURL} />,
-  },
-  {
-    label: "Smoke Alarm",
-    icon: <RemoteSvg src={smokeAlarmIconURL} />,
-  },
   {
     label: "Swimming Pool",
     icon: <RemoteSvg src={swimmingPoolIconURL} />,
@@ -129,46 +114,59 @@ const amenities = [
     icon: <RemoteSvg src={parkingSpaceIconURL} />,
   },
   {
-    label: "Dedicated Workspace",
-    icon: <RemoteSvg src={dedicatedWorkspaceIconURL} />,
-  },
-  { label: "Wifi", icon: <RemoteSvg src={wifiIconURL} /> },
-  {
-    label: "Pool Table",
-    icon: <RemoteSvg src={poolTableIconURL} />,
-  },
-  {
-    label: "First Aid Kit",
-    icon: <RemoteSvg src={firstAidKitIconURL} />,
-  },
-  {
-    label: "Intercom",
-    icon: <Headset size={24} strokeWidth={1.5} />,
-  },
-  {
-    label: "Sewage Treatment",
-    icon: <Dam size={24} strokeWidth={1.5} />,
-  },
-  {
-    label: "House Keeping",
-    icon: <BrushCleaning size={24} strokeWidth={1.5} />,
-  },
-  {
-    label: "Rain Water Harvesting",
-    icon: <CloudHail size={24} strokeWidth={1.5} />,
-  },
-  {
-    label: "Children Play Area",
-    icon: <Blocks size={24} strokeWidth={1.5} />,
-  },
-  {
-    label: "Guest Room",
-    icon: <BedSingle size={24} strokeWidth={1.5} />,
-  },
-  {
     label: "Community Hall",
     icon: <Landmark size={24} strokeWidth={1.5} />,
   },
+  // Currently Commented only showing 8 options
+  // {
+  //   label: "Outdoor Dining Area",
+  //   icon: <RemoteSvg src={outdoorDiningAreaIconURL} />,
+  // },
+  // {
+  //   label: "Fire Extinguisher",
+  //   icon: <RemoteSvg src={fireExtinguisherIconURL} />,
+  // },
+  // {
+  //   label: "Smoke Alarm",
+  //   icon: <RemoteSvg src={smokeAlarmIconURL} />,
+  // },
+  // {
+  //   label: "Dedicated Workspace",
+  //   icon: <RemoteSvg src={dedicatedWorkspaceIconURL} />,
+  // },
+  // { label: "Wifi", icon: <RemoteSvg src={wifiIconURL} /> },
+  // {
+  //   label: "Pool Table",
+  //   icon: <RemoteSvg src={poolTableIconURL} />,
+  // },
+  // {
+  //   label: "First Aid Kit",
+  //   icon: <RemoteSvg src={firstAidKitIconURL} />,
+  // },
+  // {
+  //   label: "Intercom",
+  //   icon: <Headset size={24} strokeWidth={1.5} />,
+  // },
+  // {
+  //   label: "Sewage Treatment",
+  //   icon: <Dam size={24} strokeWidth={1.5} />,
+  // },
+  // {
+  //   label: "House Keeping",
+  //   icon: <BrushCleaning size={24} strokeWidth={1.5} />,
+  // },
+  // {
+  //   label: "Rain Water Harvesting",
+  //   icon: <CloudHail size={24} strokeWidth={1.5} />,
+  // },
+  // {
+  //   label: "Children Play Area",
+  //   icon: <Blocks size={24} strokeWidth={1.5} />,
+  // },
+  // {
+  //   label: "Guest Room",
+  //   icon: <BedSingle size={24} strokeWidth={1.5} />,
+  // },
 ];
 
 const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
@@ -177,21 +175,41 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
   onReset,
   onApply,
 }) => {
+  const { isMobile } = useDeviceContext();
+  const dispatch = useDispatch();
+
   // Redux state selectors
   const {
+    nonVegAllowed,
     propertyCategory,
     propertyType,
     tenantType,
-    foodPref,
+    roomType,
     bathroomType,
+    balconyType,
     furnishing,
     availability,
+    preferredTenants,
     amenities: stateAmenities,
     parking,
     priceRangeForRent,
-    priceRangeForBuy,
+    priceRangeForFlatmate,
     bhkType,
   } = useSelector((state: RootState) => state.propertySearch);
+
+  const [currentPropertyCategory, setCurrentPropertyCategory] = useState(
+    propertyCategory ?? PropertyCategory.RENT,
+  );
+
+  const activePriceRange =
+    currentPropertyCategory === PropertyCategory.FLATMATE
+      ? priceRangeForFlatmate
+      : priceRangeForRent;
+
+  const activePriceOptions =
+    currentPropertyCategory === PropertyCategory.FLATMATE
+      ? FLATMATE_PRICE_OPTIONS
+      : RENT_PRICE_OPTIONS;
 
   // Parse BHK selections from comma-separated Redux string
   const bhkSelectedValues = useMemo<string[]>(
@@ -199,34 +217,32 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
     [bhkType],
   );
 
-  const marksForRent = [
-    { value: 0, label: "0" },
-    { value: 200000, label: "200K" },
-    { value: 400000, label: "400K" },
-    { value: 800000, label: "800K" },
-    { value: 1000000, label: "1M" },
-  ];
+  const currentPriceValue = useMemo(() => {
+    if (!activePriceRange || activePriceRange.length < 2) return "";
 
-  const marksForBuy = [
-    { value: 0, label: "0" },
-    { value: 10000000, label: "10M" },
-    { value: 20000000, label: "20M" },
-    { value: 40000000, label: "40M" },
-    { value: 80000000, label: "80M" },
-    { value: 100000000, label: "100M" },
-  ];
+    const [currentMin, currentMax] = activePriceRange;
 
-  const { isMobile } = useDeviceContext();
-  const dispatch = useDispatch();
+    const foundOption = activePriceOptions.find(
+      (opt) => opt.min === currentMin && opt.max === currentMax,
+    );
+
+    return foundOption ? foundOption.value : "";
+  }, [activePriceRange, activePriceOptions]);
 
   const handleReset = () => {
-    dispatch(resetPropertySearch());
+    dispatch(resetPropertySearchFilters());
     onReset();
   };
 
+  const handleSubmit = () => {
+    dispatch(setPropertyCategory(currentPropertyCategory as PropertyCategory));
+    onApply(currentPropertyCategory as PropertyCategory);
+  };
+
   const handleTabChange = (value: string) => {
-    dispatch(setLookingFor(value as string));
-    dispatch(setPropertyCategory(value as PropertyCategory));
+    // TODO: is it better to have category specific resets?
+    handleReset();
+    setCurrentPropertyCategory(value as PropertyCategory);
   };
 
   return (
@@ -273,13 +289,13 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
       <DialogContent>
         <div className="flex flex-col gap-6 px-6 py-2">
           {/* Looking For */}
-          {propertyCategory !== PropertyCategory.RESALE && (
+          {currentPropertyCategory !== PropertyCategory.RESALE && (
             <div>
               <div className="flex items-center gap-2 mb-2 text-lg">
                 <Binoculars size={20} /> Looking For
               </div>
               <Tabs
-                defaultActive={propertyCategory}
+                defaultActive={currentPropertyCategory}
                 onTabChange={handleTabChange}
               >
                 <TabHeader tabsClassName="justify-between border rounded-xl p-2 w-full flex gap-2">
@@ -299,6 +315,56 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                   />
                 </TabHeader>
                 <TabContent value={PropertyCategory.RENT} className="gap-4">
+                  {/* Price Range */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 text-lg">
+                      <IndianRupee size={20} /> Price Range
+                    </div>
+                    <RadioGroup
+                      name="priceRange"
+                      columns={2}
+                      options={activePriceOptions.map(({ value, label }) => ({
+                        value,
+                        label,
+                      }))}
+                      value={currentPriceValue}
+                      onChange={(value) => {
+                        const selectedOption = activePriceOptions.find(
+                          (opt) => opt.value === value,
+                        );
+
+                        if (selectedOption) {
+                          dispatch(
+                            setPriceRangeForRent([
+                              selectedOption.min,
+                              selectedOption.max,
+                            ]),
+                          );
+                        }
+                      }}
+                    />
+                  </div>
+
+                  <hr className="my-4" />
+
+                  {/* Furnishing */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 text-lg">
+                      <Sofa size={20} /> Furnishing
+                    </div>
+                    <RadioGroup
+                      name="furnishing"
+                      columns={3}
+                      options={FURNISHING_OPTIONS}
+                      value={furnishing}
+                      onChange={(value) =>
+                        dispatch(setFurnishing(value as string))
+                      }
+                    />
+                  </div>
+
+                  <hr className="my-4" />
+
                   {/* Property Type */}
                   <div>
                     <div className="flex items-center gap-2 mb-2 text-lg">
@@ -309,7 +375,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       columns={4}
                       options={[
                         {
-                          value: PROPERTY_TYPES.APARTMENT,
+                          value: PropertyTypeValue.APARTMENT,
                           label: "Apartment",
                           icon: (
                             <ImageWithLoader
@@ -321,7 +387,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           ),
                         },
                         {
-                          value: PROPERTY_TYPES.HOUSE,
+                          value: PropertyTypeValue.HOUSE,
                           label: "Independent House/Villa",
                           icon: (
                             <ImageWithLoader
@@ -333,7 +399,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           ),
                         },
                         {
-                          value: PROPERTY_TYPES.VILLA,
+                          value: PropertyTypeValue.VILLA,
                           label: "Community Villa",
                           icon: (
                             <ImageWithLoader
@@ -345,7 +411,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           ),
                         },
                         {
-                          value: PROPERTY_TYPES.BUILDING,
+                          value: PropertyTypeValue.BUILDING,
                           label: "Standalone Building",
                           icon: (
                             <ImageWithLoader
@@ -364,7 +430,9 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       }
                     />
                   </div>
+
                   <hr className="my-4" />
+
                   {/* BHK Type */}
                   <div>
                     <div className="flex items-center gap-2 mb-2 text-lg">
@@ -382,7 +450,9 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       />
                     </div>
                   </div>
+
                   <hr className="my-4" />
+
                   {/* Availability */}
                   <div>
                     <div className="flex items-center gap-2 mb-2 text-lg">
@@ -390,7 +460,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                     </div>
                     <RadioGroup
                       name="availability"
-                      columns={4}
+                      columns={3}
                       options={PROPERTY_AVAILABILITY}
                       value={availability}
                       onChange={(value) =>
@@ -398,7 +468,9 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       }
                     />
                   </div>
+
                   <hr className="my-4" />
+
                   {/* Preferred Tenants */}
                   <div>
                     <div className="flex items-center gap-2 mb-2 text-lg">
@@ -414,14 +486,14 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       columns={4}
                       options={[
                         {
-                          value: RENT_PREFERRED_TENANTS.FAMILY,
+                          value: PreferredTenantValue.FAMILY,
                           label: "Family",
                           icon: (
                             <SvgIcon iconSize="large" name="family" size={68} />
                           ),
                         },
                         {
-                          value: RENT_PREFERRED_TENANTS.COMPANY,
+                          value: PreferredTenantValue.COMPANY,
                           label: "Company",
                           icon: (
                             <SvgIcon
@@ -432,7 +504,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           ),
                         },
                         {
-                          value: RENT_PREFERRED_TENANTS.BACHELOR,
+                          value: PreferredTenantValue.BACHELOR,
                           label: "Bachelor",
                           icon: (
                             <SvgIcon
@@ -443,7 +515,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           ),
                         },
                         {
-                          value: RENT_PREFERRED_TENANTS.COUPLE,
+                          value: PreferredTenantValue.COUPLE,
                           label: "Couple",
                           icon: (
                             <SvgIcon iconSize="large" name="couple" size={68} />
@@ -451,54 +523,33 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                         },
                       ]}
                       withIcons={true}
-                      value={tenantType as string}
+                      value={preferredTenants as string}
                       onChange={(value) =>
-                        dispatch(setTenantType(value as string))
+                        dispatch(setPreferredTenants(value as string))
                       }
                     />
                   </div>
+
                   <hr className="my-4" />
-                  {/* Price Range */}
+
+                  {/* Parking */}
                   <div>
                     <div className="flex items-center gap-2 mb-2 text-lg">
-                      <IndianRupee size={20} /> Price Range
-                    </div>
-                    <RangeSlider
-                      name="priceRangeForRent"
-                      label=""
-                      min={0}
-                      max={1000000}
-                      step={50000}
-                      value={priceRangeForRent}
-                      onChange={(value) =>
-                        dispatch(
-                          setPriceRangeForRent(value as [number, number]),
-                        )
-                      }
-                      marks={marksForRent}
-                      rangeClassName="absolute h-2 bg-red-500 rounded-full top-1/2 transform -translate-y-1/2"
-                      thumbClassName="absolute w-6 h-6 flex justify-center items-center bg-white border-2 border-white-500 rounded-full shadow-md cursor-pointer transform -translate-x-1/2 -translate-y-1/2 hover:shadow-lg transition-shadow focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
-                      containerClassName="mb-8"
-                      showInputs={isMobile ? false : true}
-                    />
-                  </div>
-                  <hr className="my-4" />
-                  {/* Furnishing */}
-                  <div>
-                    <div className="flex items-center gap-2 mb-2 text-lg">
-                      <Sofa size={20} /> Furnishing
+                      <CarFront size={20} /> Parking
                     </div>
                     <RadioGroup
-                      name="furnishing"
-                      columns={4}
-                      options={FURNISHING_OPTIONS}
-                      value={furnishing}
+                      name="parking"
+                      columns={3}
+                      options={PARKING_OPTIONS}
+                      value={parking}
                       onChange={(value) =>
-                        dispatch(setFurnishing(value as string))
+                        dispatch(setParking(value as string))
                       }
                     />
                   </div>
+
                   <hr className="my-4" />
+
                   {/* Amenities */}
                   <div>
                     <div className="flex items-center gap-2 mb-2 text-lg">
@@ -529,24 +580,76 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       ))}
                     </div>
                   </div>
-                  <hr className="my-4" />
-                  {/* Parking */}
+                </TabContent>
+                <TabContent value={PropertyCategory.FLATMATE}>
+                  {/* Price Range */}
                   <div>
                     <div className="flex items-center gap-2 mb-2 text-lg">
-                      <CarFront size={20} /> Parking
+                      <IndianRupee size={20} /> Price Range
                     </div>
                     <RadioGroup
-                      name="parking"
+                      name="priceRange"
                       columns={2}
-                      options={PARKING_OPTIONS}
-                      value={parking}
+                      options={activePriceOptions.map(({ value, label }) => ({
+                        value,
+                        label,
+                      }))}
+                      value={currentPriceValue}
+                      onChange={(value) => {
+                        const selectedOption = activePriceOptions.find(
+                          (opt) => opt.value === value,
+                        );
+
+                        if (selectedOption) {
+                          dispatch(
+                            setPriceRangeForFlatmate([
+                              selectedOption.min,
+                              selectedOption.max,
+                            ]),
+                          );
+                        }
+                      }}
+                    />
+                  </div>
+
+                  <hr className="my-4" />
+
+                  {/* Room Type */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 text-lg">
+                      <BedDouble size={20} /> Room Type
+                    </div>
+                    <RadioGroup
+                      name="roomType"
+                      columns={2}
+                      options={ROOM_TYPE_OPTIONS}
+                      value={roomType}
                       onChange={(value) =>
-                        dispatch(setParking(value as string))
+                        dispatch(setRoomType(value as string))
                       }
                     />
                   </div>
-                </TabContent>
-                <TabContent value={PropertyCategory.FLATMATE}>
+
+                  <hr className="my-4" />
+
+                  {/* Furnishing */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 text-lg">
+                      <Sofa size={20} /> Furnishing
+                    </div>
+                    <RadioGroup
+                      name="furnishing"
+                      columns={3}
+                      options={FURNISHING_OPTIONS}
+                      value={furnishing}
+                      onChange={(value) =>
+                        dispatch(setFurnishing(value as string))
+                      }
+                    />
+                  </div>
+
+                  <hr className="my-4" />
+
                   {/* Property Type */}
                   <div>
                     <div className="flex items-center gap-2 mb-2 text-lg">
@@ -557,7 +660,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       columns={4}
                       options={[
                         {
-                          value: PROPERTY_TYPES.APARTMENT,
+                          value: PropertyTypeValue.APARTMENT,
                           label: "Apartment",
                           icon: (
                             <ImageWithLoader
@@ -569,7 +672,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           ),
                         },
                         {
-                          value: PROPERTY_TYPES.HOUSE,
+                          value: PropertyTypeValue.HOUSE,
                           label: "Independent House/Villa",
                           icon: (
                             <ImageWithLoader
@@ -581,7 +684,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           ),
                         },
                         {
-                          value: PROPERTY_TYPES.VILLA,
+                          value: PropertyTypeValue.VILLA,
                           label: "Community Villa",
                           icon: (
                             <ImageWithLoader
@@ -593,7 +696,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           ),
                         },
                         {
-                          value: PROPERTY_TYPES.BUILDING,
+                          value: PropertyTypeValue.BUILDING,
                           label: "Standalone Building",
                           icon: (
                             <ImageWithLoader
@@ -612,7 +715,9 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       }
                     />
                   </div>
+
                   <hr className="my-4" />
+
                   {/* Availability */}
                   <div>
                     <div className="flex items-center gap-2 mb-2 text-lg">
@@ -628,8 +733,10 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       }
                     />
                   </div>
+
                   <hr className="my-4" />
-                  {/* Preferred Tenants & Preferences */}
+
+                  {/* Tenant type & Food Preference */}
                   <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
                     <div>
                       <div className="flex items-center gap-2 mb-2 text-lg">
@@ -637,15 +744,15 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           <Mars size={20} />
                           <Venus size={20} />
                         </span>{" "}
-                        Preferred Tenants
+                        Tenant Type
                       </div>
 
                       <RadioGroup
-                        name="preferredTenants"
+                        name="tenantType"
                         columns={2}
                         options={[
                           {
-                            value: FLATMATE_PREFERRED_TENANTS.FEMALE,
+                            value: TenantTypeValue.FEMALE,
                             label: "Female",
                             icon: (
                               <SvgIcon
@@ -656,7 +763,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                             ),
                           },
                           {
-                            value: FLATMATE_PREFERRED_TENANTS.MALE,
+                            value: TenantTypeValue.MALE,
                             label: "Male",
                             icon: (
                               <SvgIcon
@@ -674,12 +781,13 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                         }
                       />
                     </div>
+
                     <div>
                       <div className="flex items-center gap-2 mb-2 text-lg">
                         <Salad size={20} /> Food Preferences
                       </div>
                       <RadioGroup
-                        name="foodPreferences"
+                        name="nonVegAllowed"
                         columns={2}
                         options={[
                           {
@@ -703,54 +811,73 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                         ]}
                         withIcons={true}
                         horizontal
-                        value={foodPref}
+                        value={nonVegAllowed === null ? "" : nonVegAllowed}
                         onChange={(value) =>
-                          dispatch(setFoodPref(value as string))
+                          dispatch(setNonVegAllowed(value as boolean))
                         }
                       />
                     </div>
                   </div>
+
                   <hr className="my-4" />
-                  {/* Price Range */}
+
+                  {/* Bathroom Type */}
                   <div>
                     <div className="flex items-center gap-2 mb-2 text-lg">
-                      <IndianRupee size={20} /> Price Range
-                    </div>
-                    <RangeSlider
-                      name="priceRangeForRent"
-                      label=""
-                      min={0}
-                      max={1000000}
-                      step={50000}
-                      value={priceRangeForRent}
-                      onChange={(value) =>
-                        dispatch(
-                          setPriceRangeForRent(value as [number, number]),
-                        )
-                      }
-                      marks={marksForRent}
-                      rangeClassName="absolute h-2 bg-red-500 rounded-full top-1/2 transform -translate-y-1/2"
-                      thumbClassName="absolute w-6 h-6 flex justify-center items-center bg-white border-2 border-white-500 rounded-full shadow-md cursor-pointer transform -translate-x-1/2 -translate-y-1/2 hover:shadow-lg transition-shadow focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
-                      containerClassName="mb-8"
-                      showInputs={isMobile ? false : true}
-                    />
-                  </div>
-                  <hr className="my-4" />
-                  {/* Furnishing */}
-                  <div>
-                    <div className="flex items-center gap-2 mb-2 text-lg">
-                      <Sofa size={20} /> Furnishing
+                      <Bath size={20} /> Bathroom Type
                     </div>
                     <RadioGroup
-                      name="furnishing"
-                      columns={4}
-                      options={FURNISHING_OPTIONS}
-                      value={furnishing}
+                      name="bathroomType"
+                      columns={3}
+                      options={BATHROOM_TYPE_OPTIONS}
+                      value={bathroomType}
                       onChange={(value) =>
-                        dispatch(setFurnishing(value as string))
+                        dispatch(setBathroomType(value as string))
                       }
                     />
                   </div>
+
+                  <hr className="my-4" />
+
+                  {/* Balcony Type */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 text-lg">
+                      <RemoteSvg src={balconyIconURL} className="" />
+                      Balcony Type
+                    </div>
+                    <RadioGroup
+                      name="balconyType"
+                      columns={2}
+                      options={BALCONY_TYPE_OPTIONS.filter(
+                        (option) => option.value !== "no-balcony",
+                      )}
+                      value={balconyType}
+                      onChange={(value) =>
+                        dispatch(setBalconyType(value as string))
+                      }
+                    />
+                  </div>
+
+                  <hr className="my-4" />
+
+                  {/* Parking */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-2 text-lg">
+                      <CarFront size={20} /> Parking
+                    </div>
+                    <RadioGroup
+                      name="parking"
+                      columns={2}
+                      options={PARKING_OPTIONS}
+                      value={parking}
+                      onChange={(value) =>
+                        dispatch(setParking(value as string))
+                      }
+                    />
+                  </div>
+
+                  <hr className="my-4" />
+
                   {/* Amenities */}
                   <div>
                     <div className="flex items-center gap-2 mb-2 text-lg">
@@ -781,45 +908,12 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       ))}
                     </div>
                   </div>
-                  <hr className="my-4" />
-                  {/* Bathroom Type */}
-                  <div>
-                    <div className="flex items-center gap-2 mb-2 text-lg">
-                      <Bath size={20} /> Attached Bathroom
-                    </div>
-                    <RadioGroup
-                      name="bathroomType"
-                      columns={2}
-                      options={YES_NO_OPTIONS}
-                      containerClassName="w-1/2 max-md:w-full"
-                      value={bathroomType}
-                      onChange={(value) =>
-                        dispatch(setBathroomType(value as string))
-                      }
-                    />
-                  </div>
-                  <hr className="my-4" />
-                  {/* Parking */}
-                  <div>
-                    <div className="flex items-center gap-2 mb-2 text-lg">
-                      <CarFront size={20} /> Parking
-                    </div>
-                    <RadioGroup
-                      name="parking"
-                      columns={2}
-                      options={PARKING_OPTIONS}
-                      value={parking}
-                      onChange={(value) =>
-                        dispatch(setParking(value as string))
-                      }
-                    />
-                  </div>
                 </TabContent>
               </Tabs>
             </div>
           )}
 
-          {propertyCategory === PropertyCategory.RESALE && (
+          {currentPropertyCategory === PropertyCategory.RESALE && (
             <div>
               {/* Property Type */}
               <div>
@@ -831,7 +925,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                   columns={4}
                   options={[
                     {
-                      value: PROPERTY_TYPES.APARTMENT,
+                      value: PropertyTypeValue.APARTMENT,
                       label: "Apartment",
                       icon: (
                         <ImageWithLoader
@@ -843,7 +937,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       ),
                     },
                     {
-                      value: PROPERTY_TYPES.HOUSE,
+                      value: PropertyTypeValue.HOUSE,
                       label: "Independent House/Villa",
                       icon: (
                         <ImageWithLoader
@@ -855,7 +949,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       ),
                     },
                     {
-                      value: PROPERTY_TYPES.VILLA,
+                      value: PropertyTypeValue.VILLA,
                       label: "Community Villa",
                       icon: (
                         <ImageWithLoader
@@ -867,7 +961,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       ),
                     },
                     {
-                      value: PROPERTY_TYPES.BUILDING,
+                      value: PropertyTypeValue.BUILDING,
                       label: "Standalone Building",
                       icon: (
                         <ImageWithLoader
@@ -937,28 +1031,28 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                   columns={4}
                   options={[
                     {
-                      value: RENT_PREFERRED_TENANTS.FAMILY,
+                      value: PreferredTenantValue.FAMILY,
                       label: "Family",
                       icon: (
                         <SvgIcon iconSize="large" name="family" size={68} />
                       ),
                     },
                     {
-                      value: RENT_PREFERRED_TENANTS.COMPANY,
+                      value: PreferredTenantValue.COMPANY,
                       label: "Company",
                       icon: (
                         <SvgIcon iconSize="large" name="company" size={68} />
                       ),
                     },
                     {
-                      value: RENT_PREFERRED_TENANTS.BACHELOR,
+                      value: PreferredTenantValue.BACHELOR,
                       label: "Bachelor",
                       icon: (
                         <SvgIcon iconSize="large" name="bachelor" size={68} />
                       ),
                     },
                     {
-                      value: RENT_PREFERRED_TENANTS.COUPLE,
+                      value: PreferredTenantValue.COUPLE,
                       label: "Couple",
                       icon: (
                         <SvgIcon iconSize="large" name="couple" size={68} />
@@ -966,8 +1060,10 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                     },
                   ]}
                   withIcons={true}
-                  value={tenantType as string}
-                  onChange={(value) => dispatch(setTenantType(value as string))}
+                  value={preferredTenants as string}
+                  onChange={(value) =>
+                    dispatch(setPreferredTenants(value as string))
+                  }
                 />
               </div>
               <hr className="my-4" />
@@ -978,7 +1074,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                 </div>
                 <RadioGroup
                   name="furnishing"
-                  columns={4}
+                  columns={3}
                   options={FURNISHING_OPTIONS}
                   value={furnishing}
                   onChange={(value) => dispatch(setFurnishing(value as string))}
@@ -990,21 +1086,28 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                 <div className="flex items-center gap-2 mb-2 text-lg">
                   <IndianRupee size={20} /> Price Range
                 </div>
-                <RangeSlider
-                  name="priceRangeForBuy"
-                  label=""
-                  min={0}
-                  max={100000000}
-                  step={5000000}
-                  value={priceRangeForBuy}
-                  onChange={(value) =>
-                    dispatch(setPriceRangeForBuy(value as [number, number]))
-                  }
-                  marks={marksForBuy}
-                  rangeClassName="absolute h-2 bg-red-500 rounded-full top-1/2 transform -translate-y-1/2"
-                  thumbClassName="absolute w-6 h-6 flex justify-center items-center bg-white border-2 border-white-500 rounded-full shadow-md cursor-pointer transform -translate-x-1/2 -translate-y-1/2 hover:shadow-lg transition-shadow focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
-                  containerClassName="mb-8"
-                  showInputs={isMobile ? false : true}
+                <RadioGroup
+                  name="priceRange"
+                  columns={2}
+                  options={activePriceOptions.map(({ value, label }) => ({
+                    value,
+                    label,
+                  }))}
+                  value={currentPriceValue}
+                  onChange={(value) => {
+                    const selectedOption = activePriceOptions.find(
+                      (opt) => opt.value === value,
+                    );
+
+                    if (selectedOption) {
+                      dispatch(
+                        setPriceRangeForBuy([
+                          selectedOption.min,
+                          selectedOption.max,
+                        ]),
+                      );
+                    }
+                  }}
                 />
               </div>
               <hr className="my-4" />
@@ -1069,7 +1172,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
             variant="primary"
             size="md"
             className="max-md:w-full px-4 py-3 rounded-xl bg-red-500 text-white hover:bg-red-600 transition-colors"
-            onClick={onApply}
+            onClick={handleSubmit}
           >
             Show Results
           </Button>

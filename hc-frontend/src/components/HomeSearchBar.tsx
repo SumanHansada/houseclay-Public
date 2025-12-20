@@ -2,12 +2,16 @@
 
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
 import { PlacesAutocomplete } from "@/base-components";
-import { resetPropertySearch, setLocation } from "@/store/propertySearchSlice";
+import {
+  resetPropertySearchSlice,
+  setConfirmedLocationName,
+  setLocation,
+} from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
 import { BENGALURU_BOUNDS, isWithinBounds } from "@/utils/geoBounds";
 
@@ -42,14 +46,25 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
   const location = useSelector(
     (state: RootState) => state.propertySearch.location,
   );
+  const confirmedLocationName = useSelector(
+    (state: RootState) => state.propertySearch.confirmedLocationName,
+  );
   const propertyCategory = useSelector(
     (state: RootState) => state.propertySearch.propertyCategory,
   );
 
+  useEffect(() => {
+    if (location?.name && !confirmedLocationName) {
+      dispatch(setLocation(null));
+    }
+  }, [dispatch, location?.name, confirmedLocationName]);
+
   const handleSearch = () => {
     if (location && location.latitude && location.longitude) {
       // Reset all filters before making a new search
-      dispatch(resetPropertySearch());
+      dispatch(resetPropertySearchSlice());
+      dispatch(setLocation(location));
+      dispatch(setConfirmedLocationName(location.name || ""));
 
       router.push(
         `/property-search?lat=${location.latitude}&lon=${location.longitude}&propertyCategory=${propertyCategory.toLowerCase()}`,
@@ -84,12 +99,14 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
             name: "",
           }),
         );
+        dispatch(setConfirmedLocationName(""));
         return;
       }
     }
 
-    dispatch(resetPropertySearch());
+    dispatch(resetPropertySearchSlice());
     dispatch(setLocation(value));
+    dispatch(setConfirmedLocationName(value.name || ""));
 
     router.push(
       `/property-search?lat=${value.latitude}&lon=${value.longitude}&propertyCategory=${propertyCategory.toLowerCase()}`,
@@ -97,6 +114,11 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
   };
 
   const handleLocationChange = (value: string) => {
+    // If user clears input manually, ensure confirmed is cleared
+    if (!value || value.trim() === "") {
+      dispatch(setConfirmedLocationName(""));
+    }
+
     if (location) {
       dispatch(
         setLocation({

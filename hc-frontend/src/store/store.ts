@@ -1,4 +1,3 @@
-// src/store/store.ts
 import { configureStore } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
@@ -45,22 +44,23 @@ const propertySearchPersistConfig = {
   storage,
   whitelist: [
     "location",
+    "confirmedLocationName",
     "propertyType",
+    "bhkType",
     "propertyCategory",
-    "propertyBhk",
+    "nonVegAllowed",
+    "preferredTenants",
     "tenantType",
-    "lookingFor",
-    "propertyTypeFilter",
-    "tenant",
-    "foodPref",
+    "roomType",
+    "balconyType",
     "bathroomType",
     "furnishing",
     "availability",
     "amenities",
     "parking",
     "priceRangeForRent",
+    "priceRangeForFlatmate",
     "priceRangeForBuy",
-    "exclusive",
     "sortFields",
     "sortOrder",
   ], // Persist all fields

@@ -44,7 +44,7 @@ import {
   WATER_SUPPLY_OPTIONS,
   YES_NO_OPTIONS,
 } from "@/common/dataConstants/options";
-import { RENT_PREFERRED_TENANTS } from "@/common/enums";
+import { PreferredTenantValue } from "@/common/enums";
 import {
   FormCalendarField,
   FormCheckbox,
@@ -244,22 +244,22 @@ export const RentalDetailsClient: React.FC = () => {
             columns={4}
             options={[
               {
-                value: RENT_PREFERRED_TENANTS.FAMILY,
+                value: PreferredTenantValue.FAMILY,
                 label: "Family",
                 icon: <RemoteSvg src={familyIconURL} />,
               },
               {
-                value: RENT_PREFERRED_TENANTS.COMPANY,
+                value: PreferredTenantValue.COMPANY,
                 label: "Company",
                 icon: <RemoteSvg src={companyIconURL} />,
               },
               {
-                value: RENT_PREFERRED_TENANTS.BACHELOR,
+                value: PreferredTenantValue.BACHELOR,
                 label: "Bachelor",
                 icon: <RemoteSvg src={bachelorIconURL} />,
               },
               {
-                value: RENT_PREFERRED_TENANTS.COUPLE,
+                value: PreferredTenantValue.COUPLE,
                 label: "Couple",
                 icon: <RemoteSvg src={coupleIconURL} />,
               },
