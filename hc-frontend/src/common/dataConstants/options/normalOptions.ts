@@ -3,8 +3,9 @@ import {
   PropertyTypeValue,
   TenantTypeValue,
 } from "@/common/enums";
+import { BaseOption, PriceOption } from "@/interfaces/Options";
 
-import { BaseOption, generateNumericOptions, PriceOption } from "./optionUtils";
+import { generateNumericOptions } from "./optionUtils";
 
 export const PROPERTY_TYPE_OPTIONS: BaseOption[] = [
   { value: PropertyTypeValue.APARTMENT, label: "Apartment" },
@@ -188,3 +189,53 @@ export const FLATMATE_PRICE_OPTIONS: PriceOption[] = [
   { value: "20000-30000", label: "20k to 30k", min: 20000, max: 30000 },
   { value: "30000-max", label: "30k & Above", min: 30000, max: 1000000 },
 ];
+
+// Amenities - Centralized Values
+export const AMENITY_VALUES = {
+  LIFT: "lift",
+  CLUB_HOUSE: "club-house",
+  GYM: "gym",
+  OUTDOOR_DINING: "outdoor-dining-area",
+  FIRE_EXTINGUISHER: "fire-extinguisher",
+  SMOKE_ALARM: "smoke-alarm",
+  SWIMMING_POOL: "swimming-pool",
+  POWER_BACKUP: "twenty-four-seven-power",
+  SECURITY: "security",
+  VISITOR_PARKING: "visitor-parking",
+  DEDICATED_WORKSPACE: "dedicated-workspace",
+  WIFI: "wifi",
+  POOL_TABLE: "pool-table",
+  FIRST_AID: "first-aid-kit",
+  INTERCOM: "intercom",
+  SEWAGE_TREATMENT: "sewage-treatment",
+  HOUSE_KEEPING: "house-keeping",
+  RAIN_WATER: "rain-water-harvesting",
+  PLAY_AREA: "children-play-area",
+  GUEST_ROOM: "guest-room",
+  COMMUNITY_HALL: "community-hall",
+} as const;
+
+// Centralized Labels (Mapped to the Values)
+export const AMENITY_LABELS: Record<string, string> = {
+  [AMENITY_VALUES.LIFT]: "Lift",
+  [AMENITY_VALUES.CLUB_HOUSE]: "Club House",
+  [AMENITY_VALUES.GYM]: "Gym",
+  [AMENITY_VALUES.OUTDOOR_DINING]: "Outdoor Dining Area",
+  [AMENITY_VALUES.FIRE_EXTINGUISHER]: "Fire Extinguisher",
+  [AMENITY_VALUES.SMOKE_ALARM]: "Smoke Alarm",
+  [AMENITY_VALUES.SWIMMING_POOL]: "Swimming Pool",
+  [AMENITY_VALUES.POWER_BACKUP]: "24/7 Power",
+  [AMENITY_VALUES.SECURITY]: "Security",
+  [AMENITY_VALUES.VISITOR_PARKING]: "Visitor Parking",
+  [AMENITY_VALUES.DEDICATED_WORKSPACE]: "Dedicated Workspace",
+  [AMENITY_VALUES.WIFI]: "Wifi",
+  [AMENITY_VALUES.POOL_TABLE]: "Pool Table",
+  [AMENITY_VALUES.FIRST_AID]: "First Aid Kit",
+  [AMENITY_VALUES.INTERCOM]: "Intercom",
+  [AMENITY_VALUES.SEWAGE_TREATMENT]: "Sewage Treatment",
+  [AMENITY_VALUES.HOUSE_KEEPING]: "House Keeping",
+  [AMENITY_VALUES.RAIN_WATER]: "Rain Water Harvesting",
+  [AMENITY_VALUES.PLAY_AREA]: "Children Play Area",
+  [AMENITY_VALUES.GUEST_ROOM]: "Guest Room",
+  [AMENITY_VALUES.COMMUNITY_HALL]: "Community Hall",
+};

@@ -60,10 +60,12 @@ import {
   securityIconURL,
   smokeAlarmIconURL,
   swimmingPoolIconURL,
-  twentyFourXSevenIconURL,
+  twentyFourSevenIconURL,
   wifiIconURL,
 } from "@/common/cdnURLs";
 import {
+  AMENITY_LABELS,
+  AMENITY_VALUES,
   BALCONY_TYPE_OPTIONS,
   BATHROOM_TYPE_OPTIONS,
   BHK_TYPE_OPTIONS,
@@ -115,79 +117,33 @@ import { GoogleMapsDirection } from "@/utility-components";
 import { PropertyDetailItem } from "./components/PropertyDetailItem";
 import Loading from "./loading";
 
-const AmenitiesMap = {
-  Lift: { label: "Lift", icon: <RemoteSvg src={liftIconURL} /> },
-  Clubhouse: {
-    label: "Club house",
-    icon: <RemoteSvg src={clubhouseIconURL} />,
-  },
-  Gym: { label: "Gym", icon: <RemoteSvg src={gymIconURL} /> },
-  "Outdoor Dining Area": {
-    label: "Outdoor Dining Area",
-    icon: <RemoteSvg src={outdoorDiningAreaIconURL} />,
-  },
-  "Fire Extinguisher": {
-    label: "Fire Extinguisher",
-    icon: <RemoteSvg src={fireExtinguisherIconURL} />,
-  },
-  "Smoke Alarm": {
-    label: "Smoke Alarm",
-    icon: <RemoteSvg src={smokeAlarmIconURL} />,
-  },
-  "Swimming Pool": {
-    label: "Swimming Pool",
-    icon: <RemoteSvg src={swimmingPoolIconURL} />,
-  },
-  "24/7 Power": {
-    label: "24/7 Power",
-    icon: <RemoteSvg src={twentyFourXSevenIconURL} />,
-  },
-  Security: { label: "Security", icon: <RemoteSvg src={securityIconURL} /> },
-  "Visitor Parking": {
-    label: "Visitor Parking",
-    icon: <RemoteSvg src={parkingSpaceIconURL} />,
-  },
-  "Dedicated Workspace": {
-    label: "Dedicated Workspace",
-    icon: <RemoteSvg src={dedicatedWorkspaceIconURL} />,
-  },
-  Wifi: { label: "Wifi", icon: <RemoteSvg src={wifiIconURL} /> },
-  "Pool Table": {
-    label: "Pool Table",
-    icon: <RemoteSvg src={poolTableIconURL} />,
-  },
-  "First Aid Kit": {
-    label: "First Aid Kit",
-    icon: <RemoteSvg src={firstAidKitIconURL} />,
-  },
-  Intercom: {
-    label: "Intercom",
-    icon: <Headset size={24} strokeWidth={1.5} />,
-  },
-  "Sewage Treatment": {
-    label: "Sewage Treatment",
-    icon: <Dam size={24} strokeWidth={1.5} />,
-  },
-  "House Keeping": {
-    label: "House Keeping",
-    icon: <BrushCleaning size={24} strokeWidth={1.5} />,
-  },
-  "Rain Water Harvesting": {
-    label: "Rain Water Harvesting",
-    icon: <CloudHail size={24} strokeWidth={1.5} />,
-  },
-  "Children Play Area": {
-    label: "Children Play Area",
-    icon: <Blocks size={24} strokeWidth={1.5} />,
-  },
-  "Guest Room": {
-    label: "Guest Room",
-    icon: <BedSingle size={24} strokeWidth={1.5} />,
-  },
-  "Community Hall": {
-    label: "Community Hall",
-    icon: <Landmark size={24} strokeWidth={1.5} />,
-  },
+const AMENITY_ICONS: Record<string, React.ReactNode> = {
+  [AMENITY_VALUES.LIFT]: <RemoteSvg src={liftIconURL} />,
+  [AMENITY_VALUES.GYM]: <RemoteSvg src={gymIconURL} />,
+  [AMENITY_VALUES.SWIMMING_POOL]: <RemoteSvg src={swimmingPoolIconURL} />,
+  [AMENITY_VALUES.POWER_BACKUP]: <RemoteSvg src={twentyFourSevenIconURL} />,
+  [AMENITY_VALUES.CLUB_HOUSE]: <RemoteSvg src={clubhouseIconURL} />,
+  [AMENITY_VALUES.SECURITY]: <RemoteSvg src={securityIconURL} />,
+  [AMENITY_VALUES.VISITOR_PARKING]: <RemoteSvg src={parkingSpaceIconURL} />,
+  [AMENITY_VALUES.COMMUNITY_HALL]: <Landmark size={24} strokeWidth={1.5} />,
+  [AMENITY_VALUES.GUEST_ROOM]: <BedSingle size={24} strokeWidth={1.5} />,
+  [AMENITY_VALUES.OUTDOOR_DINING]: <RemoteSvg src={outdoorDiningAreaIconURL} />,
+  [AMENITY_VALUES.FIRE_EXTINGUISHER]: (
+    <RemoteSvg src={fireExtinguisherIconURL} />
+  ),
+  [AMENITY_VALUES.SMOKE_ALARM]: <RemoteSvg src={smokeAlarmIconURL} />,
+
+  [AMENITY_VALUES.DEDICATED_WORKSPACE]: (
+    <RemoteSvg src={dedicatedWorkspaceIconURL} />
+  ),
+  [AMENITY_VALUES.WIFI]: <RemoteSvg src={wifiIconURL} />,
+  [AMENITY_VALUES.POOL_TABLE]: <RemoteSvg src={poolTableIconURL} />,
+  [AMENITY_VALUES.FIRST_AID]: <RemoteSvg src={firstAidKitIconURL} />,
+  [AMENITY_VALUES.INTERCOM]: <Headset size={24} strokeWidth={1.5} />,
+  [AMENITY_VALUES.SEWAGE_TREATMENT]: <Dam size={24} strokeWidth={1.5} />,
+  [AMENITY_VALUES.HOUSE_KEEPING]: <BrushCleaning size={24} strokeWidth={1.5} />,
+  [AMENITY_VALUES.RAIN_WATER]: <CloudHail size={24} strokeWidth={1.5} />,
+  [AMENITY_VALUES.PLAY_AREA]: <Blocks size={24} strokeWidth={1.5} />,
 };
 
 const CONTACT_LOGIN_DIALOG_ID = "contact-owner-login-dialog";
@@ -781,23 +737,31 @@ export function PropertyDetailsClient({
               <hr />
 
               {/* Amenities Section */}
-              <section className="py-6 mb-6">
-                <h2 className="text-xl mb-4">What this place offers</h2>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {property?.amenities?.map((amenity: string) => (
-                    <div
-                      key={amenity}
-                      className="flex items-center gap-2 text-gray-700"
-                    >
-                      {AmenitiesMap[amenity as keyof typeof AmenitiesMap]?.icon}
-                      <span>
-                        {AmenitiesMap[amenity as keyof typeof AmenitiesMap]
-                          ?.label || amenity}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </section>
+              {property?.amenities.length > 0 ? (
+                <section className="py-6 mb-6">
+                  <h2 className="text-xl mb-4">What this place offers</h2>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {property?.amenities?.map((amenityValue: string) => {
+                      const amenityIcon =
+                        AMENITY_ICONS[
+                          amenityValue as keyof typeof AMENITY_ICONS
+                        ];
+                      const amenityLabel =
+                        AMENITY_LABELS[amenityValue] ?? amenityValue;
+                      if (!amenityIcon) return null;
+                      return (
+                        <div
+                          key={amenityValue}
+                          className="flex items-center gap-2 text-gray-700"
+                        >
+                          {amenityIcon}
+                          <span>{amenityLabel}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </section>
+              ) : null}
 
               <hr />
 
@@ -1490,23 +1454,29 @@ export function PropertyDetailsClient({
             </section>
 
             {/* Amenities Section */}
-            <section className="py-6">
-              <h2 className="text-xl mb-4">What this place offers</h2>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {property?.amenities?.map((amenity: string) => (
-                  <div
-                    key={amenity}
-                    className="flex items-center gap-2 text-gray-700"
-                  >
-                    {AmenitiesMap[amenity as keyof typeof AmenitiesMap]?.icon}
-                    <span>
-                      {AmenitiesMap[amenity as keyof typeof AmenitiesMap]
-                        ?.label || amenity}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </section>
+            {property?.amenities.length > 0 ? (
+              <section className="py-6">
+                <h2 className="text-xl mb-4">What this place offers</h2>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {property?.amenities?.map((amenityValue: string) => {
+                    const amenityIcon =
+                      AMENITY_ICONS[amenityValue as keyof typeof AMENITY_ICONS];
+                    const amenityLabel =
+                      AMENITY_LABELS[amenityValue] ?? amenityValue;
+                    if (!amenityIcon) return null;
+                    return (
+                      <div
+                        key={amenityValue}
+                        className="flex items-center gap-2 text-gray-700"
+                      >
+                        {amenityIcon}
+                        <span>{amenityLabel}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            ) : null}
 
             {/* Map Section */}
             <section className="py-6">

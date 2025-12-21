@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
 
-import { BENGALURU_LOCATION, SOCIAL_MEDIA_LINKS } from "@/common/constants";
+import { EXPLORE_LOCATION, SOCIAL_MEDIA_LINKS } from "@/common/constants";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { RootState } from "@/store/store";
 import { SvgIcon } from "@/utility-components";
@@ -14,6 +14,10 @@ const FooterClient: React.FC = () => {
   const { openDialog, closeAllDialogs } = useDialog();
   const searchParams = useSearchParams();
   const pathname = usePathname();
+
+  // Dynamically get lat/lon from current params or fallback to Bengaluru
+  const currentLat = searchParams.get("lat") || EXPLORE_LOCATION.lat.toString();
+  const currentLon = searchParams.get("lon") || EXPLORE_LOCATION.lng.toString();
 
   const onLogin = () => {
     closeAllDialogs();
@@ -114,7 +118,7 @@ const FooterClient: React.FC = () => {
                   </li> */}
                   <li>
                     <Link
-                      href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=rent`}
+                      href={`/property-search?lat=${currentLat}&lon=${currentLon}&propertyCategory=rent`}
                       data-category="rent"
                       data-active={
                         searchParams.get("propertyCategory") === "rent" ||
@@ -125,12 +129,12 @@ const FooterClient: React.FC = () => {
                       }
                       className="text-black hover:text-red-500"
                     >
-                      For Rent
+                      Rent
                     </Link>
                   </li>
                   <li>
                     <Link
-                      href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=flatmate`}
+                      href={`/property-search?lat=${currentLat}&lon=${currentLon}&propertyCategory=flatmate`}
                       data-category="flatmate"
                       data-active={
                         searchParams.get("propertyCategory") === "flatmate" ||
@@ -141,7 +145,7 @@ const FooterClient: React.FC = () => {
                       }
                       className="text-black hover:text-red-500"
                     >
-                      For Flatmate
+                      Rooms
                     </Link>
                   </li>
                   <li>
@@ -193,14 +197,6 @@ const FooterClient: React.FC = () => {
                       className="text-black hover:text-red-500"
                     >
                       FAQs
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/terms-and-conditions"
-                      className="text-black hover:text-red-500"
-                    >
-                      Terms & Conditions
                     </Link>
                   </li>
                 </ul>

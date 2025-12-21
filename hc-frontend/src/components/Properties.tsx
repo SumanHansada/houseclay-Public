@@ -69,7 +69,7 @@ const Properties: React.FC<PropertiesProps> = ({
   );
 
   const bedrooms = bhkType
-    ? bhkType === "studio" || bhkType === "1-bhk"
+    ? bhkType === "Studio" || bhkType === "1 BHK"
       ? "1 Bed"
       : `${bhkType.split("BHK")[0]} Beds`
     : "N/A";
@@ -212,7 +212,7 @@ const Properties: React.FC<PropertiesProps> = ({
             </p>
           ) : propertyCategory === PropertyCategory.FLATMATE ? (
             <p className="font-medium text-xs">
-              {getOptionLabel(BHK_TYPE_OPTIONS, bhkType)} | {bathroomType} |{" "}
+              {bhkType === "Studio" ? "1 RK" : bhkType} | {bathroomType} |{" "}
               {balconyType}
             </p>
           ) : null}
