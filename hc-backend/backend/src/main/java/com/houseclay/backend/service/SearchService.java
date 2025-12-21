@@ -97,9 +97,9 @@ public class SearchService {
             ));
         }
 
-        if (request.getIsExclusive() != null && request.getIsExclusive()) {
+        if (request.getIsExclusive() != null) {
             filters.add(Query.of(q -> q
-                    .term(t -> t.field("isExclusive").value(true))
+                    .term(t -> t.field("isExclusive").value(request.getIsExclusive()))
             ));
         }
 
@@ -127,12 +127,14 @@ public class SearchService {
             ));
         }
 
-        if (request.getNonVegAllowed() != null && request.getNonVegAllowed()) {
+        if (request.getNonVegAllowed() != null) {
             filters.add(Query.of(q -> q
-                    .term(t -> t.field("nonVegAllowed").value(true))
+                    .term(t -> t
+                            .field("nonVegAllowed")
+                            .value(request.getNonVegAllowed())
+                    )
             ));
         }
-
 
         if (request.getPropertyAvailability() != null) {
             switch (request.getPropertyAvailability()) {
@@ -168,7 +170,7 @@ public class SearchService {
             List<Query> mustQueries = request.getAmenities().stream()
                     .map(amenity -> Query.of(q -> q
                             .term(t -> t
-                                    .field("amenities.keyword")
+                                    .field("amenities")
                                     .value(amenity)
                             )
                     ))
