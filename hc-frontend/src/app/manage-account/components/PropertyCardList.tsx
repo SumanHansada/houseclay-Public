@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import { formatDate, getDateKey } from "@/common/utils";
+import { formatUTCDateDisplay } from "@/common/utils";
 import { UserOwnedProperties } from "@/interfaces/User";
 
 import { PropertyCard } from "./PropertyCard";
@@ -35,18 +35,19 @@ export function PropertyCardList({
     let currentKey = "";
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
-      const key = getDateKey(item.updatedOn);
-      if (key !== currentKey) {
-        currentKey = key;
+      const displayDate = formatUTCDateDisplay(item.updatedOn);
+
+      if (displayDate !== currentKey) {
+        currentKey = displayDate;
         groups.push({
-          date: formatDate(item.updatedOn),
+          date: displayDate,
           properties: [item],
         });
       } else {
         groups[groups.length - 1].properties.push(item);
       }
     }
-    return groups;
+    return groups.reverse();
   }, [items]);
 
   return (
