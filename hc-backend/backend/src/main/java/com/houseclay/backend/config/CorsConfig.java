@@ -17,7 +17,6 @@ public class CorsConfig {
         
         // ✅ Add all frontend origins that need cookie access
         config.setAllowedOrigins(List.of(
-            "https://mb6faf.houseclay.com",
             "https://zebra.houseclay.com",
             "http://localhost:3000",
             "http://localhost:3001",
@@ -29,7 +28,9 @@ public class CorsConfig {
             "https://localhost:3001",
             "https://ec2-52-66-218-187.ap-south-1.compute.amazonaws.com:3000",
             "https://ec2-3-110-206-137.ap-south-1.compute.amazonaws.com:3001",
-            "https://ec2-13-201-0-200.ap-south-1.compute.amazonaws.com:3000"
+            "https://ec2-13-201-0-200.ap-south-1.compute.amazonaws.com:3000",
+            "https://houseclay.com",
+            "https://www.houseclay.com"
         ));
         
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
