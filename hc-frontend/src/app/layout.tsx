@@ -335,6 +335,19 @@ export default function RootLayout({
           src="https://checkout.razorpay.com/v1/checkout.js"
           strategy="lazyOnload"
         />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-64EJC1CG73"
+          strategy="afterInteractive"
+        />
+        {/* Google tag (gtag.js) */}
+        <Script id="ga-init" strategy="afterInteractive">
+          {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-64EJC1CG73');
+        `}
+        </Script>
 
         {/* Service Worker Registration - Required for beforeinstallprompt event */}
         <Script
