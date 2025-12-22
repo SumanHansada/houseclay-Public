@@ -8,6 +8,7 @@ import * as Yup from "yup";
 
 import { Button } from "@/base-components";
 import { HOUSECLAY_SUPPORT } from "@/common/constants";
+import { sanitizePhoneKeepCountryCode } from "@/common/utils";
 import { FormPhoneField, FormTextArea, FormTextField } from "@/form-components";
 import { Footer, MobileHeader } from "@/layout-components";
 import { ImageWithLoader } from "@/utility-components";
@@ -35,6 +36,10 @@ const initialValues: ContactUsFormValues = {
   subject: "",
   message: "",
 };
+
+const formattedPhoneNumber = sanitizePhoneKeepCountryCode(
+  HOUSECLAY_SUPPORT.phone,
+);
 
 export default function ContactUsPage() {
   const [savedValues, setSavedValues] =
@@ -228,7 +233,7 @@ export default function ContactUsPage() {
               </a>
 
               <a
-                href={`tel:${HOUSECLAY_SUPPORT.phone}`}
+                href={`tel:${formattedPhoneNumber}`}
                 className="flex gap-2 items-start w-fit"
               >
                 <PhoneCall

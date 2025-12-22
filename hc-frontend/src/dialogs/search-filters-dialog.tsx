@@ -95,82 +95,6 @@ interface SearchFiltersDialogProps {
   onApply: (dialogSelectedCategory?: PropertyCategory) => void;
 }
 
-const amenities = [
-  { label: "Lift", icon: <RemoteSvg src={liftIconURL} /> },
-  {
-    label: "Club house",
-    icon: <RemoteSvg src={clubhouseIconURL} />,
-  },
-  { label: "Gym", icon: <RemoteSvg src={gymIconURL} /> },
-  {
-    label: "Swimming Pool",
-    icon: <RemoteSvg src={swimmingPoolIconURL} />,
-  },
-  {
-    label: "24/7 Power",
-    icon: <RemoteSvg src={twentyFourSevenIconURL} />,
-  },
-  { label: "Security", icon: <RemoteSvg src={securityIconURL} /> },
-  {
-    label: "Visitor Parking",
-    icon: <RemoteSvg src={parkingSpaceIconURL} />,
-  },
-  {
-    label: "Community Hall",
-    icon: <Landmark size={24} strokeWidth={1.5} />,
-  },
-  // Currently Commented only showing 8 options
-  // {
-  //   label: "Outdoor Dining Area",
-  //   icon: <RemoteSvg src={outdoorDiningAreaIconURL} />,
-  // },
-  // {
-  //   label: "Fire Extinguisher",
-  //   icon: <RemoteSvg src={fireExtinguisherIconURL} />,
-  // },
-  // {
-  //   label: "Smoke Alarm",
-  //   icon: <RemoteSvg src={smokeAlarmIconURL} />,
-  // },
-  // {
-  //   label: "Dedicated Workspace",
-  //   icon: <RemoteSvg src={dedicatedWorkspaceIconURL} />,
-  // },
-  // { label: "Wifi", icon: <RemoteSvg src={wifiIconURL} /> },
-  // {
-  //   label: "Pool Table",
-  //   icon: <RemoteSvg src={poolTableIconURL} />,
-  // },
-  // {
-  //   label: "First Aid Kit",
-  //   icon: <RemoteSvg src={firstAidKitIconURL} />,
-  // },
-  // {
-  //   label: "Intercom",
-  //   icon: <Headset size={24} strokeWidth={1.5} />,
-  // },
-  // {
-  //   label: "Sewage Treatment",
-  //   icon: <Dam size={24} strokeWidth={1.5} />,
-  // },
-  // {
-  //   label: "House Keeping",
-  //   icon: <BrushCleaning size={24} strokeWidth={1.5} />,
-  // },
-  // {
-  //   label: "Rain Water Harvesting",
-  //   icon: <CloudHail size={24} strokeWidth={1.5} />,
-  // },
-  // {
-  //   label: "Children Play Area",
-  //   icon: <Blocks size={24} strokeWidth={1.5} />,
-  // },
-  // {
-  //   label: "Guest Room",
-  //   icon: <BedSingle size={24} strokeWidth={1.5} />,
-  // },
-];
-
 const AMENITY_ICONS: Record<string, React.ReactNode> = {
   [AMENITY_VALUES.LIFT]: <RemoteSvg src={liftIconURL} />,
   [AMENITY_VALUES.GYM]: <RemoteSvg src={gymIconURL} />,
@@ -926,25 +850,25 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       <Gem size={20} /> Amenities
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      {amenities.map((amenity) => (
+                      {amenitiesFilter.map((amenityValue) => (
                         <button
-                          key={amenity.label}
-                          className={`flex flex-col items-start justify-center border rounded-xl p-3 gap-2 ${stateAmenities.includes(amenity.label) ? "border-red-500" : "border-gray-200 text-gray-700"}`}
+                          key={amenityValue}
+                          className={`flex flex-col items-start justify-center border rounded-xl p-3 gap-2 ${stateAmenities.includes(amenityValue) ? "border-red-500" : "border-gray-200 text-gray-700"}`}
                           onClick={() =>
                             dispatch(
                               setAmenities(
-                                stateAmenities.includes(amenity.label)
+                                stateAmenities.includes(amenityValue)
                                   ? stateAmenities.filter(
-                                      (a) => a !== amenity.label,
+                                      (a) => a !== amenityValue,
                                     )
-                                  : [...stateAmenities, amenity.label],
+                                  : [...stateAmenities, amenityValue],
                               ),
                             )
                           }
                         >
-                          {amenity.icon}
+                          {AMENITY_ICONS[amenityValue] ?? amenityValue}
                           <span className="text-sm text-left">
-                            {amenity.label}
+                            {AMENITY_LABELS[amenityValue] ?? amenityValue}
                           </span>
                         </button>
                       ))}
@@ -1159,24 +1083,24 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                   <Gem size={20} /> Amenities
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {amenities.map((amenity) => (
+                  {amenitiesFilter.map((amenityValue) => (
                     <button
-                      key={amenity.label}
-                      className={`flex flex-col items-start justify-center border rounded-xl p-3 gap-2 ${stateAmenities.includes(amenity.label) ? "border-red-500" : "border-gray-200 text-gray-700"}`}
+                      key={amenityValue}
+                      className={`flex flex-col items-start justify-center border rounded-xl p-3 gap-2 ${stateAmenities.includes(amenityValue) ? "border-red-500" : "border-gray-200 text-gray-700"}`}
                       onClick={() =>
                         dispatch(
                           setAmenities(
-                            stateAmenities.includes(amenity.label)
-                              ? stateAmenities.filter(
-                                  (a) => a !== amenity.label,
-                                )
-                              : [...stateAmenities, amenity.label],
+                            stateAmenities.includes(amenityValue)
+                              ? stateAmenities.filter((a) => a !== amenityValue)
+                              : [...stateAmenities, amenityValue],
                           ),
                         )
                       }
                     >
-                      {amenity.icon}
-                      <span className="text-sm text-left">{amenity.label}</span>
+                      {AMENITY_ICONS[amenityValue] ?? amenityValue}
+                      <span className="text-sm text-left">
+                        {AMENITY_LABELS[amenityValue] ?? amenityValue}
+                      </span>
                     </button>
                   ))}
                 </div>

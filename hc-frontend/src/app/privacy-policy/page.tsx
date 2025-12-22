@@ -4,8 +4,8 @@ import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/base-components";
-import { Footer, MobileHeader } from "@/layout-components";
 import { HOUSECLAY_SUPPORT } from "@/common/constants";
+import { Footer, MobileHeader } from "@/layout-components";
 
 export default function PrivacyPolicyPage() {
   const router = useRouter();
@@ -43,21 +43,30 @@ export default function PrivacyPolicyPage() {
             Privacy Policy
           </h1>
         </div>
+
         <div className="flex flex-col gap-8 xl:w-1/2 lg:w-2/3 md:w-3/4 max-md:px-8 mb-16 pb-5 mx-auto">
+          <div className="flex max-md:flex-col gap-1 font-semibold">
+            <span>Last Modified:</span>
+            <span className="text-gray-700 font-medium">
+              22nd, December 2025 (22/12/2025)
+            </span>
+          </div>
+
           <div className="space-y-2">
             <h2 className="text-xl md:text-2xl font-semibold">
               Acceptance of Policy
             </h2>
             <p className="text-gray-700 md:text-lg">
-              This Privacy Policy explains how Houseclay ("Houseclay", "we",
-              "us", "our") collects, uses, discloses, process and protects
-              personal data when you use our website, apps, and services (the
-              "Platform"). By using the Platform, you agree to this Policy. If
-              you do not agree, please do not use the Platform.
+              This Privacy Policy explains how Houseclay (&quot;Houseclay&quot;,
+              &quot;we&quot;, &quot;us&quot;, &quot;our&quot;) collects, uses,
+              discloses, process and protects personal data when you use our
+              website, apps, and services (the &quot;Platform&quot;). By using
+              the Platform, you agree to this Policy. If you do not agree,
+              please do not use the Platform.
             </p>
           </div>
 
-          {/* 1. Scope & Roles */}
+          {/* 1) Scope & Roles */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
               1) Scope & Roles
@@ -65,7 +74,8 @@ export default function PrivacyPolicyPage() {
             <div className="space-y-2 md:space-y-1 pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               <p>
                 This Policy applies to visitors, listers, seekers, and any
-                person interacting with the Platform ("Users", "you", "your").
+                person interacting with the Platform (&quot;Users&quot;,
+                &quot;you&quot;, &quot;your&quot;).
               </p>
               <p>
                 Houseclay acts as an independent data fiduciary/controller for
@@ -74,7 +84,7 @@ export default function PrivacyPolicyPage() {
             </div>
           </div>
 
-          {/* 2. What We Collect */}
+          {/* 2) What We Collect */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
               2) What We Collect
@@ -100,7 +110,7 @@ export default function PrivacyPolicyPage() {
               </li>
 
               <li>
-                <h3 className="text-lg sm:text-xl font-semibold">
+                <h3 className="text-lg md:text-xl font-semibold">
                   Auth & Verification (OTP)
                 </h3>
                 <div className="space-y-2 md:space-y-1 pt-1 pl-2 md:pl-4 text-sm md:text-base text-gray-700">
@@ -120,7 +130,7 @@ export default function PrivacyPolicyPage() {
               </li>
 
               <li>
-                <h3 className="text-lg sm:text-xl font-semibold">
+                <h3 className="text-lg md:text-xl font-semibold">
                   Messaging Identifiers (SMS & WhatsApp)
                 </h3>
                 <div className="space-y-2 md:space-y-1 pt-1 pl-2 md:pl-4 text-sm md:text-base text-gray-700">
@@ -134,7 +144,7 @@ export default function PrivacyPolicyPage() {
               </li>
 
               <li>
-                <h3 className="text-lg sm:text-xl font-semibold">
+                <h3 className="text-lg md:text-xl font-semibold">
                   Listings & Interactions
                 </h3>
                 <div className="space-y-2 md:space-y-1 pt-1 pl-2 md:pl-4 text-sm md:text-base text-gray-700">
@@ -148,7 +158,7 @@ export default function PrivacyPolicyPage() {
               </li>
 
               <li>
-                <h3 className="text-lg sm:text-xl font-semibold">
+                <h3 className="text-lg md:text-xl font-semibold">
                   Usage & Device
                 </h3>
                 <div className="space-y-2 md:space-y-1 pt-1 pl-2 md:pl-4 text-sm md:text-base text-gray-700">
@@ -162,7 +172,7 @@ export default function PrivacyPolicyPage() {
               </li>
 
               <li>
-                <h3 className="text-lg sm:text-xl font-semibold">
+                <h3 className="text-lg md:text-xl font-semibold">
                   Payments (for connects)
                 </h3>
                 <div className="space-y-2 md:space-y-1 pt-1 pl-2 md:pl-4 text-sm md:text-base text-gray-700">
@@ -176,7 +186,7 @@ export default function PrivacyPolicyPage() {
               </li>
 
               <li>
-                <h3 className="text-lg sm:text-xl font-semibold">
+                <h3 className="text-lg md:text-xl font-semibold">
                   Publicly Available or Authorised Information
                 </h3>
                 <div className="space-y-2 md:space-y-1 pt-1 pl-2 md:pl-4 text-sm md:text-base text-gray-700">
@@ -197,8 +207,7 @@ export default function PrivacyPolicyPage() {
             </ul>
           </div>
 
-          {/* 3) How We Use Personal Data (Purposes)
-           */}
+          {/* 3) How We Use Personal Data (Purposes) */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
               3) How We Use Personal Data (Purposes)
@@ -219,8 +228,8 @@ export default function PrivacyPolicyPage() {
               </li>
               <li>
                 <span className="font-medium">Safety & Trust</span>: prevent
-                spam/fraud/abuse, rate-limit "reveal phone," investigate
-                complaints, power report/takedown flows.
+                spam/fraud/abuse, rate-limit &quot;reveal phone,&quot;
+                investigate complaints, power report/takedown flows.
               </li>
               <li>
                 <span className="font-medium">Improvement & Analytics</span>:
@@ -237,8 +246,9 @@ export default function PrivacyPolicyPage() {
               </li>
               <li>
                 <span className="font-medium">Do-Not-List Registry</span>:
-                honour "do not list" or "do not contact" preferences to avoid
-                future display or re-ingestion of identifiers.
+                honour &quot;do not list&quot; or &quot;do not contact&quot;
+                preferences to avoid future display or re-ingestion of
+                identifiers.
               </li>
             </ul>
           </div>
@@ -272,9 +282,9 @@ export default function PrivacyPolicyPage() {
               For WhatsApp Business messages, we rely on consent where required
               and on legitimate interests to deliver transactional messages you
               request (e.g., OTPs, claim/remove confirmations), consistent with
-              WhatsApp's Business Terms and applicable law. For SMS, we comply
-              with applicable telecom rules for transactional vs. promotional
-              messaging.
+              WhatsApp&apos;s Business Terms and applicable law. For SMS, we
+              comply with applicable telecom rules for transactional vs.
+              promotional messaging.
             </p>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               Where applicable law permits, we may process publicly available
@@ -528,9 +538,9 @@ export default function PrivacyPolicyPage() {
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               We may update this Policy from time to time. We will revise the
-              "Last Updated" date and, where required, provide additional
-              notice. Your continued use of the Platform after changes take
-              effect constitutes acceptance
+              &quot;Last Updated&quot; date and, where required, provide
+              additional notice. Your continued use of the Platform after
+              changes take effect constitutes acceptance
             </p>
           </div>
 
@@ -562,7 +572,7 @@ export default function PrivacyPolicyPage() {
               </li>
 
               <li>
-                <h3 className="text-lg sm:text-xl font-semibold">
+                <h3 className="text-lg md:text-xl font-semibold">
                   Force Majeure
                 </h3>
                 <div className="space-y-2 md:space-y-1 pt-1 pl-2 md:pl-4 text-sm md:text-base text-gray-700">
@@ -583,7 +593,7 @@ export default function PrivacyPolicyPage() {
               </li>
 
               <li>
-                <h3 className="text-lg sm:text-xl font-semibold">
+                <h3 className="text-lg md:text-xl font-semibold">
                   Limitation Period
                 </h3>
                 <div className="space-y-2 md:space-y-1 pt-1 pl-2 md:pl-4 text-sm md:text-base text-gray-700">
