@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
-import { houseclayIconURL } from "@/common/constants/cdnURL";
+import { houseclayIconURL } from "@/common/constants/cdnURLs";
 import ActionMenu from "@/components/ActionMenu";
 import { useAdminLogout } from "@/hooks/useAdminLogout";
 import { RootState } from "@/store/store";

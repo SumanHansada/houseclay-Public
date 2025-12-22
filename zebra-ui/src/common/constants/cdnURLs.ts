@@ -1,12 +1,26 @@
 import { CDN_BASE_URL } from ".";
 
+export const coinIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/coin.svg`;
 export const houseclayIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/houseclay.svg`;
+export const houseclayHomeIconURL = `${CDN_BASE_URL}/public/icons/houseclay-home.svg`;
+export const placeholderImageURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/property-placeholder.svg`;
+export const placeholderIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/property-placeholder-icon.svg`;
+export const propertyImageURL = `${CDN_BASE_URL}/public/images/property.webp`;
+
+export const directOwnerAccessImageURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/direct-owner-access.svg`;
+export const payAsYouGoImageURL = `${CDN_BASE_URL}/public/optimizedIcons/large/pay-as-you-go.svg`;
+export const exclusiveListingImageURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/exclusive-listings.svg`;
+
+export const propertyAddGraphicURL = `${CDN_BASE_URL}/public/images/property-add-graphic.webp`;
+export const listPropertySuccessIconURL = `${CDN_BASE_URL}/public/optimizedIcons/large/list-property-success.svg`;
+
+export const builtUpAreaIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/build-up-area.svg`;
+export const balconyIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/balcony.svg`;
+
+// Form Icons
 export const rentIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/rent.svg`;
 export const flatmateIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/flatmates.svg`;
 export const resaleIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/resale.svg`;
-export const listPropertySuccessIconURL = `${CDN_BASE_URL}/public/optimizedIcons/large/list-property-success.svg`;
-
-// Form Icons
 export const femaleIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/female.svg`;
 export const maleIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/male.svg`;
 export const vegIconURL = `${CDN_BASE_URL}/public/optimizedIcons/large/veg.svg`;
@@ -24,7 +38,7 @@ export const outdoorDiningAreaIconURL = `${CDN_BASE_URL}/public/optimizedIcons/s
 export const fireExtinguisherIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/fire-extinguisher.svg`;
 export const smokeAlarmIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/smoke-alarm.svg`;
 export const swimmingPoolIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/swimming-pool.svg`;
-export const twentyFourXSevenIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/24x7-power.svg`;
+export const twentyFourSevenIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/24x7-power.svg`;
 export const securityIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/security.svg`;
 export const parkingSpaceIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/parking-space.svg`;
 export const dedicatedWorkspaceIconURL = `${CDN_BASE_URL}/public/optimizedIcons/small/dedicated-workspace.svg`;

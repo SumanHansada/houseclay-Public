@@ -7,6 +7,3 @@ export const BASE_API_URL =
 
 export const WEBSITE_BASE_URL = "https://houseclay.com";
 export const CDN_BASE_URL = "https://cdn.houseclay.com";
-
-export const PLACEHOLDER_IMAGE =
-  "/optimizedIcons/medium/property-placeholder.svg";
