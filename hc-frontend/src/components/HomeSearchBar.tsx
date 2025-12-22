@@ -54,10 +54,15 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
   );
 
   useEffect(() => {
-    if (location?.name && !confirmedLocationName) {
+    if (
+      location?.latitude &&
+      location?.longitude &&
+      (!confirmedLocationName || confirmedLocationName.trim() === "")
+    ) {
       dispatch(setLocation(null));
+      dispatch(setConfirmedLocationName(""));
     }
-  }, [dispatch, location?.name, confirmedLocationName]);
+  }, []);
 
   const handleSearch = () => {
     if (location && location.latitude && location.longitude) {
