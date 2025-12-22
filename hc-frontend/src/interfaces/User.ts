@@ -19,7 +19,7 @@ export interface UserOwnedProperties {
   locationOrSocietyName: string;
   propertyState: PropertyStatus;
   createdOn: string;
-  updatedOn: string | null;
+  updatedOn: string;
   availableFrom: string;
 }
 

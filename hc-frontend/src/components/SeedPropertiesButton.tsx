@@ -4,6 +4,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 import { Button } from "@/base-components";
+import { AMENITY_VALUES } from "@/common/dataConstants/options";
 import { PropertyCategory } from "@/common/enums";
 import { FlatmateForm } from "@/interfaces/FlatmateForm";
 import { usePropertyAddMutation } from "@/store/apiSlice";
@@ -23,7 +24,7 @@ const BASE_PAYLOAD: Omit<FlatmateForm, "propertyID" | "description"> = {
     "WMPW+5VW, Gear School Rd, Kaverappa Layout, Kadubeesanahalli, Bengaluru, Karnataka 560103, India",
   latitude: 12.935488999999999,
   longitude: 77.697193,
-  rent: 30000,
+  rent: 8000,
   maintenanceCharges: 5000,
   depositCharges: 140000,
   availableFrom: "2026-01-14T18:30:00.000Z",
@@ -34,19 +35,22 @@ const BASE_PAYLOAD: Omit<FlatmateForm, "propertyID" | "description"> = {
   parking: "both",
   nonVegAllowed: true,
   amenities: [
-    "Outdoor Dining Area",
-    "Fire Extinguisher",
-    "Smoke Alarm",
-    "Clubhouse",
-    "24/7 Power",
+    AMENITY_VALUES.LIFT,
+    AMENITY_VALUES.CLUB_HOUSE,
+    AMENITY_VALUES.GYM,
+    AMENITY_VALUES.POWER_BACKUP,
+    AMENITY_VALUES.VISITOR_PARKING,
+    AMENITY_VALUES.SWIMMING_POOL,
+    AMENITY_VALUES.SECURITY,
+    AMENITY_VALUES.COMMUNITY_HALL,
   ],
   tenantType: "female",
   bathroomType: "attached",
   balconyType: "shared",
   smokingPreference: true,
   drinkingPreference: true,
-  images: [], // Empty as requested
-  coverImage: undefined, // Empty as requested
+  images: [],
+  coverImage: undefined,
   whoWillShowProperty: "owner",
   secondaryPhoneNumber: "919999999999",
 };
@@ -70,6 +74,7 @@ export const SeedPropertiesButton = () => {
           ...BASE_PAYLOAD,
           propertyID: i.toString() as string,
           description: `Seeded Test Property #${i}`,
+          rent: BASE_PAYLOAD?.rent ? BASE_PAYLOAD.rent + 1000 * i : 19000,
         };
 
         // We use .unwrap() to ensure we catch errors correctly

@@ -35,11 +35,11 @@ export function PropertyCardList({
     let currentKey = "";
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
-      const key = getDateKey(item.createdOn);
+      const key = getDateKey(item.updatedOn);
       if (key !== currentKey) {
         currentKey = key;
         groups.push({
-          date: formatDate(item.createdOn),
+          date: formatDate(item.updatedOn),
           properties: [item],
         });
       } else {

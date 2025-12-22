@@ -432,6 +432,23 @@ export const apiSlice = createApi({
         method: "POST",
       }),
     }),
+    contactUs: builder.mutation<
+      undefined,
+      {
+        name: string;
+        email: string;
+        phone: string;
+        subject: string;
+        message: string;
+      }
+    >({
+      query: (payload) => ({
+        url: "/contact/add",
+        body: payload,
+        method: "POST",
+        responseHandler: (response) => response.text(),
+      }),
+    }),
   }),
 });
 
@@ -472,4 +489,5 @@ export const {
   usePopularNeighbourhoodsQuery,
   useGenerateOtpEmailMutation,
   useVerifyEmailMutation,
+  useContactUsMutation,
 } = apiSlice;

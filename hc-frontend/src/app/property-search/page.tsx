@@ -727,11 +727,6 @@ export default function PropertySearchPage() {
                   </div>
                 )}
               </div>
-
-              {/* TEST - Seed Properties Button */}
-              {/* <div className="flex items-center gap-2">
-                {!true ? <SeedPropertiesButton /> : null}
-              </div> */}
             </div>
           </div>
 
