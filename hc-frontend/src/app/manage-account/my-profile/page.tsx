@@ -121,7 +121,7 @@ export default function MyProfilePage() {
       openDialog(EMAIL_VERIFICATION_SUCCESS_DIALOG_ID);
     } catch (err: unknown) {
       console.error("Failed to verify email:", err);
-      toast.error(getErrorMessage(err));
+      toast.error("Wrong OTP Code!");
     } finally {
       setVerificationLoading(false);
     }

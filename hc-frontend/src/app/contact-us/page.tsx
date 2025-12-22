@@ -1,20 +1,22 @@
 "use client";
 
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import { ChevronLeft, Mail, PhoneCall } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import * as Yup from "yup";
 
 import { Button } from "@/base-components";
 import { HOUSECLAY_SUPPORT } from "@/common/constants";
+import { sanitizePhoneKeepCountryCode } from "@/common/utils";
+import Spinner from "@/components/Spinner";
 import { FormPhoneField, FormTextArea, FormTextField } from "@/form-components";
 import { Footer, MobileHeader } from "@/layout-components";
+import { useContactUsMutation } from "@/store/apiSlice";
 import { ImageWithLoader } from "@/utility-components";
 
 interface ContactUsFormValues {
   name: string;
-  phoneNumber: string;
+  phone: string;
   email: string;
   subject: string;
   message: string;
@@ -22,24 +24,49 @@ interface ContactUsFormValues {
 
 const validationSchema = Yup.object({
   name: Yup.string().required("Name is required"),
-  phoneNumber: Yup.string().required("Phone is required"),
+  phone: Yup.string().required("Phone is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
-  subject: Yup.string(),
-  message: Yup.string(),
+  subject: Yup.string().required("Subject is required"),
+  message: Yup.string().required("Message is required"),
 });
 
 const initialValues: ContactUsFormValues = {
   name: "",
-  phoneNumber: "",
+  phone: "",
   email: "",
   subject: "",
   message: "",
 };
 
+const formattedPhoneNumber = sanitizePhoneKeepCountryCode(
+  HOUSECLAY_SUPPORT.phone,
+);
+
 export default function ContactUsPage() {
-  const [savedValues, setSavedValues] =
-    useState<ContactUsFormValues>(initialValues);
   const router = useRouter();
+
+  const [contactUs, { isLoading, isSuccess, isError }] = useContactUsMutation();
+
+  const handleSubmit = async (
+    values: ContactUsFormValues,
+    { resetForm }: FormikHelpers<ContactUsFormValues>,
+  ) => {
+    try {
+      const payload = {
+        name: values.name,
+        email: values.email,
+        phone: values.phone,
+        subject: values.subject,
+        message: values.message,
+      };
+
+      await contactUs(payload).unwrap();
+
+      resetForm();
+    } catch (err) {
+      console.error("Failed to send message:", err);
+    }
+  };
 
   return (
     <>
@@ -56,6 +83,7 @@ export default function ContactUsPage() {
         </MobileHeader.LeftAction>
         <MobileHeader.Title>Contact Us</MobileHeader.Title>
       </MobileHeader>
+
       <section className="relative w-full">
         {/* --- UNIFIED UPPER Section --- */}
         <section
@@ -141,14 +169,11 @@ export default function ContactUsPage() {
               Get in Touch!
             </h2>
             <Formik
-              initialValues={savedValues}
+              initialValues={initialValues}
               validationSchema={validationSchema}
               validateOnBlur={false}
               validateOnChange={false}
-              onSubmit={(values) => {
-                console.log("Submit all data:", values);
-                setSavedValues(values);
-              }}
+              onSubmit={handleSubmit}
               enableReinitialize
             >
               {() => (
@@ -170,8 +195,8 @@ export default function ContactUsPage() {
                     required
                   />
                   <FormPhoneField
-                    name="phoneNumber"
-                    id="phoneNumber"
+                    name="phone"
+                    id="phone"
                     label="Phone Number"
                     defaultCountry="in"
                     placeholder="Enter phone number"
@@ -184,6 +209,7 @@ export default function ContactUsPage() {
                     label="Subject"
                     placeholder="Enter your subject"
                     className="w-full"
+                    required
                   />
                   <FormTextArea
                     name="message"
@@ -191,12 +217,28 @@ export default function ContactUsPage() {
                     label="Message"
                     placeholder="Type your message"
                     className="w-full"
+                    required
                   />
+
+                  {/* Feedback Messages */}
+                  {isSuccess && (
+                    <div className="p-3 text-sm text-green-700 bg-green-100 rounded-lg">
+                      Message sent successfully! We will get back to you soon.
+                    </div>
+                  )}
+                  {isError && (
+                    <div className="p-3 text-sm text-red-700 bg-red-100 rounded-lg">
+                      Failed to send message. Please try again.
+                    </div>
+                  )}
+
                   <button
                     type="submit"
-                    className="px-3 py-1 md:px-5 md:py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow-sm"
+                    disabled={isLoading}
+                    className="flex items-center justify-center gap-2 px-3 py-1 md:px-5 md:py-2 bg-red-500 hover:bg-red-600 disabled:bg-red-300 disabled:cursor-not-allowed text-white rounded-lg shadow-sm transition-colors"
                   >
-                    Submit
+                    {isLoading && <Spinner size="sm" />}
+                    {isLoading ? "Sending..." : "Submit"}
                   </button>
                 </Form>
               )}
@@ -228,7 +270,7 @@ export default function ContactUsPage() {
               </a>
 
               <a
-                href={`tel:${HOUSECLAY_SUPPORT.phone}`}
+                href={`tel:${formattedPhoneNumber}`}
                 className="flex gap-2 items-start w-fit"
               >
                 <PhoneCall

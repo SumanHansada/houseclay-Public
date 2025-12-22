@@ -1,32 +1,8 @@
-import { ReactNode } from "react";
-
-export type OptionValue = string | number | boolean;
-
-export interface BaseOption<T extends OptionValue = string> {
-  value: T;
-  label: string;
-}
-
-export interface OptionWithIcon<T extends OptionValue = string>
-  extends BaseOption<T> {
-  icon: ReactNode;
-}
-
-export interface PriceOption {
-  value: string;
-  label: string;
-  min: number;
-  max: number;
-}
-
-interface NumericOptionConfig {
-  min?: number;
-  max: number;
-  addZeroOption?: boolean;
-  zeroOptionLabel?: string;
-  prefix?: string;
-  suffix?: string;
-}
+import {
+  BaseOption,
+  NumericOptionConfig,
+  OptionValue,
+} from "@/interfaces/Options";
 
 export const generateNumericOptions = (
   config: NumericOptionConfig,

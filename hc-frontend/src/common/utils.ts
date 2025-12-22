@@ -135,9 +135,12 @@ export const generateUUID = (): string => {
  */
 export const formatDate = (isoString: string): string => {
   const date = new Date(isoString);
-  const day = date.getDate().toString().padStart(2, "0");
-  const month = date.toLocaleString("en-US", { month: "short" });
-  const year = date.getFullYear();
+  const day = date.getUTCDate().toString().padStart(2, "0");
+  const month = date.toLocaleString("en-US", {
+    month: "short",
+    timeZone: "UTC",
+  });
+  const year = date.getUTCFullYear();
   return `${day}-${month}-${year}`;
 };
 
@@ -212,6 +215,7 @@ export function isEnumValue<E extends Record<string, string>>(
   return Object.values(enumObj).includes(value as string);
 }
 
+/* Validate Images */
 export const validateImages = async (
   imageUrls: string[],
 ): Promise<string[]> => {
@@ -229,4 +233,12 @@ export const validateImages = async (
 
   const results = await Promise.all(validationPromises);
   return imageUrls.filter((_, i) => results[i]);
+};
+
+/**
+ * Sanitize Phone Number but keep the country code
+ * */
+export const sanitizePhoneKeepCountryCode = (phoneNumber: string): string => {
+  if (!phoneNumber) return phoneNumber;
+  return phoneNumber.replace(/[\s\-\(\)]/g, "").replace(/^\+?0+/, "+") || "";
 };

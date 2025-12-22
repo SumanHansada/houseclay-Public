@@ -12,7 +12,7 @@ import {
   useRouter,
   useSearchParams,
 } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -84,7 +84,6 @@ export default function PropertySearchPage() {
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
   const urlCategory = getUrlCategory(searchParams);
-  const isFilterDialogChange = useRef(false);
   const [page, setPage] = useState(0);
   const { openDialog, closeDialog, isDialogOpen } = useDialog();
 
@@ -99,11 +98,6 @@ export default function PropertySearchPage() {
 
   // Hydrate category from URL on first load / URL change
   useEffect(() => {
-    if (isFilterDialogChange.current) {
-      isFilterDialogChange.current = false;
-      return; // Skip hydration if change came from filter dialog (already in sync)
-    }
-
     if (urlCategory !== searchState.propertyCategory) {
       dispatch(setPropertyCategory(urlCategory));
     }
@@ -733,11 +727,6 @@ export default function PropertySearchPage() {
                   </div>
                 )}
               </div>
-
-              {/* TEST - Seed Properties Button */}
-              {/* <div className="flex items-center gap-2">
-                {!true ? <SeedPropertiesButton /> : null}
-              </div> */}
             </div>
           </div>
 
@@ -823,7 +812,6 @@ export default function PropertySearchPage() {
           }}
           onReset={() => {}}
           onApply={(dialogSelectedCategory?: PropertyCategory) => {
-            isFilterDialogChange.current = true;
             closeDialog(PROPERTY_FILTERS_DIALOG_ID);
             handleSearch(dialogSelectedCategory);
           }}

@@ -69,9 +69,7 @@ const UpgradePropertyDialog: React.FC<UpgradePropertyDialogProps> = ({
           <button
             key="upgrade-property-button"
             className={`py-3 px-24 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200 ${isMobile ? "w-full" : ""}`}
-            onClick={() => {
-              // TODO: Add API Integration
-            }}
+            onClick={handleClose}
             tabIndex={0}
             autoFocus
           >

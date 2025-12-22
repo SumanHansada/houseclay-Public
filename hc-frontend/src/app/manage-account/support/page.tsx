@@ -6,11 +6,16 @@ import { useState } from "react";
 
 import { Button } from "@/base-components";
 import { HOUSECLAY_SUPPORT } from "@/common/constants";
+import { sanitizePhoneKeepCountryCode } from "@/common/utils";
 import { default as ACCORDION_DATA } from "@/data/SupportAccordionData.json";
 import { MobileHeader } from "@/layout-components";
 import { SvgIcon } from "@/utility-components";
 
 import { Accordion } from "../components/Accordion";
+
+const formattedPhoneNumber = sanitizePhoneKeepCountryCode(
+  HOUSECLAY_SUPPORT.phone,
+);
 
 export default function SupportPage() {
   const router = useRouter();
@@ -49,7 +54,7 @@ export default function SupportPage() {
                   <span>{HOUSECLAY_SUPPORT.email}</span>
                 </a>
                 <a
-                  href={`tel:${HOUSECLAY_SUPPORT.phone}`}
+                  href={`tel:${formattedPhoneNumber}`}
                   className="flex gap-2 items-start"
                 >
                   <PhoneCall
@@ -142,7 +147,7 @@ export default function SupportPage() {
                   <span className="">{HOUSECLAY_SUPPORT.email}</span>
                 </a>
                 <a
-                  href={`tel:${HOUSECLAY_SUPPORT.phone}`}
+                  href={`tel:${formattedPhoneNumber}`}
                   className="flex gap-2 items-start"
                 >
                   <div>
