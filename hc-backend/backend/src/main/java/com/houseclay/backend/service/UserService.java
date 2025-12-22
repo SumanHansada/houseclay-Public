@@ -114,7 +114,7 @@ public class UserService {
         }
         user = optionalUser.get();
         user.setName(userEditDTO.getName());
-        user.setEmailID(user.getEmailID());
+        user.setEmailID(userEditDTO.getEmail());
         userRepository.save(user);
     }
     
