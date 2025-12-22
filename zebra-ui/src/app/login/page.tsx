@@ -5,7 +5,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
-import { houseclayIconURL } from "@/common/constants/cdnURL";
+import { houseclayIconURL } from "@/common/constants/cdnURLs";
 import { FormTextField } from "@/form-components";
 import { authFailure, authStarted, authSuccess } from "@/store/adminAuthSlice";
 import { useLoginMutation } from "@/store/apiSlice";

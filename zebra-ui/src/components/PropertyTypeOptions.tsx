@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 
-import { flatmateIconURL, rentIconURL } from "@/common/constants/cdnURL";
+import { flatmateIconURL, rentIconURL } from "@/common/constants/cdnURLs";
 import { PropertyCategory } from "@/common/enums";
 import { MobileFooter } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";

@@ -1,4 +1,5 @@
-import { CDN_BASE_URL, PLACEHOLDER_IMAGE } from "./constants";
+import { CDN_BASE_URL } from "./constants";
+import { placeholderImageURL } from "./constants/cdnURLs";
 
 const formatter = new Intl.NumberFormat("en-IN", {
   style: "currency",
@@ -87,7 +88,7 @@ export function processPropertyImages(
 ): string[] {
   // If no images or empty array, return placeholder
   if (!images || images.length === 0) {
-    return [PLACEHOLDER_IMAGE];
+    return [placeholderImageURL];
   }
 
   // Filter out any null/undefined/empty strings and add CDN prefix
@@ -96,5 +97,5 @@ export function processPropertyImages(
     .map((img) => `${CDN_BASE_URL}/${img}`);
 
   // If all images were invalid, return placeholder
-  return processedImages.length > 0 ? processedImages : [PLACEHOLDER_IMAGE];
+  return processedImages.length > 0 ? processedImages : [placeholderImageURL];
 }

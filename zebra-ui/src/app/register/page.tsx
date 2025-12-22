@@ -6,7 +6,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
-import { houseclayIconURL } from "@/common/constants/cdnURL";
+import { houseclayIconURL } from "@/common/constants/cdnURLs";
 import { FormTextField } from "@/form-components";
 import { authFailure, authSuccess } from "@/store/adminAuthSlice";
 import { useLoginMutation, useRegisterMutation } from "@/store/apiSlice";

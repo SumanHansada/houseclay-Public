@@ -3,7 +3,7 @@
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import { listPropertySuccessIconURL } from "@/common/constants/cdnURL";
+import { listPropertySuccessIconURL } from "@/common/constants/cdnURLs";
 import { PropertyCategory } from "@/common/enums";
 import {
   Dialog,

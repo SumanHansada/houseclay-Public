@@ -28,11 +28,13 @@ import {
   securityIconURL,
   smokeAlarmIconURL,
   swimmingPoolIconURL,
-  twentyFourXSevenIconURL,
+  twentyFourSevenIconURL,
   vegIconURL,
   wifiIconURL,
-} from "@/common/constants/cdnURL";
+} from "@/common/constants/cdnURLs";
 import {
+  AMENITY_LABELS,
+  AMENITY_VALUES,
   BALCONY_TYPE_OPTIONS,
   BATHROOM_TYPE_OPTIONS,
   FURNISHING_OPTIONS,
@@ -42,7 +44,7 @@ import {
   WATER_SUPPLY_OPTIONS,
   YES_NO_OPTIONS,
 } from "@/common/constants/options/normalOptions";
-import { FLATMATE_PREFERRED_TENANTS } from "@/common/enums";
+import { TenantTypeValue } from "@/common/enums";
 import {
   FormCalendarField,
   FormCheckbox,
@@ -170,12 +172,12 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
             columns={2}
             options={[
               {
-                value: FLATMATE_PREFERRED_TENANTS.FEMALE,
+                value: TenantTypeValue.FEMALE,
                 label: "Female",
                 icon: <RemoteSvg src={femaleIconURL} />,
               },
               {
-                value: FLATMATE_PREFERRED_TENANTS.MALE,
+                value: TenantTypeValue.MALE,
                 label: "Male",
                 icon: <RemoteSvg src={maleIconURL} />,
               },
@@ -331,115 +333,114 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
           columns={4}
           options={[
             {
-              value: "Lift",
-              label: "Lift",
+              value: AMENITY_VALUES.LIFT,
+              label: AMENITY_LABELS[AMENITY_VALUES.LIFT],
               icon: <RemoteSvg src={liftIconURL} />,
             },
             {
-              value: "Clubhouse",
-              label: "Club house",
+              value: AMENITY_VALUES.CLUB_HOUSE,
+              label: AMENITY_LABELS[AMENITY_VALUES.CLUB_HOUSE],
               icon: <RemoteSvg src={clubhouseIconURL} />,
             },
             {
-              value: "Gym",
-              label: "Gym",
+              value: AMENITY_VALUES.GYM,
+              label: AMENITY_LABELS[AMENITY_VALUES.GYM],
               icon: <RemoteSvg src={gymIconURL} />,
             },
             {
-              value: "Outdoor Dining Area",
-              label: "Outdoor Dining Area",
+              value: AMENITY_VALUES.OUTDOOR_DINING,
+              label: AMENITY_LABELS[AMENITY_VALUES.OUTDOOR_DINING],
               icon: <RemoteSvg src={outdoorDiningAreaIconURL} />,
             },
             {
-              value: "Fire Extinguisher",
-              label: "Fire Extinguisher",
+              value: AMENITY_VALUES.FIRE_EXTINGUISHER,
+              label: AMENITY_LABELS[AMENITY_VALUES.FIRE_EXTINGUISHER],
               icon: <RemoteSvg src={fireExtinguisherIconURL} />,
             },
             {
-              value: "Smoke Alarm",
-              label: "Smoke Alarm",
+              value: AMENITY_VALUES.SMOKE_ALARM,
+              label: AMENITY_LABELS[AMENITY_VALUES.SMOKE_ALARM],
               icon: <RemoteSvg src={smokeAlarmIconURL} />,
             },
             {
-              value: "Swimming Pool",
-              label: "Swimming Pool",
+              value: AMENITY_VALUES.SWIMMING_POOL,
+              label: AMENITY_LABELS[AMENITY_VALUES.SWIMMING_POOL],
               icon: <RemoteSvg src={swimmingPoolIconURL} />,
             },
             {
-              value: "24/7 Power",
-              label: "24/7 Power",
-              icon: <RemoteSvg src={twentyFourXSevenIconURL} />,
+              value: AMENITY_VALUES.POWER_BACKUP,
+              label: AMENITY_LABELS[AMENITY_VALUES.POWER_BACKUP],
+              icon: <RemoteSvg src={twentyFourSevenIconURL} />,
             },
             {
-              value: "Security",
-              label: "Security",
+              value: AMENITY_VALUES.SECURITY,
+              label: AMENITY_LABELS[AMENITY_VALUES.SECURITY],
               icon: <RemoteSvg src={securityIconURL} />,
             },
             {
-              value: "Visitor Parking",
-              label: "Visitor Parking",
+              value: AMENITY_VALUES.VISITOR_PARKING,
+              label: AMENITY_LABELS[AMENITY_VALUES.VISITOR_PARKING],
               icon: <RemoteSvg src={parkingSpaceIconURL} />,
             },
             {
-              value: "Dedicated Workspace",
-              label: "Dedicated Workspace",
+              value: AMENITY_VALUES.DEDICATED_WORKSPACE,
+              label: AMENITY_LABELS[AMENITY_VALUES.DEDICATED_WORKSPACE],
               icon: <RemoteSvg src={dedicatedWorkspaceIconURL} />,
             },
             {
-              value: "Wifi",
-              label: "Wifi",
+              value: AMENITY_VALUES.WIFI,
+              label: AMENITY_LABELS[AMENITY_VALUES.WIFI],
               icon: <RemoteSvg src={wifiIconURL} />,
             },
             {
-              value: "Pool Table",
-              label: "Pool Table",
+              value: AMENITY_VALUES.POOL_TABLE,
+              label: AMENITY_LABELS[AMENITY_VALUES.POOL_TABLE],
               icon: <RemoteSvg src={poolTableIconURL} />,
             },
             {
-              value: "First Aid Kit",
-              label: "First Aid Kit",
+              value: AMENITY_VALUES.FIRST_AID,
+              label: AMENITY_LABELS[AMENITY_VALUES.FIRST_AID],
               icon: <RemoteSvg src={firstAidKitIconURL} />,
             },
             {
-              value: "Intercom",
-              label: "Intercom",
+              value: AMENITY_VALUES.INTERCOM,
+              label: AMENITY_LABELS[AMENITY_VALUES.INTERCOM],
               icon: <Headset size={24} strokeWidth={1.5} />,
             },
             {
-              value: "Sewage Treatment",
-              label: "Sewage Treatment",
+              value: AMENITY_VALUES.SEWAGE_TREATMENT,
+              label: AMENITY_LABELS[AMENITY_VALUES.SEWAGE_TREATMENT],
               icon: <Dam size={24} strokeWidth={1.5} />,
             },
             {
-              value: "House Keeping",
-              label: "House Keeping",
+              value: AMENITY_VALUES.HOUSE_KEEPING,
+              label: AMENITY_LABELS[AMENITY_VALUES.HOUSE_KEEPING],
               icon: <BrushCleaning size={24} strokeWidth={1.5} />,
             },
             {
-              value: "Rain Water Harvesting",
-              label: "Rain Water Harvesting",
+              value: AMENITY_VALUES.RAIN_WATER,
+              label: AMENITY_LABELS[AMENITY_VALUES.RAIN_WATER],
               icon: <CloudHail size={24} strokeWidth={1.5} />,
             },
             {
-              value: "Children Play Area",
-              label: "Children Play Area",
+              value: AMENITY_VALUES.PLAY_AREA,
+              label: AMENITY_LABELS[AMENITY_VALUES.PLAY_AREA],
               icon: <Blocks size={24} strokeWidth={1.5} />,
             },
             {
-              value: "Guest Room",
-              label: "Guest Room",
+              value: AMENITY_VALUES.GUEST_ROOM,
+              label: AMENITY_LABELS[AMENITY_VALUES.GUEST_ROOM],
               icon: <BedSingle size={24} strokeWidth={1.5} />,
             },
             {
-              value: "Community Hall",
-              label: "Community Hall",
+              value: AMENITY_VALUES.COMMUNITY_HALL,
+              label: AMENITY_LABELS[AMENITY_VALUES.COMMUNITY_HALL],
               icon: <Landmark size={24} strokeWidth={1.5} />,
             },
           ]}
           withIcons={true}
           alignment="start"
           required
-          disabled={disabled}
         />
       </div>
     </div>
