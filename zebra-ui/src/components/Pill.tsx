@@ -27,7 +27,7 @@ export const Pill: React.FC<PillProps> = ({
   <span
     data-testid={testId}
     className={clsx(
-      "px-2 py-1 rounded-full inline-block border",
+      "px-2 py-0.5 rounded-full inline-block border text-base",
       COLOUR_MAP[color],
       className,
     )}

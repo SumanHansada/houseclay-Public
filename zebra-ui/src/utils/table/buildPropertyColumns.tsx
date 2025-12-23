@@ -28,7 +28,7 @@
  *     });
  *
  */
-import { Eye, LucideIcon, Pencil } from "lucide-react";
+import { Eye, LucideIcon } from "lucide-react";
 
 import { Column } from "@/components/DataTable";
 import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
@@ -140,15 +140,15 @@ interface DefaultActionOpts {
  */
 export function createDefaultPropertyActions({
   onView,
-  onEdit = (row) => console.log("Edit: ", row.propertyID),
+  // onEdit = (row) => console.log("Edit: ", row.propertyID),
 }: DefaultActionOpts): ActionMap {
   return {
-    edit: {
-      icon: Pencil,
-      tooltip: "Edit Property",
-      onClick: onEdit,
-      classNameIcon: "size-5",
-    },
+    // edit: {
+    //   icon: Pencil,
+    //   tooltip: "Edit Property",
+    //   onClick: onEdit,
+    //   classNameIcon: "size-5",
+    // },
     view: {
       icon: Eye,
       tooltip: "View Details",
