@@ -123,7 +123,7 @@ const PropertyVerificationTablePage: React.FC = () => {
                   : "Properties to be Re-verified"}
               </h1>
               <span className="text-sm text-gray-500">
-                Page {currentPage} of {totalPages}
+                Page {currentPage} of {totalPages || 1}
               </span>
             </div>
 

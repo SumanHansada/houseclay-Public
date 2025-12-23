@@ -18,6 +18,7 @@ export interface PropertyReportDetails {
   reportId: number;
   reportType: ReportStatus;
   reportTime: string;
+  comment: string;
   user: UserInfo;
 }
 

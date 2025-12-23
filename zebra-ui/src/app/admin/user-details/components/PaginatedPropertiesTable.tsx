@@ -45,7 +45,14 @@ export function PaginatedPropertiesTable<
               </div>
             )}
 
-            <h2 className="text-2xl font-medium text-gray-800">{tableTitle}</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-medium text-gray-700">
+                {tableTitle}
+              </h2>
+              <span className="text-sm text-gray-500">
+                Page {currentPage} of {totalPages || 1}
+              </span>
+            </div>
 
             <div className="flex-1 overflow-auto">
               {/* Opacity Wrapper */}

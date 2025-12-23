@@ -139,7 +139,7 @@ export const LeadTableView = () => {
                 {statusBarTitle}
               </h2>
               <span className="text-sm text-gray-500">
-                Page {currentPage} of {totalPages}
+                Page {currentPage} of {totalPages || 1}
               </span>
             </div>
 

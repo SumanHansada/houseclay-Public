@@ -41,11 +41,11 @@ const Header: React.FC = () => {
         <div className="relative mr-20">
           <ActionMenu
             options={[
-              { id: 1, label: "Manage Account" },
-              { id: 2, label: "Logout" },
+              { id: 1, label: "Logout" },
+              // { id: 2, label: "Manage Account" },
             ]}
             onSelect={(option) => {
-              if (option.id === 1) {
+              if (option.id === 2) {
                 console.log("Manage Account");
               } else {
                 onLogout();
