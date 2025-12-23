@@ -48,7 +48,7 @@ export default function TermsAndConditionsPage() {
             Terms and Conditions
           </h1>
         </div>
-        <div className="flex flex-col gap-8 xl:w-1/2 lg:w-2/3 md:w-3/4 max-md:px-8 mb-16 pb-5 mx-auto">
+        <div className="flex flex-col gap-8 xl:px-28 lg:px-14 md:px-8 px-6 mb-16 pb-4 mx-auto">
           <div className="flex max-md:flex-col gap-1 font-semibold">
             <span>Last Modified:</span>
             <span className="text-gray-700 font-medium">

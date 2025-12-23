@@ -308,7 +308,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${nutino.variable}`}>
         <Providers>
-          <div className="min-h-screen">
+          <div className="min-h-dvh">
             <Header />
             <ConditionalPageTransition
               transitionType="slideRight"
@@ -319,7 +319,7 @@ export default function RootLayout({
                 "/edit-property",
               ]}
             >
-              <main className="mx-auto my-0 pt-14 max-md:pb-16 flex-1 flex flex-col justify-center">
+              <main className="mx-auto my-0 pt-14 min-h-dvh max-md:pb-16 flex flex-col">
                 <>
                   {children}
                   <CommonDialogs />

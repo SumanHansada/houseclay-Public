@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
+import { loginImageURL } from "@/common/cdnURLs";
 import { validPhoneNoLength } from "@/common/constants";
 import { AuthStep } from "@/common/enums";
 import { AuthUserDetail } from "@/interfaces/User";
@@ -334,7 +335,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
       <div className="flex items-center justify-center h-full bg-white rounded-xl">
         <div className="w-5/12 min-h-[400px] xl:min-h-[500px] 3xl:min-h-[800px] max-md:hidden">
           <ImageWithLoader
-            src="/images/login.webp"
+            src={loginImageURL}
             alt="Login"
             fill
             className="rounded-l-xl object-cover w-full min-h-[400px] xl:min-h-[500px] 3xl:min-h-[800px]"

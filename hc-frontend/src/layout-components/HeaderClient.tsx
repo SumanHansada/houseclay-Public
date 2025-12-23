@@ -6,6 +6,10 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 
+import {
+  insufficientConnectsIconURL,
+  loginAndEarnIconURL,
+} from "@/common/cdnURLs";
 import { EXPLORE_LOCATION } from "@/common/constants";
 import { AuthStep } from "@/common/enums";
 import { UserDropdown } from "@/components/UserDropdown";
@@ -34,12 +38,10 @@ export const InfoTipLogin: React.FC = () => (
   <div className="flex items-center w-full px-4 py-2 gap-4">
     <div className="relative w-1/4 aspect-[7/6]">
       <ImageWithLoader
-        src="/optimizedIcons/medium/login-and-earn.svg"
+        src={loginAndEarnIconURL}
         alt="login and earn"
         fill
         className="object-center"
-        sizes="100vw"
-        priority
       />
     </div>
     <div className="w-3/4">
@@ -55,12 +57,10 @@ export const InfoTipZeroBalance: React.FC = () => (
   <div className="flex w-full px-4 py-2 gap-4 min-w-72">
     <div className="relative h-14 aspect-[7/9]">
       <ImageWithLoader
-        src="/optimizedIcons/medium/insufficient-connects.svg"
+        src={insufficientConnectsIconURL}
         alt="insufficient connects"
         fill
         className="object-center"
-        sizes="100vw"
-        priority
       />
     </div>
     <div className="">
