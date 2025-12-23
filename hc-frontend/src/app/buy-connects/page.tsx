@@ -651,16 +651,16 @@ export default function BuyConnectsPage() {
           </DialogHeader>
           <DialogContent>
             <div className="space-y-4 my-6 px-6 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Connects to buy</span>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600 text-xs">Connects to buy</span>
                 <div className="flex items-center gap-1">
                   <SvgIcon iconSize="medium" name="coin" size={24} />
                   <span className="font-medium">{connectsToBuy} Connects</span>
                 </div>
               </div>
 
-              <div className="flex justify-between">
-                <span className="text-gray-600">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600 text-xs">
                   These new connects will expire on
                 </span>
                 <span className="font-medium">
@@ -673,8 +673,8 @@ export default function BuyConnectsPage() {
               </div>
 
               {isAuthenticated ? (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600 text-xs">
                     Your new Connects balance will be
                   </span>
                   <div className="flex items-center gap-1">

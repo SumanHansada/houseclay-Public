@@ -70,17 +70,25 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
     setActiveTab(id);
   };
 
-  const activeIndex = navItems.findIndex((i) => i.id === activeTab);
+  const activeIndex = navItems.findIndex((item) => {
+    const isActive =
+      (pathname && pathname === item.href.split("?")[0]) ||
+      (!pathname && activeTab === item.id);
+    return isActive;
+  });
 
+  console.log("active index", activeIndex);
+  console.log("active tab", activeTab);
   return (
     <nav className="fixed bottom-0 left-0 right-0 pb-safe-bottom bg-white border-t  border-gray-200 shadow-md z-40 w-full md:hidden ">
-      <ul className="relative flex items-center justify-between px-4 py-2 mx-auto">
+      <ul className="relative grid grid-cols-5 place-items-center px-4 py-2 mx-auto">
         {/* 1. Glow (below) */}
         <span
-          className="absolute -bottom-2 h-10 w-16 bg-gradient-to-t from-red-500/25 blur to-transparent
+          className="absolute bottom-0 h-12 w-16 blur bg-gradient-to-t from-red-500/25 to-transparent
              transition-transform duration-300 ease-out pointer-events-none z-0"
           style={{
-            transform: `translateX(${activeIndex * 4 + activeIndex * 0.6}rem)`,
+            gridColumnStart: activeIndex + 1,
+            gridColumnEnd: activeIndex + 2,
           }}
         />
 
@@ -89,7 +97,8 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
           className="absolute bottom-0 h-0.5 w-16 bg-red-500
              transition-transform duration-300 ease-out pointer-events-none z-10"
           style={{
-            transform: `translateX(${activeIndex * 4 + activeIndex * 0.6}rem)`,
+            gridColumnStart: activeIndex + 1,
+            gridColumnEnd: activeIndex + 2,
           }}
         />
 
