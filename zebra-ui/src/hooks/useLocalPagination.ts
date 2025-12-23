@@ -1,23 +1,12 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 interface LocalPaginationReturn<Row> {
   currentPage: number;
   totalPages: number;
-  isFirst: boolean;
-  isLast: boolean;
   paginatedRows: Row[];
   goToPage: (page: number) => void;
-  nextPage: () => void;
-  prevPage: () => void;
 }
 
-/**
- * Client‑side paginator for an in‑memory array.
- *
- * @param rows         The full data set.
- * @param rowsPerPage  Items per page (default 10).
- * @param initialPage  1‑based starting page (default 1).
- */
 export function useLocalPagination<Row>(
   rows: Row[],
   rowsPerPage: number = 10,
@@ -25,9 +14,14 @@ export function useLocalPagination<Row>(
 ): LocalPaginationReturn<Row> {
   const [currentPage, setCurrentPage] = useState(initialPage);
 
+  // Calculate total pages safely
   const totalPages = Math.max(1, Math.ceil(rows.length / rowsPerPage));
-  const isFirst = currentPage === 1;
-  const isLast = currentPage >= totalPages;
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(1);
+    }
+  }, [rows.length, totalPages, currentPage]);
 
   const paginatedRows = useMemo(() => {
     const start = (currentPage - 1) * rowsPerPage;
@@ -36,22 +30,17 @@ export function useLocalPagination<Row>(
 
   const goToPage = useCallback(
     (pageNo: number) => {
-      if (pageNo >= 1 && pageNo <= totalPages) setCurrentPage(pageNo);
+      if (pageNo >= 1 && pageNo <= totalPages) {
+        setCurrentPage(pageNo);
+      }
     },
     [totalPages],
   );
 
-  const nextPage = () => !isLast && setCurrentPage((prevPage) => prevPage + 1);
-  const prevPage = () => !isFirst && setCurrentPage((prevPage) => prevPage - 1);
-
   return {
     currentPage,
     totalPages,
-    isFirst,
-    isLast,
     paginatedRows,
     goToPage,
-    nextPage,
-    prevPage,
   };
 }

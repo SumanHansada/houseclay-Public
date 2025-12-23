@@ -1,42 +1,39 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
-import { LeadQueryParamEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
-import { Column, DataTable } from "@/components/DataTable";
+import { DataTable } from "@/components/DataTable";
 import { Pagination } from "@/components/Pagination";
+import { SearchAndFilterBar } from "@/components/SearchAndFilterBar";
 import Spinner from "@/components/Spinner";
-import { RenderLeadStatus } from "@/components/status/RenderLeadStatus";
-import { Lead, LeadType } from "@/interfaces/Lead";
-import { useGetLeadsQuery } from "@/store/apiSlice";
+import { PropertyInfo } from "@/interfaces/PropertyInfo";
+import { useGetPropertiesQuery } from "@/store/apiSlice";
+import {
+  buildPropertyColumns,
+  createDefaultPropertyActions,
+} from "@/utils/table/buildPropertyColumns";
 
-import { TableActionButtons } from "../../components/TableActionButtons";
+interface SerializedPropertyRow extends PropertyInfo {
+  _serial: number;
+}
 
 const ROWS_PER_PAGE = 12;
 
-export const LeadTableView = () => {
+export const ListAllProperties = () => {
   const router = useRouter();
-  const { leadType } = useParams() as { leadType: LeadType };
   const [currentPage, setCurrentPage] = useState(1);
 
-  const statusBarTitle =
-    leadType === "property"
-      ? "Property Listing Leads"
-      : leadType === "support"
-        ? "Search Support Leads"
-        : "Upgrade Property Leads";
-
+  // Get All Properties (Paginated)
   const {
-    data: paginatedLeadData,
+    data: paginatedPropertyData,
     isLoading,
     isFetching,
     isError,
     error,
-  } = useGetLeadsQuery(
+  } = useGetPropertiesQuery(
     {
-      type: LeadQueryParamEnum[leadType],
       page: currentPage - 1,
       size: ROWS_PER_PAGE,
     },
@@ -45,7 +42,8 @@ export const LeadTableView = () => {
     },
   );
 
-  const { content: allLeads = [], totalPages = 0 } = paginatedLeadData || {};
+  const { content: propertyList = [], totalPages = 0 } =
+    paginatedPropertyData || {};
 
   useEffect(() => {
     if (totalPages > 0 && currentPage > totalPages) {
@@ -53,72 +51,51 @@ export const LeadTableView = () => {
     }
   }, [totalPages, currentPage]);
 
-  const viewUserProfile = (phoneNo: string) => {
-    router.push(`/admin/user-details/${phoneNo}`);
-  };
-
-  const viewLeadDetails = (id: number) => {
-    router.push(`/admin/lead-management/${leadType}/${id}`);
-  };
-
-  const columns: Column<Lead>[] = [
-    {
-      key: "name",
-      label: "Name",
-      accessor: "name",
-    },
-    { key: "email", label: "Email", accessor: "email" },
-    { key: "phoneNo", label: "Phone No.", accessor: "phoneNo" },
-    {
-      key: "status",
-      label: "Status",
-      render: (lead) => <RenderLeadStatus status={lead.status} />,
-    },
-    {
-      key: "action",
-      label: "Action",
-      className: "w-80",
-      render: (lead) => (
-        <TableActionButtons
-          leadId={lead.leadId}
-          viewLeadDetails={() => viewLeadDetails(lead.leadId)}
-          viewUserProfile={() => viewUserProfile(lead.phoneNo)}
-        />
-      ),
-    },
-  ];
-
   // Initial Hard Loading State
   if (isLoading) {
     return (
       <AsyncFallback
         isLoading={isLoading}
         isError={false}
-        loadingMessage={`Loading ${statusBarTitle}...`}
+        loadingMessage="Loading properties..."
       />
     );
   }
 
   // Error State
-  if (isError || !paginatedLeadData) {
+  if (isError || !paginatedPropertyData) {
     return (
       <AsyncFallback
         isLoading={false}
         isError={true}
         error={error}
-        errorMessage="Failed to fetch Leads."
+        errorMessage="Failed to fetch Properties."
       />
     );
   }
 
+  const rows: SerializedPropertyRow[] = propertyList.map(
+    (propertyInfo, index) => ({
+      ...propertyInfo,
+      _serial: (currentPage - 1) * ROWS_PER_PAGE + index + 1,
+    }),
+  );
+
+  const columns = buildPropertyColumns(
+    createDefaultPropertyActions({
+      onView: (row) =>
+        router.push(
+          `/admin/property-details/${row.propertyCategory.toLowerCase()}/${row.propertyID}`,
+        ),
+    }),
+  );
+
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">
       <div className="flex flex-col flex-1 h-full">
-        {/* Sticky top status title bar */}
-        <div className="sticky top-0 z-10 bg-white border border-b-gray-200 shadow-sm px-8 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-medium text-gray-800">
-            Lead Management
-          </h1>
+        {/* Sticky top filter bar */}
+        <div className="sticky top-0 z-10 bg-white border border-b-gray-200 shadow-sm px-8 py-4">
+          <SearchAndFilterBar />
         </div>
 
         {/* Table area */}
@@ -133,13 +110,12 @@ export const LeadTableView = () => {
               </div>
             )}
 
-            {/* Inner Header with Page Count */}
             <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-              <h2 className="text-xl font-semibold text-gray-700">
-                {statusBarTitle}
-              </h2>
+              <h1 className="text-xl font-semibold text-gray-800">
+                All Listed Properties
+              </h1>
               <span className="text-sm text-gray-500">
-                Page {currentPage} of {totalPages || 1}
+                Page {currentPage} of {totalPages}
               </span>
             </div>
 
@@ -151,8 +127,8 @@ export const LeadTableView = () => {
               >
                 <DataTable
                   columns={columns}
-                  data={allLeads}
-                  getRowId={(lead) => lead.leadId.toString()}
+                  data={rows}
+                  getRowId={(prop) => prop.propertyID}
                 />
               </div>
             </div>

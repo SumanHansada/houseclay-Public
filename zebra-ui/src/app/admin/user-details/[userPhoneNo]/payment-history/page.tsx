@@ -4,7 +4,8 @@ import { useParams } from "next/navigation";
 import React from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
-import { PaginationFooter } from "@/components/PaginationFooter";
+import { Pagination } from "@/components/Pagination";
+import Spinner from "@/components/Spinner";
 import { RenderPaymentStatus } from "@/components/status/RenderPaymentStatus";
 import { useLocalPagination } from "@/hooks/useLocalPagination";
 import { UserExternalPayment } from "@/interfaces/User";
@@ -17,25 +18,20 @@ interface RowType extends UserExternalPayment {
 const PaymentHistory: React.FC = () => {
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
 
-  const { data } = useGetUserByPhoneNoQuery({ phoneNo: userPhoneNo });
+  const { data, isLoading } = useGetUserByPhoneNoQuery({
+    phoneNo: userPhoneNo,
+  });
 
-  const { externalPayments } = data!.user;
+  // parent layout already ensures data is present
+  const { externalPayments = [] } = data!.user;
 
   const rows: RowType[] = externalPayments.map((paymentInfo, index) => ({
     ...paymentInfo,
     _serial: index + 1,
   }));
 
-  const {
-    currentPage,
-    paginatedRows,
-    totalPages,
-    isFirst,
-    isLast,
-    goToPage,
-    nextPage,
-    prevPage,
-  } = useLocalPagination(rows, 10);
+  const { currentPage, paginatedRows, totalPages, goToPage } =
+    useLocalPagination(rows, 10);
 
   const columns: Column<RowType>[] = [
     {
@@ -85,25 +81,52 @@ const PaymentHistory: React.FC = () => {
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1 flex flex-col">
-        <div className="bg-gray-100 flex-1 py-8 px-16">
-          <div className="bg-white shadow-sm rounded-xl p-5 flex flex-col gap-4 h-full">
-            <h2 className="text-3xl">External Payment History</h2>
-            <DataTable<RowType>
-              columns={columns}
-              data={paginatedRows}
-              getRowId={(row) => row.paymentId}
-            />
+        {/* Main Content Area */}
+        <div className="bg-gray-100 flex-1 p-8">
+          <div className="bg-white shadow-sm rounded-xl p-6 flex flex-col gap-4 h-full relative">
+            {/* Loading Overlay */}
+            {isLoading && (
+              <div className="absolute inset-0 z-20 bg-white/50 flex items-center justify-center backdrop-blur-sm transition-all duration-300">
+                <div className="bg-white p-4 rounded-full shadow-lg border flex items-center justify-center">
+                  <Spinner size="lg" />
+                </div>
+              </div>
+            )}
+
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-medium text-gray-700">
+                External Payment History
+              </h2>
+              <span className="text-sm text-gray-500">
+                Page {currentPage} of {totalPages || 1}
+              </span>
+            </div>
+
+            <div className="flex-1 overflow-auto">
+              {/* Opacity Wrapper */}
+              <div
+                className={
+                  isLoading ? "opacity-50 pointer-events-none" : "opacity-100"
+                }
+              >
+                <DataTable<RowType>
+                  columns={columns}
+                  data={paginatedRows}
+                  getRowId={(row) => row.paymentId}
+                  noDataMessage="No transactions found."
+                />
+              </div>
+            </div>
           </div>
         </div>
-        <div className="sticky bottom-0 z-10 border-t border-gray-200 bg-white">
-          <PaginationFooter
+
+        {/* Sticky Bottom Pagination */}
+        <div className="sticky bottom-0 z-10 border-t border-gray-200 bg-white py-4 px-16 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+          <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            isFirst={isFirst}
-            isLast={isLast}
-            goToPage={goToPage}
-            nextPage={nextPage}
-            prevPage={prevPage}
+            onPageChange={goToPage}
+            isLoading={isLoading}
           />
         </div>
       </div>

@@ -1,57 +1,34 @@
 "use client";
-import { Eye } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
 import React from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
-import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
 import { Pagination } from "@/components/Pagination";
 import Spinner from "@/components/Spinner";
-import { RenderUserStatus } from "@/components/status/RenderUserStatus";
 import { useLocalPagination } from "@/hooks/useLocalPagination";
-import { UserInfo } from "@/interfaces/User";
-import { useGetPropertyByIdQuery } from "@/store/apiSlice";
 
-const ROWS_PER_PAGE = 10;
+interface PaginatedPropertiesTableProps<
+  RowType extends { propertyID: string; _serial: number },
+> {
+  tableTitle: string;
+  columns: Column<RowType>[];
+  rows: RowType[];
+  isLoading?: boolean;
+  rowsPerPage?: number;
+}
 
-export default function ViewUsersPage() {
-  const router = useRouter();
-  const { propertyID } = useParams() as { propertyID: string };
-
-  const { data: currentProperty, isLoading } = useGetPropertyByIdQuery({
-    propertyID: propertyID,
-  });
-  const rows = currentProperty?.viewUsers ?? [];
+export function PaginatedPropertiesTable<
+  RowType extends { propertyID: string; _serial: number },
+>(props: PaginatedPropertiesTableProps<RowType>) {
+  const {
+    tableTitle,
+    columns,
+    rows,
+    isLoading = false,
+    rowsPerPage = 10,
+  } = props;
 
   const { currentPage, paginatedRows, totalPages, goToPage } =
-    useLocalPagination(rows, ROWS_PER_PAGE);
-
-  const viewProfile = (phoneNo: string) =>
-    router.push(`/admin/user-details/${phoneNo}`);
-
-  const columns: Column<UserInfo>[] = [
-    { key: "name", label: "Name", accessor: "name" },
-    { key: "email", label: "Email", accessor: "email" },
-    { key: "phoneNo", label: "Phone No.", accessor: "phoneNo" },
-    {
-      key: "blacklisted",
-      label: "Status",
-      render: (user) => <RenderUserStatus isBlacklisted={user.blacklisted} />,
-    },
-    {
-      key: "action",
-      label: "Action",
-      className: "w-24",
-      render: (user) => (
-        <IconButtonWithTooltip
-          onClick={() => viewProfile(user.phoneNo)}
-          Icon={Eye}
-          tooltipActive={true}
-          tooltip="View Profile"
-        />
-      ),
-    },
-  ];
+    useLocalPagination(rows, rowsPerPage);
 
   return (
     <div className="flex flex-col h-full">
@@ -69,7 +46,9 @@ export default function ViewUsersPage() {
             )}
 
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-medium text-gray-700">View Users</h2>
+              <h2 className="text-2xl font-medium text-gray-700">
+                {tableTitle}
+              </h2>
               <span className="text-sm text-gray-500">
                 Page {currentPage} of {totalPages || 1}
               </span>
@@ -82,24 +61,24 @@ export default function ViewUsersPage() {
                   isLoading ? "opacity-50 pointer-events-none" : "opacity-100"
                 }
               >
-                <DataTable<UserInfo>
+                <DataTable<RowType>
                   columns={columns}
                   data={paginatedRows}
-                  getRowId={(row) => row.phoneNo}
-                  noDataMessage="No users found."
+                  getRowId={(row) => row.propertyID}
+                  noDataMessage="No properties found."
                 />
               </div>
             </div>
           </div>
         </div>
 
-        {/* Sticky bottom pagination */}
+        {/* Sticky Bottom Pagination */}
         <div className="sticky bottom-0 z-10 border-t border-gray-200 bg-white py-4 px-16 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            onPageChange={(page) => goToPage(page)}
-            isLoading={false}
+            onPageChange={goToPage}
+            isLoading={isLoading}
           />
         </div>
       </div>

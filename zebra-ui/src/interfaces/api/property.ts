@@ -18,12 +18,14 @@ export interface PropertyReportDetails {
   reportId: number;
   reportType: ReportStatus;
   reportTime: string;
+  comment: string;
   user: UserInfo;
 }
 
 // useGetPropertyByIdQuery()
 export interface GetPropertyByIdResponse {
   property: PropertyResponse;
+  secondaryPhoneNumber: string | null;
   propertyUpdates: PropertyUpdate[];
   owner: UserInfo;
   viewUsers: UserInfo[];

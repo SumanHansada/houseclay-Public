@@ -14,14 +14,14 @@ export const TableActionButtons: React.FC<TableActionButtonsProps> = ({
       <button
         data-testid={`view-user-${leadId}`}
         onClick={viewUserProfile}
-        className="group flex items-center cursor-pointer bg-teal-600 rounded-lg px-[8px] py-[4px] gap-2 text-white"
+        className="cursor-pointer bg-gray-500 rounded-lg px-2 py-0.5 text-white text-base"
       >
         View User
       </button>
       <button
         data-testid={`view-lead-${leadId}`}
         onClick={viewLeadDetails}
-        className="flex items-center cursor-pointer bg-red-600 rounded-lg px-[8px] py-[4px] gap-2 text-white"
+        className="cursor-pointer bg-red-500 rounded-lg px-2 py-0.5 text-white text-base"
       >
         View Lead
       </button>

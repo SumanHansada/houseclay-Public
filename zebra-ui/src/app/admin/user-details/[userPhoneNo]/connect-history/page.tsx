@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import React from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
-import { PaginationFooter } from "@/components/PaginationFooter";
+import { Pagination } from "@/components/Pagination";
 import { useLocalPagination } from "@/hooks/useLocalPagination";
 import { UserConnectTransaction } from "@/interfaces/User";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
@@ -15,25 +15,20 @@ interface RowType extends UserConnectTransaction {
 
 const ConnectHistoryPage: React.FC = () => {
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
-  const { data } = useGetUserByPhoneNoQuery({ phoneNo: userPhoneNo });
+  const { data, isLoading } = useGetUserByPhoneNoQuery({
+    phoneNo: userPhoneNo,
+  });
 
-  const { connectTransactions } = data!.user;
+  // parent layout already ensures data is present
+  const { connectTransactions = [] } = data!.user;
 
   const rows: RowType[] = connectTransactions.map((transactionInfo, index) => ({
     ...transactionInfo,
     _serial: index + 1,
   }));
 
-  const {
-    currentPage,
-    paginatedRows,
-    totalPages,
-    isFirst,
-    isLast,
-    goToPage,
-    nextPage,
-    prevPage,
-  } = useLocalPagination(rows, 10);
+  const { currentPage, paginatedRows, totalPages, goToPage } =
+    useLocalPagination(rows, 10);
 
   const columns: Column<RowType>[] = [
     {
@@ -79,14 +74,11 @@ const ConnectHistoryPage: React.FC = () => {
           </div>
         </div>
         <div className="sticky bottom-0 z-10 border-t border-gray-200 bg-white">
-          <PaginationFooter
+          <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
-            isFirst={isFirst}
-            isLast={isLast}
-            goToPage={goToPage}
-            nextPage={nextPage}
-            prevPage={prevPage}
+            onPageChange={goToPage}
+            isLoading={isLoading}
           />
         </div>
       </div>

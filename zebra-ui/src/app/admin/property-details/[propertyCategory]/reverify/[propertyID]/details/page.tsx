@@ -22,6 +22,7 @@ import {
   RentalDetailsForm,
   ResaleDetailsForm,
 } from "@/components/forms";
+import Spinner from "@/components/Spinner";
 import { useS3Deleter } from "@/hooks/useS3Deleter";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
 import { transformFormValuesToPropertyForm } from "@/interfaces/FormTransformers";
@@ -388,7 +389,10 @@ export default function ReverifyPropertyDetailsPage() {
           phoneNo: userPhoneNo,
         }).unwrap();
       }
-      // router.push("/admin/view-all-properties");
+      setEditMode(false);
+      // router.push(
+      //   `/admin/property-verification/${VerifyPropertyStatusEnum.REVERIFY}`,
+      // );
     } catch (error) {
       console.error("Error updating property:", error);
     }
@@ -541,6 +545,15 @@ export default function ReverifyPropertyDetailsPage() {
     finalizationStage === "uploading" ||
     finalizationStage === "updating";
 
+  const getButtonContent = (text: string) => (
+    <span className="flex items-center gap-2">
+      {isWorking ? <Spinner size="sm" /> : null}
+      {text}
+    </span>
+  );
+
+  const isFormDisabled = !editMode || isWorking;
+
   return (
     <div className="h-full bg-gray-100 flex flex-col px-4 py-8">
       <div className="flex-1 flex min-h-0 gap-5">
@@ -581,10 +594,10 @@ export default function ReverifyPropertyDetailsPage() {
                       </button>
                       <button
                         type="submit"
-                        className="border border-red-500 text-red-500 py-1 px-4 text-lg font-medium rounded-xl hover:bg-red-500 hover:text-white"
-                        disabled={!formik.isValid || isWorking}
+                        className="border border-red-500 text-red-500 py-1 px-4 text-lg font-medium rounded-xl hover:bg-red-500 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={!formik.isValid || isWorking || !formik.dirty}
                       >
-                        Save Changes
+                        {getButtonContent("Save Changes")}
                       </button>
                     </div>
                   ) : (
@@ -602,38 +615,38 @@ export default function ReverifyPropertyDetailsPage() {
                 <div className="flex flex-col gap-8">
                   <div className="bg-white rounded-xl p-6 shadow-sm">
                     {propertyCategory === PropertyCategory.RESALE ? (
-                      <PropertyDetailsResaleForm disabled={!editMode} />
+                      <PropertyDetailsResaleForm disabled={isFormDisabled} />
                     ) : propertyCategory === PropertyCategory.RENT ? (
-                      <PropertyDetailsRentForm disabled={!editMode} />
+                      <PropertyDetailsRentForm disabled={isFormDisabled} />
                     ) : (
-                      <PropertyDetailsFlatmateForm disabled={!editMode} />
+                      <PropertyDetailsFlatmateForm disabled={isFormDisabled} />
                     )}
                   </div>
 
                   <div className="bg-white rounded-xl p-6 shadow-sm">
-                    <LocalityDetailsForm disabled={!editMode} />
+                    <LocalityDetailsForm disabled={isFormDisabled} />
                   </div>
 
                   <div className="bg-white rounded-xl p-6 shadow-sm">
                     {propertyCategory === PropertyCategory.RESALE ? (
-                      <ResaleDetailsForm disabled={!editMode} />
+                      <ResaleDetailsForm disabled={isFormDisabled} />
                     ) : propertyCategory === PropertyCategory.RENT ? (
-                      <RentalDetailsForm disabled={!editMode} />
+                      <RentalDetailsForm disabled={isFormDisabled} />
                     ) : (
-                      <FlatmateDetailsForm disabled={!editMode} />
+                      <FlatmateDetailsForm disabled={isFormDisabled} />
                     )}
                   </div>
 
                   <div className="bg-white rounded-xl p-6 shadow-sm">
-                    <GalleryForm disabled={!editMode} />
+                    <GalleryForm disabled={isFormDisabled} />
                   </div>
                   <div className="bg-white rounded-xl p-6 shadow-sm">
                     {propertyCategory === PropertyCategory.RESALE ? (
-                      <AdditionalInfoResaleForm disabled={!editMode} />
+                      <AdditionalInfoResaleForm disabled={isFormDisabled} />
                     ) : propertyCategory === PropertyCategory.RENT ? (
-                      <AdditionalInfoRentForm disabled={!editMode} />
+                      <AdditionalInfoRentForm disabled={isFormDisabled} />
                     ) : (
-                      <AdditionalInfoFlatmateForm disabled={!editMode} />
+                      <AdditionalInfoFlatmateForm disabled={isFormDisabled} />
                     )}
                   </div>
                 </div>

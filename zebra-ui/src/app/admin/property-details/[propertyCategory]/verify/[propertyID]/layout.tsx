@@ -79,7 +79,15 @@ export default function VerifyPropertyLayout({
     dispatch(setPropertyDetailsFromApi(propertyDetailsRaw));
     try {
       console.log("Property Details - raw data: ", propertyDetailsRaw);
-      const apiPropertyData = propertyDetailsRaw.property;
+      let apiPropertyData = propertyDetailsRaw.property;
+      if (apiPropertyData) {
+        apiPropertyData = {
+          ...apiPropertyData,
+          secondaryPhoneNumber:
+            propertyDetailsRaw.secondaryPhoneNumber ?? undefined,
+        };
+      }
+
       if (!apiPropertyData) {
         return;
       }
@@ -113,14 +121,25 @@ export default function VerifyPropertyLayout({
     }
   }, [propertyDetailsRaw, isLoadingProperty, propertyIDParam, dispatch]);
 
-  if (isLoadingProperty || isError) {
+  // Initial Hard Loading State
+  if (isLoadingProperty) {
     return (
       <AsyncFallback
         isLoading={isLoadingProperty}
-        isError={isError}
+        isError={false}
+        loadingMessage="Loading property details..."
+      />
+    );
+  }
+
+  // Error State
+  if (isError || !propertyDetailsRaw) {
+    return (
+      <AsyncFallback
+        isLoading={false}
+        isError={true}
         error={error}
-        loadingMessage="Loading property details…"
-        errorMessage="Failed to fetch property."
+        errorMessage="Failed to fetch property details."
       />
     );
   }

@@ -1,9 +1,9 @@
 import React from "react";
 
-import { ListProperties } from "./ListProperties";
+import { ListAllProperties } from "./ListAllProperties";
 
 const ViewAllPropertyPage: React.FC = () => {
-  return <ListProperties />;
+  return <ListAllProperties />;
 };
 
 export default ViewAllPropertyPage;

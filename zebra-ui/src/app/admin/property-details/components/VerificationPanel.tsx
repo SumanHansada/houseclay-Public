@@ -15,6 +15,9 @@ import {
 
 import { PanelSection } from "./PanelSection";
 
+const VERIFY_DIALOG_ID = "verify-property-dialog";
+const DEACTIVATE_DIALOG_ID = "report-property-dialog";
+const TAG_BROKER_DIALOG_ID = "tag-broker-dialog";
 interface VerificationPanelProps {
   propertyID: string;
   formScrollRef: React.RefObject<HTMLFormElement | null>;
@@ -44,9 +47,6 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
     contactVerified: false,
   });
   const { openDialog, isDialogOpen } = useDialog();
-  const VERIFY_DIALOG_ID = "verify-property-dialog";
-  const DEACTIVATE_DIALOG_ID = "report-property-dialog";
-  const TAG_BROKER_DIALOG_ID = "tag-broker-dialog";
 
   const allDetailsChecked = useMemo(
     () => Object.values(details).every(Boolean),
