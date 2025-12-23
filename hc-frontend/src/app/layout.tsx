@@ -352,29 +352,13 @@ export default function RootLayout({
         {/* Service Worker Registration - Required for beforeinstallprompt event */}
         <Script
           id="sw-registration"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  // Unregister all existing service workers first
-                  navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                    for (let registration of registrations) {
-                      registration.unregister().then(function(success) {
-                        if (success) {
-                          console.log('Old service worker unregistered');
-                        }
-                      });
-                    }
-                  }).then(function() {
-                    // Register the new service worker
-                    return navigator.serviceWorker.register('/sw.js');
-                  }).then(function(registration) {
-                    console.log('SW registered: ', registration);
-                  }).catch(function(registrationError) {
-                    console.log('SW registration failed: ', registrationError);
-                  });
-                });
+                navigator.serviceWorker.register('/sw.js')
+                  .then(reg => console.log('SW registered', reg))
+                  .catch(err => console.error('SW failed', err));
               }
             `,
           }}
