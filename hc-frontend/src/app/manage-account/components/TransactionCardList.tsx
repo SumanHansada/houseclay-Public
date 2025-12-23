@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import { formatDate, getDateKey } from "@/common/utils";
+import { formatUTCDateDisplay } from "@/common/utils";
 import { UserExternalPayment } from "@/interfaces/User";
 
 import { TransactionCard } from "./TransactionCard";
@@ -29,18 +29,18 @@ export function TransactionCardList({
     let currentKey = "";
     for (let i = 0; i < items.length; i++) {
       const tx = items[i];
-      const key = getDateKey(tx.createdAt);
-      if (key !== currentKey) {
-        currentKey = key;
+      const displayDate = formatUTCDateDisplay(tx.createdAt);
+      if (displayDate !== currentKey) {
+        currentKey = displayDate;
         groups.push({
-          date: formatDate(tx.createdAt),
+          date: displayDate,
           transactions: [tx],
         });
       } else {
         groups[groups.length - 1].transactions.push(tx);
       }
     }
-    return groups;
+    return groups.reverse();
   }, [items]);
 
   return (

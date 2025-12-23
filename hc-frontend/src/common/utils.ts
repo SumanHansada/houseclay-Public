@@ -129,11 +129,11 @@ export const generateUUID = (): string => {
 };
 
 /**
- * Helper function to format date from ISO string to DD-MMM-YYYY
+ * Helper function to format date from ISO string to DD-MMM-YYYY (UTC format)
  * @param isoString - The ISO string to format
  * @returns The formatted date string (e.g., "25-Jun-2025")
  */
-export const formatDate = (isoString: string): string => {
+export const formatUTCDateDisplay = (isoString: string): string => {
   const date = new Date(isoString);
   const day = date.getUTCDate().toString().padStart(2, "0");
   const month = date.toLocaleString("en-US", {
@@ -142,15 +142,6 @@ export const formatDate = (isoString: string): string => {
   });
   const year = date.getUTCFullYear();
   return `${day}-${month}-${year}`;
-};
-
-/**
- * Helper function to get date only (YYYY-MM-DD) for grouping
- * @param isoString - The ISO string to get the date key from
- * @returns The date key string (e.g., "2025-06-25")
- */
-export const getDateKey = (isoString: string): string => {
-  return new Date(isoString).toISOString().split("T")[0];
 };
 
 /**

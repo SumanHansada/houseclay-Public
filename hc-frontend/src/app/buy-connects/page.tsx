@@ -660,9 +660,7 @@ export default function BuyConnectsPage() {
               </div>
 
               <div className="flex justify-between items-center">
-                <span className="text-gray-600 text-xs">
-                  These new connects will expire on
-                </span>
+                <span className="text-gray-600 text-xs">Expires on</span>
                 <span className="font-medium">
                   {expiryDate.toLocaleDateString("en-US", {
                     year: "numeric",
@@ -675,7 +673,7 @@ export default function BuyConnectsPage() {
               {isAuthenticated ? (
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600 text-xs">
-                    Your new Connects balance will be
+                    New Connects balance
                   </span>
                   <div className="flex items-center gap-1">
                     <SvgIcon iconSize="medium" name="coin" size={24} />

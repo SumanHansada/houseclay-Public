@@ -62,6 +62,7 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
       dispatch(setLocation(null));
       dispatch(setConfirmedLocationName(""));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSearch = () => {

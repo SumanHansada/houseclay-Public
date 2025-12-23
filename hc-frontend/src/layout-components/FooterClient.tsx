@@ -193,6 +193,14 @@ const FooterClient: React.FC = () => {
                   </li>
                   <li>
                     <Link
+                      href="/refund-policy"
+                      className="text-black hover:text-red-500"
+                    >
+                      Refund Policy
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
                       href="/faqs"
                       className="text-black hover:text-red-500"
                     >

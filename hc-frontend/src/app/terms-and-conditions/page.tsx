@@ -5,12 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/base-components";
 import { HOUSECLAY_SUPPORT } from "@/common/constants";
-import { sanitizePhoneKeepCountryCode } from "@/common/utils";
 import { Footer, MobileHeader } from "@/layout-components";
-
-const formattedPhoneNumber = sanitizePhoneKeepCountryCode(
-  HOUSECLAY_SUPPORT.phone,
-);
 
 export default function TermsAndConditionsPage() {
   const router = useRouter();
@@ -49,11 +44,14 @@ export default function TermsAndConditionsPage() {
           </h1>
         </div>
         <div className="flex flex-col gap-8 xl:px-28 lg:px-14 md:px-8 px-6 mb-16 pb-4 mx-auto">
-          <div className="flex max-md:flex-col gap-1 font-semibold">
-            <span>Last Modified:</span>
-            <span className="text-gray-700 font-medium">
-              22nd, December 2025 (22/12/2025)
-            </span>
+          <div className="flex flex-col gap-2 md:gap-1 font-semibold">
+            <p className="flex max-md:flex-col gap-1">
+              <span>Last Updated on </span>
+              <span className="text-gray-700">22nd, December 2025</span>
+            </p>
+            <p className="flex max-md:flex-col gap-1">
+              Houseclay.com refers to Elevensquare Technologies Pvt. Ltd.
+            </p>
           </div>
 
           <div className="space-y-2">
@@ -61,45 +59,53 @@ export default function TermsAndConditionsPage() {
               Acceptance of Policy
             </h2>
             <p className="text-gray-700 md:text-lg">
-              These Terms & Conditions (&quot;Terms&quot;) constitute a legally
-              binding agreement between Houseclay (&quot;Houseclay&quot;,
-              &quot;we&quot;, &quot;us&quot;, &quot;our&quot;) and any person or
+              These Terms & Conditions (&quot;
+              <span className="font-medium">Terms</span>&quot;) constitute a
+              legally binding agreement between Houseclay (&quot;
+              <span className="font-medium">Houseclay</span>&quot;, &quot;
+              <span className="font-medium">we</span>&quot;, &quot;
+              <span className="font-medium">us</span>&quot;, &quot;
+              <span className="font-medium">our</span>&quot;) and any person or
               entity that visits, accesses or uses our website, mobile site,
-              applications, products or services (collectively, the
-              &quot;Platform&quot;). By accessing or using the Platform, you
-              acknowledge that you have read, understood, and agree to be bound
-              by these Terms and our privacy policy. If you do not agree, please
-              do not use the Platform.
+              applications, products or services (collectively, the &quot;
+              <span className="font-medium">Platform</span>&quot;). By accessing
+              or using the Platform, you acknowledge that you have read,
+              understood, and agree to be bound by these Terms and our privacy
+              policy. If you do not agree, please do not use the Platform.
             </p>
           </div>
 
-          {/* 1) Who We Are & What We Do */}
+          {/* 1. Who We Are & What We Do */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              1) Who We Are & What We Do
+              1. Who We Are & What We Do
             </h2>
             <div className="space-y-2 md:space-y-1 pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               <p>
                 Houseclay is an online venue that surfaces and organises
                 rental-related information and enables communication between
                 people who list accommodation and people who seek accommodation
-                (collectively, &quot;Users&quot;, &quot;you&quot;,
-                &quot;your&quot;). Houseclay acts solely as a technology service
-                provider and is not a real-estate broker, agent, property
-                manager, insurer, guarantor, escrow service, or lender. We do
-                not own, manage, or control any properties, do not enter into
-                rental agreements, and do not collect rent or brokerage on
-                behalf of Users. For the avoidance of doubt, no partnership,
-                joint-venture, agency, employment or fiduciary relationship is
-                intended or created between Houseclay and any User.
+                (collectively, &quot;<span className="font-medium">Users</span>
+                &quot;, &quot;<span className="font-medium">you</span>&quot;,
+                &quot;<span className="font-medium">your</span>&quot;).
+                Houseclay acts solely as a technology service provider and is
+                not a real-estate broker, agent, property manager, insurer,
+                guarantor, escrow service, or lender. We do not own, manage, or
+                control any properties, do not enter into rental agreements, and
+                do not collect rent or brokerage on behalf of Users.
+              </p>
+              <p>
+                For the avoidance of doubt, no partnership, joint-venture,
+                agency, employment or fiduciary relationship is intended or
+                created between Houseclay and any User.
               </p>
             </div>
           </div>
 
-          {/* 2) Eligibility & Accounts */}
+          {/* 2. Eligibility & Accounts */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              2) Eligibility & Accounts
+              2. Eligibility & Accounts
             </h2>
             <div className="space-y-2 md:space-y-1 pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               <p>
@@ -117,10 +123,10 @@ export default function TermsAndConditionsPage() {
             </div>
           </div>
 
-          {/* 3) Subscriptions, Fees & Payments */}
+          {/* 3. Subscriptions, Fees & Payments */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              3) Subscriptions, Fees & Payments
+              3. Subscriptions, Fees & Payments
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               We offer free connects upon successful registration and email
@@ -147,37 +153,39 @@ export default function TermsAndConditionsPage() {
             </p>
           </div>
 
-          {/* 4) Content on the Platform */}
+          {/* 4. Content on the Platform */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              4) Content on the Platform
+              4. Content on the Platform
             </h2>
-            <ul className="pt-2 ml-6 md:ml-8 text-gray-700 md:text-lg space-y-2">
+            <ul className="list-disc pt-2 ml-6 md:ml-8 text-gray-700 md:text-lg space-y-2">
               <li>
                 <h3 className="text-lg md:text-xl font-semibold">
-                  4.1 User Content
+                  User Content
                 </h3>
-                <p className="pt-1 pl-2 md:pl-4 md:text-lg text-gray-700">
-                  Users may submit, upload, or otherwise make available text,
-                  images, links, contact fields, and other materials (&quot;User
-                  Content&quot;). By providing User Content, you represent and
-                  warrant that:
-                </p>
-                <ul className="list-disc space-y-2 md:space-y-1 pt-1 pl-6 md:pl-8 text-sm md:text-base text-gray-700">
-                  <li>
-                    You own or have all necessary rights to the User Content;
-                  </li>
-                  <li>
-                    Your User Content is accurate, lawful, and not misleading or
-                    fraudulent;
-                  </li>
-                  <li>
-                    Your User Content does not infringe any third-party rights,
-                    including but not limited to intellectual property, privacy,
-                    or publicity rights.
-                  </li>
-                </ul>
-                <p className="pt-1 pl-2 md:pl-4 md:text-lg text-gray-700">
+                <div className="pt-1 md:text-lg text-gray-700">
+                  <p>
+                    Users may submit, upload, or otherwise make available text,
+                    images, links, contact fields, and other materials
+                    (&quot;User Content&quot;). By providing User Content, you
+                    represent and warrant that:
+                  </p>
+                  <ul className="list-disc space-y-2 md:space-y-1 pt-1 ml-4 text-sm md:text-base text-gray-700">
+                    <li>
+                      You own or have all necessary rights to the User Content;
+                    </li>
+                    <li>
+                      Your User Content is accurate, lawful, and not misleading
+                      or fraudulent;
+                    </li>
+                    <li>
+                      Your User Content does not infringe any third-party
+                      rights, including but not limited to intellectual
+                      property, privacy, or publicity rights.
+                    </li>
+                  </ul>
+                </div>
+                <p className="pt-1 md:text-lg text-gray-700">
                   You grant Houseclay a worldwide, non-exclusive, royalty-free,
                   sublicensable, and transferable licence to host, store,
                   reproduce, modify, adapt, publish, translate, display,
@@ -188,7 +196,7 @@ export default function TermsAndConditionsPage() {
                   commercially reasonable period after removal to the extent
                   copies are required for backups, audits, or legal compliance.
                 </p>
-                <p className="pt-1 pl-2 md:pl-4 md:text-lg text-gray-700">
+                <p className="pt-1 md:text-lg text-gray-700">
                   You remain solely responsible for your User Content. Houseclay
                   does not guarantee any reach, views, impressions, or outcomes.
                 </p>
@@ -196,17 +204,19 @@ export default function TermsAndConditionsPage() {
 
               <li>
                 <h3 className="text-lg md:text-xl font-semibold">
-                  4.2 Publicly Available Information
+                  Publicly Available Information
                 </h3>
-                <p className="pt-1 pl-2 md:pl-4 md:text-lg text-gray-700">
+                <p className="pt-1 md:text-lg text-gray-700">
                   The Platform may surface, index, organise, cache, or display
                   rental-related information that is available publicly or from
                   authorised sources, and present it in a more structured or
-                  searchable manner for User&apos;s convenience. If you are the
-                  owner or authorised representative of content displayed on
-                  Houseclay and do not want it to appear, you may mark your
-                  property as rented out via the in-product controls or by
-                  contacting{" "}
+                  searchable manner for User&apos;s convenience.
+                </p>
+                <p className="pt-1 md:text-lg text-gray-700">
+                  If you are the owner or authorised representative of content
+                  displayed on Houseclay and do not want it to appear, you may
+                  mark your property as rented out via the in-product controls
+                  or by contacting{" "}
                   <a
                     className="text-red-600 underline cursor-pointer"
                     href={`mailto:${HOUSECLAY_SUPPORT.email}`}
@@ -221,10 +231,10 @@ export default function TermsAndConditionsPage() {
             </ul>
           </div>
 
-          {/* 5) Acceptable Use & Prohibited Activities */}
+          {/* 5. Acceptable Use & Prohibited Activities */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              5) Acceptable Use & Prohibited Activities
+              5. Acceptable Use & Prohibited Activities
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               You agree not to:
@@ -275,10 +285,10 @@ export default function TermsAndConditionsPage() {
             </p>
           </div>
 
-          {/* 6) Communications & Notifications */}
+          {/* 6. Communications & Notifications */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              6) Communications & Notifications
+              6. Communications & Notifications
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               By using the Platform or contacting us, you consent to receive
@@ -291,10 +301,10 @@ export default function TermsAndConditionsPage() {
             </p>
           </div>
 
-          {/* 7) Third-Party Sites & Services */}
+          {/* 7. Third-Party Sites & Services */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              7) Third-Party Sites & Services
+              7. Third-Party Sites & Services
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               The Platform may display links, embeds, or references to
@@ -306,10 +316,10 @@ export default function TermsAndConditionsPage() {
             </p>
           </div>
 
-          {/* 8) Intellectual Property */}
+          {/* 8. Intellectual Property */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              8) Intellectual Property
+              8. Intellectual Property
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               The Platform, including its compilations, selection, arrangement,
@@ -322,10 +332,10 @@ export default function TermsAndConditionsPage() {
             </p>
           </div>
 
-          {/* 9) Reporting, Takedown & "Do-Not-List" */}
+          {/* 9. Reporting, Takedown & "Do-Not-List" */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              9) Reporting, Takedown & &quot;Do-Not-List&quot;
+              9. Reporting, Takedown & &quot;Do-Not-List&quot;
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               If you believe content on the Platform infringes your rights or
@@ -340,15 +350,6 @@ export default function TermsAndConditionsPage() {
                   href={`mailto:${HOUSECLAY_SUPPORT.email}`}
                 >
                   {HOUSECLAY_SUPPORT.email}
-                </a>{" "}
-                or WhatsApp us on{" "}
-                <a
-                  className="text-red-600 underline cursor-pointer"
-                  href={`https://wa.me/${formattedPhoneNumber}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {HOUSECLAY_SUPPORT.phone}
                 </a>{" "}
                 with the URL(s), a description of your request, and proof of
                 authority.
@@ -367,10 +368,10 @@ export default function TermsAndConditionsPage() {
             </p>
           </div>
 
-          {/* 10) Data Protection & Privacy */}
+          {/* 10. Data Protection & Privacy */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              10) Data Protection & Privacy
+              10. Data Protection & Privacy
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               Your use of the Platform is subject to our privacy policy, which
@@ -385,10 +386,10 @@ export default function TermsAndConditionsPage() {
             </p>
           </div>
 
-          {/* 11) Renter Safety & Self-Verification */}
+          {/* 11. Renter Safety & Self-Verification */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              11) Renter Safety & Self-Verification
+              11. Renter Safety & Self-Verification
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               Always visit in person, verify ownership papers, insist on rent
@@ -397,10 +398,10 @@ export default function TermsAndConditionsPage() {
             </p>
           </div>
 
-          {/* 12) Disclaimers */}
+          {/* 12. Disclaimers */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              12) Disclaimers
+              12. Disclaimers
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               <span className="font-medium">Platform &quot;As Is&quot;</span>:
@@ -423,10 +424,10 @@ export default function TermsAndConditionsPage() {
             </p>
           </div>
 
-          {/* 13) Limitation of Liability */}
+          {/* 13. Limitation of Liability */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              13) Limitation of Liability
+              13. Limitation of Liability
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               To the maximum extent permitted by law, Houseclay and its
@@ -444,9 +445,9 @@ export default function TermsAndConditionsPage() {
             </p>
           </div>
 
-          {/* 14) Indemnity */}
+          {/* 14. Indemnity */}
           <div>
-            <h2 className="text-xl md:text-2xl font-semibold">14) Indemnity</h2>
+            <h2 className="text-xl md:text-2xl font-semibold">14. Indemnity</h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               You agree to indemnify, defend, and hold harmless Houseclay and
               its affiliates, directors, officers, employees, and agents from
@@ -459,10 +460,10 @@ export default function TermsAndConditionsPage() {
             </p>
           </div>
 
-          {/* 15) Suspension & Termination */}
+          {/* 15. Suspension & Termination */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              15) Suspension & Termination
+              15. Suspension & Termination
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               We may suspend or terminate your access to the Platform (in whole
@@ -474,10 +475,10 @@ export default function TermsAndConditionsPage() {
             </p>
           </div>
 
-          {/* 16) Changes to the Platform or Terms */}
+          {/* 16. Changes to the Platform or Terms */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              16) Changes to the Platform or Terms
+              16. Changes to the Platform or Terms
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               We may modify the Platform and update these Terms from time to
@@ -489,10 +490,10 @@ export default function TermsAndConditionsPage() {
             </p>
           </div>
 
-          {/* 17) Governing Law, Jurisdiction & Dispute Resolution */}
+          {/* 17. Governing Law, Jurisdiction & Dispute Resolution */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              17) Governing Law, Jurisdiction & Dispute Resolution
+              17. Governing Law, Jurisdiction & Dispute Resolution
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               These Terms are governed by the laws of India, without regard to
@@ -517,10 +518,10 @@ export default function TermsAndConditionsPage() {
             </p>
           </div>
 
-          {/* 18) Miscellaneous */}
+          {/* 18. Miscellaneous */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              18) Miscellaneous
+              18. Miscellaneous
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               <span className="font-medium">Entire Agreement</span>: These
@@ -549,9 +550,9 @@ export default function TermsAndConditionsPage() {
             </p>
           </div>
 
-          {/* 19) Contact */}
+          {/* 19. Contact */}
           <div>
-            <h2 className="text-xl md:text-2xl font-semibold">19) Contact</h2>
+            <h2 className="text-xl md:text-2xl font-semibold">19. Contact</h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               If you have any questions about these Terms, please contact us at{" "}
               <a
@@ -560,15 +561,8 @@ export default function TermsAndConditionsPage() {
                 aria-label={`Email ${HOUSECLAY_SUPPORT.email}`}
               >
                 {HOUSECLAY_SUPPORT.email}
-              </a>{" "}
-              or{" "}
-              <a
-                className="text-red-600 underline cursor-pointer"
-                href={`tel:${formattedPhoneNumber}`}
-                aria-label={`Call ${HOUSECLAY_SUPPORT.phone}`}
-              >
-                {HOUSECLAY_SUPPORT.phone}
               </a>
+              .
             </p>
           </div>
         </div>

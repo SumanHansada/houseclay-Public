@@ -3,8 +3,11 @@ export const BASE_API_URL =
   "https://apis.houseclay.com/api";
 
 export const HOUSECLAY_SUPPORT = {
+  name: "Arpit Biswas",
   email: "support@houseclay.com",
   phone: "+91 7892014327",
+  address:
+    "235, 2nd & 3rd Floor, 13th Cross Rd, Indira Nagar II Stage, Hoysala Nagar, Indiranagar, Bengaluru, Karnataka 560038",
 };
 
 // Media links
