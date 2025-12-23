@@ -51,7 +51,6 @@ export const UsersManagement = () => {
     data: searchUserData,
     isFetching: isSearchFetching,
     isError: isSearchError,
-    error: searchError,
   } = useGetUserByPhoneNoQuery(
     { phoneNo: activeSearch },
     { skip: !isSearchMode },
@@ -75,9 +74,6 @@ export const UsersManagement = () => {
     isGlobalLoading = false;
     isGlobalFetching = isSearchFetching;
     if (isSearchError) {
-      isGlobalError = true;
-      globalError = searchError;
-      globalErrorMessage = "Failed to fetch user.";
       tableData = [];
       totalPages = 0;
     } else {
