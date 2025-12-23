@@ -38,7 +38,7 @@ const MINIMUM_CUSTOM_CONNECTS = 1;
 const MAXIMUM_CUSTOM_CONNECTS = 50;
 const CUSTOM_CONNECT_PRICE = 99;
 const BUNDLE_VALIDITY_DAYS = 60;
-const RAZORPAY_KEY = "REDACTED_RAZORPAY_KEY_ID";
+const RAZORPAY_KEY = process.env.NEXT_PUBLIC_RAZORPAY_LIVE_API_KEY ?? "";
 
 const fmt2 = (rupees: number) =>
   rupees.toLocaleString("en-IN", {
