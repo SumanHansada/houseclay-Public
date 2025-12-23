@@ -5,7 +5,12 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/base-components";
 import { HOUSECLAY_SUPPORT } from "@/common/constants";
+import { sanitizePhoneKeepCountryCode } from "@/common/utils";
 import { Footer, MobileHeader } from "@/layout-components";
+
+const formattedPhoneNumber = sanitizePhoneKeepCountryCode(
+  HOUSECLAY_SUPPORT.phone,
+);
 
 export default function PrivacyPolicyPage() {
   const router = useRouter();
@@ -45,11 +50,19 @@ export default function PrivacyPolicyPage() {
         </div>
 
         <div className="flex flex-col gap-8 xl:w-1/2 lg:w-2/3 md:w-3/4 max-md:px-8 mb-16 pb-5 mx-auto">
-          <div className="flex max-md:flex-col gap-1 font-semibold">
-            <span>Last Modified:</span>
-            <span className="text-gray-700 font-medium">
-              22nd, December 2025 (22/12/2025)
-            </span>
+          <div className="flex flex-col gap-2 md:gap-1 font-semibold">
+            <p className="flex max-md:flex-col gap-1">
+              <span>Last Modified:</span>
+              <span className="text-gray-700 font-medium">
+                22nd, December 2025 [22/12/2025]
+              </span>
+            </p>
+            <p className="flex max-md:flex-col gap-1">
+              <span>Effective Date:</span>
+              <span className="text-gray-700 font-medium">
+                22nd, December 2025 [22/12/2025]
+              </span>
+            </p>
           </div>
 
           <div className="space-y-2">
@@ -57,555 +70,344 @@ export default function PrivacyPolicyPage() {
               Acceptance of Policy
             </h2>
             <p className="text-gray-700 md:text-lg">
-              This Privacy Policy explains how Houseclay (&quot;Houseclay&quot;,
-              &quot;we&quot;, &quot;us&quot;, &quot;our&quot;) collects, uses,
-              discloses, process and protects personal data when you use our
-              website, apps, and services (the &quot;Platform&quot;). By using
-              the Platform, you agree to this Policy. If you do not agree,
-              please do not use the Platform.
+              Houseclay (&quot;<b>we</b>&quot;, &quot;<b>us</b>&quot;, &quot;
+              <b>our</b>&quot;) operates the website, mobile applications, and
+              related services (collectively, the &quot;<b>Platform</b>&quot;).
+              Your privacy and the security of your personal information are top
+              priorities. This Privacy Policy explains how Houseclay collects,
+              uses, discloses, stores, and protects your Personal Data when you
+              use our Platform or otherwise interact with us.
+            </p>
+            <p className="text-gray-700 md:text-lg">
+              By accessing or using our Platform, or by providing Personal Data
+              to us, you consent to the processing described in this Privacy
+              Policy and agree to our Terms of Use.{" "}
+              <b>
+                If you do not agree, please do not use the Platform or submit
+                any Personal Data
+              </b>
+              .
             </p>
           </div>
 
-          {/* 1) Scope & Roles */}
+          {/* 1) Information We Collect */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              1) Scope & Roles
-            </h2>
-            <div className="space-y-2 md:space-y-1 pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
-              <p>
-                This Policy applies to visitors, listers, seekers, and any
-                person interacting with the Platform (&quot;Users&quot;,
-                &quot;you&quot;, &quot;your&quot;).
-              </p>
-              <p>
-                Houseclay acts as an independent data fiduciary/controller for
-                personal data processed to operate and improve the Platform.
-              </p>
-            </div>
-          </div>
-
-          {/* 2) What We Collect */}
-          <div>
-            <h2 className="text-xl md:text-2xl font-semibold">
-              2) What We Collect
+              1) Information We Collect
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
-              We collect the following categories of data, depending on how you
-              use the Platform:
+              We collect information to provide and improve our services,
+              personalise your experience, and to comply with legal obligations.
+              This includes:
             </p>
             <ul className="list-disc pt-2 ml-6 md:ml-8 text-gray-700 md:text-lg space-y-2 md:space-y-1">
               <li>
                 <h3 className="text-lg md:text-xl font-semibold">
-                  Account & Identity
+                  Personal Information You Provide
                 </h3>
                 <div className="space-y-2 md:space-y-1 pt-1 pl-2 md:pl-4 text-sm md:text-base text-gray-700">
                   <p>
-                    Name, phone number, email, profile info, verification
-                    status. We do not use passwords.
+                    <span className="font-medium">
+                      Account and profile details
+                    </span>
+                    : name, mobile number, email address, date of birth, profile
+                    photo.
                   </p>
                   <p>
-                    Authentication is performed via one-time passwords (OTP).
+                    <span className="font-medium">Verification data</span>:
+                    documents or digital identity information for tenant/owner
+                    verification.
+                  </p>
+                  <p>
+                    <span className="font-medium">Property data</span>: property
+                    details, photos, lease preferences, rental/ownership
+                    history.
+                  </p>
+                  <p>
+                    <span className="font-medium">
+                      Financial/payment information
+                    </span>
+                    : bank account details, UPI handle, invoices, billing
+                    addresses, transaction records (when you use ancillary
+                    payment or agreement services).
+                  </p>
+                  <p>
+                    <span className="font-medium">Communications</span>:
+                    messages between users, support tickets, feedback, survey
+                    responses.
                   </p>
                 </div>
               </li>
 
               <li>
                 <h3 className="text-lg md:text-xl font-semibold">
-                  Auth & Verification (OTP)
+                  Automatically Collected Data
                 </h3>
                 <div className="space-y-2 md:space-y-1 pt-1 pl-2 md:pl-4 text-sm md:text-base text-gray-700">
                   <p>
-                    Phone number used for OTP, OTP delivery/verification status,
-                    limited fraud-prevention signals (e.g., device/IP, attempt
-                    counters). We do not store OTPs in plain text and OTPs
-                    expire shortly after issuance.
+                    <span className="font-medium">
+                      Device & technical identifiers
+                    </span>
+                    : IP address, device identifiers, browser type, operating
+                    system, crash logs.
                   </p>
                   <p>
-                    We may also collect feedback, complaints, call recordings
-                    and WhatsApp communications where you contact our customer
-                    support, solely for quality-assurance and
-                    dispute-resolution.
+                    <span className="font-medium">Usage data</span> : pages
+                    viewed, actions taken, search queries, timestamps, feature
+                    usage patterns.
+                  </p>
+                  <p>
+                    <span className="font-medium">
+                      Location data (with permission)
+                    </span>
+                    : approximate or precise GPS/location to show relevant local
+                    listings.
                   </p>
                 </div>
               </li>
 
               <li>
                 <h3 className="text-lg md:text-xl font-semibold">
-                  Messaging Identifiers (SMS & WhatsApp)
+                  Cookies & Similar Technologies
                 </h3>
                 <div className="space-y-2 md:space-y-1 pt-1 pl-2 md:pl-4 text-sm md:text-base text-gray-700">
                   <p>
-                    Your phone/WhatsApp contact and message metadata when you
-                    contact us or opt to receive messages via WhatsApp Business.
-                    Message content is processed only as needed to provide
-                    support or deliver the requested service.
-                  </p>
-                </div>
-              </li>
-
-              <li>
-                <h3 className="text-lg md:text-xl font-semibold">
-                  Listings & Interactions
-                </h3>
-                <div className="space-y-2 md:space-y-1 pt-1 pl-2 md:pl-4 text-sm md:text-base text-gray-700">
-                  <p>
-                    Listing details (title, description, location area, rent,
-                    availability, photos, and any other detail required for
-                    enabling listing), contact preference, claim/remove/opt-out
-                    signals, messages or interest signals (where enabled).
-                  </p>
-                </div>
-              </li>
-
-              <li>
-                <h3 className="text-lg md:text-xl font-semibold">
-                  Usage & Device
-                </h3>
-                <div className="space-y-2 md:space-y-1 pt-1 pl-2 md:pl-4 text-sm md:text-base text-gray-700">
-                  <p>
-                    IP address, device type, browser, OS, language, time zone,
-                    referral source, pages viewed, actions (e.g., phone reveal),
-                    session analytics, cookies or similar identifiers.
-                  </p>
-                  <p></p>
-                </div>
-              </li>
-
-              <li>
-                <h3 className="text-lg md:text-xl font-semibold">
-                  Payments (for connects)
-                </h3>
-                <div className="space-y-2 md:space-y-1 pt-1 pl-2 md:pl-4 text-sm md:text-base text-gray-700">
-                  <p>
-                    Plan details, transaction IDs, masked card info, payment
-                    status (processed via third-party payment providers) to the
-                    extent permitted under applicable laws.
-                  </p>
-                  <p></p>
-                </div>
-              </li>
-
-              <li>
-                <h3 className="text-lg md:text-xl font-semibold">
-                  Publicly Available or Authorised Information
-                </h3>
-                <div className="space-y-2 md:space-y-1 pt-1 pl-2 md:pl-4 text-sm md:text-base text-gray-700">
-                  <p>
-                    Rental-related information available publicly or from
-                    authorised sources, organised for discovery on the Platform
-                    (e.g., property details, lister display name, contact
-                    information provided in such sources).
-                  </p>
-                  <p>
-                    We generally do not collect contact details from private
-                    channels (e.g., private messages) and rely on information
-                    provided directly by Users or that is publicly available or
-                    authorised.
+                    We use cookies and tracking technologies to enhance user
+                    experience, remember preferences, and support analytics and
+                    targeted messaging.
                   </p>
                 </div>
               </li>
             </ul>
           </div>
 
-          {/* 3) How We Use Personal Data (Purposes) */}
+          {/* 2) Use of Information */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              3) How We Use Personal Data (Purposes)
+              2) Use of Information
             </h2>
+            <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
+              We use your information to:
+            </p>
             <ul className="list-disc pt-2 ml-6 md:ml-8 text-gray-700 md:text-lg space-y-2 md:space-y-1">
               <li>
-                <span className="font-medium">Provide the Platform</span>:
-                create/manage accounts, power search & discovery, display
-                listings, enable contact flows.
+                Provide, operate, maintain, and improve the Platform and
+                services.
               </li>
               <li>
-                <span className="font-medium">Communication</span>:
-                Communications (SMS, Email & WhatsApp Business), Send OTPs and
-                transactional/service messages (e.g., claim/remove links,
-                alerts, updates). With your consent where required, send
-                promotional updates. You can manage preferences as described in
-                Messaging Preferences (SMS & WhatsApp).
+                Authenticate accounts, verify identities, and secure access.
               </li>
+              <li>Personalise recommendations (listings, offers, alerts).</li>
               <li>
-                <span className="font-medium">Safety & Trust</span>: prevent
-                spam/fraud/abuse, rate-limit &quot;reveal phone,&quot;
-                investigate complaints, power report/takedown flows.
+                Process billing, payments, agreements, and service fulfillment.
               </li>
-              <li>
-                <span className="font-medium">Improvement & Analytics</span>:
-                diagnose issues, measure performance, understand feature usage,
-                A/B test.
-              </li>
-              <li>
-                <span className="font-medium">Payments</span>: manage
-                subscriptions, billing, tax invoices.
-              </li>
+              <li>Communicate updates, alerts, and support responses.</li>
               <li>
                 <span className="font-medium">Legal & Compliance</span>: respond
                 to lawful requests, enforce Terms, protect our rights and Users.
               </li>
               <li>
-                <span className="font-medium">Do-Not-List Registry</span>:
-                honour &quot;do not list&quot; or &quot;do not contact&quot;
-                preferences to avoid future display or re-ingestion of
-                identifiers.
+                Analyse usage trends and perform data analytics to improve
+                performance.
+              </li>
+              <li>
+                Detect, prevent, and address fraud, security breaches, abusive
+                activity, or illegal conduct.
+              </li>
+              <li>
+                Comply with legal and regulatory obligations in India (including
+                DPDP 2023 and applicable IT laws).
               </li>
             </ul>
           </div>
 
-          {/* 4) Lawful Bases */}
+          {/* 3) Sharing and Disclosure */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              4) Lawful Bases
+              3) Sharing and Disclosure
             </h2>
-            <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
-              Depending on context, we process data on one or more of the
-              following bases:
+            <p className="pt-2 ml-2 md:ml-4 md:text-lg text-gray-700">
+              We may share your information as follows:
             </p>
             <ul className="list-disc pt-2 ml-6 md:ml-8 text-gray-700 md:text-lg space-y-2 md:space-y-1">
               <li>
-                To perform a contract with you (account, subscription,
-                listings).
+                <h3 className="text-lg md:text-xl font-semibold">
+                  Service Providers
+                </h3>
+                <p>
+                  To trusted third parties helping us operate the Platform
+                  (e.g., cloud hosting, analytics, payment processors), under
+                  contractual confidentiality restrictions.
+                </p>
               </li>
+
               <li>
-                Legitimate interests (operate, secure, and improve the Platform;
-                organise publicly available/authorised information for rental
-                discovery; prevent abuse; analytics).
+                <h3 className="text-lg md:text-xl font-semibold">
+                  Legal Compliance
+                </h3>
+                <p>
+                  When required by law enforcement, court order, subpoena,
+                  regulatory requests, or to protect rights, property, safety,
+                  and security of Houseclay or users.
+                </p>
               </li>
+
               <li>
-                Consent where required (e.g., certain marketing communications,
-                phone/SMS/WhatsApp where applicable).
+                <h3 className="text-lg md:text-xl font-semibold">
+                  Business Transfers
+                </h3>
+                <p>
+                  In the event of merger, acquisition, reorganisation,
+                  financing, or sale of assets, your information may be
+                  transferred as part of that transaction.
+                </p>
               </li>
-              <li>Legal obligations (tax, audit, law-enforcement requests).</li>
+
+              <li>
+                <h3 className="text-lg md:text-xl font-semibold">
+                  With Your Consent
+                </h3>
+                <p>
+                  When you explicitly opt in (e.g., for marketing emails, SMS
+                  alerts), or where Indian law permits.
+                </p>
+              </li>
+
+              <li>
+                <h3 className="text-lg md:text-xl font-semibold">
+                  Advertising and Marketing
+                </h3>
+                <p>
+                  For personalised advertisements or marketing campaigns powered
+                  by third-party ad services, with clear opt-out mechanisms
+                  where required.
+                </p>
+              </li>
             </ul>
+          </div>
+
+          {/* 4) Data Retention */}
+          <div>
+            <h2 className="text-xl md:text-2xl font-semibold">
+              4) Data Retention
+            </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
-              For WhatsApp Business messages, we rely on consent where required
-              and on legitimate interests to deliver transactional messages you
-              request (e.g., OTPs, claim/remove confirmations), consistent with
-              WhatsApp&apos;s Business Terms and applicable law. For SMS, we
-              comply with applicable telecom rules for transactional vs.
-              promotional messaging.
-            </p>
-            <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
-              Where applicable law permits, we may process publicly available
-              personal data for the purposes described above.
+              We retain Personal Data only as long as necessary to fulfil the
+              purposes outlined in this policy, including for legal compliance,
+              dispute resolution, fraud prevention, and legitimate business
+              operations. After account deletion, some information may be
+              retained to meet statutory obligations under Indian law.
             </p>
           </div>
 
-          {/* 5) Cookies & Similar Technologies */}
+          {/* 5) Your Rights & Choices */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              5) Cookies & Similar Technologies
+              5) Your Rights & Choices
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
-              We use cookies, local storage, and similar tools for core
-              functionality (session, security) and analytics (e.g., event
-              tracking, funnel analysis). You can control cookies via your
-              browser settings; disabling them may impact features.
-            </p>
-          </div>
-
-          {/* 6) Disclosures & Service Providers */}
-          <div>
-            <h2 className="text-xl md:text-2xl font-semibold">
-              6) Disclosures & Service Providers
-            </h2>
-            <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
-              We share personal data only as needed to provide the Platform or
-              as required by law:
+              Under applicable law (including the DPDP 2023), you may:
             </p>
             <ul className="list-disc pt-2 ml-6 md:ml-8 text-gray-700 md:text-lg space-y-2 md:space-y-1">
-              <li>
-                <span className="font-medium">Vendors/Processors</span>:
-                hosting, storage, analytics, communications (email/SMS/WhatsApp
-                Business providers), payment processing, customer support.
-              </li>
-              <li>
-                <span className="font-medium">Other Users</span>: limited
-                listing information and contact fields as configured by you or
-                as presented from public/authorised sources for genuine rental
-                inquiries.
-              </li>
-              <li>
-                <span className="font-medium">Legal/Compliance</span>: courts,
-                regulators, law enforcement where legally required or to protect
-                rights, safety, and property.
-              </li>
-              <li>
-                <span className="font-medium">Business Transfers</span>: in
-                connection with mergers, acquisitions, or financing, subject to
-                appropriate safeguards.
-              </li>
+              <li>Access, update, or correct your Personal Data.</li>
+              <li>Request deletion or restriction of processing.</li>
+              <li>Withdraw consent where processing is based on consent.</li>
+              <li>Opt out of direct marketing communications.</li>
+              <li>Request data portability.</li>
             </ul>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
-              We do not sell personal data.
+              To exercise these rights, contact us at the details below. We will
+              respond within a reasonable timeframe and in accordance with
+              applicable law.
             </p>
           </div>
 
-          {/* 7) Data Retention */}
+          {/* 6) Security of Personal Data */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              7) Data Retention
+              6) Security of Personal Data
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
-              We retain data for as long as necessary to fulfill the purposes
-              described or as required by law. Illustratively:
-            </p>
-            <ul className="list-disc pt-2 ml-6 md:ml-8 text-gray-700 md:text-lg space-y-2 md:space-y-1">
-              <li>
-                <span className="font-medium">Accounts & Listings</span>: active
-                use + a reasonable period for support/disputes/backup.
-              </li>
-              <li>
-                <span className="font-medium">Logs/Analytics</span>: for
-                security, fraud-prevention, and product improvement for a
-                reasonable period.
-              </li>
-              <li>
-                <span className="font-medium">Do-Not-List</span>: retained as
-                necessary to honour the opt-out.
-              </li>
-            </ul>
-            <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
-              Upon valid removal/takedown, we delete or de-identify affected
-              content from the Platform (backups may persist for a limited
-              time).
+              We implement reasonable technical, administrative, and
+              organisational safeguards (encryption in transit, secure servers,
+              access controls, periodic audits) to protect your data from
+              unauthorised access, loss, misuse, or alteration. However, no
+              system can be guaranteed 100% secure.
             </p>
           </div>
 
-          {/* 8) Your Choices & Rights */}
+          {/* 7) Children’s Privacy */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              8) Your Choices & Rights
+              7) Children&apos;s Privacy
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
-              Subject to verification and applicable law, you may:
+              The Platform is not intended for users under the age of 18. We do
+              not knowingly collect Personal Data from minors. If we learn that
+              we have collected such information, we will take steps to delete
+              it promptly.
             </p>
-            <ul className="list-disc pt-2 ml-6 md:ml-8 text-gray-700 md:text-lg space-y-2 md:space-y-1">
-              <li>Access your personal data and request a copy.</li>
-              <li>Correct inaccurate or incomplete data.</li>
-              <li>
-                Delete/Remove your listing or profile, or request erasure where
-                applicable.
-              </li>
-              <li>
-                Opt out of promotional messages (transactional/service messages
-                may continue).
-              </li>
-              <li>
-                Do-Not-List: ask us to avoid displaying content associated with
-                your phone/profile link in the future.
-              </li>
-              <li>
-                Consent withdrawal where consent is the basis. In addition, you
-                have the right to data portability, the right to restrict or
-                object to certain processing, and the right to nominate another
-                person to exercise your rights in the event of incapacity, as
-                recognised under the DPDP Act.
-              </li>
-            </ul>
           </div>
 
-          {/* 9) Messaging Preferences (SMS & WhatsApp) */}
+          {/* 8) International Transfers */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              9) Messaging Preferences (SMS & WhatsApp)
+              8) International Transfers
             </h2>
-            <ul className="list-disc pt-2 ml-6 md:ml-8 text-gray-700 md:text-lg space-y-2 md:space-y-1">
-              <li>
-                <span className="font-medium">Opt-in/Out</span>: You may opt in
-                to receive messages via SMS or WhatsApp Business and can opt out
-                at any time (e.g., in-product toggle, account settings, or by
-                replying STOP on WhatsApp where supported).
-              </li>
-              <li>
-                <span className="font-medium">
-                  Transactional vs Promotional
-                </span>
-                : You may still receive transactional or service-related
-                messages (e.g., OTPs, claim/remove confirmations) where
-                necessary to provide the Platform, even if you opt out of
-                promotional communications.
-              </li>
-            </ul>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
-              Use in-product controls (e.g., Claim/Remove), the Report link on
-              listings, or contact{" "}
-              <a
-                className="text-red-600 underline cursor-pointer"
-                href={`mailto:${HOUSECLAY_SUPPORT.email}`}
-              >
-                {HOUSECLAY_SUPPORT.email}
-              </a>
+              Your Personal Data may be processed or stored in India or in other
+              countries where we or our service providers operate. By using the
+              Platform, you consent to such international data transfers
+              consistent with applicable law.
             </p>
           </div>
 
-          {/* 10) Owner Controls: Claim / Remove / Opt-Out */}
+          {/* 9) Changes to This Policy */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              10) Owner Controls: Claim / Remove / Opt-Out
+              9) Changes to This Policy
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
-              If content displayed on Houseclay relates to your property or
-              identifier:
-            </p>
-            <ul className="list-disc pt-2 ml-6 md:ml-8 text-gray-700 md:text-lg space-y-2 md:space-y-1">
-              <li>
-                <span className="font-medium">Claim</span>: verify via OTP to
-                manage/edit/pause/mark-as-filled/delete the listing.
-              </li>
-              <li>
-                <span className="font-medium">Remove</span>: request deletion;
-                we act promptly (typically within 24 hours) after verification.
-              </li>
-              <li>
-                <span className="font-medium">Do-Not-List</span>: request we
-                avoid displaying content associated with your phone/profile in
-                the future.
-              </li>
-            </ul>
-            <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
-              We may ask for limited proof (e.g., OTP to the listed phone) to
-              prevent misuse.
+              We may update this Privacy Policy to reflect changes in practices
+              or legal requirements. Material changes will be notified by email
+              or Platform notice before they take effect. Continued use after
+              changes signifies acceptance.
             </p>
           </div>
 
-          {/* 11) Security */}
-          <div>
-            <h2 className="text-xl md:text-2xl font-semibold">11) Security</h2>
-            <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
-              We implement reasonable technical and organisational safeguards.
-              No system is 100% secure; report suspected issues promptly. We use
-              rate-limited OTP verification with short expiry windows and do not
-              store OTPs in plain text.
-            </p>
-          </div>
-
-          {/* 12) International Transfers */}
+          {/* 10) Contact Information */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              12) International Transfers
+              10) Contact Information
             </h2>
-            <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
-              Our service providers and infrastructure may be located outside
-              your state or country. Where data is transferred across borders,
-              we apply reasonable safeguards consistent with applicable law.
-            </p>
-          </div>
-
-          {/* 13) Children */}
-          <div>
-            <h2 className="text-xl md:text-2xl font-semibold">13) Children</h2>
-            <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
-              The Platform is intended for adults (18+). We do not knowingly
-              collect personal data from children. If you believe a child has
-              provided data, contact us and we will take appropriate steps.
-            </p>
-          </div>
-
-          {/* 14) Grievances & Contact */}
-          <div>
-            <h2 className="text-xl md:text-2xl font-semibold">
-              14) Grievances & Contact
-            </h2>
-            <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
-              For requests, questions, or complaints, contact our Grievance
-              Officer / Data Protection Contact:
-            </p>
-            <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700"></p>
-            <div className="py-2 pl-2 md:pl-4 space-y-1 md:text-lg text-gray-700">
-              <p>Houseclay</p>
+            <div className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
+              <h3 className="font-semibold">Houseclay Privacy Office</h3>
               <p>
-                Email:{" "}
+                <span className="font-medium">Email:</span>{" "}
                 <a
                   className="text-red-600 underline cursor-pointer"
                   href={`mailto:${HOUSECLAY_SUPPORT.email}`}
+                  aria-label={`Email ${HOUSECLAY_SUPPORT.email}`}
                 >
                   {HOUSECLAY_SUPPORT.email}
                 </a>
               </p>
+              <p>
+                <span className="font-medium">Address:</span>{" "}
+                {HOUSECLAY_SUPPORT.address}
+              </p>
+              <p>
+                <span className="font-medium">Grievance Officer:</span>{" "}
+                {HOUSECLAY_SUPPORT.name} |{" "}
+                <a
+                  className="text-red-600 underline cursor-pointer"
+                  href={`tel:${formattedPhoneNumber}`}
+                  aria-label={`Call ${HOUSECLAY_SUPPORT.phone}`}
+                >
+                  {HOUSECLAY_SUPPORT.phone}
+                </a>
+              </p>
             </div>
-            <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
-              We aim to acknowledge and resolve grievances within reasonable
-              timelines required by applicable law.
-            </p>
-          </div>
-
-          {/* 15) Changes to this Policy */}
-          <div>
-            <h2 className="text-xl md:text-2xl font-semibold">
-              15) Changes to this Policy
-            </h2>
-            <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
-              We may update this Policy from time to time. We will revise the
-              &quot;Last Updated&quot; date and, where required, provide
-              additional notice. Your continued use of the Platform after
-              changes take effect constitutes acceptance
-            </p>
-          </div>
-
-          {/* 16) Indemnity, Liability & Third‑Party Content */}
-          <div>
-            <h2 className="text-xl md:text-2xl font-semibold">
-              16) Indemnity, Liability & Third‑Party Content
-            </h2>
-            <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
-              Users are solely responsible for the accuracy of listings and
-              communications. Houseclay is an online intermediary that provides
-              a matching platform and does not guarantee listing quality,
-              availability or legality. To the maximum extent permitted by law,
-              Houseclay&apos;s aggregate liability for any claim shall not
-              exceed the total fees paid by you in the preceding three months.
-            </p>
-            <ul className="list-disc pt-2 ml-6 md:ml-8 text-gray-700 md:text-lg space-y-2 md:space-y-1">
-              <li>
-                <h3 className="text-lg md:text-xl font-semibold">
-                  Governing Law & Jurisdiction
-                </h3>
-                <div className="space-y-2 md:space-y-1 pt-1 pl-2 md:pl-4 text-sm md:text-base text-gray-700">
-                  <p>
-                    This Policy is governed by Indian law. Any dispute shall be
-                    subject to exclusive jurisdiction of the competent courts in
-                    Bengaluru, Karnataka.
-                  </p>
-                </div>
-              </li>
-
-              <li>
-                <h3 className="text-lg md:text-xl font-semibold">
-                  Force Majeure
-                </h3>
-                <div className="space-y-2 md:space-y-1 pt-1 pl-2 md:pl-4 text-sm md:text-base text-gray-700">
-                  <p>
-                    Houseclay shall not be liable for any delay or failure to
-                    perform its obligations under this Policy or the Platform
-                    Terms if such delay or failure results from events or
-                    circumstances beyond Houseclay&apos;s reasonable control,
-                    including but not limited to acts of God, fire, flood,
-                    earthquake, explosion, war, terrorism, civil disorder,
-                    pandemics, strikes, lock-outs, government orders, power
-                    outages, or failures of telecommunications or internet
-                    services. Upon occurrence of a force-majeure event,
-                    Houseclay will make reasonable efforts to resume the
-                    affected services as soon as practicable.
-                  </p>
-                </div>
-              </li>
-
-              <li>
-                <h3 className="text-lg md:text-xl font-semibold">
-                  Limitation Period
-                </h3>
-                <div className="space-y-2 md:space-y-1 pt-1 pl-2 md:pl-4 text-sm md:text-base text-gray-700">
-                  <p>
-                    Any claim, action, or proceeding arising out of or relating
-                    to this Privacy Policy must be commenced within one (1) year
-                    after the cause of action accrues; otherwise, such cause of
-                    action is permanently barred.
-                  </p>
-                </div>
-              </li>
-            </ul>
           </div>
         </div>
       </section>

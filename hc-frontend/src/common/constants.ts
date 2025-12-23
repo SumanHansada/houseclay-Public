@@ -3,8 +3,10 @@ export const BASE_API_URL =
   "https://apis.houseclay.com/api";
 
 export const HOUSECLAY_SUPPORT = {
+  name: "Arpit Biswas",
   email: "support@houseclay.com",
   phone: "+91 7892014327",
+  address: "Krishvi Gavakshi",
 };
 
 // Media links
