@@ -90,10 +90,10 @@ export default function PrivacyPolicyPage() {
             </p>
           </div>
 
-          {/* 1) Information We Collect */}
+          {/* 1. Information We Collect */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              1) Information We Collect
+              1. Information We Collect
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               We collect information to provide and improve our services,
@@ -105,7 +105,7 @@ export default function PrivacyPolicyPage() {
                 <h3 className="text-lg md:text-xl font-semibold">
                   Personal Information You Provide
                 </h3>
-                <div className="space-y-2 md:space-y-1 pt-1 pl-2 md:pl-4 text-sm md:text-base text-gray-700">
+                <div className="space-y-2 md:space-y-1 pt-1 text-sm md:text-base text-gray-700">
                   <p>
                     <span className="font-medium">
                       Account and profile details
@@ -143,7 +143,7 @@ export default function PrivacyPolicyPage() {
                 <h3 className="text-lg md:text-xl font-semibold">
                   Automatically Collected Data
                 </h3>
-                <div className="space-y-2 md:space-y-1 pt-1 pl-2 md:pl-4 text-sm md:text-base text-gray-700">
+                <div className="space-y-2 md:space-y-1 pt-1 text-sm md:text-base text-gray-700">
                   <p>
                     <span className="font-medium">
                       Device & technical identifiers
@@ -170,7 +170,7 @@ export default function PrivacyPolicyPage() {
                 <h3 className="text-lg md:text-xl font-semibold">
                   Cookies & Similar Technologies
                 </h3>
-                <div className="space-y-2 md:space-y-1 pt-1 pl-2 md:pl-4 text-sm md:text-base text-gray-700">
+                <div className="space-y-2 md:space-y-1 pt-1 text-sm md:text-base text-gray-700">
                   <p>
                     We use cookies and tracking technologies to enhance user
                     experience, remember preferences, and support analytics and
@@ -184,7 +184,7 @@ export default function PrivacyPolicyPage() {
           {/* 2) Use of Information */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              2) Use of Information
+              2. Use of Information
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               We use your information to:
@@ -203,10 +203,6 @@ export default function PrivacyPolicyPage() {
               </li>
               <li>Communicate updates, alerts, and support responses.</li>
               <li>
-                <span className="font-medium">Legal & Compliance</span>: respond
-                to lawful requests, enforce Terms, protect our rights and Users.
-              </li>
-              <li>
                 Analyse usage trends and perform data analytics to improve
                 performance.
               </li>
@@ -221,10 +217,10 @@ export default function PrivacyPolicyPage() {
             </ul>
           </div>
 
-          {/* 3) Sharing and Disclosure */}
+          {/* 3. Sharing and Disclosure */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              3) Sharing and Disclosure
+              3. Sharing and Disclosure
             </h2>
             <p className="pt-2 ml-2 md:ml-4 md:text-lg text-gray-700">
               We may share your information as follows:
@@ -286,10 +282,10 @@ export default function PrivacyPolicyPage() {
             </ul>
           </div>
 
-          {/* 4) Data Retention */}
+          {/* 4. Data Retention */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              4) Data Retention
+              4. Data Retention
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               We retain Personal Data only as long as necessary to fulfil the
@@ -300,10 +296,10 @@ export default function PrivacyPolicyPage() {
             </p>
           </div>
 
-          {/* 5) Your Rights & Choices */}
+          {/* 5. Your Rights & Choices */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              5) Your Rights & Choices
+              5. Your Rights & Choices
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               Under applicable law (including the DPDP 2023), you may:
@@ -322,10 +318,10 @@ export default function PrivacyPolicyPage() {
             </p>
           </div>
 
-          {/* 6) Security of Personal Data */}
+          {/* 6. Security of Personal Data */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              6) Security of Personal Data
+              6. Security of Personal Data
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               We implement reasonable technical, administrative, and
@@ -336,10 +332,10 @@ export default function PrivacyPolicyPage() {
             </p>
           </div>
 
-          {/* 7) Children’s Privacy */}
+          {/* 7. Children’s Privacy */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              7) Children&apos;s Privacy
+              7. Children&apos;s Privacy
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               The Platform is not intended for users under the age of 18. We do
@@ -349,10 +345,10 @@ export default function PrivacyPolicyPage() {
             </p>
           </div>
 
-          {/* 8) International Transfers */}
+          {/* 8. International Transfers */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              8) International Transfers
+              8. International Transfers
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               Your Personal Data may be processed or stored in India or in other
@@ -362,10 +358,10 @@ export default function PrivacyPolicyPage() {
             </p>
           </div>
 
-          {/* 9) Changes to This Policy */}
+          {/* 9. Changes to This Policy */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              9) Changes to This Policy
+              9. Changes to This Policy
             </h2>
             <p className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               We may update this Privacy Policy to reflect changes in practices
@@ -375,10 +371,10 @@ export default function PrivacyPolicyPage() {
             </p>
           </div>
 
-          {/* 10) Contact Information */}
+          {/* 10. Contact Information */}
           <div>
             <h2 className="text-xl md:text-2xl font-semibold">
-              10) Contact Information
+              10. Contact Information
             </h2>
             <div className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
               <h3 className="font-semibold">Houseclay Privacy Office</h3>
