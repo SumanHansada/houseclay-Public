@@ -5,12 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/base-components";
 import { HOUSECLAY_SUPPORT } from "@/common/constants";
-import { sanitizePhoneKeepCountryCode } from "@/common/utils";
 import { Footer, MobileHeader } from "@/layout-components";
-
-const formattedPhoneNumber = sanitizePhoneKeepCountryCode(
-  HOUSECLAY_SUPPORT.phone,
-);
 
 export default function TermsAndConditionsPage() {
   const router = useRouter();
@@ -51,16 +46,11 @@ export default function TermsAndConditionsPage() {
         <div className="flex flex-col gap-8 xl:px-28 lg:px-14 md:px-8 px-6 mb-16 pb-4 mx-auto">
           <div className="flex flex-col gap-2 md:gap-1 font-semibold">
             <p className="flex max-md:flex-col gap-1">
-              <span>Last Modified:</span>
-              <span className="text-gray-700 font-medium">
-                22nd, December 2025 [22/12/2025]
-              </span>
+              <span>Last Updated on </span>
+              <span className="text-gray-700">22nd, December 2025</span>
             </p>
             <p className="flex max-md:flex-col gap-1">
-              <span>Effective Date:</span>
-              <span className="text-gray-700 font-medium">
-                22nd, December 2025 [22/12/2025]
-              </span>
+              Houseclay.com refers to Elevensquare Technologies Pvt. Ltd.
             </p>
           </div>
 
@@ -69,15 +59,19 @@ export default function TermsAndConditionsPage() {
               Acceptance of Policy
             </h2>
             <p className="text-gray-700 md:text-lg">
-              These Terms & Conditions (&quot;Terms&quot;) constitute a legally
-              binding agreement between Houseclay (&quot;Houseclay&quot;,
-              &quot;we&quot;, &quot;us&quot;, &quot;our&quot;) and any person or
+              These Terms & Conditions (&quot;
+              <span className="font-medium">Terms</span>&quot;) constitute a
+              legally binding agreement between Houseclay (&quot;
+              <span className="font-medium">Houseclay</span>&quot;, &quot;
+              <span className="font-medium">we</span>&quot;, &quot;
+              <span className="font-medium">us</span>&quot;, &quot;
+              <span className="font-medium">our</span>&quot;) and any person or
               entity that visits, accesses or uses our website, mobile site,
-              applications, products or services (collectively, the
-              &quot;Platform&quot;). By accessing or using the Platform, you
-              acknowledge that you have read, understood, and agree to be bound
-              by these Terms and our privacy policy. If you do not agree, please
-              do not use the Platform.
+              applications, products or services (collectively, the &quot;
+              <span className="font-medium">Platform</span>&quot;). By accessing
+              or using the Platform, you acknowledge that you have read,
+              understood, and agree to be bound by these Terms and our privacy
+              policy. If you do not agree, please do not use the Platform.
             </p>
           </div>
 
@@ -91,13 +85,14 @@ export default function TermsAndConditionsPage() {
                 Houseclay is an online venue that surfaces and organises
                 rental-related information and enables communication between
                 people who list accommodation and people who seek accommodation
-                (collectively, &quot;Users&quot;, &quot;you&quot;,
-                &quot;your&quot;). Houseclay acts solely as a technology service
-                provider and is not a real-estate broker, agent, property
-                manager, insurer, guarantor, escrow service, or lender. We do
-                not own, manage, or control any properties, do not enter into
-                rental agreements, and do not collect rent or brokerage on
-                behalf of Users.
+                (collectively, &quot;<span className="font-medium">Users</span>
+                &quot;, &quot;<span className="font-medium">you</span>&quot;,
+                &quot;<span className="font-medium">your</span>&quot;).
+                Houseclay acts solely as a technology service provider and is
+                not a real-estate broker, agent, property manager, insurer,
+                guarantor, escrow service, or lender. We do not own, manage, or
+                control any properties, do not enter into rental agreements, and
+                do not collect rent or brokerage on behalf of Users.
               </p>
               <p>
                 For the avoidance of doubt, no partnership, joint-venture,
@@ -356,15 +351,6 @@ export default function TermsAndConditionsPage() {
                 >
                   {HOUSECLAY_SUPPORT.email}
                 </a>{" "}
-                or WhatsApp us on{" "}
-                <a
-                  className="text-red-600 underline cursor-pointer"
-                  href={`https://wa.me/${formattedPhoneNumber}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {HOUSECLAY_SUPPORT.phone}
-                </a>{" "}
                 with the URL(s), a description of your request, and proof of
                 authority.
               </li>
@@ -575,15 +561,8 @@ export default function TermsAndConditionsPage() {
                 aria-label={`Email ${HOUSECLAY_SUPPORT.email}`}
               >
                 {HOUSECLAY_SUPPORT.email}
-              </a>{" "}
-              or{" "}
-              <a
-                className="text-red-600 underline cursor-pointer"
-                href={`tel:${formattedPhoneNumber}`}
-                aria-label={`Call ${HOUSECLAY_SUPPORT.phone}`}
-              >
-                {HOUSECLAY_SUPPORT.phone}
               </a>
+              .
             </p>
           </div>
         </div>

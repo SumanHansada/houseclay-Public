@@ -5,12 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { Button } from "@/base-components";
 import { HOUSECLAY_SUPPORT } from "@/common/constants";
-import { sanitizePhoneKeepCountryCode } from "@/common/utils";
 import { Footer, MobileHeader } from "@/layout-components";
-
-const formattedPhoneNumber = sanitizePhoneKeepCountryCode(
-  HOUSECLAY_SUPPORT.phone,
-);
 
 export default function PrivacyPolicyPage() {
   const router = useRouter();
@@ -52,16 +47,11 @@ export default function PrivacyPolicyPage() {
         <div className="flex flex-col gap-8 xl:w-1/2 lg:w-2/3 md:w-3/4 max-md:px-8 mb-16 pb-5 mx-auto">
           <div className="flex flex-col gap-2 md:gap-1 font-semibold">
             <p className="flex max-md:flex-col gap-1">
-              <span>Last Modified:</span>
-              <span className="text-gray-700 font-medium">
-                22nd, December 2025 [22/12/2025]
-              </span>
+              <span>Last Updated on </span>
+              <span className="text-gray-700">22nd, December 2025</span>
             </p>
             <p className="flex max-md:flex-col gap-1">
-              <span>Effective Date:</span>
-              <span className="text-gray-700 font-medium">
-                22nd, December 2025 [22/12/2025]
-              </span>
+              Houseclay.com refers to Elevensquare Technologies Pvt. Ltd.
             </p>
           </div>
 
@@ -70,9 +60,11 @@ export default function PrivacyPolicyPage() {
               Acceptance of Policy
             </h2>
             <p className="text-gray-700 md:text-lg">
-              Houseclay (&quot;<b>we</b>&quot;, &quot;<b>us</b>&quot;, &quot;
-              <b>our</b>&quot;) operates the website, mobile applications, and
-              related services (collectively, the &quot;<b>Platform</b>&quot;).
+              Houseclay (&quot;<span className="font-medium">we</span>&quot;,
+              &quot;<span className="font-medium">us</span>&quot;, &quot;
+              <span className="font-medium">our</span>&quot;) operates the
+              website, mobile applications, and related services (collectively,
+              the &quot;<span className="font-medium">Platform</span>&quot;).
               Your privacy and the security of your personal information are top
               priorities. This Privacy Policy explains how Houseclay collects,
               uses, discloses, stores, and protects your Personal Data when you
@@ -82,10 +74,10 @@ export default function PrivacyPolicyPage() {
               By accessing or using our Platform, or by providing Personal Data
               to us, you consent to the processing described in this Privacy
               Policy and agree to our Terms of Use.{" "}
-              <b>
+              <span className="font-medium">
                 If you do not agree, please do not use the Platform or submit
                 any Personal Data
-              </b>
+              </span>
               .
             </p>
           </div>
@@ -377,7 +369,7 @@ export default function PrivacyPolicyPage() {
               10. Contact Information
             </h2>
             <div className="pt-2 pl-2 md:pl-4 md:text-lg text-gray-700">
-              <h3 className="font-semibold">Houseclay Privacy Office</h3>
+              <h3 className="font-semibold">Houseclay HQ</h3>
               <p>
                 <span className="font-medium">Email:</span>{" "}
                 <a
@@ -391,17 +383,6 @@ export default function PrivacyPolicyPage() {
               <p>
                 <span className="font-medium">Address:</span>{" "}
                 {HOUSECLAY_SUPPORT.address}
-              </p>
-              <p>
-                <span className="font-medium">Grievance Officer:</span>{" "}
-                {HOUSECLAY_SUPPORT.name} |{" "}
-                <a
-                  className="text-red-600 underline cursor-pointer"
-                  href={`tel:${formattedPhoneNumber}`}
-                  aria-label={`Call ${HOUSECLAY_SUPPORT.phone}`}
-                >
-                  {HOUSECLAY_SUPPORT.phone}
-                </a>
               </p>
             </div>
           </div>

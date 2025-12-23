@@ -222,26 +222,6 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
 
                 <li>
                   <Link
-                    href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=flatmate`}
-                    data-category="flatmate"
-                    data-active={
-                      searchParams.get("propertyCategory") === "flatmate"
-                        ? "true"
-                        : "false"
-                    }
-                    prefetch
-                    onClick={onNavClick}
-                    className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
-                  >
-                    <span className="flex items-center gap-2">
-                      For Flatmate
-                    </span>
-                    <ChevronRight size={20} />
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
                     href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=rent`}
                     data-category="rent"
                     data-active={
@@ -255,7 +235,25 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
                     onClick={onNavClick}
                     className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
                   >
-                    <span className="flex items-center gap-2">For Rent</span>
+                    <span className="flex items-center gap-2">Rent</span>
+                    <ChevronRight size={20} />
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=flatmate`}
+                    data-category="flatmate"
+                    data-active={
+                      searchParams.get("propertyCategory") === "flatmate"
+                        ? "true"
+                        : "false"
+                    }
+                    prefetch
+                    onClick={onNavClick}
+                    className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
+                  >
+                    <span className="flex items-center gap-2">Rooms</span>
                     <ChevronRight size={20} />
                   </Link>
                 </li>
@@ -276,36 +274,12 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
 
                 <li>
                   <Link
-                    href="/contact-us"
-                    prefetch
-                    onClick={onNavClick}
-                    className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
-                  >
-                    <span className="flex items-center gap-2">Contact Us</span>
-                    <ChevronRight size={20} />
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
                     href="/about-us"
                     prefetch
                     onClick={onNavClick}
                     className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
                   >
                     <span className="flex items-center gap-2">About Us</span>
-                    <ChevronRight size={20} />
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
-                    href="/faqs"
-                    prefetch
-                    onClick={onNavClick}
-                    className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
-                  >
-                    <span className="flex items-center gap-2">FAQs</span>
                     <ChevronRight size={20} />
                   </Link>
                 </li>
@@ -326,6 +300,46 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
 
                 <li>
                   <Link
+                    href="/contact-us"
+                    prefetch
+                    onClick={onNavClick}
+                    className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
+                  >
+                    <span className="flex items-center gap-2">Contact Us</span>
+                    <ChevronRight size={20} />
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    href="/refund-policy"
+                    prefetch
+                    onClick={onNavClick}
+                    className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
+                  >
+                    <span className="flex items-center gap-2">
+                      Refund Policy
+                    </span>
+                    <ChevronRight size={20} />
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    href="/privacy-policy"
+                    prefetch
+                    onClick={onNavClick}
+                    className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
+                  >
+                    <span className="flex items-center gap-2">
+                      Privacy Policy
+                    </span>
+                    <ChevronRight size={20} />
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
                     href="/terms-and-conditions"
                     prefetch
                     onClick={onNavClick}
@@ -334,6 +348,18 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
                     <span className="flex items-center gap-2">
                       Terms & Conditions
                     </span>
+                    <ChevronRight size={20} />
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    href="/faqs"
+                    prefetch
+                    onClick={onNavClick}
+                    className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
+                  >
+                    <span className="flex items-center gap-2">FAQs</span>
                     <ChevronRight size={20} />
                   </Link>
                 </li>
