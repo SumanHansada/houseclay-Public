@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/base-components";
 import { propertyImageURL } from "@/common/cdnURLs";
 import { BENGALURU_LOCATION } from "@/common/constants";
-import { ACCOUNT_NAV } from "@/common/dataConstants/navbar";
+import { ACCOUNT_NAV_ITEMS } from "@/common/dataConstants/navbar";
 import { AuthStep } from "@/common/enums";
 import { AccountNavList } from "@/components/AccountNavList";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
@@ -175,7 +175,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
           {/* Profile Section */}
           {isAuthenticated && (
             <AccountNavList
-              items={ACCOUNT_NAV}
+              items={ACCOUNT_NAV_ITEMS}
               onItemSelect={onNavClick}
               iconSize={44}
               variant="mobile"

@@ -5,8 +5,8 @@ import { Inter, Nunito } from "next/font/google";
 import Script from "next/script";
 
 import { Header, StickyNavbar } from "@/layout-components";
+import { ConditionalPageTransition } from "@/layout-components";
 import CommonDialogs from "@/layout-components/CommonDialogs";
-import ConditionalPageTransition from "@/layout-components/ConditionalPageTransition";
 import Providers from "@/providers/Providers";
 
 // const geistSans = Geist({
@@ -317,6 +317,7 @@ export default function RootLayout({
                 "/manage-account",
                 "/list-property",
                 "/edit-property",
+                "/property-search",
               ]}
             >
               <main className="mx-auto my-0 pt-14 min-h-dvh max-md:pb-16 flex flex-col">
@@ -331,9 +332,8 @@ export default function RootLayout({
         </Providers>
         {/* Razorpay checkout script */}
         <Script
-          defer
           src="https://checkout.razorpay.com/v1/checkout.js"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
         />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-64EJC1CG73"

@@ -6,6 +6,7 @@ export const houseclayHomeIconURL = `${CDN_BASE_URL}/public/icons/houseclay-home
 export const placeholderIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/property-placeholder-icon.svg`;
 export const loginAndEarnIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/login-and-earn.svg`;
 export const insufficientConnectsIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/insufficient-connects.svg`;
+export const noResultsFoundIconURL = `${CDN_BASE_URL}/public/optimizedIcons/large/no-results-found.svg`;
 
 export const placeholderImageURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/property-placeholder.svg`;
 export const propertyImageURL = `${CDN_BASE_URL}/public/images/property.webp`;

@@ -522,6 +522,8 @@ const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
     <APIProvider
       apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""}
       libraries={["places"]}
+      language="en"
+      region="IN"
     >
       <PlacesAutocompleteBase {...props} />
     </APIProvider>

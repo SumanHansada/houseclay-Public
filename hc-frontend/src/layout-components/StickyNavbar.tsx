@@ -1,23 +1,13 @@
 "use client";
 
-import { Heart, Search, UserRound } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
-import { EXPLORE_LOCATION } from "@/common/constants";
+import { StickyNavItem } from "@/common/dataConstants/navbar";
+import { STICKY_NAV_ITEMS } from "@/common/dataConstants/navbar";
 import { RootState } from "@/store/store";
-import { SvgIcon } from "@/utility-components";
-
-type NavItem = {
-  id: string;
-  icon: React.ReactElement;
-  label: string;
-  href: string;
-  badge?: number;
-};
-
 interface StickyNavbarProps {
   defaultActive?: string;
 }
@@ -32,65 +22,30 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
     isAuthenticated ? state.user.userDetail.connectBal : 0,
   );
 
-  const navItems: NavItem[] = [
-    {
-      id: "explore",
-      icon: <Search size={25} />,
-      label: "Explore",
-      href: `/property-search?lat=${EXPLORE_LOCATION.lat}&lon=${EXPLORE_LOCATION.lng}&propertyCategory=rent`,
-    },
-    {
-      id: "shortlists",
-      icon: <Heart size={25} />,
-      label: "Shortlists",
-      href: "/manage-account/shortlists",
-    },
-    {
-      id: "home",
-      icon: <SvgIcon iconSize="small" name="houseclay-home" size={25} />,
-      label: "Home",
-      href: "/",
-    },
-    {
-      id: "connects",
-      icon: <SvgIcon iconSize="medium" name="connects" size={25} />,
-      label: "Connects",
-      href: "/manage-account/connects",
-      badge: connectBal,
-    },
-    {
-      id: "account",
-      icon: <UserRound width={25} height={25} />,
-      label: "Account",
-      href: "/manage-account/my-profile",
-    },
-  ];
-
   const handleNavClick = (id: string) => {
     setActiveTab(id);
   };
 
-  const isTabActive = (navItem: NavItem) => {
+  const isTabActive = (navItem: StickyNavItem) => {
     return (
       (pathname && pathname === navItem.href.split("?")[0]) ||
       (!pathname && activeTab === navItem.id)
     );
   };
 
-  const activeIndex = navItems.findIndex((item) => {
+  const activeIndex = STICKY_NAV_ITEMS.findIndex((item) => {
     return isTabActive(item);
   });
 
   console.log("active index", activeIndex);
   console.log("active tab", activeTab);
   return (
-    <nav className="fixed bottom-0 left-0 right-0 pb-safe-bottom bg-white border-t  border-gray-200 shadow-md z-40 w-full md:hidden ">
+    <nav className="fixed h-16 bottom-0 left-0 right-0 pb-safe-bottom bg-white border-t  border-gray-200 shadow-md z-40 w-full md:hidden ">
       <ul className="relative grid grid-cols-5 place-items-center py-2">
         {/* 1. Glow (below) */}
         {activeIndex >= 0 && (
           <span
-            className="absolute bottom-0 h-12 w-16 blur bg-gradient-to-t from-red-500/25 to-transparent
-             transition-transform duration-300 ease-out pointer-events-none z-0"
+            className="absolute bottom-1 h-12 w-16 blur bg-gradient-to-t from-red-500/25 to-transparent pointer-events-none z-0"
             style={{
               gridColumnStart: activeIndex + 1,
               gridColumnEnd: activeIndex + 2,
@@ -101,8 +56,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
         {/* 2. Underline (above glow) */}
         {activeIndex >= 0 && (
           <span
-            className="absolute bottom-0 h-0.5 w-16 bg-red-500
-             transition-transform duration-300 ease-out pointer-events-none z-10"
+            className="absolute bottom-1 h-0.5 w-16 bg-red-500 pointer-events-none z-0"
             style={{
               gridColumnStart: activeIndex + 1,
               gridColumnEnd: activeIndex + 2,
@@ -110,7 +64,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
           />
         )}
 
-        {navItems.map((item) => {
+        {STICKY_NAV_ITEMS.map((item) => {
           const isActive = isTabActive(item);
 
           return (
@@ -129,12 +83,12 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
                   }`}
                 >
                   {item.icon}
-                  {item.badge != null && (
+                  {item.badge && (
                     <div
                       className="absolute top-0 right-0 -mt-0.5 -mr-0.5 bg-red-500 text-white text-xxs rounded-full w-4 h-4 min-w-fit px-1 flex items-center justify-center"
-                      aria-label={`${item.badge} connects`}
+                      aria-label={`${connectBal || 0} connects`}
                     >
-                      {item.badge}
+                      {connectBal || 0}
                     </div>
                   )}
                 </div>

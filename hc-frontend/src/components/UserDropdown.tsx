@@ -4,7 +4,7 @@ import { ChevronDown, UserRound } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-import { ACCOUNT_NAV } from "@/common/dataConstants/navbar";
+import { ACCOUNT_NAV_ITEMS } from "@/common/dataConstants/navbar";
 import { AccountNavList } from "@/components/AccountNavList";
 
 interface UserDropdownProps {
@@ -112,7 +112,7 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({
             }}
           >
             <AccountNavList
-              items={ACCOUNT_NAV}
+              items={ACCOUNT_NAV_ITEMS}
               variant="header"
               userName={userName}
               iconSize={iconSize}

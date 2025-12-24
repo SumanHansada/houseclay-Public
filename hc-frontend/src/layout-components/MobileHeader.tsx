@@ -5,18 +5,27 @@ import type { ReactNode } from "react";
 export interface MobileHeaderProps {
   children: ReactNode;
   className?: string;
+  childrenClassName?: string;
 }
 
 export interface MobileHeaderSubComponentProps {
   children: ReactNode;
 }
 
-function MobileHeader({ children, className = "" }: MobileHeaderProps) {
+function MobileHeader({
+  children,
+  className = "",
+  childrenClassName = "",
+}: MobileHeaderProps) {
   return (
     <header
       className={`fixed flex w-full items-center top-0 inset-x-0 z-50 h-14 px-4 border-b border-gray-200 bg-white shadow-sm md:hidden ${className}`}
     >
-      <div className="relative h-full w-full flex items-center">{children}</div>
+      <div
+        className={`relative h-full w-full flex items-center ${childrenClassName}`}
+      >
+        {children}
+      </div>
     </header>
   );
 }

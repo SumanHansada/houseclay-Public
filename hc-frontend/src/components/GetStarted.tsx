@@ -1,12 +1,8 @@
 import { Lightbulb } from "lucide-react";
 
-import { MobileFooter } from "@/layout-components";
 import { SvgIcon } from "@/utility-components";
-interface GetStartedProps {
-  onGetStarted: () => void;
-}
 
-const GetStarted = ({ onGetStarted }: GetStartedProps) => {
+const GetStarted = () => {
   return (
     <div className="flex flex-col gap-4 xl:gap-8 h-full">
       <h1 className="text-2xl">It&apos;s easy to list property on Houseclay</h1>
@@ -48,14 +44,6 @@ const GetStarted = ({ onGetStarted }: GetStartedProps) => {
             On an average it takes less than 2 minutes to list the property
           </span>
         </div>
-        <MobileFooter>
-          <button
-            className="text-center w-full border border-red-500 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl transition duration-200"
-            onClick={onGetStarted}
-          >
-            Get Started
-          </button>
-        </MobileFooter>
       </div>
     </div>
   );

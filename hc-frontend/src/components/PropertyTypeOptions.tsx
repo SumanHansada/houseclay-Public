@@ -3,7 +3,6 @@ import RentSvg from "public/icons/rent.svg";
 import { useDispatch, useSelector } from "react-redux";
 
 import { PropertyCategory } from "@/common/enums";
-import { MobileFooter } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { setPropertyCategory } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
@@ -29,7 +28,7 @@ const PropertyTypeOptions = ({
   const propertyCategory = useSelector(
     (state: RootState) => state.listProperty.propertyCategory,
   );
-  const { isMobile, isTablet } = useDeviceContext();
+  const { isTablet } = useDeviceContext();
 
   const propertyTypes = [
     {
@@ -54,13 +53,11 @@ const PropertyTypeOptions = ({
 
   return (
     <div className="flex flex-col gap-4 xl:gap-8 h-full">
-      <h1
-        className={`${isMobile ? "text-2xl" : "lg:text-2xl text-xl lg:mb-8 mb-4"}`}
-      >
+      <h1 className="max-md:text-2xl lg:text-2xl text-xl lg:mb-8 mb-4">
         Tell us what we can do for you today!
       </h1>
       <div
-        className={`grid ${isMobile ? "grid-cols-3 max-md:grid-cols-1 lg:gap-4 gap-4" : "grid-cols-2 max-md:grid-cols-1 gap-4 justify-between"} lg:mb-8 mb-4`}
+        className={`grid max-md:grid-cols-1 grid-cols-2 justify-between gap-4 lg:mb-8 mb-4`}
       >
         {propertyTypes.map((option) => (
           <PropertyTypeOption
@@ -68,7 +65,7 @@ const PropertyTypeOptions = ({
             id={option.id}
             label={option.label}
             icon={option.icon}
-            className={isMobile ? "px-4 items-center" : ""}
+            className="max-md:px-4 items-center"
             isSelected={propertyCategory === option.type}
             iconClassName={`${
               propertyCategory === option.type ? "opacity-100" : "opacity-50"
@@ -98,29 +95,6 @@ const PropertyTypeOptions = ({
           {isTablet ? "Start Posting" : "Start Posting Your Free Listing"}
         </button>
       </div>
-      <MobileFooter>
-        <div className={`flex gap-2 mt-auto w-full md:hidden`}>
-          {onBack && (
-            <button
-              type="button"
-              className={`text-center w-full border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 rounded-xl transition duration-200`}
-              onClick={onBack}
-            >
-              Back
-            </button>
-          )}
-          <button
-            type="button"
-            className={`text-center w-full border border-red-500  bg-red-500 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300 hover:bg-red-600 text-white px-6 py-3 rounded-xl transition duration-200`}
-            onClick={onNext}
-            onMouseEnter={handlePrefetch}
-            onFocus={handlePrefetch}
-            disabled={!propertyCategory}
-          >
-            Next
-          </button>
-        </div>
-      </MobileFooter>
     </div>
   );
 };

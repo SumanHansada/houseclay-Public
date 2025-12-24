@@ -65,6 +65,7 @@ export enum PaymentFilterStatus {
   COMPLETED = "COMPLETED",
   FAILED = "FAILED",
   IN_PROGRESS = "IN_PROGRESS",
+  DEFAULT = "DEFAULT",
 }
 
 export enum ErrorStatus {
