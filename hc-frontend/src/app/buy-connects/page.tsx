@@ -1,10 +1,10 @@
 "use client";
 
-import { ChevronLeft, X } from "lucide-react";
+import { X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
@@ -21,7 +21,6 @@ import {
 } from "@/components/Dialog";
 import { VerifyConnectsDialog } from "@/dialogs";
 import { ConnectBundleID } from "@/interfaces/ConnectsBundle";
-import { MobileFooter, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -33,6 +32,8 @@ import { RootState } from "@/store/store";
 import { setConnectBal } from "@/store/userSlice";
 import { SvgIcon } from "@/utility-components";
 import { Tab, TabContent, TabHeader, Tabs } from "@/utility-components/Tabs";
+
+import { updateBuyConnectsState } from "./layout";
 
 const MINIMUM_CUSTOM_CONNECTS = 1;
 const MAXIMUM_CUSTOM_CONNECTS = 50;
@@ -71,15 +72,10 @@ export default function BuyConnectsPage() {
 
   const { data: bundleData } = useBundleInfoQuery();
 
-  const displayBundles = useMemo(() => {
-    return (
-      bundleData?.filter((bundle) => bundle.id !== "CUSTOM_CONNECTS") || []
-    );
-  }, [bundleData]);
+  const displayBundles =
+    bundleData?.filter((bundle) => bundle.id !== "CUSTOM_CONNECTS") || [];
 
-  const customBundleInfo = useMemo(() => {
-    return bundleData?.find((b) => b.id === "CUSTOM_CONNECTS");
-  }, [bundleData]);
+  const customBundleInfo = bundleData?.find((b) => b.id === "CUSTOM_CONNECTS");
 
   // Find the currently selected bundle object from the full API list
   const currentBundle = bundleData?.find(
@@ -222,6 +218,11 @@ export default function BuyConnectsPage() {
     agreedToTerms &&
     connectsToBuy >= MINIMUM_CUSTOM_CONNECTS &&
     connectsToBuy <= MAXIMUM_CUSTOM_CONNECTS;
+
+  // Sync state to layout
+  useEffect(() => {
+    updateBuyConnectsState(selectedBundle, customConnects, agreedToTerms);
+  }, [selectedBundle, customConnects, agreedToTerms]);
 
   return (
     <>
@@ -464,20 +465,6 @@ export default function BuyConnectsPage() {
 
       {/* Mobile */}
       <section className="w-full md:hidden">
-        {/* Mobile Header */}
-        <MobileHeader>
-          <MobileHeader.LeftAction>
-            <Button
-              variant="secondary"
-              size="custom"
-              className="rounded-full p-1"
-              onClick={() => router.back()}
-            >
-              <ChevronLeft size={24} />
-            </Button>
-          </MobileHeader.LeftAction>
-          <MobileHeader.Title>Buy Connects</MobileHeader.Title>
-        </MobileHeader>
         {/* Mobile Content */}
         <div className="px-6 pt-4 pb-16 ">
           <div className="flex justify-between items-start w-full py-4 rounded-lg mb-4">
@@ -599,30 +586,6 @@ export default function BuyConnectsPage() {
             </label>
           </div>
         </div>
-
-        {/* Mobile Footer */}
-        <MobileFooter>
-          <div className="flex flex-col justify-around items-start w-full">
-            <div className="text-gray-600 text-xs flex flex-col font-bold">
-              Total Amount
-              <span className="font-light">(Inclusive of all taxes)</span>
-            </div>
-            <div className="text-sm font-bold flex gap-2 items-center">
-              ₹{fmt2(price)}
-            </div>
-          </div>
-          <button
-            className={`text-center px-6 py-3 border rounded-xl w-full transition duration-200 ${
-              canProceedToPay
-                ? "bg-red-500 border-red-500 text-white hover:bg-red-600"
-                : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
-            }`}
-            onClick={() => openDialog("connects-price-breakdown-dialog")}
-            disabled={!canProceedToPay}
-          >
-            Price Breakdown
-          </button>
-        </MobileFooter>
       </section>
 
       {/* Connects Price Dialog */}

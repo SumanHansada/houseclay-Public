@@ -1,5 +1,3 @@
-import { MobileFooter } from "@/layout-components";
-
 function Line({
   w = "100%",
   h = 16,
@@ -154,12 +152,6 @@ export default function Loading() {
           </div>
         </section>
       </section>
-
-      {/* Mobile footer skeleton (matches two CTA buttons) */}
-      <MobileFooter>
-        <div className="h-11 w-40 rounded-xl bg-gray-200" />
-        <div className="h-11 w-40 rounded-xl bg-gray-200" />
-      </MobileFooter>
     </>
   );
 }
