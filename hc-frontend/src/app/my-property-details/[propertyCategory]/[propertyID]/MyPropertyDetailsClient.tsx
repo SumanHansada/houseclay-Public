@@ -323,12 +323,12 @@ export function MyPropertyDetailsClient({
         <section className="w-3/4 max-md:w-full">
           <section className="max-md:min-h-[fit-content] w-full overflow-hidden max-md:hidden">
             <div className="py-12 mx-auto">
-              <div>
+              <div className="flex items-center justify-between gap-3">
                 <h1 className="flex items-center justify-between text-3xl text-gray-900">
                   {bhkType} in {property?.locationOrSocietyName} for{" "}
                   {pascalCase(property?.propertyCategory)} in {property?.city}
-                  <RenderPropertyStatus status={property?.propertyState} />
                 </h1>
+                <RenderPropertyStatus status={property?.propertyState} />
               </div>
             </div>
           </section>
@@ -380,10 +380,27 @@ export function MyPropertyDetailsClient({
                   </section>
                   {/* Description Section */}
                   <section className="py-6 max-md:py-3">
-                    <h2 className="text-xl">Description</h2>
-                    <p className="mb-6 text-gray-700">
-                      {property?.description}
-                    </p>
+                    <div className="flex justify-between text-base xl:text-xl mb-4 md:hidden">
+                      <h1 className="flex items-center gap-1 lg:gap-2 m-1 text-gray-900">
+                        <span className="font-semibold">
+                          {contactedUsers.length ?? 0}
+                        </span>
+                        <span className="text-gray-500 text-nowrap">
+                          People Connected
+                        </span>{" "}
+                        <span>
+                          <TrendingUp size={16} className="text-green-500" />
+                        </span>
+                      </h1>
+                      <RenderPropertyStatus status={property?.propertyState} />
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <h2 className="text-xl">Description</h2>
+                      <p className="mb-6 text-gray-700">
+                        {property?.description}
+                      </p>
+                    </div>
                     <div className="flex flex-col items-start justify-between">
                       <h2 className="flex items-center gap-1 text-xl">
                         <span className="">Property Location</span>
@@ -393,12 +410,6 @@ export function MyPropertyDetailsClient({
                         {property?.locationOrSocietyName}, {property?.city}
                       </div>
                     </div>
-                    {/* <div className="flex items-center gap-2 text-base text-gray-500">
-                      <MapPin size={16} />
-                      <span>
-                        {property?.locationOrSocietyName}, {property?.city}
-                      </span>
-                    </div> */}
                   </section>
                   {/* Property Details Section */}
                   <section className="p-6 border shadow-md rounded-xl max-md:p-3 max-md:my-3">
@@ -984,18 +995,18 @@ export function MyPropertyDetailsClient({
         </section>
         <section className="w-1/4 max-md:hidden">
           <section className="max-md:min-h-[fit-content] w-full overflow-hidden max-md:hidden">
-            <div className="py-12 mx-auto">
-              <div className="flex justify-end">
-                <h1 className="flex items-center gap-2 m-1 text-xl text-gray-900">
-                  {contactedUsers.length ?? 0}{" "}
-                  <span className="text-base text-gray-500">
-                    People Connected
-                  </span>{" "}
-                  <span>
-                    <TrendingUp size={16} className="text-green-500" />
-                  </span>
-                </h1>
-              </div>
+            <div className="flex justify-end text-base xl:text-xl py-12">
+              <h1 className="flex items-center gap-1 lg:gap-2 m-1 text-gray-900">
+                <span className="font-semibold">
+                  {contactedUsers.length ?? 0}
+                </span>
+                <span className="text-gray-500 text-nowrap">
+                  People Connected
+                </span>{" "}
+                <span>
+                  <TrendingUp size={16} className="text-green-500" />
+                </span>
+              </h1>
             </div>
             {property?.propertyState === PropertyStatus.INACTIVE ? null : (
               <div className="flex justify-end py-0 ml-auto">
