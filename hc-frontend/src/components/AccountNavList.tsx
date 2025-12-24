@@ -53,13 +53,13 @@ export function AccountNavList({
     switch (variant) {
       case "header":
         return {
-          list: "bg-white border border-gray-200 rounded-xl shadow-lg py-2 px-3 space-y-1",
+          list: "bg-white rounded-xl shadow-lg py-2 px-3 space-y-1",
           item: "gap-3 cursor-pointer rounded-md hover:bg-gray-50",
         };
       case "mobile":
         return {
-          list: "bg-white w-full divide-y-2 divide-gray-200",
-          item: "gap-3 py-2 cursor-pointer w-full flex items-center",
+          list: "bg-white w-full",
+          item: "gap-3 py-2 cursor-pointer w-full flex items-center border-b border-gray-300",
         };
       case "sidebar":
       default:

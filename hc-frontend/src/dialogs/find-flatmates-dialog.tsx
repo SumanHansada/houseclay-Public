@@ -103,7 +103,7 @@ const FindFlatmatesDialog: React.FC<FindFlatmatesDialogProps> = ({
           </div>
         </div>
       </DialogContent>
-      <DialogFooter>
+      <DialogFooter className="border-t">
         <button
           className="text-center w-full border border-red-500 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl transition duration-200"
           onClick={handleGetStarted}

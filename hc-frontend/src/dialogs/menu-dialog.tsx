@@ -343,7 +343,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
                     href="/terms-and-conditions"
                     prefetch
                     onClick={onNavClick}
-                    className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer w-full"
+                    className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
                   >
                     <span className="flex items-center gap-2">
                       Terms & Conditions
