@@ -1,24 +1,20 @@
 "use client";
 
-import { ChevronLeft, Mail, PhoneCall } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Mail, PhoneCall } from "lucide-react";
 import { useState } from "react";
 
-import { Button } from "@/base-components";
 import { HOUSECLAY_SUPPORT } from "@/common/constants";
 import { sanitizePhoneKeepCountryCode } from "@/common/utils";
 import { default as ACCORDION_DATA } from "@/data/SupportAccordionData.json";
-import { MobileHeader } from "@/layout-components";
 import { SvgIcon } from "@/utility-components";
 
-import { Accordion } from "../components/Accordion";
+import { Accordion } from "../../components/Accordion";
 
 const formattedPhoneNumber = sanitizePhoneKeepCountryCode(
   HOUSECLAY_SUPPORT.phone,
 );
 
 export default function SupportPage() {
-  const router = useRouter();
   const [openKey, setOpenKey] = useState<string | null>(null);
 
   return (
@@ -106,21 +102,7 @@ export default function SupportPage() {
 
       {/* Mobile */}
       <section className="md:hidden mb-16">
-        <MobileHeader>
-          <MobileHeader.LeftAction>
-            <Button
-              variant="secondary"
-              size="custom"
-              className="rounded-full p-1"
-              onClick={() => router.back()}
-            >
-              <ChevronLeft size={24} />
-            </Button>
-          </MobileHeader.LeftAction>
-          <MobileHeader.Title>Support</MobileHeader.Title>
-        </MobileHeader>
-
-        <div className="px-8 space-y-6">
+        <div className="flex flex-col gap-8 px-6 pb-4 mx-auto">
           {/* Support */}
           <div className="py-6">
             <h1 className="text-lg font-medium mb-6">

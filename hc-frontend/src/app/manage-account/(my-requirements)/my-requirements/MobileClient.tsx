@@ -1,18 +1,15 @@
 "use client";
 
 import { Form, useFormikContext } from "formik";
-import { ChevronLeft, SquarePen, X } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { X } from "lucide-react";
 import toast from "react-hot-toast";
 
-import { Button } from "@/base-components";
 import {
   FormCheckbox,
   FormPlacesAutocomplete,
   FormRadioGroup,
 } from "@/form-components";
 import { MyRequirementsFormValues } from "@/interfaces/ManageAccount";
-import { MobileFooter, MobileHeader } from "@/layout-components";
 
 import {
   bhkTypeOptions,
@@ -26,22 +23,12 @@ import {
 
 interface MobileProps {
   editMode: boolean;
-  setEditMode: (v: boolean) => void;
-  onBack?: () => void;
-  savedValues: MyRequirementsFormValues;
-  DEFAULT_VALUES: MyRequirementsFormValues;
 }
 
 const MAX_LOCATIONS = 5;
 
-export function MobileClient({
-  editMode,
-  setEditMode,
-  savedValues,
-  DEFAULT_VALUES,
-}: MobileProps) {
-  const router = useRouter();
-  const { values, setFieldValue, resetForm } =
+export function MobileClient({ editMode }: MobileProps) {
+  const { values, setFieldValue } =
     useFormikContext<MyRequirementsFormValues>();
   const isTenant = values.userType === "tenant";
   const isFlatmate = isTenant && values.lookingForARoom === "yes";
@@ -76,33 +63,7 @@ export function MobileClient({
   };
 
   return (
-    <>
-      <MobileHeader>
-        <MobileHeader.LeftAction>
-          <Button
-            variant="secondary"
-            size="custom"
-            className="rounded-full p-1"
-            onClick={() => (editMode ? setEditMode(false) : router.back())}
-          >
-            <ChevronLeft size={24} />
-          </Button>
-        </MobileHeader.LeftAction>
-        <MobileHeader.Title>My Requirements</MobileHeader.Title>
-        {!editMode ? (
-          <MobileHeader.RightAction>
-            <Button
-              variant="secondary"
-              size="custom"
-              className="rounded-full p-1"
-              onClick={() => setEditMode(true)}
-            >
-              <SquarePen size={24} className="p-0.5" />
-            </Button>
-          </MobileHeader.RightAction>
-        ) : null}
-      </MobileHeader>
-
+    <div className="md:hidden">
       <Form className="flex-1 space-y-6 px-6 pt-4 pb-16">
         {/* Who am I */}
         <div className="flex flex-col items-start gap-2 w-full">
@@ -160,7 +121,7 @@ export function MobileClient({
               }
               disabled={!editMode || values.locations.length >= MAX_LOCATIONS}
               containerClassName="w-full relative"
-              inputClassName="w-full p-2 border rounded-xl"
+              inputClassName="w-full p-1 border rounded-xl"
               dropdownClassName="absolute left-0 right-0 top-full z-50 mt-1 bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-auto"
               dropdownItemClassName="py-1 px-3 hover:bg-gray-100 cursor-pointer flex items-center"
               onLocationSelect={onLocationSelect}
@@ -226,41 +187,7 @@ export function MobileClient({
           options={budgetOptions}
           disabled={!editMode}
         />
-
-        {/* Actions */}
-        {editMode ? (
-          <MobileFooter>
-            <button
-              type="button"
-              className="px-4 py-3 border rounded-xl hover:bg-gray-50"
-              onClick={() => {
-                resetForm({ values: savedValues });
-                setEditMode(false);
-              }}
-            >
-              Cancel
-            </button>
-            <div className="flex gap-6">
-              <button
-                type="button"
-                className=""
-                onClick={() => {
-                  resetForm({ values: DEFAULT_VALUES });
-                }}
-              >
-                Reset
-              </button>
-              <button
-                type="submit"
-                onClick={() => setFieldValue("locationSearch", "")}
-                className="px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl"
-              >
-                Save
-              </button>
-            </div>
-          </MobileFooter>
-        ) : null}
       </Form>
-    </>
+    </div>
   );
 }

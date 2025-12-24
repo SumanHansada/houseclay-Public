@@ -50,15 +50,7 @@ export default function Loading() {
             My Profile (mobile)
           </h2>
 
-          {/* Sticky-like MobileHeader (55px) */}
-          <header className="fixed top-0 left-0 right-0 z-50 h-[55px] border-b border-gray-200 bg-white flex items-center px-4">
-            <Bar w="120px" h={22} />
-            <div className="ml-auto">
-              <Circle size={36} />
-            </div>
-          </header>
-
-          <div className="pt-[70px] pb-20 px-8">
+          <div className="pb-20 px-8">
             {/* Avatar */}
             <div className="flex flex-col items-center py-6">
               <Circle size={144} />

@@ -25,19 +25,12 @@ import {
 interface DesktopProps {
   editMode: boolean;
   setEditMode: (v: boolean) => void;
-  savedValues: MyRequirementsFormValues;
-  DEFAULT_VALUES: MyRequirementsFormValues;
 }
 
 const MAX_LOCATIONS = 5;
 
-export function DesktopClient({
-  editMode,
-  setEditMode,
-  savedValues,
-  DEFAULT_VALUES,
-}: DesktopProps) {
-  const { values, setFieldValue, resetForm } =
+export function DesktopClient({ editMode, setEditMode }: DesktopProps) {
+  const { values, setFieldValue } =
     useFormikContext<MyRequirementsFormValues>();
   const isTenant = values.userType === "tenant";
   const isFlatmate = isTenant && values.lookingForARoom === "yes";
@@ -160,7 +153,7 @@ export function DesktopClient({
                     : `Search and add up to ${MAX_LOCATIONS} locations`
                 }
                 disabled={!editMode || values.locations.length >= MAX_LOCATIONS}
-                inputClassName="w-full border-none outline-none bg-transparent p-2"
+                inputClassName="w-full border-none outline-none bg-transparent p-1"
                 containerClassName="w-full"
                 dropdownClassName="absolute left-0 right-0 top-full z-50 mt-1 bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-auto"
                 onLocationSelect={onLocationSelect}
@@ -223,40 +216,6 @@ export function DesktopClient({
             disabled={!editMode}
           />
         </div>
-
-        {/* Actions */}
-        {editMode ? (
-          <footer className="flex items-center justify-between pt-4 mt-6 text-lg border-t-2 shadow-sm">
-            <button
-              type="button"
-              className="px-5 py-2 border rounded-lg shadow-sm hover:bg-gray-50"
-              onClick={() => {
-                resetForm({ values: savedValues });
-                setEditMode(false);
-              }}
-            >
-              Cancel
-            </button>
-            <div className="flex gap-6">
-              <button
-                type="button"
-                className=""
-                onClick={() => {
-                  resetForm({ values: DEFAULT_VALUES });
-                }}
-              >
-                Reset
-              </button>
-              <button
-                type="submit"
-                onClick={() => setFieldValue("locationSearch", "")}
-                className="px-5 py-2 text-white bg-red-500 rounded-lg shadow-sm hover:bg-red-600"
-              >
-                Save
-              </button>
-            </div>
-          </footer>
-        ) : null}
       </Form>
     </>
   );

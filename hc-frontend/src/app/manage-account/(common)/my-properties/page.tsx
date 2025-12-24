@@ -1,22 +1,20 @@
 "use client";
 
-import { Check, ChevronLeft } from "lucide-react";
+import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
-import { Button } from "@/base-components";
 import { MARK_RENTED_ACTION_DIALOG_ID } from "@/common/constants";
 import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { MyPropertyActionsDialog } from "@/dialogs";
 import { ActionDialog } from "@/dialogs/action-dialog";
-import { MobileHeader } from "@/layout-components";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useDeactivatePropertyMutation } from "@/store/apiSlice";
 import { RootState } from "@/store/store";
 
-import { PropertyTable } from "../components/PropertiesTable";
-import { PropertyCardList } from "../components/PropertyCardList";
+import { PropertyTable } from "../../components/PropertiesTable";
+import { PropertyCardList } from "../../components/PropertyCardList";
 import Loading from "./loading";
 
 const filterOptions = [
@@ -44,23 +42,18 @@ export default function MyPropertiesPage() {
     (state: RootState) => state.user,
   );
 
-  const ownedProperties = useMemo(
-    () => userDetail.ownedProperties,
-    [userDetail.ownedProperties],
-  );
+  const ownedProperties = userDetail.ownedProperties;
 
-  const filteredProperties = useMemo(() => {
-    return ownedProperties.filter((prop) => {
-      if (
-        selectedFilterCategory !== PropertyCategory.NONE &&
-        prop.propertyCategory !== selectedFilterCategory
-      )
-        return false;
-      if (onlyActive && prop.propertyState !== PropertyStatus.VERIFIED)
-        return false;
-      return true;
-    });
-  }, [ownedProperties, selectedFilterCategory, onlyActive]);
+  const filteredProperties = ownedProperties.filter((prop) => {
+    if (
+      selectedFilterCategory !== PropertyCategory.NONE &&
+      prop.propertyCategory !== selectedFilterCategory
+    )
+      return false;
+    if (onlyActive && prop.propertyState !== PropertyStatus.VERIFIED)
+      return false;
+    return true;
+  });
 
   const onDashboard = (category: string, id: string) => {
     router.push(`/my-property-details/${category?.toLowerCase()}/${id}`);
@@ -154,21 +147,6 @@ export default function MyPropertiesPage() {
       </section>
 
       <section className="md:hidden">
-        {/* Header */}
-        <MobileHeader>
-          <MobileHeader.LeftAction>
-            <Button
-              variant="secondary"
-              size="custom"
-              className="p-1 rounded-full"
-              onClick={() => router.back()}
-            >
-              <ChevronLeft size={24} />
-            </Button>
-          </MobileHeader.LeftAction>
-          <MobileHeader.Title>My Properties</MobileHeader.Title>
-        </MobileHeader>
-
         {/* Filter buttons */}
         <div className="flex justify-between text-lg m-3 border p-1.5 sm:p-2 rounded-xl mx-8">
           {filterOptions.map((f) => {

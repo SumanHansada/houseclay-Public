@@ -1,14 +1,12 @@
 "use client";
 
-import { Check, ChevronLeft } from "lucide-react";
+import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
-import { Button } from "@/base-components";
 import { BadgeType, PropertyCategory, PropertyStatus } from "@/common/enums";
 import Properties from "@/components/Properties";
-import { MobileHeader } from "@/layout-components";
 import { RootState } from "@/store/store";
 
 import Loading from "./loading";
@@ -20,32 +18,38 @@ const filterOptions = [
   { label: "Flatmate", value: PropertyCategory.FLATMATE },
 ];
 
-export default function ShortlistsPage() {
-  const router = useRouter();
-
+export default function OwnersContactedPage() {
   const [selectedFilterCategory, setSelectedFilterCategory] =
     useState<PropertyCategory>(PropertyCategory.NONE);
   const [onlyAvailable, setOnlyAvailable] = useState(false);
+  const router = useRouter();
 
-  const { shortlistedProperties } = useSelector(
-    (state: RootState) => state.shortlist,
-  );
-  const { userDetailLoading, userDetailError } = useSelector(
+  const { userDetail, userDetailLoading, userDetailError } = useSelector(
     (state: RootState) => state.user,
   );
 
-  const filteredProperties = useMemo(() => {
-    return shortlistedProperties.filter((prop) => {
-      if (
-        selectedFilterCategory !== PropertyCategory.NONE &&
-        prop.propertyCategory !== selectedFilterCategory
-      )
-        return false;
-      if (onlyAvailable && prop.propertyState !== PropertyStatus.VERIFIED)
-        return false;
-      return true;
-    });
-  }, [shortlistedProperties, selectedFilterCategory, onlyAvailable]);
+  const contactedProperties = useMemo(
+    () => userDetail.contactedProperties,
+    [userDetail.contactedProperties],
+  );
+
+  // const propertyCards: PropertyCardWithImages[] = useMemo(() => {
+  //   return contactedProperties.map((prop: PropertyCardWithImages) => ({
+  //     ...prop,
+  //     images: prop.image ? [prop.image] : [FALLBACK_IMG],
+  //   }));
+  // }, [contactedProperties]);
+
+  const filteredProperties = contactedProperties.filter((prop) => {
+    if (
+      selectedFilterCategory !== PropertyCategory.NONE &&
+      prop.propertyCategory !== selectedFilterCategory
+    )
+      return false;
+    if (onlyAvailable && prop.propertyState !== PropertyStatus.VERIFIED)
+      return false;
+    return true;
+  });
 
   const handleCardClick = (e: React.MouseEvent, propertyID: string) => {
     e.stopPropagation();
@@ -62,7 +66,7 @@ export default function ShortlistsPage() {
       <section className="max-md:hidden">
         {/* Header */}
         <header className="border-b-2 pb-2 mb-8 flex justify-between">
-          <h1 className="text-2xl font-medium">Shortlisted Properties</h1>
+          <h1 className="text-2xl font-medium">Contacted Properties</h1>
           <button
             type="button"
             aria-pressed={onlyAvailable}
@@ -105,21 +109,6 @@ export default function ShortlistsPage() {
 
       {/* Mobile */}
       <section className="md:hidden">
-        {/* Header */}
-        <MobileHeader>
-          <MobileHeader.LeftAction>
-            <Button
-              variant="secondary"
-              size="custom"
-              className="rounded-full p-1"
-              onClick={() => router.back()}
-            >
-              <ChevronLeft size={24} />
-            </Button>
-          </MobileHeader.LeftAction>
-          <MobileHeader.Title>Shortlisted Properties</MobileHeader.Title>
-        </MobileHeader>
-
         {/* Filter buttons */}
         <div className="flex justify-between text-lg m-3 border p-1.5 sm:p-2 rounded-xl mx-8">
           {filterOptions.map((f) => {

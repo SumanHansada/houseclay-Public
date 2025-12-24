@@ -1,17 +1,13 @@
 "use client";
 
-import { ChevronLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 
-import { Button } from "@/base-components";
 import { PaymentFilterStatus } from "@/common/enums";
-import { MobileHeader } from "@/layout-components";
 import { RootState } from "@/store/store";
 
-import { TransactionCardList } from "../components/TransactionCardList";
-import { TransactionTable } from "../components/TransactionTable";
+import { TransactionCardList } from "../../components/TransactionCardList";
+import { TransactionTable } from "../../components/TransactionTable";
 import Loading from "./loading";
 
 const filterOptions = [
@@ -21,7 +17,6 @@ const filterOptions = [
 ];
 
 export default function MyPaymentsPage() {
-  const router = useRouter();
   const [selectedFilter, setSelectedFilter] = useState<PaymentFilterStatus>(
     PaymentFilterStatus.ALL,
   );
@@ -29,21 +24,16 @@ export default function MyPaymentsPage() {
     (state: RootState) => state.user,
   );
 
-  const externalPayments = useMemo(
-    () => userDetail.externalPayments,
-    [userDetail.externalPayments],
-  );
+  const externalPayments = userDetail.externalPayments;
 
-  const filteredPayments = useMemo(() => {
-    return externalPayments.filter((prop) => {
-      if (
-        selectedFilter !== PaymentFilterStatus.ALL &&
-        prop.status !== selectedFilter
-      )
-        return false;
-      return true;
-    });
-  }, [externalPayments, selectedFilter]);
+  const filteredPayments = externalPayments.filter((prop) => {
+    if (
+      selectedFilter !== PaymentFilterStatus.ALL &&
+      prop.status !== selectedFilter
+    )
+      return false;
+    return true;
+  });
 
   // const onDownload = (id: string) => {
   //   console.log("Download Invoice: ", id);
@@ -87,21 +77,6 @@ export default function MyPaymentsPage() {
 
       {/* Mobile */}
       <section className="md:hidden">
-        {/* Header */}
-        <MobileHeader>
-          <MobileHeader.LeftAction>
-            <Button
-              variant="secondary"
-              size="custom"
-              className="rounded-full p-1"
-              onClick={() => router.back()}
-            >
-              <ChevronLeft size={24} />
-            </Button>
-          </MobileHeader.LeftAction>
-          <MobileHeader.Title>Your payments</MobileHeader.Title>
-        </MobileHeader>
-
         {/* Filter buttons */}
         <div className="flex justify-between text-lg m-3 border p-1.5 sm:p-2 rounded-xl mx-8">
           {filterOptions.map((f) => {

@@ -1,3 +1,5 @@
+import { MobileFooter } from "@/layout-components";
+
 function Line({
   w = "100%",
   h = 16,
@@ -30,19 +32,6 @@ function FeatureRow() {
 export default function Loading() {
   return (
     <>
-      {/* Mobile header skeleton (matches MobileHeader height) */}
-      <header className="fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white md:hidden">
-        <div className="animate-pulse flex items-center h-full px-6 gap-2">
-          <div className="shrink-0 w-10 h-10 grid place-items-center">
-            <div className="h-9 w-9 rounded-full bg-gray-200" />
-          </div>
-          <div className="flex-1 px-2">
-            <div className="h-5 w-[160px] mx-auto rounded bg-gray-200" />
-          </div>
-          <div className="shrink-0 w-10 h-10" />
-        </div>
-      </header>
-
       {/* Desktop */}
       <section
         className="max-md:hidden animate-pulse"
@@ -106,7 +95,7 @@ export default function Loading() {
 
       {/* Mobile */}
       <section
-        className="md:hidden px-6 pt-[55px] pb-16 animate-pulse"
+        className="md:hidden px-6 pt-4 pb-16 animate-pulse"
         role="status"
         aria-live="polite"
         aria-busy="true"
@@ -167,14 +156,10 @@ export default function Loading() {
       </section>
 
       {/* Mobile footer skeleton (matches two CTA buttons) */}
-      <footer className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-200">
-        <div className="flex items-center justify-between gap-3 px-6 py-3">
-          <div className="h-11 w-40 rounded-xl bg-gray-200" />
-          <div className="h-11 w-40 rounded-xl bg-gray-200" />
-        </div>
-      </footer>
-      {/* Spacer so content isn’t obscured by fixed footer */}
-      <div className="md:hidden h-[64px]" />
+      <MobileFooter>
+        <div className="h-11 w-40 rounded-xl bg-gray-200" />
+        <div className="h-11 w-40 rounded-xl bg-gray-200" />
+      </MobileFooter>
     </>
   );
 }

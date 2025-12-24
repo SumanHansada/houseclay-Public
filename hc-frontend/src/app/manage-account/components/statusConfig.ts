@@ -24,7 +24,7 @@ export const statusConfig = {
     label: "In Progress",
     textClassName: "",
   },
-  default: {
+  [PaymentFilterStatus.DEFAULT]: {
     icon: HelpCircle,
     iconSize: 22,
     iconClassName: "",
@@ -36,6 +36,6 @@ export const statusConfig = {
 // Helper function to get status config
 export const getStatusConfig = (status: PaymentFilterStatus | string) => {
   return (
-    statusConfig[status as keyof typeof statusConfig] || statusConfig.default
+    statusConfig[status as keyof typeof statusConfig] || statusConfig.DEFAULT
   );
 };

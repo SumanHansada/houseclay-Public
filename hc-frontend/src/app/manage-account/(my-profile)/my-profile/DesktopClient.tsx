@@ -4,38 +4,23 @@ import { Form, useFormikContext } from "formik";
 import { CircleAlert, CircleCheck } from "lucide-react";
 
 import { getInitials } from "@/common/utils";
-import Spinner from "@/components/Spinner";
 import { FormPhoneField, FormTextField } from "@/form-components";
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
 
-import { EmailVerifyIncentive } from "../components/EmailVerifyIncentive";
+import { EmailVerifyIncentive } from "../../components/EmailVerifyIncentive";
 
 interface DesktopClientProps {
   editMode: boolean;
   setEditMode: (v: boolean) => void;
   onVerifyEmail: () => void;
-  updatingProfile: boolean;
-  noChanges: boolean;
 }
 
 export function DesktopClient({
   editMode,
   setEditMode,
   onVerifyEmail,
-  updatingProfile,
-  noChanges,
 }: DesktopClientProps) {
-  const { values, resetForm, initialValues } =
-    useFormikContext<MyProfileFormValues>();
-
-  const handleCancel = () => {
-    resetForm({ values: initialValues });
-    setEditMode(false);
-  };
-
-  const getButtonContent = (text: string) => (
-    <>{updatingProfile ? <Spinner size="sm" /> : text}</>
-  );
+  const { values } = useFormikContext<MyProfileFormValues>();
 
   return (
     <>
@@ -160,26 +145,6 @@ export function DesktopClient({
               </div>
             )}
           </div>
-
-          {/* Actions (desktop) */}
-          {editMode ? (
-            <footer className="mt-6 border-t-2 pt-4 flex justify-between shadow-sm">
-              <button
-                type="reset"
-                className="px-3 py-1 md:px-5 md:py-2 border rounded-lg shadow-sm"
-                onClick={handleCancel}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className={`px-3 py-1 md:px-5 md:py-2 text-white rounded-lg shadow-sm ${updatingProfile || noChanges ? "disabled:cursor-not-allowed disabled:bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
-                disabled={updatingProfile || noChanges}
-              >
-                {getButtonContent(noChanges ? "No Changes" : "Save Changes")}
-              </button>
-            </footer>
-          ) : null}
         </Form>
       </div>
     </>
