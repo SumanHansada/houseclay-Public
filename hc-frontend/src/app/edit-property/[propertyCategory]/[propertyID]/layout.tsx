@@ -658,8 +658,6 @@ export default function EditPropertyTypeLayout({
   }, [finalizationStage, handleUpdateProperty]);
 
   const goToHomePage = () => {
-    // Clear form data when user navigates away
-    dispatch(clearFormData());
     router.push("/");
   };
 
