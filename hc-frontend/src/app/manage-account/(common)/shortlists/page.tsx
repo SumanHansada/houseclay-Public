@@ -104,7 +104,7 @@ export default function ShortlistsPage() {
       {/* Mobile */}
       <section className="md:hidden">
         {/* Filter buttons */}
-        <div className="flex justify-between text-lg m-3 border p-1.5 sm:p-2 rounded-xl mx-8">
+        <div className="flex justify-between text-lg m-3 border p-1.5 sm:p-2 rounded-xl mx-6">
           {filterOptions.map((f) => {
             const active = selectedFilterCategory === f.value;
             return (

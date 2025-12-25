@@ -57,16 +57,9 @@ export default function Loading() {
           Mobile layout
         </h2>
 
-        {/* MobileHeader (55px) */}
-        <header className="fixed top-0 left-0 right-0 z-50 h-[55px] border-b border-gray-200 bg-white flex items-center px-4">
-          <Bar w="9rem" h={22} />
-        </header>
-        {/* Spacer under fixed header */}
-        <div className="h-[55px]" />
-
         {/* Filters container */}
-        <div className="mx-8 m-3 flex rounded-xl border p-1.5 sm:p-2">
-          {Array.from({ length: 4 }).map((_, i) => (
+        <div className="mx-6 m-3 flex rounded-xl border p-1.5 sm:p-2">
+          {Array.from({ length: 3 }).map((_, i) => (
             <Bar key={i} w="100%" h={32} className="mx-1 rounded-lg" />
           ))}
         </div>

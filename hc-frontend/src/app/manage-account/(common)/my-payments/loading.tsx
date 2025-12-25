@@ -40,9 +40,8 @@ export default function Loading() {
             Mobile header
           </h2>
 
-          <div className="mx-8 my-4 h-7 w-44 rounded-md bg-gray-200" />
           <div
-            className="mx-8 m-3 flex rounded-xl border p-1.5 sm:p-2"
+            className="mx-6 m-3 flex rounded-xl border p-1.5 sm:p-2"
             aria-label="Loading filters"
           >
             {Array.from({ length: 3 }).map((_, i) => (

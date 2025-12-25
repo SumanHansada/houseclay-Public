@@ -36,7 +36,7 @@ export default function Loading() {
         </div>
 
         {/* Filters */}
-        <div className="mx-8 mt-3 mb-4 flex rounded-xl border p-1.5 sm:p-2">
+        <div className="mx-6 mt-3 mb-4 flex rounded-xl border p-1.5 sm:p-2">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="mx-1 h-8 flex-1 rounded-lg bg-gray-200" />
           ))}
