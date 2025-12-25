@@ -9,6 +9,7 @@ export const insufficientConnectsIconURL = `${CDN_BASE_URL}/public/optimizedIcon
 export const noResultsFoundIconURL = `${CDN_BASE_URL}/public/optimizedIcons/large/no-results-found.svg`;
 export const howToUseConnectsIconURL = `${CDN_BASE_URL}/public/optimizedIcons/large/how-to-use-connects.svg`;
 export const howToUseConnectsMobileIconURL = `${CDN_BASE_URL}/public/optimizedIcons/large/how-to-use-connects-mobile.svg`;
+export const emailVerifiedIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/email-verified.svg`;
 
 export const placeholderImageURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/property-placeholder.svg`;
 export const propertyImageURL = `${CDN_BASE_URL}/public/images/property.webp`;
