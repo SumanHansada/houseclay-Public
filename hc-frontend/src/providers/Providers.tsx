@@ -1,7 +1,6 @@
 "use client";
 
-import { AnimatePresence } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 
 import { PWAInstallHandler } from "@/components/PWAInstallHandler";
@@ -11,6 +10,11 @@ import { DialogContextProvider } from "./DialogContextProvider";
 import QueryProvider from "./QueryProvider";
 import ReduxProvider from "./ReduxProvider";
 import { SkeletonProvider } from "./SkeletonProvider";
+
+// Lazy load AnimatePresence - only needed for page transitions
+const AnimatePresence = lazy(() =>
+  import("framer-motion").then((m) => ({ default: m.AnimatePresence })),
+);
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -43,7 +47,9 @@ const Providers: React.FC<ProvidersProps> = ({ children }) => {
           <DialogContextProvider>
             <SkeletonProvider>
               <PWAInstallHandler />
-              <AnimatePresence mode="wait">{children}</AnimatePresence>
+              <Suspense fallback={children}>
+                <AnimatePresence mode="wait">{children}</AnimatePresence>
+              </Suspense>
               <Toaster
                 position={toasterPosition}
                 containerClassName="toaster-container"

@@ -1,20 +1,31 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { lazy, Suspense, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
 
-import Advantages from "@/components/Advantages";
-import Neighbourhoods from "@/components/Neighborhoods";
-import PropertyOwners from "@/components/PropertyOwners";
-import Standouts from "@/components/Standouts";
-import { Testimonials } from "@/components/Testimonials";
-import { StandoutsDialog } from "@/dialogs";
 import { Testimonial } from "@/interfaces/Testimonial";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useLazyPopularNeighbourhoodsQuery,
   useLazyStandoutsQuery,
 } from "@/store/apiSlice";
+
+// Lazy load components
+const Advantages = lazy(() => import("@/components/Advantages"));
+const Neighbourhoods = lazy(() => import("@/components/Neighborhoods"));
+const PropertyOwners = lazy(() => import("@/components/PropertyOwners"));
+const Standouts = lazy(() => import("@/components/Standouts"));
+const Testimonials = lazy(() =>
+  import("@/components/Testimonials").then((m) => ({
+    default: m.Testimonials,
+  })),
+);
+const StandoutsDialog = lazy(() =>
+  import("@/dialogs").then((m) => ({ default: m.StandoutsDialog })),
+);
+
+// Simple fallback component
+const SectionFallback = () => <div className="min-h-[500px] w-full" />;
 
 interface ClientPageProps {
   testimonials: Testimonial[];
@@ -71,39 +82,51 @@ export default function ClientPage({ testimonials }: ClientPageProps) {
     <>
       {/* Advantages Section */}
       <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
-        <Advantages />
+        <Suspense fallback={<SectionFallback />}>
+          <Advantages />
+        </Suspense>
       </section>
 
       {/* Standouts Section */}
       {standoutProperties.length > 3 ? (
         <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
-          <Standouts properties={standoutProperties} />
+          <Suspense fallback={<SectionFallback />}>
+            <Standouts properties={standoutProperties} />
+          </Suspense>
         </section>
       ) : null}
 
       {/* neighbourhoods Section */}
       {neighbourhoodData && neighbourhoodData.length > 3 ? (
         <section className="min-h-[500px] w-full overflow-hidden">
-          <Neighbourhoods neighbourhoods={neighbourhoodData} />
+          <Suspense fallback={<SectionFallback />}>
+            <Neighbourhoods neighbourhoods={neighbourhoodData} />
+          </Suspense>
         </section>
       ) : null}
 
       {/* Testimonials Section */}
       <section className="min-h-[500px] w-full overflow-hidden">
-        <Testimonials testimonials={testimonials} />
+        <Suspense fallback={<SectionFallback />}>
+          <Testimonials testimonials={testimonials} />
+        </Suspense>
       </section>
 
       {/* Property Owners Section */}
       <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
-        <PropertyOwners />
+        <Suspense fallback={<SectionFallback />}>
+          <PropertyOwners />
+        </Suspense>
       </section>
 
       {/* Standouts Dialog */}
       {isDialogOpen("standouts-dialog") && standoutProperties.length > 0 && (
-        <StandoutsDialog
-          id="standouts-dialog"
-          properties={standoutProperties}
-        />
+        <Suspense fallback={null}>
+          <StandoutsDialog
+            id="standouts-dialog"
+            properties={standoutProperties}
+          />
+        </Suspense>
       )}
     </>
   );

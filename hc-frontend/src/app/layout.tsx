@@ -3,6 +3,7 @@ import "./globals.css";
 import { Viewport } from "next";
 import { Inter, Nunito } from "next/font/google";
 import Script from "next/script";
+import { lazy, Suspense } from "react";
 
 import {
   DisableScrollRestoration,
@@ -10,8 +11,10 @@ import {
   StickyNavbar,
 } from "@/layout-components";
 import { ConditionalPageTransition } from "@/layout-components";
-import CommonDialogs from "@/layout-components/CommonDialogs";
 import Providers from "@/providers/Providers";
+
+// Lazy load CommonDialogs - dialogs are conditionally rendered
+const CommonDialogs = lazy(() => import("@/layout-components/CommonDialogs"));
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -330,7 +333,9 @@ export default function RootLayout({
                 <>
                   <DisableScrollRestoration />
                   {children}
-                  <CommonDialogs />
+                  <Suspense fallback={null}>
+                    <CommonDialogs />
+                  </Suspense>
                 </>
               </main>
             </ConditionalPageTransition>

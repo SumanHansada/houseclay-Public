@@ -1,9 +1,12 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { ReactNode } from "react";
+import { lazy, ReactNode, Suspense, useMemo } from "react";
 
-import PageTransition, { TransitionType } from "./PageTransition";
+import type { TransitionType } from "./PageTransition";
+
+// Lazy load PageTransition
+const PageTransition = lazy(() => import("./PageTransition"));
 
 interface ConditionalPageTransitionProps {
   children: ReactNode;
@@ -26,17 +29,25 @@ export default function ConditionalPageTransition({
   const pathname = usePathname();
 
   // Check if current pathname should skip transitions
-  const shouldSkipTransition = skipTransitionPaths.some((path) =>
-    pathname.startsWith(path),
+  const shouldSkipTransition = useMemo(
+    () => skipTransitionPaths.some((path) => pathname.startsWith(path)),
+    [pathname, skipTransitionPaths],
   );
 
+  // If transitions are disabled, render children directly
+  if (shouldSkipTransition) {
+    return <>{children}</>;
+  }
+
   return (
-    <PageTransition
-      transitionType={transitionType}
-      backTransitionType={backTransitionType}
-      disabled={shouldSkipTransition}
-    >
-      {children}
-    </PageTransition>
+    <Suspense fallback={<div>{children}</div>}>
+      <PageTransition
+        transitionType={transitionType}
+        backTransitionType={backTransitionType}
+        disabled={shouldSkipTransition}
+      >
+        {children}
+      </PageTransition>
+    </Suspense>
   );
 }
