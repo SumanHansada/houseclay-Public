@@ -74,7 +74,7 @@ export const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
   //   setActiveSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
   // };
   return (
-    <div className="mx-auto xl:px-28 lg:px-14 md:px-14 px-6 max-md:py-6 py-12">
+    <div className="mx-auto xl:px-28 lg:px-14 md:px-14 px-6 max-md:pt-6 max-md:pb-8 py-12">
       {/* Top user avatars row */}
       <div className="mb-8 flex justify-center">
         <ImageWithLoader

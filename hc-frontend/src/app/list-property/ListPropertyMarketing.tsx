@@ -30,10 +30,10 @@ const ListPropertyMarketing = () => {
             <div className="flex justify-around items-center gap-16">
               <div className="flex flex-col w-1/2">
                 <h2 className="text-3xl font-bold text-gray-800">
-                  Trusted by Landlords Across Top Cities
+                  Trusted by Landlords Across Bengaluru
                 </h2>
                 <p className="mt-4 text-base text-gray-600">
-                  Trusted by landlords in top cities to deliver fast, reliable,
+                  Trusted by landlords in Bengaluru to deliver fast, reliable,
                   and hassle-free property listing solutions!
                 </p>
               </div>

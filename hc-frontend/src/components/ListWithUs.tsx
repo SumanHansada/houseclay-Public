@@ -45,7 +45,7 @@ const ListWithUs: React.FC = () => {
             </div>
           </div>
           <div className="text-lg font-medium text-gray-800">
-            1 lac+ tenants/buyers connections
+            10k+ tenant connections
           </div>
         </div>
       </div>

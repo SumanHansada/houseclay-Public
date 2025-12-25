@@ -12,13 +12,12 @@ const PropertyOwners: React.FC = () => {
           For Property Owners
         </span>
         <h1 className="text-3xl font-bold mt-4">
-          Sell or Rent your <span className="text-black">property</span>{" "}
+          Rent out your <span className="text-black">property</span>{" "}
           <span className="text-red-600">quickly</span>
         </h1>
         <p className="text-gray-600 mt-2">
-          Easily sell or rent your property. Our platform ensures fast,
-          hassle-free transactions, connecting you with the right buyers or
-          tenants in no time.
+          Our platform ensures fast, hassle-free closures, connecting you to the
+          right tenants in no time.
         </p>
         <Link
           href="/list-property"
