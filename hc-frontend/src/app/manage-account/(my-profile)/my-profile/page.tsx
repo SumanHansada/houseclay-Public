@@ -5,6 +5,10 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
+  EMAIL_VERIFICATION_DIALOG_ID,
+  EMAIL_VERIFICATION_SUCCESS_DIALOG_ID,
+} from "@/common/dialogConstants";
+import {
   EmailVerificationDialog,
   EmailVerificationSuccessDialog,
 } from "@/dialogs";
@@ -22,10 +26,6 @@ import { getErrorMessage } from "@/utils/rtkQueryHelpers";
 import { DesktopClient } from "./DesktopClient";
 import Loading from "./loading";
 import { MobileClient } from "./MobileClient";
-
-const EMAIL_VERIFICATION_DIALOG_ID = "email-verification-dialog";
-const EMAIL_VERIFICATION_SUCCESS_DIALOG_ID =
-  "email-verification-success-dialog";
 
 export default function MyProfilePage() {
   const { isDialogOpen, openDialog, closeDialog } = useDialog();
