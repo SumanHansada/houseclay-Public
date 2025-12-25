@@ -2,9 +2,9 @@ import https from "https";
 import fs from "fs";
 import next from "next";
 
-const dev = true;
-const hostname = "localhost.houseclay.com";
-const port = 3000;
+const dev = process.env.NODE_ENV !== "production";
+const hostname = process.env.HOSTNAME || "localhost.houseclay.com";
+const port = parseInt(process.env.PORT || "3000", 10);
 
 const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
