@@ -2,9 +2,9 @@
 
 import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import EmailVerifiedIconSvg from "public/icons/email-verified.svg";
 
 import { Button } from "@/base-components";
+import { emailVerifiedIconURL } from "@/common/cdnURLs";
 import {
   Dialog,
   DialogContent,
@@ -13,11 +13,7 @@ import {
 } from "@/components/Dialog";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
-import { SvgIcon } from "@/utility-components";
-
-const EmailVerifiedIcon = EmailVerifiedIconSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
+import { RemoteSvg, SvgIcon } from "@/utility-components";
 
 interface EmailVerificationSuccessDialogProps {
   id: string;
@@ -58,7 +54,7 @@ const EmailVerificationSuccessDialog: React.FC<
       </DialogHeader>
       <DialogContent>
         <div className="p-6 flex flex-col gap-4 items-center">
-          <EmailVerifiedIcon />
+          <RemoteSvg src={emailVerifiedIconURL} />
           <div className="text-center w-11/12 mb-2">
             <h1 className="text-3xl font-medium mb-1 max-md:hidden">
               Email Verified!

@@ -13,3 +13,6 @@ export const STANDOUTS_DIALOG_ID = "standouts-dialog";
 export const CONNECTS_PRICE_BREAKDOWN_DIALOG_ID =
   "connects-price-breakdown-dialog";
 export const VERIFY_CONNECTS_DIALOG_ID = "verify-connects-dialog";
+export const EMAIL_VERIFICATION_DIALOG_ID = "email-verification-dialog";
+export const EMAIL_VERIFICATION_SUCCESS_DIALOG_ID =
+  "email-verification-success-dialog";
