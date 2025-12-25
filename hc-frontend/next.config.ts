@@ -27,6 +27,20 @@ const nextConfig: NextConfig = {
     formats: ["image/webp", "image/avif"],
     minimumCacheTTL: 3600,
   },
+  // Cache-Control headers for static assets
+  async headers() {
+    return [
+      {
+        source: "/optimizedIcons/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+    ];
+  },
   // Turbopack configuration for development
   turbopack: {
     rules: {

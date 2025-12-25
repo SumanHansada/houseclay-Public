@@ -9,8 +9,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import VerifiedTenantsSvg from "public/icons/verified-tenants.svg";
-import ZeroPercentRedSvg from "public/icons/zero-percent-red.svg";
 import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -26,13 +24,6 @@ import { useDialog } from "@/providers/DialogContextProvider";
 import { setAuthStep, setLoginFromAddProperty } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
-
-const ZeroPercentRed = ZeroPercentRedSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const VerifiedTenants = VerifiedTenantsSvg as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
 
 interface MenuDialogProps {
   id: string;
@@ -145,11 +136,11 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
               </h2>
               <div className="relative flex flex-col z-10">
                 <div className="flex items-center text-gray-700 gap-2">
-                  <VerifiedTenants />
+                  <SvgIcon name="verified-tenants" size={20} />
                   <span>Verified Tenants/Buyers.</span>
                 </div>
                 <div className="flex items-center text-gray-700 gap-2">
-                  <ZeroPercentRed fill="text-red-500" />
+                  <SvgIcon name="zero-percent-red" size={22} />
                   <span>Zero Brokerage.</span>
                 </div>
               </div>
