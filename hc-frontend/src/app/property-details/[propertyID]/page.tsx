@@ -10,6 +10,11 @@ import { ServerAPIService } from "@/services/serverAPIService";
 
 import { PropertyDetailsClient } from "./PropertyDetailsClient";
 
+// Cache the page for 6 hours (21600 seconds)
+// This enables ISR: first request generates the page, subsequent requests use cache
+// The page will be cached per propertyID
+export const revalidate = 21600;
+
 type PropertyParams = Promise<{ propertyID: string }>;
 
 type PropertyData = {

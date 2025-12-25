@@ -1,16 +1,9 @@
-import { PropertyCategory } from "@/common/enums";
-
 import { MyPropertyDetailsClient } from "./MyPropertyDetailsClient";
 
-export const fetchCache = "force-no-store";
-
-export async function generateStaticParams() {
-  return [
-    { propertyCategory: PropertyCategory.RENT.toLowerCase() },
-    { propertyCategory: PropertyCategory.RESALE.toLowerCase() },
-    { propertyCategory: PropertyCategory.FLATMATE.toLowerCase() },
-  ];
-}
+// Cache the page for 1 hour (3600 seconds)
+// This enables ISR: first request generates the page, subsequent requests use cache
+// The page will be cached per propertyCategory + propertyID combination
+export const revalidate = 3600;
 
 // Server Component
 async function MyPropertyDetails({
