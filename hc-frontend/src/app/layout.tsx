@@ -83,6 +83,20 @@ export default function RootLayout({
           fetchPriority="high"
         />
 
+        <link
+          rel="preload"
+          as="image"
+          href="https://cdn.houseclay.com/public/images/banner-background.webp"
+          imageSrcSet="
+          https://cdn.houseclay.com/public/images/banner-background-640w.webp 640w,
+          https://cdn.houseclay.com/public/images/banner-background-768w.webp 768w,
+          https://cdn.houseclay.com/public/images/banner-background-1024w.webp 1024w,
+          https://cdn.houseclay.com/public/images/banner-background-1280w.webp 1280w,
+          https://cdn.houseclay.com/public/images/banner-background-2560w.webp 2560w"
+          imageSizes="(max-width: 768px) 100vw, (max-width: 1280px) 100vw, 1280px"
+          fetchPriority="high"
+        />
+
         {/* Critical meta tags - must come before splash screens */}
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />

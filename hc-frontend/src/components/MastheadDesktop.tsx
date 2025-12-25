@@ -23,7 +23,7 @@ const MastHeadDesktop = () => {
           https://cdn.houseclay.com/public/images/banner-background-1280w.webp 1280w,
           https://cdn.houseclay.com/public/images/banner-background-2560w.webp 2560w"
           sizes="(max-width: 768px) 100vw, (max-width: 1280px) 100vw, 1280px"
-          alt=""
+          alt="Houseclay Banner Background"
           fetchPriority="high"
           decoding="async"
           className="w-full h-full object-cover"
