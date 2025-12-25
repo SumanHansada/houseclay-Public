@@ -3,8 +3,9 @@
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 
+import { howToUseConnectsIconURL } from "@/common/cdnURLs";
 import { RootState } from "@/store/store";
-import { SvgIcon } from "@/utility-components";
+import { RemoteSvg, SvgIcon } from "@/utility-components";
 
 import Loading from "./loading";
 
@@ -118,7 +119,10 @@ export default function ConnectsPage() {
             </button>
           </div>
           <div className="lg:w-1/3 max-lg:hidden lg:pt-12 2xl:pt-0">
-            <SvgIcon iconSize="large" name="how-to-use-connects" size={380} />
+            <RemoteSvg
+              src={howToUseConnectsIconURL}
+              className="md:w-16 md:h-16 lg:w-48 lg:h-48 xl:w-80 xl:h-80"
+            />
           </div>
         </div>
       </section>

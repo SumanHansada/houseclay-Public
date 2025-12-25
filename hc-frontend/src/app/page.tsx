@@ -2,14 +2,11 @@ import { Suspense } from "react";
 
 import MastheadDesktopClient from "@/components/MastheadDesktopClient";
 import MastHeadMobileClient from "@/components/MastheadMobileClient";
-import TESTIMONIALS_DATA from "@/data/TestimonialsData.json";
 import { Footer } from "@/layout-components";
 
 import ClientPage from "./ClientPage";
 
 export default async function Home() {
-  const testimonials = TESTIMONIALS_DATA;
-
   return (
     <>
       {/* Masthead Desktop Section */}
@@ -23,7 +20,7 @@ export default async function Home() {
 
       {/* Client-side interactive components */}
       <Suspense fallback={<div>Loading...</div>}>
-        <ClientPage testimonials={testimonials} />
+        <ClientPage />
       </Suspense>
 
       <Footer />

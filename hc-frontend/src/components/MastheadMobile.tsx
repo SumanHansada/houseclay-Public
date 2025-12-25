@@ -1,4 +1,3 @@
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 // import bannerBackgroundMobile from "public/images/banner-background-mobile.webp";
@@ -15,27 +14,9 @@ import {
 } from "@/store/listPropertySlice";
 import { setPropertyCategory as setSearchPropertyCategory } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
+import { SvgIcon } from "@/utility-components";
 
 import HomeSearchBar from "./HomeSearchBar";
-
-const FindFlatmates = dynamic(
-  () => import("public/icons/find-flatmates.svg"),
-) as React.FC<React.SVGProps<SVGSVGElement>>;
-const FindRooms = dynamic(
-  () => import("public/icons/find-rooms.svg"),
-) as React.FC<React.SVGProps<SVGSVGElement>>;
-const WeeklyStandouts = dynamic(
-  () => import("public/icons/weekly-standouts.svg"),
-) as React.FC<React.SVGProps<SVGSVGElement>>;
-const ListProperty = dynamic(
-  () => import("public/icons/list-property.svg"),
-) as React.FC<React.SVGProps<SVGSVGElement>>;
-const Deal = dynamic(() => import("public/icons/deal.svg")) as React.FC<
-  React.SVGProps<SVGSVGElement>
->;
-const ZeroPercent = dynamic(
-  () => import("public/icons/zero-percent.svg"),
-) as React.FC<React.SVGProps<SVGSVGElement>>;
 
 const FIND_FLATMATES_DIALOG_ID = "find-flatmates-dialog";
 
@@ -80,7 +61,7 @@ const MastHeadMobile: React.FC = () => {
             onClick={() =>
               dispatch(setSearchPropertyCategory(PropertyCategory.RENT))
             }
-            className={`w-1/2 py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.RENT ? "text-red-500 border-red-500" : "text-gray-700 "}`}
+            className={`w-1/2 py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.RENT ? "text-red-600 border-red-600" : "text-gray-700 "}`}
           >
             Flats for rent
           </button>
@@ -88,7 +69,7 @@ const MastHeadMobile: React.FC = () => {
             onClick={() =>
               dispatch(setSearchPropertyCategory(PropertyCategory.FLATMATE))
             }
-            className={`w-1/2 py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.FLATMATE ? "text-red-500 border-red-500" : "text-gray-700 "}`}
+            className={`w-1/2 py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.FLATMATE ? "text-red-600 border-red-600" : "text-gray-700 "}`}
           >
             Find rooms
           </button>
@@ -96,7 +77,7 @@ const MastHeadMobile: React.FC = () => {
             onClick={() =>
               dispatch(setPropertyCategory(PropertyCategory.RESALE))
             }
-            className={`px-8 py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.RESALE ? "text-red-500 border-red-500" : "text-gray-700 "}`}
+            className={`px-8 py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.RESALE ? "text-red-600 border-red-600" : "text-gray-700 "}`}
           >
             Buy
           </button> */}
@@ -112,7 +93,7 @@ const MastHeadMobile: React.FC = () => {
           <span className="text-xl font-bold font-inter text-nowrap">
             Stop Searching.
           </span>
-          <span className="text-xl font-nunito text-red-500 text-nowrap">
+          <span className="text-xl font-nunito text-red-600 text-nowrap">
             Start Connecting.
           </span>
         </div>
@@ -128,8 +109,8 @@ const MastHeadMobile: React.FC = () => {
             aria-label="find-flatmates"
             onClick={() => openDialog(FIND_FLATMATES_DIALOG_ID)}
           >
-            <div className="rounded-full">
-              <FindFlatmates />
+            <div className="rounded-full w-10 h-10 items-center justify-center">
+              <SvgIcon name="find-flatmates" size={40} />
             </div>
           </button>
           <div className="text-center mt-2">
@@ -149,8 +130,8 @@ const MastHeadMobile: React.FC = () => {
             className="bg-white p-4 border border-gray-200 rounded-2xl shadow-lg justify-center items-center"
             aria-label="find-rooms"
           >
-            <div className="rounded-full">
-              <FindRooms />
+            <div className="rounded-full w-10 h-10 flex items-center justify-center">
+              <SvgIcon name="find-rooms" size={40} />
             </div>
           </Link>
           <div className="text-center mt-2">
@@ -166,8 +147,8 @@ const MastHeadMobile: React.FC = () => {
             name="weekly-standouts"
             aria-label="weekly-standouts"
           >
-            <div className="rounded-full">
-              <WeeklyStandouts />
+            <div className="rounded-full w-10 h-10 flex items-center justify-center">
+              <SvgIcon name="weekly-standouts" size={40} />
             </div>
           </button>
           <div className="text-center mt-2">
@@ -176,20 +157,18 @@ const MastHeadMobile: React.FC = () => {
         </div>
 
         <div className="flex flex-col items-center justify-center self-start justify-self-center">
-          <button
+          <Link
+            href="/list-property"
             className="bg-white p-4 border border-gray-200 rounded-2xl shadow-lg justify-center items-center relative"
-            onClick={() => router.push("/list-property")}
-            role="button"
-            name="list-property"
             aria-label="list-property"
           >
-            <div className="absolute -top-2 -right-2 bg-red-500 text-white px-2 py-0.5 text-xs rounded">
+            <div className="absolute -top-2 -right-2 bg-red-600 text-white px-2 py-0.5 text-xs rounded">
               FREE
             </div>
-            <div className="rounded-full">
-              <ListProperty />
+            <div className="rounded-full w-10 h-10 flex items-center justify-center">
+              <SvgIcon name="list-property" size={40} />
             </div>
-          </button>
+          </Link>
           <div className="text-center mt-2 flex-1">
             <div className="text-sm font-nunito">List Your Property</div>
           </div>
@@ -222,18 +201,18 @@ const MastHeadMobile: React.FC = () => {
             </p>
 
             <div className="flex items-center mt-2 gap-2">
-              <ZeroPercent />
+              <SvgIcon name="zero-percent" size={24} />
               <span className="text-sm">ZERO brokerage</span>
             </div>
 
             <div className="flex items-center mt-2 gap-3">
-              <Deal />
+              <SvgIcon name="deal" size={21} />
               <span className="text-sm">Direct Deals</span>
             </div>
           </div>
         </div>
         <button
-          className="absolute right-6 -bottom-6 bg-red-500 text-white font-nunito px-4 py-2 rounded-2xl border-4 border-red-100 font-bold"
+          className="absolute right-6 -bottom-6 bg-red-600 text-white font-nunito px-4 py-2 rounded-2xl border-4 border-red-100 font-bold"
           onClick={() => router.push("/what-are-connects")}
         >
           Know More

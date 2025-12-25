@@ -3,7 +3,6 @@
 import { lazy, Suspense, useEffect, useMemo } from "react";
 import toast from "react-hot-toast";
 
-import { Testimonial } from "@/interfaces/Testimonial";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useLazyPopularNeighbourhoodsQuery,
@@ -24,14 +23,14 @@ const StandoutsDialog = lazy(() =>
   import("@/dialogs").then((m) => ({ default: m.StandoutsDialog })),
 );
 
+import TESTIMONIALS_DATA from "@/data/TestimonialsData.json";
+
 // Simple fallback component
-const SectionFallback = () => <div className="min-h-[500px] w-full" />;
+const SectionFallback = () => (
+  <div className="min-h-[500px] w-full animate-pulse" />
+);
 
-interface ClientPageProps {
-  testimonials: Testimonial[];
-}
-
-export default function ClientPage({ testimonials }: ClientPageProps) {
+export default function ClientPage() {
   const { isDialogOpen, closeDialog } = useDialog();
 
   const [getPopularNeighbourhoods, { data: neighbourhoodData }] =
@@ -108,7 +107,7 @@ export default function ClientPage({ testimonials }: ClientPageProps) {
       {/* Testimonials Section */}
       <section className="min-h-[500px] w-full overflow-hidden">
         <Suspense fallback={<SectionFallback />}>
-          <Testimonials testimonials={testimonials} />
+          <Testimonials testimonials={TESTIMONIALS_DATA} />
         </Suspense>
       </section>
 

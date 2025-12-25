@@ -2,7 +2,18 @@
 
 import { motion, Variants } from "framer-motion";
 import { usePathname } from "next/navigation";
-import React, { ReactNode, useEffect, useRef, useState } from "react";
+import React, {
+  lazy,
+  ReactNode,
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
+const AnimatePresence = lazy(() =>
+  import("framer-motion").then((m) => ({ default: m.AnimatePresence })),
+);
 
 export type TransitionType =
   | "fade"
@@ -70,6 +81,9 @@ const PageTransition: React.FC<PageTransitionProps> = ({
   disabled = false,
 }) => {
   const pathname = usePathname();
+
+  // Lazy load AnimatePresence - only needed for page transitions
+
   const [isBackNavigation, setIsBackNavigation] = useState(false);
   const historyRef = useRef<string[]>([]);
 
@@ -112,20 +126,25 @@ const PageTransition: React.FC<PageTransitionProps> = ({
   const variants = transitionVariants[activeTransitionType];
 
   return (
-    <motion.div
-      key={pathname}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={variants}
-      transition={{
-        duration,
-        ease: [0.22, 1, 0.36, 1], // Custom easing for smooth transitions
-      }}
-      className={className}
-    >
-      {children}
-    </motion.div>
+    <Suspense fallback={children}>
+      <AnimatePresence mode="wait">
+        {" "}
+        <motion.div
+          key={pathname}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          variants={variants}
+          transition={{
+            duration,
+            ease: [0.22, 1, 0.36, 1], // Custom easing for smooth transitions
+          }}
+          className={className}
+        >
+          {children}
+        </motion.div>
+      </AnimatePresence>
+    </Suspense>
   );
 };
 

@@ -104,7 +104,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
           <MobileHeader.RightAction>
             {isAuthenticated ? null : (
               <button
-                className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-xl border-orange-600 text-orange-600 hover:bg-gray-100 text-center text-sm"
+                className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-xl border-red-600 text-red-600 hover:bg-gray-100 text-center text-sm"
                 onClick={onLogin}
               >
                 Log In

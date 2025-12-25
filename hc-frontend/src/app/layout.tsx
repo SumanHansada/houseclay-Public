@@ -30,12 +30,16 @@ const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
+  display: "swap", // Optimize font loading
+  preload: true,
 });
 
 const nutino = Nunito({
   variable: "--font-nunito",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
+  display: "swap", // Optimize font loading
+  preload: true,
 });
 
 export const viewport: Viewport = {

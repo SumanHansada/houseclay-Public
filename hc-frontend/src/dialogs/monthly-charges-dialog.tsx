@@ -25,6 +25,7 @@ const MonthlyChargesDialog: React.FC<MonthlyChargesDialogProps> = ({
       type="bottom-sheet"
       onClose={onClose}
       width={100}
+      height={20}
       entryAnimation="animate-slide-in-bottom"
       exitAnimation="animate-slide-out-bottom"
     >

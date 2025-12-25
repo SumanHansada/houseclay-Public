@@ -39,7 +39,48 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 pb-safe-bottom bg-white border-t  border-gray-200 shadow-md z-40 w-full md:hidden ">
-      <ul className="relative grid grid-cols-5 place-items-center py-2">
+      <div className="relative grid grid-cols-5 place-items-center py-2">
+        <ul className="contents">
+          {STICKY_NAV_ITEMS.map((item) => {
+            const isActive = isTabActive(item);
+
+            return (
+              <li key={item.id}>
+                <Link
+                  href={item.href}
+                  className="flex flex-col items-center justify-center relative w-16"
+                  onClick={() => handleNavClick(item.id)}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  <div
+                    className={`p-1 flex relative justify-center items-center ${
+                      isActive
+                        ? "text-red-500 border-red-500 stroke-red-500 fill-red-500"
+                        : "text-gray-500"
+                    }`}
+                  >
+                    {item.icon}
+                    {item.badge && (
+                      <div
+                        className="absolute top-0 right-0 -mt-0.5 -mr-0.5 bg-red-500 text-white text-xxs rounded-full w-4 h-4 min-w-fit px-1 flex items-center justify-center"
+                        aria-label={`${connectBal || 0} connects`}
+                      >
+                        {connectBal || 0}
+                      </div>
+                    )}
+                  </div>
+                  <span
+                    className={`text-xs ${
+                      isActive ? "text-red-500" : "text-gray-500"
+                    }`}
+                  >
+                    {item.label}
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
         {/* 1. Glow (below) */}
         {activeIndex >= 0 && (
           <span
@@ -61,47 +102,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
             }}
           />
         )}
-
-        {STICKY_NAV_ITEMS.map((item) => {
-          const isActive = isTabActive(item);
-
-          return (
-            <li key={item.id}>
-              <Link
-                href={item.href}
-                className="flex flex-col items-center justify-center relative w-16"
-                onClick={() => handleNavClick(item.id)}
-                aria-current={isActive ? "page" : undefined}
-              >
-                <div
-                  className={`p-1 flex relative justify-center items-center ${
-                    isActive
-                      ? "text-red-500 border-red-500 stroke-red-500 fill-red-500"
-                      : "text-gray-500"
-                  }`}
-                >
-                  {item.icon}
-                  {item.badge && (
-                    <div
-                      className="absolute top-0 right-0 -mt-0.5 -mr-0.5 bg-red-500 text-white text-xxs rounded-full w-4 h-4 min-w-fit px-1 flex items-center justify-center"
-                      aria-label={`${connectBal || 0} connects`}
-                    >
-                      {connectBal || 0}
-                    </div>
-                  )}
-                </div>
-                <span
-                  className={`text-xs ${
-                    isActive ? "text-red-500" : "text-gray-500"
-                  }`}
-                >
-                  {item.label}
-                </span>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
+      </div>
     </nav>
   );
 };

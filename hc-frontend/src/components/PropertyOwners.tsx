@@ -5,7 +5,7 @@ import { ImageWithLoader } from "@/utility-components";
 
 const PropertyOwners: React.FC = () => {
   return (
-    <div className="mx-auto xl:px-28 lg:px-14 md:px-14 px-6 py-12 flex flex-col md:flex-row items-center justify-between bg-white">
+    <div className="mx-auto xl:px-28 lg:px-14 md:px-14 px-6 max-md:py-6 py-12 flex flex-col md:flex-row items-center justify-between bg-white">
       {/* Left Side - Text Content */}
       <div className="flex-col flex-1 text-left items-center">
         <span className="bg-red-50 text-red-700 px-4 py-2 rounded-full text-sm ">
