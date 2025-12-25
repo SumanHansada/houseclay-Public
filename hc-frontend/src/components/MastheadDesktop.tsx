@@ -1,13 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 
-import { CDN_BASE_URL } from "@/common/constants";
 import { PropertyCategory } from "@/common/enums";
 import HomeSearchBar from "@/components/HomeSearchBar";
 import { setPropertyCategory } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
-
-const bannerBackgroundURL =
-  CDN_BASE_URL + "/public/images/banner-background.webp";
 
 const MastHeadDesktop = () => {
   const propertyCategory = useSelector(
@@ -19,16 +15,18 @@ const MastHeadDesktop = () => {
     <>
       <div className="absolute inset-0">
         <img
-          src={bannerBackgroundURL}
-          alt="Banner Background"
+          src="https://cdn.houseclay.com/public/images/banner-background.webp"
+          srcSet="
+          https://cdn.houseclay.com/public/images/banner-background-640w.webp 640w,
+          https://cdn.houseclay.com/public/images/banner-background-768w.webp 768w,
+          https://cdn.houseclay.com/public/images/banner-background-1024w.webp 1024w,
+          https://cdn.houseclay.com/public/images/banner-background-1280w.webp 1280w,
+          https://cdn.houseclay.com/public/images/banner-background-2560w.webp 2560w"
+          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 100vw, 1280px"
+          alt=""
           fetchPriority="high"
           decoding="async"
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            objectPosition: "right",
-          }}
+          className="w-full h-full object-cover"
         />
       </div>
       <div className="absolute h-full flex flex-col justify-center xl:pl-40 lg:pl-14 pl-14 xl:w-7/12 lg:w-7/12 md:w-4/5 w-4/5">

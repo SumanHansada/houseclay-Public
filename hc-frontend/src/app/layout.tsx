@@ -75,13 +75,6 @@ export default function RootLayout({
         <link
           rel="preload"
           as="image"
-          href="https://cdn.houseclay.com/public/images/banner-background.webp"
-          fetchPriority="high"
-        />
-
-        <link
-          rel="preload"
-          as="image"
           href="https://cdn.houseclay.com/public/images/banner-people-mobile.webp"
           fetchPriority="high"
         />
