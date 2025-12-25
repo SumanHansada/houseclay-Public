@@ -1082,9 +1082,9 @@ export function PropertyDetailsClient({
                               </Link>
                               <Link
                                 className="flex items-center justify-center flex-1 gap-1 border rounded-lg py-2 hover:bg-green-600 bg-green-500"
-                                href={`https://wa.me/${owner?.phoneNo}`}
+                                href={`https://wa.me/${owner?.phoneNo}?text=${encodeURIComponent("Hey, I got your number regarding your property from HouseClay.")}`}
                                 target="_blank"
-                                rel="noreferrer"
+                                rel="noopener noreferrer"
                               >
                                 <SvgIcon
                                   iconSize="small"
@@ -1669,9 +1669,9 @@ export function PropertyDetailsClient({
                   </a>
                   <a
                     className="flex items-center justify-center gap-1 border rounded-lg px-2 py-2.5 hover:bg-green-100 border-green-500 w-1/2"
-                    href={`https://wa.me/${owner?.phoneNo}`}
+                    href={`https://wa.me/${owner?.phoneNo}?text=${encodeURIComponent("Hey, I got your number regarding your property from HouseClay.")}`}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                   >
                     <SvgIcon
                       iconSize="small"

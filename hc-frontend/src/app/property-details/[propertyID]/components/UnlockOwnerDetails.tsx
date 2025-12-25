@@ -202,9 +202,9 @@ export const UnlockOwnerDetails = ({
                 </Link>
                 <Link
                   className="flex items-center justify-center flex-1 gap-1 border border-green-500 rounded-lg py-2 hover:bg-green-100"
-                  href={`https://wa.me/${apiResponse.owner.phoneNo}`}
+                  href={`https://wa.me/${apiResponse.owner.phoneNo}?text=${encodeURIComponent("Hey, I got your number regarding your property from HouseClay.")}`}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                 >
                   <SvgIcon
                     iconSize="small"
@@ -291,9 +291,9 @@ export const UnlockOwnerDetails = ({
                 </Link>
                 <Link
                   className="flex items-center justify-center flex-1 gap-1 border border-green-500 rounded-lg py-2 hover:bg-green-100"
-                  href={`https://wa.me/${apiResponse.owner.phoneNo}`}
+                  href={`https://wa.me/${apiResponse.owner.phoneNo}?text=${encodeURIComponent("Hey, I got your number regarding your property from HouseClay.")}`}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                 >
                   <SvgIcon
                     iconSize="small"

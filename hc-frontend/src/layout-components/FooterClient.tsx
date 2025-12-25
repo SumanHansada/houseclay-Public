@@ -31,7 +31,7 @@ const FooterClient: React.FC = () => {
         <div className="border-b border-gray-300 pt-24 pb-16">
           <div className="flex justify-between">
             {/* CTA Button and Description */}
-            <div className="space-y-3 w-1/2 lg:w-2/5 2xl:w-1/4">
+            <div className="space-y-3 w-1/2 lg:w-2/5 2xl:w-1/3">
               <div className="pb-4 space-y-4">
                 <div className="flex items-center">
                   <Link href="/" className="flex items-center gap-1">
@@ -48,8 +48,9 @@ const FooterClient: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-gray-600">
-                    Houseclay is an assistance based platform connecting owners
-                    and buyers, validating property and promising the best deal.
+                    Houseclay is a listing platform which helps connect verified
+                    owners and tenants without any middlemen/brokers promising a
+                    hassle-free experience.
                   </p>
                 </div>
                 <div className="flex justify-between">

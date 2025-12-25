@@ -16,7 +16,7 @@ const ListPropertyAdvantages: React.FC = () => {
         <div className="flex flex-1 flex-col bg-white rounded-3xl  border border-gray-200 shadow-lg xl:px-12 lg:px-6 px-3 py-6 justify-between items-center gap-4">
           <SvgIcon iconSize="large" name="fast-results" size={150} />
           <h1 className="font-bold text-center">Fast Results</h1>
-          <p className="text-center">Find tenants or buyers in under 3 days.</p>
+          <p className="text-center">Find tenants in under 3 days.</p>
         </div>
         <div className="flex flex-1 flex-col bg-white rounded-3xl border border-gray-200 shadow-lg xl:px-12 lg:px-6 px-3  py-6 justify-between items-center gap-4">
           <SvgIcon iconSize="medium" name="affordable-upgrades" size={150} />
@@ -29,7 +29,7 @@ const ListPropertyAdvantages: React.FC = () => {
           <SvgIcon iconSize="medium" name="connect-with-owners" size={150} />
           <h1 className="font-bold text-center">Wide Reach</h1>
           <p className="text-center">
-            Showcase your property to thousands across top cities.
+            Showcase your property to thousands across Bengaluru.
           </p>
         </div>
       </div>
