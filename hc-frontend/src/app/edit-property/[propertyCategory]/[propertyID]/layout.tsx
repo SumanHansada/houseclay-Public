@@ -7,13 +7,22 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { propertyAddGraphicURL } from "@/common/cdnURLs";
 import {
+  DELETE_PHOTOS_DIALOG_ID,
+  LIST_PROPERTY_SUCCESS_DIALOG_ID,
+  UPLOAD_PHOTOS_DIALOG_ID,
+} from "@/common/dialogConstants";
+import {
   ListPropertyFormStep,
   ListPropertyRouteStep,
   PropertyCategory,
 } from "@/common/enums";
 import { extractS3KeyFromUrl } from "@/common/utils";
 import Spinner from "@/components/Spinner";
-import { ListPropertySuccessDialog } from "@/dialogs";
+import {
+  DeletePhotosDialog,
+  ListPropertySuccessDialog,
+  UploadPhotosDialog,
+} from "@/dialogs";
 import { useS3Deleter } from "@/hooks/useS3Deleter";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
 import {
@@ -768,10 +777,20 @@ export default function EditPropertyTypeLayout({
         </div>
       </MobileFooter>
 
+      {/* Upload Dialog */}
+      {isDialogOpen(UPLOAD_PHOTOS_DIALOG_ID) && (
+        <UploadPhotosDialog id={UPLOAD_PHOTOS_DIALOG_ID} />
+      )}
+
+      {/* Delete Dialog */}
+      {isDialogOpen(DELETE_PHOTOS_DIALOG_ID) && (
+        <DeletePhotosDialog id={DELETE_PHOTOS_DIALOG_ID} />
+      )}
+
       {/* Success Dialog */}
-      {isDialogOpen("list-property-success-dialog") && (
+      {isDialogOpen(LIST_PROPERTY_SUCCESS_DIALOG_ID) && (
         <ListPropertySuccessDialog
-          id="list-property-success-dialog"
+          id={LIST_PROPERTY_SUCCESS_DIALOG_ID}
           propertyID={propertyID}
           propertyCategory={propertyCategory}
         />

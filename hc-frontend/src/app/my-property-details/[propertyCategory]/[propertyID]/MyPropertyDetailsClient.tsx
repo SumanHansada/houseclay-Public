@@ -58,7 +58,6 @@ import {
   twentyFourSevenIconURL,
   wifiIconURL,
 } from "@/common/cdnURLs";
-import { MARK_RENTED_ACTION_DIALOG_ID } from "@/common/constants";
 import {
   AMENITY_LABELS,
   AMENITY_VALUES,
@@ -74,6 +73,10 @@ import {
   WATER_SUPPLY_OPTIONS,
   YES_NO_OPTIONS,
 } from "@/common/dataConstants/options";
+import {
+  MARK_RENTED_ACTION_DIALOG_ID,
+  UPGRADE_PROPERTY_DIALOG_ID,
+} from "@/common/dialogConstants";
 import { LeadCategory, PropertyCategory, PropertyStatus } from "@/common/enums";
 import {
   formatDateToReadable,
@@ -84,6 +87,7 @@ import {
   toBase64,
 } from "@/common/utils";
 import Carousel2D from "@/components/Carousel2D";
+import { UpgradePropertyDialog } from "@/dialogs";
 import { ActionDialog } from "@/dialogs/action-dialog";
 import { Footer, MobileFooter, MobileHeader } from "@/layout-components";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -1080,6 +1084,11 @@ export function MyPropertyDetailsClient({
           onSuccess={async () => await refetch()}
           onClose={() => closeDialog(MARK_RENTED_ACTION_DIALOG_ID)}
         />
+      )}
+
+      {/* Upgrade Property Dialog */}
+      {isDialogOpen(UPGRADE_PROPERTY_DIALOG_ID) && (
+        <UpgradePropertyDialog id={UPGRADE_PROPERTY_DIALOG_ID} />
       )}
     </>
   );

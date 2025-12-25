@@ -3,6 +3,7 @@ import { Camera } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
+import { PHOTO_GALLERY_DIALOG_ID } from "@/common/dialogConstants";
 import { validateImages } from "@/common/utils";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -60,7 +61,7 @@ export default function PhotoGallery({
     setIsValidating(false);
 
     if (validated.length > 0) {
-      openDialog("photo-gallery-dialog");
+      openDialog(PHOTO_GALLERY_DIALOG_ID);
     } else {
       toast.error("No images found!");
     }

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { bannerPeopleMobileImageURL } from "@/common/cdnURLs";
 import { BENGALURU_LOCATION } from "@/common/constants";
+import { STANDOUTS_DIALOG_ID } from "@/common/dialogConstants";
 import { PropertyCategory } from "@/common/enums";
 import { generateUUID } from "@/common/utils";
 import { FindFlatmatesDialog } from "@/dialogs";
@@ -140,7 +141,7 @@ const MastHeadMobile: React.FC = () => {
           <button
             className="bg-white p-4 border border-gray-200 rounded-2xl shadow-lg justify-center items-center"
             role="button"
-            onClick={() => openDialog("standouts-dialog")}
+            onClick={() => openDialog(STANDOUTS_DIALOG_ID)}
             name="weekly-standouts"
             aria-label="weekly-standouts"
           >

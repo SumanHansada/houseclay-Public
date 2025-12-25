@@ -82,6 +82,11 @@ import {
   TOTAL_FLOORS_NUMERIC_OPTIONS,
   WATER_SUPPLY_OPTIONS,
 } from "@/common/dataConstants/options";
+import {
+  MONTHLY_CHARGES_DIALOG_ID,
+  PHOTO_GALLERY_DIALOG_ID,
+  REPORT_LISTING_DIALOG_ID,
+} from "@/common/dialogConstants";
 import { PropertyCategory } from "@/common/enums";
 import {
   formatDateToReadable,
@@ -1641,7 +1646,7 @@ export function PropertyDetailsClient({
                 <Info
                   size={16}
                   className="text-gray-600 hover:cursor-pointer"
-                  onClick={() => openDialog("monthly-charges-dialog")}
+                  onClick={() => openDialog(MONTHLY_CHARGES_DIALOG_ID)}
                 />
               </div>
             </div>
@@ -1699,11 +1704,11 @@ export function PropertyDetailsClient({
         </div>
       </MobileFooter>
       {/* Mobile Photo Gallery Dialog */}
-      {isDialogOpen("photo-gallery-dialog") && (
+      {isDialogOpen(PHOTO_GALLERY_DIALOG_ID) && (
         <PhotoGalleryDialog
-          id="photo-gallery-dialog"
+          id={PHOTO_GALLERY_DIALOG_ID}
           images={propertyImages || []}
-          onClose={() => closeDialog("photo-gallery-dialog")}
+          onClose={() => closeDialog(PHOTO_GALLERY_DIALOG_ID)}
         />
       )}
 
@@ -1728,22 +1733,22 @@ export function PropertyDetailsClient({
       )}
 
       {/* Monthly Charges mobile dialog */}
-      {isDialogOpen("monthly-charges-dialog") && (
+      {isDialogOpen(MONTHLY_CHARGES_DIALOG_ID) && (
         <MonthlyChargesDialog
-          id="monthly-charges-dialog"
+          id={MONTHLY_CHARGES_DIALOG_ID}
           rent={formattedPriceOrRentAmount}
           maintenance={maintenance}
-          onClose={() => closeDialog("monthly-charges-dialog")}
+          onClose={() => closeDialog(MONTHLY_CHARGES_DIALOG_ID)}
         />
       )}
 
       {/* Report this listing dialog */}
-      {isDialogOpen("report-listing-dialog") && (
+      {isDialogOpen(REPORT_LISTING_DIALOG_ID) && (
         <ReportListingDialog
-          id="report-listing-dialog"
+          id={REPORT_LISTING_DIALOG_ID}
           propertyId={propertyID}
           onClose={async () => {
-            closeDialog("report-listing-dialog");
+            closeDialog(REPORT_LISTING_DIALOG_ID);
             await refetchAuthPropertyDetails();
           }}
         />

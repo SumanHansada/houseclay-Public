@@ -7,13 +7,17 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { propertyAddGraphicURL } from "@/common/cdnURLs";
 import {
+  LIST_PROPERTY_SUCCESS_DIALOG_ID,
+  UPLOAD_PHOTOS_DIALOG_ID,
+} from "@/common/dialogConstants";
+import {
   ListPropertyFormStep,
   ListPropertyRouteStep,
   PropertyCategory,
 } from "@/common/enums";
 import { extractS3KeyFromUrl } from "@/common/utils";
 import Spinner from "@/components/Spinner";
-import { ListPropertySuccessDialog } from "@/dialogs";
+import { ListPropertySuccessDialog, UploadPhotosDialog } from "@/dialogs";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
 import { transformFormValuesToPropertyForm } from "@/interfaces/FormTransformers";
 import { FormValues } from "@/interfaces/FormValues";
@@ -520,10 +524,15 @@ export default function ListPropertyTypeLayout({
         </div>
       </MobileFooter>
 
+      {/* Upload Dialog */}
+      {isDialogOpen(UPLOAD_PHOTOS_DIALOG_ID) && (
+        <UploadPhotosDialog id={UPLOAD_PHOTOS_DIALOG_ID} />
+      )}
+
       {/* Success Dialog */}
-      {isDialogOpen("list-property-success-dialog") && (
+      {isDialogOpen(LIST_PROPERTY_SUCCESS_DIALOG_ID) && (
         <ListPropertySuccessDialog
-          id="list-property-success-dialog"
+          id={LIST_PROPERTY_SUCCESS_DIALOG_ID}
           propertyID={propertyID}
           propertyCategory={propertyCategory}
         />

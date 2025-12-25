@@ -10,6 +10,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/base-components";
 import NumberField from "@/base-components/NumberField";
 import RadioGroup from "@/base-components/RadioGroup";
+import {
+  CONNECTS_PRICE_BREAKDOWN_DIALOG_ID,
+  VERIFY_CONNECTS_DIALOG_ID,
+} from "@/common/dialogConstants";
 import { PaymentVerificationStatus } from "@/common/enums";
 import Carousel3D from "@/components/Carousel3D";
 import ConnectsBundleCard from "@/components/ConnectsBundleCard";
@@ -146,7 +150,7 @@ export default function BuyConnectsPage() {
   const handlePaymentSuccess = async (response: any) => {
     console.log("Payment success response:", response);
     try {
-      openDialog("verify-connects-dialog");
+      openDialog(VERIFY_CONNECTS_DIALOG_ID);
       setPaymentStatus(PaymentVerificationStatus.VERIFYING);
       const result = await verifyPayment({
         paymentId: response.razorpay_payment_id,
@@ -167,7 +171,7 @@ export default function BuyConnectsPage() {
       return;
     }
 
-    if (isDialogOpen("connects-price-breakdown-dialog")) {
+    if (isDialogOpen(CONNECTS_PRICE_BREAKDOWN_DIALOG_ID)) {
       handleCloseDialog();
     }
 
@@ -589,12 +593,12 @@ export default function BuyConnectsPage() {
       </section>
 
       {/* Connects Price Dialog */}
-      {isDialogOpen("connects-price-breakdown-dialog") && (
+      {isDialogOpen(CONNECTS_PRICE_BREAKDOWN_DIALOG_ID) && (
         <Dialog
-          id="connects-price-breakdown-dialog"
+          id={CONNECTS_PRICE_BREAKDOWN_DIALOG_ID}
           type="bottom-sheet"
           onClose={() => {
-            closeDialog("connects-price-breakdown-dialog");
+            closeDialog(CONNECTS_PRICE_BREAKDOWN_DIALOG_ID);
           }}
           entryAnimation="animate-slide-in-bottom"
           exitAnimation="animate-slide-out-bottom"
@@ -676,9 +680,9 @@ export default function BuyConnectsPage() {
       )}
 
       {/* Verify Connects Dialog */}
-      {isDialogOpen("verify-connects-dialog") && (
+      {isDialogOpen(VERIFY_CONNECTS_DIALOG_ID) && (
         <VerifyConnectsDialog
-          id="verify-connects-dialog"
+          id={VERIFY_CONNECTS_DIALOG_ID}
           status={paymentStatus}
           connects={connectsToBuy}
           onClose={handleVerifyConnectsDialogClose}

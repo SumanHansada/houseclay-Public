@@ -234,7 +234,7 @@ const PhotoUpload: React.FC<PhotoUploadProps> = ({
           <>
             <div
               {...getRootProps()}
-              className={`rounded-lg p-16 mb-4 cursor-pointer bg-gray-50 flex flex-col items-center gap-6 ${
+              className={`rounded-lg p-8 md:p-16 mb-4 cursor-pointer bg-gray-50 flex flex-col items-center gap-6 ${
                 noPhotosValue || disabled ? "cursor-not-allowed" : ""
               }`}
               onBlur={onBlur}

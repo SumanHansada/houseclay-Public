@@ -1,13 +1,11 @@
 "use client";
 
 import {
-  CallWithCaptainDialog,
-  DeletePhotosDialog,
-  LoginDialog,
-  MenuDialog,
-  UpgradePropertyDialog,
-  UploadPhotosDialog,
-} from "@/dialogs";
+  CALL_WITH_CAPTAIN_DIALOG_ID,
+  LOGIN_DIALOG_ID,
+  MENU_DIALOG_ID,
+} from "@/common/dialogConstants";
+import { CallWithCaptainDialog, LoginDialog, MenuDialog } from "@/dialogs";
 import { useDialog } from "@/providers/DialogContextProvider";
 
 const CommonDialogs: React.FC = () => {
@@ -15,24 +13,12 @@ const CommonDialogs: React.FC = () => {
   return (
     <>
       {/* Login Dialog */}
-      {isDialogOpen("login-dialog") && <LoginDialog id="login-dialog" />}
+      {isDialogOpen(LOGIN_DIALOG_ID) && <LoginDialog id={LOGIN_DIALOG_ID} />}
       {/* Menu Dialog */}
-      {isDialogOpen("menu-dialog") && <MenuDialog id="menu-dialog" />}
-      {/* Upload Dialog */}
-      {isDialogOpen("upload-photos-dialog") && (
-        <UploadPhotosDialog id="upload-photos-dialog" />
-      )}
-      {/* Delete Dialog */}
-      {isDialogOpen("delete-photos-dialog") && (
-        <DeletePhotosDialog id="delete-photos-dialog" />
-      )}
+      {isDialogOpen(MENU_DIALOG_ID) && <MenuDialog id={MENU_DIALOG_ID} />}
       {/* Call with Captain Dialog */} {/* Call with Captain Dialog */}
-      {isDialogOpen("call-with-captain-dialog") && (
-        <CallWithCaptainDialog id="call-with-captain-dialog" />
-      )}
-      {/* Upgrade Property Dialog */}
-      {isDialogOpen("upgrade-property-dialog") && (
-        <UpgradePropertyDialog id="upgrade-property-dialog" />
+      {isDialogOpen(CALL_WITH_CAPTAIN_DIALOG_ID) && (
+        <CallWithCaptainDialog id={CALL_WITH_CAPTAIN_DIALOG_ID} />
       )}
     </>
   );

@@ -39,6 +39,3 @@ export const NEIGHBOURHOODS = [
   { name: "BTM Layout", imgURL: "" },
   { name: "HSR Layout", imgURL: "" },
 ];
-
-// Dialog Id's
-export const MARK_RENTED_ACTION_DIALOG_ID = "mark-as-action-dialog-id";

@@ -23,6 +23,7 @@ const StandoutsDialog = lazy(() =>
   import("@/dialogs").then((m) => ({ default: m.StandoutsDialog })),
 );
 
+import { STANDOUTS_DIALOG_ID } from "@/common/dialogConstants";
 import TESTIMONIALS_DATA from "@/data/TestimonialsData.json";
 
 // Simple fallback component
@@ -68,8 +69,8 @@ export default function ClientPage() {
   );
 
   useEffect(() => {
-    if (isDialogOpen("standouts-dialog") && standoutProperties.length < 1) {
-      closeDialog("standouts-dialog");
+    if (isDialogOpen(STANDOUTS_DIALOG_ID) && standoutProperties.length < 1) {
+      closeDialog(STANDOUTS_DIALOG_ID);
       toast.error(
         "Currently there are no Standouts Properties. Please check again later!",
         { id: "standouts-empty" },
@@ -119,10 +120,10 @@ export default function ClientPage() {
       </section>
 
       {/* Standouts Dialog */}
-      {isDialogOpen("standouts-dialog") && standoutProperties.length > 0 && (
+      {isDialogOpen(STANDOUTS_DIALOG_ID) && standoutProperties.length > 0 && (
         <Suspense fallback={null}>
           <StandoutsDialog
-            id="standouts-dialog"
+            id={STANDOUTS_DIALOG_ID}
             properties={standoutProperties}
           />
         </Suspense>
