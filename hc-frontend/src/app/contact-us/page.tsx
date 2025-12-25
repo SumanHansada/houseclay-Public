@@ -121,7 +121,6 @@ export default function ContactUsPage() {
                     fill
                     className="object-center"
                     sizes="100vw"
-                    priority
                   />
                 </div>
               </div>

@@ -11,6 +11,9 @@ export const noResultsFoundIconURL = `${CDN_BASE_URL}/public/optimizedIcons/larg
 export const placeholderImageURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/property-placeholder.svg`;
 export const propertyImageURL = `${CDN_BASE_URL}/public/images/property.webp`;
 export const loginImageURL = `${CDN_BASE_URL}/public/images/login.webp`;
+export const ownersImageURL = `${CDN_BASE_URL}/public/images/owners.webp`;
+export const bannerAboutUsImageURL = `${CDN_BASE_URL}/public/images/banner-about-us.webp`;
+export const testimonialImageURL = `${CDN_BASE_URL}/public/images/testimonial.webp`;
 
 export const directOwnerAccessImageURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/direct-owner-access.svg`;
 export const payAsYouGoImageURL = `${CDN_BASE_URL}/public/optimizedIcons/large/pay-as-you-go.svg`;

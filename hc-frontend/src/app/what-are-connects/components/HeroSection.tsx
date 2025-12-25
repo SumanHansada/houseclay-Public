@@ -10,8 +10,6 @@ const HeroSection = () => (
         fill
         className="object-center"
         sizes="100vw"
-        fetchPriority="high"
-        priority
       />
     </div>
 

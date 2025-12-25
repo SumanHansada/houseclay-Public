@@ -9,7 +9,7 @@ import { RemoteSvg } from "@/utility-components";
 
 const Advantages: React.FC = () => {
   return (
-    <div className="flex flex-col items-center justify-between gap-10 xl:px-28 lg:px-14 md:px-14 px-8 py-20">
+    <div className="flex flex-col items-center justify-between gap-10 xl:px-28 lg:px-14 md:px-14 px-8 py-12">
       <div className="flex flex-col items-center justify-center gap-4">
         <h1 className="text-4xl font-bold text-center">Why Choose Us?</h1>
         <div className="text-center text-gray-600">

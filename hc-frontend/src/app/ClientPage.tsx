@@ -12,8 +12,8 @@ import { StandoutsDialog } from "@/dialogs";
 import { Testimonial } from "@/interfaces/Testimonial";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
-  usePopularNeighbourhoodsQuery,
-  useStandoutsQuery,
+  useLazyPopularNeighbourhoodsQuery,
+  useLazyStandoutsQuery,
 } from "@/store/apiSlice";
 
 interface ClientPageProps {
@@ -23,19 +23,34 @@ interface ClientPageProps {
 export default function ClientPage({ testimonials }: ClientPageProps) {
   const { isDialogOpen, closeDialog } = useDialog();
 
-  const { data: neighbourhoodData } = usePopularNeighbourhoodsQuery(undefined, {
-    refetchOnMountOrArgChange: 30,
-    refetchOnFocus: true,
-    refetchOnReconnect: true,
-  });
-  // console.log("neighbourhoodData", neighbourhoodData);
+  const [getPopularNeighbourhoods, { data: neighbourhoodData }] =
+    useLazyPopularNeighbourhoodsQuery();
+  const [getStandouts, { data: standoutsData }] = useLazyStandoutsQuery();
 
-  const { data: standoutsData } = useStandoutsQuery(undefined, {
-    refetchOnMountOrArgChange: 30,
-    refetchOnFocus: true,
-    refetchOnReconnect: true,
-  });
-  // console.log("standoutsData", standoutsData);
+  useEffect(() => {
+    const triggerQueries = () => {
+      getPopularNeighbourhoods(undefined);
+      getStandouts(undefined);
+    };
+
+    if (document.readyState === "complete") {
+      if (typeof requestIdleCallback !== "undefined") {
+        requestIdleCallback(triggerQueries, { timeout: 2000 });
+      } else {
+        setTimeout(triggerQueries, 0);
+      }
+    } else {
+      const handleLoad = () => {
+        if (typeof requestIdleCallback !== "undefined") {
+          requestIdleCallback(triggerQueries, { timeout: 2000 });
+        } else {
+          setTimeout(triggerQueries, 0);
+        }
+      };
+      window.addEventListener("load", handleLoad);
+      return () => window.removeEventListener("load", handleLoad);
+    }
+  }, [getPopularNeighbourhoods, getStandouts]);
 
   const standoutProperties = useMemo(
     () => standoutsData ?? [],

@@ -4,6 +4,7 @@ import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/base-components";
+import { bannerAboutUsImageURL } from "@/common/cdnURLs";
 import { Footer, MobileHeader } from "@/layout-components";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
 
@@ -35,13 +36,10 @@ export default function AboutUsPage() {
             {/* Background image */}
             <div className="absolute inset-0" aria-hidden="true">
               <ImageWithLoader
-                src="/images/banner-about-us.webp"
-                alt=""
+                src={bannerAboutUsImageURL}
+                alt="Banner About Us"
                 fill
                 className="object-center"
-                sizes="100vw"
-                fetchPriority="high"
-                priority
               />
             </div>
 

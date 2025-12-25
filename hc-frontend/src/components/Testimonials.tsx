@@ -2,7 +2,9 @@ import { Quote, Star } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
+import { testimonialImageURL } from "@/common/cdnURLs";
 import { Testimonial } from "@/interfaces/Testimonial";
+import { ImageWithLoader } from "@/utility-components";
 
 import Carousel2D from "./Carousel2D";
 
@@ -40,8 +42,9 @@ export const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({
             <Image
               src={testimonial.avatar}
               alt={testimonial.name}
-              fill
-              className="h-full w-full object-cover"
+              height={48}
+              width={48}
+              className="object-cover"
               loading="lazy"
               fetchPriority="low"
               decoding="async"
@@ -71,14 +74,17 @@ export const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
   //   setActiveSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
   // };
   return (
-    <div className="mx-auto xl:px-28 lg:px-14 md:px-14 px-6 py-8 sm:py-16 md:py-20">
+    <div className="mx-auto xl:px-28 lg:px-14 md:px-14 px-6 py-12">
       {/* Top user avatars row */}
       <div className="mb-8 flex justify-center">
-        <Image
-          src="/images/testimonial.webp"
+        <ImageWithLoader
+          src={testimonialImageURL}
           alt="Testimonial"
-          height={75}
-          width={400}
+          height={64}
+          width={403}
+          loading="lazy"
+          decoding="async"
+          fetchPriority="low"
         />
       </div>
 
@@ -94,26 +100,7 @@ export const Testimonials: React.FC<TestimonialProps> = ({ testimonials }) => {
       </div>
 
       {/* Testimonials grid */}
-      <Carousel2D
-        gap={4}
-        showDots={false}
-        showArrows
-        responsiveSlidesPerView
-        containerClassName="md:hidden"
-        className="md:hidden"
-      >
-        {testimonials.map((testimonial) => (
-          <TestimonialCard key={testimonial.id} testimonial={testimonial} />
-        ))}
-      </Carousel2D>
-      <Carousel2D
-        gap={4}
-        showDots={false}
-        showArrows
-        responsiveSlidesPerView
-        containerClassName="max-md:hidden"
-        className="max-md:hidden"
-      >
+      <Carousel2D gap={4} showDots={false} showArrows responsiveSlidesPerView>
         {testimonials.map((testimonial) => (
           <TestimonialCard key={testimonial.id} testimonial={testimonial} />
         ))}

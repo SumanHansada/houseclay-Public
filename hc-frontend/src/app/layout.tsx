@@ -4,7 +4,11 @@ import { Viewport } from "next";
 import { Inter, Nunito } from "next/font/google";
 import Script from "next/script";
 
-import { Header, StickyNavbar } from "@/layout-components";
+import {
+  DisableScrollRestoration,
+  Header,
+  StickyNavbar,
+} from "@/layout-components";
 import { ConditionalPageTransition } from "@/layout-components";
 import CommonDialogs from "@/layout-components/CommonDialogs";
 import Providers from "@/providers/Providers";
@@ -34,8 +38,8 @@ const nutino = Nunito({
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  maximumScale: 5,
+  userScalable: true,
   viewportFit: "cover", // very  important you know this
 };
 
@@ -324,6 +328,7 @@ export default function RootLayout({
             >
               <main className="mx-auto my-0 pt-14 min-h-dvh max-md:pb-16 flex flex-col">
                 <>
+                  <DisableScrollRestoration />
                   {children}
                   <CommonDialogs />
                 </>
@@ -339,10 +344,10 @@ export default function RootLayout({
         />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-64EJC1CG73"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
         {/* Google tag (gtag.js) */}
-        <Script id="ga-init" strategy="afterInteractive">
+        <Script id="ga-init" strategy="lazyOnload">
           {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}

@@ -37,8 +37,6 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
     return isTabActive(item);
   });
 
-  console.log("active index", activeIndex);
-  console.log("active tab", activeTab);
   return (
     <nav className="fixed bottom-0 left-0 right-0 pb-safe-bottom bg-white border-t  border-gray-200 shadow-md z-40 w-full md:hidden ">
       <ul className="relative grid grid-cols-5 place-items-center py-2">

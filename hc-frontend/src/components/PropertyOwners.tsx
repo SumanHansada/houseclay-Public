@@ -1,12 +1,11 @@
 import Link from "next/link";
 
-import { CDN_BASE_URL } from "@/common/constants";
+import { ownersImageURL } from "@/common/cdnURLs";
 import { ImageWithLoader } from "@/utility-components";
 
-const ownersImageUrl = CDN_BASE_URL + "/public/images/owners.webp";
 const PropertyOwners: React.FC = () => {
   return (
-    <div className="mx-auto xl:px-28 lg:px-14 md:px-14 px-6 py-20 flex flex-col md:flex-row items-center justify-between bg-white">
+    <div className="mx-auto xl:px-28 lg:px-14 md:px-14 px-6 py-12 flex flex-col md:flex-row items-center justify-between bg-white">
       {/* Left Side - Text Content */}
       <div className="flex-col flex-1 text-left items-center">
         <span className="bg-red-50 text-red-700 px-4 py-2 rounded-full text-sm ">
@@ -30,16 +29,16 @@ const PropertyOwners: React.FC = () => {
       </div>
 
       {/* Right Side - Image Content */}
-      <div className="flex flex-1 justify-between items-center">
+      <div className="flex h-[509px] w-[492px] flex-1 justify-between items-center">
         <ImageWithLoader
-          src={ownersImageUrl}
+          src={ownersImageURL}
           alt="Property Owners"
-          height={500}
-          width={500}
+          height={509}
+          width={492}
           loading="lazy"
           decoding="async"
           fetchPriority="low"
-          className="my-0 mx-auto"
+          className="mx-auto h-[509px] w-[492px]"
         />
       </div>
     </div>
