@@ -403,6 +403,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
                   <Link
                     href="/terms-and-conditions"
                     className="text-gray-700 underline font-bold"
+                    onClick={onClose}
                   >
                     Terms of Service
                   </Link>{" "}
@@ -410,6 +411,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
                   <Link
                     href="/privacy-policy"
                     className="text-gray-700 underline font-bold"
+                    onClick={onClose}
                   >
                     Privacy Policy
                   </Link>
