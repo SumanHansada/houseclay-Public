@@ -17,7 +17,7 @@ import { formatINRCurrency, processPropertyImages } from "@/common/utils";
 import { useShortlist } from "@/hooks/useShortlist";
 import { PropertySearch } from "@/interfaces/PropertySearch";
 import { PropertyCardWithImages } from "@/interfaces/User";
-import { ImageWithLoader } from "@/utility-components";
+import { ImageWithFallback } from "@/utility-components";
 
 interface PropertiesProps {
   property: PropertySearch;
@@ -106,12 +106,11 @@ const Properties: React.FC<PropertiesProps> = ({
     >
       {/* Image Carousel */}
       <div className="relative h-72 max-md:h-60">
-        <ImageWithLoader
+        <ImageWithFallback
           src={propertyImages[currentImageIndex]}
           alt={`Property ${property?.propertyID}`}
           fill
           className="rounded-xl bg-gray-200"
-          loading="lazy"
         />
 
         {/* Badge: Featured or Exclusive */}

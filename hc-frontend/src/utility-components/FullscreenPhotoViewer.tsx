@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useCallback, useEffect, useMemo } from "react";
 import React from "react";
 
-import ImageWithLoader from "./ImageWithLoader";
+import ImageWithFallback from "./ImageWithFallback";
 
 interface FullscreenPhotoViewerProps {
   images: string[];
@@ -185,12 +185,11 @@ function FullscreenPhotoViewer({
           className="relative w-full h-full max-w-7xl max-h-[90vh] p-4"
         >
           <div className="relative w-full h-full rounded-xl overflow-hidden">
-            <ImageWithLoader
+            <ImageWithFallback
               src={currentImage}
               alt={`Fullscreen image ${currentIndex + 1}`}
               fill
-              className="max-md:object-contain transition-transform duration-300 ease-in-out"
-              priority
+              className="max-md:object-contain transition-transform duration-300 ease-in-out bg-gray-200"
               style={{ transformOrigin: "center" }}
             />
           </div>
@@ -228,11 +227,11 @@ function FullscreenPhotoViewer({
                       : "border-transparent hover:border-white/50"
                   }`}
                 >
-                  <ImageWithLoader
+                  <ImageWithFallback
                     src={image}
                     alt={`Thumbnail ${index + 1}`}
                     fill
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover bg-gray-200"
                     priority
                     style={{ transformOrigin: "center" }}
                   />

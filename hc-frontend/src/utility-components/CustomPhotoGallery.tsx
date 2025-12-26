@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import ImageWithLoader from "./ImageWithLoader";
+import ImageWithFallback from "./ImageWithFallback";
 
 interface CustomPhotoGalleryProps {
   images: string[];
@@ -25,7 +25,7 @@ export default function CustomPhotoGallery({
       const heights = await Promise.all(
         images.map((src) => {
           return new Promise<number>((resolve) => {
-            const img = new Image();
+            const img = new window.Image();
             img.onload = () => {
               const aspectRatio = img.height / img.width;
               // Use a fixed width and calculate height based on aspect ratio
@@ -68,11 +68,11 @@ export default function CustomPhotoGallery({
             }}
             onClick={() => onImageClick?.(index)}
           >
-            <ImageWithLoader
+            <ImageWithFallback
               src={image}
               alt={`Property image ${index + 1}`}
               fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              className="object-cover transition-transform duration-300 group-hover:scale-105 bg-gray-200"
             />
             {/* Hover overlay */}
             <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300" />

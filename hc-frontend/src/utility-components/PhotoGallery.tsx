@@ -9,7 +9,7 @@ import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 
 import FullscreenPhotoViewer from "./FullscreenPhotoViewer";
-import ImageWithLoader from "./ImageWithLoader";
+import ImageWithFallback from "./ImageWithFallback";
 
 interface PhotoGalleryProps {
   images: string[];
@@ -90,12 +90,11 @@ export default function PhotoGallery({
             className="w-full h-full cursor-pointer relative group"
             onClick={() => handleImageClick(0)}
           >
-            <ImageWithLoader
+            <ImageWithFallback
               src={displayImages[0]}
               alt="Property image"
               fill
-              className="object-cover"
-              priority
+              className="object-cover bg-gray-200"
             />
             {/* Hover overlay */}
             <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-15 transition-opacity duration-300"></div>
@@ -109,12 +108,11 @@ export default function PhotoGallery({
                 className="col-span-2 row-span-2 cursor-pointer relative group"
                 onClick={() => handleImageClick(0)}
               >
-                <ImageWithLoader
+                <ImageWithFallback
                   src={displayImages[0]}
                   alt="Main property image"
                   fill
-                  className="object-cover"
-                  priority
+                  className="object-cover bg-gray-200"
                 />
                 {/* Hover overlay */}
                 <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-15 transition-opacity duration-300"></div>
@@ -132,11 +130,11 @@ export default function PhotoGallery({
                   className="cursor-pointer relative group overflow-hidden"
                   onClick={() => handleImageClick(index + 1)}
                 >
-                  <ImageWithLoader
+                  <ImageWithFallback
                     src={image}
                     alt={`Property image ${index + 2}`}
                     fill
-                    className="object-cover"
+                    className="object-cover bg-gray-200"
                   />
 
                   {/* Hover overlay */}
@@ -159,12 +157,11 @@ export default function PhotoGallery({
               className="md:hidden w-full h-full cursor-pointer relative group"
               onClick={handleMobileGalleryClick}
             >
-              <ImageWithLoader
+              <ImageWithFallback
                 src={displayImages[0]}
                 alt="Main property image"
                 fill
-                className="object-cover"
-                priority
+                className="object-cover bg-gray-200"
               />
               {/* Hover overlay */}
               <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-15 transition-opacity duration-300"></div>
