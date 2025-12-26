@@ -41,7 +41,7 @@ public class Property {
     private Integer totalFloors;
     private String floorType;
 
-    @Column(length = 1000)
+    @Column(length = 2000)
     private String description;
 
     private Long balcony;
