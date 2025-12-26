@@ -121,15 +121,6 @@ const ListPropertyClient = () => {
     router.push(url);
   };
 
-  const handlePrefetch = () => {
-    // Only prefetch protected routes if user is authenticated
-    // Prefetching protected routes without auth can cache redirects
-    if (propertyCategory && isAuthenticated) {
-      const url = `/list-property/${propertyCategory.toLowerCase()}/property-details`;
-      router.prefetch(url);
-    }
-  };
-
   const handleGetStarted = () => {
     if (!isAuthenticated) {
       router.push("/");
@@ -202,7 +193,6 @@ const ListPropertyClient = () => {
             <PropertyTypeOptions
               onNext={handlePostListingClick}
               onBack={handleBack}
-              handlePrefetch={handlePrefetch}
             />
           )}
         </section>
@@ -243,8 +233,6 @@ const ListPropertyClient = () => {
               type="button"
               className={`text-center w-full border border-red-500  bg-red-500 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300 hover:bg-red-600 text-white px-6 py-3 rounded-xl transition duration-200`}
               onClick={handlePostListingClick}
-              onMouseEnter={handlePrefetch}
-              onFocus={handlePrefetch}
               disabled={!propertyCategory}
             >
               Next
@@ -354,7 +342,6 @@ const ListPropertyClient = () => {
                       <PropertyTypeOptions
                         onNext={handlePostListingClick}
                         onBack={handleBack}
-                        handlePrefetch={handlePrefetch}
                       />
                     )}
                   </>

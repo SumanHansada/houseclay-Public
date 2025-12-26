@@ -19,11 +19,7 @@ interface PropertyTypeOptionsProps {
   handlePrefetch?: () => void;
 }
 
-const PropertyTypeOptions = ({
-  onBack,
-  onNext,
-  handlePrefetch,
-}: PropertyTypeOptionsProps) => {
+const PropertyTypeOptions = ({ onBack, onNext }: PropertyTypeOptionsProps) => {
   const dispatch = useDispatch();
   const propertyCategory = useSelector(
     (state: RootState) => state.listProperty.propertyCategory,
@@ -88,8 +84,6 @@ const PropertyTypeOptions = ({
           type="button"
           className={`text-center flex-1 border border-red-500 bg-red-500 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:border-gray-300 hover:bg-red-600 text-white px-6 py-2 xl:py-3 rounded-xl transition duration-200`}
           onClick={onNext}
-          onMouseEnter={handlePrefetch}
-          onFocus={handlePrefetch}
           disabled={!propertyCategory}
         >
           {isTablet ? "Start Posting" : "Start Posting Your Free Listing"}
