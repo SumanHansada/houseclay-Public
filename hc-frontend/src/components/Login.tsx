@@ -398,7 +398,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
                 </button>
 
                 {/* Privacy policy */}
-                <div className="md:hidden text-gray-500 text-sm">
+                <div className="text-gray-500 text-sm">
                   By continuing to use this service, you agree to our{" "}
                   <Link
                     href="/terms-and-conditions"

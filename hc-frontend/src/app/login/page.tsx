@@ -140,7 +140,7 @@ export default function LoginPage() {
             <div className="flex flex-col items-center">
               <ShieldCheck className="text-white fill-gray-600" size={32} />
               <p className="mt-2 text-sm text-center text-gray-400">
-                More than 800+ owners have listed their properties on HouseClay
+                More than 800+ owners have listed their properties on Houseclay
                 and closed their deal.
               </p>
             </div>

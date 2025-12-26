@@ -6,38 +6,22 @@ import { bannerPeopleMobileImageURL } from "@/common/cdnURLs";
 import { BENGALURU_LOCATION } from "@/common/constants";
 import { STANDOUTS_DIALOG_ID } from "@/common/dialogConstants";
 import { PropertyCategory } from "@/common/enums";
-import { generateUUID } from "@/common/utils";
-import { FindFlatmatesDialog } from "@/dialogs";
 import { useDialog } from "@/providers/DialogContextProvider";
-import {
-  setPropertyCategory as setListPropertyCategory,
-  setPropertyID,
-} from "@/store/listPropertySlice";
 import { setPropertyCategory as setSearchPropertyCategory } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
 import { SvgIcon } from "@/utility-components";
 
 import HomeSearchBar from "./HomeSearchBar";
 
-const FIND_FLATMATES_DIALOG_ID = "find-flatmates-dialog";
-
 const MastHeadMobile: React.FC = () => {
   const dispatch = useDispatch();
-  const { openDialog, isDialogOpen, closeDialog } = useDialog();
+  const { openDialog } = useDialog();
   const propertyCategory = useSelector(
     (state: RootState) => state.propertySearch.propertyCategory,
   );
   const router = useRouter();
 
   const searchParams = useSearchParams();
-
-  const handleFindFlatmates = () => {
-    const uuid = generateUUID();
-    dispatch(setPropertyID(uuid));
-    dispatch(setListPropertyCategory(PropertyCategory.FLATMATE));
-    const url = `/list-property/${PropertyCategory.FLATMATE.toLowerCase()}/property-details`;
-    router.push(url);
-  };
 
   return (
     <div className="relative flex flex-col px-6 pt-8 pb-14 gap-6">
@@ -105,7 +89,7 @@ const MastHeadMobile: React.FC = () => {
             role="button"
             name="find-flatmates"
             aria-label="find-flatmates"
-            onClick={() => openDialog(FIND_FLATMATES_DIALOG_ID)}
+            onClick={() => router.push("/find-flatmates")}
           >
             <div className="rounded-full w-10 h-10 items-center justify-center">
               <SvgIcon name="find-flatmates" size={40} />
@@ -216,19 +200,6 @@ const MastHeadMobile: React.FC = () => {
           Know More
         </button>
       </div>
-
-      {isDialogOpen(FIND_FLATMATES_DIALOG_ID) && (
-        <FindFlatmatesDialog
-          id={FIND_FLATMATES_DIALOG_ID}
-          handleGetStarted={() => {
-            handleFindFlatmates();
-            closeDialog(FIND_FLATMATES_DIALOG_ID);
-          }}
-          onClose={() => {
-            closeDialog(FIND_FLATMATES_DIALOG_ID);
-          }}
-        />
-      )}
     </div>
   );
 };

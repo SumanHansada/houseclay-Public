@@ -123,8 +123,8 @@ const ListPropertyClient = () => {
 
   const handleGetStarted = () => {
     if (!isAuthenticated) {
-      router.push("/");
-      openDialog("login-dialog");
+      router.replace("/login");
+      return;
     }
     setMobileStep(ListPropertyMobileStep.LISTING_OPTIONS);
   };

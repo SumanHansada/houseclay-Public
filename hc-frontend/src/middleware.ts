@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 // List of paths that don't require authentication
-const publicPaths = ["/", "/login", "/signup", "/buy-connects"];
+const publicPaths = ["/", "/login", "/buy-connects"];
 
 // Mapping of base list-property category URLs to their detail routes
 const listPropertyBaseRedirects: Record<string, string> = {
@@ -61,7 +61,7 @@ export const config = {
     // Protected routes that require authentication
     "/list-property/rent/:path*",
     "/list-property/resale/:path*",
-    "/list-property/flatmate/:path*",
+    // "/list-property/flatmate/:path*",
 
     "/edit-property/rent/:path*",
     "/edit-property/resale/:path*",
