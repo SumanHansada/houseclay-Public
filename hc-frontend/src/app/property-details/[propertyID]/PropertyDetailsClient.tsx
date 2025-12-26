@@ -187,9 +187,9 @@ export function PropertyDetailsClient({
     refetch: refetchAuthPropertyDetails,
   } = useGetAuthenticatedPropertyByIdQuery(propertyID, {
     skip: !isAuthenticated,
-    refetchOnMountOrArgChange: true,
-    refetchOnFocus: true,
-    refetchOnReconnect: true,
+    refetchOnMountOrArgChange: false,
+    refetchOnFocus: false,
+    refetchOnReconnect: false,
   });
 
   // Merge the data based on authentication status
