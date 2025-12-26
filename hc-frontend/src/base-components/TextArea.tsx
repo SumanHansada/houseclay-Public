@@ -14,6 +14,9 @@ interface TextAreaProps {
   onChange: (value: string) => void;
   onBlur?: () => void;
   error?: string;
+
+  maxLength?: number;
+  showCharCount?: boolean;
 }
 
 const TextArea: React.FC<TextAreaProps> = ({
@@ -29,6 +32,8 @@ const TextArea: React.FC<TextAreaProps> = ({
   onChange,
   onBlur,
   error,
+  maxLength,
+  showCharCount = true,
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange(e.target.value);
@@ -37,6 +42,9 @@ const TextArea: React.FC<TextAreaProps> = ({
   const handleBlur = () => {
     onBlur?.();
   };
+
+  const shouldShowCharCount =
+    maxLength !== undefined && (showCharCount ?? true);
 
   return (
     <div className="w-full">
@@ -53,6 +61,7 @@ const TextArea: React.FC<TextAreaProps> = ({
         id={id || name}
         placeholder={placeholder}
         rows={rows}
+        maxLength={maxLength}
         className={`w-full p-3 border rounded-xl ${
           error ? "border-red-500" : "border-gray-300"
         } ${disabled ? "cursor-not-allowed disabled:bg-gray-300" : ""} ${className}`}
@@ -62,6 +71,11 @@ const TextArea: React.FC<TextAreaProps> = ({
         disabled={disabled}
       />
       {error ? <div className="text-red-500 text-sm mt-1">{error}</div> : null}
+      {shouldShowCharCount && (
+        <div className="text-sm text-gray-500 mt-1 text-right">
+          {value.length}/{maxLength}
+        </div>
+      )}
     </div>
   );
 };

@@ -20,6 +20,9 @@ export const SOCIAL_MEDIA_LINKS = {
 // Including country code
 export const validPhoneNoLength = 8;
 
+// Max Description length
+export const maxDescLength = 1800;
+
 export const BENGALURU_LOCATION = { lat: 12.9716, lng: 77.5946 };
 
 // Currently using Bellandur lat(12.9337127) and lng(77.6621937)

@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
+import { maxDescLength } from "@/common/constants";
 import {
   BHK_TYPE_OPTIONS,
   FACING_OPTIONS,
@@ -277,7 +278,8 @@ const RentPropertyDetailsClient: React.FC = () => {
             id="propertyDetails.description"
             label="Description"
             placeholder="Enter property description"
-            rows={5}
+            maxLength={maxDescLength}
+            rows={6}
           />
         </div>
       </div>
