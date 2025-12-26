@@ -1,6 +1,5 @@
 "use client";
 
-// import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { Menu, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -238,14 +237,14 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
                 iconSize={40}
                 dropdownWidth={300}
               />
-            ) : (
+            ) : pathname !== "/login" ? (
               <button
                 className="xl:px-8 lg:px-6 md:px-4 px-4  py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100 text-center"
                 onClick={onLogin}
               >
                 Login
               </button>
-            )}
+            ) : null}
           </div>
         </div>
       </header>
@@ -262,14 +261,14 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
             </span>
           </Link>
         </div>
-        {isAuthenticated ? null : (
+        {!isAuthenticated && pathname !== "/login" ? (
           <button
             className="xl:px-8 lg:px-6 md:px-4 px-4 py-2 border rounded-xl border-red-600 text-red-600 hover:bg-gray-100 text-center text-sm"
             onClick={onLogin}
           >
             Log In
           </button>
-        )}
+        ) : null}
       </header>
 
       {isMobile && isDialogOpen(ACTION_DIALOG_ID) && (

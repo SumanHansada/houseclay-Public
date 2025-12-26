@@ -1,7 +1,6 @@
 "use client";
 
 import { lazy, Suspense, useEffect, useMemo } from "react";
-import toast from "react-hot-toast";
 
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -71,10 +70,6 @@ export default function ClientPage() {
   useEffect(() => {
     if (isDialogOpen(STANDOUTS_DIALOG_ID) && standoutProperties.length < 1) {
       closeDialog(STANDOUTS_DIALOG_ID);
-      toast.error(
-        "Currently there are no Standouts Properties. Please check again later!",
-        { id: "standouts-empty" },
-      );
     }
   }, [standoutProperties.length, isDialogOpen, closeDialog]);
 
