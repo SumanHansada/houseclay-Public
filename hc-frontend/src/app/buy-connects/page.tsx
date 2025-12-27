@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
@@ -25,6 +25,7 @@ import {
 } from "@/components/Dialog";
 import { VerifyConnectsDialog } from "@/dialogs";
 import { ConnectBundleID } from "@/interfaces/ConnectsBundle";
+import { MobileFooter } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -36,8 +37,6 @@ import { RootState } from "@/store/store";
 import { setConnectBal } from "@/store/userSlice";
 import { SvgIcon } from "@/utility-components";
 import { Tab, TabContent, TabHeader, Tabs } from "@/utility-components/Tabs";
-
-import { updateBuyConnectsState } from "./layout";
 
 const MINIMUM_CUSTOM_CONNECTS = 1;
 const MAXIMUM_CUSTOM_CONNECTS = 50;
@@ -124,7 +123,7 @@ export default function BuyConnectsPage() {
   expiryDate.setDate(expiryDate.getDate() + BUNDLE_VALIDITY_DAYS);
 
   const handleCloseDialog = () => {
-    closeDialog("connects-price-breakdown-dialog");
+    closeDialog(CONNECTS_PRICE_BREAKDOWN_DIALOG_ID);
   };
 
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -222,11 +221,6 @@ export default function BuyConnectsPage() {
     agreedToTerms &&
     connectsToBuy >= MINIMUM_CUSTOM_CONNECTS &&
     connectsToBuy <= MAXIMUM_CUSTOM_CONNECTS;
-
-  // Sync state to layout
-  useEffect(() => {
-    updateBuyConnectsState(selectedBundle, customConnects, agreedToTerms);
-  }, [selectedBundle, customConnects, agreedToTerms]);
 
   return (
     <>
@@ -590,10 +584,33 @@ export default function BuyConnectsPage() {
             </label>
           </div>
         </div>
+
+        <MobileFooter>
+          <div className="flex flex-col justify-around items-start w-full">
+            <div className="text-gray-600 text-xs flex flex-col font-bold">
+              Total Amount
+              <span className="font-light">(Inclusive of all taxes)</span>
+            </div>
+            <div className="text-sm font-bold flex gap-2 items-center">
+              ₹{fmt2(price)}
+            </div>
+          </div>
+          <button
+            className={`text-center px-6 py-3 border rounded-xl w-full transition duration-200 ${
+              canProceedToPay
+                ? "bg-red-500 border-red-500 text-white hover:bg-red-600"
+                : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
+            onClick={() => openDialog(CONNECTS_PRICE_BREAKDOWN_DIALOG_ID)}
+            disabled={!canProceedToPay}
+          >
+            Price Breakdown
+          </button>
+        </MobileFooter>
       </section>
 
       {/* Connects Price Dialog */}
-      {isDialogOpen(CONNECTS_PRICE_BREAKDOWN_DIALOG_ID) && (
+      {isDialogOpen(CONNECTS_PRICE_BREAKDOWN_DIALOG_ID) && isMobile && (
         <Dialog
           id={CONNECTS_PRICE_BREAKDOWN_DIALOG_ID}
           type="bottom-sheet"
