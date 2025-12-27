@@ -169,6 +169,7 @@ export const apiSlice = createApi({
     getPublicPropertyById: builder.query<unknown, string>({
       query: (id) => ({
         url: `/property/${id}`,
+        keepUnusedDataFor: 3600, // Keep cached data for 5 minutes (300 seconds)
         headers: {
           // Explicitly exclude Authorization header for public endpoint
         },
@@ -190,6 +191,7 @@ export const apiSlice = createApi({
     >({
       query: (id) => ({
         url: `/property/user/get-property/${id}`,
+        keepUnusedDataFor: 3600, // Keep cached data for 5 minutes (300 seconds)
       }),
     }),
 

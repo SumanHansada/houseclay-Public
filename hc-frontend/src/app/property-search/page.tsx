@@ -663,7 +663,7 @@ export default function PropertySearchPage() {
               size="md"
               className="min-h-[46px] text-black rounded-xl border text-sm"
               onClick={() => openDialog(PROPERTY_FILTERS_DIALOG_ID)}
-              buttonTextClassName="hidden lg:block"
+              buttonTextClassName="max-lg:hidden"
             >
               Filters
             </Button>

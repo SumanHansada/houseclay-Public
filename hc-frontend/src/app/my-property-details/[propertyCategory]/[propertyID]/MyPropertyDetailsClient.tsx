@@ -169,9 +169,9 @@ export function MyPropertyDetailsClient({
     refetch,
   } = useGetMyPropertyByIdQuery(propertyID, {
     // skip: !propertyID,
-    refetchOnMountOrArgChange: true,
-    refetchOnReconnect: true,
-    refetchOnFocus: true,
+    refetchOnMountOrArgChange: false,
+    refetchOnReconnect: false,
+    refetchOnFocus: false,
   });
 
   const propertyData = propertyDataRaw as PropertyData | undefined;

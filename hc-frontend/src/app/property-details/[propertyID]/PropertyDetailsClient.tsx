@@ -239,10 +239,7 @@ export function PropertyDetailsClient({
     propertyOwner,
   } = propertyData;
 
-  const propertyCategory = useMemo(
-    () => property?.propertyCategory ?? PropertyCategory.RENT,
-    [property],
-  );
+  const propertyCategory = property?.propertyCategory ?? PropertyCategory.RENT;
 
   // Common derivations
   const commonDerivations = useMemo(
