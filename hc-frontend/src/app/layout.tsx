@@ -338,6 +338,7 @@ export default function RootLayout({
                 "/property-search",
                 "/what-are-connects",
                 "/buy-connects",
+                "/find-flatmates",
               ]}
             >
               <main className="mx-auto my-0 pt-14 min-h-dvh max-md:pb-16 flex flex-col">
