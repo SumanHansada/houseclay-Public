@@ -189,7 +189,7 @@ function FullscreenPhotoViewer({
               src={currentImage}
               alt={`Fullscreen image ${currentIndex + 1}`}
               fill
-              className="max-md:object-contain transition-transform duration-300 ease-in-out bg-gray-200"
+              className="max-md:object-contain object-cover transition-transform duration-300 ease-in-out bg-gray-200"
               style={{ transformOrigin: "center" }}
             />
           </div>

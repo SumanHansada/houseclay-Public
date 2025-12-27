@@ -110,7 +110,7 @@ const Properties: React.FC<PropertiesProps> = ({
           src={propertyImages[currentImageIndex]}
           alt={`Property ${property?.propertyID}`}
           fill
-          className="rounded-xl bg-gray-200"
+          className="rounded-xl bg-gray-200 object-cover"
         />
 
         {/* Badge: Featured or Exclusive */}
