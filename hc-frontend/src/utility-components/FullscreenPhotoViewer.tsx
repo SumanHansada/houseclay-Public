@@ -182,14 +182,14 @@ function FullscreenPhotoViewer({
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
-          className="relative w-full h-full max-w-7xl max-h-[90vh] p-4"
+          className="relative w-full h-full max-w-7xl max-h-[80vh] p-4 mb-28"
         >
-          <div className="relative w-full h-full rounded-xl overflow-hidden">
+          <div className="relative w-full h-full overflow-hidden">
             <ImageWithFallback
               src={currentImage}
               alt={`Fullscreen image ${currentIndex + 1}`}
               fill
-              className="max-md:object-contain object-cover transition-transform duration-300 ease-in-out bg-gray-200"
+              className="object-contain transition-transform duration-300 ease-in-out"
               style={{ transformOrigin: "center" }}
             />
           </div>
