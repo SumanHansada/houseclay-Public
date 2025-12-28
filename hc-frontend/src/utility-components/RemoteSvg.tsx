@@ -20,11 +20,6 @@ const fetchSvg = async (url: string): Promise<string> => {
 
   let svgText = await res.text();
   const ct = res.headers.get("content-type") || "";
-
-  console.debug(
-    `Fetched SVG from ${url}: content-type="${ct}", length=${svgText.length}`,
-  );
-
   // Check for SVG XML declaration or root <svg> tag
   const trimmed = svgText.trim();
   if (!trimmed.startsWith("<svg") && !trimmed.startsWith("<?xml")) {
