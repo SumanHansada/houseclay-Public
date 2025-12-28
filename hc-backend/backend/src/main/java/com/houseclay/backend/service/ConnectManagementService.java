@@ -16,7 +16,7 @@ public class ConnectManagementService {
     @Autowired
     private UserRepository userRepository;
 
-    final static int NEW_USER_CONNECT_GRANT = 2;
+    final static int NEW_USER_CONNECT_GRANT = 5;
     final static int EMAIL_VERIFICATION_GRANT = 1;
 
     final static String SYSTEM_ACTOR = "SYSTEM";
