@@ -7,15 +7,15 @@ import toast from "react-hot-toast";
 import { PhoneInput } from "react-international-phone";
 import { useDispatch, useSelector } from "react-redux";
 
+import { loginAction, registerAction } from "@/actions/authActions";
 import { Button } from "@/base-components";
 import { validPhoneNoLength } from "@/common/constants";
 import { AuthStep } from "@/common/enums";
+import { AuthUserDetail } from "@/interfaces/User";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import {
   useGenerateOtpMutation,
   useLazyCheckUserQuery,
-  useLoginMutation,
-  useRegisterMutation,
 } from "@/store/apiSlice";
 import { setAuthStep, setIsAuthenticated } from "@/store/authSlice";
 import { RootState } from "@/store/store";
@@ -25,7 +25,6 @@ import {
   setEmailID,
   setName,
   setUserDetail,
-  UserDetail,
 } from "@/store/userSlice";
 import { ImageWithLoader } from "@/utility-components";
 
@@ -43,9 +42,7 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
   );
 
   const checkUser = useSelector((state: RootState) => state.user.checkUser);
-  const [login] = useLoginMutation();
   const [triggerCheckUser] = useLazyCheckUserQuery();
-  const [register] = useRegisterMutation();
   const [generateOtp] = useGenerateOtpMutation();
   const dispatch = useDispatch();
   const { isMobile } = useDeviceContext();
@@ -123,45 +120,46 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
 
   const handleVerifyAndContinue = async () => {
     try {
+      let result: { success: boolean; data?: AuthUserDetail; error?: string };
+
       if (!checkUser) {
-        if (!phoneNo) return;
-        if (!emailIDRegex.test(emailID)) return;
-        if (!name) return;
-        const registerResponse = await register({
+        // Register new user
+        if (!phoneNo || !emailIDRegex.test(emailID) || !name) return;
+        result = await registerAction({
           phoneNo,
           name,
           emailID,
           otpCode: otpCode.join(""),
         });
-        if (registerResponse.data) {
-          dispatch(setIsAuthenticated(true));
-          dispatch(setUserDetail(registerResponse.data));
-        } else {
-          toast.error("Registration failed! Wrong OTP code");
-          setOtpCode(["", "", "", ""]);
-          throw new Error("Registration failed");
-        }
       } else {
-        if (!phoneNo) return;
-        if (!otpCode.join()) return;
-        const loginResponse = await login({
+        // Login existing user
+        if (!phoneNo || !otpCode.join("")) return;
+        result = await loginAction({
           phoneNo,
           otpCode: otpCode.join(""),
         });
-        if (loginResponse.data) {
-          dispatch(setIsAuthenticated(true));
-          dispatch(setUserDetail(loginResponse?.data as UserDetail));
-        } else {
-          toast.error("Login failed! Wrong OTP code");
-          setOtpCode(["", "", "", ""]);
-          throw new Error("Login failed");
-        }
       }
+
+      if (!result.success || !result.data) {
+        const errorMessage = result.error || "Authentication failed";
+        toast.error(errorMessage);
+        setOtpCode(["", "", "", ""]);
+        throw new Error(errorMessage);
+      }
+
+      // Update Redux state
+      dispatch(setIsAuthenticated(true));
+      dispatch(setUserDetail(result.data));
       dispatch(setAuthStep(AuthStep.LOGGED_IN));
       onClose();
       onSuccess?.();
     } catch (err) {
-      console.error(err);
+      console.error("Verify Error:", err);
+      const errorMessage =
+        err instanceof Error ? err.message : "An unexpected error occurred";
+      if (!errorMessage.includes("Authentication failed")) {
+        toast.error(errorMessage);
+      }
     }
   };
 

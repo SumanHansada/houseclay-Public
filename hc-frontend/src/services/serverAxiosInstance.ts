@@ -1,13 +1,9 @@
 import axios from "axios";
-import { cookies } from "next/headers";
 
 import { BASE_API_URL } from "@/common/constants";
 
 const serverAxiosInstance = axios.create({
   baseURL: BASE_API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 export default serverAxiosInstance;
@@ -16,40 +12,38 @@ export default serverAxiosInstance;
 serverAxiosInstance.interceptors.request.use(
   async (config) => {
     const fullUrl = `${config.baseURL || ""}${config.url || ""}`;
+    const method = config.method?.toUpperCase() || "GET";
 
-    // Read cookies from Next.js only when credentials are required
-    let cookieHeader = "";
-    if (config.withCredentials) {
-      try {
-        const cookieStore = await cookies();
-        const allCookies = cookieStore.getAll();
+    // Build cURL command
+    let curlCommand = `curl -X ${method}`;
 
-        if (allCookies.length > 0) {
-          cookieHeader = allCookies
-            .map((cookie) => `${cookie.name}=${cookie.value}`)
-            .join("; ");
-
-          // Add Cookie header to the request
-          if (config.headers) {
-            config.headers.Cookie = cookieHeader;
-          }
+    // Add headers
+    if (config.headers) {
+      Object.entries(config.headers).forEach(([key, value]) => {
+        if (value && typeof value === "string") {
+          curlCommand += ` \\\n  -H "${key}: ${value}"`;
         }
-      } catch (error) {
-        // cookies() only works in Server Components/Actions
-        // If called from client-side, this will fail (which is expected)
-        console.error(
-          "Note: cookies() not available in this context (client-side?)",
-          error,
-        );
-      }
+      });
     }
+
+    // Add body for POST/PUT/PATCH requests
+    if (config.data && ["POST", "PUT", "PATCH"].includes(method)) {
+      const body =
+        typeof config.data === "string"
+          ? config.data
+          : JSON.stringify(config.data);
+      curlCommand += ` \\\n  -d '${body}'`;
+    }
+
+    // Add URL
+    curlCommand += ` \\\n  "${fullUrl}"`;
 
     console.log("=== API Request Debug ===");
     console.log("Full URL:", fullUrl);
-    console.log("Method:", config.method?.toUpperCase());
-    console.log("Cookies:", cookieHeader || "(none)");
+    console.log("Method:", method);
     console.log("Headers:", config.headers);
     console.log("\n=== cURL Command ===");
+    console.log(curlCommand);
     console.log("========================\n");
     return config;
   },
@@ -58,18 +52,12 @@ serverAxiosInstance.interceptors.request.use(
   },
 );
 
-// Add a response interceptor to surface 401s distinctly on the server
+// Add a response interceptor - errors are handled in serverAPIService
+// No transformation needed here, let serverAPIService handle all error cases
 serverAxiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error?.response?.status === 401) {
-      // On the server we cannot redirect directly; let callers decide.
-      const unauthorizedError = new Error("UNAUTHORIZED_401");
-      // Preserve axios error for debugging while signaling 401 clearly
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (unauthorizedError as any).cause = error;
-      throw unauthorizedError;
-    }
+    // Pass through errors unchanged - serverAPIService will handle them
     return Promise.reject(error);
   },
 );

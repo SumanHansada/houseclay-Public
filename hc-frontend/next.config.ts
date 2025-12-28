@@ -10,6 +10,15 @@ const nextConfig: NextConfig = {
   // Performance optimizations
   experimental: {
     optimizePackageImports: ["lucide-react", "react-loading-skeleton"],
+    viewTransition: true,
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "https://apis.houseclay.com/api/:path*",
+      },
+    ];
   },
   allowedDevOrigins: ["localhost.houseclay.com"],
   // Enable compression

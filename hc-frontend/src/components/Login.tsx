@@ -8,6 +8,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
+import { loginAction, registerAction } from "@/actions/authActions";
 import { Button } from "@/base-components";
 import { loginImageURL } from "@/common/cdnURLs";
 import { validPhoneNoLength } from "@/common/constants";
@@ -18,8 +19,6 @@ import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useGenerateOtpMutation,
   useLazyCheckUserQuery,
-  useLoginMutation,
-  useRegisterMutation,
 } from "@/store/apiSlice";
 import {
   setAuthStep,
@@ -52,9 +51,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
     (state: RootState) => state.user.userDetail,
   );
   const checkUser = useSelector((state: RootState) => state.user.checkUser);
-  const [login] = useLoginMutation();
   const [triggerCheckUser] = useLazyCheckUserQuery();
-  const [register] = useRegisterMutation();
   const [generateOtp] = useGenerateOtpMutation();
   const dispatch = useDispatch();
   const { isMobile } = useDeviceContext();
@@ -170,28 +167,38 @@ const Login = ({ onClose }: { onClose: () => void }) => {
     if (isLoading || !isVerifyEnabled) return;
     setIsLoading(true);
     try {
-      let userData: AuthUserDetail;
+      let result: { success: boolean; data?: AuthUserDetail; error?: string };
+
       if (!checkUser) {
-        const registerResponse = await register({
+        // Register new user
+        result = await registerAction({
           phoneNo,
           name,
           emailID,
           otpCode: otpCode.join(""),
-        }).unwrap();
-        console.warn("Register Response:", registerResponse);
-        userData = registerResponse;
+        });
       } else {
-        const loginResponse = await login({
+        // Login existing user
+        result = await loginAction({
           phoneNo,
           otpCode: otpCode.join(""),
-        }).unwrap();
-        console.warn("Login Response:", loginResponse);
-        userData = loginResponse as AuthUserDetail;
+        });
       }
+
+      if (!result.success || !result.data) {
+        throw new Error(result.error || "Authentication failed");
+      }
+
+      const userData = result.data;
+      console.warn("Auth Response:", userData);
+
+      // Update Redux state
       dispatch(setIsAuthenticated(true));
       dispatch(setUserDetail(userData));
       dispatch(setAuthStep(AuthStep.LOGGED_IN));
       onClose();
+
+      // Navigate based on context
       if (loginFromLoginPage) {
         router.replace("/");
         dispatch(setLoginFromLoginPage(false));
@@ -201,7 +208,9 @@ const Login = ({ onClose }: { onClose: () => void }) => {
       }
     } catch (err: unknown) {
       console.error("Verify Error:", err);
-      toast.error(getErrorMessage(err));
+      const errorMessage =
+        err instanceof Error ? err.message : "An unexpected error occurred";
+      toast.error(errorMessage);
       setOtpCode(["", "", "", ""]);
       if (inputRefs[0].current) {
         inputRefs[0].current.focus();
