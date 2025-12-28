@@ -1,15 +1,35 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import { cache } from "react";
+import { cache, Suspense } from "react";
 
 import { CDN_BASE_URL, WEBSITE_BASE_URL } from "@/common/constants";
 import {
+  BALCONY_TYPE_OPTIONS,
+  BATHROOM_TYPE_OPTIONS,
   BHK_TYPE_OPTIONS,
+  FACING_OPTIONS,
+  FLOOR_NUMERIC_OPTIONS,
+  FURNISHING_OPTIONS,
   getOptionLabel,
+  PARKING_OPTIONS,
+  POWER_BACKUP_OPTIONS,
+  PROPERTY_AGE_OPTIONS,
+  PROPERTY_TYPE_OPTIONS,
+  ROOM_TYPE_OPTIONS,
+  TENANT_TYPE_OPTIONS,
+  TOTAL_FLOORS_NUMERIC_OPTIONS,
+  WATER_SUPPLY_OPTIONS,
 } from "@/common/dataConstants/options";
-import { pascalCase } from "@/common/utils";
+import { PropertyCategory } from "@/common/enums";
+import {
+  formatDateToReadable,
+  formatINRCurrency,
+  pascalCase,
+  processPropertyImages,
+} from "@/common/utils";
 import { ServerAPIService } from "@/services/serverAPIService";
 
+import Loading from "./loading";
 import { PropertyDetailsClient } from "./PropertyDetailsClient";
 
 // Cache the page for 6 hours (21600 seconds)
@@ -136,6 +156,238 @@ export async function generateMetadata({
   };
 }
 
+// Server-side function to process property data and compute all derivations
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function processPropertyData(propertyData: any) {
+  if (!propertyData) return null;
+
+  const {
+    property,
+    contactUserCount,
+    shortlistUserCount,
+    viewUserCount,
+    owner,
+    reported,
+    propertyOwner,
+  } = propertyData;
+  if (!property) return null;
+
+  const propertyCategory = property?.propertyCategory ?? PropertyCategory.RENT;
+
+  // Process images
+  const propertyImages = processPropertyImages(property?.images);
+
+  // Common derivations
+  const bhkType = getOptionLabel(BHK_TYPE_OPTIONS, property?.bhkType);
+  const propertyType = getOptionLabel(
+    PROPERTY_TYPE_OPTIONS,
+    property?.propertyType,
+  );
+  const propertyFacing =
+    property?.facing === "dont-know"
+      ? "Not Specified"
+      : getOptionLabel(FACING_OPTIONS, property?.facing);
+  const propertyFloor = getOptionLabel(FLOOR_NUMERIC_OPTIONS, property?.floor);
+  const totalFloors = getOptionLabel(
+    TOTAL_FLOORS_NUMERIC_OPTIONS,
+    property?.totalFloors,
+  );
+  const furnishingStatus = getOptionLabel(
+    FURNISHING_OPTIONS,
+    property?.furnishing,
+  );
+  const parking =
+    property?.parking === "both"
+      ? "Car and Bike"
+      : getOptionLabel(PARKING_OPTIONS, property?.parking);
+  const bedrooms = bhkType
+    ? bhkType === "Studio" || bhkType === "1-bhk"
+      ? "1 Bedroom"
+      : `${bhkType.split("BHK")[0]} Bedrooms`
+    : "";
+  const builtUpArea = `${property?.builtUpArea || 0} Sq. Ft`;
+  const availableFrom = property?.availableFrom
+    ? formatDateToReadable(property?.availableFrom)
+    : "";
+  const maintenance = formatINRCurrency(property?.maintenanceCharges || 0);
+  const waterSupply = getOptionLabel(
+    WATER_SUPPLY_OPTIONS,
+    property?.waterSupply,
+  );
+  const powerBackup = getOptionLabel(
+    POWER_BACKUP_OPTIONS,
+    property?.powerBackup,
+  );
+  const nonVegAllowed = property?.nonVegAllowed ? "Yes" : "No";
+
+  // Category-specific derivations
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let categoryDerivations: any = {};
+  if (propertyCategory === PropertyCategory.FLATMATE) {
+    categoryDerivations = {
+      roomType: getOptionLabel(ROOM_TYPE_OPTIONS, property?.roomType),
+      tenantType: getOptionLabel(TENANT_TYPE_OPTIONS, property?.tenantType),
+      balconyType: getOptionLabel(BALCONY_TYPE_OPTIONS, property?.balconyType),
+      bathroomType: getOptionLabel(
+        BATHROOM_TYPE_OPTIONS,
+        property?.bathroomType,
+      ),
+      smokingAllowed: property?.smokingPreference ? "Yes" : "No",
+      drinkingAllowed: property?.drinkingPreference ? "Yes" : "No",
+    };
+  } else if (propertyCategory === PropertyCategory.RENT) {
+    categoryDerivations = {
+      propertyAge: getOptionLabel(PROPERTY_AGE_OPTIONS, property?.propertyAge),
+      flooring: pascalCase(property?.floorType || ""),
+      bathrooms: `${property?.bathrooms || 0} ${property?.bathrooms > 1 ? "Bathrooms" : "Bathroom"}`,
+      balcony: `${property?.balcony || 0} ${property?.balcony > 1 ? "Balconies" : "Balcony"}`,
+      preferredTenants: property?.preferredTenants
+        ? property?.preferredTenants
+            .map((value: string) => pascalCase(value))
+            .join(", ")
+        : "N/A",
+    };
+  }
+
+  // Price/Rent/Deposit derivations
+  const priceDerivations = {
+    tag: propertyCategory === PropertyCategory.RESALE ? "Price:" : "Rent:",
+    amount:
+      propertyCategory === PropertyCategory.RESALE
+        ? formatINRCurrency(property?.price)
+        : formatINRCurrency(property?.rent),
+    deposit: formatINRCurrency(
+      property?.deposit || property?.depositCharges || 0,
+    ),
+  };
+
+  // Generate property title
+  let propertyTitle = "";
+  if (propertyCategory === PropertyCategory.FLATMATE) {
+    propertyTitle = `${categoryDerivations.roomType + " Room"} for ${categoryDerivations.tenantType} in a ${bhkType} in ${property?.locationOrSocietyName}, ${property?.city}`;
+  } else {
+    propertyTitle = `${bhkType} in ${property?.locationOrSocietyName} for ${pascalCase(propertyCategory)} in ${property?.city}`;
+  }
+
+  // Process description sentences
+  const descriptionSentences = property?.description
+    ? property?.description
+        .split(/[.!?] +/)
+        .filter((sentence: string) => sentence.trim().length > 0)
+    : [];
+
+  // Build category-specific fields
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let categoryFields: { leftFields: any[]; rightFields: any[] } = {
+    leftFields: [],
+    rightFields: [],
+  };
+  if (propertyCategory === PropertyCategory.RENT) {
+    categoryFields = {
+      leftFields: [],
+      rightFields: [
+        { label: "Furnishing", value: furnishingStatus },
+        { label: "Flooring", value: categoryDerivations.flooring },
+        { label: "Non-Veg Allowed", value: nonVegAllowed },
+        { label: "Property Age", value: categoryDerivations.propertyAge },
+        {
+          label: "Preferred Tenants",
+          value: categoryDerivations.preferredTenants,
+        },
+      ],
+    };
+  } else if (propertyCategory === PropertyCategory.FLATMATE) {
+    categoryFields = {
+      leftFields: [],
+      rightFields: [
+        { label: "Tenant Type", value: categoryDerivations.tenantType },
+        { label: "Smoking Allowed", value: categoryDerivations.smokingAllowed },
+        {
+          label: "Drinking Allowed",
+          value: categoryDerivations.drinkingAllowed,
+        },
+        { label: "Parking", value: parking },
+      ],
+    };
+  }
+
+  // Build property detail columns
+  const propertyDetailLeftColumn = [
+    { label: "Property Type", value: propertyType },
+    { label: "Facing", value: propertyFacing },
+    { label: "Floor", value: `${propertyFloor}/${totalFloors}` },
+    { label: "Water Supply", value: waterSupply },
+    { label: "Power Backup", value: powerBackup },
+    ...categoryFields.leftFields,
+  ];
+
+  const propertyDetailRightColumn = [...categoryFields.rightFields];
+
+  return {
+    // Raw property data
+    property,
+    contactUserCount,
+    shortlistUserCount,
+    viewUserCount,
+    owner,
+    reported,
+    propertyOwner,
+    propertyCategory,
+    // Processed data
+    propertyImages,
+    // Common derivations
+    bhkType,
+    propertyType,
+    propertyFacing,
+    propertyFloor,
+    totalFloors,
+    furnishingStatus,
+    parking,
+    bedrooms,
+    builtUpArea,
+    availableFrom,
+    maintenance,
+    waterSupply,
+    powerBackup,
+    nonVegAllowed,
+    // Category derivations
+    ...categoryDerivations,
+    // Price derivations
+    ...priceDerivations,
+    // Computed values
+    propertyTitle,
+    descriptionSentences,
+    propertyDetailLeftColumn,
+    propertyDetailRightColumn,
+  };
+}
+
+// Async component that fetches and processes property data
+async function PropertyDetailsContent({
+  propertyID,
+  isAuthenticated,
+}: {
+  propertyID: string;
+  isAuthenticated: boolean;
+}) {
+  // Fetch property data - use authenticated endpoint if token exists
+  // This will be deduplicated with generateMetadata's call above
+  const propertyData = isAuthenticated
+    ? await getCachedPropertyDataWithAuth(propertyID)
+    : await getCachedPropertyDataWithoutAuth(propertyID);
+
+  // Process all data transformations server-side
+  const processedData = processPropertyData(propertyData);
+
+  return (
+    <PropertyDetailsClient
+      propertyID={propertyID}
+      initialPropertyData={processedData}
+      isAuthenticated={isAuthenticated}
+    />
+  );
+}
+
 // Server Component
 async function PropertyDetails({ params }: { params: PropertyParams }) {
   // Await the params before using them
@@ -146,18 +398,13 @@ async function PropertyDetails({ params }: { params: PropertyParams }) {
   const token = cookieStore.get("token");
   const isAuthenticated = !!token;
 
-  // Fetch property data - use authenticated endpoint if token exists
-  // This will be deduplicated with generateMetadata's call above
-  const propertyData = isAuthenticated
-    ? await getCachedPropertyDataWithAuth(propertyID)
-    : await getCachedPropertyDataWithoutAuth(propertyID);
-
   return (
-    <PropertyDetailsClient
-      propertyID={propertyID}
-      initialPropertyData={propertyData}
-      isAuthenticated={isAuthenticated}
-    />
+    <Suspense fallback={<Loading />}>
+      <PropertyDetailsContent
+        propertyID={propertyID}
+        isAuthenticated={isAuthenticated}
+      />
+    </Suspense>
   );
 }
 

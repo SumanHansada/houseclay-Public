@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import type { LucideIcon } from "lucide-react";
 import {
   Bath,
   BedDouble,
@@ -39,7 +40,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
@@ -63,37 +64,15 @@ import {
   twentyFourSevenIconURL,
   wifiIconURL,
 } from "@/common/cdnURLs";
-import {
-  AMENITY_LABELS,
-  AMENITY_VALUES,
-  BALCONY_TYPE_OPTIONS,
-  BATHROOM_TYPE_OPTIONS,
-  BHK_TYPE_OPTIONS,
-  FACING_OPTIONS,
-  FLOOR_NUMERIC_OPTIONS,
-  FURNISHING_OPTIONS,
-  getOptionLabel,
-  PARKING_OPTIONS,
-  POWER_BACKUP_OPTIONS,
-  PROPERTY_AGE_OPTIONS,
-  PROPERTY_TYPE_OPTIONS,
-  ROOM_TYPE_OPTIONS,
-  TENANT_TYPE_OPTIONS,
-  TOTAL_FLOORS_NUMERIC_OPTIONS,
-  WATER_SUPPLY_OPTIONS,
-} from "@/common/dataConstants/options";
+import { AMENITY_LABELS, AMENITY_VALUES } from "@/common/dataConstants/options";
 import {
   MONTHLY_CHARGES_DIALOG_ID,
   PHOTO_GALLERY_DIALOG_ID,
   REPORT_LISTING_DIALOG_ID,
 } from "@/common/dialogConstants";
 import { PropertyCategory } from "@/common/enums";
-import {
-  formatDateToReadable,
-  formatINRCurrency,
-  pascalCase,
-  processPropertyImages,
-} from "@/common/utils";
+import { pascalCase } from "@/common/utils";
+import FullScreenLoader from "@/components/FullScreenLoader";
 import {
   ContactOwnerLoginDialog,
   MonthlyChargesDialog,
@@ -166,10 +145,9 @@ export function PropertyDetailsClient({
   );
   const isAuthenticated = serverIsAuthenticated ?? clientIsAuthenticated;
 
-  // All data is now fetched server-side, so we just use initialPropertyData
-  // The server already made the decision to fetch authenticated or public data
+  // All data is now processed server-side, so we just use the pre-processed data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const propertyData = initialPropertyData as any;
+  const processedData = initialPropertyData as any;
 
   const { toggleShortlist, isShortlisted } = useShortlist();
   const shortlistStatus = isShortlisted(propertyID);
@@ -183,7 +161,13 @@ export function PropertyDetailsClient({
   const { isMobile } = useDeviceContext();
   const { isDialogOpen, closeDialog, openDialog } = useDialog();
 
+  // Extract all pre-processed data from server
+  if (!processedData) {
+    return <FullScreenLoader />;
+  }
+
   const {
+    // Raw property data
     property,
     contactUserCount,
     shortlistUserCount,
@@ -191,232 +175,35 @@ export function PropertyDetailsClient({
     owner,
     reported,
     propertyOwner,
-  } = propertyData || {};
-
-  const propertyCategory = property?.propertyCategory ?? PropertyCategory.RENT;
-
-  // Common derivations
-  const commonDerivations = useMemo(
-    () => ({
-      bhkType: getOptionLabel(BHK_TYPE_OPTIONS, property?.bhkType),
-      propertyType: getOptionLabel(
-        PROPERTY_TYPE_OPTIONS,
-        property?.propertyType,
-      ),
-      propertyFacing:
-        property?.facing === "dont-know"
-          ? "Not Specified"
-          : getOptionLabel(FACING_OPTIONS, property?.facing),
-      propertyFloor: getOptionLabel(FLOOR_NUMERIC_OPTIONS, property?.floor),
-      totalFloors: getOptionLabel(
-        TOTAL_FLOORS_NUMERIC_OPTIONS,
-        property?.totalFloors,
-      ),
-      furnishingStatus: getOptionLabel(
-        FURNISHING_OPTIONS,
-        property?.furnishing,
-      ),
-      parking: (() => {
-        return property?.parking === "both"
-          ? "Car and Bike"
-          : getOptionLabel(PARKING_OPTIONS, property?.parking);
-      })(),
-      bedrooms: (() => {
-        const bhk = getOptionLabel(BHK_TYPE_OPTIONS, property?.bhkType);
-        return bhk
-          ? bhk === "Studio" || bhk === "1-bhk"
-            ? "1 Bedroom"
-            : `${bhk.split("BHK")[0]} Bedrooms`
-          : "";
-      })(),
-      builtUpArea: `${property?.builtUpArea || 0} Sq. Ft`,
-      availableFrom: property?.availableFrom
-        ? formatDateToReadable(property?.availableFrom)
-        : "",
-      maintenance: formatINRCurrency(property?.maintenanceCharges || 0),
-      waterSupply: getOptionLabel(WATER_SUPPLY_OPTIONS, property?.waterSupply),
-      powerBackup: getOptionLabel(POWER_BACKUP_OPTIONS, property?.powerBackup),
-      nonVegAllowed: property?.nonVegAllowed ? "Yes" : "No",
-      // whoWillShow: getOptionLabel(
-      //   WHO_WILL_SHOW_PROPERTY_OPTIONS,
-      //   property?.whoWillShowProperty,
-      // ),
-    }),
-    [property],
-  );
-
-  // Category-specific derivations
-  const categoryDerivations = useMemo(() => {
-    switch (propertyCategory) {
-      case PropertyCategory.FLATMATE:
-        return {
-          roomType: getOptionLabel(ROOM_TYPE_OPTIONS, property?.roomType),
-          tenantType: getOptionLabel(TENANT_TYPE_OPTIONS, property?.tenantType),
-          balconyType: getOptionLabel(
-            BALCONY_TYPE_OPTIONS,
-            property?.balconyType,
-          ),
-          bathroomType: getOptionLabel(
-            BATHROOM_TYPE_OPTIONS,
-            property?.bathroomType,
-          ),
-          smokingAllowed: property?.smokingPreference ? "Yes" : "No",
-          drinkingAllowed: property?.drinkingPreference ? "Yes" : "No",
-        };
-      case PropertyCategory.RENT:
-        return {
-          propertyAge:
-            propertyCategory !== PropertyCategory.FLATMATE
-              ? getOptionLabel(PROPERTY_AGE_OPTIONS, property?.propertyAge)
-              : "",
-          flooring: pascalCase(property?.floorType || ""),
-          bathrooms:
-            propertyCategory !== PropertyCategory.FLATMATE
-              ? `${property?.bathrooms || 0} ${property?.bathrooms > 1 ? "Bathrooms" : "Bathroom"}`
-              : "",
-          balcony:
-            propertyCategory !== PropertyCategory.FLATMATE
-              ? `${property?.balcony || 0} ${property?.balcony > 1 ? "Balconies" : "Balcony"}`
-              : "",
-          preferredTenants: property?.preferredTenants
-            ? property?.preferredTenants
-                .map((value: string) => pascalCase(value))
-                .join(", ")
-            : "N/A",
-        };
-      default:
-        return {};
-    }
-  }, [property, propertyCategory]);
-
-  // Price/Rent/Deposit
-  const priceDerivations = useMemo(
-    () => ({
-      tag: propertyCategory === PropertyCategory.RESALE ? "Price:" : "Rent:",
-      amount:
-        propertyCategory === PropertyCategory.RESALE
-          ? formatINRCurrency(property?.price)
-          : formatINRCurrency(property?.rent),
-      deposit: formatINRCurrency(
-        property?.deposit || property?.depositCharges || 0,
-      ),
-    }),
-    [property, propertyCategory],
-  );
-
-  const propertyImages = useMemo(
-    () => processPropertyImages(property?.images),
-    [property],
-  );
-
-  // Destructure for use in JSX
-  const {
+    propertyCategory,
+    // Processed data
+    propertyImages,
+    // Common derivations
     bhkType,
     propertyType,
-    propertyFacing,
-    propertyFloor,
-    totalFloors,
     furnishingStatus,
     parking,
     bedrooms,
     builtUpArea,
     availableFrom,
     maintenance,
-    waterSupply,
-    powerBackup,
     nonVegAllowed,
-  } = commonDerivations;
-
-  const {
-    balconyType,
-    propertyAge,
+    // Category derivations
     roomType,
+    balconyType,
+    bathroomType,
     bathrooms,
     balcony,
-    tenantType,
-    bathroomType,
-    smokingAllowed,
-    drinkingAllowed,
-    flooring,
-    preferredTenants,
-  } = categoryDerivations;
-
-  const {
+    // Price derivations
     tag: catBasedPriceOrRentTag,
     amount: formattedPriceOrRentAmount,
     deposit: formattedDeposit,
-  } = priceDerivations;
-
-  // Title
-  const propertyTitle = useMemo(() => {
-    switch (propertyCategory) {
-      case PropertyCategory.FLATMATE:
-        return `${roomType + " Room"} for ${tenantType} in a ${bhkType} in ${property?.locationOrSocietyName}, ${property?.city}`;
-      default:
-      case PropertyCategory.RENT:
-        return `${bhkType} in ${property?.locationOrSocietyName} for ${pascalCase(propertyCategory)} in ${property?.city}`;
-    }
-  }, [property, propertyCategory, bhkType, roomType, tenantType]);
-
-  const getCategorySpecificFields = () => {
-    switch (propertyCategory) {
-      case PropertyCategory.RENT:
-        // Use the destructured variables from categoryDerivations
-        return {
-          leftFields: [],
-          rightFields: [
-            { label: "Furnishing", value: furnishingStatus, icon: Sofa },
-            { label: "Flooring", value: flooring, icon: InspectionPanel },
-            { label: "Non-Veg Allowed", value: nonVegAllowed, icon: Utensils },
-            { label: "Property Age", value: propertyAge, icon: Hourglass },
-            {
-              label: "Preferred Tenants",
-              value: preferredTenants,
-              icon: Users,
-            },
-          ],
-        };
-      case PropertyCategory.FLATMATE:
-        return {
-          leftFields: [],
-          rightFields: [
-            { label: "Tenant Type", value: tenantType, icon: Users },
-            {
-              label: "Smoking Allowed",
-              value: smokingAllowed,
-              icon: Cigarette,
-            },
-            { label: "Drinking Allowed", value: drinkingAllowed, icon: Wine },
-            { label: "Parking", value: parking, icon: ParkingCircle },
-          ],
-        };
-      default:
-        return { leftFields: [], rightFields: [] };
-    }
-  };
-
-  const categoryFields = getCategorySpecificFields();
-
-  const propertyDetailLeftColumn = [
-    // Common fields
-    { label: "Property Type", value: propertyType, icon: House },
-    { label: "Facing", value: propertyFacing, icon: Compass },
-    {
-      label: "Floor",
-      value: `${propertyFloor}/${totalFloors}`,
-      icon: Building2,
-    },
-    { label: "Water Supply", value: waterSupply, icon: Droplets },
-    { label: "Power Backup", value: powerBackup, icon: SmartphoneCharging },
-
-    // Category-specific fields
-    ...categoryFields.leftFields,
-  ];
-
-  const propertyDetailRightColumn = [
-    // Category-specific fields
-    ...categoryFields.rightFields,
-  ];
+    // Computed values
+    propertyTitle,
+    descriptionSentences,
+    propertyDetailLeftColumn,
+    propertyDetailRightColumn,
+  } = processedData;
 
   const handleShare = async () => {
     try {
@@ -447,16 +234,38 @@ export function PropertyDetailsClient({
     openDialog("report-listing-dialog");
   };
 
-  // Split description into sentences array
-  const descriptionSentences = property?.description
-    ? property?.description
-        .split(/[.!?] +/)
-        .filter((sentence: string) => sentence.trim().length > 0)
-    : [];
+  // descriptionSentences is now pre-processed server-side
+
+  // Map icons to property detail columns (icons can't be serialized from server)
+  const propertyDetailLeftColumnWithIcons = [
+    { ...propertyDetailLeftColumn[0], icon: House },
+    { ...propertyDetailLeftColumn[1], icon: Compass },
+    { ...propertyDetailLeftColumn[2], icon: Building2 },
+    { ...propertyDetailLeftColumn[3], icon: Droplets },
+    { ...propertyDetailLeftColumn[4], icon: SmartphoneCharging },
+  ];
+
+  const propertyDetailRightColumnWithIcons = propertyDetailRightColumn.map(
+    (item: { label: string; value: string }) => {
+      // Map icon based on label
+      let icon: LucideIcon = Info; // default
+      if (item.label === "Furnishing") icon = Sofa;
+      else if (item.label === "Flooring") icon = InspectionPanel;
+      else if (item.label === "Non-Veg Allowed") icon = Utensils;
+      else if (item.label === "Property Age") icon = Hourglass;
+      else if (item.label === "Preferred Tenants") icon = Users;
+      else if (item.label === "Tenant Type") icon = Users;
+      else if (item.label === "Smoking Allowed") icon = Cigarette;
+      else if (item.label === "Drinking Allowed") icon = Wine;
+      else if (item.label === "Parking") icon = ParkingCircle;
+
+      return { ...item, icon };
+    },
+  );
 
   const propertyDetailRowCount = Math.max(
-    propertyDetailLeftColumn.length,
-    propertyDetailRightColumn.length,
+    propertyDetailLeftColumnWithIcons.length,
+    propertyDetailRightColumnWithIcons.length,
   );
 
   return (
@@ -643,7 +452,7 @@ export function PropertyDetailsClient({
                 <div className="grid grid-cols-2 gap-6">
                   {/* Left Column */}
                   <div className="space-y-4">
-                    {propertyDetailLeftColumn.map((item, index) => (
+                    {propertyDetailLeftColumnWithIcons.map((item, index) => (
                       <PropertyDetailItem
                         key={item.label + index}
                         icon={item.icon}
@@ -655,14 +464,23 @@ export function PropertyDetailsClient({
 
                   {/* Right Column */}
                   <div className="space-y-4">
-                    {propertyDetailRightColumn.map((item, index) => (
-                      <PropertyDetailItem
-                        key={item.label + index}
-                        icon={item.icon}
-                        label={item.label}
-                        value={item.value}
-                      />
-                    ))}
+                    {propertyDetailRightColumnWithIcons.map(
+                      (
+                        item: {
+                          label: string;
+                          value: string;
+                          icon: LucideIcon;
+                        },
+                        index: number,
+                      ) => (
+                        <PropertyDetailItem
+                          key={item.label + index}
+                          icon={item.icon}
+                          label={item.label}
+                          value={item.value}
+                        />
+                      ),
+                    )}
                   </div>
                 </div>
               </section>
@@ -1373,8 +1191,9 @@ export function PropertyDetailsClient({
                 <div className="flex flex-col gap-2 md:gap-6">
                   {Array.from({ length: propertyDetailRowCount }).map(
                     (_, index) => {
-                      const leftItem = propertyDetailLeftColumn[index];
-                      const rightItem = propertyDetailRightColumn[index];
+                      const leftItem = propertyDetailLeftColumnWithIcons[index];
+                      const rightItem =
+                        propertyDetailRightColumnWithIcons[index];
 
                       return (
                         <div key={index} className="grid grid-cols-2 pb-2">
