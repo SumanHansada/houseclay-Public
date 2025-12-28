@@ -9,6 +9,7 @@ export const PHOTO_GALLERY_DIALOG_ID = "photo-gallery-dialog";
 export const UPLOAD_PHOTOS_DIALOG_ID = "upload-photos-dialog";
 export const DELETE_PHOTOS_DIALOG_ID = "delete-photos-dialog";
 export const LIST_PROPERTY_SUCCESS_DIALOG_ID = "list-property-success-dialog";
+export const LIST_PROPERTY_FAILURE_DIALOG_ID = "list-property-failure-dialog";
 export const STANDOUTS_DIALOG_ID = "standouts-dialog";
 export const CONNECTS_PRICE_BREAKDOWN_DIALOG_ID =
   "connects-price-breakdown-dialog";

@@ -3,7 +3,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 
 import { bannerPeopleMobileImageURL } from "@/common/cdnURLs";
-import { BENGALURU_LOCATION } from "@/common/constants";
+import { EXPLORE_LOCATION } from "@/common/constants";
 import { STANDOUTS_DIALOG_ID } from "@/common/dialogConstants";
 import { PropertyCategory } from "@/common/enums";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -102,7 +102,7 @@ const MastHeadMobile: React.FC = () => {
 
         <div className="flex flex-col items-center justify-center self-start justify-self-center">
           <Link
-            href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=flatmate`}
+            href={`/property-search?lat=${EXPLORE_LOCATION.lat}&lon=${EXPLORE_LOCATION.lng}&propertyCategory=flatmate`}
             data-category="flatmate"
             data-active={
               searchParams.get("propertyCategory") === "flatmate"

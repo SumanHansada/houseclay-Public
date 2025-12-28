@@ -98,7 +98,7 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
           gap={4}
           showDots={false}
           showArrows
-          responsiveSlidesPerView
+          responsiveSlidesPerView={true}
           containerClassName="px-2 max-md:hidden"
           className="max-md:hidden"
         >
@@ -129,6 +129,7 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
               key={property.propertyID}
               property={property}
               badgeType={property.badges}
+              showCarouselDots={false}
               onClick={(e: React.MouseEvent) =>
                 handleCardClick(e, property.propertyID)
               }

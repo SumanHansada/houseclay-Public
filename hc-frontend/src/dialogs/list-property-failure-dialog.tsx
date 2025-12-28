@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 
-import { PropertyCategory } from "@/common/enums";
 import {
   Dialog,
   DialogContent,
@@ -14,16 +13,12 @@ import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { SvgIcon } from "@/utility-components";
 
-interface ListPropertySuccessDialogProps {
+interface ListPropertyFailureDialogProps {
   id: string;
-  propertyID: string;
-  propertyCategory: PropertyCategory;
 }
 
-const ListPropertySuccessDialog: React.FC<ListPropertySuccessDialogProps> = ({
+const ListPropertyFailureDialog: React.FC<ListPropertyFailureDialogProps> = ({
   id,
-  propertyID,
-  propertyCategory,
 }) => {
   const { closeDialog } = useDialog();
   const { isMobile } = useDeviceContext();
@@ -33,10 +28,14 @@ const ListPropertySuccessDialog: React.FC<ListPropertySuccessDialogProps> = ({
     closeDialog(id);
   };
 
-  const handlePreviewListing = () => {
+  const handleRetry = () => {
     closeDialog(id);
-    const previewUrl = `/my-property-details/${propertyCategory.toLowerCase()}/${propertyID}?from=list-property`;
-    router.push(previewUrl);
+    router.push("/list-property");
+  };
+
+  const redirectHome = () => {
+    closeDialog(id);
+    router.push("/");
   };
 
   return (
@@ -53,7 +52,7 @@ const ListPropertySuccessDialog: React.FC<ListPropertySuccessDialogProps> = ({
           <>
             <MobileHeader className="relative">
               <MobileHeader.Title>
-                Woohoo! It&apos;s all done.
+                Oops! Something went wrong.
               </MobileHeader.Title>
             </MobileHeader>
           </>
@@ -66,23 +65,29 @@ const ListPropertySuccessDialog: React.FC<ListPropertySuccessDialogProps> = ({
             <SvgIcon iconSize="large" name="list-property-success" size={270} />
           </div>
           {!isMobile && (
-            <h2 className="text-3xl text-gray-800">Congratulations!</h2>
+            <h2 className="text-3xl text-gray-800">Something went wrong!</h2>
           )}
           <p className="text-gray-600 text-lg">
-            You have successfully posted your property.
+            Sorry we are facing some technical issue
             <br />
-            It will be live soon!
+            Please try again!
           </p>
         </div>
       </DialogContent>
       <DialogFooter>
         {/* Action buttons */}
-        <div className="flex w-full">
+        <div className="flex w-full gap-2">
           <button
-            onClick={handlePreviewListing}
+            onClick={handleRetry}
             className="w-full py-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200"
           >
-            View Listing
+            Retry
+          </button>
+          <button
+            onClick={redirectHome}
+            className="w-full py-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition duration-200"
+          >
+            Home
           </button>
         </div>
       </DialogFooter>
@@ -90,4 +95,4 @@ const ListPropertySuccessDialog: React.FC<ListPropertySuccessDialogProps> = ({
   );
 };
 
-export default ListPropertySuccessDialog;
+export default ListPropertyFailureDialog;

@@ -428,7 +428,7 @@ export default function EditPropertyTypeLayout({
   // Update the handleBack function to remove the previous step from completedSteps
   const handleBack = () => {
     if (currentStep === ListPropertyFormStep.PROPERTY_DETAILS) {
-      router.back();
+      router.replace(`/my-property-details/${propertyCategory}/${propertyID}`);
       return;
     }
 
