@@ -106,10 +106,6 @@ import { PropertyCardWithImages } from "@/interfaces/User";
 import { MobileFooter } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
-import {
-  useGetAuthenticatedPropertyByIdQuery,
-  useGetPublicPropertyByIdQuery,
-} from "@/store/apiSlice";
 import { RootState } from "@/store/store";
 import {
   PhotoGallery,
@@ -120,7 +116,6 @@ import {
 import { GoogleMapsDirection } from "@/utility-components";
 
 import { PropertyDetailItem } from "./components/PropertyDetailItem";
-import Loading from "./loading";
 
 const AMENITY_ICONS: Record<string, React.ReactNode> = {
   [AMENITY_VALUES.LIFT]: <RemoteSvg src={liftIconURL} />,
@@ -156,60 +151,25 @@ const UNLOCK_DETAILS_DIALOG_ID = "unlock-owner-details-dialog";
 
 interface PropertyDetailsClientProps {
   propertyID: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  initialData: any;
+  initialPropertyData?: unknown;
+  isAuthenticated?: boolean;
 }
 
 export function PropertyDetailsClient({
   propertyID,
-  initialData,
+  initialPropertyData,
+  isAuthenticated: serverIsAuthenticated,
 }: PropertyDetailsClientProps) {
-  const isAuthenticated = useSelector(
+  // Use server-provided authentication status, fallback to Redux state for client-side changes
+  const clientIsAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated,
   );
-  // const { data: propertyData = initialData, isLoading: _isPropertyLoading } =
-  //   useGetPublicPropertyByIdQuery(propertyID, {
-  //     skip: !!initialData, // Skip the query if we have initial data
-  //   });
+  const isAuthenticated = serverIsAuthenticated ?? clientIsAuthenticated;
 
-  // call both hooks, but skip the ones we don't need
-  const { data: publicPropertyData = initialData, isLoading: isPublicLoading } =
-    useGetPublicPropertyByIdQuery(propertyID, {
-      skip: isAuthenticated,
-      refetchOnMountOrArgChange: false,
-      refetchOnFocus: false,
-      refetchOnReconnect: false,
-    });
-
-  const {
-    data: authenticatedPropertyData,
-    isLoading: isAuthLoading,
-    refetch: refetchAuthPropertyDetails,
-  } = useGetAuthenticatedPropertyByIdQuery(propertyID, {
-    skip: !isAuthenticated,
-    refetchOnMountOrArgChange: false,
-    refetchOnFocus: false,
-    refetchOnReconnect: false,
-  });
-
-  // Merge the data based on authentication status
-  const propertyData = useMemo(() => {
-    if (isAuthenticated && authenticatedPropertyData) {
-      return {
-        property: authenticatedPropertyData.property.property,
-        contactUserCount: authenticatedPropertyData.property.contactUserCount,
-        shortlistUserCount:
-          authenticatedPropertyData.property.shortlistUserCount,
-        viewUserCount: authenticatedPropertyData.property.viewUserCount,
-        owner: authenticatedPropertyData.owner,
-        reported: authenticatedPropertyData.reported,
-        propertyOwner: authenticatedPropertyData.propertyOwner,
-      };
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return publicPropertyData as any;
-  }, [isAuthenticated, authenticatedPropertyData, publicPropertyData]);
+  // All data is now fetched server-side, so we just use initialPropertyData
+  // The server already made the decision to fetch authenticated or public data
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const propertyData = initialPropertyData as any;
 
   const { toggleShortlist, isShortlisted } = useShortlist();
   const shortlistStatus = isShortlisted(propertyID);
@@ -223,12 +183,6 @@ export function PropertyDetailsClient({
   const { isMobile } = useDeviceContext();
   const { isDialogOpen, closeDialog, openDialog } = useDialog();
 
-  const isLoading = isAuthenticated ? isAuthLoading : isPublicLoading;
-
-  if (isLoading) {
-    <Loading />;
-  }
-
   const {
     property,
     contactUserCount,
@@ -237,7 +191,7 @@ export function PropertyDetailsClient({
     owner,
     reported,
     propertyOwner,
-  } = propertyData;
+  } = propertyData || {};
 
   const propertyCategory = property?.propertyCategory ?? PropertyCategory.RENT;
 
@@ -325,7 +279,7 @@ export function PropertyDetailsClient({
               ? `${property?.balcony || 0} ${property?.balcony > 1 ? "Balconies" : "Balcony"}`
               : "",
           preferredTenants: property?.preferredTenants
-            ? property.preferredTenants
+            ? property?.preferredTenants
                 .map((value: string) => pascalCase(value))
                 .join(", ")
             : "N/A",
@@ -495,7 +449,7 @@ export function PropertyDetailsClient({
 
   // Split description into sentences array
   const descriptionSentences = property?.description
-    ? property.description
+    ? property?.description
         .split(/[.!?] +/)
         .filter((sentence: string) => sentence.trim().length > 0)
     : [];
@@ -525,12 +479,12 @@ export function PropertyDetailsClient({
           <ChevronLeft size={24} />
         </Button>
         <div className="flex gap-2 items-center">
-          {/* {property.managed && (
+          {/* {property?.managed && (
             <button className="rounded-full border md:border-none items-center justify-center p-2 bg-gradient-to-br from-yellow-400 via-yellow-500 to-orange-500 fill-current">
               <Crown onClick={() => console.log("Crown Clicked")} size={20} />
             </button>
           )} */}
-          {property.featured && (
+          {property?.featured && (
             <button className="rounded-full border md:border-none items-center justify-center p-2 bg-gradient-to-br from-red-400 via-red-400 to-red-500 fill-current">
               <SquareStar
                 onClick={() => console.log("Crown Clicked")}
@@ -642,7 +596,7 @@ export function PropertyDetailsClient({
                   {propertyType}
                 </p>
                 <p className="text-gray-500 text-sm md:hidden truncate">
-                  {property.locationOrSocietyName}, {property.city}
+                  {property?.locationOrSocietyName}, {property?.city}
                 </p>
               </div>
             </div>
@@ -657,7 +611,7 @@ export function PropertyDetailsClient({
                 {property?.locationOrSocietyName}, {property?.city}
               </span>
               <span className="md:hidden truncate flex-1">
-                {property.landmark}
+                {property?.landmark}
               </span>
             </div>
           </section>
@@ -1153,7 +1107,7 @@ export function PropertyDetailsClient({
                 </div>
               </section>
               {/* Exclusive listing */}
-              {/* {property.managed ? (
+              {/* {property?.managed ? (
                 <section className="flex flex-col justify-between items-center gap-4 mb-6">
                   <button className="px-8 py-3 flex justify-around border rounded-xl w-full text-base max-md:text-sm hover:bg-gray-50 transition-colors">
                     <div className="flex items-center gap-4">
@@ -1164,7 +1118,7 @@ export function PropertyDetailsClient({
                 </section>
               ) : null} */}
               {/* Featured Property */}
-              {property.featured && (
+              {property?.featured && (
                 <section className="flex flex-col justify-between items-center gap-4 mb-6">
                   <button className="px-8 py-3 flex justify-around border rounded-xl w-full text-base max-md:text-sm hover:bg-gray-50 transition-colors">
                     <div className="flex items-center gap-4">
@@ -1724,7 +1678,8 @@ export function PropertyDetailsClient({
           propertyID={propertyID}
           onClose={async () => {
             closeDialog(UNLOCK_DETAILS_DIALOG_ID);
-            await refetchAuthPropertyDetails();
+            // Refresh server-side data after unlocking owner details
+            router.refresh();
           }}
         />
       )}
@@ -1746,7 +1701,8 @@ export function PropertyDetailsClient({
           propertyId={propertyID}
           onClose={async () => {
             closeDialog(REPORT_LISTING_DIALOG_ID);
-            await refetchAuthPropertyDetails();
+            // Refresh server-side data after reporting property
+            router.refresh();
           }}
         />
       )}

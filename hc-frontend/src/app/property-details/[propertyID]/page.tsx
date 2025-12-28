@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
+import { cache } from "react";
 
 import { CDN_BASE_URL, WEBSITE_BASE_URL } from "@/common/constants";
 import {
@@ -40,6 +42,38 @@ const resolvePropertyFromResponse = (
   return response as PropertyData;
 };
 
+// Cached function to fetch property data - deduplicates requests within the same render
+// This ensures generateMetadata and the page component share the same fetch
+const getCachedPropertyDataWithoutAuth = cache(
+  async (propertyID: string): Promise<PropertyData | undefined> => {
+    try {
+      const propertyData: { property: PropertyData | undefined } = {
+        property: undefined,
+      };
+      propertyData.property =
+        await ServerAPIService.getPublicPropertyByID(propertyID);
+      console.log("Property Data", propertyData);
+      return resolvePropertyFromResponse(propertyData);
+    } catch (error) {
+      console.error("Error fetching property data", error);
+      return undefined;
+    }
+  },
+);
+
+const getCachedPropertyDataWithAuth = cache(
+  async (propertyID: string): Promise<PropertyData | undefined> => {
+    try {
+      const propertyData = await ServerAPIService.getPropertyByID(propertyID);
+      console.log("Property Data", propertyData);
+      return resolvePropertyFromResponse(propertyData);
+    } catch (error) {
+      console.error("Error fetching property data", error);
+      return undefined;
+    }
+  },
+);
+
 export async function generateMetadata({
   params,
 }: {
@@ -47,18 +81,16 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { propertyID } = await params;
 
-  let property: PropertyData | undefined;
+  // Check if user is authenticated by checking for token cookie
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token");
+  const isAuthenticated = !!token;
 
-  try {
-    const propertyData =
-      await ServerAPIService.getPublicPropertyByID(propertyID);
-    console.log("Property Data", propertyData);
-    property = resolvePropertyFromResponse(propertyData);
-    console.log("Property", property);
-  } catch (_error) {
-    // Ignore metadata fetch failures; fall back to defaults
-    console.error("Error fetching property data", _error);
-  }
+  // Use authenticated endpoint if token exists, otherwise use public endpoint
+  // This will be deduplicated if also called in page component
+  const property = isAuthenticated
+    ? await getCachedPropertyDataWithAuth(propertyID)
+    : await getCachedPropertyDataWithoutAuth(propertyID);
 
   const bhkType = getOptionLabel(BHK_TYPE_OPTIONS, property?.bhkType);
   const location = property?.locationOrSocietyName ?? "";
@@ -109,18 +141,24 @@ async function PropertyDetails({ params }: { params: PropertyParams }) {
   // Await the params before using them
   const { propertyID } = await params;
 
-  try {
-    const propertyData =
-      await ServerAPIService.getPublicPropertyByID(propertyID);
-    return (
-      <PropertyDetailsClient
-        propertyID={propertyID}
-        initialData={propertyData}
-      />
-    );
-  } catch (error) {
-    console.error("Error fetching property data", error);
-  }
+  // Check if user is authenticated by checking for token cookie
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token");
+  const isAuthenticated = !!token;
+
+  // Fetch property data - use authenticated endpoint if token exists
+  // This will be deduplicated with generateMetadata's call above
+  const propertyData = isAuthenticated
+    ? await getCachedPropertyDataWithAuth(propertyID)
+    : await getCachedPropertyDataWithoutAuth(propertyID);
+
+  return (
+    <PropertyDetailsClient
+      propertyID={propertyID}
+      initialPropertyData={propertyData}
+      isAuthenticated={isAuthenticated}
+    />
+  );
 }
 
 export default PropertyDetails;
