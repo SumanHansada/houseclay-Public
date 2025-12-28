@@ -159,4 +159,84 @@ export class ServerAPIService {
   static async getPublicPropertyByID(propertyID: string) {
     return this.fetchWithoutAuth(`/property/${propertyID}`);
   }
+
+  // Get properties by location (public endpoint, no auth required)
+  static async getPropertiesByLocation(params: {
+    latitude: number;
+    longitude: number;
+    propertyCategory: string;
+    page?: number;
+    size?: number;
+    [key: string]: string | number | boolean | string[] | undefined;
+  }) {
+    const {
+      latitude,
+      longitude,
+      propertyCategory,
+      page = 0,
+      size = 16,
+      ...filters
+    } = params;
+
+    const searchParams = new URLSearchParams({
+      lat: latitude.toString(),
+      lon: longitude.toString(),
+      propertyCategory: propertyCategory.toString(),
+      page: page.toString(),
+      size: size.toString(),
+    });
+
+    // Add optional filters
+    if (filters.minPrice !== undefined && filters.minPrice !== null)
+      searchParams.append("minPrice", filters.minPrice.toString());
+    if (filters.maxPrice)
+      searchParams.append("maxPrice", filters.maxPrice.toString());
+    if (filters.propertyType)
+      searchParams.append("propertyType", filters.propertyType.toString());
+    if (filters.bhkType)
+      searchParams.append("bhkType", filters.bhkType.toString());
+    if (filters.tenantType)
+      searchParams.append("tenantType", filters.tenantType.toString());
+    if (filters.nonVegAllowed !== undefined) {
+      searchParams.append(
+        "nonVegAllowed",
+        filters.nonVegAllowed ? "true" : "false",
+      );
+    }
+    if (filters.roomType)
+      searchParams.append("roomType", filters.roomType.toString());
+    if (filters.bathroomType)
+      searchParams.append("bathroomType", filters.bathroomType.toString());
+    if (filters.balconyType)
+      searchParams.append("balconyType", filters.balconyType.toString());
+    if (filters.preferredTenants)
+      searchParams.append(
+        "preferredTenants",
+        filters.preferredTenants.toString(),
+      );
+    if (filters.furnishing)
+      searchParams.append("furnishing", filters.furnishing.toString());
+    if (filters.parking)
+      searchParams.append("parking", filters.parking.toString());
+    if (
+      filters.amenities &&
+      Array.isArray(filters.amenities) &&
+      filters.amenities.length > 0
+    ) {
+      searchParams.append("amenities", filters.amenities.join(","));
+    }
+    if (filters.availability) {
+      searchParams.append(
+        "propertyAvailability",
+        filters.availability.toString(),
+      );
+    }
+    if (filters.exclusive === true) searchParams.append("exclusive", "true");
+    if (filters.sortFields)
+      searchParams.append("sortFields", filters.sortFields.toString());
+    if (filters.sortOrder)
+      searchParams.append("sortOrder", filters.sortOrder.toString());
+
+    return this.fetchWithoutAuth(`/property/search?${searchParams.toString()}`);
+  }
 }
