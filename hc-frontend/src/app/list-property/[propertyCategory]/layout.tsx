@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { propertyAddGraphicURL } from "@/common/cdnURLs";
 import {
+  LIST_PROPERTY_FAILURE_DIALOG_ID,
   LIST_PROPERTY_SUCCESS_DIALOG_ID,
   UPLOAD_PHOTOS_DIALOG_ID,
 } from "@/common/dialogConstants";
@@ -17,7 +18,11 @@ import {
 } from "@/common/enums";
 import { extractS3KeyFromUrl } from "@/common/utils";
 import Spinner from "@/components/Spinner";
-import { ListPropertySuccessDialog, UploadPhotosDialog } from "@/dialogs";
+import {
+  ListPropertyFailureDialog,
+  ListPropertySuccessDialog,
+  UploadPhotosDialog,
+} from "@/dialogs";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
 import { transformFormValuesToPropertyForm } from "@/interfaces/FormTransformers";
 import { FormValues } from "@/interfaces/FormValues";
@@ -236,7 +241,7 @@ export default function ListPropertyTypeLayout({
   // Update the handleBack function to remove the previous step from completedSteps
   const handleBack = () => {
     if (currentStep === ListPropertyFormStep.PROPERTY_DETAILS) {
-      router.back();
+      router.replace("/list-property");
       return;
     }
 
@@ -357,14 +362,15 @@ export default function ListPropertyTypeLayout({
         images: imagesS3Keys,
       };
 
-      await addProperty(apiPayload);
+      await addProperty(apiPayload).unwrap();
 
-      openDialog("list-property-success-dialog");
+      openDialog(LIST_PROPERTY_SUCCESS_DIALOG_ID);
 
       // Don't open success dialog here anymore - it will be opened automatically after upload completes
     } catch (error) {
       setRoute(ListPropertyRouteStep.ADDITIONAL_INFO);
       console.error("Error posting property:", error);
+      openDialog(LIST_PROPERTY_FAILURE_DIALOG_ID);
     }
   };
 
@@ -536,6 +542,11 @@ export default function ListPropertyTypeLayout({
           propertyID={propertyID}
           propertyCategory={propertyCategory}
         />
+      )}
+
+      {/* Failure Dialog */}
+      {isDialogOpen(LIST_PROPERTY_FAILURE_DIALOG_ID) && (
+        <ListPropertyFailureDialog id={LIST_PROPERTY_FAILURE_DIALOG_ID} />
       )}
     </>
   );

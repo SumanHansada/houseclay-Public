@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
 import { propertyImageURL } from "@/common/cdnURLs";
-import { BENGALURU_LOCATION } from "@/common/constants";
+import { EXPLORE_LOCATION } from "@/common/constants";
 import { ACCOUNT_NAV_ITEMS } from "@/common/dataConstants/navbar";
 import { AuthStep } from "@/common/enums";
 import { AccountNavList } from "@/components/AccountNavList";
@@ -213,7 +213,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
 
                 <li>
                   <Link
-                    href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=rent`}
+                    href={`/property-search?lat=${EXPLORE_LOCATION.lat}&lon=${EXPLORE_LOCATION.lng}&propertyCategory=rent`}
                     data-category="rent"
                     data-active={
                       searchParams.get("propertyCategory") === "rent" ||
@@ -233,7 +233,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
 
                 <li>
                   <Link
-                    href={`/property-search?lat=${BENGALURU_LOCATION.lat}&lon=${BENGALURU_LOCATION.lng}&propertyCategory=flatmate`}
+                    href={`/property-search?lat=${EXPLORE_LOCATION.lat}&lon=${EXPLORE_LOCATION.lng}&propertyCategory=flatmate`}
                     data-category="flatmate"
                     data-active={
                       searchParams.get("propertyCategory") === "flatmate"
