@@ -108,9 +108,14 @@ export async function generateMetadata({
 
   // Use authenticated endpoint if token exists, otherwise use public endpoint
   // This will be deduplicated if also called in page component
-  const property = isAuthenticated
-    ? await getCachedPropertyDataWithAuth(propertyID)
-    : await getCachedPropertyDataWithoutAuth(propertyID);
+
+  const propertyData = (
+    isAuthenticated
+      ? await getCachedPropertyDataWithAuth(propertyID)
+      : await getCachedPropertyDataWithoutAuth(propertyID)
+  ) as { property: PropertyData };
+
+  const property = propertyData?.property as PropertyData;
 
   const bhkType = getOptionLabel(BHK_TYPE_OPTIONS, property?.bhkType);
   const location = property?.locationOrSocietyName ?? "";
