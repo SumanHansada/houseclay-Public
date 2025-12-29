@@ -211,6 +211,8 @@ const PhotoUpload: React.FC<PhotoUploadProps> = ({
   const disabledClass =
     noPhotosValue || disabled ? "opacity-50 pointer-events-none" : "";
 
+  showNoPhotosCheckbox = showNoPhotosCheckbox && photos.length < 1;
+
   return (
     <div className={`w-full ${className}`}>
       {label && (
@@ -446,10 +448,13 @@ const PhotoUpload: React.FC<PhotoUploadProps> = ({
             checked={noPhotosValue}
             onChange={handleNoPhotosChange}
             onBlur={onNoPhotosBlur}
-            className="h-5 w-5 accent-red-500"
+            className="h-5 w-5 accent-red-500 cursor-pointer"
             disabled={photos.length > 0 || disabled} // Disable checkbox if photos exist or component is disabled
           />
-          <label htmlFor={noPhotosName} className="text-gray-600 text-lg">
+          <label
+            htmlFor={noPhotosName}
+            className="text-gray-600 text-lg cursor-pointer"
+          >
             I don&apos;t have photos now
           </label>
         </div>
