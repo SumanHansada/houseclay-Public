@@ -3,6 +3,8 @@ import axios from "axios";
 import { cookies } from "next/headers";
 import { cache } from "react";
 
+import { BASE_API_URL } from "@/common/constants";
+
 import serverAxiosInstance from "./serverAxiosInstance";
 
 export class ServerAPIService {
@@ -148,16 +150,47 @@ export class ServerAPIService {
     },
   );
 
-  // Property specific methods
+  // Property specific methods with Next.js caching
   // Note: This endpoint allows any authenticated user to view property details
   // For owner-only access, use a different endpoint
   static async getPropertyByID(propertyID: string) {
-    return this.fetchWithAuth(`/property/user/get-property/${propertyID}`);
+    const cookieStore = await cookies();
+    const allCookies = cookieStore.getAll();
+    const cookieHeader = allCookies
+      .map((cookie) => `${cookie.name}=${cookie.value}`)
+      .join("; ");
+
+    const headers: Record<string, string> = {};
+    if (cookieHeader) {
+      headers["Cookie"] = cookieHeader;
+    }
+
+    const response = await fetch(
+      `${BASE_API_URL}/property/user/get-property/${propertyID}`,
+      {
+        headers,
+        next: { revalidate: 60 },
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch property: ${response.statusText}`);
+    }
+
+    return response.json();
   }
 
-  // Public property method (no auth required)
+  // Public property method (no auth required) with Next.js caching
   static async getPublicPropertyByID(propertyID: string) {
-    return this.fetchWithoutAuth(`/property/${propertyID}`);
+    const response = await fetch(`${BASE_API_URL}/property/${propertyID}`, {
+      next: { revalidate: 60 },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch property: ${response.statusText}`);
+    }
+
+    return response.json();
   }
 
   // Get properties by location (public endpoint, no auth required)
