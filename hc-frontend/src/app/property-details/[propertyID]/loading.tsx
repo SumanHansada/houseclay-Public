@@ -5,7 +5,9 @@ import Skeleton from "react-loading-skeleton";
 
 const PhotoGallerySkeleton = ({ className = "" }: { className?: string }) => (
   <div className={`bg-gray-200 ${className}`}>
-    <Skeleton height="100%" width="100%" borderRadius={12} />
+    <div className="rounded-xl overflow-hidden max-md:rounded-none">
+      <Skeleton height="100%" width="100%" />
+    </div>
   </div>
 );
 
@@ -22,8 +24,8 @@ const PropertyDetailItemSkeleton = () => (
 );
 
 const PropertyCardSkeleton = () => (
-  <div className="border rounded-xl shadow-md px-4 py-6">
-    <div className="grid grid-cols-2 gap-4 justify-items-center items-center mb-4 divide-x">
+  <div className="border rounded-xl shadow-md px-4 py-6 md:mb-6">
+    <div className="grid grid-cols-2 gap-4 justify-items-center items-center max-md:mb-2 mb-4 divide-x">
       <div className="flex w-full justify-start items-start gap-2">
         <div className="p-0.5">
           <Skeleton height={20} width={20} borderRadius={4} />
@@ -43,7 +45,7 @@ const PropertyCardSkeleton = () => (
         </div>
       </div>
     </div>
-    <div className="grid grid-cols-2 gap-4 justify-items-center items-center mb-4 divide-x">
+    <div className="grid grid-cols-2 gap-4 justify-items-center items-center max-md:mb-2 mb-4 divide-x">
       <div className="flex w-full justify-start items-start gap-2">
         <div className="p-0.5">
           <Skeleton height={20} width={20} borderRadius={4} />
@@ -63,7 +65,7 @@ const PropertyCardSkeleton = () => (
         </div>
       </div>
     </div>
-    <div className="grid grid-cols-2 gap-4 justify-items-center items-center mb-4 divide-x">
+    <div className="grid grid-cols-2 gap-4 justify-items-center items-center max-md:mb-2 mb-4 divide-x">
       <div className="flex w-full justify-start items-start gap-2">
         <div className="p-0.5">
           <Skeleton height={20} width={20} borderRadius={4} />
@@ -83,12 +85,22 @@ const PropertyCardSkeleton = () => (
         </div>
       </div>
     </div>
-    <hr className="my-6" />
-    <div className="flex justify-between items-center mb-4">
-      <Skeleton height={16} width={60} />
-      <Skeleton height={20} width={120} />
+    <hr className="my-6 max-md:hidden" />
+    <div className="grid grid-cols-2 gap-4 justify-items-center items-center mb-4 divide-x max-md:hidden">
+      <div className="flex w-full justify-start items-start gap-2">
+        <div className="p-0.5">
+          <Skeleton height={24} width={120} />
+        </div>
+      </div>
+      <div className="flex w-full justify-start items-start gap-2">
+        <div className="p-0.5">
+          <Skeleton height={24} width={120} />
+        </div>
+      </div>
     </div>
-    <Skeleton height={48} width="100%" borderRadius={12} />
+    <div className="max-md:hidden">
+      <Skeleton height={48} width="100%" borderRadius={12} />
+    </div>
   </div>
 );
 
@@ -145,7 +157,7 @@ export default function Loading() {
       <section className="overflow-x-hidden flex-grow max-md:pb-16">
         {/* Photo Gallery Section Mobile */}
         <section className="h-60 w-full md:hidden">
-          <PhotoGallerySkeleton className="h-60" />
+          <PhotoGallerySkeleton className="h-60 rounded-none" />
         </section>
 
         <section className="flex-col w-full xl:gap-16 lg:gap-8 md:gap-0 gap-0 xl:px-28 lg:px-14 md:px-8 px-6 max-md:pt-4 max-md:pb-20">
@@ -203,10 +215,13 @@ export default function Loading() {
                     <PropertyDetailItemSkeleton />
                     <PropertyDetailItemSkeleton />
                     <PropertyDetailItemSkeleton />
+                    <PropertyDetailItemSkeleton />
                   </div>
 
                   {/* Right Column */}
                   <div className="space-y-4">
+                    <PropertyDetailItemSkeleton />
+                    <PropertyDetailItemSkeleton />
                     <PropertyDetailItemSkeleton />
                     <PropertyDetailItemSkeleton />
                     <PropertyDetailItemSkeleton />
@@ -264,10 +279,6 @@ export default function Loading() {
             <section className="md:w-1/2 lg:w-2/5 2xl:w-1/3 max-md:w-full">
               <PropertyCardSkeleton />
               <ActivityCardSkeleton />
-              <section className="flex flex-col justify-between items-center gap-4">
-                <Skeleton height={48} width="100%" borderRadius={12} />
-                <Skeleton height={16} width={120} />
-              </section>
             </section>
           </section>
 
