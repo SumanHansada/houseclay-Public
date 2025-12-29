@@ -31,7 +31,7 @@ import {
 } from "@/interfaces/FormTransformers";
 import { FormValues } from "@/interfaces/FormValues";
 import { PropertyImage } from "@/interfaces/PropertyImage";
-import { MobileFooter, PageTransition } from "@/layout-components";
+import { MobileFooter } from "@/layout-components";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useDeletePresignedUrlsMutation,
@@ -697,29 +697,24 @@ export default function EditPropertyTypeLayout({
           </div>
         </aside>
         <div className="right-0 ml-[33.33%] w-full max-md:ml-auto pt-4 md:pt-12 pb-20 mx-auto xl:px-28 lg:px-14 md:px-8 px-6">
-          <PageTransition
-            transitionType="slideRight"
-            backTransitionType="slideLeft"
-          >
-            <div className="flex flex-col">
-              <Formik
-                initialValues={initialValues}
-                onSubmit={(values) => {
-                  console.log("Submit all data:", values);
-                  // send to backend
-                }}
-                validateOnChange={false}
-                validateOnBlur={false}
-                enableReinitialize={true}
-              >
-                {(formik) => (
-                  <Form>
-                    <FormikProvider value={formik}>{children}</FormikProvider>
-                  </Form>
-                )}
-              </Formik>
-            </div>
-          </PageTransition>
+          <div className="flex flex-col">
+            <Formik
+              initialValues={initialValues}
+              onSubmit={(values) => {
+                console.log("Submit all data:", values);
+                // send to backend
+              }}
+              validateOnChange={false}
+              validateOnBlur={false}
+              enableReinitialize={true}
+            >
+              {(formik) => (
+                <Form>
+                  <FormikProvider value={formik}>{children}</FormikProvider>
+                </Form>
+              )}
+            </Formik>
+          </div>
           <div className="fixed bottom-0 left-0 ml-[33.33%] max-md:hidden right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
             <button
               type="button"

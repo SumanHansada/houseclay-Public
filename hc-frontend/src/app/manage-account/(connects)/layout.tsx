@@ -5,11 +5,7 @@ import { useRouter } from "next/navigation";
 import { type ReactNode } from "react";
 
 import { Button } from "@/base-components";
-import {
-  MobileFooter,
-  MobileHeader,
-  PageTransition,
-} from "@/layout-components";
+import { MobileFooter, MobileHeader } from "@/layout-components";
 
 /**
  * Layout for routes that need Footer (desktop)
@@ -26,12 +22,7 @@ export default function ConnectsLayout({ children }: { children: ReactNode }) {
     <>
       {/* Desktop: Content + Footer */}
       <section className="w-full overflow-y-auto max-md:hidden">
-        <PageTransition
-          transitionType="slideRight"
-          backTransitionType="slideLeft"
-        >
-          {children}
-        </PageTransition>
+        {children}
       </section>
 
       {/* Mobile: Pages handle their own MobileFooter */}
@@ -49,12 +40,7 @@ export default function ConnectsLayout({ children }: { children: ReactNode }) {
           </MobileHeader.LeftAction>
           <MobileHeader.Title>Connects</MobileHeader.Title>
         </MobileHeader>
-        <PageTransition
-          transitionType="slideRight"
-          backTransitionType="slideLeft"
-        >
-          {children}
-        </PageTransition>
+        {children}
         {/* Mobile Footer */}
         <MobileFooter>
           <button

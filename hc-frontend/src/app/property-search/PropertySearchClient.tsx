@@ -40,7 +40,7 @@ import {
   stateToToken,
   tokenToState,
 } from "@/interfaces/PropertySearchSortFilter";
-import { Footer, MobileHeader, PageTransition } from "@/layout-components";
+import { Footer, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useGetPropertiesByLocationQuery } from "@/store/apiSlice";
@@ -694,165 +694,160 @@ export function PropertySearchClient({
         </div>
       </section>
 
-      <PageTransition
-        transitionType="slideRight"
-        backTransitionType="slideLeft"
-      >
-        {/* Main Content */}
-        <section className="w-full md:pt-[64px] md:bg-gray-50 relative">
-          <div className="min-h-[580px] px-6 pb-10 md:bg-gray-50 xl:px-24 md:px-12">
-            {/* Info Bar */}
-            <div className="flex flex-col gap-4 py-6">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4">
-                {/* Left Side: Always visible count */}
-                {properties.length > 0 ? (
-                  <p className="text-sm text-gray-500 text-left md:text-right">
-                    {properties.length} out of {effectiveData?.totalElements}{" "}
-                    {(() => {
-                      const count = properties.length;
-                      const isPlural = count !== 1;
-                      switch (searchState.propertyCategory) {
-                        case PropertyCategory.FLATMATE:
-                          return isPlural ? "Rooms for Rent" : "Room for Rent";
-                        case PropertyCategory.RENT:
-                          return isPlural
-                            ? "Properties for Rent"
-                            : "Property for Rent";
-                        default:
-                          return isPlural
-                            ? "Properties for Sale"
-                            : "Property for Sale";
-                      }
-                    })()}
-                  </p>
-                ) : (
-                  <p className="h-0 w-0 invisible">Placeholder</p>
-                )}
+      {/* Main Content */}
+      <section className="w-full md:pt-[64px] md:bg-gray-50 relative">
+        <div className="min-h-[580px] px-6 pb-10 md:bg-gray-50 xl:px-24 md:px-12">
+          {/* Info Bar */}
+          <div className="flex flex-col gap-4 py-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4">
+              {/* Left Side: Always visible count */}
+              {properties.length > 0 ? (
+                <p className="text-sm text-gray-500 text-left md:text-right">
+                  {properties.length} out of {effectiveData?.totalElements}{" "}
+                  {(() => {
+                    const count = properties.length;
+                    const isPlural = count !== 1;
+                    switch (searchState.propertyCategory) {
+                      case PropertyCategory.FLATMATE:
+                        return isPlural ? "Rooms for Rent" : "Room for Rent";
+                      case PropertyCategory.RENT:
+                        return isPlural
+                          ? "Properties for Rent"
+                          : "Property for Rent";
+                      default:
+                        return isPlural
+                          ? "Properties for Sale"
+                          : "Property for Sale";
+                    }
+                  })()}
+                </p>
+              ) : (
+                <p className="h-0 w-0 invisible">Placeholder</p>
+              )}
 
-                {/* Right Side: Location or Placeholder (Invisible is for left side logic) */}
-                <div className="flex items-center gap-2 min-w-0">
-                  {searchState.confirmedLocationName &&
-                  searchState.confirmedLocationName !== "" ? (
-                    <>
-                      <span className="text-sm text-gray-700 inline text-nowrap">
-                        Showing in:
-                      </span>
-                      <span className="px-2 py-0.5 md:py-1 rounded-full bg-gray-200 text-xs md:text-sm truncate max-w-64 md:max-w-xs">
-                        {searchState.confirmedLocationName}
-                      </span>
-                    </>
-                  ) : (
-                    // Placeholder to maintain space and alignment - in case we want to place the location on left and count on right
-                    <div className="h-0 w-0 md:w-auto md:h-8 invisible">
-                      <span className="text-xs md:text-sm">
-                        Showing Results for:
-                      </span>
-                      <span className="px-3 py-1 rounded-full bg-gray-200">
-                        Placeholder
-                      </span>
-                    </div>
-                  )}
-                </div>
+              {/* Right Side: Location or Placeholder (Invisible is for left side logic) */}
+              <div className="flex items-center gap-2 min-w-0">
+                {searchState.confirmedLocationName &&
+                searchState.confirmedLocationName !== "" ? (
+                  <>
+                    <span className="text-sm text-gray-700 inline text-nowrap">
+                      Showing in:
+                    </span>
+                    <span className="px-2 py-0.5 md:py-1 rounded-full bg-gray-200 text-xs md:text-sm truncate max-w-64 md:max-w-xs">
+                      {searchState.confirmedLocationName}
+                    </span>
+                  </>
+                ) : (
+                  // Placeholder to maintain space and alignment - in case we want to place the location on left and count on right
+                  <div className="h-0 w-0 md:w-auto md:h-8 invisible">
+                    <span className="text-xs md:text-sm">
+                      Showing Results for:
+                    </span>
+                    <span className="px-3 py-1 rounded-full bg-gray-200">
+                      Placeholder
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
+          </div>
 
-            {/* Property List */}
-            <div className="mx-auto">
-              {isLoading && page === 0 && !initialData ? (
-                <FullScreenLoader />
-              ) : properties.length === 0 ? (
-                <div className="flex flex-col items-center justify-center w-11/12 gap-3 mx-auto md:w-2/3 lg:w-1/2">
-                  <div className="relative w-11/12 md:w-3/4 lg:w-2/3 aspect-[295/230]">
-                    <ImageWithLoader
-                      src={noResultsFoundIconURL}
-                      alt="No Results Found"
-                      fill
-                    />
-                  </div>
-                  <div className="text-center md:px-4">
-                    <h1 className="text-xl font-semibold md:text-2xl">
-                      No Results Found
-                    </h1>
-                    {/* Commented my-requirements code for now */}
-                    {/* <p className="text-gray-600 md:text-lg text-balance">
+          {/* Property List */}
+          <div className="mx-auto">
+            {isLoading && page === 0 && !initialData ? (
+              <FullScreenLoader />
+            ) : properties.length === 0 ? (
+              <div className="flex flex-col items-center justify-center w-11/12 gap-3 mx-auto md:w-2/3 lg:w-1/2">
+                <div className="relative w-11/12 md:w-3/4 lg:w-2/3 aspect-[295/230]">
+                  <ImageWithLoader
+                    src={noResultsFoundIconURL}
+                    alt="No Results Found"
+                    fill
+                  />
+                </div>
+                <div className="text-center md:px-4">
+                  <h1 className="text-xl font-semibold md:text-2xl">
+                    No Results Found
+                  </h1>
+                  {/* Commented my-requirements code for now */}
+                  {/* <p className="text-gray-600 md:text-lg text-balance">
                     Don&apos;t worry, we can still get you the dream house fill
                     up the requirements below and we will get back to you.
                   </p> */}
-                  </div>
-                  {/* <Link
+                </div>
+                {/* <Link
                   href="/manage-account/my-requirements"
                   className="px-6 py-2 border border-red-500 rounded-md md:text-lg hover:bg-red-50"
                 >
                   Fill Requirements
                 </Link> */}
+              </div>
+            ) : (
+              <div className="flex-1">
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
+                  {properties.map((property, idx) => (
+                    <Link
+                      key={`${property.propertyID}-${idx}`}
+                      href={`/property-details/${property.propertyID}`}
+                      prefetch={false}
+                      className="block"
+                    >
+                      <Properties
+                        property={property}
+                        badgeType={
+                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          (property as any).badgeType as BadgeType | undefined
+                        }
+                        showCarouselDots={false}
+                      />
+                    </Link>
+                  ))}
                 </div>
-              ) : (
-                <div className="flex-1">
-                  <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
-                    {properties.map((property, idx) => (
-                      <Link
-                        key={`${property.propertyID}-${idx}`}
-                        href={`/property-details/${property.propertyID}`}
-                        prefetch={false}
-                        className="block"
-                      >
-                        <Properties
-                          property={property}
-                          badgeType={
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                            (property as any).badgeType as BadgeType | undefined
-                          }
-                          showCarouselDots={false}
-                        />
-                      </Link>
-                    ))}
+
+                {effectiveData?.hasNext && (
+                  <div className="flex justify-center w-full mt-10 mb-6">
+                    <Button
+                      variant="primary"
+                      onClick={handleLoadMore}
+                      isLoading={isFetching}
+                      className="px-6 py-3 min-w-40 rounded-xl"
+                    >
+                      Load More
+                    </Button>
                   </div>
-
-                  {effectiveData?.hasNext && (
-                    <div className="flex justify-center w-full mt-10 mb-6">
-                      <Button
-                        variant="primary"
-                        onClick={handleLoadMore}
-                        isLoading={isFetching}
-                        className="px-6 py-3 min-w-40 rounded-xl"
-                      >
-                        Load More
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            )}
           </div>
-        </section>
-        <Footer />
+        </div>
+      </section>
+      <Footer />
 
-        {isDialogOpen(PROPERTY_FILTERS_DIALOG_ID) && (
-          <SearchFiltersDialog
-            id={PROPERTY_FILTERS_DIALOG_ID}
-            onClose={() => {
-              closeDialog(PROPERTY_FILTERS_DIALOG_ID);
-            }}
-            onReset={() => {}}
-            onApply={(dialogSelectedCategory?: PropertyCategory) => {
-              closeDialog(PROPERTY_FILTERS_DIALOG_ID);
-              handleSearch(dialogSelectedCategory);
-            }}
-          />
-        )}
+      {isDialogOpen(PROPERTY_FILTERS_DIALOG_ID) && (
+        <SearchFiltersDialog
+          id={PROPERTY_FILTERS_DIALOG_ID}
+          onClose={() => {
+            closeDialog(PROPERTY_FILTERS_DIALOG_ID);
+          }}
+          onReset={() => {}}
+          onApply={(dialogSelectedCategory?: PropertyCategory) => {
+            closeDialog(PROPERTY_FILTERS_DIALOG_ID);
+            handleSearch(dialogSelectedCategory);
+          }}
+        />
+      )}
 
-        {isDialogOpen(SORT_FILTERS_DIALOG_ID) && isMobile && (
-          <SortFiltersDialog
-            id={SORT_FILTERS_DIALOG_ID}
-            options={SORT_OPTIONS as { value: SortToken; label: string }[]}
-            selectedToken={selectedSortToken}
-            onSelect={(token) => onSortChange(token)}
-            onClose={() => {
-              closeDialog(SORT_FILTERS_DIALOG_ID);
-            }}
-          />
-        )}
-      </PageTransition>
+      {isDialogOpen(SORT_FILTERS_DIALOG_ID) && isMobile && (
+        <SortFiltersDialog
+          id={SORT_FILTERS_DIALOG_ID}
+          options={SORT_OPTIONS as { value: SortToken; label: string }[]}
+          selectedToken={selectedSortToken}
+          onSelect={(token) => onSortChange(token)}
+          onClose={() => {
+            closeDialog(SORT_FILTERS_DIALOG_ID);
+          }}
+        />
+      )}
     </>
   );
 }

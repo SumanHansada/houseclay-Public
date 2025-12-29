@@ -10,7 +10,6 @@ import {
   Header,
   StickyNavbar,
 } from "@/layout-components";
-import { ConditionalPageTransition } from "@/layout-components";
 import Providers from "@/providers/Providers";
 
 // Lazy load CommonDialogs - dialogs are conditionally rendered
@@ -328,29 +327,15 @@ export default function RootLayout({
         <Providers>
           <div className="min-h-dvh">
             <Header />
-            <ConditionalPageTransition
-              transitionType="slideRight"
-              backTransitionType="slideLeft"
-              skipTransitionPaths={[
-                "/manage-account",
-                "/list-property",
-                "/edit-property",
-                "/property-search",
-                "/what-are-connects",
-                "/buy-connects",
-                "/find-flatmates",
-              ]}
-            >
-              <main className="mx-auto my-0 pt-14 min-h-dvh max-md:pb-16 flex flex-col">
-                <>
-                  <DisableScrollRestoration />
-                  {children}
-                  <Suspense fallback={null}>
-                    <CommonDialogs />
-                  </Suspense>
-                </>
-              </main>
-            </ConditionalPageTransition>
+            <main className="mx-auto my-0 pt-14 min-h-dvh max-md:pb-16 flex flex-col">
+              <>
+                <DisableScrollRestoration />
+                {children}
+                <Suspense fallback={null}>
+                  <CommonDialogs />
+                </Suspense>
+              </>
+            </main>
             <StickyNavbar />
           </div>
         </Providers>

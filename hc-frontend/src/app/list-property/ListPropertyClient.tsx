@@ -23,11 +23,7 @@ import GetStarted from "@/components/GetStarted";
 import LazyPhoneInput from "@/components/LazyPhoneInput";
 import ListingOptions from "@/components/ListingOptions";
 import PropertyTypeOptions from "@/components/PropertyTypeOptions";
-import {
-  MobileFooter,
-  MobileHeader,
-  PageTransition,
-} from "@/layout-components";
+import { MobileFooter, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -180,23 +176,18 @@ const ListPropertyClient = () => {
       </MobileHeader>
       {/* Mobile Content */}
 
-      <PageTransition
-        transitionType="slideRight"
-        backTransitionType="slideLeft"
-      >
-        <section className="w-full my-0 flex-col container pt-4 pb-2 px-6 mx-auto flex justify-between gap-16 md:hidden">
-          {mobileStep === ListPropertyMobileStep.GET_STARTED && <GetStarted />}
-          {mobileStep === ListPropertyMobileStep.LISTING_OPTIONS && (
-            <ListingOptions onNext={handleListingTypeClick} />
-          )}
-          {mobileStep === ListPropertyMobileStep.PROPERTY_TYPE && (
-            <PropertyTypeOptions
-              onNext={handlePostListingClick}
-              onBack={handleBack}
-            />
-          )}
-        </section>
-      </PageTransition>
+      <section className="w-full my-0 flex-col container pt-4 pb-2 px-6 mx-auto flex justify-between gap-16 md:hidden">
+        {mobileStep === ListPropertyMobileStep.GET_STARTED && <GetStarted />}
+        {mobileStep === ListPropertyMobileStep.LISTING_OPTIONS && (
+          <ListingOptions onNext={handleListingTypeClick} />
+        )}
+        {mobileStep === ListPropertyMobileStep.PROPERTY_TYPE && (
+          <PropertyTypeOptions
+            onNext={handlePostListingClick}
+            onBack={handleBack}
+          />
+        )}
+      </section>
       <MobileFooter>
         {mobileStep === ListPropertyMobileStep.GET_STARTED && (
           <button
@@ -240,117 +231,111 @@ const ListPropertyClient = () => {
           </div>
         )}
       </MobileFooter>
-      <PageTransition
-        transitionType="slideRight"
-        backTransitionType="slideLeft"
-      >
-        {/* Desktop Section */}
-        <section className="xl:max-h-[500px] max-h-[450px] max-md:max-h-[fit-content] w-full overflow-hidden max-md:hidden">
-          <div className="container pt-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 flex justify-between gap-16">
-            <div className="flex w-2/5 justify-around items-start">
-              <ImageWithLoader
-                src={listPropertyImgUrl}
-                alt="List Your Property"
-                width={550}
-                height={475}
-                className="my-0"
-              />
-            </div>
-            <div className="flex w-3/5 items-start">
-              <div className="w-full xl:max-w-xl my-0 flex flex-col gap-8">
-                {!isAuthenticated ? (
-                  <>
-                    <div className="flex flex-col">
-                      <label className="block mb-2 text-base font-medium text-gray-700">
-                        Phone Number
-                      </label>
-                      <LazyPhoneInput
-                        defaultCountry="in"
-                        value={phoneNo}
-                        forceDialCode={true}
-                        disableFormatting={true}
-                        placeholder={"Enter phone number"}
-                        onChange={(value) => dispatch(setPhoneNo(value))}
-                        className="custom-phone-input w-full border border-gray-300 rounded-lg px-2 py-0.5 focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
+      {/* Desktop Section */}
+      <section className="xl:max-h-[500px] max-h-[450px] max-md:max-h-[fit-content] w-full overflow-hidden max-md:hidden">
+        <div className="container pt-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 flex justify-between gap-16">
+          <div className="flex w-2/5 justify-around items-start">
+            <ImageWithLoader
+              src={listPropertyImgUrl}
+              alt="List Your Property"
+              width={550}
+              height={475}
+              className="my-0"
+            />
+          </div>
+          <div className="flex w-3/5 items-start">
+            <div className="w-full xl:max-w-xl my-0 flex flex-col gap-8">
+              {!isAuthenticated ? (
+                <>
+                  <div className="flex flex-col">
+                    <label className="block mb-2 text-base font-medium text-gray-700">
+                      Phone Number
+                    </label>
+                    <LazyPhoneInput
+                      defaultCountry="in"
+                      value={phoneNo}
+                      forceDialCode={true}
+                      disableFormatting={true}
+                      placeholder={"Enter phone number"}
+                      onChange={(value) => dispatch(setPhoneNo(value))}
+                      className="custom-phone-input w-full border border-gray-300 rounded-lg px-2 py-0.5 focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
 
-                    <div className="flex items-center">
-                      <input
-                        id="terms"
-                        type="checkbox"
-                        className="w-5 h-5 text-red-500 border-gray-300 rounded focus:ring-red-500 accent-red-500 hover:cursor-pointer"
-                        checked={acceptTerms}
-                        onChange={(e) => setAcceptTerms(e.target.checked)}
-                      />
-                      <label
-                        htmlFor="terms"
-                        className="ml-2 text-sm text-gray-700"
+                  <div className="flex items-center">
+                    <input
+                      id="terms"
+                      type="checkbox"
+                      className="w-5 h-5 text-red-500 border-gray-300 rounded focus:ring-red-500 accent-red-500 hover:cursor-pointer"
+                      checked={acceptTerms}
+                      onChange={(e) => setAcceptTerms(e.target.checked)}
+                    />
+                    <label
+                      htmlFor="terms"
+                      className="ml-2 text-sm text-gray-700"
+                    >
+                      I agree to{" "}
+                      <Link
+                        href="/terms-and-conditions"
+                        className="text-gray-700 hover:underline"
                       >
-                        I agree to{" "}
-                        <Link
-                          href="/terms-and-conditions"
-                          className="text-gray-700 hover:underline"
-                        >
-                          Terms & Conditions
-                        </Link>{" "}
-                        &{" "}
-                        <Link
-                          href="/privacy-policy"
-                          className="text-gray-700 hover:underline"
-                        >
-                          Privacy Policy
-                        </Link>
-                      </label>
-                    </div>
-
-                    <div className="flex flex-col items-center">
-                      <button
-                        className={`w-full px-6 py-3 text-base text-white rounded-md  ${!acceptTerms || !phoneNo.substring(validPhoneNoLength) ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
-                        disabled={
-                          !acceptTerms || !phoneNo.substring(validPhoneNoLength)
-                        }
-                        onClick={handlePostYourPropertyClick}
+                        Terms & Conditions
+                      </Link>{" "}
+                      &{" "}
+                      <Link
+                        href="/privacy-policy"
+                        className="text-gray-700 hover:underline"
                       >
-                        Post Your Property - It&apos;s free
-                      </button>
+                        Privacy Policy
+                      </Link>
+                    </label>
+                  </div>
 
-                      <p className="mt-2 text-base text-center text-gray-500">
-                        Don&apos;t worry we won&apos;t spam you.
-                      </p>
-                    </div>
+                  <div className="flex flex-col items-center">
+                    <button
+                      className={`w-full px-6 py-3 text-base text-white rounded-md  ${!acceptTerms || !phoneNo.substring(validPhoneNoLength) ? "bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
+                      disabled={
+                        !acceptTerms || !phoneNo.substring(validPhoneNoLength)
+                      }
+                      onClick={handlePostYourPropertyClick}
+                    >
+                      Post Your Property - It&apos;s free
+                    </button>
 
-                    <div className="flex flex-col items-center">
-                      <ShieldCheck
-                        className="text-white fill-gray-600"
-                        size={32}
-                      />
-                      <p className="mt-2 text-sm text-center text-gray-400">
-                        More than 800+ owners have listed their properties on
-                        HouseClay and closed their deal.
-                      </p>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    {desktopStep ===
-                      ListPropertyDesktopStep.LISTING_OPTIONS && (
-                      <ListingOptions onNext={handleListingTypeClick} />
-                    )}
+                    <p className="mt-2 text-base text-center text-gray-500">
+                      Don&apos;t worry we won&apos;t spam you.
+                    </p>
+                  </div>
 
-                    {desktopStep === ListPropertyDesktopStep.PROPERTY_TYPE && (
-                      <PropertyTypeOptions
-                        onNext={handlePostListingClick}
-                        onBack={handleBack}
-                      />
-                    )}
-                  </>
-                )}
-              </div>
+                  <div className="flex flex-col items-center">
+                    <ShieldCheck
+                      className="text-white fill-gray-600"
+                      size={32}
+                    />
+                    <p className="mt-2 text-sm text-center text-gray-400">
+                      More than 800+ owners have listed their properties on
+                      HouseClay and closed their deal.
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {desktopStep === ListPropertyDesktopStep.LISTING_OPTIONS && (
+                    <ListingOptions onNext={handleListingTypeClick} />
+                  )}
+
+                  {desktopStep === ListPropertyDesktopStep.PROPERTY_TYPE && (
+                    <PropertyTypeOptions
+                      onNext={handlePostListingClick}
+                      onBack={handleBack}
+                    />
+                  )}
+                </>
+              )}
             </div>
           </div>
-        </section>
-      </PageTransition>
+        </div>
+      </section>
     </>
   );
 };

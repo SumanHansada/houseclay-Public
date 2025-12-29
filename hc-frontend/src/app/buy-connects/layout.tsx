@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { type ReactNode } from "react";
 
 import { Button } from "@/base-components";
-import { MobileHeader, PageTransition } from "@/layout-components";
+import { MobileHeader } from "@/layout-components";
 import Footer from "@/layout-components/Footer";
 
 export default function BuyConnectsLayout({
@@ -35,12 +35,7 @@ export default function BuyConnectsLayout({
         <MobileHeader.Title>Buy Connects</MobileHeader.Title>
       </MobileHeader>
 
-      <PageTransition
-        transitionType="slideRight"
-        backTransitionType="slideLeft"
-      >
-        {children}
-      </PageTransition>
+      {children}
 
       {/* Desktop Footer */}
       <Footer />

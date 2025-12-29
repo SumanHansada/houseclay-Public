@@ -12,11 +12,7 @@ import { Button } from "@/base-components";
 import Spinner from "@/components/Spinner";
 import { useEditMode } from "@/hooks/useEditMode";
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
-import {
-  MobileFooter,
-  MobileHeader,
-  PageTransition,
-} from "@/layout-components";
+import { MobileFooter, MobileHeader } from "@/layout-components";
 import { useUpdateUserMutation } from "@/store/apiSlice";
 import { RootState } from "@/store/store";
 import { setUserDetail } from "@/store/userSlice";
@@ -142,34 +138,29 @@ export default function MyProfileLayout({ children }: { children: ReactNode }) {
           <>
             {/* Desktop: Content + Footer */}
             <section className="w-full overflow-y-auto max-md:hidden">
-              <PageTransition
-                transitionType="slideRight"
-                backTransitionType="slideLeft"
-              >
-                {children}
-                {/* Desktop Footer */}
-                {editMode && (
-                  <footer className="mt-6 border-t-2 pt-4 flex justify-between">
-                    <button
-                      type="button"
-                      className="px-3 py-1 md:px-5 md:py-2 border rounded-lg shadow-sm"
-                      onClick={handleCancel}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      onClick={submitForm}
-                      className={`px-3 py-1 md:px-5 md:py-2 text-white rounded-lg shadow-sm ${updatingProfile || noChanges ? "disabled:cursor-not-allowed disabled:bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
-                      disabled={updatingProfile || noChanges}
-                    >
-                      {getButtonContent(
-                        noChanges ? "No Changes" : "Save Changes",
-                      )}
-                    </button>
-                  </footer>
-                )}
-              </PageTransition>
+              {children}
+              {/* Desktop Footer */}
+              {editMode && (
+                <footer className="mt-6 border-t-2 pt-4 flex justify-between">
+                  <button
+                    type="button"
+                    className="px-3 py-1 md:px-5 md:py-2 border rounded-lg shadow-sm"
+                    onClick={handleCancel}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={submitForm}
+                    className={`px-3 py-1 md:px-5 md:py-2 text-white rounded-lg shadow-sm ${updatingProfile || noChanges ? "disabled:cursor-not-allowed disabled:bg-red-300" : "bg-red-500 hover:bg-red-600"}`}
+                    disabled={updatingProfile || noChanges}
+                  >
+                    {getButtonContent(
+                      noChanges ? "No Changes" : "Save Changes",
+                    )}
+                  </button>
+                </footer>
+              )}
             </section>
 
             {/* Mobile: Header + Content + Footer */}
@@ -199,12 +190,7 @@ export default function MyProfileLayout({ children }: { children: ReactNode }) {
                   </MobileHeader.RightAction>
                 ) : null}
               </MobileHeader>
-              <PageTransition
-                transitionType="slideRight"
-                backTransitionType="slideLeft"
-              >
-                {children}
-              </PageTransition>
+              {children}
               {editMode && (
                 <MobileFooter>
                   <button

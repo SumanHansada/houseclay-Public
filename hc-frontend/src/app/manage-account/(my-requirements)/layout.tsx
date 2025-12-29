@@ -9,11 +9,7 @@ import * as Yup from "yup";
 import { Button } from "@/base-components";
 import { useEditMode } from "@/hooks/useEditMode";
 import { MyRequirementsFormValues } from "@/interfaces/ManageAccount";
-import {
-  MobileFooter,
-  MobileHeader,
-  PageTransition,
-} from "@/layout-components";
+import { MobileFooter, MobileHeader } from "@/layout-components";
 
 const validationSchema = Yup.object({});
 
@@ -92,36 +88,31 @@ export default function MyRequirementsLayout({
           <>
             {/* Desktop: Content + Footer */}
             <section className="w-full overflow-y-auto max-md:hidden">
-              <PageTransition
-                transitionType="slideRight"
-                backTransitionType="slideLeft"
-              >
-                {children}
-                {/* Desktop Footer */}
-                {editMode && (
-                  <footer className="flex items-center justify-between pt-4 mt-6 text-lg border-t-2 shadow-sm">
+              {children}
+              {/* Desktop Footer */}
+              {editMode && (
+                <footer className="flex items-center justify-between pt-4 mt-6 text-lg border-t-2 shadow-sm">
+                  <button
+                    type="button"
+                    className="px-5 py-2 border rounded-lg shadow-sm hover:bg-gray-50"
+                    onClick={handleCancel}
+                  >
+                    Cancel
+                  </button>
+                  <div className="flex gap-6">
+                    <button type="button" className="" onClick={handleReset}>
+                      Reset
+                    </button>
                     <button
                       type="button"
-                      className="px-5 py-2 border rounded-lg shadow-sm hover:bg-gray-50"
-                      onClick={handleCancel}
+                      onClick={handleSave}
+                      className="px-5 py-2 text-white bg-red-500 rounded-lg shadow-sm hover:bg-red-600"
                     >
-                      Cancel
+                      Save
                     </button>
-                    <div className="flex gap-6">
-                      <button type="button" className="" onClick={handleReset}>
-                        Reset
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleSave}
-                        className="px-5 py-2 text-white bg-red-500 rounded-lg shadow-sm hover:bg-red-600"
-                      >
-                        Save
-                      </button>
-                    </div>
-                  </footer>
-                )}
-              </PageTransition>
+                  </div>
+                </footer>
+              )}
             </section>
 
             {/* Mobile: Header + Content + Footer */}
@@ -151,12 +142,7 @@ export default function MyRequirementsLayout({
                   </MobileHeader.RightAction>
                 ) : null}
               </MobileHeader>
-              <PageTransition
-                transitionType="slideRight"
-                backTransitionType="slideLeft"
-              >
-                {children}
-              </PageTransition>
+              {children}
               {editMode && (
                 <MobileFooter>
                   <button

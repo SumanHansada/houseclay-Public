@@ -8,11 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/base-components";
 import { PropertyCategory } from "@/common/enums";
 import { generateUUID } from "@/common/utils";
-import {
-  MobileFooter,
-  MobileHeader,
-  PageTransition,
-} from "@/layout-components";
+import { MobileFooter, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { setPropertyCategory, setPropertyID } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
@@ -64,12 +60,7 @@ export default function FindFlatmatesLayout({
         </MobileHeader.LeftAction>
         <MobileHeader.Title>Find Flatmates</MobileHeader.Title>
       </MobileHeader>
-      <PageTransition
-        transitionType="slideRight"
-        backTransitionType="slideLeft"
-      >
-        {children}
-      </PageTransition>
+      {children}
       <MobileFooter>
         <Button
           variant="primary"

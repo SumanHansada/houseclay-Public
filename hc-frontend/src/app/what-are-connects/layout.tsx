@@ -5,12 +5,7 @@ import { useRouter } from "next/navigation";
 import { type ReactNode } from "react";
 
 import { Button } from "@/base-components";
-import {
-  Footer,
-  MobileFooter,
-  MobileHeader,
-  PageTransition,
-} from "@/layout-components";
+import { Footer, MobileFooter, MobileHeader } from "@/layout-components";
 
 export default function WhatAreConnectsLayout({
   children,
@@ -38,12 +33,7 @@ export default function WhatAreConnectsLayout({
         </MobileHeader.LeftAction>
         <MobileHeader.Title>What are Connects?</MobileHeader.Title>
       </MobileHeader>
-      <PageTransition
-        transitionType="slideRight"
-        backTransitionType="slideLeft"
-      >
-        {children}
-      </PageTransition>
+      {children}
 
       <MobileFooter>
         <div className="flex justify-end w-full">

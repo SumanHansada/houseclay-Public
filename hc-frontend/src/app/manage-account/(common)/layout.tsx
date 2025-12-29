@@ -6,7 +6,7 @@ import { type ReactNode } from "react";
 
 import { Button } from "@/base-components";
 import { ACCOUNT_NAV_ITEMS } from "@/common/dataConstants/navbar";
-import { MobileHeader, PageTransition } from "@/layout-components";
+import { MobileHeader } from "@/layout-components";
 
 const accountNavMap = ACCOUNT_NAV_ITEMS.reduce(
   (acc, item) => {
@@ -35,12 +35,7 @@ export default function CommonLayout({ children }: { children: ReactNode }) {
     <>
       {/* Desktop */}
       <section className="w-full overflow-y-auto max-md:hidden">
-        <PageTransition
-          transitionType="slideRight"
-          backTransitionType="slideLeft"
-        >
-          {children}
-        </PageTransition>
+        {children}
       </section>
 
       {/* Mobile */}
@@ -58,12 +53,7 @@ export default function CommonLayout({ children }: { children: ReactNode }) {
           </MobileHeader.LeftAction>
           <MobileHeader.Title>{headerName}</MobileHeader.Title>
         </MobileHeader>
-        <PageTransition
-          transitionType="slideRight"
-          backTransitionType="slideLeft"
-        >
-          {children}
-        </PageTransition>
+        {children}
       </div>
     </>
   );
