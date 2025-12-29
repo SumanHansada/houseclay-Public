@@ -39,60 +39,25 @@ export const revalidate = 21600;
 
 type PropertyParams = Promise<{ propertyID: string }>;
 
-type PropertyData = {
-  bhkType?: string;
-  locationOrSocietyName?: string;
-  propertyCategory?: string;
-  city?: string;
-  images?: string[];
-};
+// Single shared fetch function - deduplicates requests within the same render
+// This ensures generateMetadata and the page component share the same fetch
+const getProperty = cache(async (propertyID: string) => {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token");
+    const isAuthenticated = !!token;
 
-const resolvePropertyFromResponse = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  response: any,
-): PropertyData | undefined => {
-  if (!response) {
+    const data = isAuthenticated
+      ? await ServerAPIService.getPropertyByID(propertyID)
+      : await ServerAPIService.getPublicPropertyByID(propertyID);
+
+    console.log("Property Data", data);
+    return data;
+  } catch (error) {
+    console.error("Error fetching property data", error);
     return undefined;
   }
-
-  if ("property" in response) {
-    return response.property as PropertyData;
-  }
-
-  return response as PropertyData;
-};
-
-// Cached function to fetch property data - deduplicates requests within the same render
-// This ensures generateMetadata and the page component share the same fetch
-const getCachedPropertyDataWithoutAuth = cache(
-  async (propertyID: string): Promise<PropertyData | undefined> => {
-    try {
-      const propertyData: { property: PropertyData | undefined } = {
-        property: undefined,
-      };
-      propertyData.property =
-        await ServerAPIService.getPublicPropertyByID(propertyID);
-      console.log("Property Data", propertyData);
-      return resolvePropertyFromResponse(propertyData);
-    } catch (error) {
-      console.error("Error fetching property data", error);
-      return undefined;
-    }
-  },
-);
-
-const getCachedPropertyDataWithAuth = cache(
-  async (propertyID: string): Promise<PropertyData | undefined> => {
-    try {
-      const propertyData = await ServerAPIService.getPropertyByID(propertyID);
-      console.log("Property Data", propertyData);
-      return resolvePropertyFromResponse(propertyData);
-    } catch (error) {
-      console.error("Error fetching property data", error);
-      return undefined;
-    }
-  },
-);
+});
 
 export async function generateMetadata({
   params,
@@ -100,22 +65,20 @@ export async function generateMetadata({
   params: PropertyParams;
 }): Promise<Metadata> {
   const { propertyID } = await params;
-
-  // Check if user is authenticated by checking for token cookie
   const cookieStore = await cookies();
   const token = cookieStore.get("token");
   const isAuthenticated = !!token;
 
-  // Use authenticated endpoint if token exists, otherwise use public endpoint
-  // This will be deduplicated if also called in page component
+  const data = await getProperty(propertyID);
 
-  const propertyData = (
-    isAuthenticated
-      ? await getCachedPropertyDataWithAuth(propertyID)
-      : await getCachedPropertyDataWithoutAuth(propertyID)
-  ) as { property: PropertyData };
-
-  const property = propertyData?.property as PropertyData;
+  // Handle different response structures
+  const propertyData = data?.property;
+  let property = null;
+  if (isAuthenticated) {
+    property = processPropertyData(propertyData);
+  } else {
+    property = processPropertyData(data);
+  }
 
   const bhkType = getOptionLabel(BHK_TYPE_OPTIONS, property?.bhkType);
   const location = property?.locationOrSocietyName ?? "";
@@ -375,14 +338,15 @@ async function PropertyDetailsContent({
   propertyID: string;
   isAuthenticated: boolean;
 }) {
-  // Fetch property data - use authenticated endpoint if token exists
-  // This will be deduplicated with generateMetadata's call above
-  const propertyData = isAuthenticated
-    ? await getCachedPropertyDataWithAuth(propertyID)
-    : await getCachedPropertyDataWithoutAuth(propertyID);
-
-  // Process all data transformations server-side
-  const processedData = processPropertyData(propertyData);
+  // Fetch property data - this will be deduplicated with generateMetadata's call above
+  const data = await getProperty(propertyID);
+  const propertyData = data?.property;
+  let processedData = null;
+  if (isAuthenticated) {
+    processedData = processPropertyData(propertyData);
+  } else {
+    processedData = processPropertyData(data);
+  }
 
   return (
     <PropertyDetailsClient
