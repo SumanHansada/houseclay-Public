@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 
-import PropertyDetailsLoading from "./loading";
+import { PropertyDetailsStepLoading } from "@/components/loading";
+
 import PropertyDetailsClient from "./PropertyDetailsClient";
 
 // Force dynamic rendering to avoid server component issues
@@ -18,7 +19,7 @@ function PropertyDetailsErrorBoundary({
 export default function PropertyDetailsPage() {
   return (
     <PropertyDetailsErrorBoundary>
-      <Suspense fallback={<PropertyDetailsLoading />}>
+      <Suspense fallback={<PropertyDetailsStepLoading />}>
         <PropertyDetailsClient />
       </Suspense>
     </PropertyDetailsErrorBoundary>

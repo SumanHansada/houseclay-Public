@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 
-import RentalDetailsLoading from "./loading";
+import { RentalDetailsStepLoading } from "@/components/loading";
+
 import RentalDetailsWrapper from "./RentalDetailsWrapper";
 
 // Force dynamic rendering to avoid server component issues
@@ -18,7 +19,7 @@ function RentalDetailsErrorBoundary({
 export default function RentalDetailsPage() {
   return (
     <RentalDetailsErrorBoundary>
-      <Suspense fallback={<RentalDetailsLoading />}>
+      <Suspense fallback={<RentalDetailsStepLoading />}>
         <RentalDetailsWrapper />
       </Suspense>
     </RentalDetailsErrorBoundary>
