@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 
 import { PropertyCategory } from "@/common/enums";
+import { AdditionalInfoStepLoading } from "@/components/loading";
 
 import AdditionalInfoClient from "./AdditionalInfoClient";
-import AdditionalInfoLoading from "./loading";
 
 export async function generateStaticParams() {
   return [
@@ -25,7 +25,7 @@ function AdditionalInfoErrorBoundary({
 export default function AdditionalInfoPage() {
   return (
     <AdditionalInfoErrorBoundary>
-      <Suspense fallback={<AdditionalInfoLoading />}>
+      <Suspense fallback={<AdditionalInfoStepLoading />}>
         <AdditionalInfoClient />
       </Suspense>
     </AdditionalInfoErrorBoundary>

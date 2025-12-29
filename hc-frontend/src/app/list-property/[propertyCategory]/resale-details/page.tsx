@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 
 import { PropertyCategory } from "@/common/enums";
+import { ResaleDetailsStepLoading } from "@/components/loading";
 
-import ResaleDetailsLoading from "./loading";
 import ResaleDetailsClient from "./ResaleDetailsClient";
 
 export async function generateStaticParams() {
@@ -25,7 +25,7 @@ function ResaleDetailsErrorBoundary({
 export default function ResaleDetailsPage() {
   return (
     <ResaleDetailsErrorBoundary>
-      <Suspense fallback={<ResaleDetailsLoading />}>
+      <Suspense fallback={<ResaleDetailsStepLoading />}>
         <ResaleDetailsClient />
       </Suspense>
     </ResaleDetailsErrorBoundary>

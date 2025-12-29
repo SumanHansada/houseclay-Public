@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 
 import { PropertyCategory } from "@/common/enums";
+import { PropertyDetailsStepLoading } from "@/components/loading";
 
-import PropertyDetailsLoading from "./loading";
 import PropertyDetailsClient from "./PropertyDetailsClient";
 
 export async function generateStaticParams() {
@@ -25,7 +25,7 @@ function PropertyDetailsErrorBoundary({
 export default function PropertyDetailsPage() {
   return (
     <PropertyDetailsErrorBoundary>
-      <Suspense fallback={<PropertyDetailsLoading />}>
+      <Suspense fallback={<PropertyDetailsStepLoading />}>
         <PropertyDetailsClient />
       </Suspense>
     </PropertyDetailsErrorBoundary>

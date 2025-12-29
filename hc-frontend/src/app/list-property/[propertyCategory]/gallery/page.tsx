@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 
 import { PropertyCategory } from "@/common/enums";
+import { GalleryStepLoading } from "@/components/loading";
 
 import GalleryClient from "./GalleryClient";
-import GalleryPageLoading from "./loading";
 
 export async function generateStaticParams() {
   return [
@@ -21,7 +21,7 @@ function GalleryErrorBoundary({ children }: { children: React.ReactNode }) {
 export default function GalleryPage() {
   return (
     <GalleryErrorBoundary>
-      <Suspense fallback={<GalleryPageLoading />}>
+      <Suspense fallback={<GalleryStepLoading />}>
         <GalleryClient />
       </Suspense>
     </GalleryErrorBoundary>
