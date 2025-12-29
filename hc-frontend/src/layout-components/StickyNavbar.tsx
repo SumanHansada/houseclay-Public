@@ -84,7 +84,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
         {/* 1. Glow (below) */}
         {activeIndex >= 0 && (
           <span
-            className="absolute bottom-1 h-12 w-16 blur bg-gradient-to-t from-red-500/25 to-transparent pointer-events-none z-0"
+            className="absolute bottom-0 h-12 w-14 blur-sm bg-gradient-to-t from-red-500/25 to-transparent pointer-events-none z-0"
             style={{
               gridColumnStart: activeIndex + 1,
               gridColumnEnd: activeIndex + 2,
@@ -95,7 +95,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
         {/* 2. Underline (above glow) */}
         {activeIndex >= 0 && (
           <span
-            className="absolute bottom-1 h-0.5 w-16 bg-red-500 pointer-events-none z-0"
+            className="absolute bottom-0 h-0.5 w-16 bg-red-500 pointer-events-none z-0"
             style={{
               gridColumnStart: activeIndex + 1,
               gridColumnEnd: activeIndex + 2,

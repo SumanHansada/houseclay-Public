@@ -6,7 +6,7 @@ const dev = process.env.NODE_ENV !== "production";
 const hostname = process.env.HOSTNAME || "localhost.houseclay.com";
 const port = parseInt(process.env.PORT || "3000", 10);
 
-const app = next({ dev, hostname, port });
+const app = next({ dev, hostname, port, turbo: dev });
 const handle = app.getRequestHandler();
 
 const httpsOptions = {
