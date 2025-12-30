@@ -1,39 +1,36 @@
-"use client";
-
 import React from "react";
-import Skeleton from "react-loading-skeleton";
 
-interface PropertyDetailsLoadingProps {
+interface PropertyDetailsStepLoadingProps {
   className?: string;
 }
 
-export default function PropertyDetailsLoading({
+export default function PropertyDetailsStepLoading({
   className = "",
-}: PropertyDetailsLoadingProps) {
+}: PropertyDetailsStepLoadingProps) {
   return (
     <div className={`w-full max-w-4xl mx-auto p-4 ${className}`}>
       {/* Header */}
       <div className="mb-8">
-        <Skeleton height={36} width="60%" className="mb-2" />
-        <Skeleton height={20} width="80%" />
+        <div className="h-[36px] w-[60%] mb-2 bg-gray-200 rounded animate-pulse" />
+        <div className="h-5 w-[80%] bg-gray-200 rounded animate-pulse" />
       </div>
 
       <div className="space-y-6">
         {/* Property Type Dropdown */}
         <div>
-          <Skeleton height={20} width={120} className="mb-1" />
-          <Skeleton height={48} />
+          <div className="h-5 w-[120px] mb-1 bg-gray-200 rounded animate-pulse" />
+          <div className="h-[48px] bg-gray-200 rounded animate-pulse" />
         </div>
 
         {/* Built Up Area & Facing */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <Skeleton height={20} width={100} className="mb-1" />
-            <Skeleton height={48} />
+            <div className="h-5 w-[100px] mb-1 bg-gray-200 rounded animate-pulse" />
+            <div className="h-[48px] bg-gray-200 rounded animate-pulse" />
           </div>
           <div>
-            <Skeleton height={20} width={80} className="mb-1" />
-            <Skeleton height={48} />
+            <div className="h-5 w-[80px] mb-1 bg-gray-200 rounded animate-pulse" />
+            <div className="h-[48px] bg-gray-200 rounded animate-pulse" />
           </div>
         </div>
 
@@ -41,8 +38,8 @@ export default function PropertyDetailsLoading({
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {[...Array(3)].map((_, i) => (
             <div key={i}>
-              <Skeleton height={20} width={100} className="mb-1" />
-              <Skeleton height={48} />
+              <div className="h-5 w-[100px] mb-1 bg-gray-200 rounded animate-pulse" />
+              <div className="h-[48px] bg-gray-200 rounded animate-pulse" />
             </div>
           ))}
         </div>
@@ -51,16 +48,16 @@ export default function PropertyDetailsLoading({
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {[...Array(3)].map((_, i) => (
             <div key={i}>
-              <Skeleton height={20} width={80} className="mb-1" />
-              <Skeleton height={48} />
+              <div className="h-5 w-[80px] mb-1 bg-gray-200 rounded animate-pulse" />
+              <div className="h-[48px] bg-gray-200 rounded animate-pulse" />
             </div>
           ))}
         </div>
 
         {/* Description */}
         <div className="mb-6">
-          <Skeleton height={20} width={100} className="mb-1" />
-          <Skeleton height={120} />
+          <div className="h-5 w-[100px] mb-1 bg-gray-200 rounded animate-pulse" />
+          <div className="h-[120px] bg-gray-200 rounded animate-pulse" />
         </div>
       </div>
     </div>

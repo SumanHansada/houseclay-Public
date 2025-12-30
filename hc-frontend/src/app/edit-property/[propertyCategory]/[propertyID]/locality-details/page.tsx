@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import LocalityDetailsLoading from "./loading";
+import { default as LocalityDetailsStepLoading } from "./loading";
 import LocalityDetailsClient from "./LocalityDetailsClient";
 
 // Force dynamic rendering to avoid server component issues
@@ -18,7 +18,7 @@ function LocalityDetailsErrorBoundary({
 export default function LocalityDetailsPage() {
   return (
     <LocalityDetailsErrorBoundary>
-      <Suspense fallback={<LocalityDetailsLoading />}>
+      <Suspense fallback={<LocalityDetailsStepLoading />}>
         <LocalityDetailsClient />
       </Suspense>
     </LocalityDetailsErrorBoundary>

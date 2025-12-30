@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 
 import AdditionalInfoClient from "./AdditionalInfoClient";
-import AdditionalInfoLoading from "./loading";
+import { default as AdditionalInfoStepLoading } from "./loading";
 
 // Force dynamic rendering to avoid server component issues
 export const dynamic = "force-dynamic";
@@ -18,7 +18,7 @@ function AdditionalInfoErrorBoundary({
 export default function AdditionalInfoPage() {
   return (
     <AdditionalInfoErrorBoundary>
-      <Suspense fallback={<AdditionalInfoLoading />}>
+      <Suspense fallback={<AdditionalInfoStepLoading />}>
         <AdditionalInfoClient />
       </Suspense>
     </AdditionalInfoErrorBoundary>

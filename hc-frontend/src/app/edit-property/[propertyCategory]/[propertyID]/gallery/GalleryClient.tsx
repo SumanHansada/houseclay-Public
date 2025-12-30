@@ -7,6 +7,7 @@ import * as Yup from "yup";
 
 import { FormPhotoUpload } from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
+import { PropertyImage } from "@/interfaces/PropertyImage";
 import {
   setDeletedImages,
   setFormData,
@@ -40,68 +41,68 @@ const gallerySchema = Yup.object().shape({
 const GalleryClient: React.FC = () => {
   const { values, setFieldError, setErrors } = useFormikContext<FormValues>();
   const formState = useSelector((state: RootState) => state.editProperty.form);
-  const previousImages = useSelector(
-    (state: RootState) => state.editProperty.propertyImages,
-  );
   const deletedImages = useSelector(
     (state: RootState) => state.editProperty.deletedImages,
   );
   const isFormValid = formState?.isValid;
   const dispatch = useDispatch();
-  const previousImagesRef = useRef(previousImages);
+
+  // Use a ref to track the previous state of images
+  const previousImagesRef = useRef<PropertyImage[]>([]);
+  const hasInitializedRef = useRef(false);
 
   const imagesString = JSON.stringify(values.images);
   const noPhotosString = JSON.stringify(values.noPhotos);
 
-  // Initialize ref when images are first loaded
+  // Initialize previousImagesRef - ONLY ONCE
   useEffect(() => {
-    if (values.images.length > 0 && previousImagesRef.current.length === 0) {
+    if (values.images.length > 0 && !hasInitializedRef.current) {
       previousImagesRef.current = values.images;
+      hasInitializedRef.current = true;
     }
-  }, [imagesString, values.images]);
+  }, [values.images.length]);
 
-  // Track deleted images
+  // Track deleted images - ONLY after initialization
   useEffect(() => {
+    if (!hasInitializedRef.current) {
+      return; // Don't run deletion detection until initialized
+    }
+
     const currentImages = values.images;
     const prevImages = previousImagesRef.current;
 
-    // Only track deletions if ref is initialized (not the first render)
-    if (prevImages.length === 0) {
-      return;
-    }
-
-    // Find images that were deleted
     const deleted = prevImages.filter(
       (prevImage) =>
         !currentImages.some((currImage) => currImage.id === prevImage.id),
     );
 
-    // Only dispatch if there are deleted images
     if (deleted.length > 0) {
-      const existingDeletedIds = new Set(
-        deletedImages.map((image) => image.id),
+      const existingDeletedIds = new Set(deletedImages.map((img) => img.id));
+
+      const newDeleted = deleted.filter(
+        (image) => !existingDeletedIds.has(image.id),
       );
 
-      const mergedDeleted = [
-        ...deletedImages,
-        ...deleted.filter((image) => !existingDeletedIds.has(image.id)),
-      ];
+      if (newDeleted.length > 0) {
+        const mergedDeleted = [...deletedImages, ...newDeleted];
 
-      dispatch(setDeletedImages({ deletedImages: mergedDeleted }));
-      dispatch(
-        setFormData({
-          data: {
-            images: currentImages,
-            noPhotos: values.noPhotos,
-          },
-        }),
-      );
+        dispatch(setDeletedImages({ deletedImages: mergedDeleted }));
+        dispatch(
+          setFormData({
+            data: {
+              images: currentImages,
+              noPhotos: values.noPhotos,
+            },
+          }),
+        );
+      }
     }
 
-    // Update the ref
+    // Update ref after processing
     previousImagesRef.current = currentImages;
-  }, [imagesString, values.images, deletedImages, dispatch, values.noPhotos]);
+  }, [imagesString, values.noPhotos, dispatch, deletedImages.length]);
 
+  // Validation Effect
   useEffect(() => {
     const validateAndDispatch = async () => {
       try {

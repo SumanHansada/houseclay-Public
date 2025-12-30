@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 
 import GalleryClient from "./GalleryClient";
-import GalleryPageLoading from "./loading";
+import { default as GalleryStepLoading } from "./loading";
 
 // Force dynamic rendering to avoid server component issues
 export const dynamic = "force-dynamic";
@@ -14,7 +14,7 @@ function GalleryErrorBoundary({ children }: { children: React.ReactNode }) {
 export default function GalleryPage() {
   return (
     <GalleryErrorBoundary>
-      <Suspense fallback={<GalleryPageLoading />}>
+      <Suspense fallback={<GalleryStepLoading />}>
         <GalleryClient />
       </Suspense>
     </GalleryErrorBoundary>

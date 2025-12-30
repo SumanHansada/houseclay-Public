@@ -1,73 +1,100 @@
-"use client";
-
 import React from "react";
-import Skeleton from "react-loading-skeleton";
 
-interface ResaleDetailsLoadingProps {
+interface ResaleDetailsStepLoadingProps {
   className?: string;
 }
 
-export default function ResaleDetailsLoading({
+export default function ResaleDetailsStepLoading({
   className = "",
-}: ResaleDetailsLoadingProps) {
-  // Skeleton for currency input field with label and icon
+}: ResaleDetailsStepLoadingProps) {
+  // Reusable skeletons
   const CurrencyFieldSkeleton = () => (
-    <div className="flex flex-col gap-2 mb-2">
-      <Skeleton width={150} height={20} />
-      <div className="relative">
-        <div className="absolute left-3 top-1/2 -translate-y-1/2">
-          <Skeleton circle width={20} height={20} />
-        </div>
-        <Skeleton height={42} borderRadius={8} />
+    <div className="flex flex-col gap-2">
+      <div className="h-5 w-[180px] bg-gray-200 rounded animate-pulse" />
+      <div className="h-12 bg-gray-200 rounded-xl animate-pulse" />
+    </div>
+  );
+
+  const CalendarFieldSkeleton = () => (
+    <div className="flex flex-col gap-2">
+      <div className="h-5 w-[160px] bg-gray-200 rounded animate-pulse" />
+      <div className="h-12 bg-gray-200 rounded-xl animate-pulse" />
+    </div>
+  );
+
+  const SelectDropdownSkeleton = () => (
+    <div className="flex flex-col gap-2">
+      <div className="h-5 w-[160px] bg-gray-200 rounded animate-pulse" />
+      <div className="h-12 bg-gray-200 rounded-xl animate-pulse" />
+    </div>
+  );
+
+  const RadioGroupSkeleton = () => (
+    <div className="flex flex-col gap-2">
+      <div className="h-5 w-[200px] bg-gray-200 rounded animate-pulse" />
+      <div className="flex gap-8">
+        <div className="h-10 w-28 bg-gray-200 rounded-lg animate-pulse" />
+        <div className="h-10 w-28 bg-gray-200 rounded-lg animate-pulse" />
       </div>
     </div>
   );
 
-  // Skeleton for a form field with label
-  const FormFieldSkeleton = () => (
-    <div className="flex flex-col gap-2 mb-2">
-      <Skeleton width={150} height={20} />
-      <Skeleton height={42} borderRadius={8} />
-    </div>
-  );
-
-  // Skeleton for radio group with label
-  const RadioGroupSkeleton = ({ width = 300 }) => (
-    <div className="flex flex-col gap-2 mb-2">
-      <Skeleton width={150} height={20} />
-      <div className="flex gap-4">
-        <Skeleton width={width / 2 - 10} height={38} borderRadius={8} />
-        <Skeleton width={width / 2 - 10} height={38} borderRadius={8} />
+  const AmenitiesSectionSkeleton = () => (
+    <div className="flex flex-col gap-6">
+      <div className="h-7 w-[320px] bg-gray-200 rounded animate-pulse" />
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        {Array.from({ length: 15 }).map((_, i) => (
+          <div key={i} className="flex flex-col items-center gap-3">
+            <div className="w-12 h-12 bg-gray-200 rounded-lg animate-pulse" />
+            <div className="h-4 w-24 bg-gray-200 rounded animate-pulse" />
+          </div>
+        ))}
       </div>
     </div>
   );
 
   return (
     <div className={`w-full ${className}`}>
-      {/* Header */}
+      {/* Page Header */}
       <div className="mb-8">
-        <Skeleton height={36} width="60%" className="mb-2" />
-        <Skeleton height={20} width="80%" />
+        <div className="h-9 w-[420px] bg-gray-200 rounded animate-pulse" />
       </div>
 
-      <div className="space-y-6">
-        {/* Expected Price */}
-        <CurrencyFieldSkeleton />
+      <div className="space-y-8">
+        {/* Expected Price + Available From */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <CurrencyFieldSkeleton />
+          <CalendarFieldSkeleton />
+        </div>
 
-        {/* Price Per Sq Ft */}
-        <CurrencyFieldSkeleton />
+        {/* Balcony + Bathrooms */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <SelectDropdownSkeleton />
+          <SelectDropdownSkeleton />
+        </div>
 
-        {/* Possession Status */}
-        <FormFieldSkeleton />
+        {/* Price Negotiable + Under Loan */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <RadioGroupSkeleton />
+          <RadioGroupSkeleton />
+        </div>
 
-        {/* Age of Property */}
-        <FormFieldSkeleton />
+        {/* Water Supply + Power Backup */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <SelectDropdownSkeleton />
+          <SelectDropdownSkeleton />
+        </div>
 
-        {/* Furnishing Status */}
-        <RadioGroupSkeleton width={400} />
+        {/* Furnishing + Parking */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <SelectDropdownSkeleton />
+          <SelectDropdownSkeleton />
+        </div>
 
-        {/* Parking */}
-        <RadioGroupSkeleton width={300} />
+        {/* Amenities Section */}
+        <div className="mt-10">
+          <AmenitiesSectionSkeleton />
+        </div>
       </div>
     </div>
   );

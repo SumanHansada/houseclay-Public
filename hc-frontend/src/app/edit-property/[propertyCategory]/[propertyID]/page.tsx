@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 import { PropertyCategory } from "@/common/enums";
 
-import PropertyCategoryLoading from "./loading";
+import { default as PropertyFormSetupLoading } from "./PropertyFormSetupLoading";
 
 export default function EditPropertyCategoryRootPage() {
   const params = useParams();
@@ -34,5 +34,5 @@ export default function EditPropertyCategoryRootPage() {
   }, [params.propertyCategory, params.propertyID, router]);
 
   // Show loading while redirecting
-  return <PropertyCategoryLoading />;
+  return <PropertyFormSetupLoading />;
 }

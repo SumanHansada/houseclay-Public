@@ -1,119 +1,128 @@
-"use client";
-
 import React from "react";
-import Skeleton from "react-loading-skeleton";
 
-interface RentalDetailsLoadingProps {
+interface RentalDetailsStepLoadingProps {
   className?: string;
 }
 
-export default function RentalDetailsLoading({
+export default function RentalDetailsStepLoading({
   className = "",
-}: RentalDetailsLoadingProps) {
-  // Skeleton for currency input field with label and icon
+}: RentalDetailsStepLoadingProps) {
+  // Reusable skeletons
   const CurrencyFieldSkeleton = () => (
-    <div className="flex flex-col gap-2 mb-2">
-      <Skeleton width={150} height={20} />
-      <div className="relative">
-        <div className="absolute left-3 top-1/2 -translate-y-1/2">
-          <Skeleton circle width={20} height={20} />
-        </div>
-        <Skeleton height={42} borderRadius={8} />
+    <div className="flex flex-col gap-2">
+      <div className="h-5 w-[140px] bg-gray-200 rounded animate-pulse" />
+      <div className="h-12 bg-gray-200 rounded-xl animate-pulse" />
+    </div>
+  );
+
+  const RadioGroupSkeleton = () => (
+    <div className="flex flex-col gap-2">
+      <div className="h-5 w-[180px] bg-gray-200 rounded animate-pulse" />
+      <div className="flex gap-8">
+        <div className="h-10 w-24 bg-gray-200 rounded-lg animate-pulse" />
+        <div className="h-10 w-24 bg-gray-200 rounded-lg animate-pulse" />
       </div>
     </div>
   );
 
-  // Skeleton for a form field with label
-  const FormFieldSkeleton = () => (
-    <div className="flex flex-col gap-2 mb-2">
-      <Skeleton width={150} height={20} />
-      <Skeleton height={42} borderRadius={8} />
+  const SelectDropdownSkeleton = () => (
+    <div className="flex flex-col gap-2">
+      <div className="h-5 w-[160px] bg-gray-200 rounded animate-pulse" />
+      <div className="h-12 bg-gray-200 rounded-xl animate-pulse" />
     </div>
   );
 
-  // Skeleton for radio group with label
-  const RadioGroupSkeleton = ({ width = 300 }) => (
-    <div className="flex flex-col gap-2 mb-2">
-      <Skeleton width={150} height={20} />
-      <div className="flex gap-4">
-        <Skeleton width={width / 2 - 10} height={38} borderRadius={8} />
-        <Skeleton width={width / 2 - 10} height={38} borderRadius={8} />
-      </div>
+  const CalendarFieldSkeleton = () => (
+    <div className="flex flex-col gap-2">
+      <div className="h-5 w-[160px] bg-gray-200 rounded animate-pulse" />
+      <div className="h-12 bg-gray-200 rounded-xl animate-pulse" />
     </div>
   );
 
-  // Skeleton for a radio group with icons
-  const IconRadioGroupSkeleton = ({ options = 4 }) => (
-    <div className="flex flex-col gap-3 mb-2">
-      <Skeleton width={170} height={20} />
-      <div className="flex gap-4">
-        {Array(options)
-          .fill(0)
-          .map((_, i) => (
-            <div key={i} className="flex flex-col items-center gap-2">
-              <Skeleton circle width={40} height={40} />
-              <Skeleton width={70} height={16} />
-            </div>
-          ))}
-      </div>
-    </div>
-  );
-
-  // Skeleton for amenities section
-  const AmenitiesSkeletonGrid = () => (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-      {Array(16)
-        .fill(0)
-        .map((_, i) => (
-          <div key={i} className="flex items-start gap-3">
-            <Skeleton circle width={20} height={20} />
-            <div className="flex flex-col items-center">
-              <Skeleton circle width={40} height={40} />
-              <Skeleton width={60} height={16} />
+  const CheckboxGroupSkeleton = ({ columns = 4, rows = 2 }) => (
+    <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {Array.from({ length: columns * rows }).map((_, i) => (
+          <div key={i} className="flex items-center gap-3">
+            <div className="w-6 h-6 bg-gray-200 rounded animate-pulse" />
+            <div className="space-y-2">
+              <div className="h-4 w-20 bg-gray-200 rounded animate-pulse" />
+              <div className="h-8 w-8 bg-gray-200 rounded animate-pulse" />
             </div>
           </div>
         ))}
+      </div>
+    </div>
+  );
+
+  const AmenitiesSectionSkeleton = () => (
+    <div className="flex flex-col gap-4">
+      <div className="h-7 w-[300px] bg-gray-200 rounded animate-pulse" />
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        {Array.from({ length: 15 }).map((_, i) => (
+          <div key={i} className="flex flex-col items-center gap-3">
+            <div className="w-12 h-12 bg-gray-200 rounded-lg animate-pulse" />
+            <div className="h-4 w-24 bg-gray-200 rounded animate-pulse" />
+          </div>
+        ))}
+      </div>
     </div>
   );
 
   return (
     <div className={`w-full ${className}`}>
-      {/* Header */}
+      {/* Page Header */}
       <div className="mb-8">
-        <Skeleton height={36} width="60%" className="mb-2" />
-        <Skeleton height={20} width="80%" />
+        <div className="h-9 w-[420px] bg-gray-200 rounded animate-pulse" />
       </div>
 
-      <div className="space-y-6">
-        {/* Expected Rent */}
-        <CurrencyFieldSkeleton />
-
-        {/* Available From */}
-        <FormFieldSkeleton />
-
-        {/* Security Deposit */}
-        <CurrencyFieldSkeleton />
-
-        {/* Maintenance Charges */}
-        <CurrencyFieldSkeleton />
-
-        {/* Preferred Tenants */}
-        <IconRadioGroupSkeleton options={4} />
-
-        {/* Food Preferences */}
-        <RadioGroupSkeleton width={400} />
-
-        {/* Amenities */}
-        <div className="mb-6">
-          <Skeleton height={24} width={120} className="mb-4" />
-          <AmenitiesSkeletonGrid />
+      <div className="space-y-8">
+        {/* Rent + Rent Negotiable */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <CurrencyFieldSkeleton />
+          <RadioGroupSkeleton />
         </div>
 
-        {/* Parking */}
-        <RadioGroupSkeleton width={300} />
+        {/* Maintenance + Deposit */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <CurrencyFieldSkeleton />
+          <CurrencyFieldSkeleton />
+        </div>
 
-        {/* Furnishing Status */}
-        <RadioGroupSkeleton width={400} />
+        {/* Available From + Furnishing */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <CalendarFieldSkeleton />
+          <SelectDropdownSkeleton />
+        </div>
+
+        {/* Preferred Tenants (4 options with icons) */}
+        <div className="mb-6">
+          <div className="h-5 w-[200px] mb-4 bg-gray-200 rounded animate-pulse" />
+          <CheckboxGroupSkeleton columns={4} rows={1} />
+        </div>
+
+        {/* Balcony + Bathrooms */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <SelectDropdownSkeleton />
+          <SelectDropdownSkeleton />
+        </div>
+
+        {/* Water Supply + Power Backup */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <SelectDropdownSkeleton />
+          <SelectDropdownSkeleton />
+        </div>
+
+        {/* Parking + Non-Veg Allowed */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <SelectDropdownSkeleton />
+          <RadioGroupSkeleton />
+        </div>
+
+        {/* Amenities Section */}
+        <div className="mt-10">
+          <AmenitiesSectionSkeleton />
+        </div>
       </div>
     </div>
   );

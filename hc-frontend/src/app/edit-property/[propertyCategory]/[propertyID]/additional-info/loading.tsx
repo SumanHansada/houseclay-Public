@@ -1,68 +1,44 @@
-"use client";
-
 import React from "react";
-import Skeleton from "react-loading-skeleton";
 
-interface AdditionalInfoLoadingProps {
+interface AdditionalInfoStepLoadingProps {
   className?: string;
 }
 
-export default function AdditionalInfoLoading({
+export default function AdditionalInfoStepLoading({
   className = "",
-}: AdditionalInfoLoadingProps) {
-  // Skeleton for a form field with label
-  const FormFieldSkeleton = () => (
-    <div className="flex flex-col gap-2 mb-2">
-      <Skeleton width={150} height={20} />
-      <Skeleton height={42} borderRadius={8} />
-    </div>
-  );
-
-  // Skeleton for textarea with label
-  const TextareaSkeleton = () => (
-    <div className="flex flex-col gap-2 mb-2">
-      <Skeleton width={150} height={20} />
-      <Skeleton height={120} borderRadius={8} />
-    </div>
-  );
-
-  // Skeleton for radio group with label
-  const RadioGroupSkeleton = ({ width = 300 }) => (
-    <div className="flex flex-col gap-2 mb-2">
-      <Skeleton width={150} height={20} />
-      <div className="flex gap-4">
-        <Skeleton width={width / 2 - 10} height={38} borderRadius={8} />
-        <Skeleton width={width / 2 - 10} height={38} borderRadius={8} />
-      </div>
-    </div>
-  );
-
+}: AdditionalInfoStepLoadingProps) {
   return (
     <div className={`w-full ${className}`}>
       {/* Header */}
       <div className="mb-8">
-        <Skeleton height={36} width="60%" className="mb-2" />
-        <Skeleton height={20} width="80%" />
+        <div className="h-9 w-[380px] bg-gray-200 rounded animate-pulse" />
       </div>
 
+      {/* Form Fields Grid */}
       <div className="space-y-6">
-        {/* Contact Number */}
-        <FormFieldSkeleton />
+        {/* Row 1: Khata Certificate + Sale Deed */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="flex flex-col gap-2">
+            <div className="h-5 w-[280px] bg-gray-200 rounded animate-pulse" />
+            <div className="h-12 bg-gray-200 rounded-xl animate-pulse" />
+          </div>
+          <div className="flex flex-col gap-2">
+            <div className="h-5 w-[280px] bg-gray-200 rounded animate-pulse" />
+            <div className="h-12 bg-gray-200 rounded-xl animate-pulse" />
+          </div>
+        </div>
 
-        {/* WhatsApp Number */}
-        <FormFieldSkeleton />
-
-        {/* Description */}
-        <TextareaSkeleton />
-
-        {/* Property Highlights */}
-        <TextareaSkeleton />
-
-        {/* Contact Preference */}
-        <RadioGroupSkeleton width={400} />
-
-        {/* Best Time to Contact */}
-        <FormFieldSkeleton />
+        {/* Row 2: Property Tax + Secondary Phone Number */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="flex flex-col gap-2">
+            <div className="h-5 w-[280px] bg-gray-200 rounded animate-pulse" />
+            <div className="h-12 bg-gray-200 rounded-xl animate-pulse" />
+          </div>
+          <div className="flex flex-col gap-2">
+            <div className="h-5 w-[200px] bg-gray-200 rounded animate-pulse" />
+            <div className="h-12 bg-gray-200 rounded-xl animate-pulse" />
+          </div>
+        </div>
       </div>
     </div>
   );
