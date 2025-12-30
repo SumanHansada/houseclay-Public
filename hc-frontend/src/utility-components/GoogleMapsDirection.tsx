@@ -49,6 +49,7 @@ const GoogleMapsDirectionContent: React.FC<{
   const [originLatLng, setOriginLatLng] = useState<google.maps.LatLng | null>(
     null,
   );
+  const [distance, setDistance] = useState<string | null>(null);
   const [isMapInitialized, setIsMapInitialized] = useState(false);
   const hasSetInitialCenter = useRef(false);
   const originalCenter = useRef<{ lat: number; lng: number } | null>(null);
@@ -154,6 +155,10 @@ const GoogleMapsDirectionContent: React.FC<{
           if (route && route.legs && route.legs.length > 0) {
             const firstLeg = route.legs[0];
             setOriginLatLng(firstLeg.start_location);
+            // Extract distance from the route
+            if (firstLeg.distance) {
+              setDistance(firstLeg.distance.text);
+            }
           }
 
           // Fit bounds to show the entire route with padding
@@ -181,6 +186,7 @@ const GoogleMapsDirectionContent: React.FC<{
       // Clear directions by removing the renderer from map
       directionsRenderer.setMap(null);
       setOriginLatLng(null);
+      setDistance(null);
 
       // Reset to original center and zoom if we have them
       if (originalCenter.current) {
@@ -200,30 +206,43 @@ const GoogleMapsDirectionContent: React.FC<{
   }
 
   return (
-    <Map
-      mapId={mapId}
-      defaultCenter={{ lat: centerLatLng.lat(), lng: centerLatLng.lng() }} // Convert LatLng to LatLngLiteral
-      defaultZoom={zoom}
-      className={`${className} overflow-hidden`}
-    >
-      {/* Property/Destination marker - Always visible (the house icon) */}
-      <AdvancedMarker
-        position={new google.maps.LatLng(destination.lat, destination.lng)}
+    <div className="relative w-full h-full">
+      <Map
+        mapId={mapId}
+        defaultCenter={{ lat: centerLatLng.lat(), lng: centerLatLng.lng() }} // Convert LatLng to LatLngLiteral
+        defaultZoom={zoom}
+        className={`${className} overflow-hidden`}
       >
-        <div className="bg-red-500 p-2 rounded-full shadow-lg border-2 border-white">
-          <House className="w-5 h-5 text-white" />
-        </div>
-      </AdvancedMarker>
-
-      {/* User's current location marker (only show when directions are active) */}
-      {showDirections && originLatLng && (
-        <AdvancedMarker position={originLatLng}>
-          <div className="bg-blue-500 p-2 rounded-full shadow-lg border-2 border-white">
-            <Navigation className="w-5 h-5 text-white" />
+        {/* Property/Destination marker - Always visible (the house icon) */}
+        <AdvancedMarker
+          position={new google.maps.LatLng(destination.lat, destination.lng)}
+        >
+          <div className="bg-red-500 p-2 rounded-full shadow-lg border-2 border-white">
+            <House className="w-5 h-5 text-white" />
           </div>
         </AdvancedMarker>
+
+        {/* User's current location marker (only show when directions are active) */}
+        {showDirections && originLatLng && (
+          <AdvancedMarker position={originLatLng}>
+            <div className="bg-blue-500 p-2 rounded-full shadow-lg border-2 border-white">
+              <Navigation className="w-5 h-5 text-white" />
+            </div>
+          </AdvancedMarker>
+        )}
+      </Map>
+      {/* Distance overlay */}
+      {showDirections && distance && (
+        <div className="absolute top-4 left-4 bg-white px-4 py-2 rounded-lg shadow-lg border border-gray-200 z-10">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-gray-700">Distance:</span>
+            <span className="text-sm font-semibold text-gray-900">
+              {distance}
+            </span>
+          </div>
+        </div>
       )}
-    </Map>
+    </div>
   );
 };
 

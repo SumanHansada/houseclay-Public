@@ -53,29 +53,20 @@ export default function Loading() {
 
 function CardSkeleton() {
   return (
-    <article className="rounded-xl border bg-white shadow-sm overflow-hidden">
-      {/* Image / carousel area */}
-      <div className="h-44 w-full bg-gray-200" />
-      <div className="p-4 space-y-3">
-        {/* Title */}
-        <div className="h-5 w-3/4 rounded bg-gray-200" />
-        {/* Meta row */}
-        <div className="flex gap-3">
-          <div className="h-4 w-20 rounded bg-gray-200" />
-          <div className="h-4 w-24 rounded bg-gray-200" />
-          <div className="h-4 w-28 rounded bg-gray-200" />
-        </div>
-        {/* Price / status */}
-        <div className="flex items-center justify-between">
-          <div className="h-5 w-24 rounded bg-gray-200" />
-          <div className="h-6 w-20 rounded bg-gray-200" />
-        </div>
-        {/* Actions */}
-        <div className="flex justify-end gap-2 pt-1">
-          <div className="h-9 w-28 rounded-md bg-gray-200" />
-          <div className="h-9 w-36 rounded-md bg-gray-200" />
-        </div>
+    <div className="flex-col gap-8 bg-white border border-gray-100 rounded-lg drop-shadow relative p-3 animate-pulse">
+      <div className="relative h-72 max-md:h-60 mb-4">
+        <div className="h-full w-full rounded-xl bg-gray-200" />
       </div>
-    </article>
+      <div className="flex justify-between">
+        <div className="h-4 w-2/4 mb-2 bg-gray-200 rounded" />
+        <div className="h-4 w-1/4 mb-2 bg-gray-200 rounded" />
+      </div>
+      <div className="flex justify-between">
+        <div className="h-4 w-3/5 mb-2 bg-gray-200 rounded" />
+        <div className="h-5 w-1/5 mb-2 bg-gray-200 rounded" />
+      </div>
+      <div className="h-4 w-1/2 mb-2 bg-gray-200 rounded" />
+      <div className="h-4 w-full bg-gray-200 rounded" />
+    </div>
   );
 }

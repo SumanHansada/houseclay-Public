@@ -71,7 +71,7 @@ import {
   REPORT_LISTING_DIALOG_ID,
 } from "@/common/dialogConstants";
 import { PropertyCategory } from "@/common/enums";
-import { pascalCase } from "@/common/utils";
+import { openMapsDirections, pascalCase } from "@/common/utils";
 import FullScreenLoader from "@/components/FullScreenLoader";
 import {
   ContactOwnerLoginDialog,
@@ -1283,36 +1283,15 @@ export function PropertyDetailsClient({
                 </div>
                 <button
                   onClick={() => {
-                    if (origin) {
-                      const destination = `${property?.latitude || 12.9716},${property?.longitude || 77.5946}`;
+                    if (!origin) return;
 
-                      // Try Google Maps first, then Apple Maps, then web
-                      const googleMapsUrl = `comgooglemaps://?saddr=${encodeURIComponent(origin)}&daddr=${destination}&directionsmode=driving`;
-                      // const appleMapsUrl = `maps://?saddr=${encodeURIComponent(origin)}&daddr=${destination}&dirflg=d`;
+                    const destination = `${property?.latitude ?? 12.9716},${
+                      property?.longitude ?? 77.5946
+                    }`;
 
-                      // Try to open Google Maps first
-                      const link = document.createElement("a");
-                      link.href = googleMapsUrl;
-                      link.click();
+                    openMapsDirections(origin, destination);
 
-                      // Fallback to Apple Maps after a short delay
-                      // setTimeout(() => {
-                      //   const appleLink = document.createElement("a");
-                      //   appleLink.href = appleMapsUrl;
-                      //   appleLink.click();
-
-                      //   // Final fallback to web version
-                      //   setTimeout(() => {
-                      //     setShowDirections(!!origin);
-                      //   }, 1000);
-                      // }, 1000);
-
-                      setTimeout(() => {
-                        setShowDirections(!!origin);
-                      }, 1000);
-                    } else {
-                      setShowDirections(!!origin);
-                    }
+                    setTimeout(() => setShowDirections(true), 1000);
                   }}
                   disabled={!origin}
                   className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"

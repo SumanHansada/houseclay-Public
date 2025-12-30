@@ -233,3 +233,35 @@ export const sanitizePhoneKeepCountryCode = (phoneNumber: string): string => {
   if (!phoneNumber) return phoneNumber;
   return phoneNumber.replace(/[\s\-\(\)]/g, "").replace(/^\+?0+/, "+") || "";
 };
+
+export const openMapsDirections = (
+  origin: string,
+  destination: string,
+): void => {
+  if (!origin || !destination) return;
+
+  const originEncoded = encodeURIComponent(origin);
+  const destinationEncoded = encodeURIComponent(destination);
+
+  const isIOS =
+    typeof navigator !== "undefined" &&
+    /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+  if (isIOS) {
+    // 1️⃣ Try Google Maps app
+    window.location.href = `comgooglemaps://?saddr=${originEncoded}&daddr=${destinationEncoded}&directionsmode=driving`;
+
+    // 2️⃣ Fallback → Apple Maps
+    setTimeout(() => {
+      window.location.href = `maps://?saddr=${originEncoded}&daddr=${destinationEncoded}&dirflg=d`;
+    }, 1200);
+
+    // 3️⃣ Final fallback → Web
+    setTimeout(() => {
+      window.location.href = `https://www.google.com/maps/dir/?api=1&origin=${originEncoded}&destination=${destinationEncoded}&travelmode=driving`;
+    }, 2400);
+  } else {
+    // Android + Desktop → Google Maps (opens app if installed)
+    window.location.href = `https://www.google.com/maps/dir/?api=1&origin=${originEncoded}&destination=${destinationEncoded}&travelmode=driving`;
+  }
+};

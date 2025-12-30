@@ -51,7 +51,6 @@ const getProperty = cache(async (propertyID: string) => {
       ? await ServerAPIService.getPropertyByID(propertyID)
       : await ServerAPIService.getPublicPropertyByID(propertyID);
 
-    console.log("Property Data", data);
     return data;
   } catch (error) {
     console.error("Error fetching property data", error);
@@ -70,20 +69,19 @@ export async function generateMetadata({
   const isAuthenticated = !!token;
 
   const data = await getProperty(propertyID);
-
-  // Handle different response structures
   const propertyData = data?.property;
-  let property = null;
+  let processedData = null;
   if (isAuthenticated) {
-    property = processPropertyData(propertyData);
+    processedData = processPropertyData(propertyData);
   } else {
-    property = processPropertyData(data);
+    processedData = processPropertyData(data);
   }
 
-  const bhkType = getOptionLabel(BHK_TYPE_OPTIONS, property?.bhkType);
-  const location = property?.locationOrSocietyName ?? "";
-  const propertyCategory = property?.propertyCategory ?? "";
-  const city = property?.city ?? "";
+  console.log("processedData", processedData);
+  const { city, locationOrSocietyName, bhkType, propertyCategory, coverImage } =
+    processedData;
+  const imageUrl = `${CDN_BASE_URL}/${coverImage}`;
+  const location = locationOrSocietyName ?? "";
 
   const titleSegments = [
     bhkType && `${bhkType}`,
@@ -98,8 +96,6 @@ export async function generateMetadata({
   const locationSummary = [location, city].filter(Boolean).join(", ");
   const description = [title, locationSummary].filter(Boolean).join(" | ");
 
-  const imageUrl = `${CDN_BASE_URL}/${property?.images?.[0]}`;
-  console.log("Image Url", imageUrl);
   const pageUrl = `${WEBSITE_BASE_URL}/property-details/${propertyID}`;
 
   return {
@@ -144,9 +140,12 @@ function processPropertyData(propertyData: any) {
 
   // Process images
   const propertyImages = processPropertyImages(property?.images);
+  const coverImage = property?.coverImage;
 
   // Common derivations
   const bhkType = getOptionLabel(BHK_TYPE_OPTIONS, property?.bhkType);
+  const city = property?.city;
+  const locationOrSocietyName = property?.locationOrSocietyName;
   const propertyType = getOptionLabel(
     PROPERTY_TYPE_OPTIONS,
     property?.propertyType,
@@ -293,6 +292,8 @@ function processPropertyData(propertyData: any) {
 
   return {
     // Raw property data
+    city,
+    locationOrSocietyName,
     property,
     contactUserCount,
     shortlistUserCount,
@@ -303,6 +304,7 @@ function processPropertyData(propertyData: any) {
     propertyCategory,
     // Processed data
     propertyImages,
+    coverImage,
     // Common derivations
     bhkType,
     propertyType,

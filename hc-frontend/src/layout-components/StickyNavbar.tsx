@@ -84,7 +84,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
         {/* 1. Glow (below) */}
         {activeIndex >= 0 && (
           <span
-            className="absolute bottom-0 h-12 w-14 blur-sm bg-gradient-to-t from-red-500/25 to-transparent pointer-events-none z-0"
+            className="absolute bottom-1 h-12 w-14 blur-sm bg-gradient-to-t from-red-500/25 to-transparent pointer-events-none z-0"
             style={{
               gridColumnStart: activeIndex + 1,
               gridColumnEnd: activeIndex + 2,
