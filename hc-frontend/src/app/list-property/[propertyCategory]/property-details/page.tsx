@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 
 import { PropertyCategory } from "@/common/enums";
-import { PropertyDetailsStepLoading } from "@/components/loading";
 
+import { default as PropertyDetailsStepLoading } from "./loading";
 import PropertyDetailsClient from "./PropertyDetailsClient";
 
 export async function generateStaticParams() {

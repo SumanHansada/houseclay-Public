@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 
 import { PropertyCategory } from "@/common/enums";
-import { RentalDetailsStepLoading } from "@/components/loading";
 
+import { default as RentalDetailsStepLoading } from "./loading";
 import RentalDetailsWrapper from "./RentalDetailsWrapper";
 
 export async function generateStaticParams() {

@@ -1,8 +1,7 @@
 import { Suspense } from "react";
 
-import { AdditionalInfoStepLoading } from "@/components/loading";
-
 import AdditionalInfoClient from "./AdditionalInfoClient";
+import { default as AdditionalInfoStepLoading } from "./loading";
 
 // Force dynamic rendering to avoid server component issues
 export const dynamic = "force-dynamic";

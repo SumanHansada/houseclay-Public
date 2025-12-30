@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 
-import { LocalityDetailsStepLoading } from "@/components/loading";
-
+import { default as LocalityDetailsStepLoading } from "./loading";
 import LocalityDetailsClient from "./LocalityDetailsClient";
 
 // Force dynamic rendering to avoid server component issues

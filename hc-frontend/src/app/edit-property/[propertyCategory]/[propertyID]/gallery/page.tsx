@@ -1,8 +1,7 @@
 import { Suspense } from "react";
 
-import { GalleryStepLoading } from "@/components/loading";
-
 import GalleryClient from "./GalleryClient";
+import { default as GalleryStepLoading } from "./loading";
 
 // Force dynamic rendering to avoid server component issues
 export const dynamic = "force-dynamic";

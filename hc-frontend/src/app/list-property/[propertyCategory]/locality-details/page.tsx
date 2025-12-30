@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 
 import { PropertyCategory } from "@/common/enums";
-import { LocalityDetailsStepLoading } from "@/components/loading";
 
+import { default as LocalityDetailsStepLoading } from "./loading";
 import LocalityDetailsClient from "./LocalityDetailsClient";
 
 export async function generateStaticParams() {

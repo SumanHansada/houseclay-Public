@@ -4,7 +4,8 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 import { PropertyCategory } from "@/common/enums";
-import { PropertyFormSetupLoading } from "@/components/loading";
+
+import { default as PropertyFormSetupLoading } from "./PropertyFormSetupLoading";
 
 export default function EditPropertyCategoryRootPage() {
   const params = useParams();

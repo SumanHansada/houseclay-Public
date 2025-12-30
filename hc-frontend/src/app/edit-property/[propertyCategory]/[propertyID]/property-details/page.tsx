@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 
-import { PropertyDetailsStepLoading } from "@/components/loading";
-
+import { default as PropertyDetailsStepLoading } from "./loading";
 import PropertyDetailsClient from "./PropertyDetailsClient";
 
 // Force dynamic rendering to avoid server component issues

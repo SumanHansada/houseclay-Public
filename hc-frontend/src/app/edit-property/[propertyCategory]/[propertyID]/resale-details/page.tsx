@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 
-import { ResaleDetailsStepLoading } from "@/components/loading";
-
+import { default as ResaleDetailsStepLoading } from "./loading";
 import ResaleDetailsClient from "./ResaleDetailsClient";
 
 // Force dynamic rendering to avoid server component issues

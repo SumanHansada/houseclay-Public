@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 
 import { PropertyCategory } from "@/common/enums";
-import { GalleryStepLoading } from "@/components/loading";
 
 import GalleryClient from "./GalleryClient";
+import { default as GalleryStepLoading } from "./loading";
 
 export async function generateStaticParams() {
   return [

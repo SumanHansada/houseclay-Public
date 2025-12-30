@@ -5,7 +5,7 @@ import { TestimonialCard } from "@/components/Testimonials";
 import PropertiesData from "@/data/PropertiesData.json";
 import { Footer } from "@/layout-components";
 
-import CustomerSupportBanner from "./components/CustomerSupportBanner";
+import CustomerSupportBanner from "../components/CustomerSupportBanner";
 
 const ListPropertyMarketing = () => {
   const testimonials = PropertiesData.testimonials;

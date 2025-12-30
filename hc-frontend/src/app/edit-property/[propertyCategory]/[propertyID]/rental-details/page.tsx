@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 
-import { RentalDetailsStepLoading } from "@/components/loading";
-
+import { default as RentalDetailsStepLoading } from "./loading";
 import RentalDetailsWrapper from "./RentalDetailsWrapper";
 
 // Force dynamic rendering to avoid server component issues
