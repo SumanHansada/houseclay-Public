@@ -126,7 +126,7 @@ export default function ShortlistsPage() {
       {/* Cards */}
       <div className="space-y-4 overflow-y-auto max-md:px-6 pt-4 pb-16">
         {/* Property List */}
-        <div className="mx-auto w-full py-5">
+        <div className="mx-auto w-full">
           {filteredProperties.length === 0 ? (
             <div className="text-center text-gray-500 py-12">
               No properties found.
