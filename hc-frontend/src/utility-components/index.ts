@@ -8,6 +8,7 @@ export { default as GoogleMapsDirection } from "./GoogleMapsDirection";
 export { default as ImageWithFallback } from "./ImageWithFallback";
 export { default as ImageWithLoader } from "./ImageWithLoader";
 export { default as PhotoGallery } from "./PhotoGallery";
+export { default as PlacesAutocompleteWithAnimation } from "./PlacesAutocompleteWithAnimation";
 export { default as Popover } from "./Popover";
 export { default as RemoteSvg } from "./RemoteSvg";
 export { default as SvgIcon } from "./SvgIcon";

@@ -1,18 +1,18 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
-import { PlacesAutocomplete } from "@/base-components";
 import {
   resetPropertySearchSlice,
   setConfirmedLocationName,
   setLocation,
 } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
+import { PlacesAutocompleteWithAnimation } from "@/utility-components";
 import { BENGALURU_BOUNDS, isWithinBounds } from "@/utils/geoBounds";
 
 import Dropdown from "./Dropdown";
@@ -43,6 +43,7 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const dispatch = useDispatch();
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const location = useSelector(
     (state: RootState) => state.propertySearch.location,
   );
@@ -142,6 +143,29 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
     handlePrefetch();
   };
 
+  const handleClear = () => {
+    // Clear the input value by calling onChange with empty string
+    handleLocationChange("");
+    // Also ensure location is fully cleared
+    dispatch(setLocation(null));
+    dispatch(setConfirmedLocationName(""));
+  };
+
+  const handleButtonClick = () => {
+    if (location?.name) {
+      handleClear();
+    } else {
+      handleSearch();
+    }
+  };
+
+  const handleClearButtonMouseDown = (e: React.MouseEvent) => {
+    // Prevent blur from happening before we clear
+    if (location?.name) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <div
       ref={containerRef}
@@ -164,39 +188,70 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
       </div>
 
       {/* Location */}
-      <div className="w-3/4 px-2 py-1 border-gray-200 max-md:w-full max-md:flex-1 md:px-3 md:py-2">
-        <PlacesAutocomplete
+      <div className="w-3/4 px-2 py-2 border-gray-200 max-md:w-full max-md:flex-1 md:px-3 md:py-2">
+        <PlacesAutocompleteWithAnimation
           id={id}
           name="location"
-          placeholder="Type Locality..."
+          animatedPlaceholders={[
+            "Bellandur",
+            "Kadubeesanahalli",
+            "Sarjapura",
+            "HSR Layout",
+            "Koramangala",
+            "Indiranagar",
+          ]}
           value={location?.name || ""}
           onChange={handleLocationChange}
+          onFocus={() => setIsInputFocused(true)}
+          onBlur={() => setIsInputFocused(false)}
           onLocationSelect={handleLocationSelect}
           containerClassName="w-full relative"
-          labelClassName="text-sm font-medium text-gray-900 mb-1"
-          inputClassName="w-full p-3 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
+          labelClassName="text-lg font-medium text-gray-900 mb-1"
+          inputClassName="w-full p-1 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
           dropdownClassName="absolute z-10 mt-1 py-1 w-full bg-white shadow-lg max-h-60 overflow-auto rounded-b-xl"
           dropdownItemClassName="py-1 px-3 hover:bg-gray-100 cursor-pointer flex items-center"
           errorClassName="mt-1 text-sm text-red-600"
         />
       </div>
 
-      {/* Search Button */}
+      {/* Search/Clear Button */}
       <button
-        aria-label="search-properties-mobile"
+        aria-label={
+          isInputFocused && location?.name
+            ? "clear-location-mobile"
+            : "search-properties-mobile"
+        }
         className="flex items-center justify-center p-3 bg-red-500 rounded-full shadow-xl md:hidden"
-        onClick={handleSearch}
+        onClick={handleButtonClick}
+        onMouseDown={handleClearButtonMouseDown}
       >
-        <Search size={20} className="text-white fill-red-500" />
+        {isInputFocused && location?.name ? (
+          <X size={20} className="text-white" />
+        ) : (
+          <Search size={20} className="text-white fill-red-500" />
+        )}
       </button>
       <button
-        aria-label="search-properties"
+        aria-label={
+          isInputFocused && location?.name
+            ? "clear-location"
+            : "search-properties"
+        }
         className="flex items-center justify-center p-3 bg-red-500 rounded-full shadow-xl max-md:hidden"
-        onClick={handleSearch}
-        onMouseEnter={handlePrefetch}
-        onFocus={handlePrefetch}
+        onClick={handleButtonClick}
+        onMouseDown={handleClearButtonMouseDown}
+        onMouseEnter={
+          !isInputFocused || !location?.name ? handlePrefetch : undefined
+        }
+        onFocus={
+          !isInputFocused || !location?.name ? handlePrefetch : undefined
+        }
       >
-        <Search size={30} className="text-white fill-red-500" />
+        {isInputFocused && location?.name ? (
+          <X size={30} className="text-white" />
+        ) : (
+          <Search size={30} className="text-white fill-red-500" />
+        )}
       </button>
     </div>
   );

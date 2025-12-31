@@ -5,6 +5,7 @@ import {
   ChevronLeft,
   SearchIcon,
   SlidersHorizontal,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -98,6 +99,7 @@ export function PropertySearchClient({
   const dispatch = useDispatch();
   const urlCategory = getUrlCategory(searchParams);
   const [page, setPage] = useState(0);
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const { openDialog, closeDialog, isDialogOpen } = useDialog();
 
   const location = searchState.location;
@@ -311,6 +313,29 @@ export function PropertySearchClient({
           name: value,
         }),
       );
+    }
+  };
+
+  // Handle clear location
+  const handleClear = () => {
+    handleLocationChange("");
+    dispatch(setLocation(null));
+    dispatch(setConfirmedLocationName(""));
+  };
+
+  // Handle button click - either clear or search
+  const handleButtonClick = () => {
+    if (location?.name) {
+      handleClear();
+    } else {
+      handleSearch();
+    }
+  };
+
+  // Prevent blur when clicking clear button
+  const handleClearButtonMouseDown = (e: React.MouseEvent) => {
+    if (location?.name) {
+      e.preventDefault();
     }
   };
 
@@ -531,13 +556,28 @@ export function PropertySearchClient({
             name="location"
             value={locationSearch}
             onChange={handleLocationChange}
+            onFocus={() => setIsInputFocused(true)}
+            onBlur={() => setIsInputFocused(false)}
             onLocationSelect={handleLocationSelect}
             placeholder="Search for a property"
             containerClassName="w-full relative"
             inputClassName="h-10 bg-gray-100 w-full border-none outline-none"
           />
-          <button className="p-2 rounded-full" onClick={() => handleSearch()}>
-            <SearchIcon size={20} />
+          <button
+            className="p-2 rounded-full"
+            onClick={handleButtonClick}
+            onMouseDown={handleClearButtonMouseDown}
+            aria-label={
+              isInputFocused && location?.name
+                ? "clear-location-mobile"
+                : "search-properties-mobile"
+            }
+          >
+            {isInputFocused && location?.name ? (
+              <X size={20} />
+            ) : (
+              <SearchIcon size={20} />
+            )}
           </button>
         </div>
 
@@ -573,6 +613,8 @@ export function PropertySearchClient({
               name="location"
               value={locationSearch}
               onChange={handleLocationChange}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => setIsInputFocused(false)}
               onLocationSelect={handleLocationSelect}
               placeholder="Search for a property"
               inputClassName="w-full outline-none px-3"
@@ -580,9 +622,19 @@ export function PropertySearchClient({
             />
             <button
               className="p-2 bg-gray-100 rounded-full"
-              onClick={() => handleSearch()}
+              onClick={handleButtonClick}
+              onMouseDown={handleClearButtonMouseDown}
+              aria-label={
+                isInputFocused && location?.name
+                  ? "clear-location"
+                  : "search-properties"
+              }
             >
-              <SearchIcon size={20} />
+              {isInputFocused && location?.name ? (
+                <X size={20} />
+              ) : (
+                <SearchIcon size={20} />
+              )}
             </button>
           </div>
           <div className="flex flex-row items-center gap-2">

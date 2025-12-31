@@ -113,6 +113,7 @@ export default function PhotoGallery({
                   alt="Main property image"
                   fill
                   className="object-cover bg-gray-200"
+                  priority
                 />
                 {/* Hover overlay */}
                 <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-15 transition-opacity duration-300"></div>
@@ -135,6 +136,8 @@ export default function PhotoGallery({
                     alt={`Property image ${index + 2}`}
                     fill
                     className="object-cover bg-gray-200"
+                    loading="lazy"
+                    decoding="async"
                   />
 
                   {/* Hover overlay */}

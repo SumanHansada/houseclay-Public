@@ -15,6 +15,7 @@ interface PlacesAutocompleteProps {
   value: string;
   onChange: (value: string) => void;
   onBlur?: () => void;
+  onFocus?: () => void;
   error?: string;
   placeholder?: string;
   required?: boolean;
@@ -124,6 +125,7 @@ const PlacesAutocompleteBase = ({
   value,
   onChange,
   onBlur,
+  onFocus,
   error,
   placeholder = "Search places",
   required = false,
@@ -145,7 +147,6 @@ const PlacesAutocompleteBase = ({
 
   const loadTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const searchTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
-
   const activeOptionRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -436,6 +437,9 @@ const PlacesAutocompleteBase = ({
         value={value}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
+        onFocus={() => {
+          onFocus?.();
+        }}
         onBlur={() => {
           onBlur?.();
           setTimeout(() => {
