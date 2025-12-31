@@ -69,7 +69,7 @@ export const useS3Uploader = () => {
                 );
               }
             },
-            timeout: 30000, // 30 second timeout
+            timeout: 600000, // 600 second timeout
           });
 
           // File completed successfully
