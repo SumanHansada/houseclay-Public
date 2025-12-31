@@ -144,7 +144,7 @@ const PhotoUpload: React.FC<PhotoUploadProps> = ({
   // Configure dropzone
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
-      "image/*": [".jpeg", ".jpg", ".png", ".webp", ".heic"],
+      "image/*": [".jpeg", ".jpg", ".png", ".webp", ".heic", ".heif"],
     },
     onDrop,
     disabled: noPhotosValue || disabled,
