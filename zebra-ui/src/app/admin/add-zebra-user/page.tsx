@@ -1,25 +1,29 @@
 "use client";
 
-import { ErrorMessage, Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
 import * as Yup from "yup";
 
-import { FormCalendarField, FormTextField } from "@/form-components";
+import {
+  FormCalendarField,
+  FormPhoneField,
+  FormTextField,
+} from "@/form-components";
 import FormRadioGroup from "@/form-components/FormRadioGroup";
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 
-import { DocumentUpload } from "./components/DocumentUpload";
+// import { DocumentUpload } from "./components/DocumentUpload";
 
 export interface AddAdminFormValues {
   name: string;
-  // phone: string;
-  // secondaryContact?: string;
+  phone: string;
+  secondaryContact?: string;
   email: string;
   personalEmail: string;
   address: string;
   role: string;
   dateOfBirth: string;
-  documents: { pan?: File | null; aadhaar?: File | null };
+  // documents: { pan?: File | null; aadhaar?: File | null };
   joiningDate: string;
   active: boolean;
 }
@@ -34,8 +38,8 @@ const dateField: Yup.StringSchema<string> = Yup.string()
 
 const schema: Yup.Schema<AddAdminFormValues> = Yup.object({
   name: Yup.string().required("Name is required"),
-  // phone: Yup.string().required("Phone is required"),
-  // secondaryContact: Yup.string(),
+  phone: Yup.string().required("Phone number is required"),
+  secondaryContact: Yup.string(),
   email: Yup.string()
     .required("Company e-mail is required")
     .test(
@@ -51,30 +55,30 @@ const schema: Yup.Schema<AddAdminFormValues> = Yup.object({
   role: Yup.string().required("Role is required"),
   dateOfBirth: dateField,
   joiningDate: dateField,
-  documents: Yup.object()
-    .shape({
-      pan: Yup.mixed<File>().nullable(),
-      aadhaar: Yup.mixed<File>().nullable(),
-    })
-    .test("pan-or-aadhaar", "Either PAN or Aadhaar must be provided", (docs) =>
-      docs
-        ? Boolean(docs.pan instanceof File || docs.aadhaar instanceof File)
-        : false,
-    ),
+  // documents: Yup.object()
+  //   .shape({
+  //     pan: Yup.mixed<File>().nullable(),
+  //     aadhaar: Yup.mixed<File>().nullable(),
+  //   })
+  //   .test("pan-or-aadhaar", "Either PAN or Aadhaar must be provided", (docs) =>
+  //     docs
+  //       ? Boolean(docs.pan instanceof File || docs.aadhaar instanceof File)
+  //       : false,
+  //   ),
   active: Yup.boolean().required(),
 });
 
 const AddAdminPage: React.FC = () => {
   const initialValues: AddAdminFormValues = {
     name: "",
-    // phone: "",
-    // secondaryContact: "",
+    phone: "",
+    secondaryContact: "",
     email: "",
     personalEmail: "",
     address: "",
     role: "",
     dateOfBirth: "",
-    documents: { pan: null, aadhaar: null },
+    // documents: { pan: null, aadhaar: null },
     joiningDate: "",
     active: true,
   };
@@ -111,19 +115,23 @@ const AddAdminPage: React.FC = () => {
                 placeholder="Full name"
                 required
               />
-              {/* <FormPhoneInput
+              <FormPhoneField
                 label="Phone"
                 name="phone"
                 id="phone"
                 defaultCountry="in"
+                placeholder="Enter phone number"
+                className="border border-gray-300 rounded-lg px-3 py-1 focus:ring-red-500 focus:border-red-500"
                 required
               />
-              <FormPhoneInput
+              <FormPhoneField
                 label="Secondary Contact"
                 name="secondaryContact"
                 id="secondaryContact"
                 defaultCountry="in"
-              /> */}
+                placeholder="Enter secondary phone number"
+                className="border border-gray-300 rounded-lg px-3 py-1 focus:ring-red-500 focus:border-red-500"
+              />
               <FormTextField
                 name="email"
                 id="email"
@@ -159,7 +167,7 @@ const AddAdminPage: React.FC = () => {
                 options={[
                   { value: "ADMIN", label: "Admin" },
                   { value: "MANAGER", label: "Manager" },
-                  { value: "CAPTAIN", label: "HouseClay Captain" },
+                  { value: "CAPTAIN", label: "Houseclay Captain" },
                 ]}
                 required
               />
@@ -181,7 +189,7 @@ const AddAdminPage: React.FC = () => {
               />
             </div>
 
-            <div>
+            {/* <div>
               <h2 className="text-xl mb-4 font-medium text-gray-800">
                 Documents
               </h2>
@@ -197,12 +205,12 @@ const AddAdminPage: React.FC = () => {
                   ) : null
                 }
               />
-            </div>
+            </div> */}
 
             <FormRadioGroup
               name="active"
               label="Active"
-              columns={2}
+              columns={4}
               horizontal
               options={[
                 { value: true, label: "Yes" },

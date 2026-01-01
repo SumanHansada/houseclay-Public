@@ -140,16 +140,6 @@ export default function AdminLogin() {
                   >
                     {isLoading ? "Signing in…" : "Sign in"}
                   </button>
-
-                  <p className="text-sm font-light text-gray-500">
-                    Don&apos;t have an account yet?{" "}
-                    <a
-                      href="/register"
-                      className="font-medium text-red-600 hover:underline"
-                    >
-                      Sign up
-                    </a>
-                  </p>
                 </Form>
               )}
             </Formik>
