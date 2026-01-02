@@ -54,7 +54,8 @@ const ProfilePage: React.FC = () => {
     if (isBlacklisted) openDialog(ACTIVATE_DIALOG_ID);
   };
 
-  const { name, email, phoneNo, createdAt, connectBal } = currentUser;
+  const { name, email, phoneNo, createdAt, connectBal, blacklistedAt } =
+    currentUser;
 
   const profileFields = [
     { label: "Name", value: name },
@@ -68,6 +69,14 @@ const ProfilePage: React.FC = () => {
       label: "Blacklisted Status",
       value: isBlacklisted ? "The user is blacklisted" : "The user is active",
     },
+    ...(isBlacklisted && blacklistedAt
+      ? [
+          {
+            label: "Blacklisted On",
+            value: new Date(blacklistedAt).toLocaleString(),
+          },
+        ]
+      : []),
     {
       label: "Connect Balance",
       value: connectBal,

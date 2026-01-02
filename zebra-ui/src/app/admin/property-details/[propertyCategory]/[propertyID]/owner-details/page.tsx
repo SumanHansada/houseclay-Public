@@ -100,23 +100,27 @@ export default function PropertyDetailsOverviewPage() {
         {latestUpdate ? (
           <div className="bg-white rounded-xl p-6 flex flex-col gap-3">
             <h1 className="text-2xl">Property Updates:</h1>
-            <ul className="ml-4 list-disc">
+            <ul className="ml-4 list-disc text-lg">
               <li>
                 Update Type:&nbsp;
-                <span className="text-lg">{latestUpdate.updateType}</span>
+                <span className="">{latestUpdate.updateType}</span>
               </li>
               <li>
                 Update Time:&nbsp;
-                <span className="text-lg">
+                <span className="">
                   {new Date(latestUpdate.updateTime).toLocaleString("en-IN")}
                 </span>
               </li>
               <li>
                 Updated By:&nbsp;
-                <span className="text-lg">{latestUpdate.updateBy}</span>
+                <span className="">{latestUpdate.updateBy}</span>
                 <span className="text-sm text-gray-700 ml-1">
                   [{latestUpdate.userType}]
                 </span>
+              </li>
+              <li>
+                Comment: &nbsp;
+                <span className="">{latestUpdate.comment}</span>
               </li>
             </ul>
           </div>

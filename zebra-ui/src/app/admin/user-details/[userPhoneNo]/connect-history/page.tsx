@@ -33,7 +33,7 @@ const ConnectHistoryPage: React.FC = () => {
   const columns: Column<RowType>[] = [
     {
       key: "_serial",
-      label: "Sr. No.",
+      label: "#",
       accessor: "_serial",
       className: "w-20",
     },
