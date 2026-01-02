@@ -57,7 +57,7 @@ export const UsersManagement = () => {
   );
 
   // Derived Data
-  let tableData: UserInfo[] = [];
+  let tableData: (UserInfo & { _serial: number })[] = [];
   let totalPages = 0;
 
   // Loading and Fetching States
@@ -77,7 +77,11 @@ export const UsersManagement = () => {
       tableData = [];
       totalPages = 0;
     } else {
-      tableData = searchUserData?.user ? [searchUserData.user] : [];
+      const rawData = searchUserData?.user ? [searchUserData.user] : [];
+      tableData = rawData.map((user, index) => ({
+        ...user,
+        _serial: index + 1,
+      }));
       totalPages = 1;
     }
   } else {
@@ -89,7 +93,11 @@ export const UsersManagement = () => {
       globalError = listError;
       globalErrorMessage = "Failed to fetch Users.";
     } else {
-      tableData = paginatedUserData?.content || [];
+      const rawData = paginatedUserData?.content || [];
+      tableData = rawData.map((user, index) => ({
+        ...user,
+        _serial: (currentPage - 1) * ROWS_PER_PAGE + index + 1,
+      }));
       totalPages = paginatedUserData?.totalPages || 0;
     }
   }
@@ -120,7 +128,8 @@ export const UsersManagement = () => {
   };
 
   // Columns Configuration
-  const columns: Column<UserInfo>[] = [
+  const columns: Column<UserInfo & { _serial: number }>[] = [
+    { key: "_serial", label: "#", accessor: "_serial" },
     { key: "name", label: "Name", accessor: "name" },
     { key: "email", label: "Email", accessor: "email" },
     { key: "phoneNo", label: "Phone No.", accessor: "phoneNo" },
@@ -143,6 +152,21 @@ export const UsersManagement = () => {
       ),
     },
   ];
+
+  const getHeadingCountAndLabel = () => {
+    if (isSearchMode) {
+      const count = tableData.length;
+      if (count === 0) {
+        return { count: 0, label: "No results found" };
+      }
+      return { count, label: count === 1 ? "user" : "users" };
+    } else {
+      const total = paginatedUserData?.totalElements || 0;
+      return { count: total, label: total === 1 ? "user" : "users" };
+    }
+  };
+
+  const { count: userCount, label: userLabel } = getHeadingCountAndLabel();
 
   // Initial Hard Loading State
   if (isGlobalLoading) {
@@ -172,7 +196,11 @@ export const UsersManagement = () => {
       <div className="flex flex-col flex-1 h-full">
         {/* Sticky top filter bar */}
         <div className="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm flex justify-between items-center py-4 px-16">
-          <h1 className="text-2xl font-medium">Houseclay Users</h1>
+          <h1 className="text-2xl font-medium">
+            {isSearchMode && userCount === 0
+              ? "Houseclay Users - No results found"
+              : `Houseclay Users - ${userCount} ${userLabel}`}
+          </h1>
           <SearchBar
             searchText={searchText}
             onSearchTextChange={setSearchText}

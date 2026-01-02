@@ -65,7 +65,7 @@ export function buildPropertyColumns(
   return [
     {
       key: "serial",
-      label: "Sr. No.",
+      label: "#",
       accessor: "_serial",
       className: "w-20",
     },
