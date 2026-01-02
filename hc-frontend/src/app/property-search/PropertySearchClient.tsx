@@ -3,6 +3,7 @@
 import {
   ArrowDownWideNarrow,
   ChevronLeft,
+  ChevronRight,
   SearchIcon,
   SlidersHorizontal,
   X,
@@ -543,6 +544,41 @@ export function PropertySearchClient({
     router.replace(`/property-search?${params.toString()}`);
   };
 
+  const getTieredCountElement = () => {
+    const total = effectiveData?.totalElements || 0;
+    if (total < 20) {
+      return null;
+    }
+
+    let baseLabel: string;
+    switch (searchState.propertyCategory) {
+      case PropertyCategory.FLATMATE:
+        baseLabel = "listings for rent";
+        break;
+      case PropertyCategory.RENT:
+        baseLabel = "listings for rent";
+        break;
+      default:
+        baseLabel = "listings for sale";
+    }
+    const tier =
+      total >= 200
+        ? "200+"
+        : total >= 100
+          ? "100+"
+          : total >= 50
+            ? "50+"
+            : "20+";
+    const displayText = `${tier} ${baseLabel}`;
+
+    return (
+      <p className="text-sm text-gray-500 text-left md:text-right flex items-center gap-1">
+        <span>{displayText}</span>
+        <ChevronRight className="h-3 w-3 text-gray-400 hidden md:block" />
+      </p>
+    );
+  };
+
   return (
     <>
       {/* Mobile - Search and Filter Bar (Overlaps Header)*/}
@@ -750,59 +786,41 @@ export function PropertySearchClient({
       <section className="w-full md:pt-[64px] md:bg-gray-50 relative">
         <div className="min-h-[580px] px-6 pb-10 md:bg-gray-50 xl:px-24 md:px-12">
           {/* Info Bar */}
-          <div className="flex flex-col gap-4 py-6">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4">
-              {/* Left Side: Always visible count */}
-              {properties.length > 0 ? (
-                <p className="text-sm text-gray-500 text-left md:text-right">
-                  {properties.length} out of {effectiveData?.totalElements}{" "}
-                  {(() => {
-                    const count = properties.length;
-                    const isPlural = count !== 1;
-                    switch (searchState.propertyCategory) {
-                      case PropertyCategory.FLATMATE:
-                        return isPlural ? "Rooms for Rent" : "Room for Rent";
-                      case PropertyCategory.RENT:
-                        return isPlural
-                          ? "Properties for Rent"
-                          : "Property for Rent";
-                      default:
-                        return isPlural
-                          ? "Properties for Sale"
-                          : "Property for Sale";
-                    }
-                  })()}
-                </p>
-              ) : (
-                <p className="h-0 w-0 invisible">Placeholder</p>
-              )}
+          {(() => {
+            const totalElements = effectiveData?.totalElements || 0;
+            const hasCount = totalElements >= 20;
+            const hasLocation =
+              !!searchState.confirmedLocationName &&
+              searchState.confirmedLocationName !== "";
+            const hasContent = hasCount || hasLocation;
 
-              {/* Right Side: Location or Placeholder (Invisible is for left side logic) */}
-              <div className="flex items-center gap-2 min-w-0">
-                {searchState.confirmedLocationName &&
-                searchState.confirmedLocationName !== "" ? (
-                  <>
-                    <span className="text-sm text-gray-700 inline text-nowrap">
-                      Showing in:
-                    </span>
-                    <span className="px-2 py-0.5 md:py-1 rounded-full bg-gray-200 text-xs md:text-sm truncate max-w-64 md:max-w-xs">
-                      {searchState.confirmedLocationName}
-                    </span>
-                  </>
-                ) : (
-                  // Placeholder to maintain space and alignment - in case we want to place the location on left and count on right
-                  <div className="h-0 w-0 md:w-auto md:h-8 invisible">
-                    <span className="text-xs md:text-sm">
-                      Showing Results for:
-                    </span>
-                    <span className="px-3 py-1 rounded-full bg-gray-200">
-                      Placeholder
-                    </span>
-                  </div>
-                )}
+            if (!hasContent) {
+              return <div className="h-10 invisible" />;
+            }
+
+            const countElement = getTieredCountElement();
+
+            return (
+              <div className="flex flex-col gap-4 py-6">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4">
+                  {/* Left Side: Count or empty (no spacer—let flex handle) */}
+                  {countElement}
+
+                  {/* Right Side: Location (no placeholder if empty) */}
+                  {hasLocation ? (
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-sm text-gray-700 inline text-nowrap">
+                        Showing in:
+                      </span>
+                      <span className="px-2 py-0.5 md:py-1 rounded-full bg-gray-200 text-xs md:text-sm truncate max-w-64 md:max-w-xs">
+                        {searchState.confirmedLocationName}
+                      </span>
+                    </div>
+                  ) : null}
+                </div>
               </div>
-            </div>
-          </div>
+            );
+          })()}
 
           {/* Property List */}
           <div className="mx-auto">
