@@ -84,7 +84,9 @@ export async function generateMetadata({
   const location = locationOrSocietyName ?? "";
 
   const titleSegments = [
-    bhkType && `${bhkType}`,
+    propertyCategory === PropertyCategory.FLATMATE
+      ? "Room"
+      : bhkType && `${bhkType}`,
     location && `in ${location}`,
     propertyCategory && `for ${pascalCase(propertyCategory)}`,
     city && `in ${city}`,

@@ -26,6 +26,7 @@ export default function ImageWithFallback({
       }}
       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
       placeholder="blur"
+      blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYwIiBoZWlnaHQ9IjI3MCIgZmlsbD0iI2YzZjRmNiIvPg=="
     />
   );
 }
