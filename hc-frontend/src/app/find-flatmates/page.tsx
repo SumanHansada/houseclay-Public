@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://cdn.houseclay.com/public/images/list-property-og-image.jpg",
+        url: "https://cdn.houseclay.com/public/images/find-flatmates-og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Find Flatmates on Houseclay - Post instantly & connect with verified tenants",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     description:
       "It's easy to find flatmates on Houseclay. Post instantly & connect with verified tenants.",
     images: [
-      "https://cdn.houseclay.com/public/images/list-property-og-image.jpg",
+      "https://cdn.houseclay.com/public/images/find-flatmates-og-image.jpg",
     ],
   },
 };

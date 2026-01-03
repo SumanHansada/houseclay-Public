@@ -9,7 +9,6 @@ import { Button } from "@/base-components";
 import { PropertyCategory } from "@/common/enums";
 import { generateUUID } from "@/common/utils";
 import { MobileFooter, MobileHeader } from "@/layout-components";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { setPropertyCategory, setPropertyID } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 
@@ -20,7 +19,6 @@ export default function FindFlatmatesLayout({
 }) {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { isMobile } = useDeviceContext();
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated,
   );
@@ -41,10 +39,6 @@ export default function FindFlatmatesLayout({
     router.push(url);
   };
 
-  if (!isMobile) {
-    router.replace("/");
-    return;
-  }
   return (
     <>
       <MobileHeader>
