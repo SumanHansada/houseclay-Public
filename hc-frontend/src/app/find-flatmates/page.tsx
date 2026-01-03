@@ -1,6 +1,41 @@
 import { Lightbulb } from "lucide-react";
+import type { Metadata } from "next";
 
+import { WEBSITE_BASE_URL } from "@/common/constants";
 import { SvgIcon } from "@/utility-components";
+
+export const metadata: Metadata = {
+  title: "Find Flatmates on Houseclay",
+  description:
+    "It's easy to find flatmates on Houseclay. Post instantly & connect with verified tenants.",
+  alternates: {
+    canonical: `${WEBSITE_BASE_URL}/find-flatmates`,
+  },
+  openGraph: {
+    title: "Find Flatmates on Houseclay",
+    description:
+      "It's easy to find flatmates on Houseclay. Post instantly & connect with verified tenants.",
+    url: `${WEBSITE_BASE_URL}/find-flatmates`,
+    type: "website",
+    images: [
+      {
+        url: "https://cdn.houseclay.com/public/images/list-property-og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Find Flatmates on Houseclay - Post instantly & connect with verified tenants",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Find Flatmates on Houseclay",
+    description:
+      "It's easy to find flatmates on Houseclay. Post instantly & connect with verified tenants.",
+    images: [
+      "https://cdn.houseclay.com/public/images/list-property-og-image.jpg",
+    ],
+  },
+};
 
 export default function FindFlatmatesPage() {
   return (
