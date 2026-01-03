@@ -38,7 +38,7 @@ export default function Loading() {
             <div className="h-[46px] w-full rounded-xl bg-gray-200 animate-pulse" />
           </div>
           <div className="flex items-center gap-2 flex-row">
-            <div className="h-[46px] w-20 rounded-xl bg-gray-200 animate-pulse" />
+            <div className="h-[46px] w-24 rounded-xl bg-gray-200 animate-pulse" />
             <div className="h-[46px] w-36 rounded-xl bg-gray-200 animate-pulse max-2xl:hidden" />
             <div className="h-[46px] w-32 rounded-xl bg-gray-200 animate-pulse max-xl:hidden" />
             <div className="h-[46px] w-40 rounded-xl bg-gray-200 animate-pulse max-xl:hidden" />

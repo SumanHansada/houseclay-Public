@@ -695,8 +695,8 @@ export function PropertySearchClient({
               value={searchState.propertyCategory}
               onChange={onCategoryChange}
               size="sm"
-              dropdownWidth="auto"
-              containerClassName="relative w-20"
+              dropdownWidth="full"
+              containerClassName="relative w-24"
               buttonClassName="flex justify-between items-center w-full p-3 border rounded-xl text-left border-red-500 text-red-500 hover:border-red-500 hover:text-red-500"
               displayTextClassName="text-red-500"
             />
