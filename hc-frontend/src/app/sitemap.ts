@@ -15,7 +15,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     // Rent (Zero Brokerage)
     {
-      url: `${baseUrl}/property-search?city=bengaluru&propertyCategory=rent`,
+      url: `${baseUrl}/property-search?${new URLSearchParams({
+        city: "bengaluru",
+        propertyCategory: "rent",
+      })
+        .toString()
+        .replace(/&/g, "&amp;")}`,
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 0.9,
@@ -23,7 +28,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     // Flatmates
     {
-      url: `${baseUrl}/property-search?city=bengaluru&propertyCategory=flatmate`,
+      url: `${baseUrl}/property-search?${new URLSearchParams({
+        city: "bengaluru",
+        propertyCategory: "flatmate",
+      })
+        .toString()
+        .replace(/&/g, "&amp;")}`,
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 0.9,
