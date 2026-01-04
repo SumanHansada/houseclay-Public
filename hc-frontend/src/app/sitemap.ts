@@ -15,7 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     // Rent (Zero Brokerage)
     {
-      url: `${baseUrl}/property-search?lat=12.9337127&lon=77.6621937&propertyCategory=rent`,
+      url: `${baseUrl}/property-search?city=bengaluru&propertyCategory=rent`,
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 0.9,
@@ -23,7 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     // Flatmates
     {
-      url: `${baseUrl}/property-search?lat=12.9337127&lon=77.6621937&propertyCategory=flatmate`,
+      url: `${baseUrl}/property-search?city=bengaluru&propertyCategory=flatmate`,
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 0.9,

@@ -14,7 +14,7 @@ import {
   useRouter,
   useSearchParams,
 } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -25,6 +25,7 @@ import {
   SelectDropdown,
 } from "@/base-components";
 import { noResultsFoundIconURL } from "@/common/cdnURLs";
+import { CITY_LAT_LNG_MAPPING, EXPLORE_LOCATION } from "@/common/constants";
 import {
   BHK_TYPE_OPTIONS,
   PROPERTY_AVAILABILITY,
@@ -84,13 +85,104 @@ interface PropertySearchClientProps {
   };
 }
 
+// Memoized component for properties list to prevent re-renders when typing
+interface PropertiesListProps {
+  properties: PropertySearch[];
+  isLoading: boolean;
+  isFetching: boolean;
+  effectiveData?: {
+    hasNext: boolean;
+  };
+  onLoadMore: () => void;
+  page: number;
+  initialData?: PropertySearchClientProps["initialData"];
+}
+
+const PropertiesList = memo(function PropertiesList({
+  properties,
+  isLoading,
+  isFetching,
+  effectiveData,
+  onLoadMore,
+  page,
+  initialData,
+}: PropertiesListProps) {
+  if (isLoading && page === 0 && !initialData) {
+    return <FullScreenLoader />;
+  }
+
+  if (properties.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center w-11/12 gap-3 mx-auto md:w-2/3 lg:w-1/2">
+        <div className="relative w-11/12 md:w-3/4 lg:w-2/3 aspect-[295/230]">
+          <ImageWithLoader
+            src={noResultsFoundIconURL}
+            alt="No Results Found"
+            fill
+          />
+        </div>
+        <div className="text-center md:px-4">
+          <h1 className="text-xl font-semibold md:text-2xl">
+            No Results Found
+          </h1>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex-1">
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
+        {properties.map((property, idx) => (
+          <Link
+            key={`${property.propertyID}-${idx}`}
+            href={`/property-details/${property.propertyID}`}
+            prefetch={false}
+            className="block"
+          >
+            <Properties
+              property={property}
+              badgeType={
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (property as any).badgeType as BadgeType | undefined
+              }
+              showCarouselDots={false}
+            />
+          </Link>
+        ))}
+      </div>
+
+      {effectiveData?.hasNext && (
+        <div className="flex justify-center w-full mt-10 mb-6">
+          <Button
+            variant="primary"
+            onClick={onLoadMore}
+            isLoading={isFetching}
+            className="px-6 py-3 min-w-40 rounded-xl"
+          >
+            Load More
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+});
+
 export function PropertySearchClient({
   initialData,
 }: PropertySearchClientProps) {
   const searchParams = useSearchParams();
-  const lat = searchParams.get("lat");
-  const lon = searchParams.get("lon");
-  const propertyCategory = searchParams
+  let lat = searchParams.get("lat");
+  let lon = searchParams.get("lon");
+  const city = searchParams.get("city");
+  if (!lat && !lon) {
+    const cityCoords =
+      EXPLORE_LOCATION ||
+      CITY_LAT_LNG_MAPPING[city as keyof typeof CITY_LAT_LNG_MAPPING];
+    lat = cityCoords.lat.toString();
+    lon = cityCoords.lng.toString();
+  }
+  const urlPropertyCategory = searchParams
     .get("propertyCategory")
     ?.toUpperCase() as PropertyCategory;
 
@@ -351,7 +443,7 @@ export function PropertySearchClient({
     > = {
       latitude: Number(lat),
       longitude: Number(lon),
-      propertyCategory: propertyCategory || PropertyCategory.RENT,
+      propertyCategory: urlPropertyCategory || PropertyCategory.RENT,
       page: page,
     };
 
@@ -801,7 +893,7 @@ export function PropertySearchClient({
             const countElement = getTieredCountElement();
 
             return (
-              <div className="flex flex-col gap-4 py-6">
+              <div className="flex flex-col gap-4 py-6 max-md:max-h-24 max-h-20">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4">
                   {/* Left Side: Count or empty (no spacer—let flex handle) */}
                   {countElement}
@@ -824,70 +916,15 @@ export function PropertySearchClient({
 
           {/* Property List */}
           <div className="mx-auto">
-            {isLoading && page === 0 && !initialData ? (
-              <FullScreenLoader />
-            ) : properties.length === 0 ? (
-              <div className="flex flex-col items-center justify-center w-11/12 gap-3 mx-auto md:w-2/3 lg:w-1/2">
-                <div className="relative w-11/12 md:w-3/4 lg:w-2/3 aspect-[295/230]">
-                  <ImageWithLoader
-                    src={noResultsFoundIconURL}
-                    alt="No Results Found"
-                    fill
-                  />
-                </div>
-                <div className="text-center md:px-4">
-                  <h1 className="text-xl font-semibold md:text-2xl">
-                    No Results Found
-                  </h1>
-                  {/* Commented my-requirements code for now */}
-                  {/* <p className="text-gray-600 md:text-lg text-balance">
-                    Don&apos;t worry, we can still get you the dream house fill
-                    up the requirements below and we will get back to you.
-                  </p> */}
-                </div>
-                {/* <Link
-                  href="/manage-account/my-requirements"
-                  className="px-6 py-2 border border-red-500 rounded-md md:text-lg hover:bg-red-50"
-                >
-                  Fill Requirements
-                </Link> */}
-              </div>
-            ) : (
-              <div className="flex-1">
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
-                  {properties.map((property, idx) => (
-                    <Link
-                      key={`${property.propertyID}-${idx}`}
-                      href={`/property-details/${property.propertyID}`}
-                      prefetch={false}
-                      className="block"
-                    >
-                      <Properties
-                        property={property}
-                        badgeType={
-                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                          (property as any).badgeType as BadgeType | undefined
-                        }
-                        showCarouselDots={false}
-                      />
-                    </Link>
-                  ))}
-                </div>
-
-                {effectiveData?.hasNext && (
-                  <div className="flex justify-center w-full mt-10 mb-6">
-                    <Button
-                      variant="primary"
-                      onClick={handleLoadMore}
-                      isLoading={isFetching}
-                      className="px-6 py-3 min-w-40 rounded-xl"
-                    >
-                      Load More
-                    </Button>
-                  </div>
-                )}
-              </div>
-            )}
+            <PropertiesList
+              properties={properties}
+              isLoading={isLoading}
+              isFetching={isFetching}
+              effectiveData={effectiveData}
+              onLoadMore={handleLoadMore}
+              page={page}
+              initialData={initialData}
+            />
           </div>
         </div>
       </section>

@@ -1,5 +1,6 @@
 import { cache, Suspense } from "react";
 
+import { CITY_LAT_LNG_MAPPING, EXPLORE_LOCATION } from "@/common/constants";
 import { PropertyCategory } from "@/common/enums";
 import { PropertySearch } from "@/interfaces/PropertySearch";
 import { ServerAPIService } from "@/services/serverAPIService";
@@ -38,8 +39,16 @@ async function PropertySearchContent({
 }: {
   params: { [key: string]: string | string[] | undefined };
 }) {
-  const lat = params.lat;
-  const lon = params.lon;
+  let lat = params.lat;
+  let lon = params.lon;
+  if (!lat && !lon) {
+    const city = params.city;
+    const cityCoords =
+      EXPLORE_LOCATION ||
+      CITY_LAT_LNG_MAPPING[city as keyof typeof CITY_LAT_LNG_MAPPING];
+    lat = cityCoords.lat.toString();
+    lon = cityCoords.lng.toString();
+  }
   const propertyCategory = params.propertyCategory;
 
   // Only fetch if lat/lon are present and valid

@@ -53,7 +53,7 @@ export default function Loading() {
         <div className="min-h-screen bg-gray-50 pb-10 xl:px-24 md:px-12 px-6">
           {/* Header Bar */}
           <div className="">
-            <div className="flex flex-col gap-4 py-6">
+            <div className="flex flex-col gap-4 py-6 max-md:max-h-24 max-h-20">
               <div>
                 <div className="h-4 w-[200px] bg-gray-200 rounded animate-pulse" />
               </div>

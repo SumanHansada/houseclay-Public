@@ -9,8 +9,9 @@ import {
   insufficientConnectsIconURL,
   loginAndEarnIconURL,
 } from "@/common/cdnURLs";
-import { EXPLORE_LOCATION } from "@/common/constants";
+import { CITY_LAT_LNG_MAPPING } from "@/common/constants";
 import { AuthStep } from "@/common/enums";
+import { pascalCase } from "@/common/utils";
 import { UserDropdown } from "@/components/UserDropdown";
 import { ActionDialog } from "@/dialogs/action-dialog";
 import { useLogout } from "@/hooks/useLogout";
@@ -28,6 +29,11 @@ const ACTION_DIALOG_ID = "logout-action-dialog";
 type User = {
   name: string;
 };
+
+const CITY_OPTIONS = Object.keys(CITY_LAT_LNG_MAPPING).map((city) => ({
+  id: city,
+  label: pascalCase(city),
+}));
 
 export interface HeaderClientProps {
   user?: User;
@@ -97,8 +103,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
   const router = useRouter();
 
   // Dynamically get lat/lon from current params or fallback to Bengaluru
-  const currentLat = searchParams.get("lat") || EXPLORE_LOCATION.lat.toString();
-  const currentLon = searchParams.get("lon") || EXPLORE_LOCATION.lng.toString();
+  const currentCity = CITY_OPTIONS[0].id;
 
   const onLogin = () => {
     closeAllDialogs();
@@ -138,7 +143,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
         <div className="flex justify-between items-center w-full text-sm">
           <nav className="hidden md:flex xl:gap-8 lg:gap-6 md:gap-5 gap-3 text-gray-800 text-base">
             <Link
-              href={`/property-search?lat=${currentLat}&lon=${currentLon}&propertyCategory=rent`}
+              href={`/property-search?city=${currentCity}&propertyCategory=rent`}
               data-category="rent"
               data-active={
                 searchParams.get("propertyCategory") === "rent" ||
@@ -153,7 +158,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
               Rent
             </Link>
             <Link
-              href={`/property-search?lat=${currentLat}&lon=${currentLon}&propertyCategory=flatmate`}
+              href={`/property-search?city=${currentCity}&propertyCategory=flatmate`}
               data-category="flatmate"
               data-active={
                 searchParams.get("propertyCategory") === "flatmate"

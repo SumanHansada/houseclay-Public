@@ -12,7 +12,6 @@ import { default as ShortlistsIcon } from "public/optimizedIcons/small/shortlist
 import { default as SupportIcon } from "public/optimizedIcons/small/support.svg";
 import React, { type FC, type SVGProps } from "react";
 
-import { EXPLORE_LOCATION } from "@/common/constants";
 import { SvgIcon } from "@/utility-components";
 
 type NavIconType = FC<SVGProps<SVGSVGElement>>;
@@ -98,7 +97,7 @@ export const STICKY_NAV_ITEMS: StickyNavItem[] = [
     id: "explore",
     icon: React.createElement(Search, { size: 25 }),
     label: "Explore",
-    href: `/property-search?lat=${EXPLORE_LOCATION.lat}&lon=${EXPLORE_LOCATION.lng}&propertyCategory=rent`,
+    href: `/property-search?city=bengaluru&propertyCategory=rent`,
   },
   {
     id: "shortlists",
