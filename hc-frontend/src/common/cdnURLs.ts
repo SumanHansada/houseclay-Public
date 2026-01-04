@@ -11,6 +11,7 @@ export const howToUseConnectsIconURL = `${CDN_BASE_URL}/public/optimizedIcons/la
 export const howToUseConnectsMobileIconURL = `${CDN_BASE_URL}/public/optimizedIcons/large/how-to-use-connects-mobile.svg`;
 export const emailVerifiedIconURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/email-verified.svg`;
 
+export const notFoundImageURL = `${CDN_BASE_URL}/public/images/not-found.svg`;
 export const placeholderImageURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/property-placeholder.svg`;
 export const propertyImageURL = `${CDN_BASE_URL}/public/images/property.webp`;
 export const loginImageURL = `${CDN_BASE_URL}/public/images/login.webp`;
@@ -18,6 +19,21 @@ export const ownersImageURL = `${CDN_BASE_URL}/public/images/owners.webp`;
 export const bannerAboutUsImageURL = `${CDN_BASE_URL}/public/images/banner-about-us.webp`;
 export const testimonialImageURL = `${CDN_BASE_URL}/public/images/testimonial.webp`;
 export const bannerPeopleMobileImageURL = `${CDN_BASE_URL}/public/images/banner-people-mobile.webp`;
+export const bannerWhatAreConnectsImageURL = `${CDN_BASE_URL}/public/images/banner-what-are-connects.webp`;
+export const bannerWhatAreConnectsMobileImageURL = `${CDN_BASE_URL}/public/images/banner-what-are-connects-mobile.webp`;
+export const bannerBackgroundContactUsImageURL = `${CDN_BASE_URL}/public/images/banner-background-contact-us.webp`;
+export const bannerBackgroundContactUsMobileImageURL = `${CDN_BASE_URL}/public/optimizedIcons/large/banner-background-contact-us-mobile.svg`;
+export const contactSupportImageURL = `${CDN_BASE_URL}/public/optimizedIcons/large/contact-support.svg`;
+export const listPropertyImageUrl = `${CDN_BASE_URL}/public/images/list-your-property.webp`;
+export const contactOwnerImageURL = `${CDN_BASE_URL}/public/images/contact-owner.svg`;
+export const bannerStandoutsImageURL = `${CDN_BASE_URL}/public/images/banner-standouts.svg`;
+export const bannerTestimonialsImageURL = `${CDN_BASE_URL}/public/images/banner-testimonials.webp`;
+export const bannerTestimonialsMobileImageURL = `${CDN_BASE_URL}/public/images/banner-testimonials-mobile.webp`;
+
+export const apartmentImageURL = `${CDN_BASE_URL}/public/images/apartment.webp`;
+export const independentHouseImageURL = `${CDN_BASE_URL}/public/images/independent-house.webp`;
+export const communityVillaImageURL = `${CDN_BASE_URL}/public/images/community-villa.webp`;
+export const standaloneBuildingImageURL = `${CDN_BASE_URL}/public/images/standalone-building.webp`;
 
 export const directOwnerAccessImageURL = `${CDN_BASE_URL}/public/optimizedIcons/medium/direct-owner-access.svg`;
 export const payAsYouGoImageURL = `${CDN_BASE_URL}/public/optimizedIcons/large/pay-as-you-go.svg`;

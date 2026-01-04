@@ -6,6 +6,11 @@ import { useRouter } from "next/navigation";
 import * as Yup from "yup";
 
 import { Button } from "@/base-components";
+import {
+  bannerBackgroundContactUsImageURL,
+  bannerBackgroundContactUsMobileImageURL,
+  contactSupportImageURL,
+} from "@/common/cdnURLs";
 import { HOUSECLAY_SUPPORT } from "@/common/constants";
 import { sanitizePhoneKeepCountryCode } from "@/common/utils";
 import Spinner from "@/components/Spinner";
@@ -94,7 +99,7 @@ export default function ContactUsPage() {
           <div className="hidden lg:block">
             <div className="absolute inset-0 -z-10" aria-hidden="true">
               <ImageWithLoader
-                src="/images/banner-background-contact-us.webp"
+                src={bannerBackgroundContactUsImageURL}
                 alt=""
                 fill
                 className="object-cover object-top md:object-center"
@@ -116,7 +121,7 @@ export default function ContactUsPage() {
                 </p>
                 <div className="mt-8 h-80 md:w-1/2 lg:w-7/12 xl:w-1/2">
                   <ImageWithLoader
-                    src="/optimizedIcons/large/contact-support.svg"
+                    src={contactSupportImageURL}
                     alt="Contact support"
                     fill
                     className="object-center"
@@ -131,7 +136,7 @@ export default function ContactUsPage() {
           <div className="relative h-96 sm:h-[400px] md:h-[500px] lg:hidden">
             <div className="absolute inset-0 -z-10" aria-hidden="true">
               <ImageWithLoader
-                src="/optimizedIcons/large/banner-background-contact-us-mobile.svg"
+                src={bannerBackgroundContactUsMobileImageURL}
                 alt=""
                 fill
                 className="object-center"

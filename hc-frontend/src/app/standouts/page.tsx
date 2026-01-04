@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
+import { bannerStandoutsImageURL } from "@/common/cdnURLs";
 import { BadgeType } from "@/common/enums";
 import Properties from "@/components/Properties";
 import { Footer } from "@/layout-components";
@@ -48,7 +49,7 @@ export default function StandoutsPage() {
       >
         <div className="absolute inset-0" aria-hidden="true">
           <ImageWithLoader
-            src="/images/banner-standouts.svg"
+            src={bannerStandoutsImageURL}
             alt=""
             fill
             className="object-center"

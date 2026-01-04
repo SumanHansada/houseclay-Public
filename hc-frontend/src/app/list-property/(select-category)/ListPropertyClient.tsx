@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
-import { CDN_BASE_URL } from "@/common/constants";
+import { listPropertyImageUrl } from "@/common/cdnURLs";
 import { validPhoneNoLength } from "@/common/constants";
 import {
   AuthStep,
@@ -36,9 +36,6 @@ import { clearFormData, setPropertyID } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 import { setCheckUser, setPhoneNo } from "@/store/userSlice";
 import { ImageWithLoader } from "@/utility-components";
-
-const listPropertyImgUrl =
-  CDN_BASE_URL + "/public/images/list-your-property.webp";
 
 const ListPropertyClient = () => {
   const { openDialog } = useDialog();
@@ -236,7 +233,7 @@ const ListPropertyClient = () => {
         <div className="container pt-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 flex justify-between gap-16">
           <div className="flex w-2/5 justify-around items-start">
             <ImageWithLoader
-              src={listPropertyImgUrl}
+              src={listPropertyImageUrl}
               alt="List Your Property"
               width={550}
               height={475}

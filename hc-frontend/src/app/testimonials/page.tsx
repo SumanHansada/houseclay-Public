@@ -4,6 +4,10 @@ import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/base-components";
+import {
+  bannerTestimonialsImageURL,
+  bannerTestimonialsMobileImageURL,
+} from "@/common/cdnURLs";
 import Carousel2D from "@/components/Carousel2D";
 // data
 import TESTIMONIALS_DATA from "@/data/TestimonialsData.json";
@@ -38,7 +42,7 @@ export default function TestimonialsPage() {
         >
           <div className="absolute inset-0 max-md:hidden" aria-hidden="true">
             <ImageWithLoader
-              src="/images/banner-testimonials.webp"
+              src={bannerTestimonialsImageURL}
               alt=""
               fill
               className="object-center"
@@ -130,7 +134,7 @@ export default function TestimonialsPage() {
             Success Stories &amp; Testimonials
           </h1>
           <ImageWithLoader
-            src="/images/banner-testimonials-mobile.webp"
+            src={bannerTestimonialsMobileImageURL}
             alt=""
             fill
             className="object-center"

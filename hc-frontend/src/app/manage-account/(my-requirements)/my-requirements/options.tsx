@@ -1,4 +1,10 @@
 import {
+  apartmentImageURL,
+  communityVillaImageURL,
+  independentHouseImageURL,
+  standaloneBuildingImageURL,
+} from "@/common/cdnURLs";
+import {
   RequirementIconOption,
   RequirementOption,
 } from "@/interfaces/ManageAccount";
@@ -55,7 +61,7 @@ export const propertyTypeOptions: RequirementIconOption[] = [
     value: "Apartment",
     icon: (
       <ImageWithLoader
-        src="../images/apartment.webp"
+        src={apartmentImageURL}
         alt="Apartment"
         height={75}
         width={75}
@@ -67,7 +73,7 @@ export const propertyTypeOptions: RequirementIconOption[] = [
     value: "Independent House/Villa",
     icon: (
       <ImageWithLoader
-        src="../images/independent-house.webp"
+        src={independentHouseImageURL}
         alt="Independent House/Villa"
         height={75}
         width={75}
@@ -79,7 +85,7 @@ export const propertyTypeOptions: RequirementIconOption[] = [
     value: "Community Villa",
     icon: (
       <ImageWithLoader
-        src="../images/community-villa.webp"
+        src={communityVillaImageURL}
         alt="Community Villa"
         height={75}
         width={75}
@@ -91,7 +97,7 @@ export const propertyTypeOptions: RequirementIconOption[] = [
     value: "Standalone Building",
     icon: (
       <ImageWithLoader
-        src="../images/standalone-building.webp"
+        src={standaloneBuildingImageURL}
         alt="Standalone Building"
         height={75}
         width={75}

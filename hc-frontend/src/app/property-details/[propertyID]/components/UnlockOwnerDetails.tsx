@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { Button } from "@/base-components";
+import { contactOwnerImageURL } from "@/common/cdnURLs";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useContactOwnerMutation } from "@/store/apiSlice";
 import { setConnectBal } from "@/store/userSlice";
@@ -359,7 +360,7 @@ export const UnlockOwnerDetails = ({
         {!isMobile && (
           <div className="relative w-2/5 rounded-l-lg h-[440px] lg:h-[460px] 2xl:h-[480px] overflow-hidden">
             <ImageWithLoader
-              src="/images/contact-owner.svg"
+              src={contactOwnerImageURL}
               alt="Contact owner"
               fill
               className="object-center"

@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { loginAction, registerAction } from "@/actions/authActions";
 import { Button } from "@/base-components";
+import { contactOwnerImageURL } from "@/common/cdnURLs";
 import { validPhoneNoLength } from "@/common/constants";
 import { AuthStep } from "@/common/enums";
 import { AuthUserDetail } from "@/interfaces/User";
@@ -279,7 +280,7 @@ export const ContactLogin = ({ onSuccess, onClose }: ContactLoginProps) => {
         {!isMobile && (
           <div className="relative w-2/5 rounded-l-lg h-[420px] 2xl:h-[480px] overflow-hidden">
             <ImageWithLoader
-              src="/images/contact-owner.svg"
+              src={contactOwnerImageURL}
               alt="Login"
               fill
               className="object-center"

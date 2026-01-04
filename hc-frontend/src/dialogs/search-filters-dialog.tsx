@@ -23,12 +23,16 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Button, Checkbox, RadioGroup } from "@/base-components";
 import {
+  apartmentImageURL,
   balconyIconURL,
   clubhouseIconURL,
+  communityVillaImageURL,
   gymIconURL,
+  independentHouseImageURL,
   liftIconURL,
   parkingSpaceIconURL,
   securityIconURL,
+  standaloneBuildingImageURL,
   swimmingPoolIconURL,
   twentyFourSevenIconURL,
 } from "@/common/cdnURLs";
@@ -345,7 +349,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           label: "Apartment",
                           icon: (
                             <ImageWithLoader
-                              src="images/apartment.webp"
+                              src={apartmentImageURL}
                               alt="Apartment"
                               height={75}
                               width={75}
@@ -357,7 +361,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           label: "Independent House/Villa",
                           icon: (
                             <ImageWithLoader
-                              src="images/independent-house.webp"
+                              src={independentHouseImageURL}
                               alt="Independent House/Villa"
                               height={75}
                               width={75}
@@ -369,7 +373,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           label: "Community Villa",
                           icon: (
                             <ImageWithLoader
-                              src="images/community-villa.webp"
+                              src={communityVillaImageURL}
                               alt="Community Villa"
                               height={75}
                               width={75}
@@ -381,7 +385,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           label: "Standalone Building",
                           icon: (
                             <ImageWithLoader
-                              src="images/standalone-building.webp"
+                              src={standaloneBuildingImageURL}
                               alt="Standalone Building"
                               height={75}
                               width={75}
@@ -630,7 +634,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           label: "Apartment",
                           icon: (
                             <ImageWithLoader
-                              src="images/apartment.webp"
+                              src={apartmentImageURL}
                               alt="Apartment"
                               height={75}
                               width={75}
@@ -642,7 +646,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           label: "Independent House/Villa",
                           icon: (
                             <ImageWithLoader
-                              src="images/independent-house.webp"
+                              src={independentHouseImageURL}
                               alt="Independent House/Villa"
                               height={75}
                               width={75}
@@ -654,7 +658,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           label: "Community Villa",
                           icon: (
                             <ImageWithLoader
-                              src="images/community-villa.webp"
+                              src={communityVillaImageURL}
                               alt="Community Villa"
                               height={75}
                               width={75}
@@ -666,7 +670,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                           label: "Standalone Building",
                           icon: (
                             <ImageWithLoader
-                              src="images/standalone-building.webp"
+                              src={standaloneBuildingImageURL}
                               alt="Standalone Building"
                               height={75}
                               width={75}
@@ -895,7 +899,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       label: "Apartment",
                       icon: (
                         <ImageWithLoader
-                          src="images/apartment.webp"
+                          src={apartmentImageURL}
                           alt="Apartment"
                           height={75}
                           width={75}
@@ -907,7 +911,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       label: "Independent House/Villa",
                       icon: (
                         <ImageWithLoader
-                          src="images/independent-house.webp"
+                          src={independentHouseImageURL}
                           alt="Independent House/Villa"
                           height={75}
                           width={75}
@@ -919,7 +923,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       label: "Community Villa",
                       icon: (
                         <ImageWithLoader
-                          src="images/community-villa.webp"
+                          src={communityVillaImageURL}
                           alt="Community Villa"
                           height={75}
                           width={75}
@@ -931,7 +935,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                       label: "Standalone Building",
                       icon: (
                         <ImageWithLoader
-                          src="images/standalone-building.webp"
+                          src={standaloneBuildingImageURL}
                           alt="Standalone Building"
                           height={75}
                           width={75}

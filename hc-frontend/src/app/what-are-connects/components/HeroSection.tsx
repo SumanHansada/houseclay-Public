@@ -1,3 +1,7 @@
+import {
+  bannerWhatAreConnectsImageURL,
+  bannerWhatAreConnectsMobileImageURL,
+} from "@/common/cdnURLs";
 import { ImageWithLoader } from "@/utility-components";
 
 const HeroSection = () => (
@@ -5,7 +9,7 @@ const HeroSection = () => (
     {/* Desktop background */}
     <div className="absolute inset-0 max-md:hidden">
       <ImageWithLoader
-        src="/images/banner-what-are-connects.webp"
+        src={bannerWhatAreConnectsImageURL}
         alt="Banner Background"
         fill
         className="object-center"
@@ -30,7 +34,7 @@ const HeroSection = () => (
 
       <div className="relative aspect-[16/9] md:hidden rounded-xl shadow-lg overflow-hidden">
         <ImageWithLoader
-          src="/images/banner-what-are-connects-mobile.webp"
+          src={bannerWhatAreConnectsMobileImageURL}
           alt="What are connects"
           fill
           className="object-center rounded-xl shadow-lg"

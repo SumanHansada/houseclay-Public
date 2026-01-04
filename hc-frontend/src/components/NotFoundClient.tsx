@@ -1,3 +1,4 @@
+import { notFoundImageURL } from "@/common/cdnURLs";
 import { Footer } from "@/layout-components";
 import { ImageWithLoader } from "@/utility-components";
 
@@ -9,8 +10,8 @@ export default function NotFoundClient() {
       <div className="w-full py-28 sm:py-12 flex flex-col flex-1 justify-center gap-2">
         <div className="relative w-11/12 sm:w-3/4 md:w-3/5 xl:w-1/2 aspect-[7/5] mx-auto">
           <ImageWithLoader
-            src="/images/not-found.svg"
-            alt="Banner Background"
+            src={notFoundImageURL}
+            alt="Not Found Error"
             fill
             className="object-center"
             sizes="100vw"
