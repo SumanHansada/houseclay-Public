@@ -1,0 +1,37 @@
+services:
+  backend:
+    build:
+      context: ./hc-backend/backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - houseclay-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+
+  frontend:
+    build:
+      context: ./hc-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - houseclay-network
+    environment:
+      - NODE_ENV=production
+
+  zebra:
+    build:
+      context: ./zebra-ui
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    networks:
+      - houseclay-network
+    environment:
+      - NODE_ENV=production
+
+networks:
+  houseclay-network:
+    driver: bridge
