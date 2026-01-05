@@ -187,7 +187,7 @@ export class ServerAPIService {
   static async getPublicPropertyByID(propertyID: string) {
     const response = await fetch(`${BASE_API_URL}/property/${propertyID}`, {
       next: {
-        revalidate: 3600,
+        revalidate: 60,
         tags: [`property-${propertyID}`],
       },
     });

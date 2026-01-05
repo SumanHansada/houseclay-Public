@@ -102,8 +102,26 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // Dynamically get lat/lon from current params or fallback to Bengaluru
-  const currentCity = CITY_OPTIONS[0].id;
+  // Default city (e.g., first option 'Bengaluru')
+  const defaultCity = CITY_OPTIONS[0].id;
+
+  const buildSearchParams = (category: string) => {
+    let newParams: URLSearchParams;
+    if (pathname === "/property-search") {
+      // Preserve current params (including lat/lon or city) and override category
+      newParams = new URLSearchParams(searchParams.toString());
+    } else {
+      newParams = new URLSearchParams();
+    }
+    // Ensure location is always set
+    if (!newParams.has("lat") || !newParams.has("lon")) {
+      if (!newParams.has("city")) {
+        newParams.set("city", defaultCity);
+      }
+    }
+    newParams.set("propertyCategory", category);
+    return newParams.toString();
+  };
 
   const onLogin = () => {
     closeAllDialogs();
@@ -143,7 +161,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
         <div className="flex justify-between items-center w-full text-sm">
           <nav className="hidden md:flex xl:gap-8 lg:gap-6 md:gap-5 gap-3 text-gray-800 text-base">
             <Link
-              href={`/property-search?city=${currentCity}&propertyCategory=rent`}
+              href={`/property-search?${buildSearchParams("rent")}`}
               data-category="rent"
               data-active={
                 searchParams.get("propertyCategory") === "rent" ||
@@ -158,7 +176,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
               Rent
             </Link>
             <Link
-              href={`/property-search?city=${currentCity}&propertyCategory=flatmate`}
+              href={`/property-search?${buildSearchParams("flatmate")}`}
               data-category="flatmate"
               data-active={
                 searchParams.get("propertyCategory") === "flatmate"

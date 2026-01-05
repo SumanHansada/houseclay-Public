@@ -141,7 +141,7 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
   };
 
   const handleButtonClick = () => {
-    if (location?.name) {
+    if (isInputFocused && location?.name) {
       handleClear();
     } else {
       handleSearch();
@@ -150,7 +150,7 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
 
   const handleClearButtonMouseDown = (e: React.MouseEvent) => {
     // Prevent blur from happening before we clear
-    if (location?.name) {
+    if (isInputFocused && location?.name) {
       e.preventDefault();
     }
   };

@@ -1502,6 +1502,8 @@ export function PropertyDetailsClient({
           propertyId={propertyID}
           onClose={async () => {
             closeDialog(REPORT_LISTING_DIALOG_ID);
+            // Invalidate the server cache specific to this property
+            await refreshPropertyCache(propertyID);
             // Refresh server-side data after reporting property
             router.refresh();
           }}

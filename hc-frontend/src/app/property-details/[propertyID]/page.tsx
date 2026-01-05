@@ -75,7 +75,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { propertyID } = await params;
 
-  const data = await ServerAPIService.getPublicPropertyByID(propertyID);
+  const data = await getProperty(propertyID);
   const processedData = processPropertyData(data);
 
   const { city, locationOrSocietyName, bhkType, propertyCategory, coverImage } =
@@ -351,14 +351,16 @@ function processPropertyData(inputData: any) {
 }
 
 // Async component that fetches and processes property data
-async function PropertyDetailsContent({ propertyID }: { propertyID: string }) {
+async function PropertyDetailsContent({
+  propertyID,
+  isAuthenticated,
+}: {
+  propertyID: string;
+  isAuthenticated: boolean;
+}) {
   // Fetch property data - this will be deduplicated with generateMetadata's call above
   const data = await getProperty(propertyID);
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token");
-  const isAuthenticated = !!token;
-  let processedData = null;
-  processedData = processPropertyData(data);
+  const processedData = processPropertyData(data);
 
   return (
     <PropertyDetailsClient
@@ -373,10 +375,16 @@ async function PropertyDetailsContent({ propertyID }: { propertyID: string }) {
 async function PropertyDetails({ params }: { params: PropertyParams }) {
   // Await the params before using them
   const { propertyID } = await params;
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token");
+  const isAuthenticated = !!token;
 
   return (
     <Suspense fallback={<Loading />}>
-      <PropertyDetailsContent propertyID={propertyID} />
+      <PropertyDetailsContent
+        propertyID={propertyID}
+        isAuthenticated={isAuthenticated}
+      />
     </Suspense>
   );
 }

@@ -34,11 +34,9 @@ const eslintConfig = [
       // Remove unused variables and imports
       "unused-imports/no-unused-imports": "error",
       "unused-imports/no-unused-vars": [
-        "warn",
+        "error",
         {
-          vars: "all",
           varsIgnorePattern: "^_",
-          args: "after-used",
           argsIgnorePattern: "^_",
         },
       ],

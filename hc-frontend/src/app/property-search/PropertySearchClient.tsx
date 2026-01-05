@@ -418,7 +418,7 @@ export function PropertySearchClient({
 
   // Handle button click - either clear or search
   const handleButtonClick = () => {
-    if (location?.name) {
+    if (isInputFocused && location?.name) {
       handleClear();
     } else {
       handleSearch();
@@ -427,7 +427,7 @@ export function PropertySearchClient({
 
   // Prevent blur when clicking clear button
   const handleClearButtonMouseDown = (e: React.MouseEvent) => {
-    if (location?.name) {
+    if (isInputFocused && location?.name) {
       e.preventDefault();
     }
   };
@@ -644,14 +644,13 @@ export function PropertySearchClient({
 
     let baseLabel: string;
     switch (searchState.propertyCategory) {
-      case PropertyCategory.FLATMATE:
-        baseLabel = "listings for rent";
-        break;
-      case PropertyCategory.RENT:
-        baseLabel = "listings for rent";
+      case PropertyCategory.RESALE:
+        baseLabel = "listings for sale";
         break;
       default:
-        baseLabel = "listings for sale";
+      case PropertyCategory.RENT:
+      case PropertyCategory.FLATMATE:
+        baseLabel = "listings for rent";
     }
     const tier =
       total >= 200
