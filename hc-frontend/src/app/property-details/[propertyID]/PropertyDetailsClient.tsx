@@ -85,6 +85,7 @@ import { PropertyCardWithImages } from "@/interfaces/User";
 import { MobileFooter } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
+import { refreshPropertyCache } from "@/services/actions";
 import { RootState } from "@/store/store";
 import {
   PhotoGallery,
@@ -1476,6 +1477,8 @@ export function PropertyDetailsClient({
           propertyID={propertyID}
           onClose={async () => {
             closeDialog(UNLOCK_DETAILS_DIALOG_ID);
+            // Invalidate the server cache specific to this property
+            await refreshPropertyCache(propertyID);
             // Refresh server-side data after unlocking owner details
             router.refresh();
           }}

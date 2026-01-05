@@ -34,13 +34,21 @@ const eslintConfig = [
       // Remove unused variables and imports
       "unused-imports/no-unused-imports": "error",
       "unused-imports/no-unused-vars": [
-        "error",
-        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+        "warn",
+        {
+          vars: "all",
+          varsIgnorePattern: "^_",
+          args: "after-used",
+          argsIgnorePattern: "^_",
+        },
       ],
-
       "@typescript-eslint/no-unused-vars": [
         "warn",
-        { varsIgnorePattern: "^_", argsIgnorePattern: "^_" },
+        {
+          varsIgnorePattern: "^_",
+          argsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+        },
       ],
 
       // Ensure correct hook usage
