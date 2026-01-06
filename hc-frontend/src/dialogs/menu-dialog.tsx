@@ -14,9 +14,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
 import { propertyImageURL } from "@/common/cdnURLs";
-import { EXPLORE_LOCATION } from "@/common/constants";
 import { ACCOUNT_NAV_ITEMS } from "@/common/dataConstants/navbar";
 import { AuthStep } from "@/common/enums";
+import { CITY_OPTIONS } from "@/common/utils";
 import { AccountNavList } from "@/components/AccountNavList";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { MobileHeader } from "@/layout-components";
@@ -46,6 +46,9 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
   const connectBal = useSelector((state: RootState) =>
     isAuthenticated ? state.user.userDetail.connectBal : 0,
   );
+
+  // Default city (e.g., first option 'Bengaluru')
+  const defaultCity = CITY_OPTIONS[0].id;
 
   const handleCloseDialog = useCallback(() => {
     closeDialog(id);
@@ -213,7 +216,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
 
                 <li>
                   <Link
-                    href={`/property-search?lat=${EXPLORE_LOCATION.lat}&lon=${EXPLORE_LOCATION.lng}&propertyCategory=rent`}
+                    href={`/property-search?city=${defaultCity}&propertyCategory=rent`}
                     data-category="rent"
                     data-active={
                       searchParams.get("propertyCategory") === "rent" ||
@@ -233,7 +236,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
 
                 <li>
                   <Link
-                    href={`/property-search?lat=${EXPLORE_LOCATION.lat}&lon=${EXPLORE_LOCATION.lng}&propertyCategory=flatmate`}
+                    href={`/property-search?city=${defaultCity}&propertyCategory=flatmate`}
                     data-category="flatmate"
                     data-active={
                       searchParams.get("propertyCategory") === "flatmate"

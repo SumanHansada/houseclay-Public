@@ -4,7 +4,9 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
 
-import { EXPLORE_LOCATION, SOCIAL_MEDIA_LINKS } from "@/common/constants";
+import { SOCIAL_MEDIA_LINKS } from "@/common/constants";
+import { PropertyCategory } from "@/common/enums";
+import { generatePropertySearchHref } from "@/common/utils";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { RootState } from "@/store/store";
 import { SvgIcon } from "@/utility-components";
@@ -14,10 +16,6 @@ const FooterClient: React.FC = () => {
   const { openDialog, closeAllDialogs } = useDialog();
   const searchParams = useSearchParams();
   const pathname = usePathname();
-
-  // Dynamically get lat/lon from current params or fallback to Bengaluru
-  const currentLat = searchParams.get("lat") || EXPLORE_LOCATION.lat.toString();
-  const currentLon = searchParams.get("lon") || EXPLORE_LOCATION.lng.toString();
 
   const onLogin = () => {
     closeAllDialogs();
@@ -119,7 +117,11 @@ const FooterClient: React.FC = () => {
                   </li> */}
                   <li>
                     <Link
-                      href={`/property-search?lat=${currentLat}&lon=${currentLon}&propertyCategory=rent`}
+                      href={generatePropertySearchHref(
+                        PropertyCategory.RENT,
+                        pathname,
+                        searchParams,
+                      )}
                       data-category="rent"
                       data-active={
                         searchParams.get("propertyCategory") === "rent" ||
@@ -135,7 +137,11 @@ const FooterClient: React.FC = () => {
                   </li>
                   <li>
                     <Link
-                      href={`/property-search?lat=${currentLat}&lon=${currentLon}&propertyCategory=flatmate`}
+                      href={generatePropertySearchHref(
+                        PropertyCategory.FLATMATE,
+                        pathname,
+                        searchParams,
+                      )}
                       data-category="flatmate"
                       data-active={
                         searchParams.get("propertyCategory") === "flatmate" ||

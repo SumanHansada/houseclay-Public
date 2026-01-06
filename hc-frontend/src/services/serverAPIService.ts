@@ -169,7 +169,10 @@ export class ServerAPIService {
       `${BASE_API_URL}/property/user/get-property/${propertyID}`,
       {
         headers,
-        next: { revalidate: 60 },
+        next: {
+          revalidate: 60,
+          tags: [`property-${propertyID}`],
+        },
       },
     );
 
@@ -177,13 +180,19 @@ export class ServerAPIService {
       throw new Error(`Failed to fetch property: ${response.statusText}`);
     }
 
-    return response.json();
+    let data = await response.json();
+    data = { ...data, ...data.property };
+
+    return data;
   }
 
   // Public property method (no auth required) with Next.js caching
   static async getPublicPropertyByID(propertyID: string) {
     const response = await fetch(`${BASE_API_URL}/property/${propertyID}`, {
-      next: { revalidate: 60 },
+      next: {
+        revalidate: 60,
+        tags: [`property-${propertyID}`],
+      },
     });
 
     if (!response.ok) {

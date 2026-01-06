@@ -47,9 +47,19 @@ const getProperty = cache(async (propertyID: string) => {
     const token = cookieStore.get("token");
     const isAuthenticated = !!token;
 
-    const data = isAuthenticated
-      ? await ServerAPIService.getPropertyByID(propertyID)
-      : await ServerAPIService.getPublicPropertyByID(propertyID);
+    let data;
+
+    if (isAuthenticated) {
+      try {
+        data = await ServerAPIService.getPropertyByID(propertyID);
+      } catch (error) {
+        console.error("Error fetching authenticated property data", error);
+        // Fallback if auth token is stale
+        data = await ServerAPIService.getPublicPropertyByID(propertyID);
+      }
+    } else {
+      data = await ServerAPIService.getPublicPropertyByID(propertyID);
+    }
 
     return data;
   } catch (error) {
@@ -64,20 +74,10 @@ export async function generateMetadata({
   params: PropertyParams;
 }): Promise<Metadata> {
   const { propertyID } = await params;
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token");
-  const isAuthenticated = !!token;
 
   const data = await getProperty(propertyID);
-  const propertyData = data?.property;
-  let processedData = null;
-  if (isAuthenticated) {
-    processedData = processPropertyData(propertyData);
-  } else {
-    processedData = processPropertyData(data);
-  }
+  const processedData = processPropertyData(data);
 
-  console.log("processedData", processedData);
   const { city, locationOrSocietyName, bhkType, propertyCategory, coverImage } =
     processedData;
   const imageUrl = `${CDN_BASE_URL}/${coverImage}`;
@@ -124,18 +124,18 @@ export async function generateMetadata({
 
 // Server-side function to process property data and compute all derivations
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function processPropertyData(propertyData: any) {
-  if (!propertyData) return null;
+function processPropertyData(inputData: any) {
+  if (!inputData) return null;
 
   const {
     property,
     contactUserCount,
     shortlistUserCount,
     viewUserCount,
-    owner,
-    reported,
-    propertyOwner,
-  } = propertyData;
+    owner = null,
+    reported = false,
+    propertyOwner = false,
+  } = inputData;
   if (!property) return null;
 
   const propertyCategory = property?.propertyCategory ?? PropertyCategory.RENT;
@@ -344,13 +344,7 @@ async function PropertyDetailsContent({
 }) {
   // Fetch property data - this will be deduplicated with generateMetadata's call above
   const data = await getProperty(propertyID);
-  const propertyData = data?.property;
-  let processedData = null;
-  if (isAuthenticated) {
-    processedData = processPropertyData(propertyData);
-  } else {
-    processedData = processPropertyData(data);
-  }
+  const processedData = processPropertyData(data);
 
   return (
     <PropertyDetailsClient
