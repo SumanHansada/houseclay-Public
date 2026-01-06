@@ -180,7 +180,10 @@ export class ServerAPIService {
       throw new Error(`Failed to fetch property: ${response.statusText}`);
     }
 
-    return response.json();
+    let data = await response.json();
+    data = { ...data, ...data.property };
+
+    return data;
   }
 
   // Public property method (no auth required) with Next.js caching

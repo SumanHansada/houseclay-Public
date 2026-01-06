@@ -14,10 +14,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
 import { propertyImageURL } from "@/common/cdnURLs";
-import { CITY_LAT_LNG_MAPPING } from "@/common/constants";
 import { ACCOUNT_NAV_ITEMS } from "@/common/dataConstants/navbar";
 import { AuthStep } from "@/common/enums";
-import { pascalCase } from "@/common/utils";
+import { CITY_OPTIONS } from "@/common/utils";
 import { AccountNavList } from "@/components/AccountNavList";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import { MobileHeader } from "@/layout-components";
@@ -29,11 +28,6 @@ import { ImageWithLoader, SvgIcon } from "@/utility-components";
 interface MenuDialogProps {
   id: string;
 }
-
-const CITY_OPTIONS = Object.keys(CITY_LAT_LNG_MAPPING).map((city) => ({
-  id: city,
-  label: pascalCase(city),
-}));
 
 const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);

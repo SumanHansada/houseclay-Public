@@ -126,32 +126,16 @@ export async function generateMetadata({
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function processPropertyData(inputData: any) {
   if (!inputData) return null;
-  let normalizedData = inputData;
-
-  // Destructure Authenticated Data
-  if (inputData?.property?.property) {
-    normalizedData = {
-      property: inputData.property.property,
-
-      viewUserCount: inputData.property.viewUserCount,
-      shortlistUserCount: inputData.property.shortlistUserCount,
-      contactUserCount: inputData.property.contactUserCount,
-
-      owner: inputData.owner ?? null,
-      reported: inputData.reported ?? false,
-      propertyOwner: inputData.propertyOwner ?? false,
-    };
-  }
 
   const {
     property,
     contactUserCount,
     shortlistUserCount,
     viewUserCount,
-    owner,
-    reported,
-    propertyOwner,
-  } = normalizedData;
+    owner = null,
+    reported = false,
+    propertyOwner = false,
+  } = inputData;
   if (!property) return null;
 
   const propertyCategory = property?.propertyCategory ?? PropertyCategory.RENT;
@@ -375,6 +359,8 @@ async function PropertyDetailsContent({
 async function PropertyDetails({ params }: { params: PropertyParams }) {
   // Await the params before using them
   const { propertyID } = await params;
+
+  // Check if user is authenticated by checking for token cookie
   const cookieStore = await cookies();
   const token = cookieStore.get("token");
   const isAuthenticated = !!token;

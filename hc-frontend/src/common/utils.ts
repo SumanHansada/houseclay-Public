@@ -1,7 +1,8 @@
 import { format, parseISO } from "date-fns";
 
 import { placeholderImageURL } from "./cdnURLs";
-import { CDN_BASE_URL } from "./constants";
+import { CDN_BASE_URL, CITY_LAT_LNG_MAPPING } from "./constants";
+import { PropertyCategory } from "./enums";
 
 const formatter = new Intl.NumberFormat("en-IN", {
   style: "currency",
@@ -264,4 +265,66 @@ export const openMapsDirections = (
     // Android + Desktop → Google Maps (opens app if installed)
     window.location.href = `https://www.google.com/maps/dir/?api=1&origin=${originEncoded}&destination=${destinationEncoded}&travelmode=driving`;
   }
+};
+
+/**
+ * Precomputed array of city options derived from CITY_LAT_LNG_MAPPING.
+ * Each option includes an 'id' (lowercase city name) and 'label' (PascalCased display name).
+ * Used internally for default city selection in search utilities.
+ */
+export const CITY_OPTIONS = Object.keys(CITY_LAT_LNG_MAPPING).map((city) => ({
+  id: city,
+  label: pascalCase(city),
+}));
+
+/**
+ * Generates a full navigation href (path + query string) for property search links.
+ *
+ * If the current pathname is '/property-search', this function preserves the existing search parameters
+ * (such as location via lat/lon or city) and overrides only the 'propertyCategory' parameter.
+ * If not on the property-search page, it creates a new set of parameters starting with a default city.
+ *
+ * In both cases, it ensures that location parameters are present: if 'lat' and 'lon' are missing,
+ * it falls back to setting 'city' to the default (the first city in CITY_LAT_LNG_MAPPING) if not already set.
+ * Finally, it sets the provided 'propertyCategory' (converted to lowercase) and returns the full href string
+ * starting with '/property-search?'.
+ *
+ * This helps maintain user context (e.g., current location filters) when switching categories on the search page,
+ * while providing sensible defaults for navigation from other pages.
+ *
+ * @param category - The property category enum value to set (e.g., PropertyCategory.RENT).
+ * @param pathname - The current pathname from usePathname().
+ * @param searchParams - The current URLSearchParams from useSearchParams().
+ * @returns The full href string (e.g., '/property-search?lat=12.34&lon=56.78&propertyCategory=rent').
+ */
+export const generatePropertySearchHref = (
+  category: PropertyCategory,
+  pathname: string,
+  searchParams: URLSearchParams,
+) => {
+  let newParams: URLSearchParams;
+
+  if (pathname === "/property-search") {
+    // Preserve current params (including lat/lon or city) and override category
+    newParams = new URLSearchParams(searchParams.toString());
+  } else {
+    newParams = new URLSearchParams();
+  }
+
+  // Default city (e.g., first option 'Bengaluru')
+  const defaultCity = CITY_OPTIONS[0].id;
+
+  // Ensure location is always set
+  if (!newParams.has("lat") || !newParams.has("lon")) {
+    if (!newParams.has("city")) {
+      newParams.set("city", defaultCity);
+    }
+  }
+
+  // Set category in lowercase (enum values are uppercase)
+  if (category !== PropertyCategory.NONE) {
+    newParams.set("propertyCategory", category.toLowerCase());
+  }
+
+  return `/property-search?${newParams.toString()}`;
 };

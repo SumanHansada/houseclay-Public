@@ -4,43 +4,18 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
 
-import { CITY_LAT_LNG_MAPPING, SOCIAL_MEDIA_LINKS } from "@/common/constants";
-import { pascalCase } from "@/common/utils";
+import { SOCIAL_MEDIA_LINKS } from "@/common/constants";
+import { PropertyCategory } from "@/common/enums";
+import { generatePropertySearchHref } from "@/common/utils";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { RootState } from "@/store/store";
 import { SvgIcon } from "@/utility-components";
-
-const CITY_OPTIONS = Object.keys(CITY_LAT_LNG_MAPPING).map((city) => ({
-  id: city,
-  label: pascalCase(city),
-}));
 
 const FooterClient: React.FC = () => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { openDialog, closeAllDialogs } = useDialog();
   const searchParams = useSearchParams();
   const pathname = usePathname();
-
-  // Default city (e.g., first option 'Bengaluru')
-  const defaultCity = CITY_OPTIONS[0].id;
-
-  const buildSearchParams = (category: string) => {
-    let newParams: URLSearchParams;
-    if (pathname === "/property-search") {
-      // Preserve current params (including lat/lon or city) and override category
-      newParams = new URLSearchParams(searchParams.toString());
-    } else {
-      newParams = new URLSearchParams();
-    }
-    // Ensure location is always set
-    if (!newParams.has("lat") || !newParams.has("lon")) {
-      if (!newParams.has("city")) {
-        newParams.set("city", defaultCity);
-      }
-    }
-    newParams.set("propertyCategory", category);
-    return newParams.toString();
-  };
 
   const onLogin = () => {
     closeAllDialogs();
@@ -142,7 +117,11 @@ const FooterClient: React.FC = () => {
                   </li> */}
                   <li>
                     <Link
-                      href={`/property-search?${buildSearchParams("rent")}`}
+                      href={generatePropertySearchHref(
+                        PropertyCategory.RENT,
+                        pathname,
+                        searchParams,
+                      )}
                       data-category="rent"
                       data-active={
                         searchParams.get("propertyCategory") === "rent" ||
@@ -158,7 +137,11 @@ const FooterClient: React.FC = () => {
                   </li>
                   <li>
                     <Link
-                      href={`/property-search?${buildSearchParams("flatmate")}`}
+                      href={generatePropertySearchHref(
+                        PropertyCategory.FLATMATE,
+                        pathname,
+                        searchParams,
+                      )}
                       data-category="flatmate"
                       data-active={
                         searchParams.get("propertyCategory") === "flatmate" ||

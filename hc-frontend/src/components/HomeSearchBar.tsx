@@ -6,8 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
-import { CITY_LAT_LNG_MAPPING } from "@/common/constants";
-import { pascalCase } from "@/common/utils";
+import { CITY_OPTIONS } from "@/common/utils";
 import {
   resetPropertySearchSlice,
   setConfirmedLocationName,
@@ -18,11 +17,6 @@ import { PlacesAutocompleteWithAnimation } from "@/utility-components";
 import { BENGALURU_BOUNDS, isWithinBounds } from "@/utils/geoBounds";
 
 import Dropdown from "./Dropdown";
-
-const CITY_OPTIONS = Object.keys(CITY_LAT_LNG_MAPPING).map((city) => ({
-  id: city,
-  label: pascalCase(city),
-}));
 
 interface HomeSearchBarProps {
   id: string;
@@ -42,6 +36,9 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
   const propertyCategory = useSelector(
     (state: RootState) => state.propertySearch.propertyCategory,
   );
+
+  // Default city (e.g., first option 'Bengaluru')
+  const defaultCity = CITY_OPTIONS[0].id;
 
   useEffect(() => {
     if (
@@ -63,7 +60,7 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
       dispatch(setConfirmedLocationName(location.name || ""));
 
       router.push(
-        `/property-search?city=${CITY_OPTIONS[0].id}&lat=${location.latitude}&lon=${location.longitude}&propertyCategory=${propertyCategory.toLowerCase()}`,
+        `/property-search?city=${defaultCity}&lat=${location.latitude}&lon=${location.longitude}&propertyCategory=${propertyCategory.toLowerCase()}`,
       );
     }
   };
@@ -71,7 +68,7 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
   const handlePrefetch = () => {
     if (location && location.latitude && location.longitude) {
       router.prefetch(
-        `/property-search?city=${CITY_OPTIONS[0].id}&lat=${location.latitude}&lon=${location.longitude}&propertyCategory=${propertyCategory.toLowerCase()}`,
+        `/property-search?city=${defaultCity}&lat=${location.latitude}&lon=${location.longitude}&propertyCategory=${propertyCategory.toLowerCase()}`,
       );
     }
   };
@@ -105,7 +102,7 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
     dispatch(setConfirmedLocationName(value.name || ""));
 
     router.push(
-      `/property-search?city=${CITY_OPTIONS[0].id}&lat=${value.latitude}&lon=${value.longitude}&propertyCategory=${propertyCategory.toLowerCase()}`,
+      `/property-search?city=${defaultCity}&lat=${value.latitude}&lon=${value.longitude}&propertyCategory=${propertyCategory.toLowerCase()}`,
     );
   };
 

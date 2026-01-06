@@ -9,9 +9,8 @@ import {
   insufficientConnectsIconURL,
   loginAndEarnIconURL,
 } from "@/common/cdnURLs";
-import { CITY_LAT_LNG_MAPPING } from "@/common/constants";
-import { AuthStep } from "@/common/enums";
-import { pascalCase } from "@/common/utils";
+import { AuthStep, PropertyCategory } from "@/common/enums";
+import { generatePropertySearchHref } from "@/common/utils";
 import { UserDropdown } from "@/components/UserDropdown";
 import { ActionDialog } from "@/dialogs/action-dialog";
 import { useLogout } from "@/hooks/useLogout";
@@ -29,11 +28,6 @@ const ACTION_DIALOG_ID = "logout-action-dialog";
 type User = {
   name: string;
 };
-
-const CITY_OPTIONS = Object.keys(CITY_LAT_LNG_MAPPING).map((city) => ({
-  id: city,
-  label: pascalCase(city),
-}));
 
 export interface HeaderClientProps {
   user?: User;
@@ -102,27 +96,6 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // Default city (e.g., first option 'Bengaluru')
-  const defaultCity = CITY_OPTIONS[0].id;
-
-  const buildSearchParams = (category: string) => {
-    let newParams: URLSearchParams;
-    if (pathname === "/property-search") {
-      // Preserve current params (including lat/lon or city) and override category
-      newParams = new URLSearchParams(searchParams.toString());
-    } else {
-      newParams = new URLSearchParams();
-    }
-    // Ensure location is always set
-    if (!newParams.has("lat") || !newParams.has("lon")) {
-      if (!newParams.has("city")) {
-        newParams.set("city", defaultCity);
-      }
-    }
-    newParams.set("propertyCategory", category);
-    return newParams.toString();
-  };
-
   const onLogin = () => {
     closeAllDialogs();
     dispatch(setAuthStep(AuthStep.NONE));
@@ -161,7 +134,11 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
         <div className="flex justify-between items-center w-full text-sm">
           <nav className="hidden md:flex xl:gap-8 lg:gap-6 md:gap-5 gap-3 text-gray-800 text-base">
             <Link
-              href={`/property-search?${buildSearchParams("rent")}`}
+              href={generatePropertySearchHref(
+                PropertyCategory.RENT,
+                pathname,
+                searchParams,
+              )}
               data-category="rent"
               data-active={
                 searchParams.get("propertyCategory") === "rent" ||
@@ -176,7 +153,11 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
               Rent
             </Link>
             <Link
-              href={`/property-search?${buildSearchParams("flatmate")}`}
+              href={generatePropertySearchHref(
+                PropertyCategory.FLATMATE,
+                pathname,
+                searchParams,
+              )}
               data-category="flatmate"
               data-active={
                 searchParams.get("propertyCategory") === "flatmate"
