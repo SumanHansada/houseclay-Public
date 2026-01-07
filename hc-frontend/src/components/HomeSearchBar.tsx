@@ -30,9 +30,6 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
   const location = useSelector(
     (state: RootState) => state.propertySearch.location,
   );
-  const confirmedLocationName = useSelector(
-    (state: RootState) => state.propertySearch.confirmedLocationName,
-  );
   const propertyCategory = useSelector(
     (state: RootState) => state.propertySearch.propertyCategory,
   );
@@ -41,14 +38,9 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
   const defaultCity = CITY_OPTIONS[0].id;
 
   useEffect(() => {
-    if (
-      location?.latitude &&
-      location?.longitude &&
-      (!confirmedLocationName || confirmedLocationName.trim() === "")
-    ) {
-      dispatch(setLocation(null));
-      dispatch(setConfirmedLocationName(""));
-    }
+    // home search bar resets every time for a fresh start
+    dispatch(setLocation(null));
+    dispatch(setConfirmedLocationName(""));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

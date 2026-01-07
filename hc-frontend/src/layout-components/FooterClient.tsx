@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 import { SOCIAL_MEDIA_LINKS } from "@/common/constants";
 import { PropertyCategory } from "@/common/enums";
-import { generatePropertySearchHref } from "@/common/utils";
+import { getPropertySearchHrefWithLocation } from "@/common/utils";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { RootState } from "@/store/store";
 import { SvgIcon } from "@/utility-components";
@@ -117,9 +117,8 @@ const FooterClient: React.FC = () => {
                   </li> */}
                   <li>
                     <Link
-                      href={generatePropertySearchHref(
+                      href={getPropertySearchHrefWithLocation(
                         PropertyCategory.RENT,
-                        pathname,
                         searchParams,
                       )}
                       data-category="rent"
@@ -137,9 +136,8 @@ const FooterClient: React.FC = () => {
                   </li>
                   <li>
                     <Link
-                      href={generatePropertySearchHref(
+                      href={getPropertySearchHrefWithLocation(
                         PropertyCategory.FLATMATE,
-                        pathname,
                         searchParams,
                       )}
                       data-category="flatmate"

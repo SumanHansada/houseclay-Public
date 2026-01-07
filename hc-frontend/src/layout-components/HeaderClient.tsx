@@ -11,14 +11,13 @@ import {
 } from "@/common/cdnURLs";
 import { ACTION_DIALOG_ID } from "@/common/dialogConstants";
 import { AuthStep, PropertyCategory } from "@/common/enums";
-import { generatePropertySearchHref } from "@/common/utils";
+import { getPropertySearchHrefWithLocation } from "@/common/utils";
 import { UserDropdown } from "@/components/UserDropdown";
 import { ActionDialog } from "@/dialogs/action-dialog";
 import { useLogout } from "@/hooks/useLogout";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setAuthStep } from "@/store/authSlice";
-import { resetPropertySearchFilters } from "@/store/propertySearchSlice";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
 import { Popover } from "@/utility-components";
 
@@ -133,9 +132,8 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
         <div className="flex justify-between items-center w-full text-sm">
           <nav className="hidden md:flex xl:gap-8 lg:gap-6 md:gap-5 gap-3 text-gray-800 text-base">
             <Link
-              href={generatePropertySearchHref(
+              href={getPropertySearchHrefWithLocation(
                 PropertyCategory.RENT,
-                pathname,
                 searchParams,
               )}
               data-category="rent"
@@ -147,14 +145,12 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
                   : "false"
               }
               className="relative hover:text-red-600 py-2 nav-link"
-              onClick={() => dispatch(resetPropertySearchFilters())}
             >
               Rent
             </Link>
             <Link
-              href={generatePropertySearchHref(
+              href={getPropertySearchHrefWithLocation(
                 PropertyCategory.FLATMATE,
-                pathname,
                 searchParams,
               )}
               data-category="flatmate"
@@ -164,7 +160,6 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
                   : "false"
               }
               className="relative hover:text-red-600 py-2 nav-link"
-              onClick={() => dispatch(resetPropertySearchFilters())}
             >
               Rooms
             </Link>

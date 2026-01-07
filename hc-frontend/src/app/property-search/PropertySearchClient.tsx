@@ -37,6 +37,7 @@ import {
   SORT_FILTERS_DIALOG_ID,
 } from "@/common/dialogConstants";
 import { BadgeType, PropertyCategory } from "@/common/enums";
+import { getPropertySearchHrefWithLocation } from "@/common/utils";
 import FullScreenLoader from "@/components/FullScreenLoader";
 import Properties from "@/components/Properties";
 import { SearchFiltersDialog, SortFiltersDialog } from "@/dialogs";
@@ -68,11 +69,12 @@ import { RootState } from "@/store/store";
 import { ImageWithLoader } from "@/utility-components";
 import { BENGALURU_BOUNDS, isWithinBounds } from "@/utils/geoBounds";
 
-// normalize & validate category from URL
-function getUrlCategory(sp: ReadonlyURLSearchParams): PropertyCategory {
-  const raw = (sp.get("propertyCategory") || "").toUpperCase();
-  const values = Object.values(PropertyCategory) as string[];
-  return values.includes(raw)
+// Normalize & Validate category from URL
+export function getUrlCategory(
+  searchParams: ReadonlyURLSearchParams,
+): PropertyCategory {
+  const raw = (searchParams.get("propertyCategory") || "").toUpperCase();
+  return Object.values(PropertyCategory).includes(raw as PropertyCategory)
     ? (raw as PropertyCategory)
     : PropertyCategory.RENT;
 }
@@ -183,21 +185,20 @@ export function PropertySearchClient({
     lat = cityCoords.lat.toString();
     lon = cityCoords.lng.toString();
   }
-  const urlPropertyCategory = searchParams
-    .get("propertyCategory")
-    ?.toUpperCase() as PropertyCategory;
 
   const searchState = useSelector((state: RootState) => state.propertySearch);
   const router = useRouter();
   const { isMobile } = useDeviceContext();
   const dispatch = useDispatch();
-  const urlCategory = getUrlCategory(searchParams);
   const [page, setPage] = useState(0);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const { openDialog, closeDialog, isDialogOpen } = useDialog();
 
   const location = searchState.location;
   const locationSearch = location?.name || "";
+  const hasConfirmedLocation =
+    !!searchState.confirmedLocationName &&
+    searchState.confirmedLocationName !== "";
 
   const { exclusive, sortFields, sortOrder } = useSelector(
     (s: RootState) => s.propertySearch,
@@ -207,11 +208,21 @@ export function PropertySearchClient({
 
   // Hydrate category from URL on first load / URL change
   useEffect(() => {
-    if (urlCategory !== searchState.propertyCategory) {
-      dispatch(setPropertyCategory(urlCategory));
+    const currentPropertyCategory = getUrlCategory(searchParams);
+    if (currentPropertyCategory !== searchState.propertyCategory) {
+      dispatch(setPropertyCategory(currentPropertyCategory));
+      dispatch(resetPropertySearchFilters());
+
+      // Build clean URL: keep location (lat/lon or city), set category, remove ALL other
+      router.replace(
+        getPropertySearchHrefWithLocation(
+          currentPropertyCategory,
+          searchParams,
+        ),
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, urlCategory]);
+  }, [searchParams, dispatch, router]);
 
   // Whenever the URL search params change, we want to start fresh.
   useEffect(() => {
@@ -233,21 +244,14 @@ export function PropertySearchClient({
 
   // QUICK FILTER handlers (all auto-search via URL updates)
   const onCategoryChange = (raw: string | number | boolean) => {
-    const cat = String(raw).toUpperCase() as PropertyCategory;
-    dispatch(setPropertyCategory(cat));
+    const newCategory = String(raw).toUpperCase() as PropertyCategory;
+    dispatch(setPropertyCategory(newCategory));
     dispatch(resetPropertySearchFilters());
 
-    // when switching category, drop irrelevant filter from URL/state
-    replaceQuery((q) => {
-      q.set("propertyCategory", cat.toLowerCase());
-      if (cat === PropertyCategory.RENT) {
-        q.delete("tenantType");
-        dispatch(setTenantType(""));
-      } else if (cat === PropertyCategory.FLATMATE) {
-        q.delete("bhkType");
-        dispatch(setBhkType(""));
-      }
-    });
+    // build fresh URL with only location + new category
+    router.replace(
+      getPropertySearchHrefWithLocation(newCategory, searchParams),
+    );
   };
 
   const onTypeChange = (raw: string | number | boolean) => {
@@ -419,7 +423,7 @@ export function PropertySearchClient({
 
   // Handle button click - either clear or search
   const handleButtonClick = () => {
-    if (isInputFocused && location?.name) {
+    if ((isInputFocused && location?.name) || hasConfirmedLocation) {
       handleClear();
     } else {
       handleSearch();
@@ -428,7 +432,7 @@ export function PropertySearchClient({
 
   // Prevent blur when clicking clear button
   const handleClearButtonMouseDown = (e: React.MouseEvent) => {
-    if (isInputFocused && location?.name) {
+    if ((isInputFocused && location?.name) || hasConfirmedLocation) {
       e.preventDefault();
     }
   };
@@ -438,13 +442,14 @@ export function PropertySearchClient({
 
   // Build query object from all URL params
   const buildQueryParams = () => {
+    const currentPropertyCategory = getUrlCategory(searchParams);
     const query: Record<
       string,
       string | number | boolean | string[] | PropertyCategory
     > = {
       latitude: Number(lat),
       longitude: Number(lon),
-      propertyCategory: urlPropertyCategory || PropertyCategory.RENT,
+      propertyCategory: currentPropertyCategory,
       page: page,
     };
 
@@ -701,7 +706,7 @@ export function PropertySearchClient({
                 : "search-properties-mobile"
             }
           >
-            {isInputFocused && location?.name ? (
+            {(isInputFocused && location?.name) || hasConfirmedLocation ? (
               <X size={20} />
             ) : (
               <SearchIcon size={20} />
@@ -758,7 +763,7 @@ export function PropertySearchClient({
                   : "search-properties"
               }
             >
-              {isInputFocused && location?.name ? (
+              {(isInputFocused && location?.name) || hasConfirmedLocation ? (
                 <X size={20} />
               ) : (
                 <SearchIcon size={20} />
@@ -881,10 +886,7 @@ export function PropertySearchClient({
           {(() => {
             const totalElements = effectiveData?.totalElements || 0;
             const hasCount = totalElements >= 20;
-            const hasLocation =
-              !!searchState.confirmedLocationName &&
-              searchState.confirmedLocationName !== "";
-            const hasContent = hasCount || hasLocation;
+            const hasContent = hasCount || hasConfirmedLocation;
 
             if (!hasContent) {
               return <div className="h-10 invisible" />;
@@ -899,7 +901,7 @@ export function PropertySearchClient({
                   {countElement}
 
                   {/* Right Side: Location (no placeholder if empty) */}
-                  {hasLocation ? (
+                  {hasConfirmedLocation ? (
                     <div className="flex items-center gap-2 min-w-0">
                       <span className="text-sm text-gray-700 inline text-nowrap">
                         Showing in:
