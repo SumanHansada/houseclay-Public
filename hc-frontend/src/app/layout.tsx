@@ -1,10 +1,11 @@
 import "./globals.css";
 
-import { Viewport } from "next";
+import { Metadata, Viewport } from "next";
 import { Inter, Nunito } from "next/font/google";
 import Script from "next/script";
 import { lazy, Suspense } from "react";
 
+import { CDN_BASE_URL, WEBSITE_BASE_URL } from "@/common/constants";
 import {
   DisableScrollRestoration,
   Header,
@@ -29,7 +30,7 @@ const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
-  display: "swap", // Optimize font loading
+  display: "swap",
   preload: true,
 });
 
@@ -37,7 +38,7 @@ const nutino = Nunito({
   variable: "--font-nunito",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
-  display: "swap", // Optimize font loading
+  display: "swap",
   preload: true,
 });
 
@@ -46,7 +47,43 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  viewportFit: "cover", // very  important you know this
+  viewportFit: "cover",
+};
+
+export const metadata: Metadata = {
+  title: "Houseclay",
+  description: "Houseclay - Stop Searching. Start Connecting.",
+  applicationName: "Houseclay",
+  metadataBase: new URL(WEBSITE_BASE_URL),
+
+  openGraph: {
+    title: "Houseclay",
+    description: "Houseclay - Stop Searching. Start Connecting.",
+    url: WEBSITE_BASE_URL,
+    siteName: "Houseclay",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: `${CDN_BASE_URL}/public/images/home-og-1200x630.jpg`,
+        width: 1200,
+        height: 630,
+        alt: "Houseclay Homepage Preview",
+      },
+      {
+        url: `${CDN_BASE_URL}/public/images/home-og-600x315.jpg`,
+        width: 600,
+        height: 315,
+        alt: "Houseclay Homepage Preview",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Houseclay",
+    description: "Houseclay - Stop Searching. Start Connecting.",
+    images: [`${CDN_BASE_URL}/public/images/home-og-1200x675.jpg`],
+  },
 };
 
 export default function RootLayout({
@@ -57,13 +94,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        <title>Houseclay</title>
-        <meta
-          name="description"
-          content="Houseclay - Stop Searching. Start Connecting."
-        />
-        <meta name="application-name" content="Houseclay" />
-
         {/* PWA Manifest */}
         <link rel="manifest" href="/manifest.json" />
 
