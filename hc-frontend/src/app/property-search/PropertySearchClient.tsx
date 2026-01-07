@@ -32,6 +32,10 @@ import {
   PROPERTY_TYPE_SHORT_OPTIONS,
   TENANT_TYPE_OPTIONS,
 } from "@/common/dataConstants/options";
+import {
+  PROPERTY_FILTERS_DIALOG_ID,
+  SORT_FILTERS_DIALOG_ID,
+} from "@/common/dialogConstants";
 import { BadgeType, PropertyCategory } from "@/common/enums";
 import FullScreenLoader from "@/components/FullScreenLoader";
 import Properties from "@/components/Properties";
@@ -72,9 +76,6 @@ function getUrlCategory(sp: ReadonlyURLSearchParams): PropertyCategory {
     ? (raw as PropertyCategory)
     : PropertyCategory.RENT;
 }
-
-const PROPERTY_FILTERS_DIALOG_ID = "property-filters-dialog";
-const SORT_FILTERS_DIALOG_ID = "sort-filters-dialog";
 
 interface PropertySearchClientProps {
   initialData?: {

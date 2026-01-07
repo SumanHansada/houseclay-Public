@@ -9,6 +9,7 @@ import {
   insufficientConnectsIconURL,
   loginAndEarnIconURL,
 } from "@/common/cdnURLs";
+import { ACTION_DIALOG_ID } from "@/common/dialogConstants";
 import { AuthStep, PropertyCategory } from "@/common/enums";
 import { generatePropertySearchHref } from "@/common/utils";
 import { UserDropdown } from "@/components/UserDropdown";
@@ -22,8 +23,6 @@ import { ImageWithLoader, SvgIcon } from "@/utility-components";
 import { Popover } from "@/utility-components";
 
 import { RootState } from "../store/store";
-
-const ACTION_DIALOG_ID = "logout-action-dialog";
 
 type User = {
   name: string;
