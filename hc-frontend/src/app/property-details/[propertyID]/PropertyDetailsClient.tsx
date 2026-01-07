@@ -44,6 +44,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
+import { refreshPropertyCache } from "@/actions/refreshPropertyCache";
 import { Button, PlacesAutocomplete } from "@/base-components";
 import {
   balconyIconURL,
@@ -85,7 +86,6 @@ import { PropertyCardWithImages } from "@/interfaces/User";
 import { MobileFooter } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { refreshPropertyCache } from "@/services/actions";
 import { RootState } from "@/store/store";
 import {
   PhotoGallery,

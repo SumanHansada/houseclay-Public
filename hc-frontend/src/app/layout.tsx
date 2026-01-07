@@ -65,15 +65,9 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: `${CDN_BASE_URL}/public/images/home-og-1200x630.jpg`,
+        url: `${CDN_BASE_URL}/public/images/houseclay-home-og-image.jpg`,
         width: 1200,
         height: 630,
-        alt: "Houseclay Homepage Preview",
-      },
-      {
-        url: `${CDN_BASE_URL}/public/images/home-og-600x315.jpg`,
-        width: 600,
-        height: 315,
         alt: "Houseclay Homepage Preview",
       },
     ],
@@ -82,7 +76,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Houseclay",
     description: "Houseclay - Stop Searching. Start Connecting.",
-    images: [`${CDN_BASE_URL}/public/images/home-og-1200x675.jpg`],
+    images: [`${CDN_BASE_URL}/public/images/houseclay-home-og-image.jpg`],
   },
 };
 
