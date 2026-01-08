@@ -2,20 +2,16 @@
 
 import { Menu, User } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
   insufficientConnectsIconURL,
   loginAndEarnIconURL,
 } from "@/common/cdnURLs";
-import { ACTION_DIALOG_ID } from "@/common/dialogConstants";
 import { AuthStep, PropertyCategory } from "@/common/enums";
 import { getPropertySearchHrefWithLocation } from "@/common/utils";
 import { UserDropdown } from "@/components/UserDropdown";
-import { ActionDialog } from "@/dialogs/action-dialog";
-import { useLogout } from "@/hooks/useLogout";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setAuthStep } from "@/store/authSlice";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
@@ -86,13 +82,9 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
   const showZeroTip = !!isAuthenticated && Number(connectBal) === 0;
 
   const dispatch = useDispatch();
-  const { logout } = useLogout();
-  const { openDialog, closeAllDialogs, isDialogOpen, closeDialog } =
-    useDialog();
-  const { isMobile } = useDeviceContext();
+  const { openDialog, closeAllDialogs } = useDialog();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const router = useRouter();
 
   const onLogin = () => {
     closeAllDialogs();
@@ -103,11 +95,6 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
   const onMenuClick = () => {
     closeAllDialogs();
     openDialog("menu-dialog");
-  };
-
-  const onLogout = async () => {
-    await logout();
-    router.replace("/");
   };
 
   return (
@@ -268,21 +255,6 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
           </button>
         ) : null}
       </header>
-
-      {isMobile && isDialogOpen(ACTION_DIALOG_ID) && (
-        <ActionDialog
-          id={ACTION_DIALOG_ID}
-          title="Logout"
-          prompt="Are you sure you want to logout?"
-          confirmLabel="Yes, I want to logout!"
-          colour="red"
-          requireComment={false}
-          onConfirm={onLogout}
-          onClose={() => {
-            closeDialog(ACTION_DIALOG_ID);
-          }}
-        />
-      )}
     </>
   );
 };

@@ -21,4 +21,3 @@ export const PROPERTY_FILTERS_DIALOG_ID = "property-filters-dialog";
 export const SORT_FILTERS_DIALOG_ID = "sort-filters-dialog";
 export const CONTACT_LOGIN_DIALOG_ID = "contact-owner-login-dialog";
 export const UNLOCK_DETAILS_DIALOG_ID = "unlock-owner-details-dialog";
-export const ACTION_DIALOG_ID = "logout-action-dialog";

@@ -60,6 +60,7 @@ const GalleryClient: React.FC = () => {
       previousImagesRef.current = values.images;
       hasInitializedRef.current = true;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values.images.length]);
 
   // Track deleted images - ONLY after initialization
@@ -100,6 +101,7 @@ const GalleryClient: React.FC = () => {
 
     // Update ref after processing
     previousImagesRef.current = currentImages;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imagesString, values.noPhotos, dispatch, deletedImages.length]);
 
   // Validation Effect

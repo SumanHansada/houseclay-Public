@@ -38,11 +38,11 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
   const defaultCity = CITY_OPTIONS[0].id;
 
   useEffect(() => {
-    // home search bar resets every time for a fresh start
+    // Reset location state on homepage mount for a fresh search experience
+    // (clears any carryover from previous navigation's)
     dispatch(setLocation(null));
     dispatch(setConfirmedLocationName(""));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   const handleSearch = () => {
     if (location && location.latitude && location.longitude) {
