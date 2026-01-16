@@ -206,6 +206,20 @@ export function PropertySearchClient({
 
   const selectedSortToken = stateToToken({ exclusive, sortFields, sortOrder });
 
+  // Reset entire slice on initial mount if URL is clean (from header navigation)
+  useEffect(() => {
+    const paramKeys = Array.from(searchParams.keys());
+    const allowedKeys = ["city", "lat", "lon", "propertyCategory"];
+    const isCleanUrl =
+      paramKeys.every((key) => allowedKeys.includes(key)) &&
+      paramKeys.length <= allowedKeys.length;
+
+    if (isCleanUrl) {
+      dispatch(resetPropertySearchFilters());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Hydrate category from URL on first load / URL change
   useEffect(() => {
     const currentPropertyCategory = getUrlCategory(searchParams);

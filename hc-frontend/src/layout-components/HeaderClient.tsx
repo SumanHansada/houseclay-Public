@@ -86,6 +86,15 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  const rentHref = getPropertySearchHrefWithLocation(
+    PropertyCategory.RENT,
+    searchParams,
+  );
+  const flatmateHref = getPropertySearchHrefWithLocation(
+    PropertyCategory.FLATMATE,
+    searchParams,
+  );
+
   const onLogin = () => {
     closeAllDialogs();
     dispatch(setAuthStep(AuthStep.NONE));
@@ -119,10 +128,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
         <div className="flex justify-between items-center w-full text-sm">
           <nav className="hidden md:flex xl:gap-8 lg:gap-6 md:gap-5 gap-3 text-gray-800 text-base">
             <Link
-              href={getPropertySearchHrefWithLocation(
-                PropertyCategory.RENT,
-                searchParams,
-              )}
+              href={rentHref}
               data-category="rent"
               data-active={
                 searchParams.get("propertyCategory") === "rent" ||
@@ -136,10 +142,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
               Rent
             </Link>
             <Link
-              href={getPropertySearchHrefWithLocation(
-                PropertyCategory.FLATMATE,
-                searchParams,
-              )}
+              href={flatmateHref}
               data-category="flatmate"
               data-active={
                 searchParams.get("propertyCategory") === "flatmate"
