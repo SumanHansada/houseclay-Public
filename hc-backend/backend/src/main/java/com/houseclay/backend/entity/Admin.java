@@ -18,6 +18,8 @@ public class Admin {
     private String password;
     private String  name;
 
+    private AdminRole role;
+
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AdminLogin> adminLogins = new ArrayList<>();
 

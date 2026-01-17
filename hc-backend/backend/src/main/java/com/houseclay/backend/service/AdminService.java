@@ -50,6 +50,7 @@ public class AdminService {
         admin.setUsername(adminRegisterDTO.getUsername());
         admin.setPassword(passwordEncoder.encode(adminRegisterDTO.getPassword()));
         admin.setName(adminRegisterDTO.getName());
+        admin.setRole(adminRegisterDTO.getRole());
         adminRepository.save(admin);
         return admin;
     }
@@ -131,6 +132,15 @@ public class AdminService {
             throw new APIException("User not found", HttpStatus.NOT_FOUND);
         }
         return userOpt.get();
+    }
+
+    public User createUser(UserDTO userDTO) throws Exception {
+        Optional<User> userOpt = userRepository.findById(userDTO.getPhoneNo());
+        if (userOpt.isPresent()) {
+            throw new APIException("User already exists", HttpStatus.BAD_REQUEST);
+        }
+        User user = new User(userDTO.getPhoneNo(), userDTO.getName(), userDTO.getEmail());
+        return userRepository.save(user);
     }
 
     public Page<UserDTO> getAllUsers(Pageable pageable) {

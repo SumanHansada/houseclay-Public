@@ -1,5 +1,6 @@
 package com.houseclay.backend.dto;
 
+import com.houseclay.backend.entity.AdminRole;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -14,4 +15,6 @@ public class AdminRegisterDTO {
 
     @NotBlank(message = "Name cannot be empty")
     private String name;
+
+    private AdminRole role;
 }

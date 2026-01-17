@@ -133,5 +133,17 @@ public class AdminUserController {
         Pageable pageable = PageRequest.of(page, size);
         return adminService.getAllUsers(pageable);
     }
+
+    @PostMapping("/user/create")
+    public ResponseEntity<?> createUser(UserDTO userDTO, @RequestAttribute("authenticatedAdmin") Admin admin) {
+        try {
+            User user = adminService.createUser(userDTO);
+            return ResponseEntity.ok().body("User created "+user.getName());
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
     
 }
