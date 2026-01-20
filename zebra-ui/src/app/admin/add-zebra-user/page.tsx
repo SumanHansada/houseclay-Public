@@ -4,37 +4,27 @@ import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
 import * as Yup from "yup";
 
+import { Button } from "@/base-components";
+import Spinner from "@/components/Spinner";
 import {
   FormCalendarField,
   FormPhoneField,
   FormTextField,
 } from "@/form-components";
-import FormRadioGroup from "@/form-components/FormRadioGroup";
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
-
-// import { DocumentUpload } from "./components/DocumentUpload";
 
 export interface AddAdminFormValues {
   name: string;
   phone: string;
   secondaryContact?: string;
   email: string;
+  password: string;
   personalEmail: string;
   address: string;
   role: string;
   dateOfBirth: string;
-  // documents: { pan?: File | null; aadhaar?: File | null };
   joiningDate: string;
-  active: boolean;
 }
-
-const dateField: Yup.StringSchema<string> = Yup.string()
-  .transform((_, originalValue) =>
-    originalValue instanceof Date
-      ? originalValue.toISOString().split("T")[0]
-      : originalValue,
-  )
-  .required("Date is required");
 
 const schema: Yup.Schema<AddAdminFormValues> = Yup.object({
   name: Yup.string().required("Name is required"),
@@ -48,24 +38,16 @@ const schema: Yup.Schema<AddAdminFormValues> = Yup.object({
       (v = "") => !v.includes("@"),
     )
     .matches(/^\S+$/, "No spaces allowed"),
+  password: Yup.string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters long"),
   personalEmail: Yup.string()
     .email("Invalid e-mail")
     .required("Personal e-mail is required"),
   address: Yup.string().required("Address is required"),
   role: Yup.string().required("Role is required"),
-  dateOfBirth: dateField,
-  joiningDate: dateField,
-  // documents: Yup.object()
-  //   .shape({
-  //     pan: Yup.mixed<File>().nullable(),
-  //     aadhaar: Yup.mixed<File>().nullable(),
-  //   })
-  //   .test("pan-or-aadhaar", "Either PAN or Aadhaar must be provided", (docs) =>
-  //     docs
-  //       ? Boolean(docs.pan instanceof File || docs.aadhaar instanceof File)
-  //       : false,
-  //   ),
-  active: Yup.boolean().required(),
+  dateOfBirth: Yup.string().required("Date of birth is required"),
+  joiningDate: Yup.string().required("Joining date is required"),
 });
 
 const AddAdminPage: React.FC = () => {
@@ -74,13 +56,12 @@ const AddAdminPage: React.FC = () => {
     phone: "",
     secondaryContact: "",
     email: "",
+    password: "",
     personalEmail: "",
     address: "",
     role: "",
     dateOfBirth: "",
-    // documents: { pan: null, aadhaar: null },
     joiningDate: "",
-    active: true,
   };
 
   const handleSubmit = async (
@@ -124,14 +105,9 @@ const AddAdminPage: React.FC = () => {
                 className="border border-gray-300 rounded-lg px-3 py-1 focus:ring-red-500 focus:border-red-500"
                 required
               />
-              <FormPhoneField
-                label="Secondary Contact"
-                name="secondaryContact"
-                id="secondaryContact"
-                defaultCountry="in"
-                placeholder="Enter secondary phone number"
-                className="border border-gray-300 rounded-lg px-3 py-1 focus:ring-red-500 focus:border-red-500"
-              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormTextField
                 name="email"
                 id="email"
@@ -142,23 +118,16 @@ const AddAdminPage: React.FC = () => {
                 required
               />
               <FormTextField
-                name="personalEmail"
-                id="personalEmail"
-                label="Personal Email"
-                type="email"
-                placeholder="Enter your personal email"
+                name="password"
+                id="password"
+                label="Password"
+                type="password"
+                placeholder="Enter password"
                 required
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormTextField
-                name="address"
-                id="address"
-                label="Address"
-                placeholder="Enter address"
-                required
-              />
               <FormSelectDropdown
                 label="Role"
                 name="role"
@@ -171,62 +140,65 @@ const AddAdminPage: React.FC = () => {
                 ]}
                 required
               />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormCalendarField
-                label="Date of Birth"
-                name="dateOfBirth"
-                dateFormat="yyyy-MM-dd"
-                showPrevNextYear={true}
-                required
-              />
               <FormCalendarField
                 label="Joining Date"
                 name="joiningDate"
-                dateFormat="yyyy-MM-dd"
+                placeholder="Select joining date: Format 01-01-2026"
+                dateFormat="dd-MM-yyyy"
                 required
               />
             </div>
 
-            {/* <div>
-              <h2 className="text-xl mb-4 font-medium text-gray-800">
-                Documents
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <DocumentUpload label="PAN" fieldName="pan" />
-                <DocumentUpload label="Aadhaar" fieldName="aadhaar" />
-              </div>
-              <ErrorMessage
-                name="documents"
-                render={(msg) =>
-                  typeof msg === "string" ? (
-                    <p className="text-red-600 text-sm mt-1">{msg}</p>
-                  ) : null
-                }
-              />
-            </div> */}
+            <br />
+            <hr />
+            <br />
 
-            <FormRadioGroup
-              name="active"
-              label="Active"
-              columns={4}
-              horizontal
-              options={[
-                { value: true, label: "Yes" },
-                { value: false, label: "No" },
-              ]}
-              required
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormTextField
+                name="personalEmail"
+                id="personalEmail"
+                label="Personal Email"
+                type="email"
+                placeholder="Enter your personal email"
+                required
+              />
+              <FormPhoneField
+                label="Secondary Contact"
+                name="secondaryContact"
+                id="secondaryContact"
+                defaultCountry="in"
+                placeholder="Enter secondary phone number"
+                className="border border-gray-300 rounded-lg px-3 py-1 focus:ring-red-500 focus:border-red-500"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormTextField
+                name="address"
+                id="address"
+                label="Address"
+                placeholder="Enter address"
+                required
+              />
+              <FormCalendarField
+                label="Date of Birth"
+                name="dateOfBirth"
+                placeholder="Select date of birth: Format 01-01-1999"
+                dateFormat="dd-MM-yyyy"
+                showPrevNextYear={true}
+                required
+              />
+            </div>
 
             <div className="flex justify-end">
-              <button
+              <Button
+                variant="primary"
                 type="submit"
                 disabled={isSubmitting}
-                className="px-6 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 disabled:opacity-50"
+                className="rounded-lg"
               >
-                {isSubmitting ? "Saving…" : "Create User"}
-              </button>
+                {isSubmitting ? <Spinner size="sm" /> : "Create User"}
+              </Button>
             </div>
           </Form>
         )}

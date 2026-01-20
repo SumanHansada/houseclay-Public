@@ -138,7 +138,7 @@ export const AddNewHouseclayUserDialog: React.FC<
             type="submit"
             form="addUserForm"
           >
-            {isSubmitting ? <Spinner /> : "Add New User"}
+            {isSubmitting ? <Spinner size="sm" /> : "Add New User"}
           </Button>
         </div>
       </DialogFooter>

@@ -57,14 +57,17 @@ const CalendarField: React.FC<CalendarFieldProps> = ({
   const daysGridRef = useRef<HTMLDivElement>(null);
   const calendarButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Format displayed value
-  const displayValue = value ? format(new Date(value), dateFormat) : "";
+  const displayValue =
+    value && isValid(new Date(value))
+      ? format(new Date(value), dateFormat)
+      : "";
 
   // Initialize focused date when opening calendar
   useEffect(() => {
     if (isOpen) {
       if (value && isValid(new Date(value))) {
         setFocusedDate(new Date(value));
+        setCurrentMonth(new Date(value));
       } else {
         setFocusedDate(new Date());
       }
@@ -76,7 +79,6 @@ const CalendarField: React.FC<CalendarFieldProps> = ({
     const inputValue = e.target.value;
     onChange(inputValue);
 
-    // Try to parse the date
     const parsedDate = parse(inputValue, dateFormat, new Date());
     if (isValid(parsedDate)) {
       setCurrentMonth(parsedDate);
@@ -86,14 +88,15 @@ const CalendarField: React.FC<CalendarFieldProps> = ({
 
   // Handle date selection
   const handleDateSelect = (date: Date) => {
-    onChange(new Date(date).toISOString());
-    onBlur?.();
+    const dateIso = date.toISOString();
+    onChange(dateIso);
     setIsOpen(false);
 
     // Return focus to the calendar button when closing
     setTimeout(() => {
+      onBlur?.();
       calendarButtonRef.current?.focus();
-    }, 10);
+    }, 0);
   };
 
   // Navigate to today
@@ -115,17 +118,15 @@ const CalendarField: React.FC<CalendarFieldProps> = ({
 
   // Generate calendar days
   const getDaysInMonth = (year: number, month: number) => {
-    const date = new Date(year, month, 1);
     const days = [];
-    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
 
     // Add empty cells for days before the first day of the month
     for (let i = 0; i < firstDay; i++) {
       days.push(null);
     }
-
     // Add days of the month
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
     for (let i = 1; i <= daysInMonth; i++) {
       days.push(new Date(year, month, i));
     }
@@ -184,18 +185,14 @@ const CalendarField: React.FC<CalendarFieldProps> = ({
         newFocusedDate = addDays(focusedDate, 7);
         break;
       case "PageUp":
-        if (e.shiftKey) {
-          newFocusedDate = addYears(focusedDate, -1);
-        } else {
-          newFocusedDate = addMonths(focusedDate, -1);
-        }
+        newFocusedDate = e.shiftKey
+          ? addYears(focusedDate, -1)
+          : addMonths(focusedDate, -1);
         break;
       case "PageDown":
-        if (e.shiftKey) {
-          newFocusedDate = addYears(focusedDate, 1);
-        } else {
-          newFocusedDate = addMonths(focusedDate, 1);
-        }
+        newFocusedDate = e.shiftKey
+          ? addYears(focusedDate, 1)
+          : addMonths(focusedDate, 1);
         break;
       case "Home":
         newFocusedDate = startOfWeek(focusedDate);
@@ -253,12 +250,11 @@ const CalendarField: React.FC<CalendarFieldProps> = ({
   useEffect(() => {
     if (isOpen && focusedDate) {
       setTimeout(() => {
+        const dateStr = format(focusedDate, "yyyy-MM-dd");
         const dateElement = daysGridRef.current?.querySelector(
-          `[data-date="${format(focusedDate, "yyyy-MM-dd")}"]`,
+          `[data-date="${dateStr}"]`,
         );
-        if (dateElement instanceof HTMLElement) {
-          dateElement.focus();
-        }
+        if (dateElement instanceof HTMLElement) dateElement.focus();
       }, 10);
     }
   }, [isOpen, focusedDate, currentMonth]);
@@ -274,12 +270,14 @@ const CalendarField: React.FC<CalendarFieldProps> = ({
     }
 
     const today = new Date();
+    const todayTimestamp = new Date().setHours(0, 0, 0, 0);
+
     const isToday = today.toDateString() === date.toDateString();
     const isSelected =
       value && new Date(value).toDateString() === date.toDateString();
     const isFocused =
       focusedDate && focusedDate.toDateString() === date.toDateString();
-    const isDisabled = date.getTime() < today.setHours(0, 0, 0, 0); // Disable dates before today
+    const isDisabled = date.getTime() < todayTimestamp; // Disable dates before today
     const dateStr = format(date, "yyyy-MM-dd");
 
     return {
@@ -310,8 +308,7 @@ const CalendarField: React.FC<CalendarFieldProps> = ({
           htmlFor={name}
           className="block text-gray-700 text-sm font-medium mb-1"
         >
-          {label}
-          {required && <span className="text-red-500">*</span>}
+          {label} {required && <span className="text-red-500">*</span>}
         </label>
       )}
 
@@ -333,7 +330,6 @@ const CalendarField: React.FC<CalendarFieldProps> = ({
             ${disabled ? "bg-gray-100 cursor-not-allowed" : ""}
           `}
         />
-
         <button
           ref={calendarButtonRef}
           type="button"
@@ -376,7 +372,7 @@ const CalendarField: React.FC<CalendarFieldProps> = ({
             className="absolute right-0 z-10 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg p-4 w-full md:w-80"
             role="dialog"
             aria-modal="true"
-            aria-label="Calendar"
+            aria-label="Select Date"
           >
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center">
@@ -390,7 +386,6 @@ const CalendarField: React.FC<CalendarFieldProps> = ({
                     <ChevronsLeft size={20} />
                   </button>
                 )}
-
                 <button
                   type="button"
                   onClick={prevMonth}
@@ -418,7 +413,6 @@ const CalendarField: React.FC<CalendarFieldProps> = ({
                 >
                   <ChevronRight size={20} />
                 </button>
-
                 {showPrevNextYear && (
                   <button
                     type="button"
@@ -431,7 +425,8 @@ const CalendarField: React.FC<CalendarFieldProps> = ({
                 )}
               </div>
             </div>
-            <div className="flex gap-1">
+
+            <div className="grid grid-cols-7 gap-1">
               {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => (
                 <div
                   key={day}
@@ -457,21 +452,18 @@ const CalendarField: React.FC<CalendarFieldProps> = ({
                 </div>
               ))}
             </div>
+
             <div
               ref={daysGridRef}
               className="grid grid-cols-7 gap-1 text-center"
-              role="listbox"
+              role="grid"
               aria-labelledby={`${name}-calendar-heading`}
             >
               {getDaysInMonth(
                 currentMonth.getFullYear(),
                 currentMonth.getMonth(),
               ).map((date, i) => (
-                <div
-                  key={i}
-                  {...getDayProps(date)}
-                  role={date ? "option" : "presentation"}
-                >
+                <div key={i} {...getDayProps(date)} role="gridcell">
                   {date ? date.getDate() : ""}
                 </div>
               ))}
@@ -486,7 +478,6 @@ const CalendarField: React.FC<CalendarFieldProps> = ({
               >
                 Today
               </button>
-
               <button
                 type="button"
                 onClick={closeCalendar}
