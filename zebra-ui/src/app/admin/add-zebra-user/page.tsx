@@ -149,9 +149,7 @@ const AddAdminPage: React.FC = () => {
               />
             </div>
 
-            <br />
             <hr />
-            <br />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormTextField
@@ -162,13 +160,15 @@ const AddAdminPage: React.FC = () => {
                 placeholder="Enter your personal email"
                 required
               />
-              <FormPhoneField
-                label="Secondary Contact"
-                name="secondaryContact"
-                id="secondaryContact"
-                defaultCountry="in"
-                placeholder="Enter secondary phone number"
-                className="border border-gray-300 rounded-lg px-3 py-1 focus:ring-red-500 focus:border-red-500"
+              <FormCalendarField
+                label="Date of Birth"
+                name="dateOfBirth"
+                placeholder="Select date of birth: Format 01-01-1999"
+                dateFormat="dd-MM-yyyy"
+                showPrevNextYear={true}
+                disablePrevDates={false}
+                showYearDropdown={true}
+                required
               />
             </div>
 
@@ -180,13 +180,13 @@ const AddAdminPage: React.FC = () => {
                 placeholder="Enter address"
                 required
               />
-              <FormCalendarField
-                label="Date of Birth"
-                name="dateOfBirth"
-                placeholder="Select date of birth: Format 01-01-1999"
-                dateFormat="dd-MM-yyyy"
-                showPrevNextYear={true}
-                required
+              <FormPhoneField
+                label="Secondary Contact"
+                name="secondaryContact"
+                id="secondaryContact"
+                defaultCountry="in"
+                placeholder="Enter secondary phone number"
+                className="border border-gray-300 rounded-lg px-3 py-1 focus:ring-red-500 focus:border-red-500"
               />
             </div>
 
