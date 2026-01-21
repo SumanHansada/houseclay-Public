@@ -8,6 +8,7 @@ public class AdminMapper {
     public static AdminInfoDTO toAdminInfoDTO(Admin admin) {
         AdminInfoDTO adminInfoDTO = new AdminInfoDTO();
         adminInfoDTO.setName(admin.getName());
+        adminInfoDTO.setRole(admin.getRole());
         return adminInfoDTO;
     }
 }
