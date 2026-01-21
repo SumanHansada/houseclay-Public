@@ -46,7 +46,18 @@ export const apiSlice = createApi({
     }),
     register: builder.mutation<
       string, // Response Type
-      { username: string; password: string; name: string } // Request Body Type
+      {
+        username: string;
+        password: string;
+        name: string;
+        phoneNo: string;
+        secondaryPhoneNo?: string;
+        personalEmail: string;
+        address: string;
+        role: string;
+        dateOfBirth: string;
+        dateOfJoining: string;
+      } // Request Body Type
     >({
       query: (payload) => ({
         url: "/admin/register",

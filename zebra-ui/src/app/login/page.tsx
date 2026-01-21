@@ -7,8 +7,8 @@ import * as Yup from "yup";
 
 import { houseclayIconURL } from "@/common/constants/cdnURLs";
 import { FormTextField } from "@/form-components";
+import { AdminRole } from "@/interfaces/AdminAuth";
 import {
-  AdminRole,
   authFailure,
   authStarted,
   authSuccess,

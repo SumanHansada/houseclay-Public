@@ -12,12 +12,24 @@ import { useAdminLogout } from "@/hooks/useAdminLogout";
 import { RootState } from "@/store/store";
 import RemoteSvg from "@/utility-components/RemoteSvg";
 
+const actionOptions = [
+  { id: "my-profile", label: "My Profile" },
+  { id: "dashboard", label: "Dashboard" },
+  { id: "logout", label: "Logout" },
+];
+
 const Header: React.FC = () => {
   const { isAuthenticated } = useSelector(
     (state: RootState) => state.adminAuth,
   );
   const router = useRouter();
   const { logout: onLogout, isLoading: isLoggingOut } = useAdminLogout();
+
+  const headerActions: Record<string, () => void> = {
+    "my-profile": () => router.push("/admin/my-profile"),
+    dashboard: () => router.push("/admin/dashboard"),
+    logout: () => onLogout(),
+  };
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -40,15 +52,11 @@ const Header: React.FC = () => {
       {isAuthenticated ? (
         <div className="relative mr-20">
           <ActionMenu
-            options={[
-              { id: 1, label: "Logout" },
-              // { id: 2, label: "Manage Account" },
-            ]}
+            options={actionOptions}
             onSelect={(option) => {
-              if (option.id === 2) {
-                console.log("Manage Account");
-              } else {
-                onLogout();
+              const currentAction = headerActions[option.id];
+              if (currentAction) {
+                currentAction();
               }
             }}
           >

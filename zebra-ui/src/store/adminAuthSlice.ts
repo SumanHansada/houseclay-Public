@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export type AdminRole = "SUPER_ADMIN" | "MANAGER" | "CAPTAIN";
+import { AdminRole } from "@/interfaces/AdminAuth";
+
 interface AdminAuthState {
   isAuthenticated: boolean;
   isAuthLoading: boolean;

@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 
 import { sidebarItems } from "@/common/constants";
-import { AdminRole } from "@/store/adminAuthSlice";
+import { AdminRole } from "@/interfaces/AdminAuth";
 import { RootState } from "@/store/store";
 import { toSlug } from "@/utils/core";
 

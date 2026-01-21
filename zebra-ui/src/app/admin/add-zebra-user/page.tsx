@@ -2,6 +2,7 @@
 
 import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
+import toast from "react-hot-toast";
 import * as Yup from "yup";
 
 import { Button } from "@/base-components";
@@ -12,6 +13,9 @@ import {
   FormTextField,
 } from "@/form-components";
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
+import { ADMIN_ROLES } from "@/interfaces/AdminAuth";
+import { useRegisterMutation } from "@/store/apiSlice";
+import { toErrorMessage } from "@/utils/rtkError";
 
 export interface AddAdminFormValues {
   name: string;
@@ -50,27 +54,41 @@ const schema: Yup.Schema<AddAdminFormValues> = Yup.object({
   dateOfJoining: Yup.string().required("Joining date is required"),
 });
 
+const initialValues: AddAdminFormValues = {
+  name: "",
+  phoneNo: "",
+  secondaryPhoneNo: "",
+  username: "",
+  password: "",
+  personalEmail: "",
+  address: "",
+  role: "",
+  dateOfBirth: "",
+  dateOfJoining: "",
+};
+
 const AddAdminPage: React.FC = () => {
-  const initialValues: AddAdminFormValues = {
-    name: "",
-    phoneNo: "",
-    secondaryPhoneNo: "",
-    username: "",
-    password: "",
-    personalEmail: "",
-    address: "",
-    role: "",
-    dateOfBirth: "",
-    dateOfJoining: "",
-  };
+  const [registerUser] = useRegisterMutation();
 
   const handleSubmit = async (
-    v: AddAdminFormValues,
+    values: AddAdminFormValues,
     actions: FormikHelpers<AddAdminFormValues>,
   ) => {
-    const payload = { ...v, username: `${v.username}@houseclay.com` };
-    console.log("submitting", payload);
-    actions.setSubmitting(false);
+    try {
+      actions.setSubmitting(true);
+      const payload = {
+        ...values,
+        username: `${values.username}@houseclay.com`,
+      };
+      await registerUser(payload).unwrap();
+      toast.success("New Zebra user created successfully! 🎉");
+      actions.resetForm();
+    } catch (err: unknown) {
+      const errorMessage = toErrorMessage(err);
+      toast.error(errorMessage);
+    } finally {
+      actions.setSubmitting(false);
+    }
   };
 
   return (
@@ -134,8 +152,8 @@ const AddAdminPage: React.FC = () => {
                 id="role"
                 placeholder="Select role"
                 options={[
-                  { value: "MANAGER", label: "Manager" },
-                  { value: "CAPTAIN", label: "Houseclay Captain" },
+                  { value: ADMIN_ROLES.MANAGER, label: "Manager" },
+                  { value: ADMIN_ROLES.CAPTAIN, label: "Houseclay Captain" },
                 ]}
                 required
               />
