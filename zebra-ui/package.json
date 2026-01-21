@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "NODE_OPTIONS='--inspect' next dev --turbopack --experimental-https",
-    "dev:https": "node server.mjs",
-    "build": "next build",
+    "dev:zebra": "next dev --turbo",
+    "dev:local": "NODE_ENV=development next dev --turbo",
+    "dev:local:https": "NODE_ENV=development node server.mjs",
     "build:prod": "NODE_ENV=production next build",
     "start": "next start",
     "start:prod": "NODE_ENV=production next start",
@@ -16,7 +17,6 @@
     "format": "prettier src --check --ignore-path .gitignore .",
     "format:fix": "eslint src --ext .js,.jsx,.ts,.tsx --fix && prettier --write --ignore-path .gitignore .",
     "prepare": "husky",
-    "dev:zebra": "next dev --turbo",
     "e2e": "playwright test",
     "e2e:headed": "playwright test --headed --debug",
     "e2e:watch": "npm e2e:headed -g \"@auth\""
