@@ -153,13 +153,24 @@ public class AdminService {
 
     private ResponseEntity<?> buildLoginResponse(Admin admin, String token) {
         ResponseCookie cookie = ResponseCookie.from(ADMIN_TOKEN_KEY, token)
+                // Production settings
+                // .httpOnly(true)
+                // .secure(true) // Set to true when using HTTPS
+                // .sameSite("None")
+                // .domain(".houseclay.com")
+                // .path("/")
+                // .maxAge(CookieUtils.COOKIE_MAX_AGE)
+                // .build();
+
+                // Local development settings
                 .httpOnly(true)
-                .secure(true) // Set to true when using HTTPS
-                .sameSite("None")
-                .domain(".houseclay.com")
+                .secure(false)
+                .sameSite("Lax")
+                .domain(null)
                 .path("/")
                 .maxAge(CookieUtils.COOKIE_MAX_AGE)
                 .build();
+
 
         return ResponseEntity.ok()
                 .header("Set-Cookie", cookie.toString())
