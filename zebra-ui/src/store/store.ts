@@ -88,7 +88,7 @@ const propertySearchPersistConfig = {
 const adminAuthPersistConfig = {
   key: "adminAuth",
   storage,
-  whitelist: ["isAuthenticated"],
+  whitelist: ["isAuthenticated", "role"],
 };
 
 const persistedAdminAuthReducer = persistReducer(

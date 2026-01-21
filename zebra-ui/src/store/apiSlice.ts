@@ -34,12 +34,14 @@ export const apiSlice = createApi({
 
   endpoints: (builder) => ({
     // ──────────────── AUTH ────────────────
-    login: builder.mutation<string, { username: string; password: string }>({
+    login: builder.mutation<
+      { name: string; role: string },
+      { username: string; password: string }
+    >({
       query: (payload) => ({
         url: "/admin/login",
         method: "POST",
         body: payload,
-        responseHandler: (response) => response.text(),
       }),
     }),
     register: builder.mutation<
