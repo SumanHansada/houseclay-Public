@@ -23,6 +23,7 @@
 
 # misc
 .DS_Store
+.env
 
 # VS Code workspace and settings (personal/editor-specific)
 houseclay.code-workspace
