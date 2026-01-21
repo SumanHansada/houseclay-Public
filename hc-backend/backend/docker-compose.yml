@@ -60,9 +60,6 @@ services:
     ports:
       - "8080:8080"
     env_file: .env
-    environment:
-      # - SPRING_PROFILES_ACTIVE=local
-      - DATABASE_URL=jdbc:postgresql://postgres-db:5432/houseclay_local
 
 volumes:
   postgres_data:
