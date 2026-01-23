@@ -6,7 +6,7 @@ import { APIProvider } from "@vis.gl/react-google-maps";
 import { MapPin } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-import { BENGALURU_BOUNDS, LatLngBounds } from "@/utils/geoBounds";
+import { BENGALURU_BOUNDS } from "@/utils/geoBounds";
 
 interface PlacesAutocompleteProps {
   label?: string;
@@ -15,6 +15,7 @@ interface PlacesAutocompleteProps {
   value: string;
   onChange: (value: string) => void;
   onBlur?: () => void;
+  onFocus?: () => void;
   error?: string;
   placeholder?: string;
   required?: boolean;
@@ -124,6 +125,7 @@ const PlacesAutocompleteBase = ({
   value,
   onChange,
   onBlur,
+  onFocus,
   error,
   placeholder = "Search places",
   required = false,
@@ -145,7 +147,6 @@ const PlacesAutocompleteBase = ({
 
   const loadTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const searchTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
-
   const activeOptionRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -180,67 +181,53 @@ const PlacesAutocompleteBase = ({
     if (newValue.length > 2 && isLoaded) {
       searchTimeoutRef.current = setTimeout(async () => {
         try {
-          const places = (await google.maps.importLibrary("places")) as unknown;
-          // Type guard or cast to the expected type
-          const placeLib = places as {
-            Place: {
-              searchByText: (args: {
-                textQuery: string;
-                fields: string[];
-                region: string;
-                locationRestriction: LatLngBounds;
-                maxResultCount?: number;
-              }) => Promise<{
-                places?: {
-                  id: string;
-                  displayName?: string;
-                  formattedAddress?: string;
-                  location: {
-                    lat: () => number;
-                    lng: () => number;
-                  };
-                  types?: string[];
-                  primaryType?: string;
-                }[];
-              }>;
-            };
-          };
-          const result = await placeLib.Place.searchByText({
-            textQuery: newValue,
-            fields: [
-              "id",
-              "displayName",
-              "formattedAddress",
-              "location",
-              "types",
-              "primaryType",
-            ],
+          const { AutocompleteSessionToken, AutocompleteSuggestion } =
+            (await google.maps.importLibrary(
+              "places",
+            )) as google.maps.PlacesLibrary;
+
+          // Create a session token
+          const token = new AutocompleteSessionToken();
+
+          // Prepare request
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const request: any = {
+            input: newValue,
             region: "IN",
             locationRestriction: BENGALURU_BOUNDS,
-            maxResultCount: 8,
-          });
+            sessionToken: token,
+            language: "en",
+          };
 
-          if (result.places && result.places.length > 0) {
-            const formattedPredictions = result.places.map((place) => {
-              const types = place.types || [];
-              const isPriority = types.some((type) =>
-                PRIORITY_TYPES.includes(type),
-              );
-              const isArea = types.some((type) => AREA_TYPES.includes(type));
+          // Fetch autocomplete suggestions
+          const { suggestions } =
+            await AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
 
-              return {
-                id: place.id,
-                mainText: place.displayName || "",
-                secondaryText: place.formattedAddress || "",
-                placeId: place.id,
-                latitude: place.location.lat(),
-                longitude: place.location.lng(),
-                types: types,
-                primaryType: place.primaryType,
-                isPriority: isPriority,
-                isArea: isArea,
-              };
-            });
+          if (suggestions && suggestions.length > 0) {
+            // Process autocomplete suggestions (up to 8)
+            const suggestionsToProcess = suggestions.slice(0, 8);
+            const formattedPredictions: PlacePrediction[] = suggestionsToProcess
+              .filter((suggestion) => suggestion.placePrediction)
+              .map((suggestion) => {
+                const placePrediction = suggestion.placePrediction!;
+                const types: PlacePrediction["types"] = placePrediction.types;
+
+                const isPriority = types.some((type) =>
+                  PRIORITY_TYPES.includes(type),
+                );
+                const isArea = types.some((type) => AREA_TYPES.includes(type));
+
+                return {
+                  id: placePrediction.placeId || "",
+                  mainText: placePrediction.mainText?.text || "",
+                  secondaryText: placePrediction.secondaryText?.text || "",
+                  placeId: placePrediction.placeId || "",
+                  types: types,
+                  primaryType: placePrediction.types[0],
+                  isPriority: isPriority,
+                  isArea: isArea,
+                };
+              });
 
             // Sort predictions: priority items (Society) first, then areas, then rest
             formattedPredictions.sort((a, b) => {
@@ -268,7 +255,7 @@ const PlacesAutocompleteBase = ({
           setPredictions([]);
           setShowDropdown(false);
         }
-      }, 200); // Debounce delay - 200ms
+      }, 150); // Debounce delay - 150ms
     } else {
       setPredictions([]);
       setShowDropdown(false);
@@ -308,7 +295,6 @@ const PlacesAutocompleteBase = ({
             longText: string;
             types: string[];
           }[];
-          console.log(`Component: ${components}`);
 
           // 1. Extract City (Locality)
           const cityComponent = components.find((c) =>
@@ -437,6 +423,9 @@ const PlacesAutocompleteBase = ({
         value={value}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
+        onFocus={() => {
+          onFocus?.();
+        }}
         onBlur={() => {
           onBlur?.();
           setTimeout(() => {
@@ -454,6 +443,7 @@ const PlacesAutocompleteBase = ({
         aria-activedescendant={
           focusedIndex >= 0 ? `${id}-option-${focusedIndex}` : undefined
         }
+        aria-label={name}
         disabled={disabled}
       />
 
@@ -522,6 +512,8 @@ const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
     <APIProvider
       apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""}
       libraries={["places"]}
+      language="en"
+      region="IN"
     >
       <PlacesAutocompleteBase {...props} />
     </APIProvider>
