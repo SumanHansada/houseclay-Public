@@ -4,11 +4,10 @@ import { X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
-import NumberField from "@/base-components/NumberField";
 import RadioGroup from "@/base-components/RadioGroup";
 import {
   CONNECTS_PRICE_BREAKDOWN_DIALOG_ID,
@@ -36,11 +35,7 @@ import {
 import { RootState } from "@/store/store";
 import { setConnectBal } from "@/store/userSlice";
 import { SvgIcon } from "@/utility-components";
-import { Tab, TabContent, TabHeader, Tabs } from "@/utility-components/Tabs";
 
-const MINIMUM_CUSTOM_CONNECTS = 1;
-const MAXIMUM_CUSTOM_CONNECTS = 50;
-const CUSTOM_CONNECT_PRICE = 99;
 const BUNDLE_VALIDITY_DAYS = 60;
 const RAZORPAY_KEY = process.env.NEXT_PUBLIC_RAZORPAY_LIVE_API_KEY ?? "";
 
@@ -55,7 +50,6 @@ export default function BuyConnectsPage() {
   const [selectedBundle, setSelectedBundle] =
     useState<ConnectBundleID>("CUSTOM_CONNECTS");
   const [agreedToTerms, setAgreedToTerms] = useState(true);
-  const [customConnects, setCustomConnects] = useState(MINIMUM_CUSTOM_CONNECTS);
   const dispatch = useDispatch();
   const [createOrder] = useCreateOrderMutation();
   const [verifyPayment] = useVerifyPaymentMutation();
@@ -78,30 +72,32 @@ export default function BuyConnectsPage() {
   const displayBundles =
     bundleData?.filter((bundle) => bundle.id !== "CUSTOM_CONNECTS") || [];
 
-  const customBundleInfo = bundleData?.find((b) => b.id === "CUSTOM_CONNECTS");
-
   // Find the currently selected bundle object from the full API list
   const currentBundle = bundleData?.find(
     (bundle) => bundle.id === selectedBundle,
   );
 
-  // Price calculations
-  const customConnectPricePerUnit =
-    customBundleInfo?.discountedPrice || CUSTOM_CONNECT_PRICE;
-  const customConnectsPrice = customConnects * customConnectPricePerUnit;
+  // Set default to PREMIUM_GOLD_BUNDLE (middle/recommended) when data loads
+  useEffect(() => {
+    if (bundleData && bundleData.length > 0) {
+      const recommended = bundleData.find((b) => b.recommended);
+      const defaultBundleId =
+        recommended?.id ||
+        bundleData.find((b) => b.id === "PREMIUM_GOLD_BUNDLE")?.id ||
+        bundleData[1]?.id; // fallback to middle item
+
+      if (defaultBundleId) {
+        setSelectedBundle(defaultBundleId as ConnectBundleID);
+      }
+    }
+  }, [bundleData]);
 
   // This basePrice is for display purposes, using the same logic as before
   // (discounted price for bundles, calculated price for custom)
-  const price =
-    selectedBundle === "CUSTOM_CONNECTS"
-      ? customConnectsPrice
-      : currentBundle?.discountedPrice || 0;
+  const price = currentBundle?.discountedPrice || 0;
 
   // Calculate the total connects to be purchased
-  const connectsToBuy =
-    selectedBundle === "CUSTOM_CONNECTS"
-      ? customConnects
-      : currentBundle?.connects || 0;
+  const connectsToBuy = currentBundle?.connects || 0;
 
   const newConnectsBalance = isAuthenticated
     ? connectBalance + connectsToBuy
@@ -129,16 +125,16 @@ export default function BuyConnectsPage() {
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Razorpay = (window as any).Razorpay;
 
-  const handleTabChange = (value: string) => {
-    if (value === "bundles") {
-      const recommendedBundle = displayBundles.find((b) => b.recommended);
-      const defaultBundleId =
-        recommendedBundle?.id || displayBundles[0]?.id || "PREMIUM_GOLD_BUNDLE";
-      setSelectedBundle(defaultBundleId as ConnectBundleID);
-    } else {
-      setSelectedBundle("CUSTOM_CONNECTS");
-    }
-  };
+  // const handleTabChange = (value: string) => {
+  //   if (value === "bundles") {
+  //     const recommendedBundle = displayBundles.find((b) => b.recommended);
+  //     const defaultBundleId =
+  //       recommendedBundle?.id || displayBundles[0]?.id || "PREMIUM_GOLD_BUNDLE";
+  //     setSelectedBundle(defaultBundleId as ConnectBundleID);
+  //   } else {
+  //     setSelectedBundle("CUSTOM_CONNECTS");
+  //   }
+  // };
 
   const onLogin = () => {
     closeAllDialogs();
@@ -217,10 +213,7 @@ export default function BuyConnectsPage() {
     router.push("/manage-account/connects");
   };
 
-  const canProceedToPay =
-    agreedToTerms &&
-    connectsToBuy >= MINIMUM_CUSTOM_CONNECTS &&
-    connectsToBuy <= MAXIMUM_CUSTOM_CONNECTS;
+  const canProceedToPay = agreedToTerms && connectsToBuy > 0;
 
   return (
     <>
@@ -249,8 +242,8 @@ export default function BuyConnectsPage() {
             </div>
 
             <div className="flex flex-col gap-2">
-              {/* Bundle Selection */}
-              <div className="lg:col-span-2">
+              {/* Bundle Selection Tabs -  Custom Connects + Tabs Logic (COMMENTED) */}
+              {/* <div className="lg:col-span-2">
                 <Tabs
                   defaultActive="custom"
                   className="mb-6"
@@ -278,7 +271,6 @@ export default function BuyConnectsPage() {
 
                   <TabContent value="custom">
                     <div className="py-4">
-                      {/* Connects Input Section */}
                       <NumberField
                         name="customConnects"
                         label="Enter Connects to buy"
@@ -290,7 +282,6 @@ export default function BuyConnectsPage() {
                         className="mb-3"
                       />
 
-                      {/* Error Message */}
                       {customConnects <= MINIMUM_CUSTOM_CONNECTS && (
                         <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
                           <p className="text-sm">
@@ -336,6 +327,31 @@ export default function BuyConnectsPage() {
                     />
                   </TabContent>
                 </Tabs>
+              </div> */}
+
+              {/* Bundles */}
+              <div className="lg:col-span-2 py-4 mb-6">
+                <h2 className="text-2xl mb-6">
+                  Select the connects bundle to buy
+                </h2>
+
+                <RadioGroup
+                  name="bundle-selection"
+                  options={bundleOptions}
+                  value={selectedBundle}
+                  onChange={(value) =>
+                    setSelectedBundle(value as ConnectBundleID)
+                  }
+                  columns={3}
+                  horizontal={true}
+                  withIcons={true}
+                  selectedColor="shadow-2xl"
+                  radioOptionClassName="rounded-xl relative transition-all"
+                  radioGroupClassName="gap-8 md:gap-10 xl:gap-12 !grid-cols-3"
+                  radioLabelClassName="block p-0 w-full h-full"
+                  radioTextClassName="hidden"
+                  containerClassName="my-4 container mx-auto"
+                />
               </div>
 
               {/* Purchase Summary */}
@@ -478,8 +494,8 @@ export default function BuyConnectsPage() {
             </div>
           </div>
 
-          {/* Tabs */}
-          <Tabs defaultActive="custom" onTabChange={handleTabChange}>
+          {/* Tabs - Custom Connects + Tabs Logic (COMMENTED) */}
+          {/* <Tabs defaultActive="custom" onTabChange={handleTabChange}>
             <TabHeader tabsClassName="justify-between border rounded-xl p-2 w-full flex gap-2">
               <Tab
                 label="Custom"
@@ -498,7 +514,6 @@ export default function BuyConnectsPage() {
             </TabHeader>
 
             <TabContent value="custom">
-              {/* Connects Input Section */}
               <div className="py-4">
                 <NumberField
                   name="customConnects"
@@ -511,7 +526,6 @@ export default function BuyConnectsPage() {
                   className="mb-3 w-full"
                 />
 
-                {/* Error Message */}
                 {customConnects <= MINIMUM_CUSTOM_CONNECTS && (
                   <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
                     <p className="text-sm">
@@ -551,7 +565,27 @@ export default function BuyConnectsPage() {
                 initialIndex={1}
               />
             </TabContent>
-          </Tabs>
+          </Tabs> */}
+
+          <div className="py-4 max-md:py-2 -mx-6">
+            <Carousel3D
+              items={displayBundles.map((bundle) => (
+                <ConnectsBundleCard
+                  bundle={bundle}
+                  key={bundle.id}
+                  selectedBundle={selectedBundle}
+                />
+              ))}
+              onChange={(currentIndex) => {
+                const currentBundle = displayBundles[currentIndex];
+                setSelectedBundle(currentBundle.id as ConnectBundleID);
+              }}
+              width={275}
+              height={450}
+              gap={5}
+              initialIndex={1}
+            />
+          </div>
 
           {/* Mobile Purchase Summary */}
           <div className="mt-2 mb-6">
@@ -681,14 +715,12 @@ export default function BuyConnectsPage() {
             </div>
             <button
               className={`text-center px-6 py-3 border rounded-xl w-full transition duration-200 ${
-                agreedToTerms && connectsToBuy >= MINIMUM_CUSTOM_CONNECTS
+                canProceedToPay
                   ? "bg-red-500 border-red-500 text-white hover:bg-red-600"
                   : "bg-gray-300 border-gray-300 text-gray-500 cursor-not-allowed"
               }`}
               onClick={isAuthenticated ? handleProceedToPay : onLogin}
-              disabled={
-                !agreedToTerms || connectsToBuy < MINIMUM_CUSTOM_CONNECTS
-              }
+              disabled={!canProceedToPay}
             >
               Proceed to Pay
             </button>
