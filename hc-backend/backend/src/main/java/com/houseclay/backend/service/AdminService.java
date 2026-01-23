@@ -1,5 +1,6 @@
 package com.houseclay.backend.service;
 
+import com.houseclay.backend.config.CookieConfig;
 import com.houseclay.backend.dto.AdminRegisterDTO;
 import com.houseclay.backend.dto.UserDTO;
 import com.houseclay.backend.entity.*;
@@ -42,6 +43,9 @@ public class AdminService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private CookieConfig cookieConfig;
+
     public Admin registerAdmin(AdminRegisterDTO adminRegisterDTO) throws Exception {
         if (adminRepository.findByUsername(adminRegisterDTO.getUsername()).isPresent()) {
             throw new APIException("Username already exists", HttpStatus.BAD_REQUEST);
@@ -51,6 +55,12 @@ public class AdminService {
         admin.setPassword(passwordEncoder.encode(adminRegisterDTO.getPassword()));
         admin.setName(adminRegisterDTO.getName());
         admin.setRole(adminRegisterDTO.getRole());
+        admin.setPhoneNo(adminRegisterDTO.getPhoneNo());
+        admin.setSecondaryPhoneNo(adminRegisterDTO.getSecondaryPhoneNo());
+        admin.setPersonalEmail(adminRegisterDTO.getPersonalEmail());
+        admin.setAddress(adminRegisterDTO.getAddress());
+        admin.setDateOfBirth(adminRegisterDTO.getDateOfBirth());
+        admin.setDateOfJoining(adminRegisterDTO.getDateOfJoining());
         adminRepository.save(admin);
         return admin;
     }
@@ -152,15 +162,18 @@ public class AdminService {
     }
 
     private ResponseEntity<?> buildLoginResponse(Admin admin, String token) {
-        ResponseCookie cookie = ResponseCookie.from(ADMIN_TOKEN_KEY, token)
-                .httpOnly(true)
-                .secure(true) // Set to true when using HTTPS
-                .sameSite("None")
-                .domain(".houseclay.com")
-                .path("/")
-                .maxAge(CookieUtils.COOKIE_MAX_AGE)
-                .build();
+        ResponseCookie.ResponseCookieBuilder builder = ResponseCookie.from(ADMIN_TOKEN_KEY, token)
+            .httpOnly(true)
+            .secure(cookieConfig.isSecure())
+            .sameSite(cookieConfig.getSameSite())
+            .path("/")
+            .maxAge(CookieUtils.COOKIE_MAX_AGE);
 
+        // Only set domain if not empty
+        if (cookieConfig.getDomain() != null) {
+          builder.domain(cookieConfig.getDomain());
+        }
+        ResponseCookie cookie = builder.build();
         return ResponseEntity.ok()
                 .header("Set-Cookie", cookie.toString())
                 .body(AdminMapper.toAdminInfoDTO(admin));

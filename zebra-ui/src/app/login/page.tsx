@@ -7,7 +7,13 @@ import * as Yup from "yup";
 
 import { houseclayIconURL } from "@/common/constants/cdnURLs";
 import { FormTextField } from "@/form-components";
-import { authFailure, authStarted, authSuccess } from "@/store/adminAuthSlice";
+import { AdminRole } from "@/interfaces/AdminAuth";
+import {
+  authFailure,
+  authStarted,
+  authSuccess,
+  setAdminRole,
+} from "@/store/adminAuthSlice";
 import { useLoginMutation } from "@/store/apiSlice";
 import { RootState } from "@/store/store";
 import RemoteSvg from "@/utility-components/RemoteSvg";
@@ -37,12 +43,13 @@ export default function AdminLogin() {
   ) => {
     dispatch(authStarted());
     try {
-      await loginUser({
+      const response = await loginUser({
         username: values.username,
         password: values.password,
       }).unwrap();
 
       dispatch(authSuccess());
+      dispatch(setAdminRole(response.role as AdminRole));
       const from = new URLSearchParams(window.location.search).get("from");
       window.location.replace(from || "/admin/dashboard");
     } catch (err) {

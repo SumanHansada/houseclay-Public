@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,14 @@ public class Admin {
     @Id
     private String username;
     private String password;
-    private String  name;
+    private String name;
+    private String phoneNo;
+    private String secondaryPhoneNo;
+    private String personalEmail;
+    private String address;
+
+    private Timestamp dateOfJoining;
+    private Timestamp dateOfBirth;
 
     private AdminRole role;
 

@@ -22,4 +22,7 @@ https
   })
   .listen(port, hostname, () => {
     console.log(`🔒 HTTPS ready → https://${hostname}:${port}`);
+    console.log(
+      `Running in ${process.env.NODE_ENV} mode with API: ${process.env.NEXT_PUBLIC_HOUSECLAY_API_BASE_URL}`,
+    );
   });
