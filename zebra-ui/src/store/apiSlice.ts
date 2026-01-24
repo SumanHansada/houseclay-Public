@@ -107,14 +107,16 @@ export const apiSlice = createApi({
     }),
 
     createHouseclayUser: builder.mutation<
-      undefined,
+      string,
       { phoneNo: string; email: string; name: string; blacklisted: boolean }
     >({
       query: (payload) => ({
         url: `/admin/user/create`,
         method: "POST",
         body: payload,
+        responseHandler: (response) => response.text(),
       }),
+      invalidatesTags: listTag("Users"),
     }),
 
     blacklistUser: builder.mutation<

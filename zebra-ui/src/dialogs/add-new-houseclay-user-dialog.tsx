@@ -2,7 +2,7 @@
 
 import { Form, Formik } from "formik";
 import { X } from "lucide-react";
-import { useState } from "react";
+import toast from "react-hot-toast";
 import * as Yup from "yup";
 
 import { Button } from "@/base-components";
@@ -16,6 +16,7 @@ import Spinner from "@/components/Spinner";
 import { FormPhoneField, FormTextField } from "@/form-components";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useCreateHouseclayUserMutation } from "@/store/apiSlice";
+import { toErrorMessage } from "@/utils/rtkError";
 
 interface AddNewHouseclayUserDialogProps {
   id: string;
@@ -39,8 +40,7 @@ export const AddNewHouseclayUserDialog: React.FC<
   AddNewHouseclayUserDialogProps
 > = ({ id }) => {
   const { closeDialog } = useDialog();
-  const [createHouseclayUser] = useCreateHouseclayUserMutation();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [createHouseclayUser, { isLoading }] = useCreateHouseclayUserMutation();
 
   const initialValues: AddUserFormValues = {
     name: "",
@@ -51,17 +51,20 @@ export const AddNewHouseclayUserDialog: React.FC<
 
   const handleSubmit = async (values: AddUserFormValues) => {
     try {
-      await createHouseclayUser({
+      const formattedPhoneNo = values.phoneNo.startsWith("+")
+        ? values.phoneNo
+        : `+${values.phoneNo}`;
+      const response = await createHouseclayUser({
         name: values.name,
-        phoneNo: values.phoneNo,
+        phoneNo: formattedPhoneNo,
         email: values.email || "",
         blacklisted: values.blacklisted,
       }).unwrap();
+
+      toast.success(response);
       closeDialog(id);
-    } catch (error) {
-      console.error("Failed to create user:", error);
-    } finally {
-      setIsSubmitting(false);
+    } catch (err: unknown) {
+      toast.error(toErrorMessage(err));
     }
   };
 
@@ -137,8 +140,9 @@ export const AddNewHouseclayUserDialog: React.FC<
             className="rounded-lg"
             type="submit"
             form="addUserForm"
+            disabled={isLoading}
           >
-            {isSubmitting ? <Spinner size="sm" /> : "Add New User"}
+            {isLoading ? <Spinner size="sm" /> : "Add New User"}
           </Button>
         </div>
       </DialogFooter>
