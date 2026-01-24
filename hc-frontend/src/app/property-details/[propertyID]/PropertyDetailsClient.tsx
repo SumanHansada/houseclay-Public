@@ -71,7 +71,7 @@ import {
   PHOTO_GALLERY_DIALOG_ID,
   REPORT_LISTING_DIALOG_ID,
 } from "@/common/dialogConstants";
-import { PropertyCategory } from "@/common/enums";
+import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { openMapsDirections, pascalCase } from "@/common/utils";
 import FullScreenLoader from "@/components/FullScreenLoader";
 import {
@@ -206,10 +206,11 @@ export function PropertyDetailsClient({
     propertyDetailRightColumn,
   } = processedData;
 
+  const propertyUrl = typeof window !== "undefined" ? window.location.href : "";
+  const whatsappMessage = `Hi! I'm interested in your property: *${propertyTitle}* \n\nLink: ${propertyUrl}`;
+
   const handleShare = async () => {
     try {
-      const propertyUrl = window.location.href;
-
       // Check if Web Share API is supported
       if (navigator.share && isMobile) {
         await navigator.share({
@@ -268,6 +269,12 @@ export function PropertyDetailsClient({
     propertyDetailLeftColumnWithIcons.length,
     propertyDetailRightColumnWithIcons.length,
   );
+
+  const isPropertyInactive =
+    property?.propertyState === PropertyStatus.INACTIVE;
+
+  const canUserReportProperty =
+    owner && !reported && !propertyOwner && !isPropertyInactive;
 
   return (
     <>
@@ -399,7 +406,7 @@ export function PropertyDetailsClient({
               </div>
             </div>
 
-            {/* Mobile */}
+            {/* Mobile Title */}
             <div className="md:hidden">
               <div className="flex justify-between items-center mb-2 gap-8">
                 <p className="text-black text-sm border border-gray-200 py-1 px-1.5 rounded-full bg-gray-100 text-nowrap">
@@ -410,10 +417,19 @@ export function PropertyDetailsClient({
                 </p>
               </div>
             </div>
-            <div>
+
+            {/* Main Title - Desktop & Mobile */}
+            <div className="flex justify-between items-center gap-4">
               <h1 className="text-2xl text-gray-900 flex items-center gap-2">
                 {propertyTitle}
               </h1>
+              {isPropertyInactive && !isMobile ? (
+                <div className="px-5 py-2 bg-red-100 rounded-xl flex items-center justify-center border border-red-300">
+                  <span className="text-red-600 font-medium uppercase tracking-tight">
+                    Already Rented Out
+                  </span>
+                </div>
+              ) : null}
             </div>
             <div className="flex items-center gap-2 text-gray-500 text-base mt-2">
               <MapPin size={16} />
@@ -830,7 +846,27 @@ export function PropertyDetailsClient({
                       </div>
                     </div>
                   </div>
-                  {isAuthenticated ? (
+                  {isPropertyInactive ? (
+                    <div className="mt-4 p-4 bg-gray-100 border border-gray-200 rounded-xl flex flex-col items-center justify-center gap-2">
+                      <div className="text-gray-500 font-bold text-lg uppercase tracking-wider">
+                        Already Rented Out
+                      </div>
+
+                      {/* If already unlocked, still show details but make them non-interactive/dimmed */}
+                      {owner && (
+                        <div className="w-full mt-2 pt-2 border-t border-gray-300 opacity-60">
+                          <p className="text-xs text-gray-500 italic mb-2 text-center">
+                            You previously unlocked this contact, but the
+                            property is no longer available.
+                          </p>
+                          <div className="flex justify-between text-sm">
+                            <span>Owner: {owner.name}</span>
+                            <span>{owner.phoneNo}</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ) : isAuthenticated ? (
                     owner ? (
                       <div>
                         <div className="flex items-center gap-2 mt-4">
@@ -845,32 +881,28 @@ export function PropertyDetailsClient({
                             {owner?.phoneNo}
                           </div>
                         </div>
-                        <div className="flex">
-                          {owner?.phoneNo && (
-                            <div className="flex w-full mt-4 gap-2">
-                              <Link
-                                href={`tel:${owner?.phoneNo}`}
-                                className="flex items-center justify-center flex-1 gap-2 border rounded-lg py-2 bg-red-500 hover:bg-red-600"
-                              >
-                                <PhoneCall size={20} className="text-white" />
-                                <span className="text-white">Call Owner</span>
-                              </Link>
-                              <Link
-                                className="flex items-center justify-center flex-1 gap-1 border rounded-lg py-2 hover:bg-green-600 bg-green-500"
-                                href={`https://wa.me/${owner?.phoneNo}?text=${encodeURIComponent("Hey, I got your number regarding your property from HouseClay.")}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                <SvgIcon
-                                  iconSize="small"
-                                  name="whatsapp"
-                                  size={32}
-                                  className="text-white"
-                                />
-                                <span className="text-white">WhatsApp</span>
-                              </Link>
-                            </div>
-                          )}
+
+                        <div className="flex w-full mt-4 gap-2">
+                          <Link
+                            href={`tel:${owner?.phoneNo}`}
+                            className="flex items-center justify-center flex-1 gap-2 border rounded-lg py-2 bg-red-500 hover:bg-red-600 transition-all"
+                          >
+                            <PhoneCall size={20} className="text-white" />
+                            <span className="text-white">Call Owner</span>
+                          </Link>
+                          <Link
+                            className="flex items-center justify-center flex-1 gap-1 border rounded-lg py-2 hover:bg-green-600 bg-green-500 transition-all"
+                            href={`https://wa.me/${owner?.phoneNo}?text=${encodeURIComponent(whatsappMessage)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <SvgIcon
+                              name="whatsapp"
+                              size={32}
+                              className="text-white"
+                            />
+                            <span className="text-white">WhatsApp</span>
+                          </Link>
                         </div>
                       </div>
                     ) : (
@@ -947,7 +979,7 @@ export function PropertyDetailsClient({
                   </button>
                 </section>
               )}
-              {owner && !reported && !propertyOwner ? (
+              {canUserReportProperty ? (
                 <section className="flex flex-col justify-between items-center mb-6">
                   <button
                     className="text-sm text-gray-700 hover:text-gray-700 flex items-center gap-2 disabled:cursor-not-allowed disabled:text-gray-400"
@@ -1370,7 +1402,7 @@ export function PropertyDetailsClient({
             </section> */}
 
             {/* Report this listing */}
-            {owner && !reported && !propertyOwner ? (
+            {canUserReportProperty ? (
               <section className="flex justify-around items-center">
                 <button
                   className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-2"
@@ -1389,68 +1421,70 @@ export function PropertyDetailsClient({
       <MobileFooter>
         <div className="flex w-full gap-2">
           <div className="flex flex-col justify-evenly items-start w-1/3">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 text-sm">
               <div className="text-gray-600">{catBasedPriceOrRentTag}</div>
-              <div className="text-gray-900 flex gap-1 items-center">
+              <div className="text-gray-900 flex gap-0.5 items-center">
                 {formattedPriceOrRentAmount}
                 <Info
-                  size={16}
-                  className="text-gray-600 hover:cursor-pointer"
+                  size={15}
+                  className="text-gray-600"
                   onClick={() => openDialog(MONTHLY_CHARGES_DIALOG_ID)}
                 />
               </div>
             </div>
-
-            <div className="flex items-center gap-2">
-              <div className="text-gray-600">Deposit:</div>
-              <div className="text-gray-900">{formattedDeposit}</div>
+            <div className="flex items-center gap-1 text-xs">
+              <div className="text-gray-600">Dep:</div>
+              <div className="text-gray-900 font-semibold">
+                {formattedDeposit}
+              </div>
             </div>
           </div>
 
-          {owner ? (
-            <div className="flex flex-col justify-between w-2/3">
-              {/* <div className="flex items-center gap-2">
-                  <div className="text-gray-600">Owner:</div>
-                  <div className="text-gray-900">{owner?.name}</div>
-                </div> */}
-              {owner?.phoneNo && (
-                <div className="flex w-full gap-2">
-                  <a
-                    href={`tel:${owner?.phoneNo}`}
-                    className="flex items-center justify-center gap-1 border rounded-lg px-4 py-2.5 border-red-500 hover:bg-red-100 w-1/2"
-                  >
-                    <PhoneCall size={20} className="text-red-500" />
-                    Call
-                  </a>
-                  <a
-                    className="flex items-center justify-center gap-1 border rounded-lg px-2 py-2.5 hover:bg-green-100 border-green-500 w-1/2"
-                    href={`https://wa.me/${owner?.phoneNo}?text=${encodeURIComponent("Hey, I got your number regarding your property from HouseClay.")}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <SvgIcon
-                      iconSize="small"
-                      name="whatsapp"
-                      size={22}
-                      className="text-green-500"
-                    />
-                    Whatsapp
-                  </a>
-                </div>
-              )}
-            </div>
-          ) : (
-            <button
-              className="w-2/3 px-8 py-3 border bg-red-500 border-red-500 text-white rounded-xl hover:bg-red-600 transition-colors"
-              onClick={() =>
-                isAuthenticated
-                  ? openDialog(UNLOCK_DETAILS_DIALOG_ID)
-                  : openDialog(CONTACT_LOGIN_DIALOG_ID)
-              }
-            >
-              Contact Owner
-            </button>
-          )}
+          {/* Right Side: Action Buttons or Inactive Status */}
+          <div className="w-2/3">
+            {isPropertyInactive ? (
+              <div className="w-full py-3 bg-gray-100 rounded-xl flex items-center justify-center border border-gray-300">
+                <span className="text-gray-500 font-medium uppercase tracking-tight">
+                  Already Rented Out
+                </span>
+              </div>
+            ) : owner ? (
+              <div className="flex w-full gap-2">
+                <a
+                  href={`tel:${owner?.phoneNo}`}
+                  className="flex items-center justify-center gap-1 border rounded-lg py-3 border-red-500 hover:bg-red-100 w-1/2"
+                >
+                  <PhoneCall size={20} className="text-red-500" />
+                  Call
+                </a>
+                <a
+                  className="flex items-center justify-center gap-1 border rounded-lg py-3 hover:bg-green-100 border-green-500 w-1/2"
+                  href={`https://wa.me/${owner?.phoneNo}?text=${encodeURIComponent(whatsappMessage)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <SvgIcon
+                    iconSize="small"
+                    name="whatsapp"
+                    size={22}
+                    className="text-green-500"
+                  />
+                  WA
+                </a>
+              </div>
+            ) : (
+              <button
+                className="w-full py-3 border bg-red-500 border-red-500 text-white rounded-xl hover:bg-red-600 transition-colors"
+                onClick={() =>
+                  isAuthenticated
+                    ? openDialog(UNLOCK_DETAILS_DIALOG_ID)
+                    : openDialog(CONTACT_LOGIN_DIALOG_ID)
+                }
+              >
+                Contact Owner
+              </button>
+            )}
+          </div>
         </div>
       </MobileFooter>
       {/* Mobile Photo Gallery Dialog */}
