@@ -1,19 +1,20 @@
 # STAGE 1: Build
-FROM eclipse-temurin:17-jdk-jammy AS build
+# We use the official Maven image which comes with JDK 17 and Maven pre-installed
+FROM maven:3.9.9-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# Copy Maven Wrapper and pom
-COPY .mvn/ .mvn/
-COPY mvnw pom.xml ./
+# 1. Copy only the pom.xml first
+COPY pom.xml .
 
-# IMPORTANT: Fix line endings and permissions
-RUN tr -d '\r' < mvnw > mvnw_unix && \
-    mv mvnw_unix mvnw && \
-    chmod +x mvnw
+# 2. Go offline (This downloads all dependencies and caches them in a docker layer)
+# This step makes future builds SUPER fast because it won't re-download jars unless pom.xml changes
+RUN mvn dependency:go-offline
 
-# Build the JAR
+# 3. Copy your source code
 COPY src ./src
-RUN ./mvnw clean package -DskipTests
+
+# 4. Build the JAR
+RUN mvn clean package -DskipTests
 
 # STAGE 2: Runtime
 FROM eclipse-temurin:17-jre-jammy
