@@ -135,7 +135,7 @@ public class AdminUserController {
     }
 
     @PostMapping("/user/create")
-    public ResponseEntity<?> createUser(UserDTO userDTO, @RequestAttribute("authenticatedAdmin") Admin admin) {
+    public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO, @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
             User user = adminService.createUser(userDTO);
             return ResponseEntity.ok().body("User created "+user.getName());

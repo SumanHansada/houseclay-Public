@@ -68,26 +68,30 @@ const initialValues: AddAdminFormValues = {
 };
 
 const AddAdminPage: React.FC = () => {
-  const [registerUser] = useRegisterMutation();
+  const [registerUser, { isLoading }] = useRegisterMutation();
 
   const handleSubmit = async (
     values: AddAdminFormValues,
     actions: FormikHelpers<AddAdminFormValues>,
   ) => {
     try {
-      actions.setSubmitting(true);
       const payload = {
         ...values,
         username: `${values.username}@houseclay.com`,
+        phoneNo: values.phoneNo.startsWith("+")
+          ? values.phoneNo
+          : `+${values.phoneNo}`,
+        secondaryPhoneNo: values.secondaryPhoneNo
+          ? values.secondaryPhoneNo.startsWith("+")
+            ? values.secondaryPhoneNo
+            : `+${values.secondaryPhoneNo}`
+          : undefined,
       };
       await registerUser(payload).unwrap();
-      toast.success("New Zebra user created successfully! 🎉");
+      toast.success("New Zebra user created successfully!");
       actions.resetForm();
     } catch (err: unknown) {
-      const errorMessage = toErrorMessage(err);
-      toast.error(errorMessage);
-    } finally {
-      actions.setSubmitting(false);
+      toast.error(toErrorMessage(err));
     }
   };
 
@@ -104,7 +108,7 @@ const AddAdminPage: React.FC = () => {
         validateOnChange={true}
         validateOnBlur={true}
       >
-        {({ isSubmitting }) => (
+        {({}) => (
           <Form className="flex flex-col gap-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormTextField
@@ -211,10 +215,10 @@ const AddAdminPage: React.FC = () => {
               <Button
                 variant="primary"
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isLoading}
                 className="rounded-lg"
               >
-                {isSubmitting ? <Spinner size="sm" /> : "Create User"}
+                {isLoading ? <Spinner size="sm" /> : "Create User"}
               </Button>
             </div>
           </Form>

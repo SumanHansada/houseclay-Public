@@ -175,23 +175,27 @@ public class AdminService {
         }
         ResponseCookie cookie = builder.build();
         return ResponseEntity.ok()
-                .header("Set-Cookie", cookie.toString())
-                .body(AdminMapper.toAdminInfoDTO(admin));
+            .header("Set-Cookie", cookie.toString())
+            .body(AdminMapper.toAdminInfoDTO(admin));
     }
 
     private ResponseEntity<?> buildLogoutResponse() {
         // Clear the cookie by setting maxAge to 0
-        ResponseCookie cookie = ResponseCookie.from(ADMIN_TOKEN_KEY, "")
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("None")
-                .domain(".houseclay.com")
-                .path("/")
-                .maxAge(0)
-                .build();
+        ResponseCookie.ResponseCookieBuilder builder = ResponseCookie.from(ADMIN_TOKEN_KEY, "")
+            .httpOnly(true)
+            .secure(cookieConfig.isSecure())
+            .sameSite(cookieConfig.getSameSite())
+            .path("/")
+            .maxAge(0); 
+
+        // Only set domain if not empty
+        if (cookieConfig.getDomain() != null) {
+          builder.domain(cookieConfig.getDomain());
+        }
+        ResponseCookie cookie = builder.build();
         return ResponseEntity.ok()
-                .header("Set-Cookie", cookie.toString())
-                .body(Map.of("message", "Logout successful"));
+            .header("Set-Cookie", cookie.toString())
+            .body(Map.of("message", "Logout successful"));
     }
 
 }

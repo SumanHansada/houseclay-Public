@@ -122,21 +122,41 @@ const Carousel2DClient: React.FC<Carousel2DProps> = ({
 
     const handleResize = () => {
       const width = window.innerWidth;
-      if (width <= 640) {
+
+      // Mobile (portrait phones)
+      if (width < 640) {
         setResponsiveSlidesPerViewState(1);
-      } else if (width < 768) {
+      }
+      // Mobile landscape / Small tablets (sm: 640px)
+      else if (width < 768) {
         setResponsiveSlidesPerViewState(2);
-      } else if (width <= 1024) {
+      }
+      // Tablets (md: 768px)
+      else if (width <= 1024) {
         setResponsiveSlidesPerViewState(2);
-      } else if (width < 1280) {
+      }
+      // Small laptops (lg: 1024px+)
+      else if (width < 1280) {
         setResponsiveSlidesPerViewState(3);
-      } else if (width < 1536) {
+      }
+      // Desktop (xl: 1280px)
+      else if (width < 1536) {
         setResponsiveSlidesPerViewState(3);
-      } else if (width < 1920) {
+      }
+      // Large desktop (2xl: 1536px)
+      else if (width < 1920) {
         setResponsiveSlidesPerViewState(4);
-      } else if (width < 2560) {
+      }
+      // Full HD (1920px)
+      else if (width <= 2560) {
         setResponsiveSlidesPerViewState(5);
-      } else {
+      }
+      // 2K / QHD (2560px+)
+      else if (width < 3840) {
+        setResponsiveSlidesPerViewState(7);
+      }
+      // 4K / UHD and beyond (3840px+)
+      else {
         setResponsiveSlidesPerViewState(9);
       }
     };
