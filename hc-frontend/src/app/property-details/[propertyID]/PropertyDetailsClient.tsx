@@ -424,9 +424,9 @@ export function PropertyDetailsClient({
                 {propertyTitle}
               </h1>
               {isPropertyInactive && !isMobile ? (
-                <div className="px-5 py-2 bg-red-100 rounded-xl flex items-center justify-center border border-red-300">
-                  <span className="text-red-600 font-medium uppercase tracking-tight">
-                    Already Rented Out
+                <div className="px-5 py-2 bg-gray-100 rounded-xl flex items-center justify-center border border-gray-300">
+                  <span className="text-gray-600 font-medium tracking-tight">
+                    Rented Out
                   </span>
                 </div>
               ) : null}
@@ -847,24 +847,8 @@ export function PropertyDetailsClient({
                     </div>
                   </div>
                   {isPropertyInactive ? (
-                    <div className="mt-4 p-4 bg-gray-100 border border-gray-200 rounded-xl flex flex-col items-center justify-center gap-2">
-                      <div className="text-gray-500 font-bold text-lg uppercase tracking-wider">
-                        Already Rented Out
-                      </div>
-
-                      {/* If already unlocked, still show details but make them non-interactive/dimmed */}
-                      {owner && (
-                        <div className="w-full mt-2 pt-2 border-t border-gray-300 opacity-60">
-                          <p className="text-xs text-gray-500 italic mb-2 text-center">
-                            You previously unlocked this contact, but the
-                            property is no longer available.
-                          </p>
-                          <div className="flex justify-between text-sm">
-                            <span>Owner: {owner.name}</span>
-                            <span>{owner.phoneNo}</span>
-                          </div>
-                        </div>
-                      )}
+                    <div className="mt-4 p-4 bg-gray-100 border border-gray-200 rounded-xl text-gray-500 font-bold text-lg uppercase tracking-wider text-center">
+                      Rented Out
                     </div>
                   ) : isAuthenticated ? (
                     owner ? (
@@ -1445,7 +1429,7 @@ export function PropertyDetailsClient({
             {isPropertyInactive ? (
               <div className="w-full py-3 bg-gray-100 rounded-xl flex items-center justify-center border border-gray-300">
                 <span className="text-gray-500 font-medium uppercase tracking-tight">
-                  Already Rented Out
+                  Rented Out
                 </span>
               </div>
             ) : owner ? (
