@@ -22,6 +22,15 @@ const FooterClient: React.FC = () => {
     openDialog("login-dialog");
   };
 
+  const rentHref = getPropertySearchHrefWithLocation(
+    PropertyCategory.RENT,
+    searchParams,
+  );
+  const flatmateHref = getPropertySearchHrefWithLocation(
+    PropertyCategory.FLATMATE,
+    searchParams,
+  );
+
   return (
     <>
       <footer className="bg-gray-100 w-full xl:px-24 lg:px-12 px-12 font-nunito max-md:hidden">
@@ -117,10 +126,7 @@ const FooterClient: React.FC = () => {
                   </li> */}
                   <li>
                     <Link
-                      href={getPropertySearchHrefWithLocation(
-                        PropertyCategory.RENT,
-                        searchParams,
-                      )}
+                      href={rentHref}
                       data-category="rent"
                       data-active={
                         searchParams.get("propertyCategory") === "rent" ||
@@ -136,10 +142,7 @@ const FooterClient: React.FC = () => {
                   </li>
                   <li>
                     <Link
-                      href={getPropertySearchHrefWithLocation(
-                        PropertyCategory.FLATMATE,
-                        searchParams,
-                      )}
+                      href={flatmateHref}
                       data-category="flatmate"
                       data-active={
                         searchParams.get("propertyCategory") === "flatmate" ||
