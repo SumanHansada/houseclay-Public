@@ -37,7 +37,7 @@ import { setConnectBal } from "@/store/userSlice";
 import { SvgIcon } from "@/utility-components";
 
 const BUNDLE_VALIDITY_DAYS = 60;
-const RAZORPAY_KEY = process.env.NEXT_PUBLIC_RAZORPAY_LIVE_API_KEY ?? "";
+const RAZORPAY_KEY = process.env.NEXT_PUBLIC_RAZORPAY_API_KEY;
 
 const fmt2 = (rupees: number) =>
   rupees.toLocaleString("en-IN", {
