@@ -1,5 +1,6 @@
 package com.houseclay.backend.service;
 
+import com.houseclay.backend.config.CookieConfig;
 import com.houseclay.backend.dto.UserEditDTO;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
@@ -40,6 +41,9 @@ public class UserService {
 
     @Autowired
     private ConnectManagementService connectManagementService;
+
+    @Autowired
+    private CookieConfig cookieConfig;
 
     public ResponseEntity<?> createUser(UserPayload userPayload) throws Exception {
         if(!otpService.validateOTP(userPayload.getPhoneNo(), userPayload.getOtpCode())) {
@@ -117,21 +121,6 @@ public class UserService {
         user.setEmailID(userEditDTO.getEmail());
         userRepository.save(user);
     }
-    
-    public ResponseEntity<?> buildLogoutResponse() {
-        // Clear the cookie by setting maxAge to 0
-        ResponseCookie cookie = ResponseCookie.from(TOKEN_KEY, "")
-                .httpOnly(true)
-                .secure(true) // Set to true when using HTTPS
-                .sameSite("None")
-                .domain(".houseclay.com")
-                .path("/")
-                .maxAge(0) // Clear the cookie
-                .build();
-        return ResponseEntity.ok()
-                .header("Set-Cookie", cookie.toString())
-                .body(Map.of("message", "Logout successful"));
-    }
 
     public User doesUserExist(String phoneNo) {
         Optional<User> userOpt = userRepository.findById(phoneNo);
@@ -142,19 +131,40 @@ public class UserService {
         // ⚠️ For cross-origin HTTP: Don't set sameSite (legacy browser behavior)
         // ✅ For HTTPS production: Use .secure(true).sameSite("None")
         // Don't set sameSite for HTTP cross-origin (allows cookies to work)
-        // Uncomment below for HTTPS: .sameSite("None")
+        ResponseCookie.ResponseCookieBuilder builder = ResponseCookie.from(TOKEN_KEY, token)
+            .httpOnly(true)
+            .secure(cookieConfig.isSecure())
+            .sameSite(cookieConfig.getSameSite())
+            .path("/")
+            .maxAge(CookieUtils.COOKIE_MAX_AGE);
 
-        ResponseCookie cookie = ResponseCookie.from(TOKEN_KEY, token)
-                .httpOnly(true)
-                .secure(true) // Set to true when using HTTPS
-                .sameSite("None")
-                .domain(".houseclay.com")
-                .path("/")
-                .maxAge(CookieUtils.COOKIE_MAX_AGE)
-                .build();
-                
+        // Only set domain if not empty
+        if (cookieConfig.getDomain() != null) {
+          builder.domain(cookieConfig.getDomain());
+        }
+        ResponseCookie cookie = builder.build();
         return ResponseEntity.ok()
                 .header("Set-Cookie", cookie.toString())
                 .body(UserMapper.toUserLoginResponseDTO(user));
+    }
+
+
+    public ResponseEntity<?> buildLogoutResponse() {
+        // Clear the cookie by setting maxAge to 0
+        ResponseCookie.ResponseCookieBuilder builder = ResponseCookie.from(TOKEN_KEY, "")
+            .httpOnly(true)
+            .secure(cookieConfig.isSecure())
+            .sameSite(cookieConfig.getSameSite())
+            .path("/")
+            .maxAge(0); 
+
+        // Only set domain if not empty
+        if (cookieConfig.getDomain() != null) {
+          builder.domain(cookieConfig.getDomain());
+        }
+        ResponseCookie cookie = builder.build();
+        return ResponseEntity.ok()
+                .header("Set-Cookie", cookie.toString())
+                .body(Map.of("message", "Logout successful"));
     }
 }
