@@ -40,7 +40,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
@@ -158,9 +158,14 @@ export function PropertyDetailsClient({
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [origin, setOrigin] = useState<string>("");
   const [showDirections, setShowDirections] = useState(false);
+  const [propertyUrl, setPropertyUrl] = useState("");
   const router = useRouter();
   const { isMobile } = useDeviceContext();
   const { isDialogOpen, closeDialog, openDialog } = useDialog();
+
+  useEffect(() => {
+    setPropertyUrl(window.location.href);
+  }, []);
 
   // Extract all pre-processed data from server
   if (!processedData) {
@@ -206,7 +211,6 @@ export function PropertyDetailsClient({
     propertyDetailRightColumn,
   } = processedData;
 
-  const propertyUrl = typeof window !== "undefined" ? window.location.href : "";
   const whatsappMessage = `Hi! I'm interested in your property: *${propertyTitle}* \n\nLink: ${propertyUrl}`;
 
   const handleShare = async () => {
