@@ -1,157 +1,151 @@
 # 🏗️ Houseclay Developer Setup Guide
 
-This guide covers the complete setup for the **Houseclay Monorepo**, including the Java/Docker backend and Next.js frontends (`hc-frontend` and `zebra-ui`).
+This guide covers the complete setup for the **Houseclay Monorepo**. We support two workflows:
+
+- **Method A (Docker-First):** Run everything (Frontend + Backend) inside Docker. Zero local setup required.
+- **Method B (Hybrid):** Run Backend in Docker, but Frontend locally. Best for active frontend development.
+
+## 📋 Table of Contents
+
+1. [Prerequisites]
+2. [Global Configuration (Root .env)]
+3. [Method A: Docker-First Workflow (Zero Setup)]
+4. [Method B: Hybrid Workflow (Standard Dev)]
+5. [SSL Certificates (Required for Method B)]
 
 ---
 
 ## 1. Prerequisites
 
-Ensure you have the following installed before starting:
+Ensure you have the following installed:
 
-- **Docker Desktop** (Required for Backend, DB, ElasticSearch)
-- **Node.js (v18+) & npm** (Required for Frontends)
-- **mkcert** (Required for local SSL/HTTPS)
-- **Java 17 SDK** _(Optional: Only if running backend manually without Docker)_
+- **Docker Desktop** (Required for everyone)
+- **Node.js (v22+)** (Required for Method B)
+- **mkcert** (Required for Method B / HTTPS testing)
 
 ---
 
-## 2. SSL Certificates (mkcert)
+## 2. Global Configuration (Root .env)
 
-We use `mkcert` to simulate valid HTTPS locally. This is required because our Production setup uses **Secure Cookies** (`SameSite=None`), which browsers block on insecure HTTP connections.
+Before running anything, you need the master environment file.
 
-### Step 2.1: Install mkcert
+1. Create a `.env` file in the **Root** folder (`/houseclay/.env`).
+2. Add the following infrastructure secrets:
 
-- **Mac (Homebrew):**
+```properties
+# --- INFRASTRUCTURE SECRETS ---
+# Database
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=mysecretpassword
+POSTGRES_DB=houseclay_local
+POSTGRES_PORT=5432
 
-```bash
-brew install mkcert nss
+# ElasticSearch
+ELASTIC_PORT=9200
+
+# PgAdmin
+PGADMIN_EMAIL=admin@houseclay.com
+PGADMIN_PASSWORD=admin1234
+PGADMIN_PORT=8081
+
+# Frontend Ports
+MAIN_APP_PORT=3000
+ADMIN_APP_PORT=3001
 
 ```
 
-- **Windows (Chocolatey):**
+---
 
-```powershell
-choco install mkcert
+## 3. Method A: Docker-First Workflow (Zero Setup)
+
+**Best for:** Backend Devs, QA, or running the whole stack without installing Node.js locally.
+
+This uses **Docker Profiles** to start exactly what you need. All commands are run from the **Root Folder**.
+
+### Available Profiles
+
+| Profile          | Command                                  | What it starts                  | URL                     |
+| ---------------- | ---------------------------------------- | ------------------------------- | ----------------------- |
+| **Backend Only** | `docker compose --profile backend up`    | Postgres, Elastic, Java Backend | `http://localhost:8080` |
+| **Main Stack**   | `docker compose --profile houseclay up`  | Backend + **Main Website**      | `http://localhost:3000` |
+| **Admin Stack**  | `docker compose --profile zebra up`      | Backend + **Admin Portal**      | `http://localhost:3001` |
+| **Full Stack**   | `docker compose --profile full-setup up` | Everything                      | Both URLs above         |
+
+### Key Features
+
+- **Hot Reloading:** Yes! The local folders are "bound" to the container. You can edit files in `/hc-frontend` and the Docker container will update automatically.
+- **HTTP Only:** This mode runs in HTTP. It does not use the HTTPS/SSL setup.
+- **Node Version:** Runs on `node:22-alpine`.
+
+---
+
+## 4. Method B: Hybrid Workflow (Standard Dev)
+
+**Best for:** Frontend Developers who need deep debugging, browser tools, or HTTPS testing.
+
+In this workflow, you run the **Backend via Docker**, but run the **Frontend manually** on your machine.
+
+### Step 1: Start the Backend
+
+From the **Root Folder**, start only the backend infrastructure:
+
+```bash
+docker compose --profile backend up
 
 ```
 
-### Step 2.2: Generate Certificates
+- _Services:_ Postgres, ElasticSearch, pgAdmin, Java Backend.
+- _Backend URL:_ `http://localhost:8080`
 
-Run the following commands in your terminal:
+### Step 2: Start the Frontend (The Workflow Matrix)
+
+Navigate to your frontend folder (`cd hc-frontend` or `cd zebra-ui`) and choose your scenario.
+
+| Scenario            | Command              | Protocol | Backend Source   | Use Case                                                                       |
+| ------------------- | -------------------- | -------- | ---------------- | ------------------------------------------------------------------------------ |
+| **1. Standard Dev** | `npm run dev`        | `HTTP`   | **Local Docker** | **Daily Coding.** Safe, fast, connects to the Docker backend you just started. |
+| **2. Debug Hosted** | `npm run dev:hosted` | `HTTPS`  | **Hosted (AWS)** | **Bug Fixing.** Connects your local frontend to the **Production Backend**.    |
+| **3. Prod Build**   | `npm run start`      | `HTTPS`  | **Hosted (AWS)** | **Deployment Preview.** Simulates the exact production build.                  |
+
+---
+
+## 5. SSL Certificates (mkcert)
+
+**Required ONLY for Method B (Scenarios 2 & 3).**
+
+We use `mkcert` to simulate HTTPS locally, which is required for **Secure Cookies** (`SameSite=None`).
+
+### Step 5.1: Install & Generate
 
 ```bash
-# 1. Install the local CA
+# 1. Install mkcert
+brew install mkcert nss  # Mac
+choco install mkcert     # Windows
+
+# 2. Initialize CA
 mkcert -install
 
-# 2. Update your hosts file to map the custom domain
-# Open hosts file: sudo nano /etc/hosts (Mac/Linux) or Notepad as Admin (Windows)
-# Add this line:
-# 127.0.0.1   localhost.houseclay.com
+# 3. Update Hosts File (/etc/hosts or C:\Windows\System32\drivers\etc\hosts)
+# Add: 127.0.0.1   localhost.houseclay.com
 
-# 3. Generate the certificates
-# Run this inside the /hc-frontend (and /zebra-ui) folder:
-mkdir certificates
-cd certificates
+# 4. Generate Certificates (Inside /hc-frontend/certificates)
 mkcert localhost.houseclay.com
 
 ```
 
-### Step 2.3: Verify Files
+### Step 5.2: Verify
 
-You should now have two files in `hc-frontend/certificates/`:
+Ensure you have `localhost.houseclay.com.pem` and `localhost.houseclay.com-key.pem` in your `certificates/` folder.
 
-- `localhost.houseclay.com.pem` (The Certificate)
-- `localhost.houseclay.com-key.pem` (The Private Key)
-
-> **⚠️ Git Warning:** Ensure `*.pem` and `certificates/` are added to your `.gitignore`. **Never commit these keys.**
+> **⚠️ Git Warning:** Never commit `.pem` files. They are already in `.gitignore`.
 
 ---
 
-## 3. Backend Setup (Docker)
+## 📚 Appendix: Service Credentials
 
-The backend service includes Spring Boot, Postgres, ElasticSearch, and pgAdmin. We use Docker Compose to spin this up instantly.
-
-**Location:** `/hc-backend`
-
-### Setup Steps
-
-1. Create a `.env` file in `/hc-backend` with your secrets:
-
-```properties
-DATABASE_USERNAME=postgres
-DATABASE_PASSWORD=your_secure_password
-PGADMIN_USERNAME=admin@houseclay.com
-PGADMIN_PASSWORD=admin
-
-```
-
-2. Start the stack:
-
-```bash
-docker-compose up --build
-
-```
-
-### Service URL Mapping
-
-| Service           | URL                     | Credentials |
-| ----------------- | ----------------------- | ----------- |
-| **Backend API**   | `http://localhost:8080` | -           |
-| **Postgres**      | `localhost:5432`        | See `.env`  |
-| **ElasticSearch** | `http://localhost:9200` | -           |
-| **pgAdmin**       | `http://localhost:8081` | See `.env`  |
-
----
-
-## 4. Frontend Setup
-
-**Locations:** `/hc-frontend` and `/zebra-ui`
-
-Our setup supports 3 standardized workflows to handle development and production needs.
-
-### The Workflow Matrix
-
-| Scenario            | Command              | Protocol | Backend Source   | Use Case                                                       |
-| ------------------- | -------------------- | -------- | ---------------- | -------------------------------------------------------------- |
-| **1. Standard Dev** | `npm run dev`        | `HTTP`   | **Local Docker** | **Daily Coding.** Safe, fast, offline-capable.                 |
-| **2. Debug Hosted** | `npm run dev:hosted` | `HTTPS`  | **Hosted (AWS)** | **Bug Fixing.** Debugging issues that only exist on Prod data. |
-| **3. Prod Build**   | `npm run start`      | `HTTPS`  | **Hosted (AWS)** | **Deployment.** The exact command used in production.          |
-
-### Environment Configuration
-
-We do **not** use `.env.local`. Variables are managed via these default files and script overrides:
-
-1. **`.env.development` (Default)**
-
-- Used automatically by `npm run dev`.
-- Sets API to `http://localhost:8080`.
-
-2. **`.env.production` (Default)**
-
-- Used automatically by `npm run build` / `start`.
-- Sets API to `https://apis.houseclay.com`.
-
-### Running the Project
-
-```bash
-# 1. Install dependencies
-npm install
-
-# --- SCENARIO 1: Standard Development (Recommended) ---
-# Connects to your local Docker backend.
-# Runs on: http://localhost:3000
-npm run dev
-
-# --- SCENARIO 2: Debugging with Production Data ---
-# Connects to the live AWS backend.
-# Runs on: https://localhost.houseclay.com:3000
-# ⚠️ WARNING: You are interacting with REAL user data.
-npm run dev:hosted
-
-# --- SCENARIO 3: Production Build Preview ---
-# Builds the optimized app and connects to AWS backend.
-# Runs on: https://localhost.houseclay.com:3000
-npm run build
-npm run start
-
-```
+| Service           | URL              | User / Email          | Password           |
+| ----------------- | ---------------- | --------------------- | ------------------ |
+| **Backend API**   | `localhost:8080` | -                     | -                  |
+| **Postgres**      | `localhost:5432` | `postgres`            | `mysecretpassword` |
+| **pgAdmin**       | `localhost:8081` | `admin@houseclay.com` | `admin1234`        |
+| **ElasticSearch** | `localhost:9200` | -                     | -                  |
