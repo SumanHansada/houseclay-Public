@@ -82,6 +82,21 @@ services:
       - ./hc-backend/backend/.env
     environment:
       - SERVER_PORT=8080
+    healthcheck:
+      # ---------------------------------------------------------------------
+      # Bash TCP Ping
+      # Works on Alpine AND Jammy. Does not require curl/wget.
+      # Fast check. Only verifies if port 8080 is open (accepting connections).
+      # ---------------------------------------------------------------------
+      test:
+        [
+          "CMD-SHELL",
+          "bash -c '(echo > /dev/tcp/localhost/8080) >/dev/null 2>&1'",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
 
   # -----------------------------------------------------------------------
   # MAIN WEBSITE (Next.js)
@@ -93,6 +108,9 @@ services:
     container_name: houseclay-main-website
     profiles: ["houseclay", "full-setup"]
     restart: no
+    depends_on:
+      backend-app:
+        condition: service_healthy
     ports:
       - "${MAIN_APP_PORT}:3000"
     volumes:
@@ -116,6 +134,9 @@ services:
     container_name: houseclay-admin-portal
     profiles: ["zebra", "full-setup"]
     restart: no
+    depends_on:
+      backend-app:
+        condition: service_healthy
     ports:
       - "${ADMIN_APP_PORT}:3000"
     volumes:

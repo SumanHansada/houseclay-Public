@@ -7,11 +7,11 @@ This guide covers the complete setup for the **Houseclay Monorepo**. We support 
 
 ## 📋 Table of Contents
 
-1. [Prerequisites]
-2. [Global Configuration (Root .env)]
-3. [Method A: Docker-First Workflow (Zero Setup)]
-4. [Method B: Hybrid Workflow (Standard Dev)]
-5. [SSL Certificates (Required for Method B)]
+1. Prerequisites
+2. Global Configuration (Root .env)
+3. Method A: Docker-First Workflow (Zero Setup)
+4. Method B: Hybrid Workflow (Standard Dev)
+5. SSL Certificates (Required for Method B)
 
 ---
 
