@@ -47,7 +47,7 @@ jobs:
           rm -rf node_modules/.cache
 
           npm install
-          npm run build:prod
+          npm run build
           EOF
 
       # Configure AWS Credentials
