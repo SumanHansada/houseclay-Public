@@ -31,16 +31,22 @@ jobs:
 
       - name: Build zebra-ui on Zebra Host
         env:
-          NEXT_PUBLIC_HOUSECLAY_API_BASE_URL: http://${{ secrets.EC2_HOST }}:8080/api
+          NEXT_PUBLIC_HOUSECLAY_API_BASE_URL: ${{ secrets.EC2_HOST }}
           NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
         run: |
           ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.ZEBRA_HOST }} << EOF
           cd /home/ec2-user/zebra-ui
           rm -f .env.local
-          echo "NEXT_PUBLIC_HOUSECLAY_API_BASE_URL=$EC2_HOST" >> .env.local
+
+          echo "NEXT_PUBLIC_HOUSECLAY_API_BASE_URL=$NEXT_PUBLIC_HOUSECLAY_API_BASE_URL" >> .env.local
           echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY" >> .env.local
-          npm install
-          npm run build
+
+          # CLEAR ALL NEXT.js BUILD CACHES
+          rm -rf .next
+          rm -rf node_modules/.cache
+
+          npm install || exit 1
+          npm run build:prod || exit 1
           EOF
 
       - name: Start zebra-ui on Zebra Host
