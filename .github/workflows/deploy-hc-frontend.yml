@@ -31,24 +31,23 @@ jobs:
 
       - name: Build hc-frontend on Houseclay Host
         env:
-          NEXT_PUBLIC_HOUSECLAY_API_BASE_URL: ${{ secrets.EC2_HOST }}
+          NEXT_PUBLIC_HOUSECLAY_API_BASE_URL: ${{ secrets.EC2_HOST }}:8080/api
           NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
-          NEXT_PUBLIC_RAZORPAY_API_KEY: ${{ secrets.RAZORPAY_KEY }}
         run: |
           ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.FRONTEND_HOST }} << EOF
           cd /home/ec2-user/hc-frontend
           rm -f .env.local
 
-          echo "NEXT_PUBLIC_HOUSECLAY_API_BASE_URL=$NEXT_PUBLIC_HOUSECLAY_API_BASE_URL" >> .env.local
+          echo "NEXT_PUBLIC_HOUSECLAY_API_BASE_URL=$EC2_HOST" >> .env.local
           echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY" >> .env.local
-          echo "NEXT_PUBLIC_RAZORPAY_API_KEY=$NEXT_PUBLIC_RAZORPAY_API_KEY" >> .env.local
+          echo "NEXT_PUBLIC_RAZORPAY_LIVE_API_KEY=$RAZORPAY_KEY" >> .env.local
 
           # CLEAR ALL NEXT.js BUILD CACHES
           rm -rf .next
           rm -rf node_modules/.cache
 
-          npm install || exit 1
-          npm run build:prod || exit 1
+          npm install
+          npm run build:prod
           EOF
 
       # Configure AWS Credentials
@@ -72,5 +71,5 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.FRONTEND_HOST }} << EOF
           cd /home/ec2-user/hc-frontend
           pm2 delete houseclay-ui-app || true
-          pm2 start npm --name "houseclay-ui-app" -- start:prod
+          pm2 start npm --name "houseclay-ui-app" -- start
           EOF
