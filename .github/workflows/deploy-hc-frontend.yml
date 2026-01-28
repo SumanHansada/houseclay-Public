@@ -40,7 +40,7 @@ jobs:
 
           echo "NEXT_PUBLIC_HOUSECLAY_API_BASE_URL=$EC2_HOST" >> .env.local
           echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY" >> .env.local
-          echo "NEXT_PUBLIC_RAZORPAY_LIVE_API_KEY=$RAZORPAY_KEY" >> .env.local
+          echo "NEXT_PUBLIC_RAZORPAY_API_KEY=$RAZORPAY_KEY" >> .env.local
 
           # CLEAR ALL NEXT.js BUILD CACHES
           rm -rf .next
