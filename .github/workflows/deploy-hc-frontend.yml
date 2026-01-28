@@ -31,23 +31,27 @@ jobs:
 
       - name: Build hc-frontend on Houseclay Host
         env:
-          NEXT_PUBLIC_HOUSECLAY_API_BASE_URL: ${{ secrets.EC2_HOST }}:8080/api
-          NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
+          HOUSECLAY_API_BASE_URL: "https://apis.houseclay.com/api"
+          GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
+          RAZORPAY_API_KEY: ${{ secrets.RAZORPAY_KEY }}
         run: |
           ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.FRONTEND_HOST }} << EOF
           cd /home/ec2-user/hc-frontend
           rm -f .env.local
 
-          echo "NEXT_PUBLIC_HOUSECLAY_API_BASE_URL=$EC2_HOST" >> .env.local
-          echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY" >> .env.local
-          echo "NEXT_PUBLIC_RAZORPAY_LIVE_API_KEY=$RAZORPAY_KEY" >> .env.local
+          # Injecting the environment variables explicitly.
+          # NOTE: Next.js requires environment variables to be prefixed with 'NEXT_PUBLIC_' 
+          # in order to be exposed to the browser/client-side code.
+          echo "NEXT_PUBLIC_HOUSECLAY_API_BASE_URL=$HOUSECLAY_API_BASE_URL" >> .env.local
+          echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY" >> .env.local
+          echo "NEXT_PUBLIC_RAZORPAY_API_KEY=$RAZORPAY_API_KEY" >> .env.local
 
           # CLEAR ALL NEXT.js BUILD CACHES
           rm -rf .next
           rm -rf node_modules/.cache
 
-          npm install
-          npm run build:prod
+          npm install || exit 1
+          npm run build:prod || exit 1
           EOF
 
       # Configure AWS Credentials
@@ -71,5 +75,5 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.FRONTEND_HOST }} << EOF
           cd /home/ec2-user/hc-frontend
           pm2 delete houseclay-ui-app || true
-          pm2 start npm --name "houseclay-ui-app" -- start
+          pm2 start npm --name "houseclay-ui-app" -- run start:prod
           EOF
