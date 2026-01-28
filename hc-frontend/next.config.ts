@@ -63,7 +63,7 @@ const nextConfig: NextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },
-  productionBrowserSourceMaps: true, // Disable in production for better performance
+  productionBrowserSourceMaps: process.env.NODE_ENV !== "production", // Disable in production for better performance
   webpack(config, { dev, isServer }) {
     // This webpack config will only apply when NOT using Turbopack
     config.module.rules.push({
