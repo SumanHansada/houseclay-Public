@@ -105,7 +105,7 @@ Navigate to your frontend folder (`cd hc-frontend` or `cd zebra-ui`) and choose 
 | ------------------- | -------------------- | -------- | ---------------- | ------------------------------------------------------------------------------ |
 | **1. Standard Dev** | `npm run dev`        | `HTTP`   | **Local Docker** | **Daily Coding.** Safe, fast, connects to the Docker backend you just started. |
 | **2. Debug Hosted** | `npm run dev:hosted` | `HTTPS`  | **Hosted (AWS)** | **Bug Fixing.** Connects your local frontend to the **Production Backend**.    |
-| **3. Prod Build**   | `npm run start`      | `HTTPS`  | **Hosted (AWS)** | **Deployment Preview.** Simulates the exact production build.                  |
+| **3. Prod Build**   | `npm run start:hosted`      | `HTTPS`  | **Hosted (AWS)** | **Deployment Preview.** Simulates the exact production build.                  |
 
 ---
 
