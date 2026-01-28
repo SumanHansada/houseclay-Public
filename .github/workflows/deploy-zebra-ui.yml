@@ -31,15 +31,18 @@ jobs:
 
       - name: Build zebra-ui on Zebra Host
         env:
-          NEXT_PUBLIC_HOUSECLAY_API_BASE_URL: ${{ secrets.EC2_HOST }}
-          NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
+          HOUSECLAY_API_BASE_URL: "https://apis.houseclay.com/api"
+          GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
         run: |
           ssh -o StrictHostKeyChecking=no -i zebra_key.pem ec2-user@${{ secrets.ZEBRA_HOST }} << EOF
           cd /home/ec2-user/zebra-ui
           rm -f .env.local
 
-          echo "NEXT_PUBLIC_HOUSECLAY_API_BASE_URL=$NEXT_PUBLIC_HOUSECLAY_API_BASE_URL" >> .env.local
-          echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY" >> .env.local
+          # Injecting the environment variables explicitly.
+          # NOTE: Next.js requires environment variables to be prefixed with 'NEXT_PUBLIC_' 
+          # in order to be exposed to the browser/client-side code.
+          echo "NEXT_PUBLIC_HOUSECLAY_API_BASE_URL=$HOUSECLAY_API_BASE_URL" >> .env.local
+          echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=$GOOGLE_MAPS_API_KEY" >> .env.local
 
           # CLEAR ALL NEXT.js BUILD CACHES
           rm -rf .next
