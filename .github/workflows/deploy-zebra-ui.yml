@@ -40,7 +40,7 @@ jobs:
           echo "NEXT_PUBLIC_HOUSECLAY_API_BASE_URL=$EC2_HOST" >> .env.local
           echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY" >> .env.local
           npm install
-          npm run build:prod
+          npm run build
           EOF
 
       - name: Start zebra-ui on Zebra Host
