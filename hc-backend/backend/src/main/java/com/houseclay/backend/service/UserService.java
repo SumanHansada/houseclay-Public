@@ -23,6 +23,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.houseclay.backend.utils.Constants.TOKEN_KEY;
+import java.sql.Timestamp;
 
 @Service
 public class UserService {
@@ -146,6 +147,46 @@ public class UserService {
         return ResponseEntity.ok()
                 .header("Set-Cookie", cookie.toString())
                 .body(UserMapper.toUserLoginResponseDTO(user));
+    }
+
+    public String initiateCorporateVerification(User user, String corporateEmail) throws Exception {
+        // Check Denylist
+        String domain = corporateEmail.substring(corporateEmail.indexOf("@") + 1).toLowerCase();
+        if (com.houseclay.backend.utils.Constants.EMAIL_DOMAIN_DENYLIST.contains(domain)) {
+            throw new APIException("Email domain not allowed for corporate verification", HttpStatus.BAD_REQUEST);
+        }
+
+        // Check Uniqueness
+        if (userRepository.existsByCorporateEmailID(corporateEmail)) {
+            throw new APIException("This corporate email is already in use", HttpStatus.CONFLICT);
+        }
+
+        // Generate OTP
+        Map<String, String> otpMap = EmailOTPUtils.generateOTP(corporateEmail);
+        String otp = otpMap.get(EmailOTPUtils.OTP_MAP_KEY);
+        emailService.sendOTPEmail(corporateEmail, user.getName(), otp);
+
+        return otpMap.get(EmailOTPUtils.TOKEN_MAP_KEY);
+    }
+
+    public boolean confirmCorporateVerification(User user, String otp, String token, String corporateEmail, String companyName, String jobTitle) throws Exception {
+        if(!EmailOTPUtils.verifyOTP(token, otp)) {
+            throw new APIException("Invalid OTP Code", HttpStatus.UNAUTHORIZED);
+        }
+
+        Optional<User> optionalUser = userRepository.findById(user.getPhoneNo());
+        if(optionalUser.isEmpty()) {
+            throw new APIException("Invalid user", HttpStatus.BAD_REQUEST);
+        }
+        user = optionalUser.get();
+        user.setCorporateEmailID(corporateEmail);
+        user.setCorporateEmailVerified(true);
+        user.setCorporateEmailVerifiedAt(new Timestamp(System.currentTimeMillis()));
+        user.setCompanyName(companyName);
+        user.setJobTitle(jobTitle);
+
+        userRepository.save(user);
+        return true;
     }
 
 

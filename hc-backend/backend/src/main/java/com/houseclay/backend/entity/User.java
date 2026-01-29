@@ -21,6 +21,13 @@ public class User {
     private boolean isBlacklisted;
     private boolean isBroker;
     private Timestamp createdAt;
+    
+    @Column(unique = true)
+    private String corporateEmailID;
+    private boolean isCorporateEmailVerified = false;
+    private Timestamp corporateEmailVerifiedAt;
+    private String companyName;
+    private String jobTitle;
 
     public User(String phoneNo, String name, String emailID) {
         this.phoneNo = phoneNo;
