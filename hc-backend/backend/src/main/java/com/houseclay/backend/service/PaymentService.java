@@ -3,7 +3,6 @@ package com.houseclay.backend.service;
 import com.houseclay.backend.dto.CreateOrderResponseDTO;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.payload.CreateOrderRequest;
-import com.houseclay.backend.utils.Constants;
 import com.razorpay.Utils;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.repository.ExternalPaymentsRepository;

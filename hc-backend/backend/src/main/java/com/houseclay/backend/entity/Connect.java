@@ -3,7 +3,6 @@ package com.houseclay.backend.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,5 +33,4 @@ public class Connect {
 
     @OneToMany(mappedBy = "connect", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ConnectEvent> events = new ArrayList<>();
-
 }

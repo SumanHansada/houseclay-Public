@@ -15,6 +15,6 @@ public interface ConnectRepository extends JpaRepository<Connect, Long> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Connect c SET c.status = :newStatus WHERE c.status = :oldStatus AND c.createdAt < :expiryDate")
+    @Query("UPDATE Connect c SET c.status = :newStatus WHERE c.status = :oldStatus AND (SELECT MIN(ce.eventTime) FROM ConnectEvent ce WHERE ce.connect = c AND ce.eventType = 'CREATED') < :expiryDate")
     int expireOldConnects(ConnectStatus newStatus, ConnectStatus oldStatus, Timestamp expiryDate);
 }
