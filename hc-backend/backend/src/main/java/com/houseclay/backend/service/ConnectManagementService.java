@@ -104,12 +104,21 @@ public class ConnectManagementService {
 
     @Transactional
     public void grantCorporateConnects(User user) throws Exception {
+        Optional<User> optionalUser = userRepository.findById(user.getPhoneNo());
+        if (optionalUser.isEmpty()) {
+             throw new APIException("User not found", HttpStatus.BAD_REQUEST);
+        }
+        user = optionalUser.get();
+
         // Check if verified
         if (!user.isCorporateEmailVerified()) {
             throw new APIException("User corporate email not verified", HttpStatus.BAD_REQUEST);
         }
 
         // Check 30 days validity
+        if (user.getCorporateEmailVerifiedAt() == null) {
+             throw new APIException("Corporate verification timestamp missing", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         long diff = System.currentTimeMillis() - user.getCorporateEmailVerifiedAt().getTime();
         long days = diff / (1000 * 60 * 60 * 24);
         if (days > 30) {
