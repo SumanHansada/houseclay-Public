@@ -2,7 +2,6 @@ package com.houseclay.backend.service;
 
 import com.houseclay.backend.dto.CreateOrderResponseDTO;
 import com.houseclay.backend.entity.*;
-import com.houseclay.backend.payload.CreateOrderRequest;
 import com.razorpay.Utils;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.repository.ExternalPaymentsRepository;
@@ -51,8 +50,8 @@ public class PaymentService {
         this.razorpayClient = new RazorpayClient(keyId, razorpaySecret);
     }
 
-    public CreateOrderResponseDTO createOrder(User user, CreateOrderRequest request) throws Exception {
-        Pair<Double, Integer> orderPair = getAmountAndConnect(request);
+    public CreateOrderResponseDTO createOrder(User user) throws Exception {
+        Pair<Double, Integer> orderPair = getAmountAndConnect();
         double amount = orderPair.getFirst();
         int connectQty = orderPair.getSecond();
         Optional<User> userOpt = userRepository.findById(user.getPhoneNo());
@@ -73,7 +72,7 @@ public class PaymentService {
 
         // Saving order in external payment entity.
         ExternalPayments externalPayments = new ExternalPayments();
-        externalPayments.setBundle(request.getBundle());
+        externalPayments.setBundle(Bundle.valueOf(bundleConfig.getId()));
         externalPayments.setPaymentId(orderID);
         externalPayments.setAmount(amount);
         externalPayments.setConnectQty(connectQty);
@@ -165,15 +164,9 @@ public class PaymentService {
         return ResponseEntity.ok(response);
     }
 
-    public Pair<Double, Integer> getAmountAndConnect(CreateOrderRequest request) throws Exception{
-        // Check for Standard Bundle
-        // We compare enum name or ID. Bundle enums: BASIC_BLUE_BUNDLE etc.
-        // BundleConfig ID: BASIC_BLUE_BUNDLE
-        if (request.getBundle().toString().equals(bundleConfig.getId())) {
-             return Pair.of(bundleConfig.getStandardPrice(), bundleConfig.getConnects());
-        }
-
-        throw new APIException("Invalid bundle", HttpStatus.BAD_REQUEST);
+    public Pair<Double, Integer> getAmountAndConnect() throws Exception{
+        // Always return Standard Bundle
+        return Pair.of(bundleConfig.getStandardPrice(), bundleConfig.getConnects());
     }
 }
 

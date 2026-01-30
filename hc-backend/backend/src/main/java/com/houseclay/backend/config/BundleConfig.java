@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "app.bundle")
 @Data
 public class BundleConfig {
-    private final String id = "STANDARD_BUNDLE";
-    private final String title = "Standard";
+    private final String id = "ACCESS_PASS";
+    private final String title = "Access Pass";
     private final String subTitle = "Best Value";
     private int connects;
     private double standardPrice;

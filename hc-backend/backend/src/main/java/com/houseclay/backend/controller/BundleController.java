@@ -28,7 +28,7 @@ public class BundleController {
             bundleDTO.setConnects(bundleConfig.getConnects());
             bundleDTO.setStandardPrice(bundleConfig.getStandardPrice());
 
-            return ResponseEntity.ok(List.of(bundleDTO));
+            return ResponseEntity.ok(bundleDTO);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
