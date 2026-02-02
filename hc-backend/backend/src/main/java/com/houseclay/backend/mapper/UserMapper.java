@@ -17,6 +17,7 @@ public class UserMapper {
         userLoginResponseDTO.setEmailID(user.getEmailID());
         userLoginResponseDTO.setPhoneNo(user.getPhoneNo());
         userLoginResponseDTO.setConnectBal(user.getConnectBal());
+        userLoginResponseDTO.setCorporateEmailVerified(user.isCorporateEmailVerified());
         return userLoginResponseDTO;
     }
 

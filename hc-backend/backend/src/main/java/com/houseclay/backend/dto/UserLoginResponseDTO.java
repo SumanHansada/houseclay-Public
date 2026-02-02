@@ -9,4 +9,5 @@ public class UserLoginResponseDTO {
     private String phoneNo;
     private int connectBal;
     private String avatarUrl;
+    private boolean isCorporateEmailVerified;
 }
