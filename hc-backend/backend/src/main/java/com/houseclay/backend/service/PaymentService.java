@@ -1,5 +1,6 @@
 package com.houseclay.backend.service;
 
+import com.houseclay.backend.config.BundleConfig;
 import com.houseclay.backend.dto.CreateOrderResponseDTO;
 import com.houseclay.backend.entity.*;
 import com.razorpay.Utils;
@@ -41,7 +42,7 @@ public class PaymentService {
     private String razorpaySecret;
 
     @Autowired
-    private com.houseclay.backend.config.BundleConfig bundleConfig;
+    private BundleConfig bundleConfig;
 
     private static final int CONNECT_RATE = 99;
 

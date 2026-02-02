@@ -9,6 +9,7 @@ import com.houseclay.backend.payload.LoginPayload;
 import com.houseclay.backend.payload.UserPayload;
 import com.houseclay.backend.repository.UserLoginRepository;
 import com.houseclay.backend.repository.UserRepository;
+import com.houseclay.backend.utils.Constants;
 import com.houseclay.backend.utils.CookieUtils;
 import com.houseclay.backend.utils.EmailOTPUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,7 +153,7 @@ public class UserService {
     public String initiateCorporateVerification(User user, String corporateEmail) throws Exception {
         // Check Denylist
         String domain = corporateEmail.substring(corporateEmail.indexOf("@") + 1).toLowerCase();
-        if (com.houseclay.backend.utils.Constants.EMAIL_DOMAIN_DENYLIST.contains(domain)) {
+        if (Constants.EMAIL_DOMAIN_DENYLIST.contains(domain)) {
             throw new APIException("Email domain not allowed for corporate verification", HttpStatus.BAD_REQUEST);
         }
 
