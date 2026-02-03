@@ -25,6 +25,7 @@ public class Admin {
 
     private Timestamp dateOfJoining;
     private Timestamp dateOfBirth;
+    private boolean active = true;
 
     private AdminRole role;
 

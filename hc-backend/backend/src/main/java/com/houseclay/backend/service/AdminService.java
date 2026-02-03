@@ -76,6 +76,10 @@ public class AdminService {
 
         Admin admin = adminOptional.get();
 
+        if (!admin.isActive()) {
+            throw new APIException("Account is disabled. Please contact support.", HttpStatus.FORBIDDEN);
+        }
+
         // Generate auth token
         String authToken = UUID.randomUUID().toString();
 
