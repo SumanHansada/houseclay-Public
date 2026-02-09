@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import java.util.Map;
+
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -97,7 +99,7 @@ public class AdminController {
             @RequestAttribute("authenticatedAdmin") Admin admin) throws APIException {
         try {
             adminService.deactivateAdmin(username, admin);
-            return ResponseEntity.ok("Admin deactivated successfully");
+            return ResponseEntity.ok(Map.of("message", "Admin deactivated successfully"));
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {
@@ -111,7 +113,7 @@ public class AdminController {
             @RequestAttribute("authenticatedAdmin") Admin admin) throws APIException {
         try {
             adminService.activateAdmin(username, admin);
-            return ResponseEntity.ok("Admin activated successfully");
+            return ResponseEntity.ok(Map.of("message", "Admin activated successfully"));
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {
