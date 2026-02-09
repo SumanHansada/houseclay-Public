@@ -69,6 +69,7 @@ export const baseQueryWithAuth: BaseQueryFn<
 export const TAGS = [
   "Users",
   "UserDetail",
+  "Admins",
   "Leads",
   "LeadDetail",
   "Properties",

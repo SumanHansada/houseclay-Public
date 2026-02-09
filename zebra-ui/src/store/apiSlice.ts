@@ -11,6 +11,7 @@ import {
   GetPropertyByIdResponse,
   GetUserByPhoneNoResponse,
 } from "@/interfaces/api";
+import { GetAllAdminsResponse } from "@/interfaces/api/admins";
 import { PropertyForm } from "@/interfaces/PropertyForm";
 import {
   baseQueryWithAuth,
@@ -176,6 +177,18 @@ export const apiSlice = createApi({
           },
         };
       },
+    }),
+
+    // ──────────────── Admins ────────────────
+    getAdmins: builder.query<
+      GetAllAdminsResponse,
+      { page: number; size: number }
+    >({
+      query: ({ page, size }) => ({
+        url: `/admin/list-admins?page=${page}&size=${size}`,
+        method: "GET",
+      }),
+      providesTags: listTag("Admins"),
     }),
 
     // ──────────────── LEADS ────────────────
@@ -467,6 +480,7 @@ export const {
   useBlacklistUserMutation,
   useActivateUserMutation,
   useTagBrokerMutation,
+  useGetAdminsQuery,
   useGetLeadsQuery,
   useGetLeadByIdQuery,
   useLeadStatusUpdateMutation,

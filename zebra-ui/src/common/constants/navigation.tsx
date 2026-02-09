@@ -57,7 +57,7 @@ export const sidebarItems: SidebarItem[] = [
       ADMIN_ROLES.CAPTAIN,
     ],
     children: [
-      { label: "HouseClay Users", href: "/admin/user-management" },
+      { label: "Houseclay Users", href: "/admin/user-management" },
       {
         label: "Add connects",
         href: "/admin/add-connects",
