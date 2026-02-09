@@ -1,6 +1,7 @@
 package com.houseclay.backend.service;
 
 import com.houseclay.backend.config.CookieConfig;
+import com.houseclay.backend.dto.AdminDetailDTO;
 import com.houseclay.backend.dto.AdminRegisterDTO;
 import com.houseclay.backend.dto.UserDTO;
 import com.houseclay.backend.entity.*;
@@ -200,6 +201,13 @@ public class AdminService {
         return ResponseEntity.ok()
             .header("Set-Cookie", cookie.toString())
             .body(Map.of("message", "Logout successful"));
+    }
+
+    public Page<AdminDetailDTO> getAllAdmins(Pageable pageable, Admin requester) throws APIException {
+        if (!AdminRole.SUPER_ADMIN.equals(requester.getRole())) {
+            throw new APIException("Unauthorized!", HttpStatus.FORBIDDEN);
+        }
+        return adminRepository.findAll(pageable).map(AdminMapper::toAdminDetailDTO);
     }
 
 }

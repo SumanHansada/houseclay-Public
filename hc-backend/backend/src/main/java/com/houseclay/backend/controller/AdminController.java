@@ -1,5 +1,6 @@
 package com.houseclay.backend.controller;
 
+import com.houseclay.backend.dto.AdminDetailDTO;
 import com.houseclay.backend.dto.AdminInfoDTO;
 import com.houseclay.backend.dto.AdminLoginDTO;
 import com.houseclay.backend.dto.AdminRegisterDTO;
@@ -9,6 +10,10 @@ import com.houseclay.backend.mapper.AdminMapper;
 import com.houseclay.backend.service.AdminService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,6 +63,21 @@ public class AdminController {
     public ResponseEntity<?> info(@RequestAttribute("authenticatedAdmin") Admin admin) {
         AdminInfoDTO adminInfoDTO = AdminMapper.toAdminInfoDTO(admin);
         return ResponseEntity.ok(adminInfoDTO);
+    }
+
+    @GetMapping("/list-admins")
+    public Page<AdminDetailDTO> getAllAdmins(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestAttribute("authenticatedAdmin") Admin admin) throws APIException {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("dateOfJoining").descending());
+        try {
+            return adminService.getAllAdmins(pageable, admin);
+        } catch (APIException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
