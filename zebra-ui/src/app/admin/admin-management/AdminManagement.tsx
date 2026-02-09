@@ -81,8 +81,8 @@ export const AdminManagement = () => {
     _serial: (currentPage - 1) * ROWS_PER_PAGE + index + 1,
   }));
 
-  const viewProfile = (phoneNo: string) => {
-    router.push(`/admin/user-details/${phoneNo}`);
+  const viewProfile = (username: string) => {
+    router.push(`/admin/admin-details/${username}`);
   };
 
   // Columns Configuration
@@ -112,7 +112,7 @@ export const AdminManagement = () => {
       label: "Action",
       render: (admin) => (
         <IconButtonWithTooltip
-          onClick={() => viewProfile(admin.phoneNo)}
+          onClick={() => viewProfile(admin.username)}
           Icon={Eye}
           tooltipActive={true}
           tooltip="View Profile"

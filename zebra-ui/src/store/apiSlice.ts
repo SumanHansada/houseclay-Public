@@ -1,6 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 import { LeadQueryParamEnum } from "@/common/enums";
+import { AdminDetails } from "@/interfaces/Admin";
 import {
   GetAllLeadsResponse,
   GetAllPropertiesResponse,
@@ -189,6 +190,33 @@ export const apiSlice = createApi({
         method: "GET",
       }),
       providesTags: listTag("Admins"),
+    }),
+
+    getAdminByUsername: builder.query<AdminDetails, { username: string }>({
+      query: ({ username }) => ({
+        url: `/admin/${username}`,
+        method: "GET",
+      }),
+      providesTags: (_r, _e, { username }) =>
+        [{ type: "AdminDetail", username }] as const,
+    }),
+
+    activateAdmin: builder.mutation<string, { username: string }>({
+      query: ({ username }) => ({
+        url: `/admin/${username}/activate`,
+        method: "PUT",
+      }),
+      invalidatesTags: (_r, _e, { username }) =>
+        [{ type: "AdminDetail", username }, ...listTag("Admins")] as const,
+    }),
+
+    deactivateAdmin: builder.mutation<string, { username: string }>({
+      query: ({ username }) => ({
+        url: `/admin/${username}/deactivate`,
+        method: "PUT",
+      }),
+      invalidatesTags: (_r, _e, { username }) =>
+        [{ type: "AdminDetail", username }, ...listTag("Admins")] as const,
     }),
 
     // ──────────────── LEADS ────────────────
@@ -481,6 +509,9 @@ export const {
   useActivateUserMutation,
   useTagBrokerMutation,
   useGetAdminsQuery,
+  useGetAdminByUsernameQuery,
+  useActivateAdminMutation,
+  useDeactivateAdminMutation,
   useGetLeadsQuery,
   useGetLeadByIdQuery,
   useLeadStatusUpdateMutation,

@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { AlertCircle, X } from "lucide-react";
 import { useState } from "react";
 
 import {
@@ -12,6 +12,7 @@ import {
 import { DialogLabelConfig } from "@/interfaces/Dialog";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
+import { getErrorMessage } from "@/utils/rtkError";
 
 interface ActionDialogCommon extends DialogLabelConfig {
   id: string;
@@ -47,20 +48,27 @@ export const ActionDialog: React.FC<ActionDialogProps> = ({
 
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const disabled =
     loading || (requireComment ? comment.trim().length < 3 : false);
 
   const handleSubmit = async () => {
     setLoading(true);
-    if (requireComment) {
-      await onConfirm(comment.trim());
-    } else {
-      await onConfirm();
+    setError(null);
+
+    try {
+      if (requireComment) {
+        await onConfirm(comment.trim());
+      } else {
+        await onConfirm();
+      }
+      onSuccess?.();
+      closeDialog(id);
+    } catch (err: unknown) {
+      setError(getErrorMessage(err));
+      setLoading(false);
     }
-    setLoading(false);
-    onSuccess?.();
-    closeDialog(id);
   };
 
   return (
@@ -87,6 +95,13 @@ export const ActionDialog: React.FC<ActionDialogProps> = ({
               value={comment}
               onChange={(e) => setComment(e.target.value)}
             />
+          )}
+
+          {error && (
+            <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm flex items-center gap-2">
+              <AlertCircle size={16} />
+              <span>{error}</span>
+            </div>
           )}
         </div>
       </DialogContent>

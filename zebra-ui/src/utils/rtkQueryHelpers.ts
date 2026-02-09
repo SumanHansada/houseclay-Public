@@ -70,6 +70,7 @@ export const TAGS = [
   "Users",
   "UserDetail",
   "Admins",
+  "AdminDetail",
   "Leads",
   "LeadDetail",
   "Properties",
