@@ -1,7 +1,5 @@
 package com.houseclay.backend.controller;
 
-import com.houseclay.backend.dto.AdminDetailDTO;
-import com.houseclay.backend.dto.AdminSummaryDTO;
 import com.houseclay.backend.dto.AdminInfoDTO;
 import com.houseclay.backend.dto.AdminLoginDTO;
 import com.houseclay.backend.dto.AdminRegisterDTO;
@@ -11,7 +9,6 @@ import com.houseclay.backend.mapper.AdminMapper;
 import com.houseclay.backend.service.AdminService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
