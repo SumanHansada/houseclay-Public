@@ -67,25 +67,31 @@ public class AdminController {
     }
 
     @GetMapping("/list-admins")
-    public Page<AdminSummaryDTO> getAllAdmins(
+    public ResponseEntity<?> getAllAdmins(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestAttribute("authenticatedAdmin") Admin admin) throws APIException {
+            @RequestAttribute("authenticatedAdmin") Admin admin) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("dateOfJoining").descending());
         try {
-            return adminService.getAllAdmins(pageable, admin);
+            return ResponseEntity.ok(adminService.getAllAdmins(pageable, admin));
         } catch (APIException e) {
-            throw e;
+             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<AdminDetailDTO> getAdminDetails(
+    public ResponseEntity<?> getAdminDetails(
             @PathVariable String username,
-            @RequestAttribute("authenticatedAdmin") Admin admin) throws APIException {
-        return ResponseEntity.ok(adminService.getAdminDetails(username, admin));
+            @RequestAttribute("authenticatedAdmin") Admin admin) {
+        try {
+            return ResponseEntity.ok(adminService.getAdminDetails(username, admin));
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
     @PatchMapping("/{username}/deactivate")
