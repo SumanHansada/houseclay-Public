@@ -2,6 +2,7 @@ package com.houseclay.backend.service;
 
 import com.houseclay.backend.config.CookieConfig;
 import com.houseclay.backend.dto.AdminDetailDTO;
+import com.houseclay.backend.dto.AdminSummaryDTO;
 import com.houseclay.backend.dto.AdminRegisterDTO;
 import com.houseclay.backend.dto.UserDTO;
 import com.houseclay.backend.entity.*;
@@ -203,11 +204,49 @@ public class AdminService {
             .body(Map.of("message", "Logout successful"));
     }
 
-    public Page<AdminDetailDTO> getAllAdmins(Pageable pageable, Admin requester) throws APIException {
+    public Page<AdminSummaryDTO> getAllAdmins(Pageable pageable, Admin requester) throws APIException {
         if (!AdminRole.SUPER_ADMIN.equals(requester.getRole())) {
             throw new APIException("Unauthorized!", HttpStatus.FORBIDDEN);
         }
-        return adminRepository.findAll(pageable).map(AdminMapper::toAdminDetailDTO);
+        return adminRepository.findAll(pageable).map(AdminMapper::toAdminSummaryDTO);
+    }
+
+    public AdminDetailDTO getAdminDetails(String username, Admin requester) throws APIException {
+        if (!AdminRole.SUPER_ADMIN.equals(requester.getRole())) {
+            throw new APIException("Unauthorized!", HttpStatus.FORBIDDEN);
+        }
+        Admin admin = adminRepository.findByUsername(username)
+                .orElseThrow(() -> new APIException("Admin not found", HttpStatus.NOT_FOUND));
+        return AdminMapper.toAdminDetailDTO(admin);
+    }
+
+    public void deactivateAdmin(String username, Admin requester) throws APIException {
+        if (!AdminRole.SUPER_ADMIN.equals(requester.getRole())) {
+            throw new APIException("Unauthorized!", HttpStatus.FORBIDDEN);
+        }
+        Admin admin = adminRepository.findByUsername(username)
+                .orElseThrow(() -> new APIException("Admin not found", HttpStatus.NOT_FOUND));
+
+        if (admin.getUsername().equals(requester.getUsername())) {
+             throw new APIException("You cannot deactivate yourself", HttpStatus.BAD_REQUEST);
+        }
+
+        admin.setActive(false);
+        adminRepository.save(admin);
+        
+        // Invalidate all sessions
+        adminLoginRepository.deleteByAdmin(admin);
+    }
+
+    public void activateAdmin(String username, Admin requester) throws APIException {
+        if (!AdminRole.SUPER_ADMIN.equals(requester.getRole())) {
+            throw new APIException("Unauthorized!", HttpStatus.FORBIDDEN);
+        }
+        Admin admin = adminRepository.findByUsername(username)
+                .orElseThrow(() -> new APIException("Admin not found", HttpStatus.NOT_FOUND));
+
+        admin.setActive(true);
+        adminRepository.save(admin);
     }
 
 }

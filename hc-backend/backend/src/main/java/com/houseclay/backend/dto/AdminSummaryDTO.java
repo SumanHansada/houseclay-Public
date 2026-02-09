@@ -6,15 +6,11 @@ import lombok.Data;
 import java.sql.Timestamp;
 
 @Data
-public class AdminDetailDTO {
-    private String username;
+public class AdminSummaryDTO {
     private String name;
+    private String username;
     private String phoneNo;
-    private String secondaryPhoneNo;
-    private String personalEmail;
-    private String address;
     private Timestamp dateOfJoining;
-    private Timestamp dateOfBirth;
     private boolean active;
     private AdminRole role;
 }

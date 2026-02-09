@@ -1,6 +1,7 @@
 package com.houseclay.backend.controller;
 
 import com.houseclay.backend.dto.AdminDetailDTO;
+import com.houseclay.backend.dto.AdminSummaryDTO;
 import com.houseclay.backend.dto.AdminInfoDTO;
 import com.houseclay.backend.dto.AdminLoginDTO;
 import com.houseclay.backend.dto.AdminRegisterDTO;
@@ -66,7 +67,7 @@ public class AdminController {
     }
 
     @GetMapping("/list-admins")
-    public Page<AdminDetailDTO> getAllAdmins(
+    public Page<AdminSummaryDTO> getAllAdmins(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestAttribute("authenticatedAdmin") Admin admin) throws APIException {
@@ -77,6 +78,41 @@ public class AdminController {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<AdminDetailDTO> getAdminDetails(
+            @PathVariable String username,
+            @RequestAttribute("authenticatedAdmin") Admin admin) throws APIException {
+        return ResponseEntity.ok(adminService.getAdminDetails(username, admin));
+    }
+
+    @PatchMapping("/{username}/deactivate")
+    public ResponseEntity<?> deactivateAdmin(
+            @PathVariable String username,
+            @RequestAttribute("authenticatedAdmin") Admin admin) throws APIException {
+        try {
+            adminService.deactivateAdmin(username, admin);
+            return ResponseEntity.ok("Admin deactivated successfully");
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("/{username}/activate")
+    public ResponseEntity<?> activateAdmin(
+            @PathVariable String username,
+            @RequestAttribute("authenticatedAdmin") Admin admin) throws APIException {
+        try {
+            adminService.activateAdmin(username, admin);
+            return ResponseEntity.ok("Admin activated successfully");
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
