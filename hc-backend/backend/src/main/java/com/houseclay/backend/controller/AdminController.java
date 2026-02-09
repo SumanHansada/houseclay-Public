@@ -94,7 +94,7 @@ public class AdminController {
         }
     }
 
-    @PatchMapping("/{username}/deactivate")
+    @PutMapping("/{username}/deactivate")
     public ResponseEntity<?> deactivateAdmin(
             @PathVariable String username,
             @RequestAttribute("authenticatedAdmin") Admin admin) throws APIException {
@@ -108,7 +108,7 @@ public class AdminController {
         }
     }
 
-    @PatchMapping("/{username}/activate")
+    @PutMapping("/{username}/activate")
     public ResponseEntity<?> activateAdmin(
             @PathVariable String username,
             @RequestAttribute("authenticatedAdmin") Admin admin) throws APIException {

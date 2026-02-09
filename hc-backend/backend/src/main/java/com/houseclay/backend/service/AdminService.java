@@ -21,6 +21,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -220,6 +221,7 @@ public class AdminService {
         return AdminMapper.toAdminDetailDTO(admin);
     }
 
+    @Transactional
     public void deactivateAdmin(String username, Admin requester) throws APIException {
         if (!AdminRole.SUPER_ADMIN.equals(requester.getRole())) {
             throw new APIException("Unauthorized!", HttpStatus.FORBIDDEN);
