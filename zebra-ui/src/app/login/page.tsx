@@ -17,7 +17,7 @@ import {
 import { useLoginMutation } from "@/store/apiSlice";
 import { RootState } from "@/store/store";
 import RemoteSvg from "@/utility-components/RemoteSvg";
-import { toErrorMessage } from "@/utils/rtkError";
+import { getErrorMessage } from "@/utils/rtkError";
 
 const loginSchema = Yup.object().shape({
   username: Yup.string().required("Username is required"),
@@ -53,8 +53,8 @@ export default function AdminLogin() {
       const from = new URLSearchParams(window.location.search).get("from");
       window.location.replace(from || "/admin/dashboard");
     } catch (err) {
-      console.error("Login failed:", err);
-      dispatch(authFailure(toErrorMessage(err)));
+      console.error("Login failed:", getErrorMessage(err));
+      dispatch(authFailure(getErrorMessage(err)));
       formikHelpers.setSubmitting(false);
     }
   };

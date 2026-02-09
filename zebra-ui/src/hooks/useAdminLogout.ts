@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 
 import { logout as logoutAction } from "@/store/adminAuthSlice";
 import { apiSlice, useLogoutMutation } from "@/store/apiSlice";
-import { toErrorMessage } from "@/utils/rtkError";
+import { getErrorMessage } from "@/utils/rtkError";
 
 export function useAdminLogout() {
   const dispatch = useDispatch();
@@ -18,7 +18,7 @@ export function useAdminLogout() {
       console.log("Logout successful on backend.");
     } catch (err) {
       // Log the formatted error, but proceed with client logout
-      console.error("Logout API failed:", toErrorMessage(err));
+      console.error("Logout API failed:", getErrorMessage(err));
     } finally {
       dispatch(logoutAction());
       dispatch(apiSlice.util.resetApiState());

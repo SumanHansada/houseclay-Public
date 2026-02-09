@@ -1,4 +1,4 @@
-import { Home, UserCheck, Users } from "lucide-react";
+import { Home, UserCheck, UserLock, Users } from "lucide-react";
 import { ReactNode } from "react";
 
 import { ADMIN_ROLES, AdminRole } from "@/interfaces/AdminAuth";
@@ -59,14 +59,22 @@ export const sidebarItems: SidebarItem[] = [
     children: [
       { label: "HouseClay Users", href: "/admin/user-management" },
       {
-        label: "Add new Zebra user",
-        href: "/admin/add-zebra-user",
-        allowedRoles: [ADMIN_ROLES.SUPER_ADMIN],
-      },
-      {
         label: "Add connects",
         href: "/admin/add-connects",
         allowedRoles: [ADMIN_ROLES.SUPER_ADMIN],
+      },
+    ],
+  },
+  {
+    label: "Admin Management",
+    icon: <UserLock size={20} />,
+    href: "#",
+    allowedRoles: [ADMIN_ROLES.SUPER_ADMIN],
+    children: [
+      { label: "Zebra Users", href: "/admin/admin-management" },
+      {
+        label: "Add new Zebra user",
+        href: "/admin/add-zebra-user",
       },
     ],
   },

@@ -15,7 +15,7 @@ import {
 import FormSelectDropdown from "@/form-components/FormSelectDropdown";
 import { ADMIN_ROLES } from "@/interfaces/AdminAuth";
 import { useRegisterMutation } from "@/store/apiSlice";
-import { toErrorMessage } from "@/utils/rtkError";
+import { getErrorMessage } from "@/utils/rtkError";
 
 export interface AddAdminFormValues {
   name: string;
@@ -91,7 +91,7 @@ const AddAdminPage: React.FC = () => {
       toast.success("New Zebra user created successfully!");
       actions.resetForm();
     } catch (err: unknown) {
-      toast.error(toErrorMessage(err));
+      toast.error(getErrorMessage(err));
     }
   };
 

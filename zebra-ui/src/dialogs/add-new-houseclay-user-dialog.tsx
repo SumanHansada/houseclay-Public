@@ -16,7 +16,7 @@ import Spinner from "@/components/Spinner";
 import { FormPhoneField, FormTextField } from "@/form-components";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useCreateHouseclayUserMutation } from "@/store/apiSlice";
-import { toErrorMessage } from "@/utils/rtkError";
+import { getErrorMessage } from "@/utils/rtkError";
 
 interface AddNewHouseclayUserDialogProps {
   id: string;
@@ -64,7 +64,7 @@ export const AddNewHouseclayUserDialog: React.FC<
       toast.success(response);
       closeDialog(id);
     } catch (err: unknown) {
-      toast.error(toErrorMessage(err));
+      toast.error(getErrorMessage(err));
     }
   };
 
