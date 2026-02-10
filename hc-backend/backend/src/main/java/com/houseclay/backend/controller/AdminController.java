@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,7 @@ public class AdminController {
     private AdminService adminService;
 
     @PostMapping("/register")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<?> createAdmin(@Valid @RequestBody AdminRegisterDTO adminRegisterDTO) {
         try {
             adminService.registerAdmin(adminRegisterDTO);
@@ -66,6 +69,7 @@ public class AdminController {
     }
 
     @GetMapping("/list-admins")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<?> getAllAdmins(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -81,6 +85,7 @@ public class AdminController {
     }
 
     @GetMapping("/{username}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<?> getAdminDetails(
             @PathVariable String username,
             @RequestAttribute("authenticatedAdmin") Admin admin) {
@@ -94,6 +99,7 @@ public class AdminController {
     }
 
     @PutMapping("/{username}/deactivate")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<?> deactivateAdmin(
             @PathVariable String username,
             @RequestAttribute("authenticatedAdmin") Admin admin) throws APIException {
@@ -108,6 +114,7 @@ public class AdminController {
     }
 
     @PutMapping("/{username}/activate")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<?> activateAdmin(
             @PathVariable String username,
             @RequestAttribute("authenticatedAdmin") Admin admin) throws APIException {

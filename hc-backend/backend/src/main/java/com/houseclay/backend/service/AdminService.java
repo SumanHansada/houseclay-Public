@@ -206,16 +206,10 @@ public class AdminService {
     }
 
     public Page<AdminSummaryDTO> getAllAdmins(Pageable pageable, Admin requester) throws APIException {
-        if (!AdminRole.SUPER_ADMIN.equals(requester.getRole())) {
-            throw new APIException("Unauthorized!", HttpStatus.FORBIDDEN);
-        }
         return adminRepository.findAll(pageable).map(AdminMapper::toAdminSummaryDTO);
     }
 
     public AdminDetailDTO getAdminDetails(String username, Admin requester) throws APIException {
-        if (!AdminRole.SUPER_ADMIN.equals(requester.getRole())) {
-            throw new APIException("Unauthorized!", HttpStatus.FORBIDDEN);
-        }
         Admin admin = adminRepository.findByUsername(username)
                 .orElseThrow(() -> new APIException("Admin not found", HttpStatus.NOT_FOUND));
         return AdminMapper.toAdminDetailDTO(admin);
@@ -223,9 +217,6 @@ public class AdminService {
 
     @Transactional
     public void deactivateAdmin(String username, Admin requester) throws APIException {
-        if (!AdminRole.SUPER_ADMIN.equals(requester.getRole())) {
-            throw new APIException("Unauthorized!", HttpStatus.FORBIDDEN);
-        }
         Admin admin = adminRepository.findByUsername(username)
                 .orElseThrow(() -> new APIException("Admin not found", HttpStatus.NOT_FOUND));
 
@@ -241,9 +232,6 @@ public class AdminService {
     }
 
     public void activateAdmin(String username, Admin requester) throws APIException {
-        if (!AdminRole.SUPER_ADMIN.equals(requester.getRole())) {
-            throw new APIException("Unauthorized!", HttpStatus.FORBIDDEN);
-        }
         Admin admin = adminRepository.findByUsername(username)
                 .orElseThrow(() -> new APIException("Admin not found", HttpStatus.NOT_FOUND));
 

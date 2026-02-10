@@ -7,6 +7,8 @@ import com.houseclay.backend.utils.Constants;
 import com.houseclay.backend.utils.CookieUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -75,8 +77,13 @@ public class AdminTokenAuthenticationFilter extends OncePerRequestFilter {
         request.setAttribute("authenticatedAdmin", admin);
         request.setAttribute("token", token);
 
+        // Convert AdminRole to GrantedAuthority
+        List<GrantedAuthority> authorities = List.of(
+                new SimpleGrantedAuthority("ROLE_" + admin.getRole().name())
+        );
+
         UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(admin, null, List.of());
+                new UsernamePasswordAuthenticationToken(admin, null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
