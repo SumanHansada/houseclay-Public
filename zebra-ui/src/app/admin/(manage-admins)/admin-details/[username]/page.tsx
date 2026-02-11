@@ -1,4 +1,5 @@
 "use client";
+
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -70,7 +71,7 @@ const ProfilePage: React.FC = () => {
         isLoading={false}
         isError={true}
         error={error}
-        errorMessage="Failed to fetch Admins."
+        errorMessage="Failed to fetch Admin details."
       />
     );
   }

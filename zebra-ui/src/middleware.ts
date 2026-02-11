@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 const COOKIE_NAME = "admin-token";
 
 const protectedPaths = ["/admin"];
-const publicPaths = ["/login"];
+const authPath = "/login";
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get(COOKIE_NAME)?.value;
@@ -17,8 +17,8 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // If trying to access public auth routes WITH token -> Dashboard
-  if (token && publicPaths.includes(pathname)) {
+  // If trying to access auth routes WITH token -> Dashboard
+  if (token && authPath === pathname) {
     return NextResponse.redirect(new URL("/admin/dashboard", request.url));
   }
 

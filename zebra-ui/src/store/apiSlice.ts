@@ -37,7 +37,7 @@ export const apiSlice = createApi({
   endpoints: (builder) => ({
     // ──────────────── AUTH ────────────────
     login: builder.mutation<
-      { name: string; role: string },
+      { name: string; role: string; username: string },
       { username: string; password: string }
     >({
       query: (payload) => ({
@@ -77,10 +77,6 @@ export const apiSlice = createApi({
     }),
 
     // ──────────────── USERS ────────────────
-    getUsersAuthCheck: builder.query<undefined, void>({
-      query: () => "/admin/users",
-    }),
-
     getUsers: builder.query<
       GetAllUsersResponse,
       { page: number; size: number }
@@ -181,7 +177,10 @@ export const apiSlice = createApi({
     }),
 
     // ──────────────── Admins ────────────────
-    getAdminInfo: builder.query<{ name: string; role: string }, void>({
+    getAdminInfo: builder.query<
+      { name: string; role: string; username: string },
+      void
+    >({
       query: () => "/admin/info",
       keepUnusedDataFor: 0,
     }),
@@ -506,7 +505,6 @@ export const {
   useLoginMutation,
   useRegisterMutation,
   useLogoutMutation,
-  useGetUsersAuthCheckQuery,
   useGetUsersQuery,
   useGetUserByPhoneNoQuery,
   useCreateHouseclayUserMutation,

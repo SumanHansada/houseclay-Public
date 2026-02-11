@@ -3,7 +3,6 @@
 import { ChevronDown, UserRound } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import { houseclayIconURL } from "@/common/constants/cdnURLs";
@@ -31,23 +30,18 @@ const Header: React.FC = () => {
     logout: () => onLogout(),
   };
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.replace("/login");
-    }
-  }, [isAuthenticated, router]);
-
   return (
     <header className="flex fixed top-0 left-0 right-0 bg-white z-50 justify-between w-full items-center py-2 shadow-sm px-8 h-16">
       {/* Logo and App Name */}
-      <div className="flex items-center gap-2">
-        <Link href="/" className="flex items-center gap-1">
-          <RemoteSvg src={houseclayIconURL} className="size-6" />
-          <span className="text-red-600 text-lg font-nunito font-bold">
-            ZEBRA | Houseclay
-          </span>
-        </Link>
-      </div>
+      <Link
+        href="/admin/dashboard"
+        className="flex items-center justify-center gap-1 cursor-pointer"
+      >
+        <RemoteSvg src={houseclayIconURL} className="size-6" />
+        <span className="text-red-600 text-lg font-nunito font-bold">
+          ZEBRA | Houseclay
+        </span>
+      </Link>
 
       {isAuthenticated ? (
         <div className="relative mr-20">

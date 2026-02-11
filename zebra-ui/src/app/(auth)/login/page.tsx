@@ -13,6 +13,7 @@ import {
   authFailure,
   authStarted,
   authSuccess,
+  setAdminInfo,
   setAdminRole,
 } from "@/store/adminAuthSlice";
 import { useLoginMutation } from "@/store/apiSlice";
@@ -52,6 +53,9 @@ export default function AdminLogin() {
 
       dispatch(authSuccess());
       dispatch(setAdminRole(response.role as AdminRole));
+      dispatch(
+        setAdminInfo({ name: response.name, username: response.username }),
+      );
       router.replace("/admin/dashboard");
     } catch (err) {
       console.error("Login failed:", getErrorMessage(err));

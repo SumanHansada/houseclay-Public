@@ -18,7 +18,7 @@ function normalizeIndianPhone(raw: string) {
   return `+${digits}`;
 }
 
-export default function AddConnectsPage() {
+export const AddConnects = () => {
   const [userPhoneNo, setUserPhoneNo] = useState("");
   const [connectsToAdd, setConnectsToAdd] = useState<number>(0);
 
@@ -158,4 +158,4 @@ export default function AddConnectsPage() {
       </div>
     </div>
   );
-}
+};

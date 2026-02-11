@@ -8,6 +8,7 @@ import Spinner from "@/components/Spinner";
 import { AdminRole } from "@/interfaces/AdminAuth";
 import {
   authFailure,
+  setAdminInfo,
   setAdminRole,
   setIsAuthenticated,
 } from "@/store/adminAuthSlice";
@@ -32,6 +33,7 @@ export default function AuthProvider({
       // Session validated by backend
       dispatch(setIsAuthenticated(true));
       dispatch(setAdminRole(data.role as AdminRole));
+      dispatch(setAdminInfo({ name: data.name, username: data.username }));
     } else if (error) {
       // Session invalid (Cookie expired or tampered)
       dispatch(authFailure("Session expired"));
