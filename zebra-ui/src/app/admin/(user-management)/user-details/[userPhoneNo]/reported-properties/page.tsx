@@ -9,7 +9,7 @@ import {
   createDefaultPropertyActions,
 } from "@/utils/table/buildPropertyColumns";
 
-import { PaginatedPropertiesTable } from "../../components/PaginatedPropertiesTable";
+import { PaginatedPropertiesTable } from "../components/PaginatedPropertiesTable";
 
 export interface SerializedPropertyRow extends PropertyInfo {
   _serial: number;

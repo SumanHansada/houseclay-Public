@@ -1,5 +1,4 @@
 "use client";
-
 import { useParams, useRouter } from "next/navigation";
 
 import { PropertyInfo } from "@/interfaces/PropertyInfo";
@@ -9,23 +8,22 @@ import {
   createDefaultPropertyActions,
 } from "@/utils/table/buildPropertyColumns";
 
-import { PaginatedPropertiesTable } from "../../components/PaginatedPropertiesTable";
+import { PaginatedPropertiesTable } from "../components/PaginatedPropertiesTable";
 
 interface SerializedPropertyRow extends PropertyInfo {
   _serial: number;
 }
-
-const ViewedPropertiesPage: React.FC = () => {
-  const router = useRouter();
+const ContactedPropertiesPage: React.FC = () => {
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
+  const router = useRouter();
   const { data, isLoading } = useGetUserByPhoneNoQuery({
     phoneNo: userPhoneNo,
   });
 
   // parent layout already ensures data is present
-  const { viewedProperties = [] } = data!.user;
+  const { contactedProperties = [] } = data!.user;
 
-  const rows: SerializedPropertyRow[] = viewedProperties.map(
+  const rows: SerializedPropertyRow[] = contactedProperties.map(
     (propertyInfo, index) => ({
       ...propertyInfo,
       _serial: index + 1,
@@ -51,7 +49,7 @@ const ViewedPropertiesPage: React.FC = () => {
   return (
     <div className="h-full">
       <PaginatedPropertiesTable
-        tableTitle="Viewed Properties"
+        tableTitle="Contacted Properties"
         columns={columns}
         rows={rows}
         isLoading={isLoading}
@@ -60,4 +58,4 @@ const ViewedPropertiesPage: React.FC = () => {
   );
 };
 
-export default ViewedPropertiesPage;
+export default ContactedPropertiesPage;

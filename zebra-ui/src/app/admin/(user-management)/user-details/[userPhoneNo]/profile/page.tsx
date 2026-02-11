@@ -86,7 +86,7 @@ const ProfilePage: React.FC = () => {
   return (
     <div
       data-testid={userDetailsTestIds.getTabPageId(UserDetailsTabEnum.PROFILE)}
-      className="px-16 py-8 bg-gray-100 h-full"
+      className="px-16 py-8 bg-gray-100 flex-1 flex flex-col gap-6 overflow-hidden"
     >
       <div className="p-5 rounded-xl bg-white shadow-sm flex flex-col gap-4">
         <h2 className="text-3xl flex items-center w-full justify-between">

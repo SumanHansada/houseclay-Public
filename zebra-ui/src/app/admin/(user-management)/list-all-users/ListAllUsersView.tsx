@@ -7,22 +7,21 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@/base-components";
 import AsyncFallback from "@/components/AsyncFallback";
 import { Column, DataTable } from "@/components/DataTable";
-import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
 import { Pagination } from "@/components/Pagination";
 import { SearchBar } from "@/components/SearchBar";
-import Spinner from "@/components/Spinner";
 import { RenderUserStatus } from "@/components/status/RenderUserStatus";
 import { AddNewHouseclayUserDialog } from "@/dialogs/add-new-houseclay-user-dialog";
 import { UserInfo } from "@/interfaces/User";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useGetUserByPhoneNoQuery, useGetUsersQuery } from "@/store/apiSlice";
+import { Popover } from "@/utility-components";
 import { createTestIdFactory } from "@/utils/testIds";
 
 const ROWS_PER_PAGE = 12;
 const userManagementTestIds = createTestIdFactory("User Management");
 const ADD_NEW_USER_DIALOG_ID = "add-new-houseclay-user-dialog";
 
-export const UsersManagement = () => {
+export const ListAllUsersView = () => {
   const router = useRouter();
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -148,23 +147,55 @@ export const UsersManagement = () => {
       label: "Action",
       render: (user) => (
         <div className="flex items-center gap-1">
-          <IconButtonWithTooltip
-            onClick={() => router.push(`/admin/list-property/${user.phoneNo}`)}
-            Icon={PlusCircle}
-            tooltipActive={true}
-            tooltip="List Property for User"
-            classNameIconCustomize="size-5"
-          />
-          <IconButtonWithTooltip
-            onClick={() => viewProfile(user.phoneNo)}
-            Icon={Eye}
-            tooltipActive={true}
-            tooltip="View Profile"
-            testId={userManagementTestIds.genericId(
-              "view profile",
-              user.phoneNo,
-            )}
-          />
+          <Popover
+            id={`tooltip-${Math.random()}`}
+            trigger="hover"
+            align="start"
+            offset={0}
+            portal={true}
+            zIndex={50}
+            className="inline-flex"
+            panelClassName="bg-gray-500 text-white text-xs px-2 py-1 rounded shadow-md pointer-events-none"
+            content="List Property for User"
+          >
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push(`/admin/list-property/${user.phoneNo}`);
+              }}
+              aria-label="list property icon button"
+              data-testid="list-property-button"
+              className="relative flex items-center justify-center cursor-pointer transition-colors hover:bg-gray-100 rounded-full p-1"
+            >
+              <PlusCircle className="size-5 text-gray-600" />
+            </button>
+          </Popover>
+          <Popover
+            id={`tooltip-${Math.random()}`}
+            trigger="hover"
+            align="start"
+            offset={0}
+            portal={true}
+            zIndex={50}
+            className="inline-flex"
+            panelClassName="bg-gray-500 text-white text-xs px-2 py-1 rounded shadow-md pointer-events-none"
+            content="View User Profile"
+          >
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                viewProfile(user.phoneNo);
+              }}
+              aria-label="view profile icon button"
+              data-testid={userManagementTestIds.genericId(
+                "view profile",
+                user.phoneNo,
+              )}
+              className="relative flex items-center justify-center cursor-pointer transition-colors hover:bg-gray-100 rounded-full p-1"
+            >
+              <Eye className="size-6 text-gray-600" />
+            </button>
+          </Popover>
         </div>
       ),
     },
@@ -210,79 +241,59 @@ export const UsersManagement = () => {
 
   return (
     <>
-      <div className="flex flex-col h-[calc(100vh-4rem)]">
-        <div className="flex flex-col flex-1 h-full">
-          {/* Sticky top filter bar */}
-          <div className="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm flex justify-between items-center py-4 px-16">
-            <h1 className="text-2xl font-medium">
-              {isSearchMode && userCount === 0
-                ? "Houseclay Users - No results found"
-                : `Houseclay Users - ${userCount} ${userLabel}`}
-            </h1>
-            <div className="flex items-center gap-5">
-              <SearchBar
-                searchText={searchText}
-                onSearchTextChange={setSearchText}
-                onSearch={handleSearchClick}
-                onClear={handleClearSearch}
-                isSearching={isGlobalFetching}
-              />
-              <Button
-                variant="primary"
-                size="custom"
-                className="rounded-full p-2 text-nowrap"
-                onClick={() => openDialog(ADD_NEW_USER_DIALOG_ID)}
-                leftIcon={<CirclePlus size={20} />}
-              >
-                Add new User
-              </Button>
-            </div>
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Sticky top filter bar */}
+        <div className="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm flex justify-between items-center py-4 px-16">
+          <h1 className="text-2xl font-medium">
+            {isSearchMode && userCount === 0
+              ? "Houseclay Users - No results found"
+              : `Houseclay Users - ${userCount} ${userLabel}`}
+          </h1>
+          <div className="flex items-center gap-5">
+            <SearchBar
+              searchText={searchText}
+              onSearchTextChange={setSearchText}
+              onSearch={handleSearchClick}
+              onClear={handleClearSearch}
+              isSearching={isGlobalFetching}
+            />
+            <Button
+              variant="primary"
+              size="custom"
+              className="rounded-full p-2 text-nowrap"
+              onClick={() => openDialog(ADD_NEW_USER_DIALOG_ID)}
+              leftIcon={<CirclePlus size={20} />}
+            >
+              Add new User
+            </Button>
           </div>
+        </div>
 
-          {/* Table area */}
-          <div className="flex flex-1 bg-gray-100 py-8 px-16 overflow-hidden">
-            <div className="flex flex-col flex-1 bg-white shadow-sm rounded-xl p-6 relative overflow-hidden">
-              {/* Loading Overlay */}
-              {isGlobalFetching && (
-                <div className="absolute inset-0 z-20 bg-white/50 flex items-center justify-center backdrop-blur-sm transition-all duration-300">
-                  <div className="bg-white p-4 rounded-full shadow-lg border flex items-center justify-center">
-                    <Spinner size="lg" />
-                  </div>
-                </div>
-              )}
-
-              <div className="flex-1 overflow-auto">
-                <div
-                  className={
-                    isGlobalFetching
-                      ? "opacity-50 pointer-events-none"
-                      : "opacity-100"
-                  }
-                >
-                  <DataTable
-                    columns={columns}
-                    data={tableData}
-                    getRowId={(user) => user.phoneNo}
-                    noDataMessage={
-                      isSearchMode
-                        ? "No user found with that phone number."
-                        : "No User Data Found!"
-                    }
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Sticky bottom pagination */}
-          <div className="sticky bottom-0 z-10 bg-white border-t border-gray-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] py-4 px-16">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
+        {/* Table area */}
+        <div className="flex-1 flex flex-col bg-gray-100 py-8 px-16 overflow-hidden">
+          <div className="flex-1 flex flex-col bg-white shadow-sm rounded-xl p-2 relative overflow-hidden">
+            <DataTable
+              columns={columns}
+              data={tableData}
+              getRowId={(user) => user.phoneNo}
+              noDataMessage={
+                isSearchMode
+                  ? "No user found with that phone number."
+                  : "No User Data Found!"
+              }
               isLoading={isGlobalFetching}
             />
           </div>
+        </div>
+
+        {/* Sticky bottom pagination */}
+        <div className="sticky bottom-0 z-10 bg-white border-t border-gray-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] py-4 px-16">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            isLoading={isGlobalFetching}
+          />
         </div>
       </div>
       {isDialogOpen(ADD_NEW_USER_DIALOG_ID) && (

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 
-import { NumberField, PhoneField } from "@/base-components";
+import { Button, NumberField, PhoneField } from "@/base-components";
 import { useAddConnectsMutation } from "@/store/apiSlice";
 import { getErrorMessage } from "@/utils/rtkError";
 
@@ -96,64 +96,61 @@ export const AddConnects = () => {
   };
 
   return (
-    <div className="h-full w-full flex flex-col">
-      <div className="flex-1 h-full w-full bg-white">
-        <div className="px-6 py-8">
-          <h1 className="text-2xl font-semibold mb-6">Add Connects</h1>
+    <div className="flex-1 flex flex-col bg-white">
+      <div className="px-6 py-8">
+        <h1 className="text-2xl font-semibold mb-6">Add Connects</h1>
 
-          <div className="flex gap-2 w-full">
-            <PhoneField
-              id="phoneNumber"
-              name="phoneNumber"
-              label="Phone Number"
-              defaultCountry="in"
-              placeholder="Enter phone number"
-              value={userPhoneNo}
-              onChange={(val: string) => setUserPhoneNo(val)}
-              onBlur={() =>
-                setTouched((touched) => ({ ...touched, phone: true }))
-              }
-              className="border border-gray-300 rounded-xl px-3 py-2.5 focus:ring-red-500 focus:border-red-500 w-full"
-              required
-              error={phoneError || undefined}
-            />
+        <div className="flex gap-2 w-full">
+          <PhoneField
+            id="phoneNumber"
+            name="phoneNumber"
+            label="Phone Number"
+            defaultCountry="in"
+            placeholder="Enter phone number"
+            value={userPhoneNo}
+            onChange={(val: string) => setUserPhoneNo(val)}
+            onBlur={() =>
+              setTouched((touched) => ({ ...touched, phone: true }))
+            }
+            className="border border-gray-300 rounded-xl px-3 py-2.5 focus:ring-red-500 focus:border-red-500 w-full"
+            required
+            error={phoneError || undefined}
+          />
 
-            <NumberField
-              id="connects"
-              name="connects"
-              label="Connects to add"
-              value={connectsToAdd}
-              min={0}
-              max={100}
-              step={1}
-              onChange={(n) => setConnectsToAdd(Number.isFinite(n) ? n : 0)}
-              onBlur={() =>
-                setTouched((touched) => ({ ...touched, connects: true }))
-              }
-              className="px-3 focus:ring-red-500 focus:border-red-500 w-full"
-              required
-              error={connectsError || undefined}
-            />
-          </div>
+          <NumberField
+            id="connects"
+            name="connects"
+            label="Connects to add"
+            value={connectsToAdd}
+            min={0}
+            max={100}
+            step={1}
+            onChange={(n) => setConnectsToAdd(Number.isFinite(n) ? n : 0)}
+            onBlur={() =>
+              setTouched((touched) => ({ ...touched, connects: true }))
+            }
+            className="px-3 focus:ring-red-500 focus:border-red-500 w-full"
+            required
+            error={connectsError || undefined}
+          />
+        </div>
 
-          <div className="flex gap-3 pt-2 justify-end">
-            <button
-              type="button"
-              onClick={handleAdd}
-              disabled={!canSubmit}
-              className="border border-red-500 text-red-500 py-3 px-6 text-base font-medium rounded-xl hover:bg-red-500 hover:text-white disabled:opacity-50"
-            >
-              {isLoading ? "Adding…" : "Add"}
-            </button>
+        <div className="flex gap-3 pt-2 justify-end">
+          <Button
+            onClick={handleAdd}
+            disabled={!canSubmit}
+            className="rounded-xl disabled:opacity-50 disabled:cursor-not-allowed px-8 text-lg"
+          >
+            {isLoading ? "Adding…" : "Add"}
+          </Button>
 
-            <button
-              type="button"
-              onClick={handleClear}
-              className="border border-gray-300 text-gray-700 py-3 px-6 text-base font-medium rounded-xl hover:bg-gray-100"
-            >
-              Clear
-            </button>
-          </div>
+          <Button
+            variant="secondary"
+            onClick={handleClear}
+            className="rounded-xl px-8 text-lg hover:bg-gray-200 transition-colors"
+          >
+            Clear
+          </Button>
         </div>
       </div>
     </div>

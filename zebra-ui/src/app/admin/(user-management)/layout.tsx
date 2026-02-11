@@ -7,6 +7,6 @@ export default function UserManagementLayout({
   children: React.ReactNode;
 }) {
   return (
-    <RoleGuard allowedRoles={PERMISSIONS.MANAGE_USERS}>{children}</RoleGuard>
+    <RoleGuard allowedRoles={PERMISSIONS.USER_MANAGEMENT}>{children}</RoleGuard>
   );
 }

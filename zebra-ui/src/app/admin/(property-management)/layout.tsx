@@ -7,7 +7,7 @@ export default function PropertyManagementLayout({
   children: React.ReactNode;
 }) {
   return (
-    <RoleGuard allowedRoles={PERMISSIONS.MANAGE_PROPERTIES}>
+    <RoleGuard allowedRoles={PERMISSIONS.PROPERTY_MANAGEMENT}>
       {children}
     </RoleGuard>
   );

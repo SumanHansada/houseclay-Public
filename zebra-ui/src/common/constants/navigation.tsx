@@ -24,17 +24,17 @@ export const sidebarItems: SidebarItem[] = [
     label: "Properties",
     icon: <Home size={20} />,
     href: "#",
-    allowedRoles: PERMISSIONS.MANAGE_PROPERTIES,
+    allowedRoles: PERMISSIONS.PROPERTY_MANAGEMENT,
     children: [
       {
         label: "View All Properties",
         href: "/admin/view-all-properties",
-        allowedRoles: PERMISSIONS.MANAGE_PROPERTIES,
+        allowedRoles: PERMISSIONS.PROPERTY_MANAGEMENT,
       },
       {
         label: "Property Verification",
         href: "/admin/property-verification",
-        allowedRoles: PERMISSIONS.MANAGE_PROPERTIES,
+        allowedRoles: PERMISSIONS.PROPERTY_MANAGEMENT,
       },
     ],
   },
@@ -65,12 +65,12 @@ export const sidebarItems: SidebarItem[] = [
     label: "User Management",
     icon: <Users size={20} />,
     href: "#",
-    allowedRoles: PERMISSIONS.MANAGE_USERS,
+    allowedRoles: PERMISSIONS.USER_MANAGEMENT,
     children: [
       {
-        label: "Houseclay Users",
-        href: "/admin/user-management",
-        allowedRoles: PERMISSIONS.MANAGE_USERS,
+        label: "List All - Houseclay Users",
+        href: "/admin/list-all-users",
+        allowedRoles: PERMISSIONS.USER_MANAGEMENT,
       },
       {
         label: "Add connects",

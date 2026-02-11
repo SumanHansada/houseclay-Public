@@ -1,32 +1,30 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
 
-import { UserDetailsTabEnum } from "@/common/enums";
 import { PropertyInfo } from "@/interfaces/PropertyInfo";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
 import {
   buildPropertyColumns,
   createDefaultPropertyActions,
 } from "@/utils/table/buildPropertyColumns";
-import { userDetailsTestIds } from "@/utils/testIds";
 
-import { PaginatedPropertiesTable } from "../../components/PaginatedPropertiesTable";
+import { PaginatedPropertiesTable } from "../components/PaginatedPropertiesTable";
 
 interface SerializedPropertyRow extends PropertyInfo {
   _serial: number;
 }
 
-const OwnedPropertiesPage: React.FC = () => {
-  const { userPhoneNo } = useParams() as { userPhoneNo: string };
+const ShortlistedPropertiesPage: React.FC = () => {
   const router = useRouter();
+  const { userPhoneNo } = useParams() as { userPhoneNo: string };
   const { data, isLoading } = useGetUserByPhoneNoQuery({
     phoneNo: userPhoneNo,
   });
 
   // parent layout already ensures data is present
-  const { ownedProperties = [] } = data!.user;
+  const { shortlistedProperties = [] } = data!.user;
 
-  const rows: SerializedPropertyRow[] = ownedProperties.map(
+  const rows: SerializedPropertyRow[] = shortlistedProperties.map(
     (propertyInfo, index) => ({
       ...propertyInfo,
       _serial: index + 1,
@@ -50,12 +48,9 @@ const OwnedPropertiesPage: React.FC = () => {
   );
 
   return (
-    <div
-      className="h-full"
-      data-testid={userDetailsTestIds.getTabPageId(UserDetailsTabEnum.OWNED)}
-    >
+    <div className="h-full">
       <PaginatedPropertiesTable
-        tableTitle="Owned Properties"
+        tableTitle="Shortlisted Properties"
         columns={columns}
         rows={rows}
         isLoading={isLoading}
@@ -64,4 +59,4 @@ const OwnedPropertiesPage: React.FC = () => {
   );
 };
 
-export default OwnedPropertiesPage;
+export default ShortlistedPropertiesPage;

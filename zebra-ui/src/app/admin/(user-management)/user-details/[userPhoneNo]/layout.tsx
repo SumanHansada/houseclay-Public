@@ -57,7 +57,7 @@ export default function UserDetailsLayout({
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)]">
+    <div className="flex-1 flex flex-col overflow-hidden">
       <Tabs onTabChange={handleTabChange} defaultActive={activeTab}>
         <TabHeader
           containerClassName="border-b border-gray-200"
@@ -76,7 +76,7 @@ export default function UserDetailsLayout({
           ))}
         </TabHeader>
       </Tabs>
-      <div className="flex-1 overflow-auto">{children}</div>
+      <div className="flex-1 flex flex-col overflow-hidden">{children}</div>
     </div>
   );
 }
