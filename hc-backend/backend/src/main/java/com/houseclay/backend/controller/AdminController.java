@@ -85,7 +85,6 @@ public class AdminController {
     }
 
     @GetMapping("/{username}")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<?> getAdminDetails(
             @PathVariable String username,
             @RequestAttribute("authenticatedAdmin") Admin admin) {
