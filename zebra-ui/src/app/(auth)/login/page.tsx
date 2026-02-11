@@ -1,6 +1,7 @@
 "use client";
 
 import { Form, Formik, FormikHelpers } from "formik";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
@@ -32,6 +33,7 @@ interface LoginFormValues {
 
 export default function AdminLogin() {
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const { authError } = useSelector((state: RootState) => state.adminAuth);
 
@@ -50,8 +52,7 @@ export default function AdminLogin() {
 
       dispatch(authSuccess());
       dispatch(setAdminRole(response.role as AdminRole));
-      const from = new URLSearchParams(window.location.search).get("from");
-      window.location.replace(from || "/admin/dashboard");
+      router.replace("/admin/dashboard");
     } catch (err) {
       console.error("Login failed:", getErrorMessage(err));
       dispatch(authFailure(getErrorMessage(err)));

@@ -3,9 +3,13 @@ import {
   FetchArgs,
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
+import { Mutex } from "async-mutex";
 
 import { BASE_API_URL } from "@/common/constants";
 import { logout as logoutAction } from "@/store/adminAuthSlice";
+
+// Create a mutex to prevent multiple redirects if multiple queries fail simultaneously
+const mutex = new Mutex();
 
 /**
  * A thin wrapper around RTK Query’s `fetchBaseQuery`.
@@ -37,27 +41,45 @@ export const baseQueryWithAuth: BaseQueryFn<
   unknown,
   unknown
 > = async (args, api, extra) => {
-  const res = await rawBaseQuery(args, api, extra);
+  const result = await rawBaseQuery(args, api, extra);
 
-  // status can be number | "FETCH_ERROR" | "PARSING_ERROR" | "CUSTOM_ERROR"
-  const statusCode =
-    typeof res.error?.status === "number" ? res.error.status : undefined;
+  const status = result.error?.status;
 
-  if (statusCode === 401 || statusCode === 403) {
-    // 1) Ask backend to clear the HttpOnly cookie (no throw; returns {data|error})
-    await rawBaseQuery({ url: "/admin/logout", method: "POST" }, api, extra);
+  // Handle 401 (Token Expired / Invalid)
+  if (status === 401) {
+    // Check if we are already locking (to avoid spamming logout)
+    if (!mutex.isLocked()) {
+      const release = await mutex.acquire();
+      try {
+        // Optional: Attempt to tell backend to clear cookie (fire and forget)
+        // We don't await this or care if it fails, because we are nuking the session anyway
+        rawBaseQuery({ url: "/admin/logout", method: "POST" }, api, extra);
 
-    // 2) Clear local UI state
-    api.dispatch(logoutAction());
+        // Clear Redux State
+        api.dispatch(logoutAction());
 
-    // 3) Hard redirect to login
-    if (typeof window !== "undefined") {
-      const from = window.location.pathname + window.location.search;
-      window.location.replace(`/login?from=${encodeURIComponent(from)}`);
+        // Hard Redirect to Login
+        if (typeof window !== "undefined") {
+          // Use window.location to ensure a full state flush
+          window.location.href = `/login?from=${encodeURIComponent(window.location.pathname)}`;
+        }
+      } finally {
+        release();
+      }
     }
   }
 
-  return res;
+  // Handle 403 (Forbidden - Role Mismatch)
+  if (status === 403) {
+    // Do NOT logout. The user is authenticated, just unauthorized for this specific action.
+    if (typeof window !== "undefined") {
+      // Soft redirect using Next.js router would be better here if you can access it,
+      // but window.location is safe for baseQuery.
+      window.location.href = "/admin/unauthorized";
+    }
+  }
+
+  return result;
 };
 
 /**

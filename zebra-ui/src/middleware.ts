@@ -1,49 +1,30 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-// --- CONFIGURATION ---
-const publicPaths = ["/", "/login", "/register"];
-const adminRoot = "/admin/dashboard";
-const loginPath = "/login";
+const COOKIE_NAME = "admin-token";
+
+const protectedPaths = ["/admin"];
+const publicPaths = ["/login"];
 
 export function middleware(request: NextRequest) {
+  const token = request.cookies.get(COOKIE_NAME)?.value;
   const { pathname } = request.nextUrl;
-  const token = request.cookies.get("admin-token")?.value;
 
-  // Handle the root path "/"
-  if (pathname === "/") {
-    const url = request.nextUrl.clone();
-    // If logged in, go to dashboard. If not, go to login.
-    url.pathname = token ? adminRoot : loginPath;
-    return NextResponse.redirect(url);
+  // If trying to access protected routes without token -> Login
+  if (!token && protectedPaths.some((path) => pathname.startsWith(path))) {
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("from", pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
-  // Handle public paths (login/register)
-  if (publicPaths.includes(pathname)) {
-    // If logged in, redirect away from public paths to the dashboard
-    if (token) {
-      const url = request.nextUrl.clone();
-      url.pathname = adminRoot;
-      return NextResponse.redirect(url);
-    }
-    // If not logged in, allow access to public paths
-    return NextResponse.next();
+  // If trying to access public auth routes WITH token -> Dashboard
+  if (token && publicPaths.includes(pathname)) {
+    return NextResponse.redirect(new URL("/admin/dashboard", request.url));
   }
 
-  // Handle protected admin paths (everything else)
-  // If no token and not a public path, redirect to login
-  if (!token) {
-    const url = request.nextUrl.clone();
-    url.pathname = loginPath;
-    url.searchParams.set("from", pathname);
-    return NextResponse.redirect(url);
-  }
-
-  // If token exists, allow access to the protected path
   return NextResponse.next();
 }
 
 export const config = {
-  // Match all paths except for static assets and API routes
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/login", "/register"],
 };

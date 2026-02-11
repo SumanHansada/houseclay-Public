@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { setupListeners } from "@reduxjs/toolkit/query";
 import { persistReducer, persistStore } from "redux-persist";
 import type { WebStorage } from "redux-persist/es/types";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
@@ -85,17 +86,6 @@ const propertySearchPersistConfig = {
   ], // Persist all fields
 };
 
-const adminAuthPersistConfig = {
-  key: "adminAuth",
-  storage,
-  whitelist: ["isAuthenticated", "role"],
-};
-
-const persistedAdminAuthReducer = persistReducer(
-  adminAuthPersistConfig,
-  adminAuthReducer,
-);
-
 const persistedListPropertyReducer = persistReducer(
   listPropertyPersistConfig,
   listPropertyReducer,
@@ -114,7 +104,7 @@ const persistedPropertySearchReducer = persistReducer(
 export function makeStore() {
   return configureStore({
     reducer: {
-      adminAuth: persistedAdminAuthReducer,
+      adminAuth: adminAuthReducer,
       listProperty: persistedListPropertyReducer,
       editProperty: persistedEditPropertyReducer,
       propertyDetails: propertyDetailsReducer,
@@ -135,6 +125,9 @@ export function makeStore() {
 
 // Create a store instance
 export const store = makeStore();
+
+// enables refetchOnFocus and refetchOnReconnect - setupListeners adds one global event listener to the window for focus and online
+setupListeners(store.dispatch);
 
 // Create persistor
 export const persistor = persistStore(store);

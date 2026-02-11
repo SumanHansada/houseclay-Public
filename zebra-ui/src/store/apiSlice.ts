@@ -181,6 +181,11 @@ export const apiSlice = createApi({
     }),
 
     // ──────────────── Admins ────────────────
+    getAdminInfo: builder.query<{ name: string; role: string }, void>({
+      query: () => "/admin/info",
+      keepUnusedDataFor: 0,
+    }),
+
     getAdmins: builder.query<
       GetAllAdminsResponse,
       { page: number; size: number }
@@ -508,6 +513,7 @@ export const {
   useBlacklistUserMutation,
   useActivateUserMutation,
   useTagBrokerMutation,
+  useGetAdminInfoQuery,
   useGetAdminsQuery,
   useGetAdminByUsernameQuery,
   useActivateAdminMutation,

@@ -1,9 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import toast from "react-hot-toast";
 
 import { NumberField, PhoneField } from "@/base-components";
 import { useAddConnectsMutation } from "@/store/apiSlice";
+import { getErrorMessage } from "@/utils/rtkError";
 
 function digitsOnly(s: string) {
   return s.replace(/\D/g, "");
@@ -75,12 +77,14 @@ export default function AddConnectsPage() {
 
     const phoneNo = normalizeIndianPhone(userPhoneNo);
     try {
-      console.log(phoneNo, connectsToAdd);
       // Adjust payload keys if your API expects different names
       await addConnects({ phoneNo, connectCount: connectsToAdd }).unwrap();
+      toast.success("Connects added successfully!");
       handleClear();
-    } catch (e) {
-      console.error(e);
+    } catch (err: unknown) {
+      console.error(err);
+      toast.error(getErrorMessage(err));
+      handleClear();
     }
   };
 
