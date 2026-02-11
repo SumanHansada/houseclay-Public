@@ -11,6 +11,7 @@ public class AdminMapper {
         AdminInfoDTO adminInfoDTO = new AdminInfoDTO();
         adminInfoDTO.setName(admin.getName());
         adminInfoDTO.setRole(admin.getRole());
+        adminInfoDTO.setUsername(admin.getUsername());
         return adminInfoDTO;
     }
 
