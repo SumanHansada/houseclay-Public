@@ -7,6 +7,8 @@ export default function AdminManagementLayout({
   children: React.ReactNode;
 }) {
   return (
-    <RoleGuard allowedRoles={PERMISSIONS.MANAGE_ADMINS}>{children}</RoleGuard>
+    <RoleGuard allowedRoles={PERMISSIONS.ADMIN_MANAGEMENT}>
+      {children}
+    </RoleGuard>
   );
 }

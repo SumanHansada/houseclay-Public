@@ -7,18 +7,17 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@/base-components";
 import AsyncFallback from "@/components/AsyncFallback";
 import { Column, DataTable } from "@/components/DataTable";
+import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
 import { Pagination } from "@/components/Pagination";
+import { Pill } from "@/components/Pill";
 import { SearchBar } from "@/components/SearchBar";
-import { RenderUserStatus } from "@/components/status/RenderUserStatus";
 import { AddNewHouseclayUserDialog } from "@/dialogs/add-new-houseclay-user-dialog";
 import { UserInfo } from "@/interfaces/User";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useGetUserByPhoneNoQuery, useGetUsersQuery } from "@/store/apiSlice";
-import { Popover } from "@/utility-components";
-import { createTestIdFactory } from "@/utils/testIds";
 
 const ROWS_PER_PAGE = 12;
-const userManagementTestIds = createTestIdFactory("User Management");
+// const userManagementTestIds = createTestIdFactory("User Management");
 const ADD_NEW_USER_DIALOG_ID = "add-new-houseclay-user-dialog";
 
 export const ListAllUsersView = () => {
@@ -127,8 +126,11 @@ export const ListAllUsersView = () => {
     setCurrentPage(1);
   };
 
-  const viewProfile = (phoneNo: string) => {
+  const handleView = (phoneNo: string) => {
     router.push(`/admin/user-details/${phoneNo}`);
+  };
+  const handleAddProperty = (phoneNo: string) => {
+    router.push(`/admin/list-property/${phoneNo}`);
   };
 
   // Columns Configuration
@@ -140,81 +142,37 @@ export const ListAllUsersView = () => {
     {
       key: "blacklisted",
       label: "Status",
-      render: (user) => <RenderUserStatus isBlacklisted={user.blacklisted} />,
+      render: (user) =>
+        user.blacklisted ? (
+          <Pill color="red">Blacklisted</Pill>
+        ) : (
+          <Pill color="green">Active</Pill>
+        ),
     },
     {
       key: "action",
       label: "Action",
       render: (user) => (
-        <div className="flex items-center gap-1">
-          <Popover
-            id={`tooltip-${Math.random()}`}
-            trigger="hover"
-            align="start"
-            offset={0}
-            portal={true}
-            zIndex={50}
-            className="inline-flex"
-            panelClassName="bg-gray-500 text-white text-xs px-2 py-1 rounded shadow-md pointer-events-none"
-            content="List Property for User"
-          >
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                router.push(`/admin/list-property/${user.phoneNo}`);
-              }}
-              aria-label="list property icon button"
-              data-testid="list-property-button"
-              className="relative flex items-center justify-center cursor-pointer transition-colors hover:bg-gray-100 rounded-full p-1"
-            >
-              <PlusCircle className="size-5 text-gray-600" />
-            </button>
-          </Popover>
-          <Popover
-            id={`tooltip-${Math.random()}`}
-            trigger="hover"
-            align="start"
-            offset={0}
-            portal={true}
-            zIndex={50}
-            className="inline-flex"
-            panelClassName="bg-gray-500 text-white text-xs px-2 py-1 rounded shadow-md pointer-events-none"
-            content="View User Profile"
-          >
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                viewProfile(user.phoneNo);
-              }}
-              aria-label="view profile icon button"
-              data-testid={userManagementTestIds.genericId(
-                "view profile",
-                user.phoneNo,
-              )}
-              className="relative flex items-center justify-center cursor-pointer transition-colors hover:bg-gray-100 rounded-full p-1"
-            >
-              <Eye className="size-6 text-gray-600" />
-            </button>
-          </Popover>
+        <div className="flex items-center">
+          <IconButtonWithTooltip
+            onClick={() => handleAddProperty(user.phoneNo)}
+            icon={PlusCircle}
+            tooltip="Add Property for User"
+            iconClassName="size-4 text-gray-600"
+          />
+          <IconButtonWithTooltip
+            onClick={() => handleView(user.phoneNo)}
+            icon={Eye}
+            tooltip="View Profile"
+          />
         </div>
       ),
     },
   ];
 
-  const getHeadingCountAndLabel = () => {
-    if (isSearchMode) {
-      const count = tableData.length;
-      if (count === 0) {
-        return { count: 0, label: "No results found" };
-      }
-      return { count, label: count === 1 ? "user" : "users" };
-    } else {
-      const total = paginatedUserData?.totalElements || 0;
-      return { count: total, label: total === 1 ? "user" : "users" };
-    }
-  };
-
-  const { count: userCount, label: userLabel } = getHeadingCountAndLabel();
+  const userCount = isSearchMode
+    ? tableData.length
+    : paginatedUserData?.totalElements || 0;
 
   // Initial Hard Loading State
   if (isGlobalLoading) {
@@ -243,12 +201,8 @@ export const ListAllUsersView = () => {
     <>
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Sticky top filter bar */}
-        <div className="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm flex justify-between items-center py-4 px-16">
-          <h1 className="text-2xl font-medium">
-            {isSearchMode && userCount === 0
-              ? "Houseclay Users - No results found"
-              : `Houseclay Users - ${userCount} ${userLabel}`}
-          </h1>
+        <div className="h-16 sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm flex justify-between items-center px-8">
+          <h1 className="text-2xl font-medium">User Management</h1>
           <div className="flex items-center gap-5">
             <SearchBar
               searchText={searchText}
@@ -270,19 +224,31 @@ export const ListAllUsersView = () => {
         </div>
 
         {/* Table area */}
-        <div className="flex-1 flex flex-col bg-gray-100 py-8 px-16 overflow-hidden">
-          <div className="flex-1 flex flex-col bg-white shadow-sm rounded-xl p-2 relative overflow-hidden">
-            <DataTable
-              columns={columns}
-              data={tableData}
-              getRowId={(user) => user.phoneNo}
-              noDataMessage={
-                isSearchMode
-                  ? "No user found with that phone number."
-                  : "No User Data Found!"
-              }
-              isLoading={isGlobalFetching}
-            />
+        <div className="flex-1 flex flex-col bg-gray-100 p-8 overflow-hidden">
+          <div className="flex-1 flex flex-col bg-white shadow-md rounded-xl relative overflow-hidden p-2 gap-2">
+            <div className="px-1 flex justify-between items-center">
+              <h1 className="text-xl font-medium">
+                {isSearchMode && userCount === 0
+                  ? "Houseclay Users - No results found"
+                  : `Houseclay Users - [${userCount}]`}
+              </h1>
+              <span className="text-sm text-gray-500">
+                Page {currentPage} of {totalPages || 1}
+              </span>
+            </div>
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <DataTable
+                columns={columns}
+                data={tableData}
+                getRowId={(user) => user.phoneNo}
+                noDataMessage={
+                  isSearchMode
+                    ? "No user found with that phone number."
+                    : "No User Data Found!"
+                }
+                isLoading={isGlobalFetching}
+              />
+            </div>
           </div>
         </div>
 

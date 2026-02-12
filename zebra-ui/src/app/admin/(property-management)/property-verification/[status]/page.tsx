@@ -8,7 +8,6 @@ import { VerifyPropertyStatusEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
 import { DataTable } from "@/components/DataTable";
 import { Pagination } from "@/components/Pagination";
-import Spinner from "@/components/Spinner";
 import { useStatusBasedPropertyFetch } from "@/hooks/useStatusBasedPropertyFetch";
 import { PropertyInfo } from "@/interfaces/PropertyInfo";
 import { buildPropertyColumns } from "@/utils/buildPropertyColumns";
@@ -73,26 +72,21 @@ const PropertyVerificationTablePage: React.FC = () => {
       setCurrentPage(page);
     }
   };
-  const viewPropertyDetails = (
-    propertyCategory: string,
-    propertyID: string,
-  ) => {
-    const verifyPath = `/admin/property-details/${propertyCategory.toLowerCase()}/verify/${propertyID}`;
-    const reverifyPath = `/admin/property-details/${propertyCategory.toLowerCase()}/reverify/${propertyID}`;
+  const handleView = (row: SerializedPropertyRow) => {
+    const verifyPath = `/admin/property-details/${row.propertyCategory.toLowerCase()}/verify/${row.propertyID}`;
+    const reverifyPath = `/admin/property-details/${row.propertyCategory.toLowerCase()}/reverify/${row.propertyID}`;
     const currentPath =
       status === VerifyPropertyStatusEnum.VERIFY ? verifyPath : reverifyPath;
     router.push(currentPath);
   };
 
-  const columns = buildPropertyColumns({
-    verify: {
+  const columns = buildPropertyColumns([
+    {
       icon: ClipboardCheck,
       tooltip: "Verify Listing",
-      onClick: (row) =>
-        viewPropertyDetails(row.propertyCategory, row.propertyID),
-      classNameIcon: "size-5 text-primary",
+      onClick: handleView,
     },
-  });
+  ]);
 
   const handleStatusChange = (newStatus: VerifyPropertyStatusEnum) => {
     setCurrentPage(1);
@@ -100,20 +94,11 @@ const PropertyVerificationTablePage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex-1 flex flex-col">
       {/* Main Content Area - Matches ListAll's gray bg and padding */}
       <div className="flex-1 flex flex-col bg-gray-50 p-8 overflow-hidden">
         {/* White Card Container - Matches ListAll's structure */}
         <div className="flex flex-col flex-1 bg-white shadow-sm rounded-xl border border-gray-200 relative overflow-hidden">
-          {/* Blocks interaction with table while fetching - Matches ListAll overlay */}
-          {isFetching && (
-            <div className="absolute inset-0 z-20 bg-white/50 flex items-center justify-center backdrop-blur-sm transition-all duration-300">
-              <div className="bg-white p-4 rounded-full shadow-lg border flex items-center justify-center">
-                <Spinner size="lg" />
-              </div>
-            </div>
-          )}
-
           {/* Header Section - Title, page info, and status buttons; matches ListAll header with added buttons */}
           <div className="px-6 py-3 border-b border-gray-100 flex justify-between items-center">
             <div className="flex items-center gap-4">
@@ -162,21 +147,15 @@ const PropertyVerificationTablePage: React.FC = () => {
             </div>
           </div>
 
-          {/* Table Wrapper - Matches ListAll's flex-1 overflow-auto */}
-          <div className="flex-1 overflow-auto">
-            {/* Opacity Wrapper for Fetching - Matches ListAll */}
-            <div
-              className={
-                isFetching ? "opacity-50 pointer-events-none" : "opacity-100"
-              }
-            >
-              <DataTable
-                columns={columns}
-                data={rows}
-                getRowId={(prop) => prop.propertyID}
-                noDataMessage="No properties found for this status."
-              />
-            </div>
+          {/* Table Wrapper */}
+          <div className="flex-1 flex flex-col overflow-hidden">
+            <DataTable
+              columns={columns}
+              data={rows}
+              getRowId={(prop) => prop.propertyID}
+              noDataMessage="No properties found for this status."
+              isLoading={isFetching}
+            />
           </div>
         </div>
       </div>

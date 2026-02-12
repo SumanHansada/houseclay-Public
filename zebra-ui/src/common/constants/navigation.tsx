@@ -83,17 +83,17 @@ export const sidebarItems: SidebarItem[] = [
     label: "Admin Management",
     icon: <UserLock size={20} />,
     href: "#",
-    allowedRoles: PERMISSIONS.MANAGE_ADMINS,
+    allowedRoles: PERMISSIONS.ADMIN_MANAGEMENT,
     children: [
       {
-        label: "Zebra Users",
-        href: "/admin/admin-management",
-        allowedRoles: PERMISSIONS.MANAGE_ADMINS,
+        label: "List All - Zebra Admins",
+        href: "/admin/list-all-admins",
+        allowedRoles: PERMISSIONS.ADMIN_MANAGEMENT,
       },
       {
         label: "Add new Zebra user",
         href: "/admin/add-zebra-user",
-        allowedRoles: PERMISSIONS.MANAGE_ADMINS,
+        allowedRoles: PERMISSIONS.ADMIN_MANAGEMENT,
       },
     ],
   },

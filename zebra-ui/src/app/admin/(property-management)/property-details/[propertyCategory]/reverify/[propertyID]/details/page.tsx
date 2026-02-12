@@ -4,8 +4,6 @@ import { Form, Formik, FormikProvider } from "formik";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { OwnerDetails } from "@/app/admin/property-details/components/OwnerDetails";
-import { VerificationPanel } from "@/app/admin/property-details/components/VerificationPanel";
 import { PropertyCategory } from "@/common/enums";
 import { extractS3KeyFromUrl } from "@/common/utils";
 import {
@@ -44,6 +42,9 @@ import {
 } from "@/store/editPropertySlice";
 import { RootState, store } from "@/store/store";
 import { resetUpload } from "@/store/uploadToS3Slice";
+
+import { OwnerDetails } from "../../../../components/OwnerDetails";
+import { VerificationPanel } from "../../../../components/VerificationPanel";
 
 type FinalizationStage = "idle" | "deleting" | "uploading" | "updating";
 

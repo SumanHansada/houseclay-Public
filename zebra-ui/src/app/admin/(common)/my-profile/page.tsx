@@ -60,7 +60,6 @@ export default function MyProfilePage() {
   } = adminData;
 
   const profileFields = [
-    { label: "Name", value: name },
     { label: "Username", value: username },
     { label: "Phone", value: phoneNo },
     ...(secondaryPhoneNo
@@ -83,26 +82,44 @@ export default function MyProfilePage() {
   ];
 
   return (
-    <div className="px-16 py-8 bg-gray-100 h-full">
-      <div className="p-5 rounded-xl bg-white shadow-sm flex flex-col gap-4">
-        <h2 className="text-3xl flex items-center w-full justify-between">
+    <div className="flex-1 flex flex-col p-8 bg-gray-100 overflow-hidden">
+      <div className="flex-1 flex flex-col rounded-xl bg-white shadow-sm overflow-hidden">
+        {/* Header */}
+        <h2 className="bg-white border-b border-gray-100 shadow-sm text-3xl flex items-center justify-between px-8 py-4 w-full">
           My Profile
         </h2>
-        <div className="flex gap-16 h-full">
-          <InitialsAvatar name={name} size="xl" />
-          <form className="flex flex-col justify-between flex-1 gap-3">
-            {profileFields.map(({ label, value }) => (
-              <div key={label} className="flex flex-col gap-2 text-lg">
-                <label>{label}</label>
-                <input
-                  type="text"
-                  value={value}
-                  disabled
-                  className="border border-gray-400 rounded-xl p-3 text-gray-600 bg-white"
-                />
-              </div>
-            ))}
-          </form>
+        {/* Content */}
+        <div className="flex-1 flex px-8 py-4 w-full gap-5 overflow-hidden">
+          {/* Left Side - Avatar and Name */}
+          <div className="flex flex-col items-center w-1/6 h-fit rounded-xl shadow-sm border overflow-hidden min-w-48">
+            <div className="p-2 bg-gray-100 w-full flex items-center justify-center">
+              <InitialsAvatar name={name} size="xl" />
+            </div>
+            {name && (
+              <h3 className="text-2xl font-medium text-gray-800 text-center border w-full p-2">
+                {name}
+              </h3>
+            )}
+          </div>
+
+          {/* Right Side - Admin Details */}
+          <div className="flex-1 flex flex-col border rounded-xl shadow-sm overflow-hidden">
+            <form className="flex flex-col gap-4 min-h-0 overflow-auto p-3">
+              {profileFields.map(({ label, value }) => (
+                <div key={label} className="flex flex-col gap-1">
+                  <label className="text-gray-600 text-lg font-medium">
+                    {label}
+                  </label>
+                  <input
+                    type="text"
+                    value={value}
+                    disabled
+                    className="border border-gray-400 rounded-xl p-2 text-gray-700 text-xl bg-white"
+                  />
+                </div>
+              ))}
+            </form>
+          </div>
         </div>
       </div>
     </div>

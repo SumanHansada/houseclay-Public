@@ -3,14 +3,14 @@ import React from "react";
 import { PERMISSIONS } from "@/common/permissions";
 import RoleGuard from "@/components/RoleGuard";
 
-import { AddConnects } from "./AddConnects";
+import { AddConnectsForm } from "./AddConnectsForm";
 
-const UserManagementPage: React.FC = () => {
+const AddConnectsPage: React.FC = () => {
   return (
     <RoleGuard allowedRoles={PERMISSIONS.ADD_CONNECTS}>
-      <AddConnects />
+      <AddConnectsForm />
     </RoleGuard>
   );
 };
 
-export default UserManagementPage;
+export default AddConnectsPage;

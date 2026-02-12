@@ -114,7 +114,7 @@ const ProfilePage: React.FC = () => {
   ];
 
   return (
-    <div className="px-16 py-8 bg-gray-100 h-full">
+    <div className="flex-1 flex flex-col p-8 bg-gray-100 overflow-hidden">
       <div className="p-5 rounded-xl bg-white shadow-sm flex flex-col gap-4">
         <h2 className="text-3xl flex items-center w-full justify-between">
           Admin Details

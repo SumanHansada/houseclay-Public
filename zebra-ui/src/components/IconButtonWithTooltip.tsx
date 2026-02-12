@@ -39,7 +39,7 @@ const IconButtonWithTooltip: React.FC<IconButtonWithTooltipProps> = ({
         }}
         aria-label={tooltip}
         data-testid={testId}
-        className={`relative flex items-center justify-center cursor-pointer transition-colors hover:bg-gray-100 rounded-full p-1.5 ${className}`}
+        className={`relative flex items-center justify-center cursor-pointer transition-colors hover:bg-gray-100 rounded-full p-1 ${className}`}
       >
         <Icon className={iconClassName} />
       </button>

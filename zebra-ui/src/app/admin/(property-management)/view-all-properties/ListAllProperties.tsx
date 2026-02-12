@@ -1,5 +1,6 @@
 "use client";
 
+import { Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -10,10 +11,7 @@ import { SearchAndFilterBar } from "@/components/SearchAndFilterBar";
 import Spinner from "@/components/Spinner";
 import { PropertyInfo } from "@/interfaces/PropertyInfo";
 import { useGetPropertiesQuery } from "@/store/apiSlice";
-import {
-  buildPropertyColumns,
-  createDefaultPropertyActions,
-} from "@/utils/buildPropertyColumns";
+import { buildPropertyColumns } from "@/utils/buildPropertyColumns";
 
 interface SerializedPropertyRow extends PropertyInfo {
   _serial: number;
@@ -81,14 +79,19 @@ export const ListAllProperties = () => {
     }),
   );
 
-  const columns = buildPropertyColumns(
-    createDefaultPropertyActions({
-      onView: (row) =>
-        router.push(
-          `/admin/property-details/${row.propertyCategory.toLowerCase()}/${row.propertyID}`,
-        ),
-    }),
-  );
+  const handleView = (row: SerializedPropertyRow) => {
+    router.push(
+      `/admin/property-details/${row.propertyCategory.toLowerCase()}/${row.propertyID}`,
+    );
+  };
+
+  const columns = buildPropertyColumns([
+    {
+      icon: Eye,
+      tooltip: "View Property Details",
+      onClick: handleView,
+    },
+  ]);
 
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)]">

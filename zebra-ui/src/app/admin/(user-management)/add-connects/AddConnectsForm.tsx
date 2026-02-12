@@ -18,7 +18,7 @@ function normalizeIndianPhone(raw: string) {
   return `+${digits}`;
 }
 
-export const AddConnects = () => {
+export const AddConnectsForm = () => {
   const [userPhoneNo, setUserPhoneNo] = useState("");
   const [connectsToAdd, setConnectsToAdd] = useState<number>(0);
 
@@ -38,7 +38,7 @@ export const AddConnects = () => {
   const connectsOk = useMemo(
     () =>
       Number.isFinite(connectsToAdd) &&
-      connectsToAdd >= 0 &&
+      connectsToAdd > 0 &&
       connectsToAdd <= 100,
     [connectsToAdd],
   );
@@ -96,11 +96,15 @@ export const AddConnects = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-white">
-      <div className="px-6 py-8">
-        <h1 className="text-2xl font-semibold mb-6">Add Connects</h1>
+    <div className="flex-1 flex flex-col bg-gray-100 overflow-hidden p-8">
+      <div className="flex flex-col bg-white shadow-md rounded-xl overflow-hidden">
+        {/* Header */}
+        <h2 className="sticky top-0 z-10 bg-white border-b border-gray-100 shadow-sm text-3xl flex items-center w-full justify-between px-8 py-4">
+          Add Connects to Houseclay Users
+        </h2>
 
-        <div className="flex gap-2 w-full">
+        {/* Content */}
+        <div className="flex gap-2 p-6">
           <PhoneField
             id="phoneNumber"
             name="phoneNumber"
@@ -112,7 +116,7 @@ export const AddConnects = () => {
             onBlur={() =>
               setTouched((touched) => ({ ...touched, phone: true }))
             }
-            className="border border-gray-300 rounded-xl px-3 py-2.5 focus:ring-red-500 focus:border-red-500 w-full"
+            className="border border-gray-300 rounded-xl px-3 py-2.5 focus:ring-red-500 focus:border-red-500"
             required
             error={phoneError || undefined}
           />
@@ -129,27 +133,27 @@ export const AddConnects = () => {
             onBlur={() =>
               setTouched((touched) => ({ ...touched, connects: true }))
             }
-            className="px-3 focus:ring-red-500 focus:border-red-500 w-full"
+            className="px-3 focus:ring-red-500 focus:border-red-500 w-full mb-0"
             required
             error={connectsError || undefined}
           />
         </div>
 
-        <div className="flex gap-3 pt-2 justify-end">
-          <Button
-            onClick={handleAdd}
-            disabled={!canSubmit}
-            className="rounded-xl disabled:opacity-50 disabled:cursor-not-allowed px-8 text-lg"
-          >
-            {isLoading ? "Adding…" : "Add"}
-          </Button>
-
+        {/* Footer */}
+        <div className="flex gap-3 justify-end px-8 py-4 border-t border-gray-100 shadow-sm">
           <Button
             variant="secondary"
             onClick={handleClear}
             className="rounded-xl px-8 text-lg hover:bg-gray-200 transition-colors"
           >
             Clear
+          </Button>
+          <Button
+            onClick={handleAdd}
+            disabled={!canSubmit}
+            className="rounded-xl disabled:opacity-50 disabled:cursor-not-allowed px-8 text-lg"
+          >
+            {isLoading ? "Adding…" : "Add"}
           </Button>
         </div>
       </div>

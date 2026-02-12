@@ -7,8 +7,8 @@ import React from "react";
 import { Column, DataTable } from "@/components/DataTable";
 import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
 import { Pagination } from "@/components/Pagination";
+import { Pill } from "@/components/Pill";
 import Spinner from "@/components/Spinner";
-import { RenderUserStatus } from "@/components/status/RenderUserStatus";
 import { useLocalPagination } from "@/hooks/useLocalPagination";
 import { UserInfo } from "@/interfaces/User";
 import { useGetPropertyByIdQuery } from "@/store/apiSlice";
@@ -37,7 +37,12 @@ export default function ShortlistUsersPage() {
     {
       key: "blacklisted",
       label: "Status",
-      render: (user) => <RenderUserStatus isBlacklisted={user.blacklisted} />,
+      render: (user) =>
+        user.blacklisted ? (
+          <Pill color="red">Blacklisted</Pill>
+        ) : (
+          <Pill color="green">Active</Pill>
+        ),
     },
     {
       key: "action",

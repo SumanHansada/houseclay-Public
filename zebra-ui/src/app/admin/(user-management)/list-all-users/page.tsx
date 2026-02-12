@@ -2,8 +2,8 @@ import React from "react";
 
 import { ListAllUsersView } from "./ListAllUsersView";
 
-const Page: React.FC = () => {
+const ListAllUsersPage: React.FC = () => {
   return <ListAllUsersView />;
 };
 
-export default Page;
+export default ListAllUsersPage;

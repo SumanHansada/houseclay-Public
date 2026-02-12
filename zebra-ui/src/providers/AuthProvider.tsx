@@ -14,6 +14,8 @@ import {
 } from "@/store/adminAuthSlice";
 import { useGetAdminInfoQuery } from "@/store/apiSlice";
 
+const publicPaths = ["/login"];
+
 export default function AuthProvider({
   children,
 }: {
@@ -26,7 +28,6 @@ export default function AuthProvider({
   });
   const router = useRouter();
   const pathname = usePathname();
-  const publicPaths = ["/login"];
 
   useEffect(() => {
     if (data) {
