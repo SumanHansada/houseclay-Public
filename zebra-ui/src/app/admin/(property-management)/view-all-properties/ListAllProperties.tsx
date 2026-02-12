@@ -13,7 +13,7 @@ import { useGetPropertiesQuery } from "@/store/apiSlice";
 import {
   buildPropertyColumns,
   createDefaultPropertyActions,
-} from "@/utils/table/buildPropertyColumns";
+} from "@/utils/buildPropertyColumns";
 
 interface SerializedPropertyRow extends PropertyInfo {
   _serial: number;

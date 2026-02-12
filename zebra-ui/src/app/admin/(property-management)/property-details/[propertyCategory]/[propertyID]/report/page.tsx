@@ -58,8 +58,7 @@ export default function ReportUsersPage() {
         <div className="flex items-center gap-2">
           <IconButtonWithTooltip
             onClick={() => viewProfile(reportDetails.user.phoneNo)}
-            Icon={Eye}
-            tooltipActive={true}
+            icon={Eye}
             tooltip="View Profile"
           />
 

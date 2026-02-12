@@ -1,12 +1,10 @@
 "use client";
+import { Eye } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 
 import { PropertyInfo } from "@/interfaces/PropertyInfo";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
-import {
-  buildPropertyColumns,
-  createDefaultPropertyActions,
-} from "@/utils/table/buildPropertyColumns";
+import { buildPropertyColumns } from "@/utils/buildPropertyColumns";
 
 import { PaginatedPropertiesTable } from "../components/PaginatedPropertiesTable";
 
@@ -31,24 +29,22 @@ const ShortlistedPropertiesPage: React.FC = () => {
     }),
   );
 
-  const viewPropertyDetails = (
-    propertyCategory: string,
-    propertyID: string,
-  ) => {
+  const handleView = (row: SerializedPropertyRow) => {
     router.push(
-      `/admin/property-details/${propertyCategory.toLowerCase()}/${propertyID}`,
+      `/admin/property-details/${row.propertyCategory.toLowerCase()}/${row.propertyID}`,
     );
   };
 
-  const columns = buildPropertyColumns(
-    createDefaultPropertyActions({
-      onView: (row) =>
-        viewPropertyDetails(row.propertyCategory, row.propertyID),
-    }),
-  );
+  const columns = buildPropertyColumns([
+    {
+      icon: Eye,
+      tooltip: "View Property Details",
+      onClick: handleView,
+    },
+  ]);
 
   return (
-    <div className="h-full">
+    <div className="flex-1 flex flex-col overflow-hidden">
       <PaginatedPropertiesTable
         tableTitle="Shortlisted Properties"
         columns={columns}

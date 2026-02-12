@@ -45,8 +45,7 @@ export default function ContactedUsersPage() {
       render: (user) => (
         <IconButtonWithTooltip
           onClick={() => viewProfile(user.phoneNo)}
-          Icon={Eye}
-          tooltipActive={true}
+          icon={Eye}
           tooltip="View Profile"
         />
       ),

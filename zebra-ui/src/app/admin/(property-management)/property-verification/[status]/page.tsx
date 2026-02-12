@@ -11,7 +11,7 @@ import { Pagination } from "@/components/Pagination";
 import Spinner from "@/components/Spinner";
 import { useStatusBasedPropertyFetch } from "@/hooks/useStatusBasedPropertyFetch";
 import { PropertyInfo } from "@/interfaces/PropertyInfo";
-import { buildPropertyColumns } from "@/utils/table/buildPropertyColumns";
+import { buildPropertyColumns } from "@/utils/buildPropertyColumns";
 
 interface SerializedPropertyRow extends PropertyInfo {
   _serial: number;

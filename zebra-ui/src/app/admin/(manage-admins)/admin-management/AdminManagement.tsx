@@ -113,8 +113,7 @@ export const AdminManagement = () => {
       render: (admin) => (
         <IconButtonWithTooltip
           onClick={() => viewProfile(admin.username)}
-          Icon={Eye}
-          tooltipActive={true}
+          icon={Eye}
           tooltip="View Profile"
         />
       ),

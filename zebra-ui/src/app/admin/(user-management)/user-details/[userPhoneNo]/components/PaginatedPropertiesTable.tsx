@@ -3,7 +3,6 @@ import React from "react";
 
 import { Column, DataTable } from "@/components/DataTable";
 import { Pagination } from "@/components/Pagination";
-import Spinner from "@/components/Spinner";
 import { useLocalPagination } from "@/hooks/useLocalPagination";
 
 interface PaginatedPropertiesTableProps<
@@ -34,16 +33,7 @@ export function PaginatedPropertiesTable<
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col p-8 bg-gray-100 overflow-hidden">
-        <div className="flex-1 flex flex-col bg-white shadow-sm rounded-xl p-6 gap-4 relative overflow-hidden">
-          {/* Loading Overlay */}
-          {isLoading && (
-            <div className="absolute inset-0 z-20 bg-white/50 flex items-center justify-center backdrop-blur-sm transition-all duration-300">
-              <div className="bg-white p-4 rounded-full shadow-lg border flex items-center justify-center">
-                <Spinner size="lg" />
-              </div>
-            </div>
-          )}
-
+        <div className="flex-1 flex flex-col bg-white shadow-sm rounded-xl p-2 gap-2 relative overflow-hidden">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-medium text-gray-700">{tableTitle}</h2>
             <span className="text-sm text-gray-500">
@@ -51,20 +41,14 @@ export function PaginatedPropertiesTable<
             </span>
           </div>
 
-          <div className="flex-1 flex flex-col min-h-0 relative">
-            {/* Opacity Wrapper */}
-            <div
-              className={`flex-1 flex flex-col ${
-                isLoading ? "opacity-50 pointer-events-none" : "opacity-100"
-              }`}
-            >
-              <DataTable<RowType>
-                columns={columns}
-                data={paginatedRows}
-                getRowId={(row) => row.propertyID}
-                noDataMessage="No properties found."
-              />
-            </div>
+          <div className="flex-1 flex flex-col overflow-hidden relative">
+            <DataTable<RowType>
+              columns={columns}
+              data={paginatedRows}
+              getRowId={(row) => row.propertyID}
+              noDataMessage="No properties found."
+              isLoading={isLoading}
+            />
           </div>
         </div>
       </div>

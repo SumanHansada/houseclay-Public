@@ -1,13 +1,12 @@
 "use client";
+
+import { Eye } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 
 import { UserDetailsTabEnum } from "@/common/enums";
 import { PropertyInfo } from "@/interfaces/PropertyInfo";
 import { useGetUserByPhoneNoQuery } from "@/store/apiSlice";
-import {
-  buildPropertyColumns,
-  createDefaultPropertyActions,
-} from "@/utils/table/buildPropertyColumns";
+import { buildPropertyColumns } from "@/utils/buildPropertyColumns";
 import { userDetailsTestIds } from "@/utils/testIds";
 
 import { PaginatedPropertiesTable } from "../components/PaginatedPropertiesTable";
@@ -33,21 +32,19 @@ const OwnedPropertiesPage: React.FC = () => {
     }),
   );
 
-  const viewPropertyDetails = (
-    propertyCategory: string,
-    propertyID: string,
-  ) => {
+  const handleView = (row: SerializedPropertyRow) => {
     router.push(
-      `/admin/property-details/${propertyCategory.toLowerCase()}/${propertyID}`,
+      `/admin/property-details/${row.propertyCategory.toLowerCase()}/${row.propertyID}`,
     );
   };
 
-  const columns = buildPropertyColumns(
-    createDefaultPropertyActions({
-      onView: (row) =>
-        viewPropertyDetails(row.propertyCategory, row.propertyID),
-    }),
-  );
+  const columns = buildPropertyColumns([
+    {
+      icon: Eye,
+      tooltip: "View Property Details",
+      onClick: handleView,
+    },
+  ]);
 
   return (
     <div

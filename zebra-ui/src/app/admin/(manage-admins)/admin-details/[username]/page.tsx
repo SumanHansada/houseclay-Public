@@ -4,7 +4,6 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 import { dialogLabels } from "@/common/constants";
-import { UserDetailsTabEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
 import { InitialsAvatar } from "@/components/InitialsAvatar";
 import { ActionDialog } from "@/dialogs/action-dialog";
@@ -15,7 +14,6 @@ import {
   useGetAdminByUsernameQuery,
 } from "@/store/apiSlice";
 import { formatDateVerbose } from "@/utils/core";
-import { userDetailsTestIds } from "@/utils/testIds";
 
 const DEACTIVATE_DIALOG_ID = "deactivate-admin-dialog";
 const ACTIVATE_DIALOG_ID = "activate-admin-dialog";
@@ -116,10 +114,7 @@ const ProfilePage: React.FC = () => {
   ];
 
   return (
-    <div
-      data-testid={userDetailsTestIds.getTabPageId(UserDetailsTabEnum.PROFILE)}
-      className="px-16 py-8 bg-gray-100 h-full"
-    >
+    <div className="px-16 py-8 bg-gray-100 h-full">
       <div className="p-5 rounded-xl bg-white shadow-sm flex flex-col gap-4">
         <h2 className="text-3xl flex items-center w-full justify-between">
           Admin Details
@@ -141,7 +136,6 @@ const ProfilePage: React.FC = () => {
             <div className="flex justify-end mt-2">
               <button
                 type="button"
-                data-testid={userDetailsTestIds.buttonId("activate-admin")}
                 aria-label="activate-admin"
                 onClick={() => !isActive && openDialog(ACTIVATE_DIALOG_ID)}
                 disabled={isActive}
@@ -155,7 +149,6 @@ const ProfilePage: React.FC = () => {
               </button>
               <button
                 type="button"
-                data-testid={userDetailsTestIds.buttonId("deactivate-admin")}
                 aria-label="deactivate-admin"
                 onClick={() => isActive && openDialog(DEACTIVATE_DIALOG_ID)}
                 disabled={!isActive}

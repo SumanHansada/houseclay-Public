@@ -13,8 +13,10 @@ import {
   useBlacklistUserMutation,
   useGetUserByPhoneNoQuery,
 } from "@/store/apiSlice";
-import { toSlug } from "@/utils/core";
 import { userDetailsTestIds } from "@/utils/testIds";
+
+const BLACKLIST_DIALOG_ID = `blacklist-user-dialog`;
+const ACTIVATE_DIALOG_ID = `activate-user-dialog`;
 
 const ProfilePage: React.FC = () => {
   const { userPhoneNo } = useParams() as { userPhoneNo: string };
@@ -24,12 +26,6 @@ const ProfilePage: React.FC = () => {
   const [isBlacklisted, setIsBlacklisted] = useState<boolean>(
     currentUser.blacklisted,
   );
-
-  const activateUserLabel = "Activate User";
-  const blacklistUserLabel = "Blacklist User";
-
-  const BLACKLIST_DIALOG_ID = `${toSlug(activateUserLabel)}-dialog`;
-  const ACTIVATE_DIALOG_ID = `${toSlug(blacklistUserLabel)}-dialog`;
 
   const [blacklistUser] = useBlacklistUserMutation();
   const [activateUser] = useActivateUserMutation();
@@ -112,8 +108,7 @@ const ProfilePage: React.FC = () => {
             <div className="flex justify-end mt-2">
               <button
                 type="button"
-                data-testid={userDetailsTestIds.buttonId(activateUserLabel)}
-                aria-label={activateUserLabel}
+                aria-label="Activate User"
                 onClick={handleActivateClicked}
                 disabled={!isBlacklisted}
                 className={`text-lg px-3 py-2 rounded-xl font-medium ${
@@ -122,12 +117,11 @@ const ProfilePage: React.FC = () => {
                     : "bg-gray-400 text-gray-200 cursor-not-allowed"
                 }`}
               >
-                {activateUserLabel}
+                Activate User
               </button>
               <button
                 type="button"
-                data-testid={userDetailsTestIds.buttonId(blacklistUserLabel)}
-                aria-label={blacklistUserLabel}
+                aria-label="Blacklist User"
                 onClick={handleBlacklistClicked}
                 disabled={isBlacklisted}
                 className={`ml-3 text-lg px-3 py-2 rounded-xl font-medium ${
@@ -136,7 +130,7 @@ const ProfilePage: React.FC = () => {
                     : "bg-red-500 hover:bg-red-600 text-white"
                 }`}
               >
-                {blacklistUserLabel}
+                Blacklist User
               </button>
             </div>
           </form>
