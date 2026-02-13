@@ -34,9 +34,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#EA3934" />
       </head>
       <body className={`${inter.variable} ${nutino.variable}`}>
-        <Providers>
-          <main>{children}</main>
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

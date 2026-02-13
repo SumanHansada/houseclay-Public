@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -110,6 +111,7 @@ public class AdminUserController {
     }
 
     @PostMapping("/add-connects")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<?> addConnects(@RequestParam int connectCount, @RequestParam String phoneNo,
                                          @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {

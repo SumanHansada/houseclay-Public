@@ -9,4 +9,5 @@ public class AdminInfoDTO {
 
     private String name;
     private AdminRole role;
+    private String username;
 }

@@ -9,8 +9,15 @@ import com.houseclay.backend.mapper.AdminMapper;
 import com.houseclay.backend.service.AdminService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.util.Map;
+
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,6 +28,7 @@ public class AdminController {
     private AdminService adminService;
 
     @PostMapping("/register")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<?> createAdmin(@Valid @RequestBody AdminRegisterDTO adminRegisterDTO) {
         try {
             adminService.registerAdmin(adminRegisterDTO);
@@ -58,6 +66,65 @@ public class AdminController {
     public ResponseEntity<?> info(@RequestAttribute("authenticatedAdmin") Admin admin) {
         AdminInfoDTO adminInfoDTO = AdminMapper.toAdminInfoDTO(admin);
         return ResponseEntity.ok(adminInfoDTO);
+    }
+
+    @GetMapping("/list-admins")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<?> getAllAdmins(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestAttribute("authenticatedAdmin") Admin admin) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("dateOfJoining").descending());
+        try {
+            return ResponseEntity.ok(adminService.getAllAdmins(pageable, admin));
+        } catch (APIException e) {
+             return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<?> getAdminDetails(
+            @PathVariable String username,
+            @RequestAttribute("authenticatedAdmin") Admin admin) {
+        try {
+            return ResponseEntity.ok(adminService.getAdminDetails(username, admin));
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{username}/deactivate")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<?> deactivateAdmin(
+            @PathVariable String username,
+            @RequestAttribute("authenticatedAdmin") Admin admin) throws APIException {
+        try {
+            adminService.deactivateAdmin(username, admin);
+            return ResponseEntity.ok(Map.of("message", "Admin deactivated successfully"));
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{username}/activate")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<?> activateAdmin(
+            @PathVariable String username,
+            @RequestAttribute("authenticatedAdmin") Admin admin) throws APIException {
+        try {
+            adminService.activateAdmin(username, admin);
+            return ResponseEntity.ok(Map.of("message", "Admin activated successfully"));
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
 }

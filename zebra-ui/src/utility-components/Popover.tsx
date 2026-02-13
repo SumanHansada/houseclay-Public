@@ -196,7 +196,11 @@ export default function Popover({
       ref={panelRef}
       id={id}
       role={effectiveTrigger === "hover" ? "tooltip" : "menu"}
-      className={`fixed rounded-xl border border-gray-200 bg-white shadow-xl ${panelClassName ?? ""}`}
+      className={
+        panelClassName
+          ? `fixed ${panelClassName}`
+          : `fixed rounded-xl border border-gray-200 bg-white shadow-xl`
+      }
       style={{
         top: coords?.top ?? 0,
         left: coords?.left ?? 0,

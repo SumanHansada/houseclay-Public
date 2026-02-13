@@ -1,6 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 
 import { LeadQueryParamEnum } from "@/common/enums";
+import { AdminDetails } from "@/interfaces/Admin";
 import {
   GetAllLeadsResponse,
   GetAllPropertiesResponse,
@@ -11,6 +12,7 @@ import {
   GetPropertyByIdResponse,
   GetUserByPhoneNoResponse,
 } from "@/interfaces/api";
+import { GetAllAdminsResponse } from "@/interfaces/api/admins";
 import { PropertyForm } from "@/interfaces/PropertyForm";
 import {
   baseQueryWithAuth,
@@ -35,7 +37,7 @@ export const apiSlice = createApi({
   endpoints: (builder) => ({
     // ──────────────── AUTH ────────────────
     login: builder.mutation<
-      { name: string; role: string },
+      { name: string; role: string; username: string },
       { username: string; password: string }
     >({
       query: (payload) => ({
@@ -75,10 +77,6 @@ export const apiSlice = createApi({
     }),
 
     // ──────────────── USERS ────────────────
-    getUsersAuthCheck: builder.query<undefined, void>({
-      query: () => "/admin/users",
-    }),
-
     getUsers: builder.query<
       GetAllUsersResponse,
       { page: number; size: number }
@@ -176,6 +174,53 @@ export const apiSlice = createApi({
           },
         };
       },
+    }),
+
+    // ──────────────── Admins ────────────────
+    getAdminInfo: builder.query<
+      { name: string; role: string; username: string },
+      void
+    >({
+      query: () => "/admin/info",
+      keepUnusedDataFor: 0,
+    }),
+
+    getAdmins: builder.query<
+      GetAllAdminsResponse,
+      { page: number; size: number }
+    >({
+      query: ({ page, size }) => ({
+        url: `/admin/list-admins?page=${page}&size=${size}`,
+        method: "GET",
+      }),
+      providesTags: listTag("Admins"),
+    }),
+
+    getAdminByUsername: builder.query<AdminDetails, { username: string }>({
+      query: ({ username }) => ({
+        url: `/admin/${username}`,
+        method: "GET",
+      }),
+      providesTags: (_r, _e, { username }) =>
+        [{ type: "AdminDetail", username }] as const,
+    }),
+
+    activateAdmin: builder.mutation<string, { username: string }>({
+      query: ({ username }) => ({
+        url: `/admin/${username}/activate`,
+        method: "PUT",
+      }),
+      invalidatesTags: (_r, _e, { username }) =>
+        [{ type: "AdminDetail", username }, ...listTag("Admins")] as const,
+    }),
+
+    deactivateAdmin: builder.mutation<string, { username: string }>({
+      query: ({ username }) => ({
+        url: `/admin/${username}/deactivate`,
+        method: "PUT",
+      }),
+      invalidatesTags: (_r, _e, { username }) =>
+        [{ type: "AdminDetail", username }, ...listTag("Admins")] as const,
     }),
 
     // ──────────────── LEADS ────────────────
@@ -460,13 +505,17 @@ export const {
   useLoginMutation,
   useRegisterMutation,
   useLogoutMutation,
-  useGetUsersAuthCheckQuery,
   useGetUsersQuery,
   useGetUserByPhoneNoQuery,
   useCreateHouseclayUserMutation,
   useBlacklistUserMutation,
   useActivateUserMutation,
   useTagBrokerMutation,
+  useGetAdminInfoQuery,
+  useGetAdminsQuery,
+  useGetAdminByUsernameQuery,
+  useActivateAdminMutation,
+  useDeactivateAdminMutation,
   useGetLeadsQuery,
   useGetLeadByIdQuery,
   useLeadStatusUpdateMutation,

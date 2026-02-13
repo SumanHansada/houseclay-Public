@@ -5,7 +5,9 @@ export type DialogKey =
   | "activate"
   | "tagBroker"
   | "verify"
-  | "deactivate";
+  | "deactivate"
+  | "activateAdmin"
+  | "deactivateAdmin";
 
 export const dialogLabels: Record<DialogKey, DialogLabelConfig> = {
   blacklist: {
@@ -40,5 +42,17 @@ export const dialogLabels: Record<DialogKey, DialogLabelConfig> = {
     prompt: "Deactivate this property listing?",
     confirmLabel: "Deactivate",
     colour: "red",
+  },
+  deactivateAdmin: {
+    title: "Deactivate Admin",
+    prompt: "Deactivate this Admin's Zebra Account?",
+    confirmLabel: "Deactivate",
+    colour: "red",
+  },
+  activateAdmin: {
+    title: "Activate Admin",
+    prompt: "Activate this Admin's Zebra Account?",
+    confirmLabel: "Activate",
+    colour: "green",
   },
 };

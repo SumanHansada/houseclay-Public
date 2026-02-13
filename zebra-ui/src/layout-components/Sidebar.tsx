@@ -20,21 +20,32 @@ const Sidebar = () => {
     setOpenSections((prev) => ({ ...prev, [label]: !prev[label] }));
   };
 
-  const hasPermission = (itemRoles?: AdminRole[]) => {
-    if (!itemRoles) return true;
+  const hasPermission = (allowedRoles?: AdminRole[]) => {
+    if (!allowedRoles || allowedRoles.length === 0) return true;
     if (!adminRole) return false;
-    return itemRoles.includes(adminRole);
+    return allowedRoles.includes(adminRole);
   };
 
   const visibleSidebarItems = sidebarItems
-    .filter((item) => hasPermission(item.allowedRoles))
-    .map((item) => ({
-      ...item,
-      children: item.children.filter((child) =>
+    .map((item) => {
+      // Check Parent Permission
+      if (!hasPermission(item.allowedRoles)) return null;
+
+      // Filter Children
+      const validChildren = item.children.filter((child) =>
         hasPermission(child.allowedRoles),
-      ),
-    }))
-    .filter((item) => item.children.length > 0 || !item.children.length);
+      );
+
+      if (item.href === "#" && validChildren.length === 0) {
+        return null;
+      }
+      // Return the valid item with its filtered children
+      return {
+        ...item,
+        children: validChildren,
+      };
+    })
+    .filter((item) => item !== null);
 
   return (
     <aside className="bg-gray-300 w-72 lg:w-80 min-h-screen py-20 px-4 flex flex-col gap-2 fixed left-0 top-0 z-40 shadow-lg">

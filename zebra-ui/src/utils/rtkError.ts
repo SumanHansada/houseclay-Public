@@ -5,66 +5,67 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
  * Type guard to check if an error is a FetchBaseQueryError.
  */
 export const isFetchBaseQueryError = (
-  err: unknown,
-): err is FetchBaseQueryError => {
-  return typeof err === "object" && err !== null && "status" in err;
+  error: unknown,
+): error is FetchBaseQueryError => {
+  return typeof error === "object" && error !== null && "status" in error;
 };
 
 /**
  * Type guard to check if an error is a SerializedError.
  */
-export const isSerializedError = (err: unknown): err is SerializedError => {
-  return typeof err === "object" && err !== null && "message" in err;
-};
-
-/**
- * Internal type guard to safely check for a { message: string }
- * structure in an unknown 'data' payload.
- */
-const isErrorDataWithMessage = (data: unknown): data is { message: string } => {
+export const isSerializedError = (error: unknown): error is SerializedError => {
   return (
-    typeof data === "object" &&
-    data !== null &&
-    "message" in data &&
-    typeof (data as { message: unknown }).message === "string"
+    typeof error === "object" &&
+    error !== null &&
+    "message" in error &&
+    typeof (error as { message: unknown }).message === "string"
   );
 };
 
 /**
- * Converts any 'unknown' error into a human-readable string.
- * This is fully type-safe and handles all RTK error structures.
+ * Universal error parser for RTK Query.
+ * Handles:
+ * 1. HTTP Errors (400, 404, 500) with various JSON shapes ({message}, {error}, {data})
+ * 2. Parsing Errors (Non-JSON responses like 502/504 HTML bodies)
+ * 3. Serialized Errors (Network timeouts, fetch failures)
  */
-export const toErrorMessage = (err: unknown): string => {
-  // Handle RTK FetchBaseQueryError
-  if (isFetchBaseQueryError(err)) {
-    // Handle network/client-side errors (status is a string)
-    if (typeof err.status === "string") {
-      return `Request failed (${err.status}): ${err.error}`;
+export function getErrorMessage(error: unknown): string {
+  if (isFetchBaseQueryError(error)) {
+    // 1. Handle "PARSING_ERROR" (Text response instead of JSON)
+    if (error.status === "PARSING_ERROR") {
+      return typeof error.data === "string"
+        ? error.data
+        : "Server response could not be parsed";
     }
 
-    // Handle backend HTTP errors (status is a number)
-    const status = `Status ${err.status}`;
-    let details = "";
+    // 2. Handle HTTP Errors (JSON)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data = error.data as any;
 
-    if (isErrorDataWithMessage(err.data)) {
-      details = err.data.message;
-    } else if (typeof err.data === "string") {
-      details = err.data;
+    if (data) {
+      // Priority 1: Direct String
+      if (typeof data === "string") return data;
+
+      // Priority 2: Common backend error fields
+      if (typeof data.message === "string") return data.message;
+      if (typeof data.error === "string") return data.error;
+      if (typeof data.data === "string") return data.data;
     }
 
-    return `Request failed (${status})${details ? `: ${details}` : ""}`;
+    // Fallback for HTTP errors with no meaningful payload
+    return `Server Error (${error.status})`;
   }
 
-  // Handle RTK SerializedError
-  if (isSerializedError(err)) {
-    return err.message ?? "An unknown serialized error occurred";
+  // 3. Handle Serialized Errors (Network issues, timeouts)
+  if (isSerializedError(error)) {
+    return error.message || "Network Error";
   }
 
-  // Handle standard JavaScript Error objects
-  if (err instanceof Error) {
-    return err.message;
+  // 4. Handle standard JS Errors
+  if (error instanceof Error) {
+    return error.message;
   }
 
-  // Fallback for everything else
-  return "An unknown error occurred";
-};
+  // 5. Catch-all
+  return "An unexpected error occurred.";
+}

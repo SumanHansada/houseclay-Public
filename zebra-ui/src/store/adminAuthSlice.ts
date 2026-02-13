@@ -6,6 +6,8 @@ interface AdminAuthState {
   isAuthenticated: boolean;
   isAuthLoading: boolean;
   role: AdminRole | null;
+  username?: string;
+  name?: string;
   authError: string | null;
 }
 
@@ -13,6 +15,7 @@ const initialState: AdminAuthState = {
   isAuthenticated: false,
   isAuthLoading: false,
   role: null,
+  username: undefined,
   authError: null,
 };
 
@@ -33,6 +36,13 @@ const adminAuthSlice = createSlice({
       state.isAuthenticated = false;
       state.isAuthLoading = false;
       state.authError = action.payload;
+    },
+    setAdminInfo: (
+      state,
+      action: PayloadAction<{ name: string; username: string }>,
+    ) => {
+      state.name = action.payload.name;
+      state.username = action.payload.username;
     },
     setAdminRole: (state, action: PayloadAction<AdminRole | null>) => {
       state.role = action.payload;
@@ -57,6 +67,7 @@ export const {
   authStarted,
   authSuccess,
   authFailure,
+  setAdminInfo,
   setAdminRole,
   logout,
 } = adminAuthSlice.actions;

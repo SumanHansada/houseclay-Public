@@ -1,77 +1,49 @@
 import { LucideIcon } from "lucide-react";
 import React from "react";
 
-interface BaseIconButtonProps {
-  onClick: () => void;
-  Icon: LucideIcon;
-  classNameIconWrapper?: string;
-  classNameIconCustomize?: string;
-  testId?: string;
-}
+import { Popover } from "@/utility-components";
 
-interface IconWithTooltip extends BaseIconButtonProps {
-  tooltipActive: true;
+interface IconButtonWithTooltipProps {
+  icon: LucideIcon;
   tooltip: string;
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  testId?: string;
+  className?: string;
+  iconClassName?: string;
 }
-
-interface IconWithoutTooltip extends BaseIconButtonProps {
-  tooltipActive?: false;
-  tooltip?: never;
-}
-
-type IconButtonWithTooltipProps = IconWithTooltip | IconWithoutTooltip;
 
 const IconButtonWithTooltip: React.FC<IconButtonWithTooltipProps> = ({
-  onClick,
-  Icon,
+  icon: Icon,
   tooltip,
+  onClick,
   testId,
-  tooltipActive = false,
-  classNameIconWrapper = "",
-  classNameIconCustomize = "",
+  className = "",
+  iconClassName = "size-5 text-gray-600",
 }) => {
-  const tooltipClasses = [
-    "absolute",
-    "bottom-full",
-    "left-1/2",
-    "mb-1",
-    "w-max",
-    "-translate-x-1/2",
-    "rounded-md",
-    "bg-gray-500",
-    "px-2",
-    "py-1",
-    "text-sm",
-    "text-white",
-    "whitespace-nowrap",
-  ].join(" ");
-
-  const wrapperClasses = [
-    "relative",
-    "flex",
-    "items-center",
-    "cursor-pointer",
-    classNameIconWrapper,
-    tooltipActive ? "group" : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
   return (
-    <button
-      onClick={onClick}
-      aria-label={tooltip ?? "icon button"}
-      data-testid={testId}
-      className={wrapperClasses}
+    <Popover
+      id={`tooltip-${Math.random()}`}
+      trigger="hover"
+      align="center"
+      offset={0}
+      portal={true}
+      zIndex={50}
+      className="inline-flex"
+      panelClassName="bg-gray-500 text-white text-xs px-2 py-1 rounded shadow-md pointer-events-none whitespace-nowrap"
+      content={tooltip}
     >
-      <Icon className={`${classNameIconCustomize} text-gray-600`} />
-
-      {tooltipActive && (
-        <div className={`${tooltipClasses} hidden group-hover:block`}>
-          {tooltip}
-        </div>
-      )}
-    </button>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onClick(e);
+        }}
+        aria-label={tooltip}
+        data-testid={testId}
+        className={`relative flex items-center justify-center cursor-pointer transition-colors hover:bg-gray-100 rounded-full p-1 ${className}`}
+      >
+        <Icon className={iconClassName} />
+      </button>
+    </Popover>
   );
 };
 

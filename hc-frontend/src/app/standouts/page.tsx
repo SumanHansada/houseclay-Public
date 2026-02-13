@@ -69,7 +69,7 @@ export default function StandoutsPage() {
       </section>
 
       {/* --- Main Content --- */}
-      <main className="flex-1 my-12 xl:px-28 lg:px-14 md:px-14 px-6">
+      <div className="flex-1 my-12 xl:px-28 lg:px-14 md:px-14 px-6">
         {isError ? (
           <div className="py-20 text-center">
             <p className="text-red-600">
@@ -102,7 +102,7 @@ export default function StandoutsPage() {
             )}
           </div>
         )}
-      </main>
+      </div>
 
       <Footer />
     </div>

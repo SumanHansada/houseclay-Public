@@ -1,6 +1,6 @@
 import { UserDetails, UserInfo } from "@/interfaces/User";
 
-// useGetUsersQuery()
+// useGetUsersQuery() - Response Type
 export interface GetAllUsersResponse {
   content: UserInfo[];
   pageable: {
