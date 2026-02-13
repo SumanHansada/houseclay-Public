@@ -109,7 +109,7 @@ const ProfilePage: React.FC = () => {
 
           {/* Right Side - User Details */}
           <div className="flex-1 flex flex-col justify-between border rounded-xl shadow-sm overflow-hidden">
-            <form className="flex flex-col justify-between gap-4 p-3 overflow-auto min-h-0">
+            <form className="flex flex-col justify-between gap-4 px-5 py-3 overflow-auto min-h-0 scrollbar-thin">
               {profileFields.map(({ label, value }) => (
                 <div key={label} className="flex flex-col gap-1">
                   <label className="text-gray-600 text-lg font-medium">
@@ -124,6 +124,7 @@ const ProfilePage: React.FC = () => {
                 </div>
               ))}
             </form>
+
             {/* Footer */}
             <div className="sticky bottom-0 flex justify-end border-t border-gray-200 shadow-sm p-2 bg-gray-50">
               <div className="flex gap-3 items-center justify-center">

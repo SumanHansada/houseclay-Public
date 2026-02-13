@@ -104,7 +104,7 @@ export default function MyProfilePage() {
 
           {/* Right Side - Admin Details */}
           <div className="flex-1 flex flex-col border rounded-xl shadow-sm overflow-hidden">
-            <form className="flex flex-col gap-4 min-h-0 overflow-auto p-3">
+            <form className="flex flex-col gap-4 min-h-0 overflow-auto px-5 py-3 scrollbar-thin">
               {profileFields.map(({ label, value }) => (
                 <div key={label} className="flex flex-col gap-1">
                   <label className="text-gray-600 text-lg font-medium">
