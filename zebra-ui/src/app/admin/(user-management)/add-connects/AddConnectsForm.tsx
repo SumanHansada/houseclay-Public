@@ -96,15 +96,15 @@ export const AddConnectsForm = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-gray-100 overflow-hidden p-8">
-      <div className="flex flex-col bg-white shadow-md rounded-xl overflow-hidden">
+    <div className="flex-1 flex flex-col bg-gray-100 overflow-hidden justify-center items-center">
+      <div className="flex flex-col bg-white shadow-md rounded-xl overflow-hidden w-11/12">
         {/* Header */}
-        <h2 className="sticky top-0 z-10 bg-white border-b border-gray-100 shadow-sm text-3xl flex items-center w-full justify-between px-8 py-4">
+        <h2 className="sticky top-0 z-10 bg-white border-b border-gray-100 shadow-sm text-2xl flex items-center w-full justify-between px-8 py-4 font-medium">
           Add Connects to Houseclay Users
         </h2>
 
         {/* Content */}
-        <div className="flex gap-2 p-6">
+        <div className="flex gap-2 py-12 px-8">
           <PhoneField
             id="phoneNumber"
             name="phoneNumber"
@@ -140,7 +140,7 @@ export const AddConnectsForm = () => {
         </div>
 
         {/* Footer */}
-        <div className="flex gap-3 justify-end px-8 py-4 border-t border-gray-100 shadow-sm">
+        <div className="flex justify-end px-8 py-4 gap-3 border-t border-gray-100 shadow-sm">
           <Button
             variant="secondary"
             onClick={handleClear}

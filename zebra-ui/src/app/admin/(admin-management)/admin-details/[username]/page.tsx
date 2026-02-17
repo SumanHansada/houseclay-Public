@@ -88,25 +88,25 @@ const ProfilePage: React.FC = () => {
   } = adminDetails;
 
   const profileFields = [
-    { label: "Username", value: username },
-    { label: "Phone", value: phoneNo },
+    { label: "Username", value: username ?? "N/A" },
+    { label: "Phone", value: phoneNo ?? "N/A" },
     ...(secondaryPhoneNo
-      ? [{ label: "Secondary PhoneNo", value: secondaryPhoneNo }]
+      ? [{ label: "Secondary PhoneNo", value: secondaryPhoneNo ?? "N/A" }]
       : []),
     {
       label: "Role",
-      value: role,
+      value: role ?? "N/A",
     },
-    { label: "Personal Email", value: personalEmail },
+    { label: "Personal Email", value: personalEmail ?? "N/A" },
     {
       label: "Joined On",
-      value: formatDateVerbose(dateOfJoining),
+      value: dateOfJoining ? formatDateVerbose(dateOfJoining) : "N/A",
     },
     {
       label: "Date of Birth",
-      value: formatDateVerbose(dateOfBirth),
+      value: dateOfBirth ? formatDateVerbose(dateOfBirth) : "N/A",
     },
-    { label: "Address", value: address },
+    { label: "Address", value: address ?? "N/A" },
     {
       label: "Active",
       value: isActive ? "The admin is active" : "The admin is inactive",

@@ -97,8 +97,8 @@ export const AddZebraUserForm = () => {
 
   return (
     <div className="flex-1 flex flex-col bg-gray-100 overflow-hidden p-8">
-      <div className="flex-1 flex flex-col bg-white shadow-md rounded-xl p-8 overflow-y-auto">
-        <h1 className="text-2xl md:text-3xl mb-6 font-semibold text-gray-800">
+      <div className="flex-1 flex flex-col bg-white shadow-md rounded-xl overflow-hidden">
+        <h1 className="sticky top-0 z-10 bg-white border-b border-gray-100 shadow-sm text-2xl flex items-center w-full justify-between px-8 py-4 font-medium">
           Add New Zebra User
         </h1>
 
@@ -109,110 +109,124 @@ export const AddZebraUserForm = () => {
           validateOnChange={true}
           validateOnBlur={true}
         >
-          {({}) => (
-            <Form className="flex flex-col gap-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormTextField
-                  name="name"
-                  id="name"
-                  label="Name"
-                  placeholder="Full name"
-                  required
-                />
-                <FormPhoneField
-                  label="Phone"
-                  name="phoneNo"
-                  id="phoneNo"
-                  defaultCountry="in"
-                  placeholder="Enter phone number"
-                  className="border border-gray-300 rounded-lg px-3 py-1 focus:ring-red-500 focus:border-red-500"
-                  required
-                />
+          {({ resetForm }) => (
+            <Form className="flex-1 flex flex-col overflow-hidden">
+              {/* Container for all form fields */}
+              <div className="flex-1 flex flex-col gap-6 p-8 overflow-auto scrollbar-thin">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormTextField
+                    name="name"
+                    id="name"
+                    label="Name"
+                    placeholder="Full name"
+                    required
+                  />
+                  <FormPhoneField
+                    label="Phone"
+                    name="phoneNo"
+                    id="phoneNo"
+                    defaultCountry="in"
+                    placeholder="Enter phone number"
+                    className="border border-gray-300 rounded-lg px-3 py-1 focus:ring-red-500 focus:border-red-500"
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormTextField
+                    name="username"
+                    id="username"
+                    label="Official Email (Username)"
+                    type="email"
+                    placeholder="username"
+                    suffix="@houseclay.com"
+                    required
+                  />
+                  <FormTextField
+                    name="password"
+                    id="password"
+                    label="Password"
+                    type="password"
+                    placeholder="Enter password"
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormSelectDropdown
+                    label="Role"
+                    name="role"
+                    id="role"
+                    placeholder="Select role"
+                    options={[
+                      { value: ADMIN_ROLES.MANAGER, label: "Manager" },
+                      {
+                        value: ADMIN_ROLES.CAPTAIN,
+                        label: "Houseclay Captain",
+                      },
+                    ]}
+                    required
+                  />
+                  <FormCalendarField
+                    label="Joining Date"
+                    name="dateOfJoining"
+                    placeholder="Select joining date: Format 01-01-2026"
+                    dateFormat="dd-MM-yyyy"
+                    required
+                  />
+                </div>
+
+                <hr />
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormTextField
+                    name="personalEmail"
+                    id="personalEmail"
+                    label="Personal Email"
+                    type="email"
+                    placeholder="Enter your personal email"
+                    required
+                  />
+                  <FormCalendarField
+                    label="Date of Birth"
+                    name="dateOfBirth"
+                    placeholder="Select date of birth: Format 01-01-1999"
+                    dateFormat="dd-MM-yyyy"
+                    showPrevNextYear={true}
+                    disablePrevDates={false}
+                    showYearDropdown={true}
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormTextField
+                    name="address"
+                    id="address"
+                    label="Address"
+                    placeholder="Enter address"
+                    required
+                  />
+                  <FormPhoneField
+                    label="Secondary Phone Number"
+                    name="secondaryPhoneNo"
+                    id="secondaryPhoneNo"
+                    defaultCountry="in"
+                    placeholder="Enter secondary phone number"
+                    className="border border-gray-300 rounded-lg px-3 py-1 focus:ring-red-500 focus:border-red-500"
+                  />
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormTextField
-                  name="username"
-                  id="username"
-                  label="Official Email (Username)"
-                  type="email"
-                  placeholder="username"
-                  suffix="@houseclay.com"
-                  required
-                />
-                <FormTextField
-                  name="password"
-                  id="password"
-                  label="Password"
-                  type="password"
-                  placeholder="Enter password"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormSelectDropdown
-                  label="Role"
-                  name="role"
-                  id="role"
-                  placeholder="Select role"
-                  options={[
-                    { value: ADMIN_ROLES.MANAGER, label: "Manager" },
-                    { value: ADMIN_ROLES.CAPTAIN, label: "Houseclay Captain" },
-                  ]}
-                  required
-                />
-                <FormCalendarField
-                  label="Joining Date"
-                  name="dateOfJoining"
-                  placeholder="Select joining date: Format 01-01-2026"
-                  dateFormat="dd-MM-yyyy"
-                  required
-                />
-              </div>
-
-              <hr />
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormTextField
-                  name="personalEmail"
-                  id="personalEmail"
-                  label="Personal Email"
-                  type="email"
-                  placeholder="Enter your personal email"
-                  required
-                />
-                <FormCalendarField
-                  label="Date of Birth"
-                  name="dateOfBirth"
-                  placeholder="Select date of birth: Format 01-01-1999"
-                  dateFormat="dd-MM-yyyy"
-                  showPrevNextYear={true}
-                  disablePrevDates={false}
-                  showYearDropdown={true}
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormTextField
-                  name="address"
-                  id="address"
-                  label="Address"
-                  placeholder="Enter address"
-                  required
-                />
-                <FormPhoneField
-                  label="Secondary Phone Number"
-                  name="secondaryPhoneNo"
-                  id="secondaryPhoneNo"
-                  defaultCountry="in"
-                  placeholder="Enter secondary phone number"
-                  className="border border-gray-300 rounded-lg px-3 py-1 focus:ring-red-500 focus:border-red-500"
-                />
-              </div>
-
-              <div className="flex justify-end">
+              {/* Footer */}
+              <div className="flex justify-end px-8 py-4 gap-3 border-t border-gray-100 shadow-sm">
+                <Button
+                  variant="secondary"
+                  onClick={() => resetForm()}
+                  className="rounded-xl px-8 text-lg hover:bg-gray-200 transition-colors"
+                >
+                  Clear
+                </Button>
                 <Button
                   variant="primary"
                   type="submit"

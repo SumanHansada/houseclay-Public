@@ -201,7 +201,7 @@ export const ListAllUsersView = () => {
     <>
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Sticky top filter bar */}
-        <div className="h-16 sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm flex justify-between items-center px-8">
+        <div className="h-16 sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm flex justify-between items-center px-8 py-4">
           <h1 className="text-2xl font-medium">User Management</h1>
           <div className="flex items-center gap-5">
             <SearchBar
@@ -253,7 +253,7 @@ export const ListAllUsersView = () => {
         </div>
 
         {/* Sticky bottom pagination */}
-        <div className="sticky bottom-0 z-10 bg-white border-t border-gray-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] py-4 px-16">
+        <div className="sticky bottom-0 z-10 bg-white border-t border-gray-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] py-4 px-8">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

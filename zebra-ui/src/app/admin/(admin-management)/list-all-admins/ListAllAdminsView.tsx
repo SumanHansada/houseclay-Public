@@ -122,7 +122,7 @@ export const ListAllAdminsView = () => {
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* Sticky top filter bar */}
-      <div className="h-16 sticky top-0 z-10 bg-white border border-b-gray-200 shadow-sm px-8 flex items-center">
+      <div className="h-16 sticky top-0 z-10 bg-white border border-b-gray-200 shadow-sm px-8 py-4 flex items-center">
         <h1 className="text-2xl font-medium">Admin Management</h1>
       </div>
 

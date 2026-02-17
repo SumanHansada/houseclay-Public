@@ -7,7 +7,7 @@ import { Button } from "@/base-components";
 export default function UnauthorizedPage() {
   const router = useRouter();
   return (
-    <div className="flex h-[calc(100vh-4rem)] w-full items-center justify-center bg-gray-100">
+    <div className="flex-1 flex w-full items-center justify-center bg-gray-100">
       <div className="rounded-lg bg-white p-5 shadow-md">
         <div>
           <h1 className="mb-4 text-3xl font-bold text-red-600">Unauthorized</h1>
