@@ -28,7 +28,7 @@ export default function ShortlistUsersPage() {
     useLocalPagination(rows, ROWS_PER_PAGE);
 
   const viewProfile = (phoneNo: string) =>
-    router.push(`/admin/user-details/${phoneNo}`);
+    router.push(`/admin/users/${phoneNo}`);
 
   const columns: Column<UserInfo>[] = [
     { key: "name", label: "Name", accessor: "name" },

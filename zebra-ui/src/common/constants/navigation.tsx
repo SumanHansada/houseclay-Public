@@ -46,17 +46,17 @@ export const sidebarItems: SidebarItem[] = [
     children: [
       {
         label: "Property Leads",
-        href: "/admin/lead-management/property",
+        href: "/admin/leads/property",
         allowedRoles: PERMISSIONS.LEADS_ACCESS,
       },
       {
         label: "Support Leads",
-        href: "/admin/lead-management/support",
+        href: "/admin/leads/support",
         allowedRoles: PERMISSIONS.LEADS_ACCESS,
       },
       {
         label: "Upgrade Property Leads",
-        href: "/admin/lead-management/upgrade",
+        href: "/admin/leads/upgrade",
         allowedRoles: PERMISSIONS.LEADS_ACCESS,
       },
     ],
@@ -65,12 +65,12 @@ export const sidebarItems: SidebarItem[] = [
     label: "User Management",
     icon: <Users size={20} />,
     href: "#",
-    allowedRoles: PERMISSIONS.USER_MANAGEMENT,
+    allowedRoles: PERMISSIONS.USERS_ACCESS,
     children: [
       {
         label: "Houseclay Users - Table View",
-        href: "/admin/list-all-users",
-        allowedRoles: PERMISSIONS.USER_MANAGEMENT,
+        href: "/admin/users",
+        allowedRoles: PERMISSIONS.USERS_ACCESS,
       },
       {
         label: "Add connects",

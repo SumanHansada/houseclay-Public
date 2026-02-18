@@ -49,7 +49,7 @@ export default function PropertyDetailsOverviewPage() {
           <div className="flex justify-between items-center">
             <h2 className="text-3xl">Owner Details</h2>
             <Link
-              href={`/admin/user-details/${phoneNo}`}
+              href={`/admin/users/${phoneNo}`}
               target="_blank"
               rel="noopener noreferrer"
               prefetch={false}

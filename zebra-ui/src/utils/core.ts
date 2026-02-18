@@ -90,6 +90,30 @@ export const getInitials = (fullName: string | undefined) => {
     : (parts[0][0] + parts[1][0]).toUpperCase();
 };
 
+/**
+ * Safely decodes a URL parameter (like a phone number or email).
+ *
+ * @remarks
+ * - Wraps standard `decodeURIComponent` in a try-catch.
+ * - Prevents app crashes if the URL contains malformed sequences (e.g. "%").
+ * - Essential for parameters containing special chars like "+" (common in phone numbers).
+ *
+ * @example
+ * safeUrlDecode("%2B919876543210"); // Returns "+919876543210"
+ * safeUrlDecode("normal-string");   // Returns "normal-string"
+ * safeUrlDecode("malformed-%");     // Returns "malformed-%" (doesn't crash)
+ */
+export function safeUrlDecode(value: string | undefined | null): string {
+  if (!value) return "";
+  try {
+    return decodeURIComponent(value);
+  } catch (_e) {
+    // If the string is malformed (e.g. ends in a single "%"), decodeURIComponent throws.
+    // In that case, we return the raw value.
+    return value;
+  }
+}
+
 /* --------------------------------------------------------------------
   Enum helpers
    ------------------------------------------------------------------ */
