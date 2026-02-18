@@ -7,6 +7,6 @@ export default function LeadManagementLayout({
   children: React.ReactNode;
 }) {
   return (
-    <RoleGuard allowedRoles={PERMISSIONS.MANAGE_LEADS}>{children}</RoleGuard>
+    <RoleGuard allowedRoles={PERMISSIONS.LEADS_ACCESS}>{children}</RoleGuard>
   );
 }

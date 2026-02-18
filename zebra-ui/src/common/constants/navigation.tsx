@@ -42,22 +42,22 @@ export const sidebarItems: SidebarItem[] = [
     label: "Lead Management",
     icon: <UserCheck size={20} />,
     href: "#",
-    allowedRoles: PERMISSIONS.MANAGE_LEADS,
+    allowedRoles: PERMISSIONS.LEADS_ACCESS,
     children: [
       {
-        label: "Property Lead",
+        label: "Property Leads",
         href: "/admin/lead-management/property",
-        allowedRoles: PERMISSIONS.MANAGE_LEADS,
+        allowedRoles: PERMISSIONS.LEADS_ACCESS,
       },
       {
-        label: "Support Lead",
+        label: "Support Leads",
         href: "/admin/lead-management/support",
-        allowedRoles: PERMISSIONS.MANAGE_LEADS,
+        allowedRoles: PERMISSIONS.LEADS_ACCESS,
       },
       {
-        label: "Upgrade Property",
+        label: "Upgrade Property Leads",
         href: "/admin/lead-management/upgrade",
-        allowedRoles: PERMISSIONS.MANAGE_LEADS,
+        allowedRoles: PERMISSIONS.LEADS_ACCESS,
       },
     ],
   },
@@ -68,7 +68,7 @@ export const sidebarItems: SidebarItem[] = [
     allowedRoles: PERMISSIONS.USER_MANAGEMENT,
     children: [
       {
-        label: "List All - Houseclay Users",
+        label: "Houseclay Users - Table View",
         href: "/admin/list-all-users",
         allowedRoles: PERMISSIONS.USER_MANAGEMENT,
       },
@@ -86,7 +86,7 @@ export const sidebarItems: SidebarItem[] = [
     allowedRoles: PERMISSIONS.ADMIN_MANAGEMENT,
     children: [
       {
-        label: "List All - Zebra Admins",
+        label: "Zebra Admins - Table View",
         href: "/admin/list-all-admins",
         allowedRoles: PERMISSIONS.ADMIN_MANAGEMENT,
       },

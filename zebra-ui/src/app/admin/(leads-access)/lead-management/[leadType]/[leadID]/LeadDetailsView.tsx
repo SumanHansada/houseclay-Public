@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 
 import { LeadActionsEnum, LeadStatusEnum } from "@/common/enums";
@@ -13,11 +13,13 @@ import {
   useLeadStatusUpdateMutation,
 } from "@/store/apiSlice";
 
-export const LeadDetails = () => {
+interface LeadDetailsProps {
+  leadType: LeadType;
+  leadID: number;
+}
+
+export const LeadDetailsView = ({ leadType, leadID }: LeadDetailsProps) => {
   const router = useRouter();
-  const params = useParams();
-  const leadType = params.leadType as LeadType;
-  const leadID = Number(params.leadID);
 
   const {
     data: currentLead,

@@ -75,13 +75,13 @@ const Sidebar = () => {
               ) : null}
             </div>
             {item.children.length && openSections[item.label] && (
-              <div className="ml-16 flex flex-col gap-1 font-nunito">
+              <div className="ml-12 flex flex-col gap-1 font-nunito">
                 {item.children.map((child) => (
                   <Link
                     key={child.label}
                     href={child.href}
                     data-testid={`sidebar-link-${toSlug(child.label)}`} // Zebra-UI: test id
-                    className="py-1 text-lg text-gray-700 hover:text-gray-950 cursor-pointer block"
+                    className="py-1 text-base text-gray-700 hover:text-gray-950 hover:bg-gray-200 cursor-pointer block rounded-lg px-2"
                   >
                     {child.label}
                   </Link>

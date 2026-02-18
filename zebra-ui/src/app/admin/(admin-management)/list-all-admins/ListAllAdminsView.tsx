@@ -121,7 +121,7 @@ export const ListAllAdminsView = () => {
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      {/* Sticky top filter bar */}
+      {/* Sticky top status title bar */}
       <div className="h-16 sticky top-0 z-10 bg-white border border-b-gray-200 shadow-sm px-8 py-4 flex items-center">
         <h1 className="text-2xl font-medium">Admin Management</h1>
       </div>
@@ -129,6 +129,7 @@ export const ListAllAdminsView = () => {
       {/* Table area */}
       <div className="flex-1 flex flex-col bg-gray-100 p-8 overflow-hidden">
         <div className="flex-1 flex flex-col bg-white shadow-md rounded-xl relative overflow-hidden p-2 gap-2">
+          {/* Table Header */}
           <div className="px-1 flex justify-between items-center">
             <h1 className="text-xl font-medium">
               Houseclay - Zebra Users [{totalElements}]
@@ -138,6 +139,7 @@ export const ListAllAdminsView = () => {
             </span>
           </div>
 
+          {/* Table */}
           <div className="flex-1 flex flex-col overflow-hidden">
             <DataTable
               columns={columns}

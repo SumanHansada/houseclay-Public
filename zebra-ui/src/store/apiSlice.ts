@@ -1,6 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 
-import { LeadQueryParamEnum } from "@/common/enums";
 import { AdminDetails } from "@/interfaces/Admin";
 import {
   GetAllLeadsResponse,
@@ -13,6 +12,7 @@ import {
   GetUserByPhoneNoResponse,
 } from "@/interfaces/api";
 import { GetAllAdminsResponse } from "@/interfaces/api/admins";
+import { LeadQueryParam } from "@/interfaces/Lead";
 import { PropertyForm } from "@/interfaces/PropertyForm";
 import {
   baseQueryWithAuth,
@@ -226,7 +226,7 @@ export const apiSlice = createApi({
     // ──────────────── LEADS ────────────────
     getLeads: builder.query<
       GetAllLeadsResponse,
-      { type: LeadQueryParamEnum; page: number; size: number }
+      { type: LeadQueryParam; page: number; size: number }
     >({
       query: ({ type, page, size }) => ({
         url: `/leads?leadCategory=${type}&page=${page}&size=${size}`,
