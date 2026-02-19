@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { LEAD_TYPE_MAP, LeadType } from "@/interfaces/Lead";
 
@@ -8,6 +8,9 @@ import { LeadsTableView } from "./LeadsTableView";
 interface PageProps {
   params: Promise<{
     leadType: string;
+  }>;
+  searchParams: Promise<{
+    page?: string;
   }>;
 }
 
@@ -23,12 +26,22 @@ export async function generateMetadata({
   };
 }
 
-export default async function LeadsPage({ params }: PageProps) {
+export default async function LeadsPage({ params, searchParams }: PageProps) {
   const { leadType } = await params;
+  const { page } = await searchParams;
+
   if (!Object.keys(LEAD_TYPE_MAP).includes(leadType)) {
     return notFound();
   }
   const validLeadType = leadType as LeadType;
 
-  return <LeadsTableView leadType={validLeadType} />;
+  const parsedPage = Number(page);
+
+  if (page !== undefined && (isNaN(parsedPage) || parsedPage < 1)) {
+    redirect(`/admin/leads/${validLeadType}?page=1`);
+  }
+
+  const currentPage = parsedPage || 1;
+
+  return <LeadsTableView leadType={validLeadType} currentPage={currentPage} />;
 }

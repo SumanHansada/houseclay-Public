@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useTransition } from "react";
 
 import AsyncFallback from "@/components/AsyncFallback";
 import { Column, DataTable } from "@/components/DataTable";
@@ -15,9 +15,17 @@ import { TableActionButtons } from "../components/TableActionButtons";
 
 const ROWS_PER_PAGE = 12;
 
-export const LeadsTableView = ({ leadType }: { leadType: LeadType }) => {
+export const LeadsTableView = ({
+  leadType,
+  currentPage,
+}: {
+  leadType: LeadType;
+  currentPage: number;
+}) => {
   const router = useRouter();
-  const [currentPage, setCurrentPage] = useState(1);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
 
   const statusBarTitle =
     leadType === "property"
@@ -25,6 +33,19 @@ export const LeadsTableView = ({ leadType }: { leadType: LeadType }) => {
       : leadType === "support"
         ? "Search Support Leads"
         : "Upgrade Property Leads";
+
+  // update URL
+  const updateURL = useCallback(
+    (page: number) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("page", page.toString());
+
+      startTransition(() => {
+        router.push(`${pathname}?${params.toString()}`);
+      });
+    },
+    [searchParams, pathname, router],
+  );
 
   const {
     data: paginatedLeadData,
@@ -46,10 +67,10 @@ export const LeadsTableView = ({ leadType }: { leadType: LeadType }) => {
   const { content: allLeads = [], totalPages = 0 } = paginatedLeadData || {};
 
   useEffect(() => {
-    if (totalPages > 0 && currentPage > totalPages) {
-      setCurrentPage(1);
+    if (!isLoading && totalPages > 0 && currentPage > totalPages) {
+      updateURL(1);
     }
-  }, [totalPages, currentPage]);
+  }, [totalPages, currentPage, isLoading, updateURL]);
 
   const viewUserProfile = (phoneNo: string) => {
     router.push(`/admin/users/${phoneNo}`);
@@ -133,7 +154,7 @@ export const LeadsTableView = ({ leadType }: { leadType: LeadType }) => {
               columns={columns}
               data={allLeads}
               getRowId={(lead) => lead.leadId.toString()}
-              isLoading={isFetching}
+              isLoading={isFetching || isPending}
             />
           </div>
         </div>
@@ -144,8 +165,8 @@ export const LeadsTableView = ({ leadType }: { leadType: LeadType }) => {
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
-          onPageChange={(page) => setCurrentPage(page)}
-          isLoading={isFetching}
+          onPageChange={updateURL}
+          isLoading={isFetching || isPending}
         />
       </div>
     </div>

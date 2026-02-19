@@ -21,20 +21,20 @@ export interface SidebarItem {
 
 export const sidebarItems: SidebarItem[] = [
   {
-    label: "Properties",
+    label: "Property Management",
     icon: <Home size={20} />,
     href: "#",
-    allowedRoles: PERMISSIONS.PROPERTY_MANAGEMENT,
+    allowedRoles: PERMISSIONS.PROPERTIES_ACCESS,
     children: [
       {
         label: "View All Properties",
         href: "/admin/view-all-properties",
-        allowedRoles: PERMISSIONS.PROPERTY_MANAGEMENT,
+        allowedRoles: PERMISSIONS.PROPERTIES_ACCESS,
       },
       {
         label: "Property Verification",
         href: "/admin/property-verification",
-        allowedRoles: PERMISSIONS.PROPERTY_MANAGEMENT,
+        allowedRoles: PERMISSIONS.PROPERTIES_ACCESS,
       },
     ],
   },
@@ -83,17 +83,17 @@ export const sidebarItems: SidebarItem[] = [
     label: "Admin Management",
     icon: <UserLock size={20} />,
     href: "#",
-    allowedRoles: PERMISSIONS.ADMIN_MANAGEMENT,
+    allowedRoles: PERMISSIONS.ADMINS_ACCESS,
     children: [
       {
         label: "Zebra Admins - Table View",
-        href: "/admin/list-all-admins",
-        allowedRoles: PERMISSIONS.ADMIN_MANAGEMENT,
+        href: "/admin/admins",
+        allowedRoles: PERMISSIONS.ADMINS_ACCESS,
       },
       {
         label: "Add new Zebra user",
         href: "/admin/add-zebra-user",
-        allowedRoles: PERMISSIONS.ADMIN_MANAGEMENT,
+        allowedRoles: PERMISSIONS.ADMINS_ACCESS,
       },
     ],
   },

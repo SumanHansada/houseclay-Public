@@ -2,7 +2,7 @@
 
 import { CirclePlus, Eye, PlusCircle } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState, useTransition } from "react";
+import React, { useCallback, useEffect, useState, useTransition } from "react";
 
 import { Button } from "@/base-components";
 import AsyncFallback from "@/components/AsyncFallback";
@@ -17,57 +17,56 @@ import { useDialog } from "@/providers/DialogContextProvider";
 import { useGetUserByPhoneNoQuery, useGetUsersQuery } from "@/store/apiSlice";
 
 const ROWS_PER_PAGE = 12;
-// const userManagementTestIds = createTestIdFactory("User Management");
 const ADD_NEW_USER_DIALOG_ID = "add-new-houseclay-user-dialog";
 
-interface Props {
-  initialPage: number;
-  initialSearch: string;
-}
-
-export const UsersTableView = ({ initialPage, initialSearch }: Props) => {
+export const UsersTableView = ({
+  currentPage,
+  searchTerm,
+}: {
+  currentPage: number;
+  searchTerm: string;
+}) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { isDialogOpen, openDialog } = useDialog();
   const [isPending, startTransition] = useTransition();
 
-  const [localSearchText, setLocalSearchText] = useState(initialSearch);
+  const [localSearchText, setLocalSearchText] = useState(searchTerm);
 
   // Sync local input if URL changes externally (e.g. Back Button)
   useEffect(() => {
-    setLocalSearchText(initialSearch);
-  }, [initialSearch]);
+    setLocalSearchText(searchTerm);
+  }, [searchTerm]);
 
   // update URL
-  const updateURL = (updates: Record<string, string | null>) => {
-    const params = new URLSearchParams(searchParams.toString());
+  const updateURL = useCallback(
+    (updates: Record<string, string | null>) => {
+      const params = new URLSearchParams(searchParams.toString());
 
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value) {
-        params.set(key, value);
-      } else {
-        params.delete(key);
-      }
-    });
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value) {
+          params.set(key, value);
+        } else {
+          params.delete(key);
+        }
+      });
 
-    // If we are searching, always reset to page 1
-    if (updates.search !== undefined) {
-      if (updates.search) {
-        params.set("page", "1");
-      } else {
+      // If we are searching, always reset to page 1
+      if (updates.search !== undefined) {
         params.set("page", "1");
       }
-    }
 
-    startTransition(() => {
-      router.push(`${pathname}?${params.toString()}`);
-    });
-  };
+      startTransition(() => {
+        router.push(`${pathname}?${params.toString()}`);
+      });
+    },
+    [searchParams, pathname, router],
+  );
 
   const handleSearchClick = () => {
     const term = localSearchText.trim();
-    if (term != initialSearch) {
+    if (term != searchTerm) {
       updateURL({ search: term });
     }
   };
@@ -90,7 +89,7 @@ export const UsersTableView = ({ initialPage, initialSearch }: Props) => {
   };
 
   // ─── DATA FETCHING ───
-  const isSearchMode = !!initialSearch;
+  const isSearchMode = !!searchTerm;
 
   // Get All Users (Paginated)
   const {
@@ -101,7 +100,7 @@ export const UsersTableView = ({ initialPage, initialSearch }: Props) => {
     error: listError,
   } = useGetUsersQuery(
     {
-      page: initialPage - 1,
+      page: currentPage - 1,
       size: ROWS_PER_PAGE,
     },
     {
@@ -116,7 +115,7 @@ export const UsersTableView = ({ initialPage, initialSearch }: Props) => {
     isFetching: isSearchFetching,
     isError: isSearchError,
   } = useGetUserByPhoneNoQuery(
-    { phoneNo: initialSearch },
+    { phoneNo: searchTerm },
     { skip: !isSearchMode },
   );
 
@@ -160,7 +159,7 @@ export const UsersTableView = ({ initialPage, initialSearch }: Props) => {
       const rawData = paginatedUserData?.content || [];
       tableData = rawData.map((user, index) => ({
         ...user,
-        _serial: (initialPage - 1) * ROWS_PER_PAGE + index + 1,
+        _serial: (currentPage - 1) * ROWS_PER_PAGE + index + 1,
       }));
       totalPages = paginatedUserData?.totalPages || 0;
     }
@@ -168,20 +167,15 @@ export const UsersTableView = ({ initialPage, initialSearch }: Props) => {
 
   // Reset page if out of bounds
   useEffect(() => {
-    if (initialPage < 1) {
-      updateURL({ page: "1" });
-    }
-
     if (
       !isSearchMode &&
       !isListLoading &&
       totalPages > 0 &&
-      initialPage > totalPages
+      currentPage > totalPages
     ) {
       updateURL({ page: "1" });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [totalPages, initialPage, isSearchMode, isListLoading]);
+  }, [totalPages, currentPage, isSearchMode, isListLoading, updateURL]);
 
   // Columns Configuration
   const columns: Column<UserInfo & { _serial: number }>[] = [
@@ -282,7 +276,7 @@ export const UsersTableView = ({ initialPage, initialSearch }: Props) => {
                   : `Houseclay Users - [${userCount}]`}
               </h1>
               <span className="text-xs font-medium text-gray-400 bg-gray-50 px-2 py-1 rounded-full border">
-                Page {initialPage} of {totalPages || 1}
+                Page {currentPage} of {totalPages || 1}
               </span>
             </div>
             <div className="flex-1 flex flex-col overflow-hidden">
@@ -304,7 +298,7 @@ export const UsersTableView = ({ initialPage, initialSearch }: Props) => {
         {/* Sticky bottom pagination */}
         <div className="sticky bottom-0 z-10 bg-white border-t border-gray-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] py-4 px-8">
           <Pagination
-            currentPage={initialPage}
+            currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
             isLoading={isGlobalFetching}

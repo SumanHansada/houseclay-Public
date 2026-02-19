@@ -1,8 +1,8 @@
 "use client";
 
 import { Eye } from "lucide-react";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import React, { useCallback, useEffect, useTransition } from "react";
 
 import AsyncFallback from "@/components/AsyncFallback";
 import { Column, DataTable } from "@/components/DataTable";
@@ -19,9 +19,55 @@ interface SerializedAdminRow extends AdminInfo {
 
 const ROWS_PER_PAGE = 12;
 
-export const ListAllAdminsView = () => {
+export const AdminsTableView = ({
+  currentPage,
+  searchTerm,
+}: {
+  currentPage: number;
+  searchTerm: string;
+}) => {
   const router = useRouter();
-  const [currentPage, setCurrentPage] = useState(1);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
+  console.log(searchTerm);
+
+  const handlePageChange = (page: number) => {
+    updateURL({ page: page.toString() });
+  };
+
+  const viewProfile = (username: string) => {
+    router.push(`/admin/admins/${username}`);
+  };
+
+  // update URL
+  const updateURL = useCallback(
+    (updates: Record<string, string | null>) => {
+      const params = new URLSearchParams(searchParams.toString());
+
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value) {
+          params.set(key, value);
+        } else {
+          params.delete(key);
+        }
+      });
+
+      // If we are searching, always reset to page 1
+      if (updates.search !== undefined) {
+        if (updates.search) {
+          params.set("page", "1");
+        } else {
+          params.set("page", "1");
+        }
+      }
+
+      startTransition(() => {
+        router.push(`${pathname}?${params.toString()}`);
+      });
+    },
+    [searchParams, pathname, router],
+  );
 
   // Get All Admins (Paginated)
   const {
@@ -46,43 +92,16 @@ export const ListAllAdminsView = () => {
     totalElements = 0,
   } = paginatedAdminData || {};
 
-  useEffect(() => {
-    if (totalPages > 0 && currentPage > totalPages) {
-      setCurrentPage(1);
-    }
-  }, [totalPages, currentPage]);
-
-  // Initial Hard Loading State
-  if (isLoading) {
-    return (
-      <AsyncFallback
-        isLoading={isLoading}
-        isError={false}
-        loadingMessage="Loading admins..."
-      />
-    );
-  }
-
-  // Error State
-  if (isError || !paginatedAdminData) {
-    return (
-      <AsyncFallback
-        isLoading={false}
-        isError={true}
-        error={error}
-        errorMessage="Failed to fetch Admins."
-      />
-    );
-  }
-
   const rows: SerializedAdminRow[] = adminList.map((adminInfo, index) => ({
     ...adminInfo,
     _serial: (currentPage - 1) * ROWS_PER_PAGE + index + 1,
   }));
 
-  const viewProfile = (username: string) => {
-    router.push(`/admin/admin-details/${username}`);
-  };
+  useEffect(() => {
+    if (!isLoading && totalPages > 0 && currentPage > totalPages) {
+      updateURL({ page: "1" });
+    }
+  }, [totalPages, currentPage, isLoading, updateURL]);
 
   // Columns Configuration
   const columns: Column<SerializedAdminRow>[] = [
@@ -119,6 +138,29 @@ export const ListAllAdminsView = () => {
     },
   ];
 
+  // Initial Hard Loading State
+  if (isLoading) {
+    return (
+      <AsyncFallback
+        isLoading={isLoading}
+        isError={false}
+        loadingMessage="Loading admins..."
+      />
+    );
+  }
+
+  // Error State
+  if (isError || !paginatedAdminData) {
+    return (
+      <AsyncFallback
+        isLoading={false}
+        isError={true}
+        error={error}
+        errorMessage="Failed to fetch Admins."
+      />
+    );
+  }
+
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* Sticky top status title bar */}
@@ -130,11 +172,11 @@ export const ListAllAdminsView = () => {
       <div className="flex-1 flex flex-col bg-gray-100 p-8 overflow-hidden">
         <div className="flex-1 flex flex-col bg-white shadow-md rounded-xl relative overflow-hidden p-2 gap-2">
           {/* Table Header */}
-          <div className="px-1 flex justify-between items-center">
+          <div className="flex justify-between items-center px-1">
             <h1 className="text-xl font-medium">
               Houseclay - Zebra Users [{totalElements}]
             </h1>
-            <span className="text-sm text-gray-500">
+            <span className="text-xs font-medium text-gray-400 bg-gray-50 px-2 py-1 rounded-full border">
               Page {currentPage} of {totalPages || 1}
             </span>
           </div>
@@ -146,7 +188,7 @@ export const ListAllAdminsView = () => {
               data={rows}
               getRowId={(admin) => admin.username}
               noDataMessage="No admins found."
-              isLoading={isFetching}
+              isLoading={isFetching || isPending}
             />
           </div>
         </div>
@@ -157,8 +199,8 @@ export const ListAllAdminsView = () => {
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
-          onPageChange={(page) => setCurrentPage(page)}
-          isLoading={isFetching}
+          onPageChange={handlePageChange}
+          isLoading={isFetching || isPending}
         />
       </div>
     </div>

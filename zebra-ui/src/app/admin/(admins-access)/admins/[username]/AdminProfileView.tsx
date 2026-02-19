@@ -1,7 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { Button } from "@/base-components";
 import { dialogLabels } from "@/common/constants";
@@ -19,30 +18,21 @@ import { formatDateVerbose } from "@/utils/core";
 const DEACTIVATE_DIALOG_ID = "deactivate-admin-dialog";
 const ACTIVATE_DIALOG_ID = "activate-admin-dialog";
 
-const ProfilePage: React.FC = () => {
-  const { username: adminUsername } = useParams() as { username: string };
-
+export const AdminProfileView = ({
+  adminUsername,
+}: {
+  adminUsername: string;
+}) => {
   const {
     data: adminDetails,
     isLoading,
     isError,
     error,
-  } = useGetAdminByUsernameQuery(
-    { username: adminUsername },
-    { skip: !adminUsername },
-  );
+  } = useGetAdminByUsernameQuery({ username: adminUsername });
 
   const [activateAdmin] = useActivateAdminMutation();
   const [deactivateAdmin] = useDeactivateAdminMutation();
   const { openDialog, isDialogOpen } = useDialog();
-
-  const [isActive, setIsActive] = useState(false);
-
-  useEffect(() => {
-    if (adminDetails) {
-      setIsActive(adminDetails.active);
-    }
-  }, [adminDetails]);
 
   const handleActivateAdmin = async () => {
     await activateAdmin({ username: adminUsername }).unwrap();
@@ -85,6 +75,7 @@ const ProfilePage: React.FC = () => {
     secondaryPhoneNo,
     address,
     username,
+    active,
   } = adminDetails;
 
   const profileFields = [
@@ -97,6 +88,10 @@ const ProfilePage: React.FC = () => {
       label: "Role",
       value: role ?? "N/A",
     },
+    {
+      label: "Active",
+      value: active ? "The admin is active" : "The admin is inactive",
+    },
     { label: "Personal Email", value: personalEmail ?? "N/A" },
     {
       label: "Joined On",
@@ -107,14 +102,10 @@ const ProfilePage: React.FC = () => {
       value: dateOfBirth ? formatDateVerbose(dateOfBirth) : "N/A",
     },
     { label: "Address", value: address ?? "N/A" },
-    {
-      label: "Active",
-      value: isActive ? "The admin is active" : "The admin is inactive",
-    },
   ];
 
   return (
-    <div className="flex-1 flex flex-col p-8 bg-gray-100 overflow-hidden">
+    <div className="flex-1 flex flex-col bg-gray-100 overflow-hidden">
       <div className="flex-1 flex flex-col rounded-xl bg-white shadow-sm overflow-hidden">
         {/* Header */}
         <h2 className="bg-white border-b border-gray-100 shadow-sm text-3xl flex items-center justify-between w-full px-8 py-4">
@@ -122,7 +113,7 @@ const ProfilePage: React.FC = () => {
         </h2>
 
         {/* Content */}
-        <div className="flex-1 flex px-8 py-4 w-full gap-5 overflow-hidden">
+        <div className="flex-1 flex p-8 w-full gap-5 overflow-hidden">
           {/* Left Side - Avatar and Name */}
           <div className="flex flex-col items-center w-1/6 h-fit rounded-xl shadow-sm border overflow-hidden min-w-48">
             <div className="p-2 bg-gray-100 w-full flex items-center justify-center">
@@ -155,25 +146,24 @@ const ProfilePage: React.FC = () => {
 
             {/* Footer */}
             <div className="sticky bottom-0 flex justify-end border-t border-gray-200 shadow-sm p-2 bg-gray-50">
-              <div className="flex gap-3 items-center justify-center">
+              {active ? (
                 <Button
                   aria-label="deactivate-admin"
-                  onClick={() => isActive && openDialog(DEACTIVATE_DIALOG_ID)}
-                  disabled={!isActive}
-                  className="rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={() => openDialog(DEACTIVATE_DIALOG_ID)}
+                  className="rounded-lg"
                 >
                   Deactivate Admin
                 </Button>
+              ) : (
                 <button
                   type="button"
                   aria-label="activate-admin"
-                  onClick={() => !isActive && openDialog(ACTIVATE_DIALOG_ID)}
-                  disabled={isActive}
-                  className="rounded-lg px-4 py-2 text-base bg-green-600 text-white cursor-pointer hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={() => openDialog(ACTIVATE_DIALOG_ID)}
+                  className="rounded-lg px-4 py-2 text-base bg-green-600 text-white cursor-pointer hover:bg-green-700"
                 >
                   Activate Admin
                 </button>
-              </div>
+              )}
             </div>
           </div>
         </div>
@@ -184,7 +174,6 @@ const ProfilePage: React.FC = () => {
           id={ACTIVATE_DIALOG_ID}
           {...dialogLabels.activateAdmin}
           onConfirm={handleActivateAdmin}
-          onSuccess={() => setIsActive(true)}
         />
       )}
 
@@ -193,11 +182,8 @@ const ProfilePage: React.FC = () => {
           id={DEACTIVATE_DIALOG_ID}
           {...dialogLabels.deactivateAdmin}
           onConfirm={handleDeactivateAdmin}
-          onSuccess={() => setIsActive(false)}
         />
       )}
     </div>
   );
 };
-
-export default ProfilePage;

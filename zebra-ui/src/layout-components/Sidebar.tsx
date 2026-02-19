@@ -53,11 +53,11 @@ const Sidebar = () => {
         {visibleSidebarItems.map((item) => (
           <div key={item.label}>
             <div
-              className={`flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-200 cursor-pointer transition-colors`}
+              className={`flex items-center justify-between p-3 rounded-lg hover:bg-gray-200 cursor-pointer transition-colors`}
               onClick={() => item.children.length && toggleSection(item.label)}
               data-testid={`sidebar-section-${toSlug(item.label)}`} // Zebra-UI: test id
             >
-              <div className="flex items-center gap-3 text-gray-950">
+              <div className="flex items-center gap-2.5 text-gray-950">
                 {item.icon}
                 <Link
                   href={item.href}

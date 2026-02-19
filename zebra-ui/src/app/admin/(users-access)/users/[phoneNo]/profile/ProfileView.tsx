@@ -29,11 +29,11 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
   if (!data?.user) return null;
 
   const handleBlacklistConfirm = async (comment: string) => {
-    await blacklistUser({ phoneNo: userPhoneNo, comment });
+    await blacklistUser({ phoneNo: userPhoneNo, comment }).unwrap();
   };
 
   const handleActivateConfirm = async (comment: string) => {
-    await activateUser({ phoneNo: userPhoneNo, comment });
+    await activateUser({ phoneNo: userPhoneNo, comment }).unwrap();
   };
 
   const {
@@ -110,26 +110,24 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
 
             {/* Footer */}
             <div className="sticky bottom-0 flex justify-end border-t border-gray-200 shadow-sm p-2 bg-gray-50">
-              <div className="flex gap-3 items-center justify-center">
-                {!blacklisted ? (
-                  <Button
-                    aria-label="Blacklist User"
-                    onClick={() => openDialog(BLACKLIST_DIALOG_ID)}
-                    className="rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Blacklist User
-                  </Button>
-                ) : (
-                  <button
-                    type="button"
-                    aria-label="Activate User"
-                    onClick={() => openDialog(ACTIVATE_DIALOG_ID)}
-                    className="rounded-lg px-4 py-2 text-base bg-green-600 text-white cursor-pointer hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Activate User
-                  </button>
-                )}
-              </div>
+              {!blacklisted ? (
+                <Button
+                  aria-label="Blacklist User"
+                  onClick={() => openDialog(BLACKLIST_DIALOG_ID)}
+                  className="rounded-lg"
+                >
+                  Blacklist User
+                </Button>
+              ) : (
+                <button
+                  type="button"
+                  aria-label="Activate User"
+                  onClick={() => openDialog(ACTIVATE_DIALOG_ID)}
+                  className="rounded-lg px-4 py-2 text-base bg-green-600 text-white cursor-pointer hover:bg-green-700"
+                >
+                  Activate User
+                </button>
+              )}
             </div>
           </div>
         </div>
