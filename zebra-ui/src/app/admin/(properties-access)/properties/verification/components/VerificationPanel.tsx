@@ -1,5 +1,6 @@
 "use client";
 
+import { ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
@@ -13,15 +14,57 @@ import {
   useVerifyPropertyMutation,
 } from "@/store/apiSlice";
 
-import { PanelSection } from "./PanelSection";
-
 const VERIFY_DIALOG_ID = "verify-property-dialog";
 const DEACTIVATE_DIALOG_ID = "report-property-dialog";
 const TAG_BROKER_DIALOG_ID = "tag-broker-dialog";
+
 interface VerificationPanelProps {
   propertyID: string;
   formScrollRef: React.RefObject<HTMLFormElement | null>;
   userPhoneNo: string;
+}
+
+function PanelSection<T extends Record<string, boolean>>({
+  title,
+  checklist,
+  setChecklist,
+  items,
+  complete,
+}: SectionProps<T>) {
+  return (
+    <div className="my-1">
+      <div className="flex w-full justify-between items-center py-1">
+        <h2 className="text-xl font-semibold">{title}</h2>
+        {complete && (
+          <p className="flex items-center gap-2 text-green-600">
+            <ShieldCheck size={18} /> <span>Marked as verified</span>
+          </p>
+        )}
+      </div>
+      <ul className="space-y-2">
+        {items.map(({ key, label }) => (
+          <li key={String(key)} className="flex items-center gap-3">
+            <input
+              id={`${title}-${String(key)}`}
+              type="checkbox"
+              checked={checklist[key]}
+              onChange={() =>
+                setChecklist((prev) => ({ ...prev, [key]: !prev[key] }))
+              }
+              className="h-4 w-4 accent-red-600 cursor-pointer"
+            />
+            <label
+              htmlFor={`${title}-${String(key)}`}
+              className="select-none cursor-pointer"
+            >
+              {label}
+            </label>
+          </li>
+        ))}
+      </ul>
+      <hr className="my-2" />
+    </div>
+  );
 }
 
 export const VerificationPanel: React.FC<VerificationPanelProps> = ({
@@ -46,6 +89,7 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
     notBroker: false,
     contactVerified: false,
   });
+
   const { openDialog, isDialogOpen } = useDialog();
 
   const allDetailsChecked = useMemo(
@@ -64,13 +108,12 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
   /* ----------------------- comment & scroll control --------------------- */
   const [hasScrolledToEnd, setHasScrolledToEnd] = useState(false);
   const [comment, setComment] = useState("");
-
   const [score, setScore] = useState(0);
+
   const scoreOptions = useMemo(
     () => Array.from({ length: 10 }, (_, i) => (i + 1) * 10),
     [],
   );
-
   const router = useRouter();
 
   /* detect scroll‑to‑bottom on the left column */
@@ -100,7 +143,7 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
 
   const redirectToPropertyList = () => {
     router.push(
-      `/admin/property-verification/${VerifyPropertyStatusEnum.VERIFY}`,
+      `/admin/properties/verification/${VerifyPropertyStatusEnum.VERIFY}`,
     );
   };
 
@@ -117,18 +160,6 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
   const handleTagBroker = async (commentFromDialog: string) => {
     await tagBroker({ phoneNo: userPhoneNo, comment: commentFromDialog });
     await deactivateProperty({ propertyID, comment: commentFromDialog });
-  };
-
-  const handleVerifyClicked = () => {
-    openDialog(VERIFY_DIALOG_ID);
-  };
-
-  const handleDeactivateClicked = () => {
-    openDialog(DEACTIVATE_DIALOG_ID);
-  };
-
-  const handleTagBrokerClicked = () => {
-    openDialog(TAG_BROKER_DIALOG_ID);
   };
 
   /* ---------------------------- render ---------------------------------- */
@@ -207,10 +238,10 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
         </p>
       </div>
 
-      {/* TAG OWNER AS BROKER – placeholder */}
+      {/* TAG OWNER AS BROKER */}
       <button
         type="button"
-        onClick={handleTagBrokerClicked}
+        onClick={() => openDialog(TAG_BROKER_DIALOG_ID)}
         className="w-full border border-red-500 text-red-600 py-2 rounded-xl hover:bg-red-200"
       >
         Tag Owner as Broker
@@ -235,7 +266,7 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
         <button
           type="button"
           disabled={!commentValid}
-          onClick={handleDeactivateClicked}
+          onClick={() => openDialog(DEACTIVATE_DIALOG_ID)}
           className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
           Deactivate Property
@@ -243,13 +274,14 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
         <button
           type="button"
           disabled={!readyForVerification}
-          onClick={handleVerifyClicked}
+          onClick={() => openDialog(VERIFY_DIALOG_ID)}
           className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-xl disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
           Verify Property
         </button>
       </div>
 
+      {/* DIALOGS */}
       {isDialogOpen(VERIFY_DIALOG_ID) && (
         <ActionDialog
           id={VERIFY_DIALOG_ID}
@@ -258,7 +290,6 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
           onSuccess={redirectToPropertyList}
         />
       )}
-
       {isDialogOpen(DEACTIVATE_DIALOG_ID) && (
         <ActionDialog
           id={DEACTIVATE_DIALOG_ID}
@@ -267,7 +298,6 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
           onSuccess={redirectToPropertyList}
         />
       )}
-
       {isDialogOpen(TAG_BROKER_DIALOG_ID) && (
         <ActionDialog
           id={TAG_BROKER_DIALOG_ID}
@@ -280,3 +310,11 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
     </div>
   );
 };
+
+interface SectionProps<T extends Record<string, boolean>> {
+  title: string;
+  checklist: T;
+  setChecklist: React.Dispatch<React.SetStateAction<T>>;
+  items: { key: keyof T; label: string }[];
+  complete: boolean;
+}

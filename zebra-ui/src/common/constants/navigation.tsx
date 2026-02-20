@@ -33,7 +33,7 @@ export const sidebarItems: SidebarItem[] = [
       },
       {
         label: "Property Verification",
-        href: "/admin/property-verification",
+        href: "/admin/properties/verification",
         allowedRoles: PERMISSIONS.PROPERTIES_ACCESS,
       },
     ],

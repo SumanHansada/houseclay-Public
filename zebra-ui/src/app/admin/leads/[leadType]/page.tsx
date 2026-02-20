@@ -14,6 +14,12 @@ interface PageProps {
   }>;
 }
 
+export async function generateStaticParams() {
+  return Object.keys(LEAD_TYPE_MAP).map((key) => ({
+    leadType: key,
+  }));
+}
+
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
