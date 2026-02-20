@@ -27,8 +27,8 @@ export const sidebarItems: SidebarItem[] = [
     allowedRoles: PERMISSIONS.PROPERTIES_ACCESS,
     children: [
       {
-        label: "View All Properties",
-        href: "/admin/view-all-properties",
+        label: "Properties - Table View",
+        href: "/admin/properties",
         allowedRoles: PERMISSIONS.PROPERTIES_ACCESS,
       },
       {
@@ -74,7 +74,7 @@ export const sidebarItems: SidebarItem[] = [
       },
       {
         label: "Add connects",
-        href: "/admin/add-connects",
+        href: "/admin/users/add-connects",
         allowedRoles: PERMISSIONS.ADD_CONNECTS,
       },
     ],
@@ -92,7 +92,7 @@ export const sidebarItems: SidebarItem[] = [
       },
       {
         label: "Add new Zebra user",
-        href: "/admin/add-zebra-user",
+        href: "/admin/admins/add-admin",
         allowedRoles: PERMISSIONS.ADMINS_ACCESS,
       },
     ],
