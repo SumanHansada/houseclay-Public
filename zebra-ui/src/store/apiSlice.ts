@@ -1,6 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 
-import { LeadQueryParamEnum } from "@/common/enums";
 import { AdminDetails } from "@/interfaces/Admin";
 import {
   GetAllLeadsResponse,
@@ -13,21 +12,15 @@ import {
   GetUserByPhoneNoResponse,
 } from "@/interfaces/api";
 import { GetAllAdminsResponse } from "@/interfaces/api/admins";
+import { LeadQueryParam } from "@/interfaces/Lead";
 import { PropertyForm } from "@/interfaces/PropertyForm";
+import { safeUrlDecode } from "@/utils/core";
 import {
   baseQueryWithAuth,
   invalidateAllTags,
   listTag,
   TAGS,
 } from "@/utils/rtkQueryHelpers";
-
-const safeDecode = (param: string) => {
-  try {
-    return decodeURIComponent(param);
-  } catch {
-    return param;
-  }
-};
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -93,10 +86,9 @@ export const apiSlice = createApi({
       { phoneNo: string }
     >({
       query: ({ phoneNo }) => {
-        const raw = safeDecode(phoneNo).trim();
         return {
           url: "/admin/search-user",
-          params: { phoneNo: raw },
+          params: { phoneNo },
           method: "GET",
         };
       },
@@ -126,8 +118,9 @@ export const apiSlice = createApi({
       { phoneNo: string; comment: string }
     >({
       query: ({ phoneNo, comment }) => ({
-        url: `/admin/blacklist-user?phoneNo=${phoneNo}&comment=${comment}`,
+        url: "/admin/blacklist-user",
         method: "POST",
+        params: { phoneNo, comment },
         headers: {
           "Content-Type": "application/json",
         },
@@ -145,8 +138,9 @@ export const apiSlice = createApi({
       { phoneNo: string; comment: string }
     >({
       query: ({ phoneNo, comment }) => ({
-        url: `/admin/activate-user?phoneNo=${phoneNo}&comment=${comment}`,
+        url: "/admin/activate-user",
         method: "POST",
+        params: { phoneNo, comment },
         headers: {
           "Content-Type": "application/json",
         },
@@ -164,10 +158,9 @@ export const apiSlice = createApi({
       { phoneNo: string; comment: string }
     >({
       query: ({ phoneNo, comment }) => {
-        const raw = safeDecode(phoneNo).trim();
         return {
           url: "/admin/tag-broker",
-          params: { phoneNo: raw, comment: comment },
+          params: { phoneNo, comment },
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -226,7 +219,7 @@ export const apiSlice = createApi({
     // ──────────────── LEADS ────────────────
     getLeads: builder.query<
       GetAllLeadsResponse,
-      { type: LeadQueryParamEnum; page: number; size: number }
+      { type: LeadQueryParam; page: number; size: number }
     >({
       query: ({ type, page, size }) => ({
         url: `/leads?leadCategory=${type}&page=${page}&size=${size}`,
@@ -328,7 +321,7 @@ export const apiSlice = createApi({
       }
     >({
       query: ({ phoneNo, payload }) => {
-        const rawPhoneNo = safeDecode(phoneNo);
+        const rawPhoneNo = safeUrlDecode(phoneNo);
         return {
           url: "property/admin/add",
           params: { phoneNo: rawPhoneNo },
@@ -350,7 +343,7 @@ export const apiSlice = createApi({
       }
     >({
       query: ({ phoneNo, payload }) => {
-        const rawPhoneNo = safeDecode(phoneNo);
+        const rawPhoneNo = safeUrlDecode(phoneNo);
         return {
           url: "property/admin/update",
           params: { phoneNo: rawPhoneNo },
@@ -487,10 +480,9 @@ export const apiSlice = createApi({
       }
     >({
       query: ({ connectCount, phoneNo }) => {
-        const rawPhoneNo = safeDecode(phoneNo).trim();
         return {
           url: "/admin/add-connects",
-          params: { connectCount: connectCount, phoneNo: rawPhoneNo },
+          params: { connectCount, phoneNo },
           method: "POST",
           headers: {
             "Content-Type": "application/json",

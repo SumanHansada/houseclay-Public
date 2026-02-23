@@ -9,7 +9,7 @@ export default function AdminRootLayout({
 }) {
   return (
     <AuthProvider>
-      <div className="w-full h-screen bg-gray-50 flex flex-col overflow-hidden">
+      <div className="fixed inset-0 w-full bg-gray-50 flex flex-col overflow-hidden">
         <Header />
         <Sidebar />
         <main className="pl-72 lg:pl-80 pt-16 flex-1 flex flex-col overflow-hidden">

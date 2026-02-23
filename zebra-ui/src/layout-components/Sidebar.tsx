@@ -53,11 +53,11 @@ const Sidebar = () => {
         {visibleSidebarItems.map((item) => (
           <div key={item.label}>
             <div
-              className={`flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-200 cursor-pointer transition-colors`}
+              className={`flex items-center justify-between p-3 rounded-lg hover:bg-gray-200 cursor-pointer transition-colors`}
               onClick={() => item.children.length && toggleSection(item.label)}
               data-testid={`sidebar-section-${toSlug(item.label)}`} // Zebra-UI: test id
             >
-              <div className="flex items-center gap-3 text-gray-950">
+              <div className="flex items-center gap-2.5 text-gray-950">
                 {item.icon}
                 <Link
                   href={item.href}
@@ -75,13 +75,13 @@ const Sidebar = () => {
               ) : null}
             </div>
             {item.children.length && openSections[item.label] && (
-              <div className="ml-16 flex flex-col gap-1 font-nunito">
+              <div className="ml-12 flex flex-col gap-1 font-nunito">
                 {item.children.map((child) => (
                   <Link
                     key={child.label}
                     href={child.href}
                     data-testid={`sidebar-link-${toSlug(child.label)}`} // Zebra-UI: test id
-                    className="py-1 text-lg text-gray-700 hover:text-gray-950 cursor-pointer block"
+                    className="py-1 text-base text-gray-700 hover:text-gray-950 hover:bg-gray-200 cursor-pointer block rounded-lg px-2"
                   >
                     {child.label}
                   </Link>

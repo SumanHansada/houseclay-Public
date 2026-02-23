@@ -1,6 +1,14 @@
 import { LeadStatusEnum } from "@/common/enums";
 
-export type LeadType = "property" | "support";
+export const LEAD_TYPE_MAP = {
+  property: "PROPERTY_LISTING",
+  support: "SEARCH_SUPPORT",
+  upgrade: "UPGRADE_PROPERTY",
+} as const;
+
+export type LeadType = keyof typeof LEAD_TYPE_MAP;
+
+export type LeadQueryParam = (typeof LEAD_TYPE_MAP)[LeadType];
 
 export interface Lead {
   leadId: number;
