@@ -430,7 +430,7 @@ export default function ListPropertyTypeLayout({
   return (
     <>
       {/* Mobile stepper is now handled inside ListPropertyStepper */}
-      <div className="flex flex-col w-full h-full overflow-y-auto top-14">
+      <div className="flex flex-col w-full flex-1 overflow-y-auto min-h-0">
         <div className="p-3 sticky top-0 z-40 bg-white border-b border-b-gray-100 shadow-md xl:px-28 lg:px-14 md:px-8 px-8">
           {/* Steps navigation */}
           {!isMobile && renderStepper()}
