@@ -31,13 +31,13 @@ const ListPropertyPage = () => {
     }
     const uuid = generateUUID();
     dispatch(setPropertyID(uuid));
-    const url = `/admin/list-property/${userPhoneNo}/${propertyCategory.toLowerCase()}/${uuid}/property-details`;
+    const url = `/admin/list-property/${userPhoneNo}/${propertyCategory.toLowerCase()}/property-details`;
     console.log("Navigating to URL:", url);
     router.push(url);
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] items-center justify-center">
+    <div className="flex-1 flex flex-col overflow-y-auto items-center justify-center">
       <div className="border border-red-500 rounded-xl p-6 text-lg w-1/2">
         <PropertyTypeOptions
           onNext={handlePostListingClick}

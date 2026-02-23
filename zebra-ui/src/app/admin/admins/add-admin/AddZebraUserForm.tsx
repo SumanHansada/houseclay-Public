@@ -96,8 +96,8 @@ export const AddZebraUserForm = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-gray-100 overflow-hidden p-8">
-      <div className="flex-1 flex flex-col bg-white shadow-md rounded-xl overflow-hidden">
+    <div className="flex-1 flex flex-col bg-gray-100 overflow-hidden">
+      <div className="flex-1 flex flex-col bg-gray-50 shadow-md rounded-xl overflow-hidden">
         <h1 className="sticky top-0 z-10 bg-white border-b border-gray-100 shadow-sm text-2xl flex items-center w-full justify-between px-8 py-4 font-medium">
           Add New Zebra User
         </h1>
@@ -219,7 +219,7 @@ export const AddZebraUserForm = () => {
               </div>
 
               {/* Footer */}
-              <div className="flex justify-end px-8 py-4 gap-3 border-t border-gray-100 shadow-sm">
+              <div className="flex justify-end px-8 py-2 gap-3 border-t border-gray-200 shadow-sm bg-white">
                 <Button
                   variant="secondary"
                   onClick={() => resetForm()}

@@ -121,7 +121,7 @@ export const VerificationTableView = ({
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* Sticky top status title bar */}
-      <div className="sticky top-0 z-20 flex items-center justify-center border-b border-gray-200 bg-white shadow-sm px-8 h-16">
+      <div className="h-16 sticky top-0 z-10 bg-white border border-b-gray-200 shadow-sm px-8 flex items-center">
         <SearchAndFilterBar />
       </div>
 

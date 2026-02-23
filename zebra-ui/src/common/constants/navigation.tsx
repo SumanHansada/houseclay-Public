@@ -68,7 +68,7 @@ export const sidebarItems: SidebarItem[] = [
     allowedRoles: PERMISSIONS.USERS_ACCESS,
     children: [
       {
-        label: "Houseclay Users - Table View",
+        label: "Users - Table View",
         href: "/admin/users",
         allowedRoles: PERMISSIONS.USERS_ACCESS,
       },
@@ -86,12 +86,12 @@ export const sidebarItems: SidebarItem[] = [
     allowedRoles: PERMISSIONS.ADMINS_ACCESS,
     children: [
       {
-        label: "Zebra Admins - Table View",
+        label: "Admins - Table View",
         href: "/admin/admins",
         allowedRoles: PERMISSIONS.ADMINS_ACCESS,
       },
       {
-        label: "Add new Zebra user",
+        label: "Add new Admin",
         href: "/admin/admins/add-admin",
         allowedRoles: PERMISSIONS.ADMINS_ACCESS,
       },

@@ -28,7 +28,7 @@ import { clearFormData, setFileURLMap } from "@/store/listPropertySlice";
 import { RootState } from "@/store/store";
 import { resetUpload } from "@/store/uploadToS3Slice";
 
-import DesktopStepper from "../../components/DesktopStepper";
+import DesktopStepper from "../components/DesktopStepper";
 
 type FinalizationStage = "idle" | "uploading" | "posting";
 
@@ -45,11 +45,14 @@ export default function ListPropertyTypeLayout({
   const { openDialog, isDialogOpen, closeDialog } = useDialog();
   const { isMobile } = useDeviceContext();
 
-  // Extract propertyCategory and propertyID from URL params
+  // Extract userPhoneNo and propertyCategory from URL params
   const pathSegments = pathname.split("/");
   const userPhoneNo = pathSegments[3];
   const propertyCategory = pathSegments[4]?.toUpperCase() as PropertyCategory;
-  const propertyID = pathSegments[5];
+
+  const propertyID = useSelector(
+    (state: RootState) => state.listProperty.propertyID,
+  );
 
   // Get upload state to monitor completion
   const uploadState = useSelector((state: RootState) => state.uploadToS3);
@@ -180,7 +183,7 @@ export default function ListPropertyTypeLayout({
   const initialValues = getInitialValues();
 
   const setRoute = (stepSlug: string) => {
-    const route = `/admin/list-property/${userPhoneNo}/${propertyCategory.toLowerCase()}/${propertyID}/${stepSlug}`;
+    const route = `/admin/list-property/${userPhoneNo}/${propertyCategory.toLowerCase()}/${stepSlug}`;
     router.push(route);
   };
 
@@ -427,8 +430,8 @@ export default function ListPropertyTypeLayout({
   return (
     <>
       {/* Mobile stepper is now handled inside ListPropertyStepper */}
-      <div className="flex flex-col w-full h-full top-14">
-        <div className="p-3 sticky top-16 z-40 bg-white border-b border-b-gray-100 shadow-md xl:px-28 lg:px-14 md:px-8 px-8">
+      <div className="flex flex-col w-full h-full overflow-y-auto top-14">
+        <div className="p-3 sticky top-0 z-40 bg-white border-b border-b-gray-100 shadow-md xl:px-28 lg:px-14 md:px-8 px-8">
           {/* Steps navigation */}
           {!isMobile && renderStepper()}
         </div>
