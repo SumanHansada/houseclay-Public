@@ -151,6 +151,10 @@ public class UserService {
     }
 
     public String initiateCorporateVerification(User user, String corporateEmail) throws Exception {
+        if (user.isCorporateEmailVerified() || (user.getCorporateEmailID() != null && !user.getCorporateEmailID().isEmpty())) {
+            throw new APIException("You have already claimed your corporate benefits", HttpStatus.BAD_REQUEST);
+        }
+
         // Check Denylist
         String domain = corporateEmail.substring(corporateEmail.indexOf("@") + 1).toLowerCase();
         if (Constants.EMAIL_DOMAIN_DENYLIST.contains(domain)) {
