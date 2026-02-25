@@ -4,7 +4,6 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 import { PHOTO_GALLERY_DIALOG_ID } from "@/common/dialogConstants";
-import { validateImages } from "@/common/utils";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 
@@ -30,7 +29,6 @@ export default function PhotoGallery({
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { isMobile } = useDeviceContext();
   const { openDialog } = useDialog();
-  const [isValidating, setIsValidating] = useState(false);
 
   // Limit the number of images to display
   const displayImages = images.slice(0, maxDisplayImages);
@@ -53,18 +51,12 @@ export default function PhotoGallery({
   //   openDialog("photo-gallery-dialog");
   // };
 
-  const handleMobileGalleryClick = async () => {
-    if (isValidating || (images.length || 0) === 0) return;
-
-    setIsValidating(true);
-    const validated = await validateImages(images || []);
-    setIsValidating(false);
-
-    if (validated.length > 0) {
-      openDialog(PHOTO_GALLERY_DIALOG_ID);
-    } else {
+  const handleMobileGalleryClick = () => {
+    if (images.length === 0) {
       toast.error("No images found!");
+      return;
     }
+    openDialog(PHOTO_GALLERY_DIALOG_ID);
   };
 
   if (!displayImages.length) {

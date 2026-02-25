@@ -67,9 +67,11 @@ import {
 } from "@/common/cdnURLs";
 import { AMENITY_LABELS, AMENITY_VALUES } from "@/common/dataConstants/options";
 import {
+  CONTACT_LOGIN_DIALOG_ID,
   MONTHLY_CHARGES_DIALOG_ID,
   PHOTO_GALLERY_DIALOG_ID,
   REPORT_LISTING_DIALOG_ID,
+  UNLOCK_DETAILS_DIALOG_ID,
 } from "@/common/dialogConstants";
 import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { openMapsDirections, pascalCase } from "@/common/utils";
@@ -125,9 +127,6 @@ const AMENITY_ICONS: Record<string, React.ReactNode> = {
   [AMENITY_VALUES.RAIN_WATER]: <CloudHail size={24} strokeWidth={1.5} />,
   [AMENITY_VALUES.PLAY_AREA]: <Blocks size={24} strokeWidth={1.5} />,
 };
-
-const CONTACT_LOGIN_DIALOG_ID = "contact-owner-login-dialog";
-const UNLOCK_DETAILS_DIALOG_ID = "unlock-owner-details-dialog";
 
 interface PropertyDetailsClientProps {
   propertyID: string;

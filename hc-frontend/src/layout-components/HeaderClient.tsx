@@ -2,7 +2,7 @@
 
 import { Menu, User } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -10,20 +10,14 @@ import {
   loginAndEarnIconURL,
 } from "@/common/cdnURLs";
 import { AuthStep, PropertyCategory } from "@/common/enums";
-import { generatePropertySearchHref } from "@/common/utils";
+import { getPropertySearchHrefWithLocation } from "@/common/utils";
 import { UserDropdown } from "@/components/UserDropdown";
-import { ActionDialog } from "@/dialogs/action-dialog";
-import { useLogout } from "@/hooks/useLogout";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setAuthStep } from "@/store/authSlice";
-import { resetPropertySearchFilters } from "@/store/propertySearchSlice";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
 import { Popover } from "@/utility-components";
 
 import { RootState } from "../store/store";
-
-const ACTION_DIALOG_ID = "logout-action-dialog";
 
 type User = {
   name: string;
@@ -88,13 +82,18 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
   const showZeroTip = !!isAuthenticated && Number(connectBal) === 0;
 
   const dispatch = useDispatch();
-  const { logout } = useLogout();
-  const { openDialog, closeAllDialogs, isDialogOpen, closeDialog } =
-    useDialog();
-  const { isMobile } = useDeviceContext();
+  const { openDialog, closeAllDialogs } = useDialog();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const router = useRouter();
+
+  const rentHref = getPropertySearchHrefWithLocation(
+    PropertyCategory.RENT,
+    searchParams,
+  );
+  const flatmateHref = getPropertySearchHrefWithLocation(
+    PropertyCategory.FLATMATE,
+    searchParams,
+  );
 
   const onLogin = () => {
     closeAllDialogs();
@@ -105,11 +104,6 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
   const onMenuClick = () => {
     closeAllDialogs();
     openDialog("menu-dialog");
-  };
-
-  const onLogout = async () => {
-    await logout();
-    router.replace("/");
   };
 
   return (
@@ -134,11 +128,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
         <div className="flex justify-between items-center w-full text-sm">
           <nav className="hidden md:flex xl:gap-8 lg:gap-6 md:gap-5 gap-3 text-gray-800 text-base">
             <Link
-              href={generatePropertySearchHref(
-                PropertyCategory.RENT,
-                pathname,
-                searchParams,
-              )}
+              href={rentHref}
               data-category="rent"
               data-active={
                 searchParams.get("propertyCategory") === "rent" ||
@@ -148,16 +138,11 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
                   : "false"
               }
               className="relative hover:text-red-600 py-2 nav-link"
-              onClick={() => dispatch(resetPropertySearchFilters())}
             >
               Rent
             </Link>
             <Link
-              href={generatePropertySearchHref(
-                PropertyCategory.FLATMATE,
-                pathname,
-                searchParams,
-              )}
+              href={flatmateHref}
               data-category="flatmate"
               data-active={
                 searchParams.get("propertyCategory") === "flatmate"
@@ -165,7 +150,6 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
                   : "false"
               }
               className="relative hover:text-red-600 py-2 nav-link"
-              onClick={() => dispatch(resetPropertySearchFilters())}
             >
               Rooms
             </Link>
@@ -274,21 +258,6 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
           </button>
         ) : null}
       </header>
-
-      {isMobile && isDialogOpen(ACTION_DIALOG_ID) && (
-        <ActionDialog
-          id={ACTION_DIALOG_ID}
-          title="Logout"
-          prompt="Are you sure you want to logout?"
-          confirmLabel="Yes, I want to logout!"
-          colour="red"
-          requireComment={false}
-          onConfirm={onLogout}
-          onClose={() => {
-            closeDialog(ACTION_DIALOG_ID);
-          }}
-        />
-      )}
     </>
   );
 };

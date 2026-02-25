@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 import { SOCIAL_MEDIA_LINKS } from "@/common/constants";
 import { PropertyCategory } from "@/common/enums";
-import { generatePropertySearchHref } from "@/common/utils";
+import { getPropertySearchHrefWithLocation } from "@/common/utils";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { RootState } from "@/store/store";
 import { SvgIcon } from "@/utility-components";
@@ -21,6 +21,15 @@ const FooterClient: React.FC = () => {
     closeAllDialogs();
     openDialog("login-dialog");
   };
+
+  const rentHref = getPropertySearchHrefWithLocation(
+    PropertyCategory.RENT,
+    searchParams,
+  );
+  const flatmateHref = getPropertySearchHrefWithLocation(
+    PropertyCategory.FLATMATE,
+    searchParams,
+  );
 
   return (
     <>
@@ -117,11 +126,7 @@ const FooterClient: React.FC = () => {
                   </li> */}
                   <li>
                     <Link
-                      href={generatePropertySearchHref(
-                        PropertyCategory.RENT,
-                        pathname,
-                        searchParams,
-                      )}
+                      href={rentHref}
                       data-category="rent"
                       data-active={
                         searchParams.get("propertyCategory") === "rent" ||
@@ -137,11 +142,7 @@ const FooterClient: React.FC = () => {
                   </li>
                   <li>
                     <Link
-                      href={generatePropertySearchHref(
-                        PropertyCategory.FLATMATE,
-                        pathname,
-                        searchParams,
-                      )}
+                      href={flatmateHref}
                       data-category="flatmate"
                       data-active={
                         searchParams.get("propertyCategory") === "flatmate" ||

@@ -1,4 +1,5 @@
 import { format, parseISO } from "date-fns";
+import { ReadonlyURLSearchParams } from "next/navigation";
 
 import { placeholderImageURL } from "./cdnURLs";
 import { CDN_BASE_URL, CITY_LAT_LNG_MAPPING } from "./constants";
@@ -207,26 +208,6 @@ export function isEnumValue<E extends Record<string, string>>(
   return Object.values(enumObj).includes(value as string);
 }
 
-/* Validate Images */
-export const validateImages = async (
-  imageUrls: string[],
-): Promise<string[]> => {
-  if (imageUrls.length === 0) return [];
-
-  const validationPromises = imageUrls.map(
-    (url) =>
-      new Promise<boolean>((resolve) => {
-        const img = new Image();
-        img.onload = () => resolve(true);
-        img.onerror = () => resolve(false);
-        img.src = url;
-      }),
-  );
-
-  const results = await Promise.all(validationPromises);
-  return imageUrls.filter((_, i) => results[i]);
-};
-
 /**
  * Sanitize Phone Number but keep the country code
  * */
@@ -278,53 +259,43 @@ export const CITY_OPTIONS = Object.keys(CITY_LAT_LNG_MAPPING).map((city) => ({
 }));
 
 /**
- * Generates a full navigation href (path + query string) for property search links.
+ * Generates a clean property search URL for the given category.
  *
- * If the current pathname is '/property-search', this function preserves the existing search parameters
- * (such as location via lat/lon or city) and overrides only the 'propertyCategory' parameter.
- * If not on the property-search page, it creates a new set of parameters starting with a default city.
+ * Key behaviors:
+ * - Preserves the user's current location context:
+ *   - If `lat` and `lon` are present → keeps them (and optional `city`)
+ *   - Else if `city` is present → keeps it
+ *   - Otherwise → falls back to default city
+ * - Sets the new `propertyCategory` (lowercase)
+ * - Removes ALL other search parameters (price, bhk, filters, etc.)
  *
- * In both cases, it ensures that location parameters are present: if 'lat' and 'lon' are missing,
- * it falls back to setting 'city' to the default (the first city in CITY_LAT_LNG_MAPPING) if not already set.
- * Finally, it sets the provided 'propertyCategory' (converted to lowercase) and returns the full href string
- * starting with '/property-search?'.
+ * Use this when switching categories (header nav, quick filters, dialog)
+ * to maintain location continuity while resetting irrelevant filters.
  *
- * This helps maintain user context (e.g., current location filters) when switching categories on the search page,
- * while providing sensible defaults for navigation from other pages.
- *
- * @param category - The property category enum value to set (e.g., PropertyCategory.RENT).
- * @param pathname - The current pathname from usePathname().
- * @param searchParams - The current URLSearchParams from useSearchParams().
- * @returns The full href string (e.g., '/property-search?lat=12.34&lon=56.78&propertyCategory=rent').
+ * @param category - The target PropertyCategory (e.g., RENT, FLATMATE)
+ * @param searchParams - Current search params from useSearchParams()
+ * @returns Full href string starting with "/property-search?"
  */
-export const generatePropertySearchHref = (
+export const getPropertySearchHrefWithLocation = (
   category: PropertyCategory,
-  pathname: string,
-  searchParams: URLSearchParams,
+  searchParams: URLSearchParams | ReadonlyURLSearchParams,
 ) => {
-  let newParams: URLSearchParams;
+  const cleanParams = new URLSearchParams();
 
-  if (pathname === "/property-search") {
-    // Preserve current params (including lat/lon or city) and override category
-    newParams = new URLSearchParams(searchParams.toString());
-  } else {
-    newParams = new URLSearchParams();
-  }
+  const lat = searchParams.get("lat");
+  const lon = searchParams.get("lon");
+  const city = searchParams.get("city");
 
-  // Default city (e.g., first option 'Bengaluru')
   const defaultCity = CITY_OPTIONS[0].id;
-
-  // Ensure location is always set
-  if (!newParams.has("lat") || !newParams.has("lon")) {
-    if (!newParams.has("city")) {
-      newParams.set("city", defaultCity);
-    }
+  if (lat && lon) {
+    cleanParams.set("city", city || defaultCity);
+    cleanParams.set("lat", lat);
+    cleanParams.set("lon", lon);
+  } else {
+    cleanParams.set("city", city || defaultCity);
   }
 
-  // Set category in lowercase (enum values are uppercase)
-  if (category !== PropertyCategory.NONE) {
-    newParams.set("propertyCategory", category.toLowerCase());
-  }
+  cleanParams.set("propertyCategory", category.toLowerCase());
 
-  return `/property-search?${newParams.toString()}`;
+  return `/property-search?${cleanParams.toString()}`;
 };
