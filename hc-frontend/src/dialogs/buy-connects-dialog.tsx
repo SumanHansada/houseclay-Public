@@ -98,8 +98,7 @@ const BuyConnectsDialog: React.FC<BuyConnectsDialogProps> = ({ id }) => {
     useInitiateCorporateVerificationMutation();
   const [confirmVerify, { isLoading: isConfirming }] =
     useConfirmCorporateVerificationMutation();
-  const [claimBenefits, { isLoading: isClaiming }] =
-    useClaimCorporateBenefitsMutation();
+  const [claimBenefits] = useClaimCorporateBenefitsMutation();
 
   // State
   const [step, setStep] = useState<BuyConnectsStep>(BuyConnectsStep.INFO);
@@ -479,7 +478,7 @@ const BuyConnectsDialog: React.FC<BuyConnectsDialogProps> = ({ id }) => {
                     Claim Failed
                   </h3>
                   <p className="text-gray-600">
-                    Verification passed, but we couldn't add the connects.
+                    Verification passed, but we couldn&apos;t add the connects.
                   </p>
                 </div>
                 <div className="flex gap-3 w-full">
