@@ -78,23 +78,23 @@ export default function BuyConnectsPage() {
   );
 
   // Set default to PREMIUM_GOLD_BUNDLE (middle/recommended) when data loads
-  useEffect(() => {
-    if (bundleData && bundleData.length > 0) {
-      const recommended = bundleData.find((b) => b.recommended);
-      const defaultBundleId =
-        recommended?.id ||
-        bundleData.find((b) => b.id === "PREMIUM_GOLD_BUNDLE")?.id ||
-        bundleData[1]?.id; // fallback to middle item
+  // useEffect(() => {
+  //   if (bundleData && bundleData.length > 0) {
+  //     const recommended = bundleData.find((b) => b.recommended);
+  //     const defaultBundleId =
+  //       recommended?.id ||
+  //       bundleData.find((b) => b.id === "PREMIUM_GOLD_BUNDLE")?.id ||
+  //       bundleData[1]?.id; // fallback to middle item
 
-      if (defaultBundleId) {
-        setSelectedBundle(defaultBundleId as ConnectBundleID);
-      }
-    }
-  }, [bundleData]);
+  //     if (defaultBundleId) {
+  //       setSelectedBundle(defaultBundleId as ConnectBundleID);
+  //     }
+  //   }
+  // }, [bundleData]);
 
   // This basePrice is for display purposes, using the same logic as before
   // (discounted price for bundles, calculated price for custom)
-  const price = currentBundle?.discountedPrice || 0;
+  const price = currentBundle?.standardPrice || 0;
 
   // Calculate the total connects to be purchased
   const connectsToBuy = currentBundle?.connects || 0;

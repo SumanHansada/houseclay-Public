@@ -607,7 +607,7 @@ const Login = ({ onClose }: { onClose: () => void }) => {
                       <div>
                         <p className="text-gray-800 font-normal">
                           Verify your Phone Number and earn
-                          <span className="font-bold"> 2 Connects</span>{" "}
+                          <span className="font-bold"> 1 Connect</span>{" "}
                           instantly!
                         </p>
                       </div>
