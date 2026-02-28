@@ -362,7 +362,7 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["User"],
     }),
-    bundleInfo: builder.query<ConnectsBundle[], void>({
+    bundleInfo: builder.query<ConnectsBundle, void>({
       query: () => "/bundle/info",
     }),
     createOrder: builder.mutation<
@@ -371,15 +371,11 @@ export const apiSlice = createApi({
         displayAmount: number;
         razorPayAmount: number;
       },
-      { bundle: string; connects: number }
+      void
     >({
-      query: (data) => ({
+      query: () => ({
         url: "/payment/create-order",
         method: "POST",
-        body: data,
-        headers: {
-          "Content-Type": "application/json",
-        },
       }),
     }),
     verifyPayment: builder.mutation<

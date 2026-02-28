@@ -1,7 +1,6 @@
 "use client";
 
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -9,12 +8,10 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
 import { loginAction, registerAction } from "@/actions/authActions";
-import { Button } from "@/base-components";
 import { loginImageURL } from "@/common/cdnURLs";
 import { validPhoneNoLength } from "@/common/constants";
 import { AuthStep } from "@/common/enums";
 import { AuthUserDetail } from "@/interfaces/User";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useGenerateOtpMutation,
@@ -43,7 +40,13 @@ import Spinner from "./Spinner";
 
 const emailIDRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-const Login = ({ onClose }: { onClose: () => void }) => {
+const Login = ({
+  onClose,
+  onSuccess,
+}: {
+  onClose?: () => void;
+  onSuccess?: () => void;
+}) => {
   const { authStep, loginFromAddProperty, loginFromLoginPage } = useSelector(
     (state: RootState) => state.auth,
   );
@@ -54,7 +57,6 @@ const Login = ({ onClose }: { onClose: () => void }) => {
   const [triggerCheckUser] = useLazyCheckUserQuery();
   const [generateOtp] = useGenerateOtpMutation();
   const dispatch = useDispatch();
-  const { isMobile } = useDeviceContext();
   const router = useRouter();
   const { closeAllDialogs } = useDialog();
 
@@ -190,13 +192,20 @@ const Login = ({ onClose }: { onClose: () => void }) => {
       }
 
       const userData = result.data;
-      console.warn("Auth Response:", userData);
 
       // Update Redux state
       dispatch(setIsAuthenticated(true));
       dispatch(setUserDetail(userData));
       dispatch(setAuthStep(AuthStep.LOGGED_IN));
-      onClose();
+
+      // If onSuccess callback is provided, execute it and return
+      if (onSuccess) {
+        onSuccess();
+        return;
+      }
+
+      // Close dialog if it exists
+      if (onClose) onClose();
 
       // Navigate based on context
       if (loginFromLoginPage) {
@@ -328,334 +337,319 @@ const Login = ({ onClose }: { onClose: () => void }) => {
   );
 
   return (
-    <>
-      {!isMobile && (
-        <div className="relative w-full h-0">
-          <Button
-            variant="secondary"
-            size="custom"
-            className="absolute top-4 right-4 rounded-full p-1"
-            onClick={onClose}
-          >
-            <X size={24} />
-          </Button>
-        </div>
-      )}
-      <div className="flex items-center justify-center h-full bg-white rounded-xl">
-        <div className="w-5/12 min-h-[400px] xl:min-h-[500px] 3xl:min-h-[800px] max-md:hidden">
-          <ImageWithLoader
-            src={loginImageURL}
-            alt="Login"
-            fill
-            className="rounded-l-xl object-cover w-full min-h-[400px] xl:min-h-[500px] 3xl:min-h-[800px]"
-            priority
-          />
-        </div>
-        {/* Right pane (form) - takes remaining width */}
-        <div className="flex flex-1 h-full px-8 mx-auto relative">
-          {authStep === AuthStep.PHONE && (
-            <div className="w-full flex flex-col align-center justify-center gap-8">
-              {/* Form header */}
-              <div className="max-md:hidden">
-                <h1 className="text-lg lg:text-xl xl:text-2xl 2xl:text-3xl mb-3 text-black ">
-                  Log In to Your Account
-                </h1>
-                <p className="text-gray-600 text-sm">
-                  Enter phone number to log in
-                </p>
+    <div className="flex w-full max-w-5xl bg-white rounded-xl overflow-hidden h-full md:h-[380px] lg:h-[400px] xl:h-[420px] 2xl:h-[440px] md:max-h-[90vh]">
+      {/* Left Pane (IMAGE) */}
+      <div className="hidden md:block relative w-[45%] h-full bg-gray-50">
+        <ImageWithLoader
+          src={loginImageURL}
+          alt="Login"
+          fill
+          className="object-cover"
+          priority
+        />
+      </div>
+
+      {/* Right Pane (FORM) */}
+      <div className="w-full md:w-[55%] h-full overflow-y-auto px-8 flex flex-col justify-center">
+        {authStep === AuthStep.PHONE && (
+          <div className="w-full flex flex-col align-center justify-center gap-8">
+            {/* Form header */}
+            <div className="max-md:hidden">
+              <h1 className="text-lg lg:text-xl xl:text-2xl 2xl:text-3xl mb-3 text-black ">
+                Log In to Your Account
+              </h1>
+              <p className="text-gray-600 text-sm">
+                Enter phone number to log in
+              </p>
+            </div>
+
+            {/* Form fields */}
+            <div className="space-y-2 lg:space-y-2 xl:space-y-3 2xl:space-y-4">
+              <div>
+                <div className="md:hidden mb-8">
+                  <span className="text-2xl font-bold">No spam, </span>
+                  <span className="text-2xl">just updates.</span>
+                </div>
+                <label
+                  htmlFor="phone"
+                  className="block text-base font-normal text-gray-700 mb-2"
+                >
+                  Phone Number
+                </label>
+                <LazyPhoneInput
+                  name="phone"
+                  defaultCountry="in"
+                  selectedCountry="in"
+                  value={phoneNo}
+                  forceDialCode={true}
+                  disableFormatting={true}
+                  placeholder={"Enter phone number"}
+                  onChange={(value) => dispatch(setPhoneNo(value))}
+                  className="custom-phone-input w-full border border-gray-300 rounded-lg px-2 py-0.5 focus:ring-2 focus:ring-blue-500"
+                />
               </div>
 
-              {/* Form fields */}
-              <div className="space-y-2 lg:space-y-2 xl:space-y-3 2xl:space-y-4">
-                <div>
-                  <div className="md:hidden mb-8">
-                    <span className="text-2xl font-bold">No spam, </span>
-                    <span className="text-2xl">just updates.</span>
-                  </div>
-                  <label
-                    htmlFor="phone"
-                    className="block text-base font-normal text-gray-700 mb-2"
-                  >
-                    Phone Number
-                  </label>
-                  <LazyPhoneInput
-                    name="phone"
-                    defaultCountry="in"
-                    selectedCountry="in"
-                    value={phoneNo}
-                    forceDialCode={true}
-                    disableFormatting={true}
-                    placeholder={"Enter phone number"}
-                    onChange={(value) => dispatch(setPhoneNo(value))}
-                    className="custom-phone-input w-full border border-gray-300 rounded-lg px-2 py-0.5 focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
+              {/* Info box */}
+              <div className="text-gray-400 mb-3 text-sm">
+                We&apos;ll text you to confirm your number.
+              </div>
 
-                {/* Info box */}
-                <div className="text-gray-400 mb-3 text-sm">
-                  We&apos;ll text you to confirm your number.
-                </div>
+              {/* Continue button */}
+              <button
+                type="submit"
+                className={`w-full text-white py-3 px-4 rounded-lg ${!phoneNo.substring(validPhoneNoLength) || isLoading ? "bg-red-300 cursor-not-allowed" : "bg-red-500 hover:bg-red-600"}`}
+                onClick={handleCheckUser}
+                disabled={!phoneNo.substring(validPhoneNoLength) || isLoading}
+              >
+                {getButtonContent("Continue")}
+              </button>
 
-                {/* Continue button */}
-                <button
-                  type="submit"
-                  className={`w-full text-white py-3 px-4 rounded-lg ${!phoneNo.substring(validPhoneNoLength) || isLoading ? "bg-red-300 cursor-not-allowed" : "bg-red-500 hover:bg-red-600"}`}
-                  onClick={handleCheckUser}
-                  disabled={!phoneNo.substring(validPhoneNoLength) || isLoading}
+              {/* Privacy policy */}
+              <div className="text-gray-500 text-sm">
+                By continuing to use this service, you agree to our{" "}
+                <Link
+                  href="/terms-and-conditions"
+                  className="text-gray-700 underline font-bold"
+                  onClick={() => onClose?.()}
                 >
-                  {getButtonContent("Continue")}
-                </button>
-
-                {/* Privacy policy */}
-                <div className="text-gray-500 text-sm">
-                  By continuing to use this service, you agree to our{" "}
-                  <Link
-                    href="/terms-and-conditions"
-                    className="text-gray-700 underline font-bold"
-                    onClick={onClose}
-                  >
-                    Terms of Service
-                  </Link>{" "}
-                  and{" "}
-                  <Link
-                    href="/privacy-policy"
-                    className="text-gray-700 underline font-bold"
-                    onClick={onClose}
-                  >
-                    Privacy Policy
-                  </Link>
-                </div>
+                  Terms of Service
+                </Link>{" "}
+                and{" "}
+                <Link
+                  href="/privacy-policy"
+                  className="text-gray-700 underline font-bold"
+                  onClick={() => onClose?.()}
+                >
+                  Privacy Policy
+                </Link>
               </div>
             </div>
-          )}
-          {authStep === AuthStep.CREATE_USER && (
-            <div className="w-full flex flex-col align-center justify-center gap-2">
-              {/* Form header */}
-              <div>
-                <h1 className="text-2xl mb-1 text-black ">
-                  Create New Account
-                </h1>
-              </div>
-              <div className="space-y-2">
-                <div>
-                  <label
-                    htmlFor="phone"
-                    className="block text-base font-normal text-gray-700"
-                  >
-                    Phone Number<span className="text-red-600">*</span>
-                  </label>
-                  <LazyPhoneInput
-                    defaultCountry="in"
-                    value={phoneNo}
-                    forceDialCode={true}
-                    disableFormatting={true}
-                    placeholder={"Enter phone number"}
-                    onChange={(value) => dispatch(setPhoneNo(value))}
-                    className="custom-phone-input w-full border border-gray-300 rounded-lg px-2 py-0.5 focus:ring-2 focus:ring-blue-500"
-                  />
-                  <label
-                    htmlFor="phone"
-                    className="block text-base font-normal text-gray-700 mt-2"
-                  >
-                    Email Address<span className="text-red-600">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    placeholder="Enter email address"
-                    value={emailID}
-                    onChange={(e) => dispatch(setEmailID(e.target.value))}
-                    className="px-2 py-2 w-full border border-gray-300 rounded-lg"
-                  />
-                  <label
-                    htmlFor="phone"
-                    className="block text-base font-normal text-gray-700 mt-2"
-                  >
-                    Name<span className="text-red-600">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter name"
-                    required
-                    value={name}
-                    onChange={(e) => dispatch(setName(e.target.value))}
-                    className="px-2 py-2 w-full border border-gray-300 rounded-lg mb-2"
-                  />
-                </div>
-                {/* Continue button */}
-                <button
-                  type="submit"
-                  className={`w-full text-white py-3 px-4 rounded-lg ${
-                    !phoneNo.substring(validPhoneNoLength) ||
-                    !emailIDRegex.test(emailID) ||
-                    !name ||
-                    isLoading
-                      ? "bg-red-300 cursor-not-allowed"
-                      : "bg-red-500 hover:bg-red-600"
-                  }`}
-                  onClick={handleCreateUser}
-                  disabled={
-                    !phoneNo.substring(validPhoneNoLength) ||
-                    !emailIDRegex.test(emailID) ||
-                    !name ||
-                    isLoading
-                  }
-                >
-                  {getButtonContent("Continue")}
-                </button>
-              </div>
+          </div>
+        )}
+        {authStep === AuthStep.CREATE_USER && (
+          <div className="w-full flex flex-col align-center justify-center gap-2">
+            {/* Form header */}
+            <div>
+              <h1 className="text-2xl mb-1 text-black ">Create New Account</h1>
             </div>
-          )}
-          {authStep === AuthStep.OTP && (
-            <div className="w-full flex flex-col align-center justify-center gap-6">
-              {/* Form header */}
+            <div className="space-y-2">
               <div>
-                <h1 className="text-2xl mb-1 text-black ">
-                  Verify Your Phone Number
-                </h1>
-                <p className="text-gray-600 text-sm">
-                  We&apos;ve sent a 4-digit OTP to your phone number.
-                </p>
-              </div>
-
-              {/* Form fields */}
-              <div className="flex flex-col gap-5">
-                {/* Hidden input for Android & iOS OTP autofill */}
+                <label
+                  htmlFor="phone"
+                  className="block text-base font-normal text-gray-700"
+                >
+                  Phone Number<span className="text-red-600">*</span>
+                </label>
+                <LazyPhoneInput
+                  defaultCountry="in"
+                  value={phoneNo}
+                  forceDialCode={true}
+                  disableFormatting={true}
+                  placeholder={"Enter phone number"}
+                  onChange={(value) => dispatch(setPhoneNo(value))}
+                  className="custom-phone-input w-full border border-gray-300 rounded-lg px-2 py-0.5 focus:ring-2 focus:ring-blue-500"
+                />
+                <label
+                  htmlFor="phone"
+                  className="block text-base font-normal text-gray-700 mt-2"
+                >
+                  Email Address<span className="text-red-600">*</span>
+                </label>
                 <input
+                  type="email"
+                  placeholder="Enter email address"
+                  value={emailID}
+                  onChange={(e) => dispatch(setEmailID(e.target.value))}
+                  className="px-2 py-2 w-full border border-gray-300 rounded-lg"
+                />
+                <label
+                  htmlFor="phone"
+                  className="block text-base font-normal text-gray-700 mt-2"
+                >
+                  Name<span className="text-red-600">*</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter name"
+                  required
+                  value={name}
+                  onChange={(e) => dispatch(setName(e.target.value))}
+                  className="px-2 py-2 w-full border border-gray-300 rounded-lg mb-2"
+                />
+              </div>
+              {/* Continue button */}
+              <button
+                type="submit"
+                className={`w-full text-white py-3 px-4 rounded-lg ${
+                  !phoneNo.substring(validPhoneNoLength) ||
+                  !emailIDRegex.test(emailID) ||
+                  !name ||
+                  isLoading
+                    ? "bg-red-300 cursor-not-allowed"
+                    : "bg-red-500 hover:bg-red-600"
+                }`}
+                onClick={handleCreateUser}
+                disabled={
+                  !phoneNo.substring(validPhoneNoLength) ||
+                  !emailIDRegex.test(emailID) ||
+                  !name ||
+                  isLoading
+                }
+              >
+                {getButtonContent("Continue")}
+              </button>
+            </div>
+          </div>
+        )}
+        {authStep === AuthStep.OTP && (
+          <div className="w-full flex flex-col align-center justify-center gap-6">
+            {/* Form header */}
+            <div>
+              <h1 className="text-2xl mb-1 text-black ">
+                Verify Your Phone Number
+              </h1>
+              <p className="text-gray-600 text-sm">
+                We&apos;ve sent a 4-digit OTP to your phone number.
+              </p>
+            </div>
+
+            {/* Form fields */}
+            <div className="flex flex-col gap-5">
+              {/* Hidden input for Android & iOS OTP autofill */}
+              <input
+                type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                style={{
+                  position: "absolute",
+                  left: "-9999px",
+                  opacity: 0,
+                  pointerEvents: "none",
+                }}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, "").slice(0, 4);
+                  if (value.length === 4) {
+                    const digits = value.split("");
+                    setOtpCode(digits);
+                    // Focus the last input
+                    if (inputRefs[3].current) {
+                      inputRefs[3].current.focus();
+                    }
+                  }
+                }}
+              />
+              <div className="flex gap-2">
+                <input
+                  id="otp-1"
                   type="text"
                   inputMode="numeric"
                   autoComplete="one-time-code"
-                  style={{
-                    position: "absolute",
-                    left: "-9999px",
-                    opacity: 0,
-                    pointerEvents: "none",
-                  }}
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/\D/g, "").slice(0, 4);
-                    if (value.length === 4) {
-                      const digits = value.split("");
-                      setOtpCode(digits);
-                      // Focus the last input
-                      if (inputRefs[3].current) {
-                        inputRefs[3].current.focus();
-                      }
-                    }
-                  }}
+                  ref={inputRefs[0]}
+                  value={otpCode[0]}
+                  onChange={(e) => handleChange(0, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(0, e)}
+                  onPaste={handlePaste}
+                  className={`w-12 h-12 text-center text-xl font-medium border-2 ${otpCode[0] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
+                  maxLength={1}
+                  disabled={isLoading}
                 />
-                <div className="flex gap-2">
-                  <input
-                    id="otp-1"
-                    type="text"
-                    inputMode="numeric"
-                    autoComplete="one-time-code"
-                    ref={inputRefs[0]}
-                    value={otpCode[0]}
-                    onChange={(e) => handleChange(0, e.target.value)}
-                    onKeyDown={(e) => handleKeyDown(0, e)}
-                    onPaste={handlePaste}
-                    className={`w-12 h-12 text-center text-xl font-medium border-2 ${otpCode[0] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
-                    maxLength={1}
-                    disabled={isLoading}
-                  />
-                  <input
-                    id="otp-2"
-                    type="text"
-                    inputMode="numeric"
-                    autoComplete="one-time-code"
-                    ref={inputRefs[1]}
-                    value={otpCode[1]}
-                    onChange={(e) => handleChange(1, e.target.value)}
-                    onKeyDown={(e) => handleKeyDown(1, e)}
-                    className={`w-12 h-12 text-center text-xl font-medium border-2 ${otpCode[1] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
-                    maxLength={1}
-                    disabled={isLoading}
-                  />
-                  <input
-                    id="otp-3"
-                    type="text"
-                    inputMode="numeric"
-                    autoComplete="one-time-code"
-                    ref={inputRefs[2]}
-                    value={otpCode[2]}
-                    onChange={(e) => handleChange(2, e.target.value)}
-                    onKeyDown={(e) => handleKeyDown(2, e)}
-                    className={`w-12 h-12 text-center text-xl font-medium border-2 ${otpCode[2] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
-                    maxLength={1}
-                    disabled={isLoading}
-                  />
-                  <input
-                    id="otp-4"
-                    type="text"
-                    inputMode="numeric"
-                    autoComplete="one-time-code"
-                    ref={inputRefs[3]}
-                    value={otpCode[3]}
-                    onChange={(e) => handleChange(3, e.target.value)}
-                    onKeyDown={(e) => handleKeyDown(3, e)}
-                    className={`w-12 h-12 text-center text-xl font-medium border-2 ${otpCode[3] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
-                    maxLength={1}
-                    disabled={isLoading}
-                  />
-                </div>
+                <input
+                  id="otp-2"
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  ref={inputRefs[1]}
+                  value={otpCode[1]}
+                  onChange={(e) => handleChange(1, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(1, e)}
+                  className={`w-12 h-12 text-center text-xl font-medium border-2 ${otpCode[1] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
+                  maxLength={1}
+                  disabled={isLoading}
+                />
+                <input
+                  id="otp-3"
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  ref={inputRefs[2]}
+                  value={otpCode[2]}
+                  onChange={(e) => handleChange(2, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(2, e)}
+                  className={`w-12 h-12 text-center text-xl font-medium border-2 ${otpCode[2] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
+                  maxLength={1}
+                  disabled={isLoading}
+                />
+                <input
+                  id="otp-4"
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  ref={inputRefs[3]}
+                  value={otpCode[3]}
+                  onChange={(e) => handleChange(3, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(3, e)}
+                  className={`w-12 h-12 text-center text-xl font-medium border-2 ${otpCode[3] ? "bg-white border-red-200" : "bg-gray-100 border-gray-300"}  rounded-md focus:border-red-200 focus:outline-none`}
+                  maxLength={1}
+                  disabled={isLoading}
+                />
+              </div>
 
-                <div className="flex flex-col gap-4">
-                  {/* Info box */}
-                  {!checkUser ? (
-                    <div className="bg-red-50 p-2 rounded-lg flex items-center gap-2">
-                      <SvgIcon iconSize="medium" name="coin-egg" size={40} />
+              <div className="flex flex-col gap-4">
+                {/* Info box */}
+                {!checkUser ? (
+                  <div className="bg-red-50 p-2 rounded-lg flex items-center gap-2">
+                    <SvgIcon iconSize="medium" name="coin-egg" size={40} />
 
-                      <div>
-                        <p className="text-gray-800 font-normal">
-                          Verify your Phone Number and earn
-                          <span className="font-bold"> 1 Connect</span>{" "}
-                          instantly!
-                        </p>
-                      </div>
+                    <div>
+                      <p className="text-gray-800 font-normal">
+                        Verify your Phone Number and earn
+                        <span className="font-bold"> 1 Connect</span> instantly!
+                      </p>
                     </div>
-                  ) : null}
-                  {/* Verify Button */}
-                  <button
-                    type="submit"
-                    className={`w-full text-white py-3 px-4 rounded-lg ${isVerifyEnabled && !isLoading ? "bg-red-500 hover:bg-red-600" : "bg-red-300 cursor-not-allowed"}`}
-                    onClick={handleVerifyAndContinue}
-                    disabled={!isVerifyEnabled || isLoading}
-                  >
-                    {getButtonContent(
-                      checkUser ? "Verify" : "Verify and Continue",
-                    )}
-                  </button>
-                </div>
-
-                {/* Resend option */}
-                <div className="text-center">
-                  {timeLeft > 0 ? (
-                    <span>Resend code in {timeLeft}s</span>
-                  ) : (
-                    <>
-                      <span className="text-gray-500">
-                        Didn&apos;t receive code?
-                      </span>{" "}
-                      <button
-                        type="button"
-                        onClick={handleResendOtp}
-                        disabled={isLoading}
-                        className={`font-medium underline ${
-                          isLoading
-                            ? "text-gray-400 cursor-not-allowed"
-                            : "text-red-500"
-                        }`}
-                      >
-                        Resend
-                      </button>
-                    </>
+                  </div>
+                ) : null}
+                {/* Verify Button */}
+                <button
+                  type="submit"
+                  className={`w-full text-white py-3 px-4 rounded-lg ${isVerifyEnabled && !isLoading ? "bg-red-500 hover:bg-red-600" : "bg-red-300 cursor-not-allowed"}`}
+                  onClick={handleVerifyAndContinue}
+                  disabled={!isVerifyEnabled || isLoading}
+                >
+                  {getButtonContent(
+                    checkUser ? "Verify" : "Verify and Continue",
                   )}
-                </div>
+                </button>
+              </div>
+
+              {/* Resend option */}
+              <div className="text-center">
+                {timeLeft > 0 ? (
+                  <span>Resend code in {timeLeft}s</span>
+                ) : (
+                  <>
+                    <span className="text-gray-500">
+                      Didn&apos;t receive code?
+                    </span>{" "}
+                    <button
+                      type="button"
+                      onClick={handleResendOtp}
+                      disabled={isLoading}
+                      className={`font-medium underline ${
+                        isLoading
+                          ? "text-gray-400 cursor-not-allowed"
+                          : "text-red-500"
+                      }`}
+                    >
+                      Resend
+                    </button>
+                  </>
+                )}
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
-    </>
+    </div>
   );
 };
 

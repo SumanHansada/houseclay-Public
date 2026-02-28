@@ -9,6 +9,9 @@ import {
   insufficientConnectsIconURL,
   loginAndEarnIconURL,
 } from "@/common/cdnURLs";
+import {
+  BUY_CONNECTS_DIALOG_ID,
+} from "@/common/dialogConstants";
 import { AuthStep, PropertyCategory } from "@/common/enums";
 import { getPropertySearchHrefWithLocation } from "@/common/utils";
 import { UserDropdown } from "@/components/UserDropdown";
@@ -46,7 +49,9 @@ export const InfoTipLogin: React.FC = () => (
   </div>
 );
 
-export const InfoTipZeroBalance: React.FC = () => (
+export const InfoTipZeroBalance: React.FC<{ onBuyConnects: () => void }> = ({
+  onBuyConnects,
+}) => (
   <div className="flex w-full px-4 py-2 gap-4 min-w-72">
     <div className="relative h-14 aspect-[7/9]">
       <ImageWithLoader
@@ -61,9 +66,9 @@ export const InfoTipZeroBalance: React.FC = () => (
       <p className="text-gray-500 font-light text-nowrap">
         Purchase more now to continue!
       </p>
-      <Link href="/buy-connects" className="text-red-600 cursor-pointer">
+      <button onClick={onBuyConnects} className="text-red-600 cursor-pointer text-left">
         Buy Connects
-      </Link>
+      </button>
     </div>
   </div>
 );
@@ -165,13 +170,12 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
             >
               Buy
             </Link> */}
-            <Link
-              href="/buy-connects"
-              data-active={pathname === "/buy-connects" ? "true" : "false"}
+            <button
+              onClick={() => openDialog(BUY_CONNECTS_DIALOG_ID)}
               className="relative hover:text-red-600 py-2 nav-link"
             >
               Buy Connects
-            </Link>
+            </button>
             <Link
               href="/about-us"
               data-active={pathname === "/about-us" ? "true" : "false"}
@@ -201,7 +205,15 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
               align="end"
               enabled={showLoginTip || showZeroTip}
               panelClassName=""
-              content={showLoginTip ? <InfoTipLogin /> : <InfoTipZeroBalance />}
+              content={
+                showLoginTip ? (
+                  <InfoTipLogin />
+                ) : (
+                  <InfoTipZeroBalance
+                    onBuyConnects={() => openDialog(BUY_CONNECTS_DIALOG_ID)}
+                  />
+                )
+              }
             >
               <Link
                 href="/manage-account/connects"
