@@ -9,7 +9,10 @@ import {
   insufficientConnectsIconURL,
   loginAndEarnIconURL,
 } from "@/common/cdnURLs";
-import { BUY_CONNECTS_DIALOG_ID } from "@/common/dataConstants/dialogIDs";
+import {
+  BUY_CONNECTS_DIALOG_ID,
+  PRO_SUBSCRIPTION_DIALOG_ID,
+} from "@/common/dataConstants/dialogIDs";
 import { AuthStep, PropertyCategory } from "@/common/enums";
 import { getPropertySearchHrefWithLocation } from "@/common/utils";
 import { UserDropdown } from "@/components/UserDropdown";
@@ -172,10 +175,10 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
               Buy
             </Link> */}
             <button
-              onClick={() => openDialog(BUY_CONNECTS_DIALOG_ID)}
+              onClick={() => openDialog(PRO_SUBSCRIPTION_DIALOG_ID)}
               className="relative hover:text-red-600 py-2 nav-link"
             >
-              Buy Connects
+              Houseclay Pro
             </button>
             <Link
               href="/about-us"

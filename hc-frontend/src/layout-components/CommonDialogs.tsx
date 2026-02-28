@@ -5,6 +5,7 @@ import {
   CALL_WITH_CAPTAIN_DIALOG_ID,
   LOGIN_DIALOG_ID,
   MENU_DIALOG_ID,
+  PRO_SUBSCRIPTION_DIALOG_ID,
 } from "@/common/dataConstants/dialogIDs";
 import {
   BuyConnectsDialog,
@@ -12,6 +13,7 @@ import {
   LoginDialog,
   MenuDialog,
 } from "@/dialogs";
+import ProSubscriptionDialog from "@/dialogs/pro-subscription-dialog";
 import { useDialog } from "@/providers/DialogContextProvider";
 
 const CommonDialogs: React.FC = () => {
@@ -29,6 +31,10 @@ const CommonDialogs: React.FC = () => {
       {/* Buy Connects Dialog */}
       {isDialogOpen(BUY_CONNECTS_DIALOG_ID) && (
         <BuyConnectsDialog id={BUY_CONNECTS_DIALOG_ID} />
+      )}
+      {/* Pro Subscription Dialog */}
+      {isDialogOpen(PRO_SUBSCRIPTION_DIALOG_ID) && (
+        <ProSubscriptionDialog id={PRO_SUBSCRIPTION_DIALOG_ID} />
       )}
     </>
   );

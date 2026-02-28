@@ -6,7 +6,6 @@ import { type ReactNode } from "react";
 
 import { Button } from "@/base-components";
 import { PRO_SUBSCRIPTION_DIALOG_ID } from "@/common/dataConstants/dialogIDs";
-import ProSubscriptionDialog from "@/dialogs/pro-subscription-dialog";
 import { MobileFooter, MobileHeader } from "@/layout-components";
 import { useDialog } from "@/providers/DialogContextProvider";
 
@@ -17,14 +16,10 @@ import { useDialog } from "@/providers/DialogContextProvider";
  */
 export default function ConnectsLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const { openDialog, isDialogOpen } = useDialog();
+  const { openDialog } = useDialog();
 
   const handleBackClick = () => {
     router.back();
-  };
-
-  const handleBuyConnectsClick = () => {
-    openDialog(PRO_SUBSCRIPTION_DIALOG_ID);
   };
 
   return (
@@ -61,16 +56,12 @@ export default function ConnectsLayout({ children }: { children: ReactNode }) {
           <button
             className="text-center border border-red-500 bg-red-500  hover:bg-red-600 text-white px-6 py-3 rounded-xl transition duration-200"
             // onClick={() => router.push("/buy-connects")}
-            onClick={handleBuyConnectsClick}
+            onClick={() => openDialog(PRO_SUBSCRIPTION_DIALOG_ID)}
           >
             Buy Connects
           </button>
         </MobileFooter>
       </div>
-
-      {isDialogOpen(PRO_SUBSCRIPTION_DIALOG_ID) && (
-        <ProSubscriptionDialog id={PRO_SUBSCRIPTION_DIALOG_ID} />
-      )}
     </>
   );
 }
