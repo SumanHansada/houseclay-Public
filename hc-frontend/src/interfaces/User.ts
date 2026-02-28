@@ -6,6 +6,7 @@ export interface AuthUserDetail {
   phoneNo: string;
   connectBal: number;
   avatarUrl: string | null;
+  corporateEmailVerified: boolean;
 }
 
 export interface UserOwnedProperties {

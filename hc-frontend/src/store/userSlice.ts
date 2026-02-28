@@ -14,6 +14,7 @@ export interface UserDetail {
   avatarUrl: string | null;
   onWhatsApp: boolean;
   emailVerified: boolean;
+  corporateEmailVerified: boolean;
 
   ownedProperties: UserOwnedProperties[];
   externalPayments: UserExternalPayment[];
@@ -46,6 +47,7 @@ const initialState: UserState = {
     avatarUrl: null,
     onWhatsApp: false,
     emailVerified: false,
+    corporateEmailVerified: false,
 
     ownedProperties: [],
     externalPayments: [],
@@ -104,6 +106,12 @@ const userSlice = createSlice({
     setEmailVerified(state, action: PayloadAction<boolean>) {
       if (state.userDetail) {
         state.userDetail.emailVerified = action.payload;
+      }
+    },
+
+    setCorporateEmailVerified(state, action: PayloadAction<boolean>) {
+      if (state.userDetail) {
+        state.userDetail.corporateEmailVerified = action.payload;
       }
     },
 
@@ -179,6 +187,7 @@ export const {
   setPhoneNo,
   setAvatarUrl,
   setEmailVerified,
+  setCorporateEmailVerified,
   setOnWhatsApp,
   setContactedProperties,
   setExternalPayments,
