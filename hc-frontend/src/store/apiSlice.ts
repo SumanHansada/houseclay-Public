@@ -77,16 +77,7 @@ export const apiSlice = createApi({
         body: data,
       }),
     }),
-    getUserInfo: builder.query<
-      {
-        name: string;
-        emailID: string;
-        connectBal: number;
-        avatarUrl: string | null;
-        phoneNo: string;
-      },
-      void
-    >({
+    getUserInfo: builder.query<AuthUserDetail, void>({
       query: () => "/user/info",
     }),
     logout: builder.mutation<
