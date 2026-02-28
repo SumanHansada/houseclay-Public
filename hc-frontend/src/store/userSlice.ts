@@ -15,6 +15,8 @@ export interface UserDetail {
   onWhatsApp: boolean;
   emailVerified: boolean;
   corporateEmailVerified: boolean;
+  companyName?: string;
+  jobTitle?: string;
 
   ownedProperties: UserOwnedProperties[];
   externalPayments: UserExternalPayment[];
@@ -48,6 +50,8 @@ const initialState: UserState = {
     onWhatsApp: false,
     emailVerified: false,
     corporateEmailVerified: false,
+    companyName: undefined,
+    jobTitle: undefined,
 
     ownedProperties: [],
     externalPayments: [],

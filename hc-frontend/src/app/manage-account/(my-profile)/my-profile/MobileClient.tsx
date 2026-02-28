@@ -1,7 +1,7 @@
 "use client";
 
 import { Form, useFormikContext } from "formik";
-import { CircleAlert, CircleCheck } from "lucide-react";
+import { CircleAlert, CircleCheck, ShieldCheck } from "lucide-react";
 import { type ReactNode } from "react";
 
 import { getInitials } from "@/common/utils";
@@ -58,8 +58,15 @@ export function MobileClient({ editMode, onVerifyEmail }: MobileClientProps) {
   return (
     <div className="md:hidden">
       <div className="flex flex-col items-center py-6">
-        <div className="size-36 bg-black rounded-full flex items-center justify-center text-5xl text-white">
-          {getInitials(values.name)}
+        <div className="relative">
+          <div className="size-36 bg-black rounded-full flex items-center justify-center text-5xl text-white">
+            {getInitials(values.name)}
+          </div>
+          {values.corporateEmailVerified && (
+            <div className="absolute bottom-1 right-1 bg-white rounded-full p-1 shadow-md">
+              <ShieldCheck className="text-white fill-red-500 size-8" />
+            </div>
+          )}
         </div>
       </div>
 
@@ -73,6 +80,39 @@ export function MobileClient({ editMode, onVerifyEmail }: MobileClientProps) {
             placeholder="Full name"
             required
           />
+          {/* Connects Balance */}
+          <FormTextField
+            name="connectsBalance"
+            id="connectsBalance"
+            label="Connects Balance"
+            placeholder="0"
+            className="cursor-not-allowed bg-gray-50"
+            disabled
+          />
+
+          {/* Job Title */}
+          {values.jobTitle ? (
+            <FormTextField
+              name="jobTitle"
+              id="jobTitle"
+              label="Job Title"
+              placeholder="Not provided"
+              className="cursor-not-allowed bg-gray-50"
+              disabled
+            />
+          ) : null}
+
+          {/* Company Name */}
+          {values.companyName ? (
+            <FormTextField
+              name="companyName"
+              id="companyName"
+              label="Company Name"
+              placeholder="Not provided"
+              className="cursor-not-allowed bg-gray-50"
+              disabled
+            />
+          ) : null}
 
           {/* Phone (read-only) */}
           <div className="mt-1 flex flex-col gap-4">
@@ -153,6 +193,19 @@ export function MobileClient({ editMode, onVerifyEmail }: MobileClientProps) {
       ) : (
         <div className="px-6 pt-4 pb-16 space-y-4">
           <DisplayRow label="Name" value={values.name} />
+          <DisplayRow label="Connects Balance" value={values.connectsBalance} />
+          {values.jobTitle ? (
+            <DisplayRow
+              label="Job Title"
+              value={values.jobTitle || "Not provided"}
+            />
+          ) : null}
+          {values.companyName ? (
+            <DisplayRow
+              label="Company Name"
+              value={values.companyName || "Not provided"}
+            />
+          ) : null}
           <DisplayRow
             label="Phone Number"
             value={`${values.phoneNumber}`}

@@ -72,6 +72,9 @@ export interface UserDetailsDTO {
   onWhatsApp: boolean;
   emailVerified: boolean;
   connectBal: number;
+  corporateEmailVerified: boolean;
+  companyName?: string;
+  jobTitle?: string;
 
   ownedProperties: UserOwnedProperties[];
   externalPayments: UserExternalPayment[];

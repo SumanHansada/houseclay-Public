@@ -3,7 +3,6 @@
 import { Heart, Search, UserRound } from "lucide-react";
 // import { default as RequirementsIcon } from "public/optimizedIcons/medium/my-requirements.svg";
 import { default as OwnersIcon } from "public/optimizedIcons/medium/owners-contacted.svg";
-import { default as ConnectsIcon } from "public/optimizedIcons/small/connects.svg";
 import { default as LogoutIcon } from "public/optimizedIcons/small/logout.svg";
 import { default as PaymentsIcon } from "public/optimizedIcons/small/my-payments.svg";
 import { default as ProfileIcon } from "public/optimizedIcons/small/my-profile.svg";
@@ -45,12 +44,12 @@ export const ACCOUNT_NAV_ITEMS: AccountNavItem[] = [
     href: "/manage-account/shortlists",
     NavIcon: ShortlistsIcon,
   },
-  {
-    label: "Connects",
-    headerLabel: "Connects",
-    href: "/manage-account/connects",
-    NavIcon: ConnectsIcon,
-  },
+  // {
+  //   label: "Connects",
+  //   headerLabel: "Connects",
+  //   href: "/manage-account/connects",
+  //   NavIcon: ConnectsIcon,
+  // },
   {
     label: "My Payments",
     headerLabel: "Your Payments",

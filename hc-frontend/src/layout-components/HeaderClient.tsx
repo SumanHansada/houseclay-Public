@@ -178,7 +178,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
               onClick={() => openDialog(PRO_SUBSCRIPTION_DIALOG_ID)}
               className="relative hover:text-red-600 py-2 nav-link flex gap-1 items-center"
             >
-              Get Pro <ShieldCheckIcon className="size-4" />
+              Get Pro <ShieldCheckIcon className="size-5" />
             </button>
             <Link
               href="/about-us"
@@ -220,7 +220,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
               }
             >
               <Link
-                href="/manage-account/connects"
+                href="/manage-account/my-profile"
                 className="flex items-center xl:px-4 lg:px-3 md:px-2 px-2 py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100"
                 aria-label={`Connects Balance ${connectBal} Connects`}
               >

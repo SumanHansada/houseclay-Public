@@ -1,7 +1,7 @@
 "use client";
 
 import { Form, useFormikContext } from "formik";
-import { CircleAlert, CircleCheck } from "lucide-react";
+import { CircleAlert, CircleCheck, ShieldCheck } from "lucide-react";
 
 import { getInitials } from "@/common/utils";
 import { FormPhoneField, FormTextField } from "@/form-components";
@@ -40,8 +40,15 @@ export function DesktopClient({
       <div className="flex flex-col lg:flex-row lg:gap-6 xl:gap-10 2xl:gap-20 space-y-8 lg:space-y-0">
         {/* Avatar */}
         <div className="flex flex-col items-center">
-          <div className="size-32 2xl:size-40 bg-black rounded-full flex items-center justify-center text-5xl 2xl:text-[60px] text-white">
-            {getInitials(values.name)}
+          <div className="relative">
+            <div className="size-32 2xl:size-40 bg-black rounded-full flex items-center justify-center text-5xl 2xl:text-[60px] text-white">
+              {getInitials(values.name)}
+            </div>
+            {values.corporateEmailVerified && (
+              <div className="absolute bottom-0 right-0 bg-white rounded-full p-0.5 shadow-md">
+                <ShieldCheck className="text-white fill-red-500 size-8 2xl:size-10" />
+              </div>
+            )}
           </div>
         </div>
 
@@ -57,6 +64,40 @@ export function DesktopClient({
             required
             disabled={!editMode}
           />
+
+          {/* Connects Balance */}
+          <FormTextField
+            name="connectsBalance"
+            id="connectsBalance"
+            label="Connects Balance"
+            placeholder="0"
+            className="w-2/3 cursor-not-allowed bg-gray-50"
+            disabled
+          />
+
+          {/* Job Title */}
+          {values.jobTitle ? (
+            <FormTextField
+              name="jobTitle"
+              id="jobTitle"
+              label="Job Title"
+              placeholder="Not provided"
+              className="w-2/3 cursor-not-allowed bg-gray-50"
+              disabled
+            />
+          ) : null}
+
+          {/* Company Name */}
+          {values.companyName ? (
+            <FormTextField
+              name="companyName"
+              id="companyName"
+              label="Company Name"
+              placeholder="Not provided"
+              className="w-2/3 cursor-not-allowed bg-gray-50"
+              disabled
+            />
+          ) : null}
 
           {/* Phone */}
           <div className="mt-1 flex flex-col lg:flex-row items-end lg:items-center justify-between lg:gap-1">
