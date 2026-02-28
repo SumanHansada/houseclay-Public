@@ -5,7 +5,7 @@ import {
   CALL_WITH_CAPTAIN_DIALOG_ID,
   LOGIN_DIALOG_ID,
   MENU_DIALOG_ID,
-} from "@/common/dialogConstants";
+} from "@/common/dataConstants/dialogIDs";
 import {
   BuyConnectsDialog,
   CallWithCaptainDialog,

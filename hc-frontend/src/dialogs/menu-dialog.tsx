@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
 import { propertyImageURL } from "@/common/cdnURLs";
-import { ACCOUNT_NAV_ITEMS } from "@/common/dataConstants/navbar";
+import { ACCOUNT_NAV_ITEMS } from "@/common/dataConstants/navbarList";
 import { AuthStep } from "@/common/enums";
 import { CITY_OPTIONS } from "@/common/utils";
 import { AccountNavList } from "@/components/AccountNavList";

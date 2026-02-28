@@ -46,7 +46,7 @@ import {
   ROOM_TYPE_OPTIONS,
   WATER_SUPPLY_OPTIONS,
   YES_NO_OPTIONS,
-} from "@/common/dataConstants/options";
+} from "@/common/dataConstants/formOptions";
 import { TenantTypeValue } from "@/common/enums";
 import {
   FormCalendarField,

@@ -48,7 +48,7 @@ import {
   PROPERTY_AVAILABILITY,
   RENT_PRICE_OPTIONS,
   ROOM_TYPE_OPTIONS,
-} from "@/common/dataConstants/options";
+} from "@/common/dataConstants/formOptions";
 import {
   PreferredTenantValue,
   PropertyCategory,

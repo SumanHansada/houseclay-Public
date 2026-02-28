@@ -8,7 +8,7 @@ import * as Yup from "yup";
 import {
   KHATA_CERTIFICATE_OPTIONS,
   YES_NO_OPTIONS,
-} from "@/common/dataConstants/options";
+} from "@/common/dataConstants/formOptions";
 import { FormPhoneField, FormSelectDropdown } from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
 import { setAdditionalInfo, setFormValidity } from "@/store/editPropertySlice";

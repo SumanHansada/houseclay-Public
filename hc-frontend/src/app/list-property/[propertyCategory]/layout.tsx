@@ -10,7 +10,7 @@ import {
   LIST_PROPERTY_FAILURE_DIALOG_ID,
   LIST_PROPERTY_SUCCESS_DIALOG_ID,
   UPLOAD_PHOTOS_DIALOG_ID,
-} from "@/common/dialogConstants";
+} from "@/common/dataConstants/dialogIDs";
 import {
   ListPropertyFormStep,
   ListPropertyRouteStep,

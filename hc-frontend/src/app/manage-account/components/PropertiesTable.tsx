@@ -3,15 +3,13 @@
 import { CircleCheck, Clock, Ellipsis } from "lucide-react";
 import Link from "next/link";
 
-import {
-  BHK_TYPE_OPTIONS,
-  getOptionLabel,
-} from "@/common/dataConstants/options";
+import { BHK_TYPE_OPTIONS } from "@/common/dataConstants/formOptions";
 import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { formatINRCurrency, pascalCase } from "@/common/utils";
 import { Column, DataTable } from "@/components/DataTable";
 import { UserOwnedProperties } from "@/interfaces/User";
 import { Popover } from "@/utility-components";
+import { getOptionLabel } from "@/utils/formOptionHelpers";
 
 export function PropertyTable({
   properties,

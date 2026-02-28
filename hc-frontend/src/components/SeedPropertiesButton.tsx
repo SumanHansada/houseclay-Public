@@ -4,7 +4,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 import { Button } from "@/base-components";
-import { AMENITY_VALUES } from "@/common/dataConstants/options";
+import { AMENITY_VALUES } from "@/common/dataConstants/formOptions";
 import { PropertyCategory } from "@/common/enums";
 import { FlatmateForm } from "@/interfaces/FlatmateForm";
 import { usePropertyAddMutation } from "@/store/apiSlice";

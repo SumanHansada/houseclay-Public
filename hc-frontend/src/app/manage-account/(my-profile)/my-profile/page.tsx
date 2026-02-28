@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   EMAIL_VERIFICATION_DIALOG_ID,
   EMAIL_VERIFICATION_SUCCESS_DIALOG_ID,
-} from "@/common/dialogConstants";
+} from "@/common/dataConstants/dialogIDs";
 import {
   EmailVerificationDialog,
   EmailVerificationSuccessDialog,

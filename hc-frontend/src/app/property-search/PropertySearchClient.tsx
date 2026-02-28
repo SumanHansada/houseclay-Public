@@ -31,11 +31,11 @@ import {
   PROPERTY_AVAILABILITY,
   PROPERTY_TYPE_SHORT_OPTIONS,
   TENANT_TYPE_OPTIONS,
-} from "@/common/dataConstants/options";
+} from "@/common/dataConstants/formOptions";
 import {
   PROPERTY_FILTERS_DIALOG_ID,
   SORT_FILTERS_DIALOG_ID,
-} from "@/common/dialogConstants";
+} from "@/common/dataConstants/dialogIDs";
 import { BadgeType, PropertyCategory } from "@/common/enums";
 import { getPropertySearchHrefWithLocation } from "@/common/utils";
 import FullScreenLoader from "@/components/FullScreenLoader";

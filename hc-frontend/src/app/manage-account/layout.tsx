@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { type ReactNode, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { ACCOUNT_NAV_ITEMS } from "@/common/dataConstants/navbar";
+import { ACCOUNT_NAV_ITEMS } from "@/common/dataConstants/navbarList";
 import { AccountNavList } from "@/components/AccountNavList";
 import { Footer } from "@/layout-components";
 import { useGetUserDetailQuery } from "@/store/apiSlice";

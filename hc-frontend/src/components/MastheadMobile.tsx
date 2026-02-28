@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { bannerPeopleMobileImageURL } from "@/common/cdnURLs";
 import { EXPLORE_LOCATION } from "@/common/constants";
-import { STANDOUTS_DIALOG_ID } from "@/common/dialogConstants";
+import { STANDOUTS_DIALOG_ID } from "@/common/dataConstants/dialogIDs";
 import { PropertyCategory } from "@/common/enums";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setPropertyCategory as setSearchPropertyCategory } from "@/store/propertySearchSlice";

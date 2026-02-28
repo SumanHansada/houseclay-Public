@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { type ReactNode } from "react";
 
 import { Button } from "@/base-components";
-import { ACCOUNT_NAV_ITEMS } from "@/common/dataConstants/navbar";
+import { ACCOUNT_NAV_ITEMS } from "@/common/dataConstants/navbarList";
 import { MobileHeader } from "@/layout-components";
 
 const accountNavMap = ACCOUNT_NAV_ITEMS.reduce(

@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 
-import { StickyNavItem } from "@/common/dataConstants/navbar";
-import { STICKY_NAV_ITEMS } from "@/common/dataConstants/navbar";
+import { StickyNavItem } from "@/common/dataConstants/navbarList";
+import { STICKY_NAV_ITEMS } from "@/common/dataConstants/navbarList";
 import { RootState } from "@/store/store";
 interface StickyNavbarProps {
   defaultActive?: string;

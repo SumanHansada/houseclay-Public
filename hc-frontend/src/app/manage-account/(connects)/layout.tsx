@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 import { type ReactNode } from "react";
 
 import { Button } from "@/base-components";
+import { PRO_SUBSCRIPTION_DIALOG_ID } from "@/common/dataConstants/dialogIDs";
 import { MobileFooter, MobileHeader } from "@/layout-components";
+import { useDialog } from "@/providers/DialogContextProvider";
 
 /**
  * Layout for routes that need Footer (desktop)
@@ -14,10 +16,16 @@ import { MobileFooter, MobileHeader } from "@/layout-components";
  */
 export default function ConnectsLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
+  const { openDialog } = useDialog();
 
   const handleBackClick = () => {
     router.back();
   };
+
+  const handleBuyConnectsClick = () => {
+    openDialog(PRO_SUBSCRIPTION_DIALOG_ID);
+  };
+
   return (
     <>
       {/* Desktop: Content + Footer */}
@@ -51,7 +59,8 @@ export default function ConnectsLayout({ children }: { children: ReactNode }) {
           </button>
           <button
             className="text-center border border-red-500 bg-red-500  hover:bg-red-600 text-white px-6 py-3 rounded-xl transition duration-200"
-            onClick={() => router.push("/buy-connects")}
+            // onClick={() => router.push("/buy-connects")}
+            onClick={handleBuyConnectsClick}
           >
             Buy Connects
           </button>

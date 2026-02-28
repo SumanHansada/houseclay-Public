@@ -59,24 +59,23 @@ import {
   wifiIconURL,
 } from "@/common/cdnURLs";
 import {
+  MARK_RENTED_ACTION_DIALOG_ID,
+  UPGRADE_PROPERTY_DIALOG_ID,
+} from "@/common/dataConstants/dialogIDs";
+import {
   AMENITY_LABELS,
   AMENITY_VALUES,
   BHK_TYPE_OPTIONS,
   FACING_OPTIONS,
   FLOOR_NUMERIC_OPTIONS,
   FURNISHING_OPTIONS,
-  getOptionLabel,
   PARKING_OPTIONS,
   PROPERTY_AGE_OPTIONS,
   PROPERTY_TYPE_OPTIONS,
   TOTAL_FLOORS_NUMERIC_OPTIONS,
   WATER_SUPPLY_OPTIONS,
   YES_NO_OPTIONS,
-} from "@/common/dataConstants/options";
-import {
-  MARK_RENTED_ACTION_DIALOG_ID,
-  UPGRADE_PROPERTY_DIALOG_ID,
-} from "@/common/dialogConstants";
+} from "@/common/dataConstants/formOptions";
 import { LeadCategory, PropertyCategory, PropertyStatus } from "@/common/enums";
 import {
   formatDateToReadable,
@@ -106,6 +105,7 @@ import {
   TabHeader,
   Tabs,
 } from "@/utility-components";
+import { getOptionLabel } from "@/utils/formOptionHelpers";
 
 import PostedAndRentDetails from "./components/PostedAndRentDetails";
 import { RenderPropertyStatus } from "./components/RenderPropertyStatus";
