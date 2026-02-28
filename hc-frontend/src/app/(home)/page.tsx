@@ -14,7 +14,7 @@ export default async function Home() {
         <MastheadDesktopClient />
       </section>
       {/* Masthead Mobile Section */}
-      <section className={"min-h-[500px] w-full overflow-hidden md:hidden"}>
+      <section className={"min-h-[300px] w-full overflow-hidden md:hidden"}>
         <MastHeadMobileClient />
       </section>
 
