@@ -8,7 +8,6 @@ import { Button } from "@/base-components";
 import { PRO_SUBSCRIPTION_DIALOG_ID } from "@/common/dataConstants/dialogIDs";
 import ProSubscriptionDialog from "@/dialogs/pro-subscription-dialog";
 import { MobileFooter, MobileHeader } from "@/layout-components";
-import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 
 /**
@@ -18,8 +17,7 @@ import { useDialog } from "@/providers/DialogContextProvider";
  */
 export default function ConnectsLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const { isMobile } = useDeviceContext();
-  const { openDialog } = useDialog();
+  const { openDialog, isDialogOpen } = useDialog();
 
   const handleBackClick = () => {
     router.back();
@@ -70,7 +68,9 @@ export default function ConnectsLayout({ children }: { children: ReactNode }) {
         </MobileFooter>
       </div>
 
-      {isMobile && <ProSubscriptionDialog id={PRO_SUBSCRIPTION_DIALOG_ID} />}
+      {isDialogOpen(PRO_SUBSCRIPTION_DIALOG_ID) && (
+        <ProSubscriptionDialog id={PRO_SUBSCRIPTION_DIALOG_ID} />
+      )}
     </>
   );
 }
