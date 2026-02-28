@@ -1,7 +1,7 @@
 "use client";
 
 import { Form, Formik } from "formik";
-import { CheckCircle2, CircleCheck, X } from "lucide-react";
+import { CheckCircle2, CircleCheck, Loader2, X, XCircle } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
@@ -76,6 +76,8 @@ enum BuyConnectsStep {
   VERIFY_PAYMENT = "VERIFY_PAYMENT",
 }
 
+type ClaimStatus = "CLAIMING" | "SUCCESS" | "ERROR";
+
 const BuyConnectsDialog: React.FC<BuyConnectsDialogProps> = ({ id }) => {
   const { isMobile } = useDeviceContext();
   const { closeDialog } = useDialog();
@@ -89,7 +91,7 @@ const BuyConnectsDialog: React.FC<BuyConnectsDialogProps> = ({ id }) => {
   const [createOrder, { isLoading: isCreatingOrder }] =
     useCreateOrderMutation();
   const [verifyPayment] = useVerifyPaymentMutation();
-  const [triggerGetUserInfo] = useLazyGetUserInfoQuery(); // For Syncing
+  const [triggerGetUserInfo] = useLazyGetUserInfoQuery();
 
   // Corporate verification mutations
   const [initiateVerify, { isLoading: isInitiating }] =
@@ -104,6 +106,7 @@ const BuyConnectsDialog: React.FC<BuyConnectsDialogProps> = ({ id }) => {
   const [paymentStatus, setPaymentStatus] = useState<PaymentVerificationStatus>(
     PaymentVerificationStatus.VERIFYING,
   );
+  const [claimStatus, setClaimStatus] = useState<ClaimStatus>("CLAIMING");
 
   // Corporate Data
   const [corporateEmail, setCorporateEmail] = useState("");
@@ -128,6 +131,7 @@ const BuyConnectsDialog: React.FC<BuyConnectsDialogProps> = ({ id }) => {
       setVerificationToken("");
       setOtpCode(["", "", "", ""]);
       setPaymentStatus(PaymentVerificationStatus.VERIFYING);
+      setClaimStatus("CLAIMING");
     }, 300);
   };
 
@@ -233,6 +237,23 @@ const BuyConnectsDialog: React.FC<BuyConnectsDialogProps> = ({ id }) => {
     }
   };
 
+  const triggerClaimProcess = async () => {
+    setClaimStatus("CLAIMING");
+    try {
+      // Claim Benefits
+      await claimBenefits().unwrap();
+
+      // Sync User Data
+      const userData = await triggerGetUserInfo().unwrap();
+      dispatch(setUserDetail(userData));
+      setClaimStatus("SUCCESS");
+    } catch (err) {
+      console.error("Failed to claim benefits", err);
+      setClaimStatus("ERROR");
+      toast.error(getErrorMessage(err));
+    }
+  };
+
   const handleConfirmVerification = async (values: {
     companyName?: string;
     jobTitle?: string;
@@ -251,30 +272,16 @@ const BuyConnectsDialog: React.FC<BuyConnectsDialogProps> = ({ id }) => {
         companyName: values.companyName,
         jobTitle: values.jobTitle,
       }).unwrap();
-      setStep(BuyConnectsStep.CLAIM);
+
       toast.success("Email verified successfully!");
+      setStep(BuyConnectsStep.CLAIM);
+      // Automatically Trigger Claim
+      await triggerClaimProcess();
     } catch (err) {
       console.error("Failed to confirm verification", err);
       toast.error(getErrorMessage(err));
     }
   };
-
-  const handleClaimBenefits = async () => {
-    try {
-      // Claim
-      await claimBenefits().unwrap();
-      // Sync User Data (Fetch latest user info)
-      const userData = await triggerGetUserInfo().unwrap();
-      dispatch(setUserDetail(userData));
-      toast.success("30 Free Connects added to your account!");
-      handleCloseDialog();
-    } catch (err) {
-      console.error("Failed to claim benefits", err);
-      toast.error(getErrorMessage(err));
-    }
-  };
-
-  // --- OTP Logic ---
 
   const handleOtpChange = (index: number, value: string) => {
     // Only allow numbers
@@ -405,7 +412,11 @@ const BuyConnectsDialog: React.FC<BuyConnectsDialogProps> = ({ id }) => {
             </Formik>
             <div className="text-center">
               <button
-                onClick={() => setStep(BuyConnectsStep.INFO)}
+                onClick={() => {
+                  setStep(BuyConnectsStep.INFO);
+                  setOtpCode(["", "", "", ""]);
+                  setVerificationToken("");
+                }}
                 className="text-gray-500 text-sm hover:text-gray-700 underline"
               >
                 Back to Bundle Info
@@ -416,25 +427,79 @@ const BuyConnectsDialog: React.FC<BuyConnectsDialogProps> = ({ id }) => {
 
       case BuyConnectsStep.CLAIM:
         return (
-          <div className="flex flex-col gap-6 py-8 text-center items-center">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-2">
-              <CircleCheck className="text-green-600" size={40} />
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                Verification Successful!
-              </h3>
-              <p className="text-gray-600">
-                You are eligible for the Free Access Pass.
-              </p>
-            </div>
-            <Button
-              onClick={handleClaimBenefits}
-              isLoading={isClaiming}
-              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-bold text-lg shadow-lg shadow-green-200"
-            >
-              Claim 30 Free Connects
-            </Button>
+          <div className="flex flex-col gap-6 p-6 text-center items-center justify-center min-h-[300px]">
+            {/* CLAIMING STATE */}
+            {claimStatus === "CLAIMING" && (
+              <>
+                <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-2 animate-pulse">
+                  <Loader2 className="text-blue-600 animate-spin" size={40} />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    Verification Successful
+                  </h3>
+                  <p className="text-gray-600">
+                    Adding 30 Free Connects to your account...
+                  </p>
+                </div>
+              </>
+            )}
+
+            {/* SUCCESS STATE */}
+            {claimStatus === "SUCCESS" && (
+              <>
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-2">
+                  <CircleCheck className="text-green-600" size={40} />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                    Benefits Unlocked!
+                  </h3>
+                  <p className="text-gray-600">
+                    You have successfully claimed your Free Access Pass.
+                  </p>
+                </div>
+                <Button
+                  onClick={handleCloseDialog}
+                  className="w-full py-3 rounded-xl font-bold text-lg"
+                >
+                  Continue
+                </Button>
+              </>
+            )}
+
+            {/* ERROR STATE */}
+            {claimStatus === "ERROR" && (
+              <>
+                <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mb-2">
+                  <XCircle className="text-red-600" size={40} />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    Claim Failed
+                  </h3>
+                  <p className="text-gray-600">
+                    Verification passed, but we couldn't add the connects.
+                  </p>
+                </div>
+                <div className="flex gap-3 w-full">
+                  <Button
+                    variant="secondary"
+                    onClick={handleCloseDialog}
+                    className="w-1/2 py-3 rounded-xl text-lg"
+                  >
+                    Close
+                  </Button>
+                  <Button
+                    variant="danger"
+                    onClick={triggerClaimProcess}
+                    className="w-1/2 py-3 rounded-xl text-lg"
+                  >
+                    Retry Claim
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
         );
 
