@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, User } from "lucide-react";
+import { Menu, ShieldCheckIcon, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
@@ -176,9 +176,9 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
             </Link> */}
             <button
               onClick={() => openDialog(PRO_SUBSCRIPTION_DIALOG_ID)}
-              className="relative hover:text-red-600 py-2 nav-link"
+              className="relative hover:text-red-600 py-2 nav-link flex gap-1 items-center"
             >
-              Houseclay Pro
+              Get Pro <ShieldCheckIcon className="size-4" />
             </button>
             <Link
               href="/about-us"

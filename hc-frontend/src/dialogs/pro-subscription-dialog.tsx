@@ -130,6 +130,8 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
   const ref4 = useRef<HTMLInputElement>(null);
   const inputRefs = useMemo(() => [ref1, ref2, ref3, ref4], []);
 
+  const isUserAlreadyVerified = userDetail?.corporateEmailVerified;
+
   const onClose = () => {
     closeDialog(id);
     // Reset state after animation
@@ -153,6 +155,9 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
       } else {
         setStep(ProSubscriptionStep.INFO);
       }
+    }
+    if (isAuthenticated && isUserAlreadyVerified) {
+      setSelectedOption("no-corporate");
     }
   }, [isAuthenticated, step]);
 
@@ -366,7 +371,7 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
           ? "Payment Successful"
           : "Processing Payment";
       default:
-        return "Houseclay PRO";
+        return "Houseclay Pro";
     }
   };
 
@@ -639,8 +644,6 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
           );
         }
 
-        const isAlreadyVerified = userDetail?.corporateEmailVerified;
-
         return (
           <div className="flex flex-col h-full">
             {/* HERO SECTION */}
@@ -661,7 +664,7 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                     {[
                       "100% Verified Listings",
                       "Zero Brokerage - Direct Owner Contact",
-                      "No Spam",
+                      "Priority Access to Listings",
                     ].map((item, i) => (
                       <li
                         key={i}
@@ -709,121 +712,131 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
 
             {/* SELECTION SECTION */}
             <div className="flex flex-col gap-3 px-6 pb-6">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                Standard Plan
-              </p>
-
-              {/* Corporate Option */}
-              <div
-                onClick={() => {
-                  if (!isAlreadyVerified) {
-                    setSelectedOption("corporate");
-                  }
-                }}
-                className={`relative border rounded-xl p-4 transition-all duration-200 ${
-                  isAlreadyVerified && selectedOption !== "corporate"
-                    ? "opacity-50 cursor-not-allowed bg-gray-50"
-                    : "cursor-pointer"
-                } ${
-                  selectedOption === "corporate"
-                    ? "border-red-500 bg-red-50 ring-1 ring-red-500 shadow-md"
-                    : "border-neutral-100 hover:border-red-200 hover:bg-gray-50"
-                }`}
-              >
-                <div className="flex justify-between items-start">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${
-                        selectedOption === "corporate"
-                          ? "border-red-600 bg-red-600"
-                          : "border-gray-300 bg-white"
-                      }`}
-                    >
-                      {selectedOption === "corporate" && (
-                        <div className="w-2 h-2 bg-white rounded-full" />
-                      )}
-                    </div>
-                    <div className="flex flex-col">
-                      <span
-                        className={`text-sm font-semibold ${selectedOption === "corporate" ? "text-red-900" : "text-gray-700"}`}
-                      >
-                        I have a Corporate Email
-                      </span>
-                      <span className="text-xs text-green-600 font-medium">
-                        Get it for FREE
-                      </span>
-                    </div>
+              {isUserAlreadyVerified ? (
+                <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center space-y-2">
+                  <div className="flex justify-center">
+                    <CheckCircle2 className="text-green-600" size={28} />
                   </div>
-                  {/* Price Tag */}
-                  <div className="flex flex-col items-end">
-                    <span className="text-xs text-gray-400 line-through">
-                      ₹{bundleData?.standardPrice || 1499}
-                    </span>
-                    <span className="text-lg font-bold text-green-600">₹0</span>
-                  </div>
+                  <p className="text-sm font-medium text-green-800">
+                    You are already verified and have claimed your benefits.
+                  </p>
+                  <p className="text-xs text-green-700">
+                    You can proceed to buy more if required.
+                  </p>
                 </div>
+              ) : (
+                <>
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                    Standard Plan
+                  </p>
 
-                {selectedOption === "corporate" && (
-                  <div className="mt-4 pl-8 animate-fade-in space-y-3">
-                    <p className="text-xs text-gray-600 leading-relaxed">
-                      Verify your work email to unlock{" "}
-                      {bundleData?.connects || 30} connects instantly.
-                    </p>
-
-                    {isAlreadyVerified ? (
-                      <div className="bg-green-100 text-green-700 px-3 py-2 rounded-lg text-sm font-medium flex gap-2 items-center">
-                        <CheckCircle2 size={16} /> Already Verified
+                  {/* Corporate Option */}
+                  <div
+                    onClick={() => setSelectedOption("corporate")}
+                    className={`relative rounded-xl cursor-pointer transition-all duration-200 ${
+                      selectedOption === "corporate"
+                        ? "p-px bg-gradient-to-r from-red-600 via-red-500 via-80% to-amber-300 shadow-md"
+                        : "border border-neutral-100 hover:border-red-200 hover:bg-gray-50"
+                    }`}
+                  >
+                    <div
+                      className={`h-full w-full ${selectedOption === "corporate" ? "bg-red-50 rounded-lg p-4" : "p-4"}`}
+                    >
+                      <div className="flex justify-between items-start">
+                        <div className="flex items-center gap-3">
+                          <div
+                            className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${
+                              selectedOption === "corporate"
+                                ? "border-red-600 bg-red-600"
+                                : "border-gray-300 bg-white"
+                            }`}
+                          >
+                            {selectedOption === "corporate" && (
+                              <div className="w-2 h-2 bg-white rounded-full" />
+                            )}
+                          </div>
+                          <div className="flex flex-col">
+                            <span
+                              className={`text-sm font-semibold ${selectedOption === "corporate" ? "text-red-900" : "text-gray-700"}`}
+                            >
+                              I have a Corporate Email
+                            </span>
+                            <span className="text-xs text-green-600 font-medium">
+                              Get it for FREE
+                            </span>
+                          </div>
+                        </div>
+                        {/* Price Tag */}
+                        <div className="flex flex-col items-end">
+                          <span className="text-xs text-gray-400 line-through">
+                            ₹{bundleData?.standardPrice || 1499}
+                          </span>
+                          <span className="text-lg font-bold text-green-600">
+                            ₹0
+                          </span>
+                        </div>
                       </div>
-                    ) : (
-                      <input
-                        type="email"
-                        placeholder="name@company.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-200 bg-white"
-                        onClick={(e) => e.stopPropagation()}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") handleVerifyEmailClick();
-                        }}
-                      />
-                    )}
-                  </div>
-                )}
-              </div>
 
-              {/* No Corporate Option */}
-              <div
-                onClick={() => setSelectedOption("no-corporate")}
-                className={`border rounded-xl p-4 cursor-pointer transition-all duration-200 ${
-                  selectedOption === "no-corporate"
-                    ? "border-red-500 bg-red-50 ring-1 ring-red-500 shadow-md"
-                    : "border-gray-200 hover:border-red-200 hover:bg-gray-50"
-                }`}
-              >
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${
-                        selectedOption === "no-corporate"
-                          ? "border-red-600 bg-red-600"
-                          : "border-gray-300 bg-white"
-                      }`}
-                    >
-                      {selectedOption === "no-corporate" && (
-                        <div className="w-2 h-2 bg-white rounded-full" />
+                      {selectedOption === "corporate" && (
+                        <div className="mt-4 pl-8 animate-fade-in space-y-3">
+                          <p className="text-xs text-gray-600 leading-relaxed">
+                            Verify your work email to unlock{" "}
+                            {bundleData?.connects || 30} connects instantly.
+                          </p>
+
+                          <input
+                            type="email"
+                            placeholder="name@company.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-200 bg-white"
+                            onClick={(e) => e.stopPropagation()}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") handleVerifyEmailClick();
+                            }}
+                          />
+                        </div>
                       )}
                     </div>
-                    <span
-                      className={`text-sm font-semibold ${selectedOption === "no-corporate" ? "text-red-900" : "text-gray-700"}`}
-                    >
-                      I don&apos;t have a Corporate Email
-                    </span>
                   </div>
-                  <span className="text-lg font-bold text-gray-900">
-                    ₹{bundleData?.standardPrice || 1499}
-                  </span>
-                </div>
-              </div>
+
+                  {/* No Corporate Option */}
+                  <div
+                    onClick={() => setSelectedOption("no-corporate")}
+                    className={`relative rounded-xl cursor-pointer transition-all duration-200 ${
+                      selectedOption === "no-corporate"
+                        ? "p-px bg-gradient-to-r from-red-600 via-red-500 via-80% to-amber-300 shadow-md"
+                        : "border border-gray-200 hover:border-red-200 hover:bg-gray-50"
+                    }`}
+                  >
+                    <div
+                      className={`h-full w-full flex justify-between items-center ${selectedOption === "no-corporate" ? "bg-red-50 rounded-lg p-4" : "p-4"}`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${
+                            selectedOption === "no-corporate"
+                              ? "border-red-600 bg-red-600"
+                              : "border-gray-300 bg-white"
+                          }`}
+                        >
+                          {selectedOption === "no-corporate" && (
+                            <div className="w-2 h-2 bg-white rounded-full" />
+                          )}
+                        </div>
+                        <span
+                          className={`text-sm font-semibold ${selectedOption === "no-corporate" ? "text-red-900" : "text-gray-700"}`}
+                        >
+                          I don&apos;t have a Corporate Email
+                        </span>
+                      </div>
+                      <span className="text-lg font-bold text-gray-900">
+                        ₹{bundleData?.standardPrice || 1499}
+                      </span>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         );
@@ -835,7 +848,7 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
     <Dialog
       id={id}
       type={isMobile ? "fullscreen" : "card"}
-      width={isMobile ? 100 : step === ProSubscriptionStep.INFO ? 50 : 40}
+      width={isMobile ? 100 : step === ProSubscriptionStep.LOGIN ? 50 : 40}
       onClose={onClose}
       entryAnimation={isMobile ? "animate-slide-in-bottom" : "animate-fade-in"}
       exitAnimation={isMobile ? "animate-slide-out-bottom" : "animate-fade-out"}
@@ -895,13 +908,12 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
               disabled={
                 isCreatingOrder ||
                 isInitiating ||
-                (userDetail?.corporateEmailVerified &&
-                  selectedOption === "corporate")
+                (isUserAlreadyVerified && selectedOption === "corporate")
               }
               className="flex-1 rounded-xl py-3"
             >
               {selectedOption === "corporate"
-                ? userDetail?.corporateEmailVerified
+                ? isUserAlreadyVerified
                   ? "Verified"
                   : "Verify & Unlock"
                 : `Pay ₹${bundleData?.standardPrice || 1499}`}
