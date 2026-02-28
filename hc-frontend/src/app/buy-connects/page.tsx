@@ -45,53 +45,7 @@ const fmt2 = (rupees: number) =>
     maximumFractionDigits: 2,
   });
 
-  interface ContactUsFormValues {
-    name: string;
-    phone: string;
-    email: string;
-    subject: string;
-    message: string;
-  }
-  
-  const validationSchema = Yup.object({
-    name: Yup.string().required("Name is required"),
-    phone: Yup.string().required("Phone is required"),
-    email: Yup.string().email("Invalid email").required("Email is required"),
-    subject: Yup.string().required("Subject is required"),
-    message: Yup.string().required("Message is required"),
-  });
-  
-  const initialValues: ContactUsFormValues = {
-    name: "",
-    phone: "",
-    email: "",
-    subject: "",
-    message: "",
-  };
-
 export default function BuyConnectsPage() {
-  const [contactUs, { isLoading, isSuccess, isError }] = useContactUsMutation();
-  
-    const handleSubmit = async (
-      values: ContactUsFormValues,
-      { resetForm }: FormikHelpers<ContactUsFormValues>,
-    ) => {
-      try {
-        const payload = {
-          name: values.name,
-          email: values.email,
-          phone: values.phone,
-          subject: values.subject,
-          message: values.message,
-        };
-  
-        await contactUs(payload).unwrap();
-  
-        resetForm();
-      } catch (err) {
-        console.error("Failed to send message:", err);
-      }
-    };
   const router = useRouter();
   const [selectedBundle, setSelectedBundle] =
     useState<ConnectBundleID>("CUSTOM_CONNECTS");
@@ -115,13 +69,11 @@ export default function BuyConnectsPage() {
 
   const { data: bundleData } = useBundleInfoQuery();
 
-  const displayBundles =
-    bundleData?.filter((bundle) => bundle.id !== "CUSTOM_CONNECTS") || [];
+  // const displayBundles =
+  //   bundleData?.filter((bundle) => bundle.id !== "CUSTOM_CONNECTS") || [];
 
   // Find the currently selected bundle object from the full API list
-  const currentBundle = bundleData?.find(
-    (bundle) => bundle.id === selectedBundle,
-  );
+  const currentBundle = bundleData;
 
   // Set default to PREMIUM_GOLD_BUNDLE (middle/recommended) when data loads
   // useEffect(() => {
@@ -149,17 +101,17 @@ export default function BuyConnectsPage() {
     ? connectBalance + connectsToBuy
     : connectsToBuy;
 
-  const bundleOptions = displayBundles.map((bundle) => ({
-    value: bundle.id,
-    label: bundle.title,
-    icon: (
-      <ConnectsBundleCard
-        bundle={bundle}
-        selectedBundle={selectedBundle}
-        isMobile={isMobile}
-      />
-    ),
-  }));
+  // const bundleOptions = displayBundles.map((bundle) => ({
+  //   value: bundle.id,
+  //   label: bundle.title,
+  //   icon: (
+  //     <ConnectsBundleCard
+  //       bundle={bundle}
+  //       selectedBundle={selectedBundle}
+  //       isMobile={isMobile}
+  //     />
+  //   ),
+  // }));
 
   const expiryDate = new Date();
   expiryDate.setDate(expiryDate.getDate() + BUNDLE_VALIDITY_DAYS);

@@ -1,28 +1,25 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/base-components";
-import { BUY_CONNECTS_DIALOG_ID, VERIFY_CONNECTS_DIALOG_ID } from "@/common/dialogConstants";
-import { PaymentVerificationStatus } from "@/common/enums";
-
-import * as Yup from "yup";
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-} from "@/components/Dialog";
+  BUY_CONNECTS_DIALOG_ID,
+  VERIFY_CONNECTS_DIALOG_ID,
+} from "@/common/dialogConstants";
+import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
 import Login from "@/components/Login";
 import { MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useBundleInfoQuery,
-  useContactUsMutation,
+  useClaimCorporateBenefitsMutation,
+  useConfirmCorporateVerificationMutation,
   useCreateOrderMutation,
+  useInitiateCorporateVerificationMutation,
   useVerifyPaymentMutation,
 } from "@/store/apiSlice";
 import { RootState } from "@/store/store";
@@ -31,6 +28,7 @@ import { SvgIcon } from "@/utility-components";
 import { Form, Formik, FormikHelpers } from "formik";
 import Spinner from "@/components/Spinner";
 import { FormTextField } from "@/form-components";
+import * as Yup from "yup";
 
 // Razorpay type definition
 declare global {
@@ -39,18 +37,6 @@ declare global {
     Razorpay: any;
   }
 }
-
-interface ContactUsFormValues {
-  email: string;
-}
-
-const validationSchema = Yup.object({
-  email: Yup.string().email("Invalid email").required("Email is required"),
-});
-
-const initialValues: ContactUsFormValues = {
-  email: "",
-};
 
 const RAZORPAY_KEY = process.env.NEXT_PUBLIC_RAZORPAY_API_KEY;
 
@@ -64,122 +50,114 @@ interface BuyConnectsDialogProps {
   id: string;
 }
 
+const corporateValidationSchema = Yup.object({
+  email: Yup.string().email("Invalid email").required("Email is required"),
+});
+
+const corporateInitialValues = {
+  email: "",
+};
+
 const BuyConnectsDialog: React.FC<BuyConnectsDialogProps> = ({ id }) => {
   const { isMobile } = useDeviceContext();
   const { closeDialog, openDialog } = useDialog();
   const dispatch = useDispatch();
-  
+
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { userDetail } = useSelector((state: RootState) => state.user);
-  
+
   const { data: bundleData, isLoading: isBundleLoading } = useBundleInfoQuery();
-  const [createOrder, { isLoading: isCreatingOrder }] = useCreateOrderMutation();
+  const [createOrder, { isLoading: isCreatingOrder }] =
+    useCreateOrderMutation();
   const [verifyPayment] = useVerifyPaymentMutation();
 
-  const [localAuthStep, setLocalAuthStep] = useState<"login" | "buy">(isAuthenticated ? "buy" : "login");
+  // Corporate verification mutations
+  const [initiateVerify, { isLoading: isInitiating }] =
+    useInitiateCorporateVerificationMutation();
+  const [confirmVerify, { isLoading: isConfirming }] =
+    useConfirmCorporateVerificationMutation();
+  const [claimBenefits, { isLoading: isClaiming }] =
+    useClaimCorporateBenefitsMutation();
 
-  // Sync local auth step with global auth state
-  useEffect(() => {
-    if (isAuthenticated) {
-      setLocalAuthStep("buy");
-    } else {
-        // If dialog is open and user is not authenticated, show login
-         // But only if we are in this flow. 
-         // For now, simple logic: if not auth, show login.
-         setLocalAuthStep("login");
-    }
-  }, [isAuthenticated]);
+  // Steps
+  const [step, setStep] = useState<"INFO" | "LOGIN" | "OTP" | "CLAIM">("INFO");
+
+  // Pending action to resume after login
+  const [pendingAction, setPendingAction] = useState<"BUY" | "VERIFY" | null>(
+    null,
+  );
+
+  // State for corporate verification
+  const [corporateEmail, setCorporateEmail] = useState("");
+  const [verificationToken, setVerificationToken] = useState("");
+  const [otpCode, setOtpCode] = useState(["", "", "", ""]);
+
+  // Refs for OTP inputs
+  const inputRefs = [
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+    useRef<HTMLInputElement>(null),
+  ];
 
   const handleCloseDialog = () => {
     closeDialog(id);
+    // Reset state after a short delay so animation finishes
+    setTimeout(() => {
+      setStep("INFO");
+      setPendingAction(null);
+      setCorporateEmail("");
+      setVerificationToken("");
+      setOtpCode(["", "", "", ""]);
+      // Reset local storage or other cleanup if needed
+    }, 300);
   };
 
+  // Sync auth state: If we were waiting to login, resume action
+  useEffect(() => {
+    if (isAuthenticated && step === "LOGIN") {
+      if (pendingAction === "BUY") {
+        setStep("INFO");
+        // Optionally auto-trigger pay but better to let user click again for safety/confirmation
+        setPendingAction(null);
+      } else if (pendingAction === "VERIFY") {
+        // User just logged in, now trigger the initiate verify call
+        handleInitiateVerification(corporateEmail);
+        setPendingAction(null);
+      } else {
+        setStep("INFO");
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, step]);
+
   const handlePaymentSuccess = async (response: any) => {
-    console.log("Payment success response:", response);
     try {
-      // Close this dialog and open verify dialog
-      closeDialog(id);
-      openDialog(VERIFY_CONNECTS_DIALOG_ID);
-      
-      // We are not handling the verify call here directly because VerifyConnectsDialog 
-      // typically handles the status display. 
-      // However, the existing page verified it THEN closed/navigated.
-      // Based on page.tsx: 
-      // openDialog(VERIFY_CONNECTS_DIALOG_ID);
-      // setPaymentStatus(VERIFYING);
-      // verifyPayment(...)
-      
-      // Since VerifyConnectsDialog seems to be a display component mainly (based on usage in page.tsx),
-      // we might need to pass the verification promise or status to it, OR handle verification here.
-      // But VerifyConnectsDialog is a Dialog component. 
-      
-      // To mimic page.tsx exactly, we would need to control the verify dialog's state from here
-      // OR pass the payment data to the verify dialog context?
-      // Since the VerifyConnectsDialog is likely stateless or takes props, we can't easily pass props 
-      // via openDialog unless the dialog context supports it (it doesn't seem to based on usage).
-      
-      // WAIT: In page.tsx, VerifyConnectsDialog is rendered conditionally:
-      // {isDialogOpen(VERIFY_CONNECTS_DIALOG_ID) && <VerifyConnectsDialog ... status={paymentStatus} ... />}
-      // This means the STATE is in the Page.
-      // So here, the STATE must be in a parent or we must handle verification inside THIS dialog?
-      // But we are closing THIS dialog.
-      
-      // Re-reading page.tsx: VerifyConnectsDialog takes `status` and `connects`.
-      
-      // Solution: We should probably NOT close this dialog immediately, 
-      // OR we need a global store for payment status.
-      // OR we just perform verification here, wait for result, THEN show success/failure?
-      
-      // But the user said "call verify if payment is done".
-      
-      // Let's implement verification here.
-      
       const result = await verifyPayment({
         paymentId: response.razorpay_payment_id,
         orderId: response.razorpay_order_id,
         signature: response.razorpay_signature,
       }).unwrap();
-      
-      console.log("Payment verification response:", result);
+
       dispatch(setConnectBal(result.connectBal));
-      
-      // Ideally we show a success message or the Verify Dialog in success state.
-      // Since we can't easily pass props to VerifyConnectsDialog via openDialog,
-      // We will rely on CommonDialogs to render VerifyConnectsDialog?
-      // CommonDialogs renders: {isDialogOpen(VERIFY_CONNECTS_DIALOG_ID) && <VerifyConnectsDialog id={...} />}
-      // It implies VerifyConnectsDialog handles its own state or fetches it?
-      // Checking src/dialogs/index.ts -> it exports it.
-      // Checking page.tsx again -> It explicitly passes `status={paymentStatus}`.
-      // But CommonDialogs.tsx (Step 7) imports `VerifyConnectsDialog` but DOES NOT render it (it's commented out/not there yet? Wait).
-      // Step 7 checks CommonDialogs.tsx. 
-      // It has `CallWithCaptainDialog`, `LoginDialog`, `MenuDialog`. 
-      // It DOES NOT have `VerifyConnectsDialog`.
-      // The user said: "add it to src/layout-components/CommonDialogs.tsx". 
-      // So I need to add `BuyConnectsDialog`.
-      // The `VerifyConnectsDialog` was only in the `page.tsx` return JSX.
-      
-      // So, if I want `VerifyConnectsDialog` to be global, I ALSO need to add it to `CommonDialogs.tsx` w/ props management?
-      // OR I can make BuyConnectsDialog handle the success state internally (replace content with success message).
-      // This is simpler and follows "dialog should contain its logic inside itself".
-      
-      // I'll show a "Payment Successful" view inside THIS dialog, then close.
-      // Or I can update `CommonDialogs` to include `VerifyConnectsDialog` but passing props is hard.
-      
-      // Plan: Handle verification inside this dialog, show success UI, then close.
-      
+      handleCloseDialog();
+      openDialog(VERIFY_CONNECTS_DIALOG_ID);
     } catch (e) {
       console.error("Payment verification failed:", e);
-      // Show error state
     }
   };
 
-  const [contactUs, { isLoading, isSuccess, isError }] = useContactUsMutation();
-
   const handleProceedToPay = async () => {
+    if (!isAuthenticated) {
+      setPendingAction("BUY");
+      setStep("LOGIN");
+      return;
+    }
+
     if (!bundleData) return;
-    
+
     try {
-      const response = await createOrder().unwrap(); // No args
+      const response = await createOrder().unwrap();
 
       const options = {
         key: RAZORPAY_KEY,
@@ -205,105 +183,277 @@ const BuyConnectsDialog: React.FC<BuyConnectsDialogProps> = ({ id }) => {
     }
   };
 
-  const handleSubmit = async (
-      values: ContactUsFormValues,
-      { resetForm }: FormikHelpers<ContactUsFormValues>,
-    ) => {
-      try {
-        
-  
-        resetForm();
-      } catch (err) {
-        console.error("Failed to send message:", err);
-      }
-    };
+  const handleInitiateVerification = async (email: string) => {
+    // Ensure email is valid before proceeding
+    if (!email) return;
 
-  const Content = () => {
-    if (isBundleLoading) return <div className="p-8 text-center">Loading options...</div>;
-    if (!bundleData) return <div className="p-8 text-center text-red-500">Failed to load bundle info.</div>;
+    if (!isAuthenticated) {
+      setCorporateEmail(email);
+      setPendingAction("VERIFY");
+      setStep("LOGIN");
+      return;
+    }
+
+    try {
+      const token = await initiateVerify(email).unwrap();
+      setVerificationToken(token);
+      setCorporateEmail(email);
+      setStep("OTP");
+    } catch (err) {
+      console.error("Failed to initiate verification", err);
+      // TODO: Add error handling/toast
+    }
+  };
+
+  const handleConfirmVerification = async (values: {
+    companyName?: string;
+    jobTitle?: string;
+  }) => {
+    const otp = otpCode.join("");
+    if (otp.length !== 4) return;
+
+    try {
+      await confirmVerify({
+        otp,
+        token: verificationToken,
+        corporateEmail,
+        companyName: values.companyName,
+        jobTitle: values.jobTitle,
+      }).unwrap();
+      setStep("CLAIM");
+    } catch (err) {
+      console.error("Failed to confirm verification", err);
+      // TODO: Add error handling
+    }
+  };
+
+  const handleClaimBenefits = async () => {
+    try {
+      await claimBenefits().unwrap();
+      handleCloseDialog();
+      openDialog(VERIFY_CONNECTS_DIALOG_ID);
+    } catch (err) {
+      console.error("Failed to claim benefits", err);
+    }
+  };
+
+  // OTP Helpers
+  const handleOtpChange = (index: number, value: string) => {
+    // allow only numbers
+    if (!/^\d*$/.test(value)) return;
+    if (value.length > 1) return;
+
+    const newOtp = [...otpCode];
+    newOtp[index] = value;
+    setOtpCode(newOtp);
+
+    // Auto focus next
+    if (value && index < 3) {
+      inputRefs[index + 1].current?.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (
+    index: number,
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    if (e.key === "Backspace" && !otpCode[index] && index > 0) {
+      inputRefs[index - 1].current?.focus();
+    }
+  };
+
+  const InfoContent = () => {
+    if (isBundleLoading)
+      return <div className="p-8 text-center">Loading options...</div>;
+    if (!bundleData)
+      return (
+        <div className="p-8 text-center text-red-500">
+          Failed to load bundle info.
+        </div>
+      );
 
     return (
-      <div>
-      <div className="flex flex-col gap-6">
-        <div className="bg-gradient-to-br from-red-50 to-white border border-red-100 rounded-xl p-6 text-center shadow-sm">
-           <h3 className="text-xl font-bold text-gray-800 mb-2">{bundleData.title}</h3>
-           <p className="text-gray-600 mb-4 text-sm">{bundleData.subTitle}</p>
-           
-           <div className="flex items-center justify-center gap-2 mb-4">
-             <div className="bg-yellow-100 p-2 rounded-full">
+      <div className="flex flex-col gap-6 p-6">
+        {/* Purchase Section */}
+        <div className="flex flex-col gap-4">
+          <div className="bg-gradient-to-br from-red-50 to-white border border-red-100 rounded-xl p-6 text-center shadow-sm">
+            <h3 className="text-xl font-bold text-gray-800 mb-2">
+              {bundleData.title}
+            </h3>
+            <p className="text-gray-600 mb-4 text-sm">{bundleData.subTitle}</p>
+
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <div className="bg-yellow-100 p-2 rounded-full">
                 <SvgIcon iconSize="medium" name="coin" size={32} />
-             </div>
-             <span className="text-3xl font-bold text-gray-900">{bundleData.connects} <span className="text-lg font-medium text-gray-500">Connects</span></span>
-           </div>
-           
-           <div className="text-2xl font-bold text-red-600">
-             ₹{fmt2(bundleData.standardPrice)} 
-              <span className="text-xs font-normal text-gray-500 block mt-1">(Inclusive of all taxes)</span>
-           </div>
+              </div>
+              <span className="text-3xl font-bold text-gray-900">
+                {bundleData.connects}{" "}
+                <span className="text-lg font-medium text-gray-500">
+                  Connects
+                </span>
+              </span>
+            </div>
+
+            <div className="text-2xl font-bold text-red-600">
+              ₹{fmt2(bundleData.standardPrice)}
+              <span className="text-xs font-normal text-gray-500 block mt-1">
+                (Inclusive of all taxes)
+              </span>
+            </div>
+          </div>
+
+          <div className="text-xs text-gray-500 text-center">
+            <p>This bundle expires in 30 days.</p>
+            <p className="mt-1">
+              By proceeding, you authorize Houseclay to charge your account.
+            </p>
+          </div>
+
+          <Button
+            onClick={handleProceedToPay}
+            isLoading={isCreatingOrder}
+            className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl text-lg font-medium"
+            disabled={isCreatingOrder}
+          >
+            Proceed to Pay
+          </Button>
         </div>
 
-        <div className="text-xs text-gray-500 text-center">
-          <p>This bundle expires in 30 days.</p>
-          <p className="mt-2">By proceeding, you authorize Houseclay to charge your account.</p>
-        </div>
+        <div className="w-full h-px bg-gray-200"></div>
 
-        <Button 
-        onClick={handleProceedToPay}
-        isLoading={isCreatingOrder}
-        className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl text-lg font-medium"
-        disabled={isCreatingOrder || !bundleData}
-        >
-          Proceed to Pay
-        </Button>
+        {/* Corporate Verification Section */}
+        <div>
+          <h2 className="text-lg font-bold text-gray-800 mb-2">
+            Unlock Free Access Pass
+          </h2>
+          <p className="text-sm text-gray-600 mb-4">
+            Verify your corporate email ID to get 30 Connects for free!
+          </p>
+
+          <Formik
+            initialValues={corporateInitialValues}
+            validationSchema={corporateValidationSchema}
+            validateOnBlur={false}
+            validateOnChange={false}
+            onSubmit={(values) => handleInitiateVerification(values.email)}
+          >
+            {({ isSubmitting }) => (
+              <Form className="flex flex-col md:flex-row gap-3">
+                <FormTextField
+                  name="email"
+                  label=""
+                  placeholder="Enter corporate email"
+                  className="w-full"
+                />
+
+                <Button
+                  type="submit"
+                  isLoading={isInitiating}
+                  className="bg-gray-900 hover:bg-black text-white px-6 rounded-xl md:w-auto w-full max-h-12"
+                >
+                  Verify
+                </Button>
+              </Form>
+            )}
+          </Formik>
+        </div>
       </div>
-      <br />
-      <hr />
-      <br />
-      <div>
-        <h2 className="text-xl font-bold text-gray-800 mb-2">Verify with your Corporate email id to get the Access Pass for Free!</h2>
+    );
+  };
+
+  const OtpContent = () => {
+    // Formik for optional fields
+    return (
+      <div className="flex flex-col gap-6 p-4">
+        <div className="text-center">
+          <h3 className="text-xl font-bold text-gray-900 mb-1">Verify Email</h3>
+          <p className="text-gray-500 text-sm">
+            We've sent a code to{" "}
+            <span className="font-medium text-gray-800">{corporateEmail}</span>
+          </p>
+        </div>
+
+        {/* OTP Input */}
+        <div className="flex justify-center gap-3 my-2">
+          {[0, 1, 2, 3].map((idx) => (
+            <input
+              key={idx}
+              ref={inputRefs[idx]}
+              type="text"
+              inputMode="numeric"
+              maxLength={1}
+              className="w-12 h-12 border-2 border-gray-300 rounded-lg text-center text-xl font-bold focus:border-red-500 focus:outline-none transition-colors"
+              value={otpCode[idx]}
+              onChange={(e) => handleOtpChange(idx, e.target.value)}
+              onKeyDown={(e) => handleOtpKeyDown(idx, e)}
+            />
+          ))}
+        </div>
+
         <Formik
-              initialValues={initialValues}
-              validationSchema={validationSchema}
-              validateOnBlur={false}
-              validateOnChange={false}
-              onSubmit={handleSubmit}
-              enableReinitialize
-            >
-              {() => (
-                <Form className="space-y-4 flex gap-4">
-                  <FormTextField
-                    name="email"
-                    id="email"
-                    label="Email"
-                    placeholder="Enter your personal email"
-                    className="w-full"
-                    required
-                  />
+          initialValues={{ companyName: "", jobTitle: "" }}
+          onSubmit={handleConfirmVerification}
+        >
+          {({ isSubmitting }) => (
+            <Form className="flex flex-col gap-4">
+              <FormTextField
+                name="companyName"
+                label="Company Name (Optional)"
+                placeholder="e.g. Houseclay"
+              />
+              <FormTextField
+                name="jobTitle"
+                label="Job Title (Optional)"
+                placeholder="e.g. Software Engineer"
+              />
 
-                  {/* Feedback Messages */}
-                  {isSuccess && (
-                    <div className="p-3 text-sm text-green-700 bg-green-100 rounded-lg">
-                      Message sent successfully! We will get back to you soon.
-                    </div>
-                  )}
-                  {isError && (
-                    <div className="p-3 text-sm text-red-700 bg-red-100 rounded-lg">
-                      Failed to send message. Please try again.
-                    </div>
-                  )}
+              <Button
+                type="submit"
+                isLoading={isConfirming}
+                disabled={otpCode.some((d) => !d)}
+                className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl mt-2"
+              >
+                Verify & Continue
+              </Button>
+            </Form>
+          )}
+        </Formik>
 
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="flex items-center justify-center gap-2 px-3 py-1 md:px-5 md:py-2 bg-red-500 hover:bg-red-600 disabled:bg-red-300 disabled:cursor-not-allowed text-white rounded-lg shadow-sm transition-colors"
-                  >
-                    {isLoading && <Spinner size="sm" />}
-                    {isLoading ? "Sending..." : "Verify"}
-                  </button>
-                </Form>
-              )}
-            </Formik>
+        <div className="text-center">
+          <button
+            onClick={() => setStep("INFO")}
+            className="text-gray-500 text-sm hover:text-gray-700"
+          >
+            Back to Bundle Info
+          </button>
+        </div>
       </div>
+    );
+  };
+
+  const ClaimContent = () => {
+    return (
+      <div className="flex flex-col gap-6 py-8 text-center items-center">
+        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-2">
+          <SvgIcon name="tick" size={40} className="text-green-600" />
+        </div>
+
+        <div>
+          <h3 className="text-2xl font-bold text-gray-900 mb-2">
+            Verification Successful!
+          </h3>
+          <p className="text-gray-600">
+            You are eligible for the Free Access Pass.
+          </p>
+        </div>
+
+        <Button
+          onClick={handleClaimBenefits}
+          isLoading={isClaiming}
+          className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-bold text-lg shadow-lg shadow-green-200"
+        >
+          Claim 30 Free Connects
+        </Button>
       </div>
     );
   };
@@ -312,68 +462,79 @@ const BuyConnectsDialog: React.FC<BuyConnectsDialogProps> = ({ id }) => {
     <Dialog
       id={id}
       type={isMobile ? "fullscreen" : "card"}
-      width={isMobile ? 100 : 60}
+      width={isMobile ? 100 : step === "INFO" || step === "LOGIN" ? 50 : 50}
       onClose={handleCloseDialog}
       entryAnimation={isMobile ? "animate-slide-in-right" : "animate-fade-in"}
       exitAnimation={isMobile ? "animate-slide-out-right" : "animate-fade-out"}
     >
       <DialogHeader>
         {isMobile ? (
-             <MobileHeader>
-                <MobileHeader.Title>
-                    {localAuthStep === "login" ? "Login" : "Buy Connects"}
-                </MobileHeader.Title>
-                <MobileHeader.RightAction>
-                  <Button
-                    variant="secondary"
-                    size="custom"
-                    className="rounded-full p-1"
-                    onClick={handleCloseDialog}
-                  >
-                    <X size={24} />
-                  </Button>
-                </MobileHeader.RightAction>
-             </MobileHeader>
+          <MobileHeader>
+            <MobileHeader.Title>
+              {step === "LOGIN"
+                ? "Login"
+                : step === "OTP"
+                  ? "Verification"
+                  : step === "CLAIM"
+                    ? "Claim Benefits"
+                    : "Buy Connects"}
+            </MobileHeader.Title>
+            <MobileHeader.RightAction>
+              <Button
+                variant="secondary"
+                size="custom"
+                className="rounded-full p-1"
+                onClick={handleCloseDialog}
+              >
+                <X size={24} />
+              </Button>
+            </MobileHeader.RightAction>
+          </MobileHeader>
         ) : (
-            <div className="flex justify-between w-full">
-                 <h2 className="text-xl font-semibold">
-                    {localAuthStep === "login" ? "Login" : "Buy Connects"}
-                 </h2>
-                 <Button
-                    variant="secondary"
-                    size="custom"
-                    className="rounded-full p-1 hover:bg-gray-100"
-                    onClick={handleCloseDialog}
-                  >
-                    <X size={20} />
-                  </Button>
-            </div>
+          <div className="flex justify-between items-center w-full">
+            <h2 className="text-xl font-semibold">
+              {step === "LOGIN"
+                ? "Login"
+                : step === "OTP"
+                  ? "Verification"
+                  : step === "CLAIM"
+                    ? "Claim Benefits"
+                    : "Buy Connects"}
+            </h2>
+            <Button
+              variant="secondary"
+              size="custom"
+              className="rounded-full p-1 hover:bg-gray-100"
+              onClick={handleCloseDialog}
+            >
+              <X size={20} />
+            </Button>
+          </div>
         )}
       </DialogHeader>
 
       <DialogContent>
-        <div className={isMobile ? "h-full" : "p-6"}>
-          {localAuthStep === "login" ? (
+        <div className={isMobile ? "h-full" : ""}>
+          {step === "LOGIN" && (
             <div className="h-full">
-              {/* Embed Login component. 
-                   NOTE: Login component inside Dialog usually expects to control the dialog via onClose.
-                   Here, we want success to just switch state. 
-                   We need to ensure Login component calls onClose on success.
-                   We pass a custom onClose that updates local state.
-               */}
-              <Login onClose={() => setLocalAuthStep("buy")} />
+              <Login
+                onClose={() => {
+                  // If cancelled login, go back to INFO
+                  setStep("INFO");
+                  setPendingAction(null);
+                }}
+                onSuccess={() => {
+                  // Logic handled in useEffect, but we can also double check here
+                }}
+              />
             </div>
-          ) : (
-            <Content />
           )}
+
+          {step === "INFO" && <InfoContent />}
+          {step === "OTP" && <OtpContent />}
+          {step === "CLAIM" && <ClaimContent />}
         </div>
       </DialogContent>
-      
-      {/* {localAuthStep === "buy" && (
-          <DialogFooter className="p-4 border-t">
-            
-          </DialogFooter>
-      )} */}
     </Dialog>
   );
 };

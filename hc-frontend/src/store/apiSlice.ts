@@ -378,6 +378,44 @@ export const apiSlice = createApi({
         method: "POST",
       }),
     }),
+    initiateCorporateVerification: builder.mutation<string, string>({
+      query: (corporateEmail) => ({
+        url: `/user/verify-corporate-email-init?corporateEmail=${encodeURIComponent(corporateEmail)}`,
+        method: "POST",
+        responseHandler: (response) => response.text(),
+      }),
+    }),
+    confirmCorporateVerification: builder.mutation<
+      { message: string; isCorporateVerified: boolean },
+      {
+        otp: string;
+        token: string;
+        corporateEmail: string;
+        companyName?: string;
+        jobTitle?: string;
+      }
+    >({
+      query: (payload) => {
+        const params = new URLSearchParams();
+        params.append("otp", payload.otp);
+        params.append("token", payload.token);
+        params.append("corporateEmail", payload.corporateEmail);
+        if (payload.companyName)
+          params.append("companyName", payload.companyName);
+        if (payload.jobTitle) params.append("jobTitle", payload.jobTitle);
+
+        return {
+          url: `/user/verify-corporate-email-confirm?${params.toString()}`,
+          method: "POST",
+        };
+      },
+    }),
+    claimCorporateBenefits: builder.mutation<{ message: string }, void>({
+      query: () => ({
+        url: "/user/claim-corporate-benefits",
+        method: "POST",
+      }),
+    }),
     verifyPayment: builder.mutation<
       { message: string; connectBal: number },
       {
@@ -490,4 +528,7 @@ export const {
   useGenerateOtpEmailMutation,
   useVerifyEmailMutation,
   useContactUsMutation,
+  useInitiateCorporateVerificationMutation,
+  useConfirmCorporateVerificationMutation,
+  useClaimCorporateBenefitsMutation,
 } = apiSlice;
