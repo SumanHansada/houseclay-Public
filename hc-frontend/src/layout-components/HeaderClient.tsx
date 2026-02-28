@@ -9,9 +9,7 @@ import {
   insufficientConnectsIconURL,
   loginAndEarnIconURL,
 } from "@/common/cdnURLs";
-import {
-  BUY_CONNECTS_DIALOG_ID,
-} from "@/common/dialogConstants";
+import { BUY_CONNECTS_DIALOG_ID } from "@/common/dialogConstants";
 import { AuthStep, PropertyCategory } from "@/common/enums";
 import { getPropertySearchHrefWithLocation } from "@/common/utils";
 import { UserDropdown } from "@/components/UserDropdown";
@@ -66,7 +64,10 @@ export const InfoTipZeroBalance: React.FC<{ onBuyConnects: () => void }> = ({
       <p className="text-gray-500 font-light text-nowrap">
         Purchase more now to continue!
       </p>
-      <button onClick={onBuyConnects} className="text-red-600 cursor-pointer text-left">
+      <button
+        onClick={onBuyConnects}
+        className="text-red-600 cursor-pointer text-left"
+      >
         Buy Connects
       </button>
     </div>

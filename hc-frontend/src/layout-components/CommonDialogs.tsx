@@ -1,14 +1,17 @@
 "use client";
 
 import {
+  BUY_CONNECTS_DIALOG_ID,
   CALL_WITH_CAPTAIN_DIALOG_ID,
   LOGIN_DIALOG_ID,
   MENU_DIALOG_ID,
-  BUY_CONNECTS_DIALOG_ID,
 } from "@/common/dialogConstants";
-
-import { CallWithCaptainDialog, LoginDialog, MenuDialog, BuyConnectsDialog } from "@/dialogs";
-
+import {
+  BuyConnectsDialog,
+  CallWithCaptainDialog,
+  LoginDialog,
+  MenuDialog,
+} from "@/dialogs";
 import { useDialog } from "@/providers/DialogContextProvider";
 
 const CommonDialogs: React.FC = () => {
