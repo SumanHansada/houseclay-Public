@@ -12,6 +12,7 @@ import com.houseclay.backend.payload.UserPayload;
 import com.houseclay.backend.service.AdminService;
 import com.houseclay.backend.service.LeadService;
 import com.houseclay.backend.service.UserService;
+import com.houseclay.backend.service.ConnectManagementService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,9 @@ public class UserController {
     @Autowired
     private AdminService adminService;
 
+    @Autowired
+    private ConnectManagementService connectManagementService;
+    
 
     @RequestMapping (method = RequestMethod.POST, value = "/register",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createUser(@Valid @RequestBody UserPayload payload) {
@@ -153,6 +157,55 @@ public class UserController {
             userService.userUpdate(user, userEditDTO);
             Map<String, Object> response = new HashMap<>();
             response.put("message", "User updated successfully");
+            return ResponseEntity.ok(response);
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/verify-corporate-email-init")
+    public ResponseEntity<?> initiateCorporateVerification(
+            @RequestAttribute("authenticatedUser") User user,
+            @RequestParam String corporateEmail) {
+        try {
+            return ResponseEntity.ok(userService.initiateCorporateVerification(user, corporateEmail));
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/verify-corporate-email-confirm")
+    public ResponseEntity<?> confirmCorporateVerification(
+            @RequestAttribute("authenticatedUser") User user,
+            @RequestParam String otp,
+            @RequestParam String token,
+            @RequestParam String corporateEmail,
+            @RequestParam(required = false) String companyName,
+            @RequestParam(required = false) String jobTitle) {
+        try {
+            boolean verified = userService.confirmCorporateVerification(user, otp, token, corporateEmail, companyName, jobTitle);
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Corporate email verified successfully");
+            response.put("isCorporateVerified", verified);
+            return ResponseEntity.ok(response);
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/claim-corporate-benefits")
+    public ResponseEntity<?> claimCorporateBenefits(
+            @RequestAttribute("authenticatedUser") User user) {
+        try {
+            connectManagementService.grantCorporateConnects(user);
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Corporate benefits granted successfully");
             return ResponseEntity.ok(response);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());

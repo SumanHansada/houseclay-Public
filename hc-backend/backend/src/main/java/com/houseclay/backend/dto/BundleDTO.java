@@ -8,13 +8,5 @@ public class BundleDTO {
     private String title;
     private String subTitle;
     private int connects;
-    private double originalPrice;
-    private double discountedPrice;
-    private String discount;
-    private String validity;
-    private String borderColor;
-    private String backgroundColor;
-    private boolean selected;
-    private boolean recommended; // not present in all objects (optional)
-    private String background;
+    private double standardPrice;
 }

@@ -17,6 +17,7 @@ public class UserMapper {
         userLoginResponseDTO.setEmailID(user.getEmailID());
         userLoginResponseDTO.setPhoneNo(user.getPhoneNo());
         userLoginResponseDTO.setConnectBal(user.getConnectBal());
+        userLoginResponseDTO.setCorporateEmailVerified(user.isCorporateEmailVerified());
         return userLoginResponseDTO;
     }
 
@@ -34,10 +35,16 @@ public class UserMapper {
         dto.setPhoneNo(user.getPhoneNo());
         dto.setName(user.getName());
         dto.setEmail(user.getEmailID());
+        dto.setEmailVerified(user.isEmailVerified());
         dto.setCreatedAt(user.getCreatedAt());
         dto.setBlacklisted(user.isBlacklisted());
         dto.setBroker(user.isBroker());
         dto.setConnectBal(user.getConnectBal());
+        dto.setCorporateEmailID(user.getCorporateEmailID());
+        dto.setCorporateEmailVerified(user.isCorporateEmailVerified());
+        dto.setCorporateEmailVerifiedAt(user.getCorporateEmailVerifiedAt());
+        dto.setCompanyName(user.getCompanyName());
+        dto.setJobTitle(user.getJobTitle());
 
         dto.setUserUpdates(user.getUserUpdateLogs().stream()
                 .map(UserMapper::toUserUpdateDTO)
@@ -98,6 +105,9 @@ public class UserMapper {
         dto.setPhoneNo(user.getPhoneNo());
         dto.setConnectBal(user.getConnectBal());
         dto.setEmailVerified(user.isEmailVerified());
+        dto.setCorporateEmailVerified(user.isCorporateEmailVerified());
+        dto.setCompanyName(user.getCompanyName());
+        dto.setJobTitle(user.getJobTitle());
 
         dto.setOwnedProperties(
                 user.getOwnedProperties().stream()

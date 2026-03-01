@@ -1,10 +1,8 @@
 package com.houseclay.backend.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.houseclay.backend.dto.BundleDTO;
-import com.houseclay.backend.utils.Constants;
+import com.houseclay.backend.config.BundleConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,15 +15,21 @@ import java.util.List;
 @RequestMapping("/api/bundle")
 public class BundleController {
 
+    @Autowired
+    private BundleConfig bundleConfig;
+
     @GetMapping("/info")
     public ResponseEntity<?> getBundle() {
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return ResponseEntity.ok(objectMapper.readValue(
-                    Constants.BUNDLE_DATA,
-                    new TypeReference<List<BundleDTO>>() {}
-            ));
-        } catch (JsonProcessingException e) {
+            BundleDTO bundleDTO = new BundleDTO();
+            bundleDTO.setId(bundleConfig.getId());
+            bundleDTO.setTitle(bundleConfig.getTitle());
+            bundleDTO.setSubTitle(bundleConfig.getSubTitle());
+            bundleDTO.setConnects(bundleConfig.getConnects());
+            bundleDTO.setStandardPrice(bundleConfig.getStandardPrice());
+
+            return ResponseEntity.ok(bundleDTO);
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }

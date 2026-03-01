@@ -3,6 +3,7 @@ package com.houseclay.backend.service;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.repository.UserRepository;
+import com.houseclay.backend.config.BundleConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,9 @@ public class ConnectManagementService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BundleConfig bundleConfig;
 
     final static int NEW_USER_CONNECT_GRANT = 1;
     final static int EMAIL_VERIFICATION_GRANT = 1;
@@ -95,6 +99,59 @@ public class ConnectManagementService {
             user.getConnects().add(connect);
         }
         user.setConnectBal(user.getConnectBal() + EMAIL_VERIFICATION_GRANT);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void grantCorporateConnects(User user) throws Exception {
+        Optional<User> optionalUser = userRepository.findById(user.getPhoneNo());
+        if (optionalUser.isEmpty()) {
+             throw new APIException("User not found", HttpStatus.BAD_REQUEST);
+        }
+        user = optionalUser.get();
+
+        // Check if verified
+        if (!user.isCorporateEmailVerified()) {
+            throw new APIException("User corporate email not verified", HttpStatus.BAD_REQUEST);
+        }
+
+        // Check 30 days validity
+        if (user.getCorporateEmailVerifiedAt() == null) {
+             throw new APIException("Corporate verification timestamp missing", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        long diff = System.currentTimeMillis() - user.getCorporateEmailVerifiedAt().getTime();
+        long days = diff / (1000 * 60 * 60 * 24);
+        if (days > 30) {
+           throw new APIException("Corporate grant offer expired (must satisfy within 30 days of verification)", HttpStatus.BAD_REQUEST);
+        }
+
+        // Check for existing grant
+        boolean alreadyGranted = user.getConnects().stream()
+                .anyMatch(c -> c.getSourceType() == ConnectSourceType.CORPORATE_VERIFICATION_GRANT);
+        if (alreadyGranted) {
+             throw new APIException("Corporate benefits already claimed", HttpStatus.CONFLICT);
+        }
+
+        // Grant Connects
+        int grantAmount = bundleConfig.getConnects();
+        for (int i = 0; i < grantAmount; i++) {
+            ConnectEvent connectEvent = new ConnectEvent();
+            connectEvent.setEventType(ConnectEventType.CREATED);
+            connectEvent.setActorType(ActorType.SYSTEM);
+            connectEvent.setActorId(SYSTEM_ACTOR);
+            
+            Connect connect = new Connect();
+            connect.setSourceType(ConnectSourceType.CORPORATE_VERIFICATION_GRANT);
+            connect.setSourceId(SYSTEM_ACTOR);
+            connect.setUser(user);
+            connect.setStatus(ConnectStatus.ACTIVE);
+            connect.getEvents().add(connectEvent);
+            connectEvent.setConnect(connect);
+            
+            user.getConnects().add(connect);
+        }
+        
+        user.setConnectBal(user.getConnectBal() + grantAmount);
         userRepository.save(user);
     }
 }

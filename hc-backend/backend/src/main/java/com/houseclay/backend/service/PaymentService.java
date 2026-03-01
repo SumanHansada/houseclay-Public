@@ -1,12 +1,8 @@
 package com.houseclay.backend.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.houseclay.backend.dto.BundleDTO;
+import com.houseclay.backend.config.BundleConfig;
 import com.houseclay.backend.dto.CreateOrderResponseDTO;
 import com.houseclay.backend.entity.*;
-import com.houseclay.backend.payload.CreateOrderRequest;
-import com.houseclay.backend.utils.Constants;
 import com.razorpay.Utils;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.repository.ExternalPaymentsRepository;
@@ -25,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -46,6 +41,9 @@ public class PaymentService {
     @Value("${razorpay.key_secret}")
     private String razorpaySecret;
 
+    @Autowired
+    private BundleConfig bundleConfig;
+
     private static final int CONNECT_RATE = 99;
 
     @PostConstruct
@@ -53,14 +51,10 @@ public class PaymentService {
         this.razorpayClient = new RazorpayClient(keyId, razorpaySecret);
     }
 
-    public CreateOrderResponseDTO createOrder(User user, CreateOrderRequest request) throws Exception {
-        Pair<Double, Integer> orderPair = getAmountAndConnect(request);
+    public CreateOrderResponseDTO createOrder(User user) throws Exception {
+        Pair<Double, Integer> orderPair = getAmountAndConnect();
         double amount = orderPair.getFirst();
         int connectQty = orderPair.getSecond();
-        if (request.getBundle() == Bundle.CUSTOM_CONNECTS) {
-            connectQty = request.getConnects();
-            amount = amount * connectQty;
-        }
         Optional<User> userOpt = userRepository.findById(user.getPhoneNo());
         if (userOpt.isEmpty()) {
             throw new APIException("Invalid token", HttpStatus.BAD_REQUEST);
@@ -79,7 +73,7 @@ public class PaymentService {
 
         // Saving order in external payment entity.
         ExternalPayments externalPayments = new ExternalPayments();
-        externalPayments.setBundle(request.getBundle());
+        externalPayments.setBundle(Bundle.valueOf(bundleConfig.getId()));
         externalPayments.setPaymentId(orderID);
         externalPayments.setAmount(amount);
         externalPayments.setConnectQty(connectQty);
@@ -171,18 +165,9 @@ public class PaymentService {
         return ResponseEntity.ok(response);
     }
 
-    public Pair<Double, Integer> getAmountAndConnect(CreateOrderRequest request) throws Exception{
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<BundleDTO> bundles = objectMapper.readValue(
-                Constants.BUNDLE_DATA,
-                new TypeReference<List<BundleDTO>>() {}
-        );
-        for (BundleDTO bundleDTO : bundles) {
-            if(request.getBundle().toString().equals(bundleDTO.getId())) {
-                return Pair.of(bundleDTO.getDiscountedPrice(), bundleDTO.getConnects());
-            }
-        }
-        throw new APIException("Invalid bundle", HttpStatus.BAD_REQUEST);
+    public Pair<Double, Integer> getAmountAndConnect() throws Exception{
+        // Always return Standard Bundle
+        return Pair.of(bundleConfig.getStandardPrice(), bundleConfig.getConnects());
     }
 }
 

@@ -9,12 +9,18 @@ import java.util.List;
 public class UserDetailDTO {
     private String phoneNo;
     private String email;
+    private boolean emailVerified;
     private String name;
     private Timestamp createdAt;
     private boolean isBlacklisted;
     private boolean isBroker;
     private Timestamp blacklistedAt;
     private int connectBal;
+    private String corporateEmailID;
+    private boolean isCorporateEmailVerified;
+    private Timestamp corporateEmailVerifiedAt;
+    private String companyName;
+    private String jobTitle;
     private List<UserUpdateDTO> userUpdates;
     private List<UserPropertyDTO> ownedProperties;
     private List<UserPropertyDTO> shortlistedProperties;
