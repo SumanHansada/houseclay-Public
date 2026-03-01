@@ -2,9 +2,8 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 
-import { bannerPeopleMobileImageURL } from "@/common/cdnURLs";
 import { EXPLORE_LOCATION } from "@/common/constants";
-import { STANDOUTS_DIALOG_ID } from "@/common/dialogConstants";
+import { STANDOUTS_DIALOG_ID } from "@/common/dataConstants/dialogIDs";
 import { PropertyCategory } from "@/common/enums";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setPropertyCategory as setSearchPropertyCategory } from "@/store/propertySearchSlice";
@@ -158,7 +157,7 @@ const MastHeadMobile: React.FC = () => {
       </div>
 
       {/* Banner */}
-      <div className="relative w-full flex justify-center">
+      {/* <div className="relative w-full flex justify-center">
         <div className="rounded-2xl p-5 relative overflow-hidden w-full">
           <div className="absolute inset-0 pointer-events-none">
             <img
@@ -199,7 +198,7 @@ const MastHeadMobile: React.FC = () => {
         >
           Know More
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

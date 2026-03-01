@@ -6,6 +6,7 @@ export interface AuthUserDetail {
   phoneNo: string;
   connectBal: number;
   avatarUrl: string | null;
+  corporateEmailVerified: boolean;
 }
 
 export interface UserOwnedProperties {
@@ -71,6 +72,9 @@ export interface UserDetailsDTO {
   onWhatsApp: boolean;
   emailVerified: boolean;
   connectBal: number;
+  corporateEmailVerified: boolean;
+  companyName?: string;
+  jobTitle?: string;
 
   ownedProperties: UserOwnedProperties[];
   externalPayments: UserExternalPayment[];

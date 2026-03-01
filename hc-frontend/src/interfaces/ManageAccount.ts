@@ -7,6 +7,10 @@ export interface MyProfileFormValues {
   onWhatsapp: boolean;
   email: string;
   emailVerified: boolean;
+  corporateEmailVerified: boolean;
+  companyName?: string;
+  jobTitle?: string;
+  connectsBalance: number;
 }
 
 export type UserType = "tenant" | "buyer" | "";

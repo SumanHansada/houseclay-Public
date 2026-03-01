@@ -3,7 +3,7 @@ import { Camera } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-import { PHOTO_GALLERY_DIALOG_ID } from "@/common/dialogConstants";
+import { PHOTO_GALLERY_DIALOG_ID } from "@/common/dataConstants/dialogIDs";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 

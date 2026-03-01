@@ -88,6 +88,7 @@ export function getErrorMessage(error: unknown): string {
   }
 
   // Handle standard FetchBaseQueryError (JSON response with HTTP error status)
+  // Handle standard FetchBaseQueryError
   if (
     "status" in error &&
     typeof (error as FetchBaseQueryError).status === "number"
@@ -95,10 +96,21 @@ export function getErrorMessage(error: unknown): string {
     const fetchError = error as FetchBaseQueryError;
     const data = fetchError.data;
 
+    // Check if data itself is the error string
+    if (typeof data === "string") {
+      return data;
+    }
+
+    // Check if data is an object with message/error fields
     if (data && typeof data === "object") {
-      const typedData = data as { message?: string; error?: string };
-      if (typedData.message) return typedData.message;
+      const typedData = data as {
+        data?: string;
+        error?: string;
+        message?: string;
+      };
+      if (typedData.data) return typedData.data;
       if (typedData.error) return typedData.error;
+      if (typedData.message) return typedData.message;
     }
 
     // Fallback if JSON exists but has no message/error field

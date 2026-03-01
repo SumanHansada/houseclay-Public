@@ -22,7 +22,7 @@ const StandoutsDialog = lazy(() =>
   import("@/dialogs").then((m) => ({ default: m.StandoutsDialog })),
 );
 
-import { STANDOUTS_DIALOG_ID } from "@/common/dialogConstants";
+import { STANDOUTS_DIALOG_ID } from "@/common/dataConstants/dialogIDs";
 import TESTIMONIALS_DATA from "@/data/TestimonialsData.json";
 
 // Simple fallback component

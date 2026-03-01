@@ -3,11 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 
-import { StickyNavItem } from "@/common/dataConstants/navbar";
-import { STICKY_NAV_ITEMS } from "@/common/dataConstants/navbar";
-import { RootState } from "@/store/store";
+import { StickyNavItem } from "@/common/dataConstants/navbarList";
+import { STICKY_NAV_ITEMS } from "@/common/dataConstants/navbarList";
+import { useDialog } from "@/providers/DialogContextProvider";
 interface StickyNavbarProps {
   defaultActive?: string;
 }
@@ -15,22 +14,22 @@ interface StickyNavbarProps {
 const StickyNavbar: React.FC<StickyNavbarProps> = ({
   defaultActive = "home",
 }) => {
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const pathname = usePathname();
   const [activeTab, setActiveTab] = useState<string>(defaultActive);
-  const connectBal = useSelector((state: RootState) =>
-    isAuthenticated ? state.user.userDetail.connectBal : 0,
-  );
+  const { openDialog } = useDialog();
 
   const handleNavClick = (id: string) => {
     setActiveTab(id);
   };
 
   const isTabActive = (navItem: StickyNavItem) => {
-    return (
-      (pathname && pathname === navItem.href.split("?")[0]) ||
-      (!pathname && activeTab === navItem.id)
-    );
+    if (navItem.href) {
+      return (
+        (pathname && pathname === navItem.href.split("?")[0]) ||
+        (!pathname && activeTab === navItem.id)
+      );
+    }
+    return activeTab === navItem.id;
   };
 
   const activeIndex = STICKY_NAV_ITEMS.findIndex((item) => {
@@ -44,39 +43,59 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
           {STICKY_NAV_ITEMS.map((item) => {
             const isActive = isTabActive(item);
 
+            const navContent = (
+              <>
+                <div
+                  className={`p-1 flex relative justify-center items-center ${
+                    isActive
+                      ? "text-red-500 border-red-500 stroke-red-500 fill-red-500"
+                      : "text-gray-500"
+                  }`}
+                >
+                  {item.icon}
+                  {/* {item.badge && (
+                    <div
+                      className="absolute top-0 right-0 -mt-0.5 -mr-0.5 bg-red-500 text-white text-xxs rounded-full w-4 h-4 min-w-fit px-1 flex items-center justify-center"
+                      aria-label={`${connectBal || 0} connects`}
+                    >
+                      {connectBal || 0}
+                    </div>
+                  )} */}
+                </div>
+                <span
+                  className={`text-xs ${
+                    isActive ? "text-red-500" : "text-gray-500"
+                  }`}
+                >
+                  {item.label}
+                </span>
+              </>
+            );
+
             return (
               <li key={item.id}>
-                <Link
-                  href={item.href}
-                  className="flex flex-col items-center justify-center relative w-16"
-                  onClick={() => handleNavClick(item.id)}
-                  aria-current={isActive ? "page" : undefined}
-                >
-                  <div
-                    className={`p-1 flex relative justify-center items-center ${
-                      isActive
-                        ? "text-red-500 border-red-500 stroke-red-500 fill-red-500"
-                        : "text-gray-500"
-                    }`}
+                {item.href ? (
+                  <Link
+                    href={item.href}
+                    className="flex flex-col items-center justify-center relative w-16"
+                    onClick={() => handleNavClick(item.id)}
+                    aria-current={isActive ? "page" : undefined}
                   >
-                    {item.icon}
-                    {item.badge && (
-                      <div
-                        className="absolute top-0 right-0 -mt-0.5 -mr-0.5 bg-red-500 text-white text-xxs rounded-full w-4 h-4 min-w-fit px-1 flex items-center justify-center"
-                        aria-label={`${connectBal || 0} connects`}
-                      >
-                        {connectBal || 0}
-                      </div>
-                    )}
-                  </div>
-                  <span
-                    className={`text-xs ${
-                      isActive ? "text-red-500" : "text-gray-500"
-                    }`}
+                    {navContent}
+                  </Link>
+                ) : (
+                  <button
+                    className="flex flex-col items-center justify-center relative w-16"
+                    onClick={() => {
+                      if (item.actionId) {
+                        openDialog(item.actionId);
+                      }
+                    }}
+                    aria-current={isActive ? "page" : undefined}
                   >
-                    {item.label}
-                  </span>
-                </Link>
+                    {navContent}
+                  </button>
+                )}
               </li>
             );
           })}

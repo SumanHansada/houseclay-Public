@@ -7,17 +7,17 @@ import {
   BATHROOM_TYPE_OPTIONS,
   BHK_TYPE_OPTIONS,
   FURNISHING_OPTIONS,
-  getOptionLabel,
   PROPERTY_TYPE_OPTIONS,
   ROOM_TYPE_OPTIONS,
   TENANT_TYPE_OPTIONS,
-} from "@/common/dataConstants/options";
+} from "@/common/dataConstants/formOptions";
 import { BadgeType, PropertyCategory } from "@/common/enums";
 import { formatINRCurrency, processPropertyImages } from "@/common/utils";
 import { useShortlist } from "@/hooks/useShortlist";
 import { PropertySearch } from "@/interfaces/PropertySearch";
 import { PropertyCardWithImages } from "@/interfaces/User";
 import { ImageWithFallback } from "@/utility-components";
+import { getOptionLabel } from "@/utils/formOptionHelpers";
 
 interface PropertiesProps {
   property: PropertySearch;

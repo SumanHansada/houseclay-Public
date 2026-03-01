@@ -1,9 +1,8 @@
 "use client";
 
-import { Heart, Search, UserRound } from "lucide-react";
+import { Heart, Search, ShieldCheck, UserRound } from "lucide-react";
 // import { default as RequirementsIcon } from "public/optimizedIcons/medium/my-requirements.svg";
 import { default as OwnersIcon } from "public/optimizedIcons/medium/owners-contacted.svg";
-import { default as ConnectsIcon } from "public/optimizedIcons/small/connects.svg";
 import { default as LogoutIcon } from "public/optimizedIcons/small/logout.svg";
 import { default as PaymentsIcon } from "public/optimizedIcons/small/my-payments.svg";
 import { default as ProfileIcon } from "public/optimizedIcons/small/my-profile.svg";
@@ -13,6 +12,8 @@ import { default as SupportIcon } from "public/optimizedIcons/small/support.svg"
 import React, { type FC, type SVGProps } from "react";
 
 import { SvgIcon } from "@/utility-components";
+
+import { PRO_SUBSCRIPTION_DIALOG_ID } from "./dialogIDs";
 
 type NavIconType = FC<SVGProps<SVGSVGElement>>;
 type NavActionId = "LOGOUT";
@@ -45,12 +46,12 @@ export const ACCOUNT_NAV_ITEMS: AccountNavItem[] = [
     href: "/manage-account/shortlists",
     NavIcon: ShortlistsIcon,
   },
-  {
-    label: "Connects",
-    headerLabel: "Connects",
-    href: "/manage-account/connects",
-    NavIcon: ConnectsIcon,
-  },
+  // {
+  //   label: "Connects",
+  //   headerLabel: "Connects",
+  //   href: "/manage-account/connects",
+  //   NavIcon: ConnectsIcon,
+  // },
   {
     label: "My Payments",
     headerLabel: "Your Payments",
@@ -88,8 +89,9 @@ export type StickyNavItem = {
   id: string;
   icon: React.ReactElement;
   label: string;
-  href: string;
+  href?: string;
   badge?: boolean;
+  actionId?: string;
 };
 
 export const STICKY_NAV_ITEMS: StickyNavItem[] = [
@@ -116,15 +118,10 @@ export const STICKY_NAV_ITEMS: StickyNavItem[] = [
     href: "/",
   },
   {
-    id: "connects",
-    icon: React.createElement(SvgIcon, {
-      iconSize: "medium",
-      name: "connects",
-      size: 25,
-    }),
-    label: "Connects",
-    href: "/manage-account/connects",
-    badge: true,
+    id: "pro",
+    icon: React.createElement(ShieldCheck, { size: 25 }),
+    label: "Get Pro",
+    actionId: PRO_SUBSCRIPTION_DIALOG_ID,
   },
   {
     id: "account",

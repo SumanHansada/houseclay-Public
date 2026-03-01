@@ -52,6 +52,10 @@ export default function MyProfileLayout({ children }: { children: ReactNode }) {
       phoneVerified: true,
       onWhatsapp: userDetail.onWhatsApp,
       emailVerified: userDetail.emailVerified,
+      corporateEmailVerified: userDetail.corporateEmailVerified,
+      connectsBalance: userDetail.connectBal,
+      companyName: userDetail.companyName || "",
+      jobTitle: userDetail.jobTitle || "",
     }),
     [userDetail],
   );

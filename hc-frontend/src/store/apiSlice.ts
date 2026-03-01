@@ -77,16 +77,7 @@ export const apiSlice = createApi({
         body: data,
       }),
     }),
-    getUserInfo: builder.query<
-      {
-        name: string;
-        emailID: string;
-        connectBal: number;
-        avatarUrl: string | null;
-        phoneNo: string;
-      },
-      void
-    >({
+    getUserInfo: builder.query<AuthUserDetail, void>({
       query: () => "/user/info",
     }),
     logout: builder.mutation<
@@ -362,7 +353,7 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["User"],
     }),
-    bundleInfo: builder.query<ConnectsBundle[], void>({
+    bundleInfo: builder.query<ConnectsBundle, void>({
       query: () => "/bundle/info",
     }),
     createOrder: builder.mutation<
@@ -371,15 +362,49 @@ export const apiSlice = createApi({
         displayAmount: number;
         razorPayAmount: number;
       },
-      { bundle: string; connects: number }
+      void
     >({
-      query: (data) => ({
+      query: () => ({
         url: "/payment/create-order",
         method: "POST",
-        body: data,
-        headers: {
-          "Content-Type": "application/json",
-        },
+      }),
+    }),
+    initiateCorporateVerification: builder.mutation<string, string>({
+      query: (corporateEmail) => ({
+        url: `/user/verify-corporate-email-init?corporateEmail=${encodeURIComponent(corporateEmail)}`,
+        method: "POST",
+        responseHandler: (response) => response.text(),
+      }),
+    }),
+    confirmCorporateVerification: builder.mutation<
+      { message: string; isCorporateVerified: boolean },
+      {
+        otp: string;
+        token: string;
+        corporateEmail: string;
+        companyName?: string;
+        jobTitle?: string;
+      }
+    >({
+      query: (payload) => {
+        const params = new URLSearchParams();
+        params.append("otp", payload.otp);
+        params.append("token", payload.token);
+        params.append("corporateEmail", payload.corporateEmail);
+        if (payload.companyName)
+          params.append("companyName", payload.companyName);
+        if (payload.jobTitle) params.append("jobTitle", payload.jobTitle);
+
+        return {
+          url: `/user/verify-corporate-email-confirm?${params.toString()}`,
+          method: "POST",
+        };
+      },
+    }),
+    claimCorporateBenefits: builder.mutation<{ message: string }, void>({
+      query: () => ({
+        url: "/user/claim-corporate-benefits",
+        method: "POST",
       }),
     }),
     verifyPayment: builder.mutation<
@@ -494,4 +519,7 @@ export const {
   useGenerateOtpEmailMutation,
   useVerifyEmailMutation,
   useContactUsMutation,
+  useInitiateCorporateVerificationMutation,
+  useConfirmCorporateVerificationMutation,
+  useClaimCorporateBenefitsMutation,
 } = apiSlice;

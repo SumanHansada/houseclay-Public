@@ -12,7 +12,7 @@ import {
   FLOOR_NUMERIC_OPTIONS,
   PROPERTY_TYPE_OPTIONS,
   TOTAL_FLOORS_NUMERIC_OPTIONS,
-} from "@/common/dataConstants/options";
+} from "@/common/dataConstants/formOptions";
 import {
   FormSelectDropdown,
   FormTextArea,

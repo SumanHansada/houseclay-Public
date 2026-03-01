@@ -25,12 +25,12 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ id }) => {
     <Dialog
       id={id}
       type={isMobile ? "fullscreen" : "card"}
-      width={isMobile ? 100 : 45}
+      width={isMobile ? 100 : 50}
       onClose={handleCloseDialog}
       entryAnimation={isMobile ? "animate-slide-in-right" : "animate-fade-in"}
       exitAnimation={isMobile ? "animate-slide-out-right" : "animate-fade-out"}
     >
-      <DialogHeader>
+      <DialogHeader className="border-none">
         {isMobile ? (
           <MobileHeader>
             <MobileHeader.Title>Log In to Your Account</MobileHeader.Title>
@@ -45,7 +45,18 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ id }) => {
               </Button>
             </MobileHeader.RightAction>
           </MobileHeader>
-        ) : null}
+        ) : (
+          <div className="flex justify-end w-full">
+            <Button
+              variant="secondary"
+              size="custom"
+              className="rounded-full p-1"
+              onClick={handleCloseDialog}
+            >
+              <X size={24} />
+            </Button>
+          </div>
+        )}
       </DialogHeader>
 
       <DialogContent>

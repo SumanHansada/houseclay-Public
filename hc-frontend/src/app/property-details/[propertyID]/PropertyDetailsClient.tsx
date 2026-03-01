@@ -65,14 +65,17 @@ import {
   twentyFourSevenIconURL,
   wifiIconURL,
 } from "@/common/cdnURLs";
-import { AMENITY_LABELS, AMENITY_VALUES } from "@/common/dataConstants/options";
 import {
   CONTACT_LOGIN_DIALOG_ID,
   MONTHLY_CHARGES_DIALOG_ID,
   PHOTO_GALLERY_DIALOG_ID,
   REPORT_LISTING_DIALOG_ID,
   UNLOCK_DETAILS_DIALOG_ID,
-} from "@/common/dialogConstants";
+} from "@/common/dataConstants/dialogIDs";
+import {
+  AMENITY_LABELS,
+  AMENITY_VALUES,
+} from "@/common/dataConstants/formOptions";
 import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { openMapsDirections, pascalCase } from "@/common/utils";
 import FullScreenLoader from "@/components/FullScreenLoader";

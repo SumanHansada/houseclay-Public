@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, User } from "lucide-react";
+import { Menu, ShieldCheckIcon, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +9,10 @@ import {
   insufficientConnectsIconURL,
   loginAndEarnIconURL,
 } from "@/common/cdnURLs";
+import {
+  BUY_CONNECTS_DIALOG_ID,
+  PRO_SUBSCRIPTION_DIALOG_ID,
+} from "@/common/dataConstants/dialogIDs";
 import { AuthStep, PropertyCategory } from "@/common/enums";
 import { getPropertySearchHrefWithLocation } from "@/common/utils";
 import { UserDropdown } from "@/components/UserDropdown";
@@ -46,7 +50,9 @@ export const InfoTipLogin: React.FC = () => (
   </div>
 );
 
-export const InfoTipZeroBalance: React.FC = () => (
+export const InfoTipZeroBalance: React.FC<{ onBuyConnects: () => void }> = ({
+  onBuyConnects,
+}) => (
   <div className="flex w-full px-4 py-2 gap-4 min-w-72">
     <div className="relative h-14 aspect-[7/9]">
       <ImageWithLoader
@@ -61,9 +67,12 @@ export const InfoTipZeroBalance: React.FC = () => (
       <p className="text-gray-500 font-light text-nowrap">
         Purchase more now to continue!
       </p>
-      <Link href="/buy-connects" className="text-red-600 cursor-pointer">
+      <button
+        onClick={onBuyConnects}
+        className="text-red-600 cursor-pointer text-left"
+      >
         Buy Connects
-      </Link>
+      </button>
     </div>
   </div>
 );
@@ -165,13 +174,12 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
             >
               Buy
             </Link> */}
-            <Link
-              href="/buy-connects"
-              data-active={pathname === "/buy-connects" ? "true" : "false"}
-              className="relative hover:text-red-600 py-2 nav-link"
+            <button
+              onClick={() => openDialog(PRO_SUBSCRIPTION_DIALOG_ID)}
+              className="relative hover:text-red-600 py-2 nav-link flex gap-1 items-center"
             >
-              Buy Connects
-            </Link>
+              Get Pro <ShieldCheckIcon className="size-5" />
+            </button>
             <Link
               href="/about-us"
               data-active={pathname === "/about-us" ? "true" : "false"}
@@ -201,10 +209,18 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
               align="end"
               enabled={showLoginTip || showZeroTip}
               panelClassName=""
-              content={showLoginTip ? <InfoTipLogin /> : <InfoTipZeroBalance />}
+              content={
+                showLoginTip ? (
+                  <InfoTipLogin />
+                ) : (
+                  <InfoTipZeroBalance
+                    onBuyConnects={() => openDialog(BUY_CONNECTS_DIALOG_ID)}
+                  />
+                )
+              }
             >
               <Link
-                href="/manage-account/connects"
+                href="/manage-account/my-profile"
                 className="flex items-center xl:px-4 lg:px-3 md:px-2 px-2 py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100"
                 aria-label={`Connects Balance ${connectBal} Connects`}
               >

@@ -10,7 +10,6 @@ import {
   FACING_OPTIONS,
   FLOOR_NUMERIC_OPTIONS,
   FURNISHING_OPTIONS,
-  getOptionLabel,
   PARKING_OPTIONS,
   POWER_BACKUP_OPTIONS,
   PROPERTY_AGE_OPTIONS,
@@ -19,7 +18,7 @@ import {
   TENANT_TYPE_OPTIONS,
   TOTAL_FLOORS_NUMERIC_OPTIONS,
   WATER_SUPPLY_OPTIONS,
-} from "@/common/dataConstants/options";
+} from "@/common/dataConstants/formOptions";
 import { PropertyCategory } from "@/common/enums";
 import {
   formatDateToReadable,
@@ -28,6 +27,7 @@ import {
   processPropertyImages,
 } from "@/common/utils";
 import { ServerAPIService } from "@/services/serverAPIService";
+import { getOptionLabel } from "@/utils/formOptionHelpers";
 
 import Loading from "./loading";
 import { PropertyDetailsClient } from "./PropertyDetailsClient";

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
-import { MARK_RENTED_ACTION_DIALOG_ID } from "@/common/dialogConstants";
+import { MARK_RENTED_ACTION_DIALOG_ID } from "@/common/dataConstants/dialogIDs";
 import { PropertyCategory, PropertyStatus } from "@/common/enums";
 import { MyPropertyActionsDialog } from "@/dialogs";
 import { ActionDialog } from "@/dialogs/action-dialog";
