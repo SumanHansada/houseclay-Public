@@ -4,7 +4,6 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 import { PHOTO_GALLERY_DIALOG_ID } from "@/common/dataConstants/dialogIDs";
-import { validateImages } from "@/common/utils";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 

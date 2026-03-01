@@ -27,15 +27,15 @@ import {
 import { noResultsFoundIconURL } from "@/common/cdnURLs";
 import { CITY_LAT_LNG_MAPPING, EXPLORE_LOCATION } from "@/common/constants";
 import {
+  PROPERTY_FILTERS_DIALOG_ID,
+  SORT_FILTERS_DIALOG_ID,
+} from "@/common/dataConstants/dialogIDs";
+import {
   BHK_TYPE_OPTIONS,
   PROPERTY_AVAILABILITY,
   PROPERTY_TYPE_SHORT_OPTIONS,
   TENANT_TYPE_OPTIONS,
 } from "@/common/dataConstants/formOptions";
-import {
-  PROPERTY_FILTERS_DIALOG_ID,
-  SORT_FILTERS_DIALOG_ID,
-} from "@/common/dataConstants/dialogIDs";
 import { BadgeType, PropertyCategory } from "@/common/enums";
 import { getPropertySearchHrefWithLocation } from "@/common/utils";
 import FullScreenLoader from "@/components/FullScreenLoader";
