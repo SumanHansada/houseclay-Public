@@ -6,6 +6,7 @@ import {
   CircleCheck,
   HandCoins,
   Loader2,
+  ShieldCheckIcon,
   UserStar,
   X,
   XCircle,
@@ -292,6 +293,11 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
       return;
     }
 
+    if (!companyName.trim() || !jobTitle.trim()) {
+      toast.error("Please provide both Company Name and Job Title");
+      return;
+    }
+
     try {
       await confirmVerify({
         otp,
@@ -435,7 +441,8 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                 name="companyName"
                 value={companyName}
                 onChange={(val) => setCompanyName(String(val))}
-                label="Company Name (Optional)"
+                label="Company Name"
+                required
                 placeholder="e.g. Houseclay"
                 className="w-full"
               />
@@ -443,7 +450,8 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                 name="jobTitle"
                 value={jobTitle}
                 onChange={(val) => setJobTitle(String(val))}
-                label="Job Title (Optional)"
+                label="Job Title"
+                required
                 placeholder="e.g. Software Engineer"
                 className="w-full"
               />
@@ -649,8 +657,12 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
             {/* HERO SECTION */}
             <div className="px-6 py-6 flex flex-col gap-6">
               <div className="text-center space-y-1">
-                <h2 className="text-2xl font-bold text-gray-900">
-                  Unlock <span className="text-red-600">Houseclay Pro</span>
+                <h2 className="flex items-center justify-center gap-2 text-2xl font-bold text-gray-900">
+                  Unlock{" "}
+                  <span className="text-red-600 flex items-center justify-center">
+                    Houseclay Pro{" "}
+                    <ShieldCheckIcon className="size-8 text-white fill-red-500" />
+                  </span>
                 </h2>
                 <p className="text-sm text-gray-500">
                   Connect directly with owners. Zero Brokerage.
@@ -726,10 +738,6 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                 </div>
               ) : (
                 <>
-                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                    Standard Plan
-                  </p>
-
                   {/* Corporate Option */}
                   <div
                     onClick={() => setSelectedOption("corporate")}

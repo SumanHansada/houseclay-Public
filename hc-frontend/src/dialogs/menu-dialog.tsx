@@ -4,6 +4,7 @@ import {
   ChevronDown,
   ChevronRight,
   ChevronUp,
+  LogOut,
   UserRound,
   X,
 } from "lucide-react";
@@ -19,6 +20,7 @@ import { AuthStep } from "@/common/enums";
 import { CITY_OPTIONS } from "@/common/utils";
 import { AccountNavList } from "@/components/AccountNavList";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
+import { useLogout } from "@/hooks/useLogout";
 import { MobileHeader } from "@/layout-components";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setAuthStep, setLoginFromAddProperty } from "@/store/authSlice";
@@ -37,8 +39,6 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const [quickLinksExpanded, setQuickLinksExpanded] = useState(true);
-  const toggleQuickLinks = () => setQuickLinksExpanded(!quickLinksExpanded);
   const { name, phoneNo } = useSelector(
     (state: RootState) => state.user.userDetail,
   );
@@ -46,6 +46,12 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
   const connectBal = useSelector((state: RootState) =>
     isAuthenticated ? state.user.userDetail.connectBal : 0,
   );
+  const [quickLinksExpanded, setQuickLinksExpanded] = useState(
+    isAuthenticated ? false : true,
+  );
+  const toggleQuickLinks = () => setQuickLinksExpanded(!quickLinksExpanded);
+
+  const { logout } = useLogout();
 
   // Default city (e.g., first option 'Bengaluru')
   const defaultCity = CITY_OPTIONS[0].id;
@@ -72,6 +78,12 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
     } else {
       router.push("/list-property");
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    router.replace("/");
+    handleCloseDialog();
   };
 
   return (
@@ -169,7 +181,9 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
           {/* Profile Section */}
           {isAuthenticated && (
             <AccountNavList
-              items={ACCOUNT_NAV_ITEMS}
+              items={ACCOUNT_NAV_ITEMS.filter(
+                (item) => item.actionId !== "LOGOUT",
+              )}
               onItemSelect={onNavClick}
               iconSize={44}
               variant="mobile"
@@ -248,20 +262,6 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
                     className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
                   >
                     <span className="flex items-center gap-2">Rooms</span>
-                    <ChevronRight size={20} />
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
-                    href="/what-are-connects"
-                    prefetch
-                    onClick={onNavClick}
-                    className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
-                  >
-                    <span className="flex items-center gap-2">
-                      What Are Connects
-                    </span>
                     <ChevronRight size={20} />
                   </Link>
                 </li>
@@ -360,6 +360,17 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
               </ul>
             </div>
           </div>
+
+          {/* Logout Button */}
+          {isAuthenticated && (
+            <div
+              onClick={handleLogout}
+              className="flex items-center gap-2 py-4 px-4  cursor-pointer w-full border-b border-gray-200 text-gray-700"
+            >
+              <LogOut size={20} className="text-gray-700" />
+              <span>Logout</span>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

@@ -29,7 +29,7 @@ const CommonDialogs = lazy(() => import("@/layout-components/CommonDialogs"));
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["200", "300", "400", "500", "600", "700", "800"],
   display: "swap",
   preload: true,
 });
@@ -121,6 +121,10 @@ export default function RootLayout({
         />
 
         {/* Critical meta tags - must come before splash screens */}
+        <meta
+          name="description"
+          content="Houseclay - Stop Searching. Start Connecting."
+        />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />

@@ -176,9 +176,10 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
             </Link> */}
             <button
               onClick={() => openDialog(PRO_SUBSCRIPTION_DIALOG_ID)}
-              className="relative hover:text-red-600 py-2 nav-link flex gap-1 items-center"
+              className="relative text-red-600 py-2 nav-link flex items-center hover:bg-red-50 rounded-xl px-2"
             >
-              Get Pro <ShieldCheckIcon className="size-5" />
+              Get Pro{" "}
+              <ShieldCheckIcon className="size-6 text-white fill-red-500" />
             </button>
             <Link
               href="/about-us"
