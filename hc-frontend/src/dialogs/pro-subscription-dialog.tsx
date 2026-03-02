@@ -738,10 +738,6 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                 </div>
               ) : (
                 <>
-                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                    Standard Plan
-                  </p>
-
                   {/* Corporate Option */}
                   <div
                     onClick={() => setSelectedOption("corporate")}

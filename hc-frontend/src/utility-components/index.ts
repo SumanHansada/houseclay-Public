@@ -7,6 +7,7 @@ export { default as GoogleMaps } from "./GoogleMaps";
 export { default as GoogleMapsDirection } from "./GoogleMapsDirection";
 export { default as ImageWithFallback } from "./ImageWithFallback";
 export { default as ImageWithLoader } from "./ImageWithLoader";
+export { default as InfiniteScroller } from "./InfiniteScroller";
 export { default as PhotoGallery } from "./PhotoGallery";
 export { default as PlacesAutocompleteWithAnimation } from "./PlacesAutocompleteWithAnimation";
 export { default as Popover } from "./Popover";

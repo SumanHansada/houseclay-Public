@@ -1,11 +1,14 @@
+"use client";
+
+import { BedDouble } from "lucide-react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { PropertyCategory } from "@/common/enums";
 import HomeSearchBar from "@/components/HomeSearchBar";
 import { setPropertyCategory } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
-import { SvgIcon } from "@/utility-components";
-import { BedDouble } from "lucide-react";
+import { InfiniteScroller, SvgIcon } from "@/utility-components";
 
 const MastHeadDesktop = () => {
   const propertyCategory = useSelector(
@@ -31,7 +34,7 @@ const MastHeadDesktop = () => {
           className="w-full h-full object-cover"
         />
       </div>
-      <div className="absolute h-full flex flex-col justify-center xl:pl-40 lg:pl-14 pl-14 xl:w-1/2 lg:w-7/12 md:w-3/5 w-4/5">
+      <div className="absolute h-full flex flex-col justify-center xl:pl-40 lg:pl-14 pl-14 2xl:w-2/5 lg:w-1/2 md:w-3/5 w-4/5">
         {/* Headings */}
         <div className="max-w-md mb-8">
           <h2 className="flex flex-col xl:text-5xl lg:text-4xl text-4xl max-lg:flex-col text-gray-800 mb-1 gap-2">
@@ -40,15 +43,19 @@ const MastHeadDesktop = () => {
             </span>
             <span className="font-semibold text-nowrap">
               Without the Hassle
-              {/* <span className="underline decoration-red-600 decoration-wavy decoration-4 underline-offset-2">
-                Hassle
-              </span> */}
             </span>
           </h2>
         </div>
 
+        {/* Animated Text Scroller */}
+        <InfiniteScroller
+          intervalMs={3000}
+          className="mb-6 -mt-2 ml-2"
+          itemClassName="font-light text-lg justify-start"
+        />
+
         {/* Tabs */}
-        <div className="max-w-5xl flex justify-start mb-4">
+        <div className="max-w-5xl flex justify-start mb-4 px-2">
           <button
             className={`flex items-center gap-2 px-2 py-2 text-lg border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.RENT ? "text-red-600 border-b-2 border-red-600" : "text-gray-700"}`}
             onClick={() => dispatch(setPropertyCategory(PropertyCategory.RENT))}
@@ -56,7 +63,12 @@ const MastHeadDesktop = () => {
             <SvgIcon
               iconSize="small"
               name="instant-access"
-              className="size-8 text-black"
+              size={24}
+              className={
+                propertyCategory === PropertyCategory.RENT
+                  ? "text-red-600"
+                  : "text-gray-700"
+              }
             />
             <span className="">Flats for rent</span>
           </button>
@@ -66,7 +78,9 @@ const MastHeadDesktop = () => {
               dispatch(setPropertyCategory(PropertyCategory.FLATMATE))
             }
           >
-            <BedDouble className="size-5 text-black" />
+            <BedDouble
+              className={`size-5 ${propertyCategory === PropertyCategory.FLATMATE ? "text-red-600" : "text-gray-700"}`}
+            />
             <span className="">Find rooms</span>
           </button>
           {/* <button

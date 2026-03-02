@@ -20,12 +20,12 @@ import { AuthStep } from "@/common/enums";
 import { CITY_OPTIONS } from "@/common/utils";
 import { AccountNavList } from "@/components/AccountNavList";
 import { Dialog, DialogContent, DialogHeader } from "@/components/Dialog";
+import { useLogout } from "@/hooks/useLogout";
 import { MobileHeader } from "@/layout-components";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setAuthStep, setLoginFromAddProperty } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
-import { useLogout } from "@/hooks/useLogout";
 
 interface MenuDialogProps {
   id: string;
@@ -39,8 +39,6 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const [quickLinksExpanded, setQuickLinksExpanded] = useState(false);
-  const toggleQuickLinks = () => setQuickLinksExpanded(!quickLinksExpanded);
   const { name, phoneNo } = useSelector(
     (state: RootState) => state.user.userDetail,
   );
@@ -48,6 +46,10 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
   const connectBal = useSelector((state: RootState) =>
     isAuthenticated ? state.user.userDetail.connectBal : 0,
   );
+  const [quickLinksExpanded, setQuickLinksExpanded] = useState(
+    isAuthenticated ? false : true,
+  );
+  const toggleQuickLinks = () => setQuickLinksExpanded(!quickLinksExpanded);
 
   const { logout } = useLogout();
 
@@ -363,9 +365,9 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
           {isAuthenticated && (
             <div
               onClick={handleLogout}
-              className="flex items-center gap-2 py-2 cursor-pointer w-full text-red-600 font-medium"
+              className="flex items-center gap-2 py-4 px-4  cursor-pointer w-full border-b border-gray-200 text-gray-700"
             >
-              <LogOut size={24} />
+              <LogOut size={20} className="text-gray-700" />
               <span>Logout</span>
             </div>
           )}

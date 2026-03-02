@@ -1,3 +1,4 @@
+import { BedDouble } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,7 +9,7 @@ import { PropertyCategory } from "@/common/enums";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { setPropertyCategory as setSearchPropertyCategory } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
-import { SvgIcon } from "@/utility-components";
+import { InfiniteScroller, SvgIcon } from "@/utility-components";
 
 import HomeSearchBar from "./HomeSearchBar";
 
@@ -38,21 +39,34 @@ const MastHeadMobile: React.FC = () => {
       {/* Tabs and Search */}
       <div className="w-full">
         {/* Tabs */}
-        <div className="flex justify-center w-4/5 mx-auto">
+        <div className="flex justify-center w-[85%] mx-auto">
           <button
             onClick={() =>
               dispatch(setSearchPropertyCategory(PropertyCategory.RENT))
             }
-            className={`w-1/2 py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.RENT ? "text-red-600 border-red-600" : "text-gray-700 "}`}
+            className={`w-1/2 flex items-center gap-1 justify-center py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.RENT ? "text-red-600 border-red-600" : "text-gray-700 "}`}
           >
+            <SvgIcon
+              iconSize="small"
+              name="instant-access"
+              size={24}
+              className={
+                propertyCategory === PropertyCategory.RENT
+                  ? "text-red-600"
+                  : "text-gray-700"
+              }
+            />
             Flats for rent
           </button>
           <button
             onClick={() =>
               dispatch(setSearchPropertyCategory(PropertyCategory.FLATMATE))
             }
-            className={`w-1/2 py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.FLATMATE ? "text-red-600 border-red-600" : "text-gray-700 "}`}
+            className={`w-1/2 flex items-center gap-1 justify-center py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.FLATMATE ? "text-red-600 border-red-600" : "text-gray-700 "}`}
           >
+            <BedDouble
+              className={`size-5 ${propertyCategory === PropertyCategory.FLATMATE ? "text-red-600" : "text-gray-700"}`}
+            />
             Find rooms
           </button>
           {/* <button
@@ -67,6 +81,15 @@ const MastHeadMobile: React.FC = () => {
 
         {/* Search */}
         <HomeSearchBar id="mobile-search-bar" />
+      </div>
+
+      {/* Animated Text Scroller */}
+      <div className="flex items-center justify-center">
+        <InfiniteScroller
+          intervalMs={3000}
+          className="mb-0"
+          itemClassName="font-light justify-center"
+        />
       </div>
 
       {/* Tagline */}

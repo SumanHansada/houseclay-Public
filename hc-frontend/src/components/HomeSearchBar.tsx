@@ -2,7 +2,7 @@
 
 import { Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -26,7 +26,6 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const dispatch = useDispatch();
-  const [isInputFocused, setIsInputFocused] = useState(false);
   const location = useSelector(
     (state: RootState) => state.propertySearch.location,
   );
@@ -138,21 +137,6 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
     dispatch(setConfirmedLocationName(""));
   };
 
-  const handleButtonClick = () => {
-    if (isInputFocused && location?.name) {
-      handleClear();
-    } else {
-      handleSearch();
-    }
-  };
-
-  const handleClearButtonMouseDown = (e: React.MouseEvent) => {
-    // Prevent blur from happening before we clear
-    if (isInputFocused && location?.name) {
-      e.preventDefault();
-    }
-  };
-
   return (
     <div
       ref={containerRef}
@@ -189,8 +173,6 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
           ]}
           value={location?.name || ""}
           onChange={handleLocationChange}
-          onFocus={() => setIsInputFocused(true)}
-          onBlur={() => setIsInputFocused(false)}
           onLocationSelect={handleLocationSelect}
           containerClassName="w-full relative"
           labelClassName="text-lg font-medium text-gray-900 mb-1"
