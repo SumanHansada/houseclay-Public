@@ -4,6 +4,7 @@ import {
   ChevronDown,
   ChevronRight,
   ChevronUp,
+  LogOut,
   UserRound,
   X,
 } from "lucide-react";
@@ -24,6 +25,7 @@ import { useDialog } from "@/providers/DialogContextProvider";
 import { setAuthStep, setLoginFromAddProperty } from "@/store/authSlice";
 import { RootState } from "@/store/store";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
+import { useLogout } from "@/hooks/useLogout";
 
 interface MenuDialogProps {
   id: string;
@@ -46,6 +48,8 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
   const connectBal = useSelector((state: RootState) =>
     isAuthenticated ? state.user.userDetail.connectBal : 0,
   );
+
+  const { logout } = useLogout();
 
   // Default city (e.g., first option 'Bengaluru')
   const defaultCity = CITY_OPTIONS[0].id;
@@ -72,6 +76,12 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
     } else {
       router.push("/list-property");
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    router.replace("/");
+    handleCloseDialog();
   };
 
   return (
@@ -169,7 +179,9 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
           {/* Profile Section */}
           {isAuthenticated && (
             <AccountNavList
-              items={ACCOUNT_NAV_ITEMS}
+              items={ACCOUNT_NAV_ITEMS.filter(
+                (item) => item.actionId !== "LOGOUT",
+              )}
               onItemSelect={onNavClick}
               iconSize={44}
               variant="mobile"
@@ -346,6 +358,17 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
               </ul>
             </div>
           </div>
+
+          {/* Logout Button */}
+          {isAuthenticated && (
+            <div
+              onClick={handleLogout}
+              className="flex items-center gap-2 py-2 cursor-pointer w-full text-red-600 font-medium"
+            >
+              <LogOut size={24} />
+              <span>Logout</span>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

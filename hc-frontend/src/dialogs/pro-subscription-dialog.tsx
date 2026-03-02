@@ -293,6 +293,11 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
       return;
     }
 
+    if (!companyName.trim() || !jobTitle.trim()) {
+      toast.error("Please provide both Company Name and Job Title");
+      return;
+    }
+
     try {
       await confirmVerify({
         otp,
@@ -436,7 +441,8 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                 name="companyName"
                 value={companyName}
                 onChange={(val) => setCompanyName(String(val))}
-                label="Company Name (Optional)"
+                label="Company Name"
+                required
                 placeholder="e.g. Houseclay"
                 className="w-full"
               />
@@ -444,7 +450,8 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                 name="jobTitle"
                 value={jobTitle}
                 onChange={(val) => setJobTitle(String(val))}
-                label="Job Title (Optional)"
+                label="Job Title"
+                required
                 placeholder="e.g. Software Engineer"
                 className="w-full"
               />
