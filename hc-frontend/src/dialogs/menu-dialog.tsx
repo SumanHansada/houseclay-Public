@@ -37,7 +37,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const [quickLinksExpanded, setQuickLinksExpanded] = useState(true);
+  const [quickLinksExpanded, setQuickLinksExpanded] = useState(false);
   const toggleQuickLinks = () => setQuickLinksExpanded(!quickLinksExpanded);
   const { name, phoneNo } = useSelector(
     (state: RootState) => state.user.userDetail,
@@ -248,20 +248,6 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
                     className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
                   >
                     <span className="flex items-center gap-2">Rooms</span>
-                    <ChevronRight size={20} />
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
-                    href="/what-are-connects"
-                    prefetch
-                    onClick={onNavClick}
-                    className="flex items-center justify-between py-4 hover:bg-gray-100 cursor-pointer border-b border-gray-300 w-full"
-                  >
-                    <span className="flex items-center gap-2">
-                      What Are Connects
-                    </span>
                     <ChevronRight size={20} />
                   </Link>
                 </li>

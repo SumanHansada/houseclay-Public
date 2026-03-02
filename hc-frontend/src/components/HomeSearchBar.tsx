@@ -45,16 +45,25 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
   }, [dispatch]);
 
   const handleSearch = () => {
-    if (location && location.latitude && location.longitude) {
-      // Reset all filters before making a new search
-      dispatch(resetPropertySearchSlice());
-      dispatch(setLocation(location));
-      dispatch(setConfirmedLocationName(location.name || ""));
-
-      router.push(
-        `/property-search?city=${defaultCity}&lat=${location.latitude}&lon=${location.longitude}&propertyCategory=${propertyCategory.toLowerCase()}`,
+    if (!location?.latitude || !location?.longitude) {
+      toast.error(
+        "Please select a specific location from the dropdown suggestions.",
+        {
+          duration: 4000,
+        },
       );
+      return;
     }
+    // if (location && location.latitude && location.longitude) {
+    // Reset all filters before making a new search
+    dispatch(resetPropertySearchSlice());
+    dispatch(setLocation(location));
+    dispatch(setConfirmedLocationName(location.name || ""));
+
+    router.push(
+      `/property-search?city=${defaultCity}&lat=${location.latitude}&lon=${location.longitude}&propertyCategory=${propertyCategory.toLowerCase()}`,
+    );
+    // }
   };
 
   const handlePrefetch = () => {
@@ -147,7 +156,7 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
   return (
     <div
       ref={containerRef}
-      className="flex items-center justify-between pl-4 pr-2 bg-white border border-gray-200 rounded-full shadow-lg inset-shadow-xs md:h-16 h-14"
+      className="flex items-center justify-between pl-4 pr-2 bg-white border border-gray-200 rounded-xl shadow-lg inset-shadow-xs md:h-16 h-14"
     >
       {/* City */}
       <div className="w-1/4 px-3 py-2 border-r border-gray-200 max-md:hidden">
@@ -165,8 +174,8 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
         </div>
       </div>
 
-      {/* Location */}
-      <div className="w-3/4 px-2 py-2 border-gray-200 max-md:w-full max-md:flex-1 md:px-3 md:py-2">
+      {/* Location Input Wrapper */}
+      <div className="w-3/4 p-1 border-gray-200 max-md:w-full max-md:flex-1 md:px-3 md:py-2 relative flex items-center">
         <PlacesAutocompleteWithAnimation
           id={id}
           name="location"
@@ -185,51 +194,43 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
           onLocationSelect={handleLocationSelect}
           containerClassName="w-full relative"
           labelClassName="text-lg font-medium text-gray-900 mb-1"
-          inputClassName="w-full p-1 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
+          inputClassName="w-full p-1 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 pr-8"
           dropdownClassName="absolute z-10 mt-1 py-1 w-full bg-white shadow-lg max-h-60 overflow-auto rounded-b-xl"
           dropdownItemClassName="py-1 px-3 hover:bg-gray-100 cursor-pointer flex items-center"
           errorClassName="mt-1 text-sm text-red-600"
         />
+
+        {/* Dedicated Clear Button */}
+        {location?.name && (
+          <button
+            aria-label="clear-location"
+            onClick={handleClear}
+            onMouseDown={(e) => e.preventDefault()}
+            className="absolute right-4 p-1 rounded-full hover:bg-gray-100 transition-colors"
+          >
+            <X size={18} className="text-gray-500" />
+          </button>
+        )}
       </div>
 
-      {/* Search/Clear Button */}
+      {/* Mobile Search Button */}
       <button
-        aria-label={
-          isInputFocused && location?.name
-            ? "clear-location-mobile"
-            : "search-properties-mobile"
-        }
-        className="flex items-center justify-center p-3 bg-red-500 rounded-full shadow-xl md:hidden"
-        onClick={handleButtonClick}
-        onMouseDown={handleClearButtonMouseDown}
+        aria-label="search-properties-mobile"
+        className="flex items-center justify-center px-3 py-2 bg-red-500 rounded-xl shadow-xl md:hidden hover:bg-red-600 transition-colors"
+        onClick={handleSearch}
       >
-        {isInputFocused && location?.name ? (
-          <X size={20} className="text-white" />
-        ) : (
-          <Search size={20} className="text-white fill-red-500" />
-        )}
+        <Search size={20} className="text-white fill-red-500" />
       </button>
+
+      {/* Desktop Search Button */}
       <button
-        aria-label={
-          isInputFocused && location?.name
-            ? "clear-location"
-            : "search-properties"
-        }
-        className="flex items-center justify-center p-3 bg-red-500 rounded-full shadow-xl max-md:hidden"
-        onClick={handleButtonClick}
-        onMouseDown={handleClearButtonMouseDown}
-        onMouseEnter={
-          !isInputFocused || !location?.name ? handlePrefetch : undefined
-        }
-        onFocus={
-          !isInputFocused || !location?.name ? handlePrefetch : undefined
-        }
+        aria-label="search-properties"
+        className="flex items-center justify-center px-6 py-2 bg-red-500 rounded-xl shadow-xl max-md:hidden hover:bg-red-600 transition-colors"
+        onClick={handleSearch}
+        onMouseEnter={handlePrefetch}
+        onFocus={handlePrefetch}
       >
-        {isInputFocused && location?.name ? (
-          <X size={30} className="text-white" />
-        ) : (
-          <Search size={30} className="text-white fill-red-500" />
-        )}
+        <span className="text-white font-light text-lg">Search</span>
       </button>
     </div>
   );

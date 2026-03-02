@@ -6,6 +6,7 @@ import {
   CircleCheck,
   HandCoins,
   Loader2,
+  ShieldCheckIcon,
   UserStar,
   X,
   XCircle,
@@ -649,8 +650,12 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
             {/* HERO SECTION */}
             <div className="px-6 py-6 flex flex-col gap-6">
               <div className="text-center space-y-1">
-                <h2 className="text-2xl font-bold text-gray-900">
-                  Unlock <span className="text-red-600">Houseclay Pro</span>
+                <h2 className="flex items-center justify-center gap-2 text-2xl font-bold text-gray-900">
+                  Unlock{" "}
+                  <span className="text-red-600 flex items-center justify-center">
+                    Houseclay Pro{" "}
+                    <ShieldCheckIcon className="size-8 text-white fill-red-500" />
+                  </span>
                 </h2>
                 <p className="text-sm text-gray-500">
                   Connect directly with owners. Zero Brokerage.

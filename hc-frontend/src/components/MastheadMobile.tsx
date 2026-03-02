@@ -34,6 +34,7 @@ const MastHeadMobile: React.FC = () => {
           priority
         />
       </div> */}
+
       {/* Tabs and Search */}
       <div className="w-full">
         {/* Tabs */}
@@ -69,7 +70,7 @@ const MastHeadMobile: React.FC = () => {
       </div>
 
       {/* Tagline */}
-      <div className="flex flex-col justify-center items-center">
+      {/* <div className="flex flex-col justify-center items-center">
         <div className="flex items-center gap-2">
           <span className="text-xl font-bold font-inter text-nowrap">
             Stop Searching.
@@ -78,7 +79,7 @@ const MastHeadMobile: React.FC = () => {
             Start Connecting.
           </span>
         </div>
-      </div>
+      </div> */}
 
       {/* Feature Grid */}
       <div className="grid grid-cols-4 gap-4 place-items-start">
