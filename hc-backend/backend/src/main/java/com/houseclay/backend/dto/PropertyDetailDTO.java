@@ -9,9 +9,9 @@ public class PropertyDetailDTO {
     private PropertyDTO property;
     private String secondaryPhoneNumber;
     List<PropertyUpdateDTO> propertyUpdates;
-    private UserDTO owner;
+    private ContactUserDTO owner;
     private List<UserDTO> viewUsers;
     private List<UserDTO> shortlistUsers;
-    private List<UserDTO> contactUsers;
+    private List<ContactUserDTO> contactUsers;
     private List<ReportUserDTO> reportUsers;
 }
