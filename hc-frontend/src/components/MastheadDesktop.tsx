@@ -34,7 +34,7 @@ const MastHeadDesktop = () => {
           className="w-full h-full object-cover"
         />
       </div>
-      <div className="absolute h-full flex flex-col justify-center xl:pl-40 lg:pl-14 pl-14 2xl:w-2/5 lg:w-1/2 md:w-3/5 w-4/5">
+      <div className="absolute h-full flex flex-col justify-center xl:pl-40 lg:pl-14 pl-14 2xl:w-[45%] lg:w-1/2 md:w-3/5 w-4/5">
         {/* Headings */}
         <div className="max-w-md mb-8">
           <h2 className="flex flex-col xl:text-5xl lg:text-4xl text-4xl max-lg:flex-col text-gray-800 mb-1 gap-2">
