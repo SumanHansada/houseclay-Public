@@ -770,7 +770,7 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                               I have a Corporate Email
                             </span>
                             <span className="text-xs text-green-600 font-medium">
-                              Get it for FREE
+                              Get Early Access
                             </span>
                           </div>
                         </div>

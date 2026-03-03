@@ -212,7 +212,7 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
         onMouseEnter={handlePrefetch}
         onFocus={handlePrefetch}
       >
-        <span className="text-white font-light text-lg">Search</span>
+        <span className="text-white font-light lg:text-lg">Search</span>
       </button>
     </div>
   );

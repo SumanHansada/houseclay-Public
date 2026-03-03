@@ -20,11 +20,11 @@ public class PropertyDetailMapper {
                 .map(PropertyDetailMapper::toPropertyUpdateDTO)
                 .collect(Collectors.toList()));
 
-        target.setOwner(UserMapper.toDTO(source.getOwner()));
+        target.setOwner(UserMapper.toContactUserDTO(source.getOwner()));
 
         target.setContactUsers(source.getPropertyActions().stream()
                 .filter(propertyAction -> propertyAction.getUserActionType() == UserActionType.CONTACT)
-                .map(propertyAction -> UserMapper.toDTO(propertyAction.getUser()))
+                .map(propertyAction -> UserMapper.toContactUserDTO(propertyAction.getUser()))
                 .collect(Collectors.toList())
         );
 

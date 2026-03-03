@@ -234,6 +234,17 @@ public class UserMapper {
         dto.setEventTime(connectEvent.getEventTime());
         dto.setNotes(connectEvent.getNotes());
         return dto;
+}
+
+    public static ContactUserDTO toContactUserDTO(User user) {
+        ContactUserDTO dto = new ContactUserDTO();
+        dto.setEmail(user.getEmailID());
+        dto.setPhoneNo(user.getPhoneNo());
+        dto.setName(user.getName());
+        dto.setBlacklisted(user.isBlacklisted());
+        dto.setCompanyName(user.getCompanyName());
+        dto.setJobTitle(user.getJobTitle());
+        return dto;
     }
 }
 
