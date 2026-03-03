@@ -988,6 +988,20 @@ export function MyPropertyDetailsClient({
                                 </span>
                               </a>
                             )}
+                            <div className="flex items-center flex-1 gap-1 px-4">
+                              {/* <Job size={20} /> */}
+                              <span className="hover:underline">
+                                {user.jobTitle ? user.jobTitle : "Not Verified"}
+                              </span>
+                            </div>
+                            <div className="flex items-center flex-1 gap-1 px-4">
+                              {/* <Company size={20} /> */}
+                              <span className="hover:underline">
+                                {user.companyName
+                                  ? user.companyName
+                                  : "Not Verified"}
+                              </span>
+                            </div>
                           </div>
                         ))
                       : "Currently no prospects!"}
