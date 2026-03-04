@@ -16,15 +16,15 @@ export interface InfiniteScrollerProps {
 
 const DEFAULT_ITEMS: InfiniteScrollerItem[] = [
   {
-    text: "Identify verified marketplace",
+    text: "Live listings. Zero brokerage",
     // icon: <CheckCircle2 className="size-5" />,
   },
   {
-    text: "Verified owners & Professionals",
+    text: "Verified owners. Verified tenants.",
     // icon: <CheckCircle2 className="size-5" />,
   },
   {
-    text: "Zero Brokerage",
+    text: "No hassle. No spams.",
     // icon: <CheckCircle2 className="size-5" />
   },
 ];
