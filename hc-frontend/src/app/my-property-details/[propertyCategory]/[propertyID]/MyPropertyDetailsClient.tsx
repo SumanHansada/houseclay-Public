@@ -956,55 +956,129 @@ export function MyPropertyDetailsClient({
                   </section>
                 </TabContent> */}
                 <TabContent value="prospects">
-                  <section className="py-6">
-                    <h2 className="mb-2 text-lg font-semibold">Prospects</h2>
+                  <section className="py-6 min-h-[50vh]">
+                    <h2 className="mb-6 text-xl">Prospects</h2>
 
-                    {contactedUsers.length
-                      ? contactedUsers.map((user) => (
+                    {contactedUsers.length ? (
+                      <div className="grid gap-6 lg:grid-cols-2 2xl:grid-cols-3">
+                        {contactedUsers.map((user) => (
                           <div
                             key={user.phoneNo}
-                            className="flex w-full px-4 py-3 mb-4 text-lg bg-gray-100 rounded-lg max-lg:flex-col max-lg:gap-2"
+                            className="flex flex-col p-5 border shadow-md rounded-xl max-md:p-4 bg-white hover:shadow-lg transition-shadow duration-300"
                           >
-                            <div className="flex-1 px-4 border-gray-400 lg:border-r">
-                              {user.name}
-                            </div>
-                            <a
-                              href={`tel:${user.phoneNo}`}
-                              className="flex items-center flex-1 gap-1 px-4 border-gray-400 lg:border-r"
-                            >
-                              <PhoneCall size={20} />
-                              <span className="hover:underline">
-                                {user.phoneNo}
-                              </span>
-                            </a>
-                            {user.email && (
-                              <a
-                                href={`mailto:${user.email}`}
-                                className="flex items-center flex-1 gap-1 px-4"
-                              >
-                                <Mail size={20} />
-                                <span className="hover:underline">
-                                  {user.email}
+                            {/* Header: Avatar, Name & Role */}
+                            <div className="flex items-center gap-4 pb-4 mb-4 border-b border-gray-100">
+                              <div className="flex items-center justify-center w-12 h-12 bg-red-50 text-red-500 rounded-full shrink-0">
+                                <UserSearch size={24} strokeWidth={1.5} />
+                              </div>
+                              <div className="flex flex-col overflow-hidden">
+                                <span className="font-bold text-lg text-gray-900 font-nunito truncate">
+                                  {user.name}
                                 </span>
-                              </a>
-                            )}
-                            <div className="flex items-center flex-1 gap-1 px-4">
-                              {/* <Job size={20} /> */}
-                              <span className="hover:underline">
-                                {user.jobTitle ? user.jobTitle : "Not Verified"}
-                              </span>
+                                {(user.jobTitle || user.companyName) && (
+                                  <span className="text-sm text-gray-500 truncate">
+                                    {[user.jobTitle, user.companyName]
+                                      .filter(Boolean)
+                                      .join(" at ")}
+                                  </span>
+                                )}
+                              </div>
                             </div>
-                            <div className="flex items-center flex-1 gap-1 px-4">
-                              {/* <Company size={20} /> */}
-                              <span className="hover:underline">
-                                {user.companyName
-                                  ? user.companyName
-                                  : "Not Verified"}
-                              </span>
+
+                            {/* Contact Info Grid */}
+                            <div className="flex flex-col gap-4">
+                              <div className="flex items-start justify-start w-full gap-3 text-gray-600">
+                                <div className="p-0.5">
+                                  <PhoneCall
+                                    size={20}
+                                    className="text-gray-400"
+                                  />
+                                </div>
+                                <div className="flex flex-col">
+                                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-0.5">
+                                    Phone
+                                  </span>
+                                  <a
+                                    href={`tel:${user.phoneNo}`}
+                                    className="text-gray-900 hover:text-red-500 font-medium transition-colors"
+                                  >
+                                    {user.phoneNo}
+                                  </a>
+                                </div>
+                              </div>
+
+                              {user.email && (
+                                <div className="flex items-start justify-start w-full gap-3 text-gray-600">
+                                  <div className="p-0.5">
+                                    <Mail size={20} className="text-gray-400" />
+                                  </div>
+                                  <div className="flex flex-col overflow-hidden">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-0.5">
+                                      Email
+                                    </span>
+                                    <a
+                                      href={`mailto:${user.email}`}
+                                      className="text-gray-900 hover:text-red-500 font-medium transition-colors truncate"
+                                    >
+                                      {user.email}
+                                    </a>
+                                  </div>
+                                </div>
+                              )}
+
+                              {user.companyName && (
+                                <div className="flex items-start justify-start w-full gap-3 text-gray-600">
+                                  <div className="p-0.5">
+                                    <Building2
+                                      size={20}
+                                      className="text-gray-400"
+                                    />
+                                  </div>
+                                  <div className="flex flex-col overflow-hidden">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-0.5">
+                                      Company
+                                    </span>
+                                    <span className="text-gray-900 font-medium truncate">
+                                      {user.companyName}
+                                    </span>
+                                  </div>
+                                </div>
+                              )}
+
+                              {user.jobTitle && (
+                                <div className="flex items-start justify-start w-full gap-3 text-gray-600">
+                                  <div className="p-0.5">
+                                    <ClipboardPen
+                                      size={20}
+                                      className="text-gray-400"
+                                    />
+                                  </div>
+                                  <div className="flex flex-col overflow-hidden">
+                                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-0.5">
+                                      Job Title
+                                    </span>
+                                    <span className="text-gray-900 font-medium truncate">
+                                      {user.jobTitle}
+                                    </span>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </div>
-                        ))
-                      : "Currently no prospects!"}
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center p-12 text-center bg-gray-50 rounded-xl border border-gray-100">
+                        <UserSearch size={48} className="text-gray-300 mb-4" />
+                        <p className="text-lg font-medium text-gray-600">
+                          No prospects yet
+                        </p>
+                        <p className="text-gray-400 text-sm mt-1">
+                          When someone contacts you for this property, they will
+                          appear here.
+                        </p>
+                      </div>
+                    )}
                   </section>
                 </TabContent>
               </Tabs>
