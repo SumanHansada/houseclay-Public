@@ -20,7 +20,7 @@ public interface PropertyRepository extends JpaRepository<Property, String> {
 
     @Query("SELECT p FROM Property p WHERE p.propertyState = :state AND " +
            "(SELECT MAX(l.updatedAt) FROM PropertyUpdateLog l WHERE l.property = p AND l.updateType IN :types) < :thresholdDate")
-    List<Property> findPropertiesForReverification(
+    List<Property> findPropertiesForRoutineCheck(
             @Param("state") PropertyState state,
             @Param("types") List<PropertyUpdateType> types,
             @Param("thresholdDate") Timestamp thresholdDate

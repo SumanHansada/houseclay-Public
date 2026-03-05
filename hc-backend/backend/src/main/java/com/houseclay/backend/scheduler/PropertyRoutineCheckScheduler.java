@@ -21,46 +21,46 @@ import java.util.List;
 
 @Component
 @EnableScheduling
-public class PropertyReverificationScheduler {
+public class PropertyRoutineCheckScheduler {
 
-    private static final Logger logger = LoggerFactory.getLogger(PropertyReverificationScheduler.class);
+    private static final Logger logger = LoggerFactory.getLogger(PropertyRoutineCheckScheduler.class);
 
     @Autowired
     private PropertyRepository propertyRepository;
 
-    @Value("${app.property.reverification-expiration-days:30}")
+    @Value("${app.property.routine-check-expiration-days:30}")
     private int expirationDays;
 
     @Scheduled(cron = "0 0 0 * * ?") // Runs every day at midnight
     @Transactional
-    public void schedulePropertyReverification() {
-        logger.info("Starting PropertyReverificationScheduler to flag properties for reverification");
+    public void schedulePropertyRoutineCheck() {
+        logger.info("Starting PropertyRoutineCheckScheduler to flag properties for routine monthly checks");
 
         Timestamp thresholdDate = Timestamp.valueOf(LocalDateTime.now().minusDays(expirationDays));
-        List<PropertyUpdateType> updateTypes = Arrays.asList(PropertyUpdateType.VERIFIED, PropertyUpdateType.RE_VERIFIED);
+        List<PropertyUpdateType> updateTypes = Arrays.asList(PropertyUpdateType.VERIFIED, PropertyUpdateType.RE_VERIFIED, PropertyUpdateType.ROUTINE_CHECK);
 
-        List<Property> propertiesToReverify = propertyRepository.findPropertiesForReverification(PropertyState.ACTIVE, updateTypes, thresholdDate);
+        List<Property> propertiesToCheck = propertyRepository.findPropertiesForRoutineCheck(PropertyState.ACTIVE, updateTypes, thresholdDate);
 
-        if (propertiesToReverify.isEmpty()) {
-            logger.info("No properties found for reverification.");
+        if (propertiesToCheck.isEmpty()) {
+            logger.info("No properties found for routine check.");
             return;
         }
 
-        logger.info("Found {} properties to reverify. Updating their state to PENDING_RE_VERIFICATION.", propertiesToReverify.size());
+        logger.info("Found {} properties for routine check. Updating their state to PENDING_ROUTINE_CHECK.", propertiesToCheck.size());
 
-        for (Property property : propertiesToReverify) {
-            property.setPropertyState(PropertyState.PENDING_RE_VERIFICATION);
+        for (Property property : propertiesToCheck) {
+            property.setPropertyState(PropertyState.PENDING_ROUTINE_CHECK);
             
             PropertyUpdateLog updateLog = new PropertyUpdateLog();
             updateLog.setProperty(property);
-            updateLog.setUpdateType(PropertyUpdateType.UPDATE);
-            updateLog.setComment("Automated state change to PENDING_RE_VERIFICATION by scheduler due to expiration");
+            updateLog.setUpdateType(PropertyUpdateType.ROUTINE_CHECK);
+            updateLog.setComment("Automated state change to PENDING_ROUTINE_CHECK by scheduler due to expiration");
             updateLog.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
             
             property.getPropertyUpdateLogs().add(updateLog);
         }
 
-        propertyRepository.saveAll(propertiesToReverify);
-        logger.info("Successfully updated state for {} properties.", propertiesToReverify.size());
+        propertyRepository.saveAll(propertiesToCheck);
+        logger.info("Successfully updated state for {} properties.", propertiesToCheck.size());
     }
 }
