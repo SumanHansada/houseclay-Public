@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Repository
 public interface ConnectRepository extends JpaRepository<Connect, Long> {
@@ -17,4 +18,7 @@ public interface ConnectRepository extends JpaRepository<Connect, Long> {
     @Transactional
     @Query("UPDATE Connect c SET c.status = :newStatus WHERE c.status = :oldStatus AND (SELECT MIN(ce.eventTime) FROM ConnectEvent ce WHERE ce.connect = c AND ce.eventType = 'CREATED') < :expiryDate")
     int expireOldConnects(ConnectStatus newStatus, ConnectStatus oldStatus, Timestamp expiryDate);
+
+    @Query("SELECT c.user.phoneNo, COUNT(c) FROM Connect c WHERE c.status = :status AND (SELECT MIN(ce.eventTime) FROM ConnectEvent ce WHERE ce.connect = c AND ce.eventType = 'CREATED') < :expiryDate GROUP BY c.user.phoneNo")
+    List<Object[]> countConnectsToExpirePerUser(ConnectStatus status, Timestamp expiryDate);
 }
