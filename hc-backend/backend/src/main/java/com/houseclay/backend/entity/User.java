@@ -39,6 +39,7 @@ public class User {
         this.userUpdateLogs = new LinkedList<>();
         this.connects = new LinkedList<>();
         this.leads = new LinkedList<>();
+        this.subscriptions = new LinkedList<>();
     }
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -64,6 +65,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserUpdateLog> userUpdateLogs;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserSubscription> subscriptions;
 
     public User() {
 

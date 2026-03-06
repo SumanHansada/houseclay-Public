@@ -163,6 +163,15 @@ public class ConnectManagementService {
             
             user.getConnects().add(connect);
         }
+
+        // Apply pseudo-subscription
+        UserSubscription subscription = new UserSubscription();
+        subscription.setUser(user);
+        subscription.setSourceType(SubscriptionSourceType.CORPORATE_VERIFICATION);
+        subscription.setSourceId(SYSTEM_ACTOR);
+        subscription.setStatus(SubscriptionStatus.ACTIVE);
+        subscription.setExpiresAt(Timestamp.valueOf(LocalDateTime.now().plusDays(30)));
+        user.getSubscriptions().add(subscription);
         
         user.setConnectBal(user.getConnectBal() + grantAmount);
         userRepository.save(user);

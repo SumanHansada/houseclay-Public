@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -157,6 +158,16 @@ public class PaymentService {
 
             user.getConnects().add(connect);
         }
+
+        // Apply pseudo-subscription
+        UserSubscription subscription = new UserSubscription();
+        subscription.setUser(user);
+        subscription.setSourceType(SubscriptionSourceType.RAZORPAY_PAYMENT);
+        subscription.setSourceId(payment.getPaymentId());
+        subscription.setStatus(SubscriptionStatus.ACTIVE);
+        subscription.setExpiresAt(Timestamp.valueOf(LocalDateTime.now().plusDays(30)));
+        user.getSubscriptions().add(subscription);
+
         user.setConnectBal(user.getConnectBal() + connectQty);
         userRepository.save(user);
         Map<String, Object> response = new HashMap<>();
