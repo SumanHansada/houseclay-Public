@@ -129,6 +129,16 @@ public class PropertyAdminController {
         return ResponseEntity.ok(properties);
     }
 
+    @GetMapping("/properties-to-routine-check")
+    public ResponseEntity<Page<UserPropertyDTO>> getPropertiesToRoutineCheck(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<UserPropertyDTO> properties = propertyAdminService.getPropertyByState(PropertyState.PENDING_ROUTINE_CHECK, pageable);
+        return ResponseEntity.ok(properties);
+    }
+
     @PostMapping("/verify-property")
     public ResponseEntity<?> verifyProperty(@RequestParam String propertyId,
                                             @RequestParam String comment,
