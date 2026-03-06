@@ -1,5 +1,6 @@
 package com.houseclay.backend.controller;
 
+import com.houseclay.backend.dto.AdminUserDTO;
 import com.houseclay.backend.dto.UserDTO;
 import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.entity.User;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -128,11 +130,11 @@ public class AdminUserController {
     }
 
     @GetMapping("/users")
-    public Page<UserDTO> getUsers(
+    public Page<AdminUserDTO> getUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestAttribute("authenticatedAdmin") Admin admin) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         return adminService.getAllUsers(pageable);
     }
 

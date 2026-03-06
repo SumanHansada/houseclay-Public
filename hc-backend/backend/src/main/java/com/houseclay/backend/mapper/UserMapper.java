@@ -30,6 +30,17 @@ public class UserMapper {
         return userDTO;
     }
 
+    public static AdminUserDTO toAdminUserDTO(User user) {
+        AdminUserDTO userDTO = new AdminUserDTO();
+        userDTO.setEmail(user.getEmailID());
+        userDTO.setPhoneNo(user.getPhoneNo());
+        userDTO.setName(user.getName());
+        userDTO.setBlacklisted(user.isBlacklisted());
+        userDTO.setCorporateEmailVerified(user.isCorporateEmailVerified());
+        userDTO.setCreatedAt(user.getCreatedAt());
+        return userDTO;
+    }
+
     public static UserDetailDTO toDetailDTO(User user) {
         UserDetailDTO dto = new UserDetailDTO();
         dto.setPhoneNo(user.getPhoneNo());

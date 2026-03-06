@@ -4,6 +4,7 @@ import com.houseclay.backend.config.CookieConfig;
 import com.houseclay.backend.dto.AdminDetailDTO;
 import com.houseclay.backend.dto.AdminSummaryDTO;
 import com.houseclay.backend.dto.AdminRegisterDTO;
+import com.houseclay.backend.dto.AdminUserDTO;
 import com.houseclay.backend.dto.UserDTO;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
@@ -160,8 +161,8 @@ public class AdminService {
         return userRepository.save(user);
     }
 
-    public Page<UserDTO> getAllUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).map(UserMapper::toDTO);
+    public Page<AdminUserDTO> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable).map(UserMapper::toAdminUserDTO);
     }
 
     public User updateUser(User user) {
