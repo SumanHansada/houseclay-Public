@@ -6,5 +6,6 @@ public enum PropertyUpdateType {
     VERIFIED,
     RE_VERIFIED,
     DEACTIVATE,
-    ACTIVATE
+    ACTIVATE,
+    ROUTINE_CHECK
 }

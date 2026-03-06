@@ -3,19 +3,32 @@ package com.houseclay.backend.service;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.repository.UserRepository;
+import com.houseclay.backend.repository.ConnectRepository;
 import com.houseclay.backend.config.BundleConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ConnectManagementService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ConnectManagementService.class);
+
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ConnectRepository connectRepository;
 
     @Autowired
     private BundleConfig bundleConfig;
@@ -153,5 +166,33 @@ public class ConnectManagementService {
         
         user.setConnectBal(user.getConnectBal() + grantAmount);
         userRepository.save(user);
+    }
+
+    @Transactional
+    public int expireOldConnects(int expirationDays) {
+        LocalDateTime cutoff = LocalDateTime.now().minus(expirationDays, ChronoUnit.DAYS);
+        Timestamp expiryDate = Timestamp.valueOf(cutoff);
+
+        // Fetch aggregation of expiring connects per user
+        List<Object[]> aggregatedExpiringConnects = connectRepository.countConnectsToExpirePerUser(ConnectStatus.ACTIVE, expiryDate);
+        int totalExpiredConnects = 0;
+
+        for (Object[] result : aggregatedExpiringConnects) {
+            String phoneNo = (String) result[0];
+            Long countToDeductLong = (Long) result[1];
+            int countToDeduct = countToDeductLong.intValue();
+            
+            // Bulk decrement user balance directly in the database
+            userRepository.decrementConnectBalance(phoneNo, countToDeduct);
+            totalExpiredConnects += countToDeduct;
+        }
+
+        if (totalExpiredConnects > 0) {
+            // Bulk update the old connects to EXPIRED status directly in DB
+            connectRepository.expireOldConnects(ConnectStatus.EXPIRED, ConnectStatus.ACTIVE, expiryDate);
+            logger.info("Successfully expired {} connects in bulk and updated respective users' balances.", totalExpiredConnects);
+        }
+
+        return totalExpiredConnects;
     }
 }
