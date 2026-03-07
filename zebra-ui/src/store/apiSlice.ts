@@ -6,9 +6,6 @@ import {
   GetAllPropertiesResponse,
   GetAllUsersResponse,
   GetLeadByIdResponse,
-  GetPropertiesToReverifyResponse,
-  GetPropertiesToRoutineCheckResponse,
-  GetPropertiesToVerifyResponse,
   GetPropertyByIdResponse,
   GetUserByPhoneNoResponse,
 } from "@/interfaces/api";
@@ -359,12 +356,21 @@ export const apiSlice = createApi({
 
     getProperties: builder.query<
       GetAllPropertiesResponse,
-      { page: number; size: number }
+      { page: number; size: number; state?: string; sortOrder?: string }
     >({
-      query: ({ page, size }) => ({
-        url: `/property/admin/all?page=${page}&size=${size}`,
-        method: "GET",
-      }),
+      query: ({ page, size, state, sortOrder }) => {
+        const params = new URLSearchParams({
+          page: page.toString(),
+          size: size.toString(),
+        });
+        if (state) params.append("state", state);
+        if (sortOrder) params.append("sortOrder", sortOrder);
+
+        return {
+          url: `/property/admin/properties?${params.toString()}`,
+          method: "GET",
+        };
+      },
       providesTags: (result) =>
         result
           ? [
@@ -389,39 +395,6 @@ export const apiSlice = createApi({
         [{ type: "PropertyDetail", id: propertyID }] as const,
     }),
 
-    getPropertiesToVerify: builder.query<
-      GetPropertiesToVerifyResponse,
-      { page: number; size: number }
-    >({
-      query: ({ page, size }) => ({
-        url: `/property/admin/properties-to-verify?page=${page}&size=${size}`,
-        method: "GET",
-      }),
-      providesTags: listTag("PropertiesToVerify"),
-    }),
-
-    getPropertiesToReverify: builder.query<
-      GetPropertiesToReverifyResponse,
-      { page: number; size: number }
-    >({
-      query: ({ page, size }) => ({
-        url: `/property/admin/properties-to-re-verify?page=${page}&size=${size}`,
-        method: "GET",
-      }),
-      providesTags: listTag("PropertiesToReverify"),
-    }),
-
-    getPropertiesToRoutineCheck: builder.query<
-      GetPropertiesToRoutineCheckResponse,
-      { page: number; size: number }
-    >({
-      query: ({ page, size }) => ({
-        url: `/property/admin/properties-to-routine-check?page=${page}&size=${size}`,
-        method: "GET",
-      }),
-      providesTags: listTag("PropertiesToRoutineCheck"),
-    }),
-
     verifyProperty: builder.mutation<
       {
         message: string;
@@ -441,7 +414,7 @@ export const apiSlice = createApi({
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: listTag("PropertiesToVerify"),
+      invalidatesTags: listTag("Properties"),
     }),
 
     reverifyProperty: builder.mutation<
@@ -462,7 +435,7 @@ export const apiSlice = createApi({
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: listTag("PropertiesToReverify"),
+      invalidatesTags: listTag("Properties"),
     }),
 
     deactivateProperty: builder.mutation<
@@ -476,12 +449,7 @@ export const apiSlice = createApi({
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: () =>
-        [
-          ...listTag("Properties"),
-          ...listTag("PropertiesToVerify"),
-          ...listTag("PropertiesToReverify"),
-        ] as const,
+      invalidatesTags: () => [...listTag("Properties")] as const,
     }),
 
     addConnects: builder.mutation<
@@ -530,9 +498,6 @@ export const {
   usePropertyUpdateMutation,
   useGetPropertiesQuery,
   useGetPropertyByIdQuery,
-  useGetPropertiesToVerifyQuery,
-  useGetPropertiesToReverifyQuery,
-  useGetPropertiesToRoutineCheckQuery,
   useVerifyPropertyMutation,
   useDeactivatePropertyMutation,
   useAddConnectsMutation,

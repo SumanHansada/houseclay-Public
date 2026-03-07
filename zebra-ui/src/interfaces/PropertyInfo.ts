@@ -1,4 +1,4 @@
-import { PropertyCategory, PropertyStatus } from "@/common/enums";
+import { PropertyCategory, PropertyState } from "@/common/enums";
 
 export interface PropertyInfo {
   propertyID: string;
@@ -6,7 +6,7 @@ export interface PropertyInfo {
   price: string | null;
   location: string;
   bhkType: string;
-  propertyState: PropertyStatus;
+  propertyState: PropertyState;
   createdOn: string;
   updatedOn: string | null;
   availableFrom: string;

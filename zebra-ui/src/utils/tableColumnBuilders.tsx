@@ -85,6 +85,7 @@ export interface PropertyActionConfig {
   icon: LucideIcon;
   tooltip: string;
   onClick: (row: SerializedPropertyRow) => void;
+  show?: (row: SerializedPropertyRow) => boolean;
 }
 
 /**
@@ -141,9 +142,15 @@ export function buildPropertyColumns(
       label: "Action",
       render: (row) => {
         if (!actions.length) return null;
+
+        const visibleActions = actions.filter(
+          (action) => !action.show || action.show(row),
+        );
+        if (!visibleActions.length) return null;
+
         return (
           <div className="flex items-center gap-2">
-            {actions.map((action, index) => (
+            {visibleActions.map((action, index) => (
               <IconButtonWithTooltip
                 key={`${action.tooltip}-${index}`}
                 icon={action.icon}
