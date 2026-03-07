@@ -85,6 +85,21 @@ public class PropertyAdminService {
                 .map(UserMapper::toUserPropertyDTO);
     }
 
+    public Page<UserPropertyDTO> getPropertiesByState(PropertyState state, String sortOrder, Pageable pageable) {
+        Page<Property> properties;
+
+        if ("asc".equalsIgnoreCase(sortOrder)) {
+            // "asc" = Earliest entry first
+            properties = propertyRepository.findByPropertyStateOrderByEarliestUpdate(state, pageable);
+        } else {
+            // "desc" = Newest entry first (Default)
+            properties = propertyRepository.findByPropertyStateOrderByLatestUpdate(state, pageable);
+        }
+
+        // Map your Property entities to UserPropertyDTOs here
+        return properties.map(UserMapper::toUserPropertyDTO);
+    }
+
     public Property verifyProperty(String propertyId, String comment, Long score, Admin admin) throws APIException {
         Optional<Property> propertyOpt = propertyRepository.findById(propertyId);
         if (propertyOpt.isEmpty()) {
