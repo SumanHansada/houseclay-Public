@@ -9,6 +9,11 @@ export interface UserInfo {
   blacklisted: boolean;
 }
 
+export interface UserExtendedInfo extends UserInfo {
+  corporateEmailVerified: boolean;
+  createdAt: string;
+}
+
 export interface UserUpdate {
   updateType: string;
   updateTime: string;
@@ -41,9 +46,15 @@ export interface UserReportProperty {
 
 export interface UserDetails extends UserInfo {
   createdAt: string;
+  emailVerified: boolean;
   blacklistedAt: string;
   broker: boolean;
   connectBal: number;
+  corporateEmailVerified: boolean;
+  corporateEmailVerifiedAt: string;
+  companyName: string;
+  jobTitle: string;
+  corporateEmailID: string;
 
   userUpdates: UserUpdate[];
   ownedProperties: PropertyInfo[];
