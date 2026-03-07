@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import { dialogLabels } from "@/common/constants";
-import { VerifyPropertyStatusEnum } from "@/common/enums";
 import { ActionDialog } from "@/dialogs/action-dialog";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -22,6 +21,7 @@ interface VerificationPanelProps {
   propertyID: string;
   formScrollRef: React.RefObject<HTMLFormElement | null>;
   userPhoneNo: string;
+  status: string;
 }
 
 function PanelSection<T extends Record<string, boolean>>({
@@ -71,6 +71,7 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
   propertyID,
   formScrollRef,
   userPhoneNo,
+  status,
 }) => {
   /* --------------------------- checkbox state --------------------------- */
   const [details, setDetails] = useState({
@@ -142,9 +143,7 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
   const [tagBroker] = useTagBrokerMutation();
 
   const redirectToPropertyList = () => {
-    router.push(
-      `/admin/properties/verification/${VerifyPropertyStatusEnum.VERIFY}`,
-    );
+    router.push(`/admin/properties/verification/${status}`);
   };
 
   const handleVerify = async () => {

@@ -46,6 +46,7 @@ export enum PropertyStatus {
 export enum VerifyPropertyStatusEnum {
   VERIFY = "pending",
   REVERIFY = "report",
+  ROUTINE_CHECK = "routine-check",
 }
 
 export enum PropertyDetailsTabEnum {

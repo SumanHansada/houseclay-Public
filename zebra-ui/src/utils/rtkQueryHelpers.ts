@@ -99,6 +99,7 @@ export const TAGS = [
   "PropertyDetail",
   "PropertiesToVerify",
   "PropertiesToReverify",
+  "PropertiesToRoutineCheck",
 ] as const;
 
 /** Union of all tag names, e.g. `"Users" | "Leads" | …`. */

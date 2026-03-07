@@ -7,6 +7,7 @@ import {
   GetAllUsersResponse,
   GetLeadByIdResponse,
   GetPropertiesToReverifyResponse,
+  GetPropertiesToRoutineCheckResponse,
   GetPropertiesToVerifyResponse,
   GetPropertyByIdResponse,
   GetUserByPhoneNoResponse,
@@ -410,6 +411,17 @@ export const apiSlice = createApi({
       providesTags: listTag("PropertiesToReverify"),
     }),
 
+    getPropertiesToRoutineCheck: builder.query<
+      GetPropertiesToRoutineCheckResponse,
+      { page: number; size: number }
+    >({
+      query: ({ page, size }) => ({
+        url: `/property/admin/properties-to-routine-check?page=${page}&size=${size}`,
+        method: "GET",
+      }),
+      providesTags: listTag("PropertiesToRoutineCheck"),
+    }),
+
     verifyProperty: builder.mutation<
       {
         message: string;
@@ -520,6 +532,7 @@ export const {
   useGetPropertyByIdQuery,
   useGetPropertiesToVerifyQuery,
   useGetPropertiesToReverifyQuery,
+  useGetPropertiesToRoutineCheckQuery,
   useVerifyPropertyMutation,
   useDeactivatePropertyMutation,
   useAddConnectsMutation,

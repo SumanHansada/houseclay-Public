@@ -81,3 +81,19 @@ export interface GetPropertiesToReverifyResponse {
   size: number;
   number: number;
 }
+
+// useGetPropertiesToRoutineCheckQuery()
+export interface GetPropertiesToRoutineCheckResponse {
+  content: PropertyInfo[];
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
+  };
+  totalPages: number;
+  totalElements: number;
+  last: boolean;
+  first: boolean;
+  numberOfElements: number;
+  size: number;
+  number: number;
+}

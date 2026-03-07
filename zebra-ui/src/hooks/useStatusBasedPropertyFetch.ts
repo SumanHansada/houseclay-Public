@@ -1,6 +1,7 @@
 import { VerifyPropertyStatusEnum } from "@/common/enums";
 import {
   useGetPropertiesToReverifyQuery,
+  useGetPropertiesToRoutineCheckQuery,
   useGetPropertiesToVerifyQuery,
 } from "@/store/apiSlice";
 
@@ -31,5 +32,15 @@ export function useStatusBasedPropertyFetch({
     },
   );
 
-  return status === VerifyPropertyStatusEnum.VERIFY ? verify : reverify;
+  const routineCheck = useGetPropertiesToRoutineCheckQuery(
+    { page, size },
+    {
+      skip: status !== VerifyPropertyStatusEnum.ROUTINE_CHECK,
+      refetchOnMountOrArgChange: true,
+    },
+  );
+
+  if (status === VerifyPropertyStatusEnum.VERIFY) return verify;
+  if (status === VerifyPropertyStatusEnum.REVERIFY) return reverify;
+  return routineCheck;
 }
