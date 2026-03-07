@@ -99,19 +99,9 @@ public class PropertyAdminController {
     }
 
 
-    @GetMapping("/all")
-    public ResponseEntity<Page<UserPropertyDTO>> getProperties(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<UserPropertyDTO> properties = propertyAdminService.getProperties(pageable);
-        return ResponseEntity.ok(properties);
-    }
-
     @GetMapping("/properties")
     public ResponseEntity<Page<UserPropertyDTO>> getPropertiesByState(
-            @RequestParam PropertyState state,
+            @RequestParam(required = false) PropertyState state,
             @RequestParam(defaultValue = "desc") String sortOrder, // Frontend passes "asc" or "desc"
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {

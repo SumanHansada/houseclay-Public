@@ -75,25 +75,23 @@ public class PropertyAdminService {
         propertyElasticService.deletePropertyInElastic(property);
     }
 
-    public Page<UserPropertyDTO> getProperties(Pageable pageable) {
-        return propertyRepository.findAll(pageable)
-                .map(UserMapper::toUserPropertyDTO);
-    }
-
-    public Page<UserPropertyDTO> getPropertyByState(PropertyState propertyState, Pageable pageable) {
-        return propertyRepository.findByPropertyState(propertyState, pageable)
-                .map(UserMapper::toUserPropertyDTO);
-    }
-
     public Page<UserPropertyDTO> getPropertiesByState(PropertyState state, String sortOrder, Pageable pageable) {
         Page<Property> properties;
 
-        if ("asc".equalsIgnoreCase(sortOrder)) {
-            // "asc" = Earliest entry first
-            properties = propertyRepository.findByPropertyStateOrderByEarliestUpdate(state, pageable);
+        if (state != null) {
+            if ("asc".equalsIgnoreCase(sortOrder)) {
+                // "asc" = Earliest entry first
+                properties = propertyRepository.findByPropertyStateOrderByEarliestUpdate(state, pageable);
+            } else {
+                // "desc" = Newest entry first (Default)
+                properties = propertyRepository.findByPropertyStateOrderByLatestUpdate(state, pageable);
+            }
         } else {
-            // "desc" = Newest entry first (Default)
-            properties = propertyRepository.findByPropertyStateOrderByLatestUpdate(state, pageable);
+            if ("asc".equalsIgnoreCase(sortOrder)) {
+                properties = propertyRepository.findAllOrderByEarliestUpdate(pageable);
+            } else {
+                properties = propertyRepository.findAllOrderByLatestUpdate(pageable);
+            }
         }
 
         // Map your Property entities to UserPropertyDTOs here

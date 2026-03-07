@@ -28,6 +28,16 @@ public interface PropertyRepository extends JpaRepository<Property, String> {
            "(SELECT MAX(l.updatedAt) FROM PropertyUpdateLog l WHERE l.property = p) DESC")
     Page<Property> findByPropertyStateOrderByLatestUpdate(@Param("state") PropertyState state, Pageable pageable);
 
+    // Sorts ALL properties by the Oldest/Earliest update first (ASC)
+    @Query("SELECT p FROM Property p ORDER BY " +
+           "(SELECT MIN(l.updatedAt) FROM PropertyUpdateLog l WHERE l.property = p) ASC")
+    Page<Property> findAllOrderByEarliestUpdate(Pageable pageable);
+
+    // Sorts ALL properties by the Newest/Latest update first (DESC)
+    @Query("SELECT p FROM Property p ORDER BY " +
+           "(SELECT MAX(l.updatedAt) FROM PropertyUpdateLog l WHERE l.property = p) DESC")
+    Page<Property> findAllOrderByLatestUpdate(Pageable pageable);
+
     @Query("SELECT p FROM Property p WHERE p.propertyState = :state AND " +
            "(SELECT MAX(l.updatedAt) FROM PropertyUpdateLog l WHERE l.property = p AND l.updateType IN :types) < :thresholdDate")
     List<Property> findPropertiesForRoutineCheck(
