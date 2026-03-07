@@ -1,16 +1,16 @@
 "use client";
 
-import { Eye, ClipboardCheck } from "lucide-react";
+import { ClipboardCheck, Eye } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useCallback, useEffect, useTransition } from "react";
 
+import SelectDropdown from "@/base-components/SelectDropdown";
+import { PropertyState, VerifyPropertyStatusEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
 import { DataTable } from "@/components/DataTable";
 import { Pagination } from "@/components/Pagination";
 import { SearchAndFilterBar } from "@/components/SearchAndFilterBar";
-import SelectDropdown from "@/base-components/SelectDropdown";
 import { PropertyInfo } from "@/interfaces/PropertyInfo";
-import { PropertyState, VerifyPropertyStatusEnum } from "@/common/enums";
 import { useGetPropertiesQuery } from "@/store/apiSlice";
 import { buildPropertyColumns } from "@/utils/tableColumnBuilders";
 
@@ -95,6 +95,8 @@ export const PropertiesTableView = ({
     }),
   );
 
+  const propertiesCount = paginatedPropertyData?.totalElements || 0;
+
   const handleView = (row: SerializedPropertyRow) => {
     router.push(`/admin/properties/${row.propertyID}`);
   };
@@ -166,7 +168,9 @@ export const PropertiesTableView = ({
           {/* Table Header */}
           <div className="flex justify-between items-center px-1">
             <div className="flex items-center gap-4">
-              <h1 className="text-xl font-medium">All Listed Properties</h1>
+              <h1 className="text-xl font-medium">
+                Properties - [{propertiesCount}]
+              </h1>
               <span className="text-xs font-medium text-gray-400 bg-gray-50 px-2 py-1 rounded-full border">
                 Page {currentPage} of {totalPages || 1}
               </span>

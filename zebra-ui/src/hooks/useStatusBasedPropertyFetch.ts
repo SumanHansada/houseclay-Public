@@ -1,4 +1,4 @@
-import { VerifyPropertyStatusEnum, PropertyState } from "@/common/enums";
+import { PropertyState, VerifyPropertyStatusEnum } from "@/common/enums";
 import { useGetPropertiesQuery } from "@/store/apiSlice";
 
 interface StatusFetchParams {
