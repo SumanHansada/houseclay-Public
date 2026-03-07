@@ -99,33 +99,17 @@ public class PropertyAdminController {
     }
 
 
-    @GetMapping("/all")
-    public ResponseEntity<Page<UserPropertyDTO>> getProperties(
+    @GetMapping("/properties")
+    public ResponseEntity<Page<UserPropertyDTO>> getPropertiesByState(
+            @RequestParam(required = false) PropertyState state,
+            @RequestParam(defaultValue = "desc") String sortOrder, // Frontend passes "asc" or "desc"
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<UserPropertyDTO> properties = propertyAdminService.getProperties(pageable);
-        return ResponseEntity.ok(properties);
-    }
-
-    @GetMapping("/properties-to-verify")
-    public ResponseEntity<Page<UserPropertyDTO>> getPropertiesToVerify(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<UserPropertyDTO> properties = propertyAdminService.getPropertyByState(PropertyState.PENDING_VERIFICATION, pageable);
-        return ResponseEntity.ok(properties);
-    }
-
-    @GetMapping("/properties-to-re-verify")
-    public ResponseEntity<Page<UserPropertyDTO>> getPropertiesToReVerify(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        Page<UserPropertyDTO> properties = propertyAdminService.getPropertyByState(PropertyState.PENDING_RE_VERIFICATION, pageable);
+        // Note: We don't pass Sort into PageRequest here because the JPQL query handles the complex sorting
+        Pageable pageable = PageRequest.of(page, size); 
+        
+        Page<UserPropertyDTO> properties = propertyAdminService.getPropertiesByState(state, sortOrder, pageable);
         return ResponseEntity.ok(properties);
     }
 

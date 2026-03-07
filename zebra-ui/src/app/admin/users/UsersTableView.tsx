@@ -12,9 +12,10 @@ import { Pagination } from "@/components/Pagination";
 import { Pill } from "@/components/Pill";
 import { SearchBar } from "@/components/SearchBar";
 import { AddNewHouseclayUserDialog } from "@/dialogs/add-new-houseclay-user-dialog";
-import { UserInfo } from "@/interfaces/User";
+import { UserExtendedInfo } from "@/interfaces/User";
 import { useDialog } from "@/providers/DialogContextProvider";
 import { useGetUserByPhoneNoQuery, useGetUsersQuery } from "@/store/apiSlice";
+import { formatDateVerbose } from "@/utils/core";
 
 const ROWS_PER_PAGE = 12;
 const ADD_NEW_USER_DIALOG_ID = "add-new-houseclay-user-dialog";
@@ -120,7 +121,7 @@ export const UsersTableView = ({
   );
 
   // ─── DATA PROCESSING ───
-  let tableData: (UserInfo & { _serial: number })[] = [];
+  let tableData: (UserExtendedInfo & { _serial: number })[] = [];
   let totalPages = 0;
 
   // Loading/Error States
@@ -178,11 +179,22 @@ export const UsersTableView = ({
   }, [totalPages, currentPage, isSearchMode, isListLoading, updateURL]);
 
   // Columns Configuration
-  const columns: Column<UserInfo & { _serial: number }>[] = [
+  const columns: Column<UserExtendedInfo & { _serial: number }>[] = [
     { key: "_serial", label: "#", accessor: "_serial" },
     { key: "name", label: "Name", accessor: "name" },
     { key: "email", label: "Email", accessor: "email" },
     { key: "phoneNo", label: "Phone No.", accessor: "phoneNo" },
+    {
+      key: "corporateEmailVerified",
+      label: "Corporate Verified",
+      render: (user) =>
+        user.corporateEmailVerified ? "Verified" : "Not Verified",
+    },
+    {
+      key: "createdAt",
+      label: "Created At",
+      render: (user) => formatDateVerbose(user.createdAt),
+    },
     {
       key: "blacklisted",
       label: "Status",

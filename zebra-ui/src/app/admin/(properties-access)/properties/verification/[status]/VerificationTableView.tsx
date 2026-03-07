@@ -4,6 +4,7 @@ import { ClipboardCheck } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useCallback, useEffect, useTransition } from "react";
 
+import SelectDropdown from "@/base-components/SelectDropdown";
 import { VerifyPropertyStatusEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
 import { DataTable } from "@/components/DataTable";
@@ -81,10 +82,12 @@ export const VerificationTableView = ({
     },
   ]);
 
-  const rows = allProperties.map((propertyInfo, index) => ({
-    ...propertyInfo,
-    _serial: (currentPage - 1) * ROWS_PER_PAGE + index + 1,
-  }));
+  const rows = allProperties.map(
+    (propertyInfo: PropertyInfo, index: number) => ({
+      ...propertyInfo,
+      _serial: (currentPage - 1) * ROWS_PER_PAGE + index + 1,
+    }),
+  );
 
   const handleStatusChange = (newStatus: VerifyPropertyStatusEnum) => {
     if (newStatus === status) return;
@@ -134,7 +137,9 @@ export const VerificationTableView = ({
               <h1 className="text-xl font-medium">
                 {status === VerifyPropertyStatusEnum.VERIFY
                   ? "Properties to be Verified"
-                  : "Properties to be Re-verified"}
+                  : status === VerifyPropertyStatusEnum.REVERIFY
+                    ? "Properties to be Re-verified"
+                    : "Properties for Routine Check"}
               </h1>
               <span className="text-xs font-medium text-gray-400 bg-gray-50 px-2 py-1 rounded-full border">
                 Page {currentPage} of {totalPages || 1}
@@ -144,30 +149,29 @@ export const VerificationTableView = ({
             {/* Status Toggle Buttons */}
             <div className="flex gap-2 items-center">
               <h2 className="text-xl font-medium">Status:</h2>
-              <button
-                className={`py-1 px-3 rounded-lg border transition-colors ${
-                  status === VerifyPropertyStatusEnum.VERIFY
-                    ? "bg-red-500 text-white border-red-500"
-                    : "bg-white text-red-500 border-red-500 hover:bg-red-50"
-                }`}
-                onClick={() =>
-                  handleStatusChange(VerifyPropertyStatusEnum.VERIFY)
+              <SelectDropdown
+                name="verification-status"
+                id="verification-status"
+                value={status}
+                onChange={(val) =>
+                  handleStatusChange(val as VerifyPropertyStatusEnum)
                 }
-              >
-                Pending
-              </button>
-              <button
-                className={`py-1 px-3 rounded-lg border transition-colors ${
-                  status === VerifyPropertyStatusEnum.REVERIFY
-                    ? "bg-red-500 text-white border-red-500"
-                    : "bg-white text-red-500 border-red-500 hover:bg-red-50"
-                }`}
-                onClick={() =>
-                  handleStatusChange(VerifyPropertyStatusEnum.REVERIFY)
-                }
-              >
-                Reported
-              </button>
+                options={[
+                  { label: "Pending", value: VerifyPropertyStatusEnum.VERIFY },
+                  {
+                    label: "Reported",
+                    value: VerifyPropertyStatusEnum.REVERIFY,
+                  },
+                  {
+                    label: "Routine Check",
+                    value: VerifyPropertyStatusEnum.ROUTINE_CHECK,
+                  },
+                ]}
+                variant="outline"
+                containerClassName="w-48"
+                buttonClassName="flex justify-between items-center w-full px-4 py-2 border rounded-xl text-left bg-white text-gray-700"
+                dropdownClassName="absolute right-0 z-50 mt-1 w-full bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-auto"
+              />
             </div>
           </div>
 

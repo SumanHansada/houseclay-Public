@@ -31,11 +31,11 @@ export const sidebarItems: SidebarItem[] = [
         href: "/admin/properties",
         allowedRoles: PERMISSIONS.PROPERTIES_ACCESS,
       },
-      {
-        label: "Property Verification",
-        href: "/admin/properties/verification",
-        allowedRoles: PERMISSIONS.PROPERTIES_ACCESS,
-      },
+      // {
+      //   label: "Property Verification",
+      //   href: "/admin/properties/verification",
+      //   allowedRoles: PERMISSIONS.PROPERTIES_ACCESS,
+      // },
     ],
   },
   {

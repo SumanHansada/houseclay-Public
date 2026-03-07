@@ -563,6 +563,7 @@ export const VerificationDetailsView = ({ propertyID, status }: Props) => {
             propertyID={propertyID}
             formScrollRef={formRef}
             userPhoneNo={currentUser.phoneNo}
+            status={status}
           />
         )}
       </div>

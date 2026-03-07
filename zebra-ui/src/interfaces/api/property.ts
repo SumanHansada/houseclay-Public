@@ -49,35 +49,3 @@ export interface GetAllPropertiesResponse {
   size: number;
   number: number;
 }
-
-// useGetPropertiesToVerifyQuery()
-export interface GetPropertiesToVerifyResponse {
-  content: PropertyInfo[];
-  pageable: {
-    pageNumber: number;
-    pageSize: number;
-  };
-  totalPages: number;
-  totalElements: number;
-  last: boolean;
-  first: boolean;
-  numberOfElements: number;
-  size: number;
-  number: number;
-}
-
-// useGetPropertiesToReverifyQuery()
-export interface GetPropertiesToReverifyResponse {
-  content: PropertyInfo[];
-  pageable: {
-    pageNumber: number;
-    pageSize: number;
-  };
-  totalPages: number;
-  totalElements: number;
-  last: boolean;
-  first: boolean;
-  numberOfElements: number;
-  size: number;
-  number: number;
-}

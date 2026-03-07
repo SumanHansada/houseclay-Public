@@ -75,14 +75,27 @@ public class PropertyAdminService {
         propertyElasticService.deletePropertyInElastic(property);
     }
 
-    public Page<UserPropertyDTO> getProperties(Pageable pageable) {
-        return propertyRepository.findAll(pageable)
-                .map(UserMapper::toUserPropertyDTO);
-    }
+    public Page<UserPropertyDTO> getPropertiesByState(PropertyState state, String sortOrder, Pageable pageable) {
+        Page<Property> properties;
 
-    public Page<UserPropertyDTO> getPropertyByState(PropertyState propertyState, Pageable pageable) {
-        return propertyRepository.findByPropertyState(propertyState, pageable)
-                .map(UserMapper::toUserPropertyDTO);
+        if (state != null) {
+            if ("asc".equalsIgnoreCase(sortOrder)) {
+                // "asc" = Earliest entry first
+                properties = propertyRepository.findByPropertyStateOrderByEarliestUpdate(state, pageable);
+            } else {
+                // "desc" = Newest entry first (Default)
+                properties = propertyRepository.findByPropertyStateOrderByLatestUpdate(state, pageable);
+            }
+        } else {
+            if ("asc".equalsIgnoreCase(sortOrder)) {
+                properties = propertyRepository.findAllOrderByEarliestUpdate(pageable);
+            } else {
+                properties = propertyRepository.findAllOrderByLatestUpdate(pageable);
+            }
+        }
+
+        // Map your Property entities to UserPropertyDTOs here
+        return properties.map(UserMapper::toUserPropertyDTO);
     }
 
     public Property verifyProperty(String propertyId, String comment, Long score, Admin admin) throws APIException {

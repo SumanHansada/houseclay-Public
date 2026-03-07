@@ -1,8 +1,5 @@
-import { VerifyPropertyStatusEnum } from "@/common/enums";
-import {
-  useGetPropertiesToReverifyQuery,
-  useGetPropertiesToVerifyQuery,
-} from "@/store/apiSlice";
+import { PropertyState, VerifyPropertyStatusEnum } from "@/common/enums";
+import { useGetPropertiesQuery } from "@/store/apiSlice";
 
 interface StatusFetchParams {
   status: VerifyPropertyStatusEnum;
@@ -15,21 +12,17 @@ export function useStatusBasedPropertyFetch({
   page,
   size,
 }: StatusFetchParams) {
-  const verify = useGetPropertiesToVerifyQuery(
-    { page, size },
-    {
-      skip: status !== VerifyPropertyStatusEnum.VERIFY,
-      refetchOnMountOrArgChange: true,
-    },
-  );
+  let mappedState: string = "";
+  if (status === VerifyPropertyStatusEnum.VERIFY) {
+    mappedState = PropertyState.PENDING_VERIFICATION;
+  } else if (status === VerifyPropertyStatusEnum.REVERIFY) {
+    mappedState = PropertyState.PENDING_RE_VERIFICATION;
+  } else if (status === VerifyPropertyStatusEnum.ROUTINE_CHECK) {
+    mappedState = PropertyState.PENDING_ROUTINE_CHECK;
+  }
 
-  const reverify = useGetPropertiesToReverifyQuery(
-    { page, size },
-    {
-      skip: status !== VerifyPropertyStatusEnum.REVERIFY,
-      refetchOnMountOrArgChange: true,
-    },
+  return useGetPropertiesQuery(
+    { page, size, state: mappedState },
+    { refetchOnMountOrArgChange: true },
   );
-
-  return status === VerifyPropertyStatusEnum.VERIFY ? verify : reverify;
 }

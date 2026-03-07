@@ -43,9 +43,18 @@ export enum PropertyStatus {
   INACTIVE = "INACTIVE",
 }
 
+export enum PropertyState {
+  PENDING_VERIFICATION = "PENDING_VERIFICATION",
+  PENDING_RE_VERIFICATION = "PENDING_RE_VERIFICATION",
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  PENDING_ROUTINE_CHECK = "PENDING_ROUTINE_CHECK",
+}
+
 export enum VerifyPropertyStatusEnum {
   VERIFY = "pending",
   REVERIFY = "report",
+  ROUTINE_CHECK = "routine-check",
 }
 
 export enum PropertyDetailsTabEnum {

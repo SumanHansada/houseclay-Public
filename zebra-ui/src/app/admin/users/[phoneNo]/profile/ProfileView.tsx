@@ -39,27 +39,37 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
   const {
     name,
     email,
+    emailVerified,
     phoneNo,
     createdAt,
     connectBal,
+    corporateEmailVerified,
+    corporateEmailID,
+    corporateEmailVerifiedAt,
+    companyName,
+    jobTitle,
     blacklisted,
     blacklistedAt,
   } = data.user;
 
   const profileFields = [
-    { label: "Email", value: email },
     { label: "Phone", value: phoneNo },
-    {
-      label: "Connect Balance",
-      value: connectBal,
-    },
     {
       label: "Joined On",
       value: new Date(createdAt).toLocaleString(),
     },
     {
+      label: "Connect Balance",
+      value: connectBal,
+    },
+    { label: "Email", value: email },
+    {
+      label: "Personal Email Verified",
+      value: emailVerified ? "Verified" : "Not Verified",
+    },
+    {
       label: "Blacklisted Status",
-      value: blacklisted ? "The user is blacklisted" : "The user is active",
+      value: blacklisted ? "User is Blacklisted" : "User is Active",
     },
     {
       label: "Blacklisted On",
@@ -67,6 +77,28 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
         blacklisted && blacklistedAt
           ? new Date(blacklistedAt).toLocaleString()
           : "N/A",
+    },
+    {
+      label: "Corporate Email",
+      value: corporateEmailID ?? "N/A",
+    },
+    {
+      label: "Corporate Email Verified",
+      value: corporateEmailVerified ? "Verified" : "Not Verified",
+    },
+    {
+      label: "Corporate Email Verified At",
+      value: corporateEmailVerifiedAt
+        ? new Date(corporateEmailVerifiedAt).toLocaleString()
+        : "N/A",
+    },
+    {
+      label: "Company Name",
+      value: companyName ?? "N/A",
+    },
+    {
+      label: "Job Title",
+      value: jobTitle ?? "N/A",
     },
   ];
 
