@@ -672,6 +672,7 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
               {/* Benefits */}
               <div className="w-full rounded-xl p-px shadow-sm bg-gradient-to-r from-red-600 via-red-500 via-80% to-amber-300">
                 <div className="bg-white rounded-xl p-4">
+                <div className="bg-white rounded-xl p-4">
                   <ul className="flex flex-col gap-2">
                     {[
                       "100% Verified Listings",
@@ -744,11 +745,11 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                     className={`relative rounded-xl cursor-pointer transition-all duration-200 ${
                       selectedOption === "corporate"
                         ? "p-px bg-gradient-to-r from-red-600 via-red-500 via-80% to-amber-300 shadow-md"
-                        : "border border-neutral-100 hover:border-red-200 hover:bg-gray-50"
+                        : "border border-neutral-100 hover:border-red-100 hover:bg-gray-50"
                     }`}
                   >
                     <div
-                      className={`h-full w-full ${selectedOption === "corporate" ? "bg-red-50 rounded-xl p-4" : "p-4"}`}
+                      className={`h-full w-full p-4 ${selectedOption === "corporate" ? "bg-red-50 rounded-xl" : ""}`}
                     >
                       <div className="flex justify-between items-start">
                         <div className="flex items-center gap-3">
@@ -814,11 +815,11 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                     className={`relative rounded-xl cursor-pointer transition-all duration-200 ${
                       selectedOption === "no-corporate"
                         ? "p-px bg-gradient-to-r from-red-600 via-red-500 via-80% to-amber-300 shadow-md"
-                        : "border border-gray-200 hover:border-red-200 hover:bg-gray-50"
+                        : "border border-gray-200 hover:border-red-100 hover:bg-gray-50"
                     }`}
                   >
                     <div
-                      className={`h-full w-full flex justify-between items-center ${selectedOption === "no-corporate" ? "bg-red-50 rounded-xl p-4" : "p-4"}`}
+                      className={`h-full w-full flex justify-between items-center p-4 ${selectedOption === "no-corporate" ? "bg-red-50 rounded-xl" : ""}`}
                     >
                       <div className="flex items-center gap-3">
                         <div
