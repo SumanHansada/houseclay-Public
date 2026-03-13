@@ -9,7 +9,6 @@ import com.houseclay.backend.payload.LoginPayload;
 import com.houseclay.backend.payload.UserPayload;
 import com.houseclay.backend.repository.UserLoginRepository;
 import com.houseclay.backend.repository.UserRepository;
-import com.houseclay.backend.utils.Constants;
 import com.houseclay.backend.utils.CookieUtils;
 import com.houseclay.backend.utils.EmailOTPUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +24,8 @@ import java.util.UUID;
 
 import static com.houseclay.backend.utils.Constants.TOKEN_KEY;
 import java.sql.Timestamp;
+import com.houseclay.backend.enums.CorporateDomainStatus;
+import com.houseclay.backend.enums.CorporateBenefitStatus;
 
 @Service
 public class UserService {
@@ -43,6 +44,9 @@ public class UserService {
 
     @Autowired
     private ConnectManagementService connectManagementService;
+
+    @Autowired
+    private CorporateDomainService corporateDomainService;
 
     @Autowired
     private CookieConfig cookieConfig;
@@ -155,18 +159,38 @@ public class UserService {
             throw new APIException("You have already claimed your corporate benefits", HttpStatus.BAD_REQUEST);
         }
 
-        // Check Denylist
-        String domain = corporateEmail.substring(corporateEmail.indexOf("@") + 1).toLowerCase();
-        if (Constants.EMAIL_DOMAIN_DENYLIST.contains(domain)) {
-            throw new APIException("Email domain not allowed for corporate verification", HttpStatus.BAD_REQUEST);
-        }
-
         // Check Uniqueness
         if (userRepository.existsByCorporateEmailID(corporateEmail)) {
             throw new APIException("This corporate email is already in use", HttpStatus.CONFLICT);
         }
+        
+        String domain = corporateDomainService.extractDomain(corporateEmail);
+        if (domain == null) {
+            throw new APIException("Invalid corporate email format", HttpStatus.BAD_REQUEST);
+        }
 
-        // Generate OTP
+        // 1. Instant rejection on match with the disposable list
+        if (corporateDomainService.isDisposable(domain)) {
+            throw new APIException("Email domain not allowed for corporate verification", HttpStatus.BAD_REQUEST);
+        }
+
+        // 2. Query DB
+        Optional<CorporateDomainStatus> dbStatus = corporateDomainService.getDomainStatusFromDb(domain);
+        if (dbStatus.isPresent() && dbStatus.get() == CorporateDomainStatus.DENIED) {
+            throw new APIException("Email domain not allowed for corporate verification", HttpStatus.BAD_REQUEST);
+        }
+
+        // 3. DNS check Fail-open if NOT already allowed/pending
+        if (dbStatus.isEmpty()) {
+            boolean hasMx = corporateDomainService.checkMxRecordsFailOpen(domain);
+            if (!hasMx) {
+                throw new APIException("Email domain is invalid or does not have mail servers", HttpStatus.BAD_REQUEST);
+            }
+            // 4. Save to DB async
+            corporateDomainService.fetchMetadataAndSavePendingAsync(domain);
+        }
+
+        // 5. Generate OTP
         Map<String, String> otpMap = EmailOTPUtils.generateOTP(corporateEmail);
         String otp = otpMap.get(EmailOTPUtils.OTP_MAP_KEY);
         emailService.sendOTPEmail(corporateEmail, user.getName(), otp);
@@ -174,7 +198,7 @@ public class UserService {
         return otpMap.get(EmailOTPUtils.TOKEN_MAP_KEY);
     }
 
-    public boolean confirmCorporateVerification(User user, String otp, String token, String corporateEmail, String companyName, String jobTitle) throws Exception {
+    public CorporateBenefitStatus confirmCorporateVerification(User user, String otp, String token, String corporateEmail, String companyName, String jobTitle) throws Exception {
         if(!EmailOTPUtils.verifyOTP(token, otp)) {
             throw new APIException("Invalid OTP Code", HttpStatus.UNAUTHORIZED);
         }
@@ -190,8 +214,34 @@ public class UserService {
         user.setCompanyName(companyName);
         user.setJobTitle(jobTitle);
 
+        String domain = corporateDomainService.extractDomain(corporateEmail);
+        CorporateDomainStatus domainStatus = corporateDomainService.getDomainStatusFromDb(domain)
+                .orElse(CorporateDomainStatus.PENDING);
+
+        CorporateBenefitStatus newBenefitStatus;
+        UserUpdateLog log = new UserUpdateLog();
+        log.setUser(user);
+        log.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+
+        if (domainStatus == CorporateDomainStatus.ALLOWED) {
+            newBenefitStatus = CorporateBenefitStatus.APPROVED;
+            user.setCorporateBenefitStatus(newBenefitStatus);
+            // Grant Connects since the domain is already verified
+            connectManagementService.grantCorporateConnects(user);
+            log.setUserUpdateType(UserUpdateType.CORPORATE_BENEFIT_VERIFIED);
+            log.setComment("Corporate Domain " + domain + " ALLOWED - automatically verifying benefits");
+        } else {
+            // Wait for DB Admin approval
+            newBenefitStatus = CorporateBenefitStatus.PENDING_ADMIN_APPROVAL;
+            user.setCorporateBenefitStatus(newBenefitStatus);
+            log.setUserUpdateType(UserUpdateType.CORPORATE_BENEFIT_PENDING);
+            log.setComment("Corporate Domain " + domain + " PENDING - awaiting admin approval");
+        }
+
+        user.getUserUpdateLogs().add(log);
         userRepository.save(user);
-        return true;
+        
+        return newBenefitStatus;
     }
 
 

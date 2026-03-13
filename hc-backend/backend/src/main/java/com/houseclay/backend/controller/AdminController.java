@@ -127,4 +127,38 @@ public class AdminController {
         }
     }
 
+    @GetMapping("/corporate-domains")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<?> getPendingCorporateDomains(@RequestAttribute("authenticatedAdmin") Admin admin) {
+        try {
+            return ResponseEntity.ok(adminService.getPendingCorporateDomains(admin));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/corporate-domains/{id}/approve")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<?> approveCorporateDomain(@PathVariable Long id, @RequestAttribute("authenticatedAdmin") Admin admin) {
+        try {
+            return ResponseEntity.ok(adminService.approveCorporateDomain(id, admin));
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/corporate-domains/{id}/deny")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<?> denyCorporateDomain(@PathVariable Long id, @RequestAttribute("authenticatedAdmin") Admin admin) {
+        try {
+            return ResponseEntity.ok(adminService.denyCorporateDomain(id, admin));
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
 }

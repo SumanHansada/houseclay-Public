@@ -2,6 +2,7 @@ package com.houseclay.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import com.houseclay.backend.enums.CorporateBenefitStatus;
 
 import java.sql.Timestamp;
 import java.util.LinkedList;
@@ -28,6 +29,9 @@ public class User {
     private Timestamp corporateEmailVerifiedAt;
     private String companyName;
     private String jobTitle;
+
+    @Enumerated(EnumType.STRING)
+    private CorporateBenefitStatus corporateBenefitStatus = CorporateBenefitStatus.NONE;
 
     public User(String phoneNo, String name, String emailID) {
         this.phoneNo = phoneNo;

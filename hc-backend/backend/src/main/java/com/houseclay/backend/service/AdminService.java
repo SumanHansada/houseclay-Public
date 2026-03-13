@@ -13,6 +13,9 @@ import com.houseclay.backend.mapper.UserMapper;
 import com.houseclay.backend.repository.AdminLoginRepository;
 import com.houseclay.backend.repository.AdminRepository;
 import com.houseclay.backend.repository.UserRepository;
+import com.houseclay.backend.repository.CorporateDomainRepository;
+import com.houseclay.backend.enums.CorporateBenefitStatus;
+import com.houseclay.backend.enums.CorporateDomainStatus;
 import com.houseclay.backend.utils.CookieUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -49,6 +52,15 @@ public class AdminService {
 
     @Autowired
     private CookieConfig cookieConfig;
+
+    @Autowired
+    private CorporateDomainRepository corporateDomainRepository;
+
+    @Autowired
+    private CorporateDomainService corporateDomainService;
+
+    @Autowired
+    private ConnectManagementService connectManagementService;
 
     public Admin registerAdmin(AdminRegisterDTO adminRegisterDTO) throws Exception {
         if (adminRepository.findByUsername(adminRegisterDTO.getUsername()).isPresent()) {
@@ -238,6 +250,67 @@ public class AdminService {
 
         admin.setActive(true);
         adminRepository.save(admin);
+    }
+
+    public List<CorporateDomain> getPendingCorporateDomains(Admin admin) {
+        return corporateDomainRepository.findByStatus(CorporateDomainStatus.PENDING);
+    }
+
+    public CorporateDomain approveCorporateDomain(Long id, Admin admin) throws Exception {
+        CorporateDomain domain = corporateDomainRepository.findById(id)
+                .orElseThrow(() -> new APIException("Corporate Domain not found", HttpStatus.NOT_FOUND));
+        if (domain.getStatus() != CorporateDomainStatus.PENDING) {
+            throw new APIException("Only pending domains can be approved", HttpStatus.BAD_REQUEST);
+        }
+        domain.setStatus(CorporateDomainStatus.ALLOWED);
+        corporateDomainRepository.save(domain);
+        
+        // Async update all users
+        grantBenefitsToPendingUsersAsync(domain.getDomainName(), admin);
+        return domain;
+    }
+
+    public CorporateDomain denyCorporateDomain(Long id, Admin admin) throws Exception {
+        CorporateDomain domain = corporateDomainRepository.findById(id)
+                .orElseThrow(() -> new APIException("Corporate Domain not found", HttpStatus.NOT_FOUND));
+        if (domain.getStatus() != CorporateDomainStatus.PENDING) {
+            throw new APIException("Only pending domains can be denied", HttpStatus.BAD_REQUEST);
+        }
+        domain.setStatus(CorporateDomainStatus.DENIED);
+        corporateDomainRepository.save(domain);
+
+        // Async update all users
+        rejectBenefitsForPendingUsersAsync(domain.getDomainName(), admin);
+        return domain;
+    }
+
+    @org.springframework.scheduling.annotation.Async
+    public void grantBenefitsToPendingUsersAsync(String domainName, Admin admin) {
+        List<User> pendingUsers = userRepository.findByCorporateBenefitStatus(CorporateBenefitStatus.PENDING_ADMIN_APPROVAL);
+        for (User user : pendingUsers) {
+            if (user.getCorporateEmailID() != null && corporateDomainService.extractDomain(user.getCorporateEmailID()).equals(domainName)) {
+                user.setCorporateBenefitStatus(CorporateBenefitStatus.APPROVED);
+                try {
+                    connectManagementService.grantCorporateConnects(user);
+                } catch(Exception e) {
+                   // Ignore connect grant failures for specific users to not block loop
+                }
+                user.getUserUpdateLogs().add(new UserUpdateLog(user, admin, new Timestamp(System.currentTimeMillis()), UserUpdateType.CORPORATE_BENEFIT_VERIFIED, "Admin Approved Domain"));
+                userRepository.save(user);
+            }
+        }
+    }
+
+    @org.springframework.scheduling.annotation.Async
+    public void rejectBenefitsForPendingUsersAsync(String domainName, Admin admin) {
+        List<User> pendingUsers = userRepository.findByCorporateBenefitStatus(CorporateBenefitStatus.PENDING_ADMIN_APPROVAL);
+        for (User user : pendingUsers) {
+            if (user.getCorporateEmailID() != null && corporateDomainService.extractDomain(user.getCorporateEmailID()).equals(domainName)) {
+                user.setCorporateBenefitStatus(CorporateBenefitStatus.REJECTED);
+                user.getUserUpdateLogs().add(new UserUpdateLog(user, admin, new Timestamp(System.currentTimeMillis()), UserUpdateType.CORPORATE_BENEFIT_REJECTED, "Admin Denied Domain"));
+                userRepository.save(user);
+            }
+        }
     }
 
 }

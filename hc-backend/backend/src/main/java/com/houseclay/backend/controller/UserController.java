@@ -9,6 +9,7 @@ import com.houseclay.backend.mapper.UserMapper;
 import com.houseclay.backend.payload.LoginPayload;
 import com.houseclay.backend.payload.UserPayload;
 
+import com.houseclay.backend.enums.CorporateBenefitStatus;
 import com.houseclay.backend.service.AdminService;
 import com.houseclay.backend.service.LeadService;
 import com.houseclay.backend.service.UserService;
@@ -187,11 +188,17 @@ public class UserController {
             @RequestParam(required = false) String companyName,
             @RequestParam(required = false) String jobTitle) {
         try {
-            boolean verified = userService.confirmCorporateVerification(user, otp, token, corporateEmail, companyName, jobTitle);
+            CorporateBenefitStatus status = userService.confirmCorporateVerification(user, otp, token, corporateEmail, companyName, jobTitle);
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "Corporate email verified successfully");
-            response.put("isCorporateVerified", verified);
-            return ResponseEntity.ok(response);
+            response.put("corporateBenefitStatus", status);
+
+            if (status == CorporateBenefitStatus.PENDING_ADMIN_APPROVAL) {
+                response.put("message", "Corporate email verified successfully and is pending admin approval.");
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+            } else {
+                response.put("message", "Corporate email verified successfully and benefits granted.");
+                return ResponseEntity.ok(response);
+            }
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {
