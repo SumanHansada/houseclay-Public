@@ -671,7 +671,7 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
 
               {/* Benefits */}
               <div className="w-full rounded-xl p-px shadow-sm bg-gradient-to-r from-red-600 via-red-500 via-80% to-amber-300">
-                <div className="bg-white rounded-lg p-4">
+                <div className="bg-white rounded-xl p-4">
                   <ul className="flex flex-col gap-2">
                     {[
                       "100% Verified Listings",
@@ -748,7 +748,7 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                     }`}
                   >
                     <div
-                      className={`h-full w-full ${selectedOption === "corporate" ? "bg-red-50 rounded-lg p-4" : "p-4"}`}
+                      className={`h-full w-full ${selectedOption === "corporate" ? "bg-red-50 rounded-xl p-4" : "p-4"}`}
                     >
                       <div className="flex justify-between items-start">
                         <div className="flex items-center gap-3">
@@ -818,7 +818,7 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                     }`}
                   >
                     <div
-                      className={`h-full w-full flex justify-between items-center ${selectedOption === "no-corporate" ? "bg-red-50 rounded-lg p-4" : "p-4"}`}
+                      className={`h-full w-full flex justify-between items-center ${selectedOption === "no-corporate" ? "bg-red-50 rounded-xl p-4" : "p-4"}`}
                     >
                       <div className="flex items-center gap-3">
                         <div
