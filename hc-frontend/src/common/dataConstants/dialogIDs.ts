@@ -17,7 +17,6 @@ export const VERIFY_CONNECTS_DIALOG_ID = "verify-connects-dialog";
 export const EMAIL_VERIFICATION_DIALOG_ID = "email-verification-dialog";
 export const EMAIL_VERIFICATION_SUCCESS_DIALOG_ID =
   "email-verification-success-dialog";
-export const BUY_CONNECTS_DIALOG_ID = "buy-connects-dialog";
 export const PRO_SUBSCRIPTION_DIALOG_ID = "pro-subscription-dialog";
 export const PROPERTY_FILTERS_DIALOG_ID = "property-filters-dialog";
 export const SORT_FILTERS_DIALOG_ID = "sort-filters-dialog";

@@ -127,3 +127,16 @@ export const enum ReportStatus {
   RENTED_OUT = "RENTED_OUT",
   OTHER = "OTHER",
 }
+
+export enum CorporateBenefitStatus {
+  NONE = "NONE",
+  PENDING_ADMIN_APPROVAL = "PENDING_ADMIN_APPROVAL",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
+}
+
+export enum CorporateDomainStatus {
+  ALLOWED = "ALLOWED",
+  DENIED = "DENIED",
+  PENDING = "PENDING",
+}

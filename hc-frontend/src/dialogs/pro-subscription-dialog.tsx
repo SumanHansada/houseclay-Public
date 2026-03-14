@@ -56,7 +56,6 @@ import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useBundleInfoQuery,
-  useClaimCorporateBenefitsMutation,
   useConfirmCorporateVerificationMutation,
   useCreateOrderMutation,
   useInitiateCorporateVerificationMutation,
@@ -79,7 +78,7 @@ enum ProSubscriptionStep {
   VERIFY_PAYMENT = "VERIFY_PAYMENT",
 }
 
-type ClaimStatus = "CLAIMING" | "SUCCESS" | "ERROR";
+type ClaimStatus = "CLAIMING" | "SUCCESS" | "PENDING_APPROVAL" | "ERROR";
 
 const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
   const { isMobile } = useDeviceContext();
@@ -101,7 +100,6 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
     useInitiateCorporateVerificationMutation();
   const [confirmVerify, { isLoading: isConfirming }] =
     useConfirmCorporateVerificationMutation();
-  const [claimBenefits] = useClaimCorporateBenefitsMutation();
 
   // State
   const [step, setStep] = useState<ProSubscriptionStep>(
@@ -269,23 +267,6 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
     }
   };
 
-  const triggerClaimProcess = async () => {
-    setClaimStatus("CLAIMING");
-    try {
-      // Claim Benefits
-      await claimBenefits().unwrap();
-
-      // Sync User Data
-      const userData = await triggerGetUserInfo().unwrap();
-      dispatch(setUserDetail(userData));
-      setClaimStatus("SUCCESS");
-    } catch (err) {
-      console.error("Failed to claim benefits", err);
-      setClaimStatus("ERROR");
-      toast.error(getErrorMessage(err));
-    }
-  };
-
   const handleConfirmVerification = async () => {
     const otp = otpCode.join("");
     if (otp.length !== 4) {
@@ -299,7 +280,10 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
     }
 
     try {
-      await confirmVerify({
+      setStep(ProSubscriptionStep.CLAIM);
+      setClaimStatus("CLAIMING");
+
+      const response = await confirmVerify({
         otp,
         token: verificationToken,
         corporateEmail: email,
@@ -307,12 +291,18 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
         jobTitle: jobTitle || undefined,
       }).unwrap();
 
-      toast.success("Email verified successfully!");
-      setStep(ProSubscriptionStep.CLAIM);
-      // Automatically Trigger Claim
-      await triggerClaimProcess();
+      // Sync User Data
+      const userData = await triggerGetUserInfo().unwrap();
+      dispatch(setUserDetail(userData));
+
+      if (response.corporateBenefitStatus === "PENDING_ADMIN_APPROVAL") {
+        setClaimStatus("PENDING_APPROVAL");
+      } else {
+        setClaimStatus("SUCCESS");
+      }
     } catch (err) {
       console.error("Failed to confirm verification", err);
+      setClaimStatus("ERROR");
       toast.error(getErrorMessage(err));
     }
   };
@@ -491,12 +481,36 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    Verification Successful
+                    Verifying OTP
                   </h3>
                   <p className="text-gray-600">
-                    Adding 30 Free Connects to your account...
+                    Checking your corporate domain status...
                   </p>
                 </div>
+              </>
+            )}
+
+            {/* PENDING APPROVAL STATE */}
+            {claimStatus === "PENDING_APPROVAL" && (
+              <>
+                <div className="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mb-2">
+                  <CheckCircle2 className="text-yellow-600" size={40} />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    Verification Pending Review
+                  </h3>
+                  <p className="text-gray-600">
+                    Your email is verified, but your company domain is pending
+                    admin approval. Your benefits will be granted once approved.
+                  </p>
+                </div>
+                <Button
+                  onClick={onClose}
+                  className="w-full py-3 rounded-xl font-bold text-lg"
+                >
+                  Got it
+                </Button>
               </>
             )}
 
@@ -531,26 +545,22 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    Claim Failed
+                    Verification Failed
                   </h3>
                   <p className="text-gray-600">
-                    Verification passed, but we couldn&apos;t add the connects.
+                    We could not verify your domain or OTP.
                   </p>
                 </div>
                 <div className="flex gap-3 w-full">
                   <Button
                     variant="secondary"
-                    onClick={onClose}
-                    className="w-1/2 py-3 rounded-xl text-lg"
+                    onClick={() => {
+                      setStep(ProSubscriptionStep.OTP);
+                      setClaimStatus("CLAIMING");
+                    }}
+                    className="w-full py-3 rounded-xl text-lg"
                   >
-                    Close
-                  </Button>
-                  <Button
-                    variant="danger"
-                    onClick={triggerClaimProcess}
-                    className="w-1/2 py-3 rounded-xl text-lg"
-                  >
-                    Retry Claim
+                    Try Again
                   </Button>
                 </div>
               </>

@@ -1,4 +1,3 @@
-export { default as BuyConnectsDialog } from "./buy-connects-dialog";
 export { default as CallWithCaptainDialog } from "./call-with-captain";
 export { default as ContactOwnerLoginDialog } from "./contact-owner-login-dialog";
 export { default as DeletePhotosDialog } from "./delete-photos-dialog";
