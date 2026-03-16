@@ -23,4 +23,10 @@ public class Constants {
             "10minutemail.com", "guerrillamail.com", "sharklasers.com",
             "throwawaymail.com", "getairmail.com"
     );
+
+    public static final java.util.List<String> DISPOSABLE_DOMAIN_LIST = java.util.List.of(
+            "mailinator.com", "yopmail.com", "temp-mail.org", "tempmail.com",
+            "10minutemail.com", "guerrillamail.com", "sharklasers.com",
+            "throwawaymail.com", "getairmail.com"
+    );
 }

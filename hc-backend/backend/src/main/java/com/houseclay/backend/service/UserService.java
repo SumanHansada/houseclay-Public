@@ -186,8 +186,6 @@ public class UserService {
             if (!hasMx) {
                 throw new APIException("Email domain is invalid or does not have mail servers", HttpStatus.BAD_REQUEST);
             }
-            // 4. Save to DB async
-            corporateDomainService.fetchMetadataAndSavePendingAsync(domain);
         }
 
         // 5. Generate OTP
@@ -216,7 +214,10 @@ public class UserService {
 
         String domain = corporateDomainService.extractDomain(corporateEmail);
         CorporateDomainStatus domainStatus = corporateDomainService.getDomainStatusFromDb(domain)
-                .orElse(CorporateDomainStatus.PENDING);
+                .orElseGet(() -> {
+                    corporateDomainService.fetchMetadataAndSavePendingAsync(domain);
+                    return CorporateDomainStatus.PENDING;
+                });
 
         CorporateBenefitStatus newBenefitStatus;
         UserUpdateLog log = new UserUpdateLog();

@@ -13,7 +13,6 @@ import com.houseclay.backend.enums.CorporateBenefitStatus;
 import com.houseclay.backend.service.AdminService;
 import com.houseclay.backend.service.LeadService;
 import com.houseclay.backend.service.UserService;
-import com.houseclay.backend.service.ConnectManagementService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,9 +36,8 @@ public class UserController {
     @Autowired
     private AdminService adminService;
 
-    @Autowired
-    private ConnectManagementService connectManagementService;
     
+
 
     @RequestMapping (method = RequestMethod.POST, value = "/register",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createUser(@Valid @RequestBody UserPayload payload) {
@@ -206,18 +204,4 @@ public class UserController {
         }
     }
 
-    @PostMapping("/claim-corporate-benefits")
-    public ResponseEntity<?> claimCorporateBenefits(
-            @RequestAttribute("authenticatedUser") User user) {
-        try {
-            connectManagementService.grantCorporateConnects(user);
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Corporate benefits granted successfully");
-            return ResponseEntity.ok(response);
-        } catch (APIException e) {
-            return ResponseEntity.status(e.getCode()).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
 }

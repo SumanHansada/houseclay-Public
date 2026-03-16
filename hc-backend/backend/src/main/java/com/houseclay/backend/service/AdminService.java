@@ -24,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -252,8 +253,16 @@ public class AdminService {
         adminRepository.save(admin);
     }
 
-    public List<CorporateDomain> getPendingCorporateDomains(Admin admin) {
-        return corporateDomainRepository.findByStatus(CorporateDomainStatus.PENDING);
+    public List<CorporateDomain> getCorporateDomainsByStatus(String status, Admin admin) throws APIException {
+        if (status.equalsIgnoreCase("all")) {
+            return corporateDomainRepository.findAll();
+        }
+        try {
+            CorporateDomainStatus enumStatus = CorporateDomainStatus.valueOf(status.toUpperCase());
+            return corporateDomainRepository.findByStatus(enumStatus);
+        } catch (IllegalArgumentException e) {
+            throw new APIException("Invalid status: " + status, HttpStatus.BAD_REQUEST);
+        }
     }
 
     public CorporateDomain approveCorporateDomain(Long id, Admin admin) throws Exception {
@@ -284,7 +293,7 @@ public class AdminService {
         return domain;
     }
 
-    @org.springframework.scheduling.annotation.Async
+    @Async
     public void grantBenefitsToPendingUsersAsync(String domainName, Admin admin) {
         List<User> pendingUsers = userRepository.findByCorporateBenefitStatus(CorporateBenefitStatus.PENDING_ADMIN_APPROVAL);
         for (User user : pendingUsers) {
@@ -301,7 +310,7 @@ public class AdminService {
         }
     }
 
-    @org.springframework.scheduling.annotation.Async
+    @Async
     public void rejectBenefitsForPendingUsersAsync(String domainName, Admin admin) {
         List<User> pendingUsers = userRepository.findByCorporateBenefitStatus(CorporateBenefitStatus.PENDING_ADMIN_APPROVAL);
         for (User user : pendingUsers) {

@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.houseclay.backend.utils.Constants;
+
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
@@ -19,7 +21,6 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -33,11 +34,7 @@ public class CorporateDomainService {
     private final CorporateDomainRepository corporateDomainRepository;
 
     // In-memory set for disposable emails
-    private final Set<String> disposableDomains = new HashSet<>(List.of(
-            "mailinator.com", "yopmail.com", "temp-mail.org", "tempmail.com",
-            "10minutemail.com", "guerrillamail.com", "sharklasers.com",
-            "throwawaymail.com", "getairmail.com"
-    ));
+    private final Set<String> disposableDomains = new HashSet<>(Constants.DISPOSABLE_DOMAIN_LIST);
 
     private final HttpClient httpClient = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(3))
@@ -104,6 +101,10 @@ public class CorporateDomainService {
      */
     @Async
     public void fetchMetadataAndSavePendingAsync(String domain) {
+        if (corporateDomainRepository.findByDomainName(domain).isPresent()) {
+            return;
+        }
+
         String title = null;
         try {
             HttpRequest request = HttpRequest.newBuilder()
@@ -142,5 +143,4 @@ public class CorporateDomainService {
             // Ignore constraint violations if another thread saved it simultaneously
         }
     }
-
 }

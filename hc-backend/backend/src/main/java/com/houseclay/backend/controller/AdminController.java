@@ -129,9 +129,11 @@ public class AdminController {
 
     @GetMapping("/corporate-domains")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    public ResponseEntity<?> getPendingCorporateDomains(@RequestAttribute("authenticatedAdmin") Admin admin) {
+    public ResponseEntity<?> getCorporateDomains(
+            @RequestParam(defaultValue = "all") String status,
+            @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
-            return ResponseEntity.ok(adminService.getPendingCorporateDomains(admin));
+            return ResponseEntity.ok(adminService.getCorporateDomainsByStatus(status, admin));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
