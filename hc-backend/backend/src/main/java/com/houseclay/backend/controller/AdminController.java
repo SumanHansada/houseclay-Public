@@ -131,9 +131,12 @@ public class AdminController {
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<?> getCorporateDomains(
             @RequestParam(defaultValue = "all") String status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
             @RequestAttribute("authenticatedAdmin") Admin admin) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         try {
-            return ResponseEntity.ok(adminService.getCorporateDomainsByStatus(status, admin));
+            return ResponseEntity.ok(adminService.getCorporateDomainsByStatus(status, pageable, admin));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

@@ -253,13 +253,13 @@ public class AdminService {
         adminRepository.save(admin);
     }
 
-    public List<CorporateDomain> getCorporateDomainsByStatus(String status, Admin admin) throws APIException {
+    public Page<CorporateDomain> getCorporateDomainsByStatus(String status, Pageable pageable, Admin admin) throws APIException {
         if (status.equalsIgnoreCase("all")) {
-            return corporateDomainRepository.findAll();
+            return corporateDomainRepository.findAll(pageable);
         }
         try {
             CorporateDomainStatus enumStatus = CorporateDomainStatus.valueOf(status.toUpperCase());
-            return corporateDomainRepository.findByStatus(enumStatus);
+            return corporateDomainRepository.findByStatus(enumStatus, pageable);
         } catch (IllegalArgumentException e) {
             throw new APIException("Invalid status: " + status, HttpStatus.BAD_REQUEST);
         }
