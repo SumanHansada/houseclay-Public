@@ -100,6 +100,8 @@ export const TAGS = [
   "PropertiesToVerify",
   "PropertiesToReverify",
   "PropertiesToRoutineCheck",
+  "CorporateDomains",
+  "CorporateDomainDetail",
 ] as const;
 
 /** Union of all tag names, e.g. `"Users" | "Leads" | …`. */

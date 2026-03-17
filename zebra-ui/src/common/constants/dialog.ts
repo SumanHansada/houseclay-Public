@@ -7,7 +7,9 @@ export type DialogKey =
   | "verify"
   | "deactivate"
   | "activateAdmin"
-  | "deactivateAdmin";
+  | "deactivateAdmin"
+  | "approveDomain"
+  | "denyDomain";
 
 export const dialogLabels: Record<DialogKey, DialogLabelConfig> = {
   blacklist: {
@@ -54,5 +56,17 @@ export const dialogLabels: Record<DialogKey, DialogLabelConfig> = {
     prompt: "Activate this Admin's Zebra Account?",
     confirmLabel: "Activate",
     colour: "green",
+  },
+  approveDomain: {
+    title: "Approve Corporate Domain",
+    prompt: "Are you sure you want to allow this corporate domain?",
+    confirmLabel: "Approve",
+    colour: "green",
+  },
+  denyDomain: {
+    title: "Deny Corporate Domain",
+    prompt: "Are you sure you want to deny this corporate domain?",
+    confirmLabel: "Deny",
+    colour: "red",
   },
 };
