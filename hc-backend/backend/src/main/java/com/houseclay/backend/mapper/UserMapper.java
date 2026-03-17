@@ -18,6 +18,7 @@ public class UserMapper {
         userLoginResponseDTO.setPhoneNo(user.getPhoneNo());
         userLoginResponseDTO.setConnectBal(user.getConnectBal());
         userLoginResponseDTO.setCorporateEmailVerified(user.isCorporateEmailVerified());
+        userLoginResponseDTO.setCorporateBenefitStatus(user.getCorporateBenefitStatus());
         return userLoginResponseDTO;
     }
 
@@ -37,6 +38,7 @@ public class UserMapper {
         userDTO.setName(user.getName());
         userDTO.setBlacklisted(user.isBlacklisted());
         userDTO.setCorporateEmailVerified(user.isCorporateEmailVerified());
+        userDTO.setCorporateBenefitStatus(user.getCorporateBenefitStatus());
         userDTO.setCreatedAt(user.getCreatedAt());
         return userDTO;
     }
@@ -56,6 +58,7 @@ public class UserMapper {
         dto.setCorporateEmailVerifiedAt(user.getCorporateEmailVerifiedAt());
         dto.setCompanyName(user.getCompanyName());
         dto.setJobTitle(user.getJobTitle());
+        dto.setCorporateBenefitStatus(user.getCorporateBenefitStatus());
 
         dto.setUserUpdates(user.getUserUpdateLogs().stream()
                 .map(UserMapper::toUserUpdateDTO)
@@ -119,6 +122,7 @@ public class UserMapper {
         dto.setCorporateEmailVerified(user.isCorporateEmailVerified());
         dto.setCompanyName(user.getCompanyName());
         dto.setJobTitle(user.getJobTitle());
+        dto.setCorporateBenefitStatus(user.getCorporateBenefitStatus());
 
         dto.setOwnedProperties(
                 user.getOwnedProperties().stream()

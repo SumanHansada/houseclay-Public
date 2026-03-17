@@ -128,13 +128,12 @@ public class AdminController {
     }
 
     @GetMapping("/corporate-domains")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<?> getCorporateDomains(
             @RequestParam(defaultValue = "all") String status,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestAttribute("authenticatedAdmin") Admin admin) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending());
         try {
             return ResponseEntity.ok(adminService.getCorporateDomainsByStatus(status, pageable, admin));
         } catch (Exception e) {
@@ -143,7 +142,6 @@ public class AdminController {
     }
 
     @PutMapping("/corporate-domains/{id}/approve")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<?> approveCorporateDomain(@PathVariable Long id, @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
             return ResponseEntity.ok(adminService.approveCorporateDomain(id, admin));
@@ -155,7 +153,6 @@ public class AdminController {
     }
 
     @PutMapping("/corporate-domains/{id}/deny")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<?> denyCorporateDomain(@PathVariable Long id, @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
             return ResponseEntity.ok(adminService.denyCorporateDomain(id, admin));

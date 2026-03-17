@@ -188,7 +188,7 @@ public class UserService {
             }
         }
 
-        // 5. Generate OTP
+        // 4. Generate OTP
         Map<String, String> otpMap = EmailOTPUtils.generateOTP(corporateEmail);
         String otp = otpMap.get(EmailOTPUtils.OTP_MAP_KEY);
         emailService.sendOTPEmail(corporateEmail, user.getName(), otp);

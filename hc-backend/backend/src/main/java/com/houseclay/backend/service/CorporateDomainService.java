@@ -32,12 +32,19 @@ import java.util.regex.Pattern;
 public class CorporateDomainService {
 
     private final CorporateDomainRepository corporateDomainRepository;
+    
+    // Pattern.DOTALL allows matching across newlines. 
+    // [^>]* allows for attributes inside the title tag like <title id="main">
+    private static final Pattern TITLE_PATTERN = Pattern.compile("<title[^>]*>(.*?)</title>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
     // In-memory set for disposable emails
     private final Set<String> disposableDomains = new HashSet<>(Constants.DISPOSABLE_DOMAIN_LIST);
 
+    // Enable redirect following so domains like "houseclay.com" 
+    // successfully redirect to "www.houseclay.com" instead of failing.
     private final HttpClient httpClient = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(3))
+            .followRedirects(HttpClient.Redirect.NORMAL) 
             .build();
 
     /**
@@ -101,6 +108,7 @@ public class CorporateDomainService {
      */
     @Async
     public void fetchMetadataAndSavePendingAsync(String domain) {
+        // Prevent duplicate processing
         if (corporateDomainRepository.findByDomainName(domain).isPresent()) {
             return;
         }
@@ -109,26 +117,38 @@ public class CorporateDomainService {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI("https://" + domain))
+                    // OPTIMIZATION 3: Add a User-Agent so WAFs/Cloudflare don't instantly block the Java client
+                    .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
                     .timeout(Duration.ofSeconds(5))
                     .GET()
                     .build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            String html = response.body();
-
-            // Simple regex to extract <title>...</title>
-            Pattern titlePattern = Pattern.compile("<title>(.*?)</title>", Pattern.CASE_INSENSITIVE);
-            Matcher matcher = titlePattern.matcher(html);
-            if (matcher.find()) {
-                title = matcher.group(1).trim();
-                // truncate to 255 chars max
-                if (title.length() > 255) {
-                    title = title.substring(0, 255);
+            
+            // Only parse if we got a successful response
+            if (response.statusCode() >= 200 && response.statusCode() < 400) {
+                String html = response.body();
+                Matcher matcher = TITLE_PATTERN.matcher(html);
+                
+                if (matcher.find()) {
+                    // Clean up HTML entities, tabs, and newlines that might break the UI
+                    title = matcher.group(1).trim().replaceAll("\\s+", " ");
+                    
+                    if (title.length() > 255) {
+                        title = title.substring(0, 255);
+                    }
                 }
+            } else {
+                log.warn("Non-200 HTTP response for domain {}: Status {}", domain, response.statusCode());
             }
         } catch (Exception e) {
             log.warn("Failed to fetch metadata for domain {}: {}", domain, e.getMessage());
-            // It's okay to fail, we will just save without a title
+        }
+
+        // Fallback Logic
+        // If the title is still null/empty due to a timeout, 403, or missing <title> tag.
+        if (title == null || title.isEmpty()) {
+            title = generateAdminFallbackTitle(domain);
         }
 
         try {
@@ -141,6 +161,29 @@ public class CorporateDomainService {
         } catch (Exception e) {
             log.warn("Failed to save pending corporate domain {}: {}", domain, e.getMessage());
             // Ignore constraint violations if another thread saved it simultaneously
+        }
+    }
+
+    /**
+     * Generates a clear placeholder for the Admin UI if the actual website title couldn't be fetched.
+     * Example: "google.co.in" -> "[Fetch Failed] Google"
+     */
+    private String generateAdminFallbackTitle(String domain) {
+        try {
+            // Extract the base word (e.g., "houseclay" from "houseclay.com")
+            String baseName = domain;
+            if (domain.contains(".")) {
+                baseName = domain.substring(0, domain.indexOf('.'));
+            }
+            
+            // Capitalize the first letter
+            String capitalized = baseName.substring(0, 1).toUpperCase() + baseName.substring(1);
+            
+            // Add the Admin identifier prefix
+            return "[Fetch Failed] " + capitalized;
+        } catch (Exception e) {
+            // Absolute worst-case scenario fallback
+            return "[Fetch Failed] " + domain;
         }
     }
 }
