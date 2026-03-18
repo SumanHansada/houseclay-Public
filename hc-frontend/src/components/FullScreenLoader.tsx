@@ -52,7 +52,9 @@ const FullScreenLoader: React.FC<FullScreenLoaderProps> = ({
           strokeWidth=".818"
         />
       </svg>
-      <p className="tagline font-inter">Stop Searching. Start Connecting</p>
+      <p className="tagline font-inter">
+        Find your perfect home, without the hassle.
+      </p>
     </div>
   );
 };
