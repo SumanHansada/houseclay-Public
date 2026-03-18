@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+import { CorporateBenefitStatus } from "@/common/enums";
 import {
   PropertyCardWithImages,
   UserExternalPayment,
@@ -15,6 +16,7 @@ export interface UserDetail {
   onWhatsApp: boolean;
   emailVerified: boolean;
   corporateEmailVerified: boolean;
+  corporateBenefitStatus?: CorporateBenefitStatus;
   companyName?: string;
   jobTitle?: string;
 
@@ -50,6 +52,7 @@ const initialState: UserState = {
     onWhatsApp: false,
     emailVerified: false,
     corporateEmailVerified: false,
+    corporateBenefitStatus: undefined,
     companyName: undefined,
     jobTitle: undefined,
 
@@ -116,6 +119,15 @@ const userSlice = createSlice({
     setCorporateEmailVerified(state, action: PayloadAction<boolean>) {
       if (state.userDetail) {
         state.userDetail.corporateEmailVerified = action.payload;
+      }
+    },
+
+    setCorporateBenefitStatus(
+      state,
+      action: PayloadAction<CorporateBenefitStatus | undefined>,
+    ) {
+      if (state.userDetail) {
+        state.userDetail.corporateBenefitStatus = action.payload;
       }
     },
 
@@ -192,6 +204,7 @@ export const {
   setAvatarUrl,
   setEmailVerified,
   setCorporateEmailVerified,
+  setCorporateBenefitStatus,
   setOnWhatsApp,
   setContactedProperties,
   setExternalPayments,

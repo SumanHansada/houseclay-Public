@@ -3,6 +3,7 @@
 import { Form, useFormikContext } from "formik";
 import { CircleAlert, CircleCheck, ShieldCheck } from "lucide-react";
 
+import { CorporateBenefitStatus } from "@/common/enums";
 import { getInitials } from "@/common/utils";
 import { FormPhoneField, FormTextField } from "@/form-components";
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
@@ -44,7 +45,7 @@ export function DesktopClient({
             <div className="size-32 2xl:size-40 bg-black rounded-full flex items-center justify-center text-5xl 2xl:text-[60px] text-white">
               {getInitials(values.name)}
             </div>
-            {values.corporateEmailVerified && (
+            {values.corporateBenefitStatus === "APPROVED" && (
               <div className="absolute bottom-0 right-0 bg-white rounded-full p-0.5 shadow-md">
                 <ShieldCheck className="text-white fill-red-500 size-8 2xl:size-10" />
               </div>
@@ -76,11 +77,12 @@ export function DesktopClient({
           />
 
           {/* Job Title */}
-          {values.jobTitle ? (
+          {values.jobTitle &&
+          values.corporateBenefitStatus !== CorporateBenefitStatus.REJECTED ? (
             <FormTextField
               name="jobTitle"
               id="jobTitle"
-              label="Job Title"
+              label="Which profession?"
               placeholder="Not provided"
               className="w-2/3 cursor-not-allowed bg-gray-50"
               disabled
@@ -88,11 +90,12 @@ export function DesktopClient({
           ) : null}
 
           {/* Company Name */}
-          {values.companyName ? (
+          {values.companyName &&
+          values.corporateBenefitStatus !== CorporateBenefitStatus.REJECTED ? (
             <FormTextField
               name="companyName"
               id="companyName"
-              label="Company Name"
+              label="Where do you work?"
               placeholder="Not provided"
               className="w-2/3 cursor-not-allowed bg-gray-50"
               disabled

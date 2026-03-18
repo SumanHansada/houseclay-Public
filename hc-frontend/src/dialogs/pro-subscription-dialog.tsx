@@ -43,7 +43,10 @@ declare global {
 const RAZORPAY_KEY = process.env.NEXT_PUBLIC_RAZORPAY_API_KEY;
 
 import { Button } from "@/base-components";
-import { PaymentVerificationStatus } from "@/common/enums";
+import {
+  CorporateBenefitStatus,
+  PaymentVerificationStatus,
+} from "@/common/enums";
 import {
   Dialog,
   DialogContent,
@@ -129,7 +132,13 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
   const ref4 = useRef<HTMLInputElement>(null);
   const inputRefs = useMemo(() => [ref1, ref2, ref3, ref4], []);
 
-  const isUserAlreadyVerified = userDetail?.corporateEmailVerified;
+  const isUserAlreadyVerified =
+    userDetail?.corporateBenefitStatus === CorporateBenefitStatus.APPROVED;
+  const isPendingAdminApproval =
+    userDetail?.corporateBenefitStatus ===
+    CorporateBenefitStatus.PENDING_ADMIN_APPROVAL;
+  const isRejected =
+    userDetail?.corporateBenefitStatus === CorporateBenefitStatus.REJECTED;
 
   const onClose = () => {
     closeDialog(id);
@@ -155,10 +164,31 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
         setStep(ProSubscriptionStep.INFO);
       }
     }
-    if (isAuthenticated && isUserAlreadyVerified) {
+    if (
+      isAuthenticated &&
+      (isUserAlreadyVerified || isPendingAdminApproval || isRejected)
+    ) {
       setSelectedOption("no-corporate");
     }
-  }, [isAuthenticated, step]);
+  }, [
+    isAuthenticated,
+    step,
+    isUserAlreadyVerified,
+    isPendingAdminApproval,
+    isRejected,
+  ]);
+
+  // Fetch updated user info when dialog opens (to get latest corporateBenefitStatus)
+  useEffect(() => {
+    if (isAuthenticated) {
+      triggerGetUserInfo()
+        .unwrap()
+        .then((data) => {
+          dispatch(setUserDetail(data));
+        })
+        .catch((err) => console.error("Failed to refresh user info", err));
+    }
+  }, [isAuthenticated, triggerGetUserInfo, dispatch]);
 
   // Focus first OTP input when entering OTP step
   useEffect(() => {
@@ -295,7 +325,10 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
       const userData = await triggerGetUserInfo().unwrap();
       dispatch(setUserDetail(userData));
 
-      if (response.corporateBenefitStatus === "PENDING_ADMIN_APPROVAL") {
+      if (
+        response.corporateBenefitStatus ===
+        CorporateBenefitStatus.PENDING_ADMIN_APPROVAL
+      ) {
         setClaimStatus("PENDING_APPROVAL");
       } else {
         setClaimStatus("SUCCESS");
@@ -431,16 +464,16 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                 name="companyName"
                 value={companyName}
                 onChange={(val) => setCompanyName(String(val))}
-                label="Company Name"
+                label="Where do you work?"
                 required
-                placeholder="e.g. Houseclay"
+                placeholder="e.g. Houseclay/TCS"
                 className="w-full"
               />
               <TextField
                 name="jobTitle"
                 value={jobTitle}
                 onChange={(val) => setJobTitle(String(val))}
-                label="Job Title"
+                label="Which profession?"
                 required
                 placeholder="e.g. Software Engineer"
                 className="w-full"
@@ -745,6 +778,30 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                   </p>
                   <p className="text-xs text-green-700">
                     You can proceed to buy more if required.
+                  </p>
+                </div>
+              ) : isPendingAdminApproval ? (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-center space-y-2">
+                  <div className="flex justify-center">
+                    <CheckCircle2 className="text-yellow-600" size={28} />
+                  </div>
+                  <p className="text-sm font-medium text-yellow-800">
+                    Your company domain is pending admin approval.
+                  </p>
+                  <p className="text-xs text-yellow-700">
+                    Your benefits will be granted once approved.
+                  </p>
+                </div>
+              ) : isRejected ? (
+                <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-center space-y-2">
+                  <div className="flex justify-center">
+                    <XCircle className="text-red-600" size={28} />
+                  </div>
+                  <p className="text-sm font-medium text-red-800">
+                    Your corporate domain verification was rejected.
+                  </p>
+                  <p className="text-xs text-red-700">
+                    You can proceed to buy Connects standardly.
                   </p>
                 </div>
               ) : (

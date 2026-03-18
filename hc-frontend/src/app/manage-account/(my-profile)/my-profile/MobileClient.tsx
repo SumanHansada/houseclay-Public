@@ -4,6 +4,7 @@ import { Form, useFormikContext } from "formik";
 import { CircleAlert, CircleCheck, ShieldCheck } from "lucide-react";
 import { type ReactNode } from "react";
 
+import { CorporateBenefitStatus } from "@/common/enums";
 import { getInitials } from "@/common/utils";
 import { FormPhoneField, FormTextField } from "@/form-components";
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
@@ -62,7 +63,7 @@ export function MobileClient({ editMode, onVerifyEmail }: MobileClientProps) {
           <div className="size-36 bg-black rounded-full flex items-center justify-center text-5xl text-white">
             {getInitials(values.name)}
           </div>
-          {values.corporateEmailVerified && (
+          {values.corporateBenefitStatus === "APPROVED" && (
             <div className="absolute bottom-1 right-1 bg-white rounded-full p-1 shadow-md">
               <ShieldCheck className="text-white fill-red-500 size-8" />
             </div>
@@ -91,11 +92,12 @@ export function MobileClient({ editMode, onVerifyEmail }: MobileClientProps) {
           />
 
           {/* Job Title */}
-          {values.jobTitle ? (
+          {values.jobTitle &&
+          values.corporateBenefitStatus !== CorporateBenefitStatus.REJECTED ? (
             <FormTextField
               name="jobTitle"
               id="jobTitle"
-              label="Job Title"
+              label="Which profession?"
               placeholder="Not provided"
               className="cursor-not-allowed bg-gray-50"
               disabled
@@ -103,11 +105,12 @@ export function MobileClient({ editMode, onVerifyEmail }: MobileClientProps) {
           ) : null}
 
           {/* Company Name */}
-          {values.companyName ? (
+          {values.companyName &&
+          values.corporateBenefitStatus !== CorporateBenefitStatus.REJECTED ? (
             <FormTextField
               name="companyName"
               id="companyName"
-              label="Company Name"
+              label="Where do you work?"
               placeholder="Not provided"
               className="cursor-not-allowed bg-gray-50"
               disabled
@@ -194,15 +197,17 @@ export function MobileClient({ editMode, onVerifyEmail }: MobileClientProps) {
         <div className="px-6 pt-4 pb-16 space-y-4">
           <DisplayRow label="Name" value={values.name} />
           <DisplayRow label="Connects Balance" value={values.connectsBalance} />
-          {values.jobTitle ? (
+          {values.jobTitle &&
+          values.corporateBenefitStatus !== CorporateBenefitStatus.REJECTED ? (
             <DisplayRow
-              label="Job Title"
+              label="Which profession?"
               value={values.jobTitle || "Not provided"}
             />
           ) : null}
-          {values.companyName ? (
+          {values.companyName &&
+          values.corporateBenefitStatus !== CorporateBenefitStatus.REJECTED ? (
             <DisplayRow
-              label="Company Name"
+              label="Where do you work?"
               value={values.companyName || "Not provided"}
             />
           ) : null}
