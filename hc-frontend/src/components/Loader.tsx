@@ -51,7 +51,7 @@ const Loader: React.FC<LoaderProps> = ({ className = "" }) => {
         />
       </svg>
       <p className="tagline font-inter">
-        Find your perfect home, without the hassle.
+        Verified Owners, Verified Working Professionals.
       </p>
     </div>
   );
