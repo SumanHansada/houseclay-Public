@@ -10,8 +10,8 @@ export interface AuthUserDetail {
   phoneNo: string;
   connectBal: number;
   avatarUrl: string | null;
-  corporateEmailVerified: boolean;
-  corporateBenefitStatus?: CorporateBenefitStatus;
+  corporateBenefitStatus: CorporateBenefitStatus;
+  corporateEmailID?: string;
 }
 
 export interface UserOwnedProperties {
@@ -77,10 +77,10 @@ export interface UserDetailsDTO {
   onWhatsApp: boolean;
   emailVerified: boolean;
   connectBal: number;
-  corporateEmailVerified: boolean;
-  corporateBenefitStatus?: CorporateBenefitStatus;
+  corporateBenefitStatus: CorporateBenefitStatus;
   companyName?: string;
   jobTitle?: string;
+  corporateEmailID?: string;
 
   ownedProperties: UserOwnedProperties[];
   externalPayments: UserExternalPayment[];

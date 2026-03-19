@@ -170,9 +170,6 @@ export const apiSlice = createApi({
       {
         property: {
           property: unknown;
-          contactUserCount: number;
-          viewUserCount: number;
-          shortlistUserCount: number;
         };
         owner: { name: string; phoneNo: string; emailID: string };
         reported: boolean;

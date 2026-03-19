@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
 import { Button } from "@/base-components";
+import { CorporateBenefitStatus } from "@/common/enums";
 import Spinner from "@/components/Spinner";
 import { useEditMode } from "@/hooks/useEditMode";
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
@@ -52,11 +53,12 @@ export default function MyProfileLayout({ children }: { children: ReactNode }) {
       phoneVerified: true,
       onWhatsapp: userDetail.onWhatsApp,
       emailVerified: userDetail.emailVerified,
-      corporateEmailVerified: userDetail.corporateEmailVerified,
-      corporateBenefitStatus: userDetail.corporateBenefitStatus,
+      corporateBenefitStatus:
+        userDetail.corporateBenefitStatus || CorporateBenefitStatus.NONE,
       connectsBalance: userDetail.connectBal,
       companyName: userDetail.companyName || "",
       jobTitle: userDetail.jobTitle || "",
+      corporateEmailID: userDetail.corporateEmailID || "",
     }),
     [userDetail],
   );

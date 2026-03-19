@@ -792,19 +792,7 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                     Your benefits will be granted once approved.
                   </p>
                 </div>
-              ) : isRejected ? (
-                <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-center space-y-2">
-                  <div className="flex justify-center">
-                    <XCircle className="text-red-600" size={28} />
-                  </div>
-                  <p className="text-sm font-medium text-red-800">
-                    Your corporate domain verification was rejected.
-                  </p>
-                  <p className="text-xs text-red-700">
-                    You can proceed to buy Connects standardly.
-                  </p>
-                </div>
-              ) : (
+              ) : isRejected ? null : (
                 <>
                   {/* Corporate Option */}
                   <div

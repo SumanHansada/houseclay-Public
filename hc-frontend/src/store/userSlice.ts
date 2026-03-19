@@ -15,10 +15,10 @@ export interface UserDetail {
   avatarUrl: string | null;
   onWhatsApp: boolean;
   emailVerified: boolean;
-  corporateEmailVerified: boolean;
-  corporateBenefitStatus?: CorporateBenefitStatus;
+  corporateBenefitStatus: CorporateBenefitStatus;
   companyName?: string;
   jobTitle?: string;
+  corporateEmailID?: string;
 
   ownedProperties: UserOwnedProperties[];
   externalPayments: UserExternalPayment[];
@@ -51,10 +51,10 @@ const initialState: UserState = {
     avatarUrl: null,
     onWhatsApp: false,
     emailVerified: false,
-    corporateEmailVerified: false,
-    corporateBenefitStatus: undefined,
+    corporateBenefitStatus: CorporateBenefitStatus.NONE,
     companyName: undefined,
     jobTitle: undefined,
+    corporateEmailID: undefined,
 
     ownedProperties: [],
     externalPayments: [],
@@ -116,15 +116,9 @@ const userSlice = createSlice({
       }
     },
 
-    setCorporateEmailVerified(state, action: PayloadAction<boolean>) {
-      if (state.userDetail) {
-        state.userDetail.corporateEmailVerified = action.payload;
-      }
-    },
-
     setCorporateBenefitStatus(
       state,
-      action: PayloadAction<CorporateBenefitStatus | undefined>,
+      action: PayloadAction<CorporateBenefitStatus>,
     ) {
       if (state.userDetail) {
         state.userDetail.corporateBenefitStatus = action.payload;
@@ -203,7 +197,6 @@ export const {
   setPhoneNo,
   setAvatarUrl,
   setEmailVerified,
-  setCorporateEmailVerified,
   setCorporateBenefitStatus,
   setOnWhatsApp,
   setContactedProperties,

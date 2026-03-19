@@ -7,10 +7,10 @@ export interface MyProfileFormValues {
   onWhatsapp: boolean;
   email: string;
   emailVerified: boolean;
-  corporateEmailVerified: boolean;
-  corporateBenefitStatus?: CorporateBenefitStatus;
+  corporateBenefitStatus: CorporateBenefitStatus;
   companyName?: string;
   jobTitle?: string;
+  corporateEmailID?: string;
   connectsBalance: number;
 }
 

@@ -81,6 +81,7 @@ export function MobileClient({ editMode, onVerifyEmail }: MobileClientProps) {
             placeholder="Full name"
             required
           />
+
           {/* Connects Balance */}
           <FormTextField
             name="connectsBalance"
@@ -90,32 +91,6 @@ export function MobileClient({ editMode, onVerifyEmail }: MobileClientProps) {
             className="cursor-not-allowed bg-gray-50"
             disabled
           />
-
-          {/* Job Title */}
-          {values.jobTitle &&
-          values.corporateBenefitStatus !== CorporateBenefitStatus.REJECTED ? (
-            <FormTextField
-              name="jobTitle"
-              id="jobTitle"
-              label="Which profession?"
-              placeholder="Not provided"
-              className="cursor-not-allowed bg-gray-50"
-              disabled
-            />
-          ) : null}
-
-          {/* Company Name */}
-          {values.companyName &&
-          values.corporateBenefitStatus !== CorporateBenefitStatus.REJECTED ? (
-            <FormTextField
-              name="companyName"
-              id="companyName"
-              label="Where do you work?"
-              placeholder="Not provided"
-              className="cursor-not-allowed bg-gray-50"
-              disabled
-            />
-          ) : null}
 
           {/* Phone (read-only) */}
           <div className="mt-1 flex flex-col gap-4">
@@ -192,25 +167,52 @@ export function MobileClient({ editMode, onVerifyEmail }: MobileClientProps) {
               </p>
             )}
           </div>
+
+          <hr className="my-6 border-gray-200" />
+
+          {/* Company Name */}
+          {values.companyName &&
+          values.corporateBenefitStatus !== CorporateBenefitStatus.REJECTED ? (
+            <FormTextField
+              name="companyName"
+              id="companyName"
+              label="Company"
+              placeholder="Not provided"
+              className="cursor-not-allowed bg-gray-50"
+              disabled
+            />
+          ) : null}
+
+          {/* Job Title */}
+          {values.jobTitle &&
+          values.corporateBenefitStatus !== CorporateBenefitStatus.REJECTED ? (
+            <FormTextField
+              name="jobTitle"
+              id="jobTitle"
+              label="Job Title"
+              placeholder="Not provided"
+              className="cursor-not-allowed bg-gray-50"
+              disabled
+            />
+          ) : null}
+
+          {/* Corporate Email */}
+          {values.corporateEmailID &&
+          values.corporateBenefitStatus === CorporateBenefitStatus.APPROVED ? (
+            <FormTextField
+              name="corporateEmailID"
+              id="corporateEmailID"
+              label="Corporate Email"
+              placeholder="Not provided"
+              className="cursor-not-allowed bg-gray-50"
+              disabled
+            />
+          ) : null}
         </Form>
       ) : (
         <div className="px-6 pt-4 pb-16 space-y-4">
           <DisplayRow label="Name" value={values.name} />
           <DisplayRow label="Connects Balance" value={values.connectsBalance} />
-          {values.jobTitle &&
-          values.corporateBenefitStatus !== CorporateBenefitStatus.REJECTED ? (
-            <DisplayRow
-              label="Which profession?"
-              value={values.jobTitle || "Not provided"}
-            />
-          ) : null}
-          {values.companyName &&
-          values.corporateBenefitStatus !== CorporateBenefitStatus.REJECTED ? (
-            <DisplayRow
-              label="Where do you work?"
-              value={values.companyName || "Not provided"}
-            />
-          ) : null}
           <DisplayRow
             label="Phone Number"
             value={`${values.phoneNumber}`}
@@ -232,6 +234,32 @@ export function MobileClient({ editMode, onVerifyEmail }: MobileClientProps) {
           {values.emailVerified ? null : (
             <EmailVerifyIncentive onVerify={onVerifyEmail} />
           )}
+
+          {(values.companyName ||
+            values.jobTitle ||
+            values.corporateEmailID) && <hr className="my-4 border-gray-200" />}
+
+          {values.companyName &&
+          values.corporateBenefitStatus !== CorporateBenefitStatus.REJECTED ? (
+            <DisplayRow
+              label="Company"
+              value={values.companyName || "Not provided"}
+            />
+          ) : null}
+          {values.jobTitle &&
+          values.corporateBenefitStatus !== CorporateBenefitStatus.REJECTED ? (
+            <DisplayRow
+              label="Job Title"
+              value={values.jobTitle || "Not provided"}
+            />
+          ) : null}
+          {values.corporateEmailID &&
+          values.corporateBenefitStatus === CorporateBenefitStatus.APPROVED ? (
+            <DisplayRow
+              label="Corporate Email"
+              value={values.corporateEmailID || "Not provided"}
+            />
+          ) : null}
         </div>
       )}
     </div>
