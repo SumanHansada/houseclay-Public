@@ -119,9 +119,9 @@ public class UserMapper {
         dto.setPhoneNo(user.getPhoneNo());
         dto.setConnectBal(user.getConnectBal());
         dto.setEmailVerified(user.isEmailVerified());
-        dto.setCorporateEmailVerified(user.isCorporateEmailVerified());
         dto.setCompanyName(user.getCompanyName());
         dto.setJobTitle(user.getJobTitle());
+        dto.setCorporateEmailID(user.getCorporateEmailID());
         dto.setCorporateBenefitStatus(user.getCorporateBenefitStatus());
 
         dto.setOwnedProperties(
@@ -236,7 +236,11 @@ public class UserMapper {
     public static UserUpdateDTO toUserUpdateDTO(UserUpdateLog userUpdateLog) {
         UserUpdateDTO dto = new UserUpdateDTO();
         dto.setUpdateType(userUpdateLog.getUserUpdateType());
-        dto.setUpdateBy(userUpdateLog.getAdmin().getUsername());
+        if (userUpdateLog.getAdmin() != null) {
+            dto.setUpdateBy(userUpdateLog.getAdmin().getUsername());
+        } else {
+            dto.setUpdateBy("SYSTEM");
+        }
         dto.setUpdateTime(userUpdateLog.getUpdatedAt());
         dto.setComment(userUpdateLog.getComment());
         return dto;
