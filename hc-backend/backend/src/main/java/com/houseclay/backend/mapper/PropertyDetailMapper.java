@@ -11,39 +11,48 @@ public class PropertyDetailMapper {
         PropertyDetailDTO detailDTO = new PropertyDetailDTO();
         detailDTO.setSecondaryPhoneNumber(property.getSecondaryPhoneNumber());
         detailDTO.setProperty(PropertyMapper.toBasicDTO(property));
-        copyAdditionalFields(property, detailDTO);
+        detailDTO.setOwner(UserMapper.toDTO(property.getOwner()));
+        detailDTO.setContactUsers(property.getPropertyActions().stream()
+                .filter(propertyAction -> propertyAction.getUserActionType() == UserActionType.CONTACT)
+                .map(propertyAction -> UserMapper.toContactUserDTO(propertyAction.getUser()))
+                .collect(Collectors.toList())
+        );
         return detailDTO;
     }
 
-    private static void copyAdditionalFields(Property source, PropertyDetailDTO target) {
-        target.setPropertyUpdates(source.getPropertyUpdateLogs().stream()
-                .map(PropertyDetailMapper::toPropertyUpdateDTO)
-                .collect(Collectors.toList()));
-
-        target.setOwner(UserMapper.toContactUserDTO(source.getOwner()));
-
-        target.setContactUsers(source.getPropertyActions().stream()
+    public static AdminPropertyDetailDTO toAdminPropertyDetailDTO(Property property) {
+        AdminPropertyDetailDTO detailDTO = new AdminPropertyDetailDTO();
+        detailDTO.setSecondaryPhoneNumber(property.getSecondaryPhoneNumber());
+        detailDTO.setProperty(PropertyMapper.toBasicDTO(property));
+        detailDTO.setOwner(UserMapper.toDTO(property.getOwner()));
+        
+        detailDTO.setContactUsers(property.getPropertyActions().stream()
                 .filter(propertyAction -> propertyAction.getUserActionType() == UserActionType.CONTACT)
                 .map(propertyAction -> UserMapper.toContactUserDTO(propertyAction.getUser()))
                 .collect(Collectors.toList())
         );
 
-        target.setViewUsers(source.getPropertyActions().stream()
+        detailDTO.setPropertyUpdates(property.getPropertyUpdateLogs().stream()
+                .map(PropertyDetailMapper::toPropertyUpdateDTO)
+                .collect(Collectors.toList()));
+
+        detailDTO.setViewUsers(property.getPropertyActions().stream()
                 .filter(propertyAction -> propertyAction.getUserActionType() == UserActionType.VIEW)
                 .map(propertyAction -> UserMapper.toDTO(propertyAction.getUser()))
                 .collect(Collectors.toList())
         );
 
-        target.setShortlistUsers(source.getPropertyActions().stream()
+        detailDTO.setShortlistUsers(property.getPropertyActions().stream()
                 .filter(propertyAction -> propertyAction.getUserActionType() == UserActionType.SHORTLIST)
                 .map(propertyAction -> UserMapper.toDTO(propertyAction.getUser()))
                 .collect(Collectors.toList())
         );
 
-        target.setReportUsers(source.getReportedProperties().stream()
+        detailDTO.setReportUsers(property.getReportedProperties().stream()
                 .map(PropertyDetailMapper::toReportUserDTO)
                 .collect(Collectors.toList()));
-
+                
+        return detailDTO;
     }
 
     private static ReportUserDTO toReportUserDTO(ReportProperty reportProperty) {

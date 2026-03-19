@@ -259,6 +259,7 @@ public class UserMapper {
         dto.setBlacklisted(user.isBlacklisted());
         dto.setCompanyName(user.getCompanyName());
         dto.setJobTitle(user.getJobTitle());
+        dto.setCorporateBenefitStatus(user.getCorporateBenefitStatus());
         return dto;
     }
 }

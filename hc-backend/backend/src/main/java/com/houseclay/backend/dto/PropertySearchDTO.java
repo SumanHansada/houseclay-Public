@@ -6,7 +6,4 @@ import lombok.Data;
 public class PropertySearchDTO {
 
     private PropertyDTO property;
-    private Long viewUserCount;
-    private Long shortlistUserCount;
-    private Long contactUserCount;
 }
