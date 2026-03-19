@@ -8,6 +8,7 @@ import { RenderPropertyStatus } from "@/components/status/RenderPropertyStatus";
 import { CorporateDomain } from "@/interfaces/api";
 import { PropertyInfo } from "@/interfaces/PropertyInfo";
 import { UserInfo } from "@/interfaces/User";
+import { Popover } from "@/utility-components";
 
 import { formatDateVerbose } from "./core";
 
@@ -182,6 +183,15 @@ export interface CorporateDomainActionConfig {
   show?: (row: SerializedCorporateDomainRow) => boolean;
 }
 
+/**
+ * buildCorporateDomainColumns
+ * ---------------------------
+ * Returns the column configuration for the Corporate Domains table.
+ * Extracts the layout logic to maintain consistency with User and Property tables.
+ *
+ * @param actions - An array of action objects (icon + handler) for the Action column.
+ * The order in the array determines the render order.
+ */
 export function buildCorporateDomainColumns(
   actions: CorporateDomainActionConfig[] = [],
 ): Column<SerializedCorporateDomainRow>[] {
@@ -200,7 +210,27 @@ export function buildCorporateDomainColumns(
     {
       key: "websiteTitle",
       label: "Website Title",
-      accessor: "websiteTitle",
+      render: (d) => {
+        const title = d.websiteTitle || "—";
+
+        return (
+          <Popover
+            id={`popover-domain-title-${d.id}`}
+            trigger="hover"
+            // The content panel with some basic padding and max-width so very long titles wrap nicely
+            content={
+              <div className="p-3 max-w-xs md:max-w-sm text-sm text-gray-700 font-medium break-words">
+                {title}
+              </div>
+            }
+          >
+            {/* The truncate class requires a width constraint (like max-w) to trigger the ellipsis (...) */}
+            <div className="max-w-[150px] md:max-w-[200px] xl:max-w-[250px] truncate cursor-help">
+              {title}
+            </div>
+          </Popover>
+        );
+      },
     },
     {
       key: "status",

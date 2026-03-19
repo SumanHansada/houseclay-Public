@@ -1,10 +1,12 @@
 "use client";
 
+import { CircleSlash, Clock, ExternalLink, ShieldCheck } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 import { Button } from "@/base-components";
 import { dialogLabels } from "@/common/constants";
-import { UserDetailsTabEnum } from "@/common/enums";
+import { CorporateBenefitStatus, UserDetailsTabEnum } from "@/common/enums";
 import { InitialsAvatar } from "@/components/InitialsAvatar";
 import { ActionDialog } from "@/dialogs/action-dialog";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -19,6 +21,7 @@ const BLACKLIST_DIALOG_ID = `blacklist-user-dialog`;
 const ACTIVATE_DIALOG_ID = `activate-user-dialog`;
 
 export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
+  const router = useRouter();
   const { data } = useGetUserByPhoneNoQuery({ phoneNo: userPhoneNo });
 
   const [blacklistUser] = useBlacklistUserMutation();
@@ -43,7 +46,7 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
     phoneNo,
     createdAt,
     connectBal,
-    corporateEmailVerified,
+    corporateBenefitStatus,
     corporateEmailID,
     corporateEmailVerifiedAt,
     companyName,
@@ -83,8 +86,42 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
       value: corporateEmailID ?? "N/A",
     },
     {
-      label: "Corporate Email Verified",
-      value: corporateEmailVerified ? "Verified" : "Not Verified",
+      label: "Corporate Benefit Status",
+      customRender: (
+        <div className="flex items-center justify-between border border-gray-400 rounded-xl p-2 bg-white">
+          <div className="flex items-center gap-1">
+            {corporateBenefitStatus === CorporateBenefitStatus.APPROVED && (
+              <ShieldCheck className="text-white fill-red-500" />
+            )}
+            {corporateBenefitStatus ===
+              CorporateBenefitStatus.PENDING_ADMIN_APPROVAL && (
+              <Clock className="text-yellow-500" />
+            )}
+            {corporateBenefitStatus === CorporateBenefitStatus.REJECTED && (
+              <CircleSlash className="text-red-500" />
+            )}
+            <span className="text-gray-700 text-xl font-medium">
+              {corporateBenefitStatus || "NONE"}
+            </span>
+          </div>
+          {corporateBenefitStatus ===
+            CorporateBenefitStatus.PENDING_ADMIN_APPROVAL && (
+            <Button
+              size="custom"
+              className="px-3 py-1 rounded-lg"
+              rightIcon={<ExternalLink size={16} />}
+              onClick={(e) => {
+                e.preventDefault(); // prevent form submit behavior if any
+                router.push(
+                  "/admin/users/corporate-domains?page=1&status=pending",
+                );
+              }}
+            >
+              Review domains
+            </Button>
+          )}
+        </div>
+      ),
     },
     {
       label: "Corporate Email Verified At",
@@ -115,27 +152,35 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
             <div className="p-2 bg-gray-100 w-full flex items-center justify-center">
               <InitialsAvatar name={name} size="xl" />
             </div>
-            {name && (
-              <h3 className="text-2xl font-medium text-gray-800 text-center border w-full p-2">
-                {name}
-              </h3>
-            )}
+            <h3 className="text-2xl font-medium text-gray-800 text-center border w-full p-2 flex-col items-center justify-center">
+              {name || "N/A"}
+              {corporateBenefitStatus === CorporateBenefitStatus.APPROVED && (
+                <div className="flex items-center justify-around gap-1 text-sm w-fit mx-auto">
+                  <ShieldCheck className="text-white fill-red-500 size-5" />
+                  <span className="underline">Corporate Verified</span>
+                </div>
+              )}
+            </h3>
           </div>
 
           {/* Right Side */}
           <div className="flex-1 flex flex-col justify-between border rounded-xl shadow-sm overflow-hidden">
             <form className="flex flex-col justify-between gap-4 px-5 py-3 overflow-auto min-h-0 scrollbar-thin">
-              {profileFields.map(({ label, value }) => (
+              {profileFields.map(({ label, value, customRender }) => (
                 <div key={label} className="flex flex-col gap-1">
                   <label className="text-gray-600 text-lg font-medium">
                     {label}
                   </label>
-                  <input
-                    type="text"
-                    value={value}
-                    disabled
-                    className="border border-gray-400 rounded-xl p-2 text-gray-700 text-xl bg-white"
-                  />
+                  {customRender ? (
+                    customRender
+                  ) : (
+                    <input
+                      type="text"
+                      value={value}
+                      disabled
+                      className="border border-gray-400 rounded-xl p-2 text-gray-700 text-xl bg-white"
+                    />
+                  )}
                 </div>
               ))}
             </form>
