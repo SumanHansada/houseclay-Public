@@ -3,6 +3,7 @@ import Image, { ImageProps } from "next/image";
 import { memo, useState } from "react";
 
 import { placeholderImageURL } from "@/common/cdnURLs";
+import { shimmer, toBase64 } from "@/common/utils";
 
 import RemoteSvg from "./RemoteSvg";
 
@@ -63,6 +64,7 @@ const ImageWithLoader = memo(function ImageWithLoader({
           className={`object-cover ${className ?? ""} ${isLoading ? "opacity-0" : "opacity-100"} transition-opacity duration-300`}
           onLoad={handleLoad}
           onError={handleError}
+          blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(300, 400))}`}
           {...rest}
         />
       )}
