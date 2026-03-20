@@ -67,6 +67,7 @@ import {
 } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
 import { ImageWithLoader } from "@/utility-components";
+import GoogleMapsPropertyMarkers from "@/utility-components/GoogleMapsPropertyMarkers";
 import { BENGALURU_BOUNDS, isWithinBounds } from "@/utils/geoBounds";
 
 // Normalize & Validate category from URL
@@ -135,13 +136,13 @@ const PropertiesList = memo(function PropertiesList({
 
   return (
     <div className="flex-1">
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6">
         {properties.map((property, idx) => (
           <Link
             key={`${property.propertyID}-${idx}`}
             href={`/property-details/${property.propertyID}`}
             prefetch={false}
-            className="block"
+            className="block rounded-xl"
           >
             <Properties
               property={property}
@@ -895,52 +896,69 @@ export function PropertySearchClient({
 
       {/* Main Content */}
       <section className="w-full md:pt-[64px] md:bg-gray-50 relative">
-        <div className="min-h-[580px] px-6 pb-10 md:bg-gray-50 xl:px-24 md:px-12">
-          {/* Info Bar */}
-          {(() => {
-            const totalElements = effectiveData?.totalElements || 0;
-            const hasCount = totalElements >= 20;
-            const hasContent = hasCount || hasConfirmedLocation;
+        <div className="md:flex">
+          {/* Left: Property listings */}
+          <div className="min-h-[580px] px-6 pb-10 md:bg-gray-50 md:pl-12 md:pr-6 xl:pl-24 xl:pr-8 md:flex-1 md:min-w-0">
+            {/* Info Bar */}
+            {(() => {
+              const totalElements = effectiveData?.totalElements || 0;
+              const hasCount = totalElements >= 20;
+              const hasContent = hasCount || hasConfirmedLocation;
 
-            if (!hasContent) {
-              return <div className="h-10 invisible" />;
-            }
+              if (!hasContent) {
+                return <div className="h-10 invisible" />;
+              }
 
-            const countElement = getTieredCountElement();
+              const countElement = getTieredCountElement();
 
-            return (
-              <div className="flex flex-col gap-4 py-6 max-md:max-h-24 max-h-20">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4">
-                  {/* Left Side: Count or empty (no spacer—let flex handle) */}
-                  {countElement}
+              return (
+                <div className="flex flex-col gap-4 py-6 max-md:max-h-24 max-h-20">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4">
+                    {countElement}
 
-                  {/* Right Side: Location (no placeholder if empty) */}
-                  {hasConfirmedLocation ? (
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className="text-sm text-gray-700 inline text-nowrap">
-                        Showing in:
-                      </span>
-                      <span className="px-2 py-0.5 md:py-1 rounded-full bg-gray-200 text-xs md:text-sm truncate max-w-64 md:max-w-xs">
-                        {searchState.confirmedLocationName}
-                      </span>
-                    </div>
-                  ) : null}
+                    {hasConfirmedLocation ? (
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="text-sm text-gray-700 inline text-nowrap">
+                          Showing in:
+                        </span>
+                        <span className="px-2 py-0.5 md:py-1 rounded-full bg-gray-200 text-xs md:text-sm truncate max-w-64 md:max-w-xs">
+                          {searchState.confirmedLocationName}
+                        </span>
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
-              </div>
-            );
-          })()}
+              );
+            })()}
 
-          {/* Property List */}
-          <div className="mx-auto">
-            <PropertiesList
-              properties={properties}
-              isLoading={isLoading}
-              isFetching={isFetching}
-              effectiveData={effectiveData}
-              onLoadMore={handleLoadMore}
-              page={page}
-              initialData={initialData}
-            />
+            {/* Property List */}
+            <div className="mx-auto">
+              <PropertiesList
+                properties={properties}
+                isLoading={isLoading}
+                isFetching={isFetching}
+                effectiveData={effectiveData}
+                onLoadMore={handleLoadMore}
+                page={page}
+                initialData={initialData}
+              />
+            </div>
+          </div>
+
+          {/* Right: Map with property markers (desktop only, sticky) */}
+          <div className="hidden md:block md:w-[50%] lg:w-[50%]">
+            <div className="sticky top-[120px] h-[calc(100vh-120px)] pt-6 pb-6 pr-12 xl:pr-24">
+              <GoogleMapsPropertyMarkers
+                properties={properties}
+                mapId="d2efb78aa393f5315b3aed0e"
+                defaultCenter={
+                  lat && lon
+                    ? { lat: Number(lat), lng: Number(lon) }
+                    : undefined
+                }
+                className="h-full w-full rounded-xl"
+              />
+            </div>
           </div>
         </div>
       </section>

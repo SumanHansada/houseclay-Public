@@ -6,10 +6,12 @@ import {
   useApiIsLoaded,
   useMap,
 } from "@vis.gl/react-google-maps";
-import { House } from "lucide-react";
-import { Navigation } from "lucide-react";
+import { Fullscreen, Minus, Navigation, Plus } from "lucide-react";
 import React from "react";
 import { useEffect, useRef, useState } from "react";
+import { createRoot } from "react-dom/client";
+
+import SvgIcon from "./SvgIcon";
 
 interface GoogleMapsDirectionProps {
   mapId?: string;
@@ -104,27 +106,60 @@ const GoogleMapsDirectionContent: React.FC<{
 
       // Set map options
       map.setOptions({
-        zoomControl: true,
-        zoomControlOptions: {
-          position: google.maps.ControlPosition.RIGHT_CENTER,
-        },
-        mapTypeControl: true,
-        mapTypeControlOptions: {
-          position: google.maps.ControlPosition.TOP_RIGHT,
-        },
-        streetViewControl: true,
-        streetViewControlOptions: {
-          position: google.maps.ControlPosition.RIGHT_CENTER,
-        },
-        fullscreenControl: true,
-        fullscreenControlOptions: {
-          position: google.maps.ControlPosition.RIGHT_TOP,
-        },
+        disableDefaultUI: true,
         gestureHandling: "greedy",
-        disableDefaultUI: false,
         scrollwheel: true,
         draggable: true,
       });
+
+      const zoomContainer = document.createElement("div");
+      zoomContainer.style.margin = "12px";
+      const zoomRoot = createRoot(zoomContainer);
+      zoomRoot.render(
+        <div className="flex flex-col overflow-hidden">
+          <button
+            onClick={() => map.setZoom((map.getZoom() ?? 10) + 1)}
+            className="w-10 h-10 bg-white rounded-t-xl flex items-center justify-center border hover:bg-gray-100 transition-colors text-gray-700"
+            aria-label="Zoom in"
+          >
+            <Plus size={18} />
+          </button>
+          <div className="h-px bg-gray-200" />
+          <button
+            onClick={() => map.setZoom((map.getZoom() ?? 10) - 1)}
+            className="w-10 h-10 bg-white rounded-b-xl flex items-center justify-center border hover:bg-gray-100 transition-colors text-gray-700"
+            aria-label="Zoom out"
+          >
+            <Minus size={18} />
+          </button>
+        </div>,
+      );
+      map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(
+        zoomContainer,
+      );
+
+      const fullscreenContainer = document.createElement("div");
+      fullscreenContainer.style.margin = "12px";
+      const fullscreenRoot = createRoot(fullscreenContainer);
+      fullscreenRoot.render(
+        <button
+          onClick={() => {
+            const mapDiv = map.getDiv();
+            if (document.fullscreenElement) {
+              document.exitFullscreen();
+            } else {
+              mapDiv.requestFullscreen();
+            }
+          }}
+          className="w-10 h-10 bg-white rounded-xl flex items-center justify-center border border-gray-200 hover:bg-gray-100 transition-colors text-gray-700"
+          aria-label="Toggle fullscreen"
+        >
+          <Fullscreen size={18} />
+        </button>,
+      );
+      map.controls[google.maps.ControlPosition.RIGHT_TOP].push(
+        fullscreenContainer,
+      );
 
       setIsMapInitialized(true);
     }
@@ -217,8 +252,8 @@ const GoogleMapsDirectionContent: React.FC<{
         <AdvancedMarker
           position={new google.maps.LatLng(destination.lat, destination.lng)}
         >
-          <div className="bg-red-500 p-2 rounded-full shadow-lg border-2 border-white">
-            <House className="w-5 h-5 text-white" />
+          <div className="w-8 h-8 rounded-full bg-red-500 text-white border-2 border-white shadow-lg cursor-pointer flex items-center justify-center">
+            <SvgIcon iconSize="small" name="houseclay-home" size={16} />
           </div>
         </AdvancedMarker>
 

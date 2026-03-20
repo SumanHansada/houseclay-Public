@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Crown, Heart, MapPin, Star } from "lucide-react";
+import { Crown, Heart, MapPin, Star, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
@@ -26,6 +26,7 @@ interface PropertiesProps {
   autoplayInterval?: number;
   showCarouselDots?: boolean;
   onClick?: (e: React.MouseEvent) => void;
+  onClose?: () => void;
 }
 
 // Properties Component
@@ -37,6 +38,7 @@ const Properties: React.FC<PropertiesProps> = ({
   autoplayInterval = 3000,
   showCarouselDots = true,
   onClick,
+  onClose,
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { toggleShortlist, isShortlisted } = useShortlist();
@@ -102,15 +104,15 @@ const Properties: React.FC<PropertiesProps> = ({
   return (
     <div
       onClick={onClick}
-      className="flex-col gap-8 bg-white border border-gray-100 rounded-xl drop-shadow relative p-3 cursor-pointer"
+      className="flex-col gap-8 bg-white rounded-xl drop-shadow relative cursor-pointer"
     >
       {/* Image Carousel */}
-      <div className="relative h-72 max-md:h-60">
+      <div className="relative h-60 max-md:h-60">
         <ImageWithFallback
           src={propertyImages[currentImageIndex]}
           alt={`Property ${property?.propertyID}`}
           fill
-          className="rounded-xl bg-gray-200 object-cover"
+          className="rounded-t-xl bg-gray-200 object-cover"
         />
 
         {/* Badge: Featured or Exclusive */}
@@ -142,33 +144,48 @@ const Properties: React.FC<PropertiesProps> = ({
           </div>
         )}
 
-        {/* Favorite Button */}
-        <motion.button
-          className={`absolute top-2 right-2 bg-gray-50/30 rounded-full p-2 shadow-md ${isShortlistedProperty ? "text-pink-500" : "text-gray-500"}`}
-          onClick={async (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const newStatus = await toggleShortlist(
-              property as PropertyCardWithImages,
-            );
-            setIsShortlistedProperty(newStatus);
-          }}
-          whileTap={{ scale: 0.95 }}
-          aria-label="Shortlist Property"
-        >
-          {/* Heart icon with scale animation */}
-          <motion.div
-            animate={{
-              scale: isShortlistedProperty ? [1, 1.3, 1] : 1,
+        <div className="absolute top-2 right-2 flex items-center gap-1.5">
+          {/* Favorite Button */}
+          <motion.button
+            className={`bg-white/75 rounded-full p-2 shadow-md ${isShortlistedProperty ? "text-pink-500" : "text-gray-500"}`}
+            onClick={async (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const newStatus = await toggleShortlist(
+                property as PropertyCardWithImages,
+              );
+              setIsShortlistedProperty(newStatus);
             }}
-            transition={{ duration: 0.3 }}
+            whileTap={{ scale: 0.95 }}
+            aria-label="Shortlist Property"
           >
-            <Heart
-              size={16}
-              className={isShortlistedProperty ? "fill-current" : ""}
-            />
-          </motion.div>
-        </motion.button>
+            <motion.div
+              animate={{
+                scale: isShortlistedProperty ? [1, 1.3, 1] : 1,
+              }}
+              transition={{ duration: 0.3 }}
+            >
+              <Heart
+                size={16}
+                className={isShortlistedProperty ? "fill-current" : ""}
+              />
+            </motion.div>
+          </motion.button>
+
+          {onClose && (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onClose();
+              }}
+              className="bg-white/75 rounded-full p-2 shadow-md text-gray-500 hover:text-gray-700"
+              aria-label="Close"
+            >
+              <X size={16} />
+            </button>
+          )}
+        </div>
 
         {/* Carousel Dots */}
         {showCarouselDots && propertyImages.length > 1 && (
@@ -190,7 +207,7 @@ const Properties: React.FC<PropertiesProps> = ({
       </div>
 
       {/* Property Info */}
-      <div className="flex-col mt-4">
+      <div className="flex-col p-4">
         <div className="flex justify-between items-center mb-2 gap-8">
           <p className="text-black text-xs border border-gray-200 py-1 px-1.5 rounded-full bg-gray-100 text-nowrap">
             {propertyCategory === PropertyCategory.RENT
