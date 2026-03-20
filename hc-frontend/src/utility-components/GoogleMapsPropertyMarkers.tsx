@@ -265,7 +265,7 @@ const MapInner: React.FC<{
                       d="M18 2 C9 2 2 9 2 18 C2 27 9 36 14 41 C15.5 42.5 16.8 43 18 43 C19.2 43 20.5 42.5 22 41 C27 36 34 27 34 18 C34 9 27 2 18 2Z"
                       fill={isSelected ? "red" : "white"}
                     />{" "}
-                    <circle cx="18" cy="18" r="13" fill="ef4444" />{" "}
+                    <circle cx="18" cy="18" r="13" fill="#ef4444" />{" "}
                   </svg>
                   <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-8 h-6 flex items-center justify-center text-white pointer-events-none">
                     <SvgIcon iconSize="small" name="houseclay-home" size={16} />
