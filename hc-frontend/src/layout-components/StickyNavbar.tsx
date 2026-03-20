@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { StickyNavItem } from "@/common/dataConstants/navbarList";
 import { STICKY_NAV_ITEMS } from "@/common/dataConstants/navbarList";
@@ -17,6 +17,30 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
   const pathname = usePathname();
   const [activeTab, setActiveTab] = useState<string>(defaultActive);
   const { openDialog } = useDialog();
+  const [visible, setVisible] = useState(true);
+  const lastScrollY = useRef(0);
+  const ticking = useRef(false);
+
+  const onScroll = useCallback(() => {
+    if (ticking.current) return;
+    ticking.current = true;
+    requestAnimationFrame(() => {
+      const currentY = window.scrollY;
+      const delta = currentY - lastScrollY.current;
+      if (delta > 10) {
+        setVisible(false);
+      } else if (delta < -5) {
+        setVisible(true);
+      }
+      lastScrollY.current = currentY;
+      ticking.current = false;
+    });
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [onScroll]);
 
   const handleNavClick = (id: string) => {
     setActiveTab(id);
@@ -37,7 +61,9 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
   });
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 pb-safe-bottom bg-white border-t  border-gray-200 shadow-md z-40 w-full md:hidden ">
+    <nav
+      className={`fixed bottom-0 left-0 right-0 pb-safe-bottom bg-white border-t border-gray-200 shadow-md z-40 w-full md:hidden transition-transform duration-300 ease-in-out ${visible ? "translate-y-0" : "translate-y-full"}`}
+    >
       <div className="relative grid grid-cols-5 place-items-center py-2">
         <ul className="contents">
           {STICKY_NAV_ITEMS.map((item) => {

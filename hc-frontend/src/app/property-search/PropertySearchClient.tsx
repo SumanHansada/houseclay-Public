@@ -14,7 +14,7 @@ import {
   useRouter,
   useSearchParams,
 } from "next/navigation";
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -195,9 +195,19 @@ export function PropertySearchClient({
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [selectedMapProperty, setSelectedMapProperty] =
     useState<PropertySearch | null>(null);
+  const [mobileMapState, setMobileMapState] = useState<
+    "default" | "expanded" | "collapsed"
+  >("default");
+  const displayedMapProperty = useRef<PropertySearch | null>(null);
+  if (selectedMapProperty) {
+    displayedMapProperty.current = selectedMapProperty;
+  }
 
   const handleMobileMarkerSelect = useCallback(
-    (property: PropertySearch | null) => setSelectedMapProperty(property),
+    (property: PropertySearch | null) => {
+      setSelectedMapProperty(property);
+      setMobileMapState(property ? "expanded" : "collapsed");
+    },
     [],
   );
   const { openDialog, closeDialog, isDialogOpen } = useDialog();
@@ -905,7 +915,7 @@ export function PropertySearchClient({
       <section className="w-full md:pt-[64px] md:bg-gray-50 relative">
         {/* Mobile: Sticky map behind listings */}
         <div
-          className={`md:hidden sticky top-14 z-0 ${selectedMapProperty ? "h-[calc(100vh-3.5rem)]" : "h-[40vh]"} transition-[height] duration-300`}
+          className={`md:hidden sticky top-14 z-0 ${mobileMapState === "expanded" ? "h-[calc(100vh-3.5rem)]" : mobileMapState === "collapsed" ? "h-[80vh]" : "h-[40vh]"}`}
         >
           <GoogleMapsPropertyMarkers
             properties={properties}
@@ -918,31 +928,34 @@ export function PropertySearchClient({
           />
         </div>
 
-        {/* Mobile: Bottom property card when marker selected */}
-        {selectedMapProperty && (
-          <div
-            key={selectedMapProperty.propertyID}
-            className="md:hidden fixed bottom-0 left-0 right-0 z-50 animate-slide-in-bottom"
-          >
+        {/* Mobile: Bottom property card — always rendered, slides in/out */}
+        <div
+          className={`md:hidden fixed bottom-0 left-0 right-0 z-50 transition-transform duration-300 ease-in-out ${selectedMapProperty ? "translate-y-0" : "translate-y-full"}`}
+        >
+          {displayedMapProperty.current && (
             <Link
-              href={`/property-details/${selectedMapProperty.propertyID}`}
+              key={displayedMapProperty.current.propertyID}
+              href={`/property-details/${displayedMapProperty.current.propertyID}`}
               prefetch={false}
               className="block rounded-t-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
             >
               <Properties
-                property={selectedMapProperty}
+                property={displayedMapProperty.current}
                 showCarouselDots={false}
-                onClose={() => setSelectedMapProperty(null)}
+                onClose={() => {
+                  setSelectedMapProperty(null);
+                  setMobileMapState("collapsed");
+                }}
                 className="rounded-t-xl rounded-b-none"
               />
             </Link>
-          </div>
-        )}
+          )}
+        </div>
 
         <div className="md:flex">
           {/* Listings */}
           <div
-            className={`min-h-screen md:min-h-[580px] px-6 pb-10 md:bg-gray-50 md:pl-12 md:pr-6 xl:pl-24 xl:pr-8 md:flex-1 md:min-w-0 max-md:relative max-md:z-10 max-md:bg-white max-md:rounded-t-3xl max-md:-mt-5 max-md:shadow-[0_-4px_16px_rgba(0,0,0,0.08)] ${selectedMapProperty ? "max-md:hidden" : ""}`}
+            className={`min-h-screen md:min-h-[580px] px-6 pb-10 md:bg-gray-50 md:pl-12 md:pr-6 xl:pl-24 xl:pr-8 md:flex-1 md:min-w-0 max-md:relative max-md:z-10 max-md:bg-white max-md:rounded-t-3xl max-md:-mt-5 max-md:shadow-[0_-4px_16px_rgba(0,0,0,0.08)] ${mobileMapState === "expanded" ? "max-md:hidden" : ""}`}
           >
             {/* Drag handle (mobile only) */}
             <div className="md:hidden flex justify-center pt-3 pb-1">
