@@ -578,7 +578,7 @@ export function PropertyDetailsClient({
                     <PlacesAutocomplete
                       id="destination"
                       name="destination"
-                      placeholder="Type in place to get direction"
+                      placeholder="Find directions from your home"
                       value={origin}
                       onChange={(value) => setOrigin(value)}
                       onLocationSelect={(location) =>
@@ -1292,7 +1292,7 @@ export function PropertyDetailsClient({
                   <PlacesAutocomplete
                     id="destination"
                     name="destination"
-                    placeholder="Type in place to get direction"
+                    placeholder="Find directions from your home"
                     value={origin}
                     onChange={(value) => setOrigin(value)}
                     onLocationSelect={(location) =>

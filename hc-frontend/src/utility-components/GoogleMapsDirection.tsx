@@ -107,6 +107,10 @@ const GoogleMapsDirectionContent: React.FC<{
       // Set map options
       map.setOptions({
         disableDefaultUI: true,
+        streetViewControl: true,
+        streetViewControlOptions: {
+          position: google.maps.ControlPosition.RIGHT_TOP,
+        },
         gestureHandling: "greedy",
         scrollwheel: true,
         draggable: true,
@@ -252,16 +256,46 @@ const GoogleMapsDirectionContent: React.FC<{
         <AdvancedMarker
           position={new google.maps.LatLng(destination.lat, destination.lng)}
         >
-          <div className="w-8 h-8 rounded-full bg-red-500 text-white border-2 border-white shadow-lg cursor-pointer flex items-center justify-center">
-            <SvgIcon iconSize="small" name="houseclay-home" size={16} />
+          <div
+            className="flex flex-col items-center cursor-pointer"
+            style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))" }}
+          >
+            <div className="relative">
+              <svg width="36" height="46" viewBox="0 0 36 46" fill="none">
+                {" "}
+                <path
+                  d="M18 2 C9 2 2 9 2 18 C2 27 9 36 14 41 C15.5 42.5 16.8 43 18 43 C19.2 43 20.5 42.5 22 41 C27 36 34 27 34 18 C34 9 27 2 18 2Z"
+                  fill="white"
+                />{" "}
+                <circle cx="18" cy="18" r="13" fill="#ef4444" />{" "}
+              </svg>
+              <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-8 h-6 flex items-center justify-center text-white pointer-events-none">
+                <SvgIcon iconSize="small" name="houseclay-home" size={16} />
+              </div>
+            </div>
           </div>
         </AdvancedMarker>
 
         {/* User's current location marker (only show when directions are active) */}
         {showDirections && originLatLng && (
           <AdvancedMarker position={originLatLng}>
-            <div className="bg-blue-500 p-2 rounded-full shadow-lg border-2 border-white">
-              <Navigation className="w-5 h-5 text-white" />
+            <div
+              className="flex flex-col items-center cursor-pointer"
+              style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))" }}
+            >
+              <div className="relative">
+                <svg width="36" height="46" viewBox="0 0 36 46" fill="none">
+                  {" "}
+                  <path
+                    d="M18 2 C9 2 2 9 2 18 C2 27 9 36 14 41 C15.5 42.5 16.8 43 18 43 C19.2 43 20.5 42.5 22 41 C27 36 34 27 34 18 C34 9 27 2 18 2Z"
+                    fill="white"
+                  />{" "}
+                  <circle cx="18" cy="18" r="13" fill="#3b82f6" />{" "}
+                </svg>
+                <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-8 h-7 flex items-center justify-center text-white pointer-events-none">
+                  <Navigation className="w-4 h-4 text-white" />
+                </div>
+              </div>
             </div>
           </AdvancedMarker>
         )}

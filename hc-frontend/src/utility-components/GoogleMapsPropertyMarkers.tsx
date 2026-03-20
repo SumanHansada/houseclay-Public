@@ -90,6 +90,10 @@ const MapInner: React.FC<{
     if (map && !isMapInitialized.current) {
       map.setOptions({
         disableDefaultUI: true,
+        streetViewControl: true,
+        streetViewControlOptions: {
+          position: google.maps.ControlPosition.RIGHT_TOP,
+        },
         gestureHandling: "greedy",
         scrollwheel: true,
         draggable: true,
@@ -209,9 +213,20 @@ const MapInner: React.FC<{
                 <div
                   ref={refs.setReference}
                   {...getReferenceProps()}
-                  className="w-8 h-8 rounded-full bg-black text-white border-2 border-white shadow-lg cursor-pointer flex items-center justify-center"
+                  className="flex flex-col items-center cursor-pointer"
+                  style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))" }}
                 >
-                  <SvgIcon iconSize="small" name="houseclay-home" size={16} />
+                  <svg width="36" height="46" viewBox="0 0 36 46" fill="none">
+                    {" "}
+                    <path
+                      d="M18 2 C9 2 2 9 2 18 C2 27 9 36 14 41 C15.5 42.5 16.8 43 18 43 C19.2 43 20.5 42.5 22 41 C27 36 34 27 34 18 C34 9 27 2 18 2Z"
+                      fill="red"
+                    />{" "}
+                    <circle cx="18" cy="18" r="13" fill="#ef4444" />{" "}
+                  </svg>
+                  <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-8 h-6 flex items-center justify-center text-white pointer-events-none">
+                    <SvgIcon iconSize="small" name="houseclay-home" size={16} />
+                  </div>
                 </div>
                 <FloatingFocusManager
                   context={context}
@@ -240,9 +255,27 @@ const MapInner: React.FC<{
               </div>
             ) : (
               <div
-                className={`w-8 h-8 rounded-full ${isSelected ? "bg-black" : "bg-red-500"} text-white border-2 border-white shadow-lg cursor-pointer flex items-center justify-center hover:scale-110 transition-transform`}
+                className="flex flex-col items-center cursor-pointer hover:scale-110 transition-transform"
+                style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))" }}
               >
-                <SvgIcon iconSize="small" name="houseclay-home" size={16} />
+                <div className="relative">
+                  <svg width="36" height="46" viewBox="0 0 36 46" fill="none">
+                    {" "}
+                    <path
+                      d="M18 2 C9 2 2 9 2 18 C2 27 9 36 14 41 C15.5 42.5 16.8 43 18 43 C19.2 43 20.5 42.5 22 41 C27 36 34 27 34 18 C34 9 27 2 18 2Z"
+                      fill="white"
+                    />{" "}
+                    <circle
+                      cx="18"
+                      cy="18"
+                      r="13"
+                      fill={isSelected ? "black" : "#ef4444"}
+                    />{" "}
+                  </svg>
+                  <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-8 h-6 flex items-center justify-center text-white pointer-events-none">
+                    <SvgIcon iconSize="small" name="houseclay-home" size={16} />
+                  </div>
+                </div>
               </div>
             )}
           </AdvancedMarker>
