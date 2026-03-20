@@ -915,7 +915,7 @@ export function PropertyDetailsClient({
               </section>
 
               {/* Activity Card */}
-              <section className="bg-white border rounded-xl px-4 py-6 mb-6">
+              {/* <section className="bg-white border rounded-xl px-4 py-6 mb-6">
                 <h3 className="text-xl mb-4">Activity On This Property</h3>
                 <div className="grid grid-cols-3 gap-4 divide-x">
                   <div className="flex flex-col items-start gap-3">
@@ -946,7 +946,7 @@ export function PropertyDetailsClient({
                     </div>
                   </div>
                 </div>
-              </section>
+              </section> */}
               {/* Exclusive listing */}
               {/* {property?.managed ? (
                 <section className="flex flex-col justify-between items-center gap-4 mb-6">

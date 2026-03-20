@@ -966,17 +966,24 @@ export function MyPropertyDetailsClient({
                                 <UserSearch size={24} strokeWidth={1.5} />
                               </div>
                               <div className="flex flex-col overflow-hidden">
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-2.5">
                                   <span className="font-bold text-lg text-gray-900 font-nunito truncate">
                                     {user.name}
                                   </span>
                                   {user.corporateBenefitStatus ===
                                     CorporateBenefitStatus.APPROVED && (
-                                    <ShieldCheck
-                                      size={18}
-                                      className="text-blue-500"
-                                      strokeWidth={2}
-                                    />
+                                    <div
+                                      className="flex items-center gap-1.5 px-2 py-0.5 bg-blue-50 border border-blue-100 rounded text-blue-700 shrink-0 cursor-default"
+                                      title="Verified Corporate Professional"
+                                    >
+                                      <ShieldCheck
+                                        size={14}
+                                        strokeWidth={2.5}
+                                      />
+                                      <span className="text-xs font-bold tracking-wider uppercase underline decoration-blue-300 underline-offset-2">
+                                        Corporate Verified
+                                      </span>
+                                    </div>
                                   )}
                                 </div>
                                 {(user.jobTitle || user.companyName) && (
