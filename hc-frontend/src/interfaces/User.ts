@@ -1,4 +1,8 @@
-import { PropertyCategory, PropertyStatus } from "@/common/enums";
+import {
+  CorporateBenefitStatus,
+  PropertyCategory,
+  PropertyStatus,
+} from "@/common/enums";
 
 export interface AuthUserDetail {
   name: string;
@@ -6,7 +10,8 @@ export interface AuthUserDetail {
   phoneNo: string;
   connectBal: number;
   avatarUrl: string | null;
-  corporateEmailVerified: boolean;
+  corporateBenefitStatus: CorporateBenefitStatus;
+  corporateEmailID?: string;
 }
 
 export interface UserOwnedProperties {
@@ -72,9 +77,10 @@ export interface UserDetailsDTO {
   onWhatsApp: boolean;
   emailVerified: boolean;
   connectBal: number;
-  corporateEmailVerified: boolean;
+  corporateBenefitStatus: CorporateBenefitStatus;
   companyName?: string;
   jobTitle?: string;
+  corporateEmailID?: string;
 
   ownedProperties: UserOwnedProperties[];
   externalPayments: UserExternalPayment[];

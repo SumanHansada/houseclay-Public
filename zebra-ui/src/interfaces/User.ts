@@ -1,4 +1,4 @@
-import { PaymentStatusEnum } from "@/common/enums";
+import { CorporateBenefitStatus, PaymentStatusEnum } from "@/common/enums";
 
 import { PropertyInfo } from "./PropertyInfo";
 
@@ -10,7 +10,7 @@ export interface UserInfo {
 }
 
 export interface UserExtendedInfo extends UserInfo {
-  corporateEmailVerified: boolean;
+  corporateBenefitStatus?: CorporateBenefitStatus;
   createdAt: string;
 }
 
@@ -50,7 +50,7 @@ export interface UserDetails extends UserInfo {
   blacklistedAt: string;
   broker: boolean;
   connectBal: number;
-  corporateEmailVerified: boolean;
+  corporateBenefitStatus?: CorporateBenefitStatus;
   corporateEmailVerifiedAt: string;
   companyName: string;
   jobTitle: string;

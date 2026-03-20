@@ -170,9 +170,6 @@ export const apiSlice = createApi({
       {
         property: {
           property: unknown;
-          contactUserCount: number;
-          viewUserCount: number;
-          shortlistUserCount: number;
         };
         owner: { name: string; phoneNo: string; emailID: string };
         reported: boolean;
@@ -377,7 +374,7 @@ export const apiSlice = createApi({
       }),
     }),
     confirmCorporateVerification: builder.mutation<
-      { message: string; isCorporateVerified: boolean },
+      { message: string; corporateBenefitStatus: string },
       {
         otp: string;
         token: string;
@@ -401,12 +398,7 @@ export const apiSlice = createApi({
         };
       },
     }),
-    claimCorporateBenefits: builder.mutation<{ message: string }, void>({
-      query: () => ({
-        url: "/user/claim-corporate-benefits",
-        method: "POST",
-      }),
-    }),
+
     verifyPayment: builder.mutation<
       { message: string; connectBal: number },
       {
@@ -521,5 +513,4 @@ export const {
   useContactUsMutation,
   useInitiateCorporateVerificationMutation,
   useConfirmCorporateVerificationMutation,
-  useClaimCorporateBenefitsMutation,
 } = apiSlice;

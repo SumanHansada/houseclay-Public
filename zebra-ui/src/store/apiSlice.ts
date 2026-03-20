@@ -5,6 +5,7 @@ import {
   GetAllLeadsResponse,
   GetAllPropertiesResponse,
   GetAllUsersResponse,
+  GetCorporateDomainsResponse,
   GetLeadByIdResponse,
   GetPropertyByIdResponse,
   GetUserByPhoneNoResponse,
@@ -165,6 +166,52 @@ export const apiSlice = createApi({
           },
         };
       },
+    }),
+
+    // ──────────────── CORPORATE DOMAINS ────────────────
+    getCorporateDomains: builder.query<
+      GetCorporateDomainsResponse,
+      { status: string; page: number; size: number }
+    >({
+      query: ({ status, page, size }) => ({
+        url: `/admin/corporate-domains`,
+        params: { status, page, size },
+        method: "GET",
+      }),
+      providesTags: (result) =>
+        result
+          ? [
+              ...listTag("CorporateDomains"),
+              ...result.content.map((domain) => ({
+                type: "CorporateDomainDetail" as const,
+                id: domain.id,
+              })),
+            ]
+          : listTag("CorporateDomains"),
+    }),
+
+    approveCorporateDomain: builder.mutation<string, { id: number }>({
+      query: ({ id }) => ({
+        url: `/admin/corporate-domains/${id}/approve`,
+        method: "PUT",
+      }),
+      invalidatesTags: (_r, _e, { id }) =>
+        [
+          { type: "CorporateDomainDetail", id },
+          ...listTag("CorporateDomains"),
+        ] as const,
+    }),
+
+    denyCorporateDomain: builder.mutation<string, { id: number }>({
+      query: ({ id }) => ({
+        url: `/admin/corporate-domains/${id}/deny`,
+        method: "PUT",
+      }),
+      invalidatesTags: (_r, _e, { id }) =>
+        [
+          { type: "CorporateDomainDetail", id },
+          ...listTag("CorporateDomains"),
+        ] as const,
     }),
 
     // ──────────────── Admins ────────────────
@@ -488,6 +535,9 @@ export const {
   useGetAdminByUsernameQuery,
   useActivateAdminMutation,
   useDeactivateAdminMutation,
+  useGetCorporateDomainsQuery,
+  useApproveCorporateDomainMutation,
+  useDenyCorporateDomainMutation,
   useGetLeadsQuery,
   useGetLeadByIdQuery,
   useLeadStatusUpdateMutation,

@@ -52,13 +52,13 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: "Houseclay",
-  description: "Houseclay - Stop Searching. Start Connecting.",
+  description: "Houseclay: Verified Owners, Verified Working Professionals.",
   applicationName: "Houseclay",
   metadataBase: new URL(WEBSITE_BASE_URL),
 
   openGraph: {
     title: "Houseclay",
-    description: "Houseclay - Stop Searching. Start Connecting.",
+    description: "Houseclay: Verified Owners, Verified Working Professionals.",
     url: WEBSITE_BASE_URL,
     siteName: "Houseclay",
     locale: "en_US",
@@ -75,7 +75,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Houseclay",
-    description: "Houseclay - Stop Searching. Start Connecting.",
+    description: "Houseclay: Verified Owners, Verified Working Professionals.",
     images: [`${CDN_BASE_URL}/public/images/houseclay-home-og-image.jpg`],
   },
 };
@@ -123,7 +123,7 @@ export default function RootLayout({
         {/* Critical meta tags - must come before splash screens */}
         <meta
           name="description"
-          content="Houseclay - Stop Searching. Start Connecting."
+          content="Houseclay: Verified Owners, Verified Working Professionals."
         />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />

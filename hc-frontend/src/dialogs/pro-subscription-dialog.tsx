@@ -43,7 +43,10 @@ declare global {
 const RAZORPAY_KEY = process.env.NEXT_PUBLIC_RAZORPAY_API_KEY;
 
 import { Button } from "@/base-components";
-import { PaymentVerificationStatus } from "@/common/enums";
+import {
+  CorporateBenefitStatus,
+  PaymentVerificationStatus,
+} from "@/common/enums";
 import {
   Dialog,
   DialogContent,
@@ -56,7 +59,6 @@ import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
   useBundleInfoQuery,
-  useClaimCorporateBenefitsMutation,
   useConfirmCorporateVerificationMutation,
   useCreateOrderMutation,
   useInitiateCorporateVerificationMutation,
@@ -79,7 +81,7 @@ enum ProSubscriptionStep {
   VERIFY_PAYMENT = "VERIFY_PAYMENT",
 }
 
-type ClaimStatus = "CLAIMING" | "SUCCESS" | "ERROR";
+type ClaimStatus = "CLAIMING" | "SUCCESS" | "PENDING_APPROVAL" | "ERROR";
 
 const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
   const { isMobile } = useDeviceContext();
@@ -101,7 +103,6 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
     useInitiateCorporateVerificationMutation();
   const [confirmVerify, { isLoading: isConfirming }] =
     useConfirmCorporateVerificationMutation();
-  const [claimBenefits] = useClaimCorporateBenefitsMutation();
 
   // State
   const [step, setStep] = useState<ProSubscriptionStep>(
@@ -131,7 +132,13 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
   const ref4 = useRef<HTMLInputElement>(null);
   const inputRefs = useMemo(() => [ref1, ref2, ref3, ref4], []);
 
-  const isUserAlreadyVerified = userDetail?.corporateEmailVerified;
+  const isUserAlreadyVerified =
+    userDetail?.corporateBenefitStatus === CorporateBenefitStatus.APPROVED;
+  const isPendingAdminApproval =
+    userDetail?.corporateBenefitStatus ===
+    CorporateBenefitStatus.PENDING_ADMIN_APPROVAL;
+  const isRejected =
+    userDetail?.corporateBenefitStatus === CorporateBenefitStatus.REJECTED;
 
   const onClose = () => {
     closeDialog(id);
@@ -157,10 +164,31 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
         setStep(ProSubscriptionStep.INFO);
       }
     }
-    if (isAuthenticated && isUserAlreadyVerified) {
+    if (
+      isAuthenticated &&
+      (isUserAlreadyVerified || isPendingAdminApproval || isRejected)
+    ) {
       setSelectedOption("no-corporate");
     }
-  }, [isAuthenticated, step]);
+  }, [
+    isAuthenticated,
+    step,
+    isUserAlreadyVerified,
+    isPendingAdminApproval,
+    isRejected,
+  ]);
+
+  // Fetch updated user info when dialog opens (to get latest corporateBenefitStatus)
+  useEffect(() => {
+    if (isAuthenticated) {
+      triggerGetUserInfo()
+        .unwrap()
+        .then((data) => {
+          dispatch(setUserDetail(data));
+        })
+        .catch((err) => console.error("Failed to refresh user info", err));
+    }
+  }, [isAuthenticated, triggerGetUserInfo, dispatch]);
 
   // Focus first OTP input when entering OTP step
   useEffect(() => {
@@ -269,23 +297,6 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
     }
   };
 
-  const triggerClaimProcess = async () => {
-    setClaimStatus("CLAIMING");
-    try {
-      // Claim Benefits
-      await claimBenefits().unwrap();
-
-      // Sync User Data
-      const userData = await triggerGetUserInfo().unwrap();
-      dispatch(setUserDetail(userData));
-      setClaimStatus("SUCCESS");
-    } catch (err) {
-      console.error("Failed to claim benefits", err);
-      setClaimStatus("ERROR");
-      toast.error(getErrorMessage(err));
-    }
-  };
-
   const handleConfirmVerification = async () => {
     const otp = otpCode.join("");
     if (otp.length !== 4) {
@@ -299,7 +310,10 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
     }
 
     try {
-      await confirmVerify({
+      setStep(ProSubscriptionStep.CLAIM);
+      setClaimStatus("CLAIMING");
+
+      const response = await confirmVerify({
         otp,
         token: verificationToken,
         corporateEmail: email,
@@ -307,12 +321,21 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
         jobTitle: jobTitle || undefined,
       }).unwrap();
 
-      toast.success("Email verified successfully!");
-      setStep(ProSubscriptionStep.CLAIM);
-      // Automatically Trigger Claim
-      await triggerClaimProcess();
+      // Sync User Data
+      const userData = await triggerGetUserInfo().unwrap();
+      dispatch(setUserDetail(userData));
+
+      if (
+        response.corporateBenefitStatus ===
+        CorporateBenefitStatus.PENDING_ADMIN_APPROVAL
+      ) {
+        setClaimStatus("PENDING_APPROVAL");
+      } else {
+        setClaimStatus("SUCCESS");
+      }
     } catch (err) {
       console.error("Failed to confirm verification", err);
+      setClaimStatus("ERROR");
       toast.error(getErrorMessage(err));
     }
   };
@@ -441,16 +464,16 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                 name="companyName"
                 value={companyName}
                 onChange={(val) => setCompanyName(String(val))}
-                label="Company Name"
+                label="Where do you work?"
                 required
-                placeholder="e.g. Houseclay"
+                placeholder="e.g. Houseclay/TCS"
                 className="w-full"
               />
               <TextField
                 name="jobTitle"
                 value={jobTitle}
                 onChange={(val) => setJobTitle(String(val))}
-                label="Job Title"
+                label="Which profession?"
                 required
                 placeholder="e.g. Software Engineer"
                 className="w-full"
@@ -491,12 +514,36 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    Verification Successful
+                    Verifying OTP
                   </h3>
                   <p className="text-gray-600">
-                    Adding 30 Free Connects to your account...
+                    Checking your corporate domain status...
                   </p>
                 </div>
+              </>
+            )}
+
+            {/* PENDING APPROVAL STATE */}
+            {claimStatus === "PENDING_APPROVAL" && (
+              <>
+                <div className="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mb-2">
+                  <CheckCircle2 className="text-yellow-600" size={40} />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    Verification Pending Review
+                  </h3>
+                  <p className="text-gray-600">
+                    Your email is verified, but your company domain is pending
+                    admin approval. Your benefits will be granted once approved.
+                  </p>
+                </div>
+                <Button
+                  onClick={onClose}
+                  className="w-full py-3 rounded-xl font-bold text-lg"
+                >
+                  Got it
+                </Button>
               </>
             )}
 
@@ -531,26 +578,22 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    Claim Failed
+                    Verification Failed
                   </h3>
                   <p className="text-gray-600">
-                    Verification passed, but we couldn&apos;t add the connects.
+                    We could not verify your domain or OTP.
                   </p>
                 </div>
                 <div className="flex gap-3 w-full">
                   <Button
                     variant="secondary"
-                    onClick={onClose}
-                    className="w-1/2 py-3 rounded-xl text-lg"
+                    onClick={() => {
+                      setStep(ProSubscriptionStep.OTP);
+                      setClaimStatus("CLAIMING");
+                    }}
+                    className="w-full py-3 rounded-xl text-lg"
                   >
-                    Close
-                  </Button>
-                  <Button
-                    variant="danger"
-                    onClick={triggerClaimProcess}
-                    className="w-1/2 py-3 rounded-xl text-lg"
-                  >
-                    Retry Claim
+                    Try Again
                   </Button>
                 </div>
               </>
@@ -672,6 +715,7 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
               {/* Benefits */}
               <div className="w-full rounded-xl p-px shadow-sm bg-gradient-to-r from-red-600 via-red-500 via-80% to-amber-300">
                 <div className="bg-white rounded-xl p-4">
+                <div className="bg-white rounded-xl p-4">
                   <ul className="flex flex-col gap-2">
                     {[
                       "100% Verified Listings",
@@ -736,7 +780,19 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                     You can proceed to buy more if required.
                   </p>
                 </div>
-              ) : (
+              ) : isPendingAdminApproval ? (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-center space-y-2">
+                  <div className="flex justify-center">
+                    <CheckCircle2 className="text-yellow-600" size={28} />
+                  </div>
+                  <p className="text-sm font-medium text-yellow-800">
+                    Your company domain is pending admin approval.
+                  </p>
+                  <p className="text-xs text-yellow-700">
+                    Your benefits will be granted once approved.
+                  </p>
+                </div>
+              ) : isRejected ? null : (
                 <>
                   {/* Corporate Option */}
                   <div
@@ -744,11 +800,11 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                     className={`relative rounded-xl cursor-pointer transition-all duration-200 ${
                       selectedOption === "corporate"
                         ? "p-px bg-gradient-to-r from-red-600 via-red-500 via-80% to-amber-300 shadow-md"
-                        : "border border-neutral-100 hover:border-red-200 hover:bg-gray-50"
+                        : "border border-neutral-100 hover:border-red-100 hover:bg-gray-50"
                     }`}
                   >
                     <div
-                      className={`h-full w-full ${selectedOption === "corporate" ? "bg-red-50 rounded-xl p-4" : "p-4"}`}
+                      className={`h-full w-full p-4 ${selectedOption === "corporate" ? "bg-red-50 rounded-xl" : ""}`}
                     >
                       <div className="flex justify-between items-start">
                         <div className="flex items-center gap-3">
@@ -814,11 +870,11 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
                     className={`relative rounded-xl cursor-pointer transition-all duration-200 ${
                       selectedOption === "no-corporate"
                         ? "p-px bg-gradient-to-r from-red-600 via-red-500 via-80% to-amber-300 shadow-md"
-                        : "border border-gray-200 hover:border-red-200 hover:bg-gray-50"
+                        : "border border-gray-200 hover:border-red-100 hover:bg-gray-50"
                     }`}
                   >
                     <div
-                      className={`h-full w-full flex justify-between items-center ${selectedOption === "no-corporate" ? "bg-red-50 rounded-xl p-4" : "p-4"}`}
+                      className={`h-full w-full flex justify-between items-center p-4 ${selectedOption === "no-corporate" ? "bg-red-50 rounded-xl" : ""}`}
                     >
                       <div className="flex items-center gap-3">
                         <div

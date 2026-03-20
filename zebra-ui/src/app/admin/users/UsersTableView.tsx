@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useCallback, useEffect, useState, useTransition } from "react";
 
 import { Button } from "@/base-components";
+import { CorporateBenefitStatus } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
 import { Column, DataTable } from "@/components/DataTable";
 import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
@@ -185,10 +186,19 @@ export const UsersTableView = ({
     { key: "email", label: "Email", accessor: "email" },
     { key: "phoneNo", label: "Phone No.", accessor: "phoneNo" },
     {
-      key: "corporateEmailVerified",
-      label: "Corporate Verified",
-      render: (user) =>
-        user.corporateEmailVerified ? "Verified" : "Not Verified",
+      key: "corporateBenefitStatus",
+      label: "Corporate Benefit",
+      render: (user) => {
+        const title =
+          user.corporateBenefitStatus || CorporateBenefitStatus.NONE;
+        let color: "green" | "red" | "yellow" | "gray" = "gray";
+        if (title === CorporateBenefitStatus.APPROVED) color = "green";
+        if (title === CorporateBenefitStatus.REJECTED) color = "red";
+        if (title === CorporateBenefitStatus.PENDING_ADMIN_APPROVAL)
+          color = "yellow";
+
+        return <Pill color={color}>{title}</Pill>;
+      },
     },
     {
       key: "createdAt",

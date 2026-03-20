@@ -1,4 +1,4 @@
-import { PaymentFilterStatus } from "@/common/enums";
+import { CorporateBenefitStatus, PaymentFilterStatus } from "@/common/enums";
 
 export interface MyProfileFormValues {
   name: string;
@@ -7,9 +7,10 @@ export interface MyProfileFormValues {
   onWhatsapp: boolean;
   email: string;
   emailVerified: boolean;
-  corporateEmailVerified: boolean;
+  corporateBenefitStatus: CorporateBenefitStatus;
   companyName?: string;
   jobTitle?: string;
+  corporateEmailID?: string;
   connectsBalance: number;
 }
 

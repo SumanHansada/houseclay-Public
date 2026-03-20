@@ -77,6 +77,11 @@ export const sidebarItems: SidebarItem[] = [
         href: "/admin/users/add-connects",
         allowedRoles: PERMISSIONS.ADD_CONNECTS,
       },
+      {
+        label: "Corporate Domains",
+        href: "/admin/users/corporate-domains",
+        allowedRoles: PERMISSIONS.USERS_ACCESS,
+      },
     ],
   },
   {

@@ -4,6 +4,7 @@ import { Form, useFormikContext } from "formik";
 import { CircleAlert, CircleCheck, ShieldCheck } from "lucide-react";
 import { type ReactNode } from "react";
 
+import { CorporateBenefitStatus } from "@/common/enums";
 import { getInitials } from "@/common/utils";
 import { FormPhoneField, FormTextField } from "@/form-components";
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
@@ -62,7 +63,7 @@ export function MobileClient({ editMode, onVerifyEmail }: MobileClientProps) {
           <div className="size-36 bg-black rounded-full flex items-center justify-center text-5xl text-white">
             {getInitials(values.name)}
           </div>
-          {values.corporateEmailVerified && (
+          {values.corporateBenefitStatus === "APPROVED" && (
             <div className="absolute bottom-1 right-1 bg-white rounded-full p-1 shadow-md">
               <ShieldCheck className="text-white fill-red-500 size-8" />
             </div>
@@ -80,6 +81,7 @@ export function MobileClient({ editMode, onVerifyEmail }: MobileClientProps) {
             placeholder="Full name"
             required
           />
+
           {/* Connects Balance */}
           <FormTextField
             name="connectsBalance"
@@ -89,30 +91,6 @@ export function MobileClient({ editMode, onVerifyEmail }: MobileClientProps) {
             className="cursor-not-allowed bg-gray-50"
             disabled
           />
-
-          {/* Job Title */}
-          {values.jobTitle ? (
-            <FormTextField
-              name="jobTitle"
-              id="jobTitle"
-              label="Job Title"
-              placeholder="Not provided"
-              className="cursor-not-allowed bg-gray-50"
-              disabled
-            />
-          ) : null}
-
-          {/* Company Name */}
-          {values.companyName ? (
-            <FormTextField
-              name="companyName"
-              id="companyName"
-              label="Company Name"
-              placeholder="Not provided"
-              className="cursor-not-allowed bg-gray-50"
-              disabled
-            />
-          ) : null}
 
           {/* Phone (read-only) */}
           <div className="mt-1 flex flex-col gap-4">
@@ -189,23 +167,52 @@ export function MobileClient({ editMode, onVerifyEmail }: MobileClientProps) {
               </p>
             )}
           </div>
+
+          <hr className="my-6 border-gray-200" />
+
+          {/* Company Name */}
+          {values.companyName &&
+          values.corporateBenefitStatus !== CorporateBenefitStatus.REJECTED ? (
+            <FormTextField
+              name="companyName"
+              id="companyName"
+              label="Company"
+              placeholder="Not provided"
+              className="cursor-not-allowed bg-gray-50"
+              disabled
+            />
+          ) : null}
+
+          {/* Job Title */}
+          {values.jobTitle &&
+          values.corporateBenefitStatus !== CorporateBenefitStatus.REJECTED ? (
+            <FormTextField
+              name="jobTitle"
+              id="jobTitle"
+              label="Job Title"
+              placeholder="Not provided"
+              className="cursor-not-allowed bg-gray-50"
+              disabled
+            />
+          ) : null}
+
+          {/* Corporate Email */}
+          {values.corporateEmailID &&
+          values.corporateBenefitStatus === CorporateBenefitStatus.APPROVED ? (
+            <FormTextField
+              name="corporateEmailID"
+              id="corporateEmailID"
+              label="Corporate Email"
+              placeholder="Not provided"
+              className="cursor-not-allowed bg-gray-50"
+              disabled
+            />
+          ) : null}
         </Form>
       ) : (
         <div className="px-6 pt-4 pb-16 space-y-4">
           <DisplayRow label="Name" value={values.name} />
           <DisplayRow label="Connects Balance" value={values.connectsBalance} />
-          {values.jobTitle ? (
-            <DisplayRow
-              label="Job Title"
-              value={values.jobTitle || "Not provided"}
-            />
-          ) : null}
-          {values.companyName ? (
-            <DisplayRow
-              label="Company Name"
-              value={values.companyName || "Not provided"}
-            />
-          ) : null}
           <DisplayRow
             label="Phone Number"
             value={`${values.phoneNumber}`}
@@ -227,6 +234,32 @@ export function MobileClient({ editMode, onVerifyEmail }: MobileClientProps) {
           {values.emailVerified ? null : (
             <EmailVerifyIncentive onVerify={onVerifyEmail} />
           )}
+
+          {(values.companyName ||
+            values.jobTitle ||
+            values.corporateEmailID) && <hr className="my-4 border-gray-200" />}
+
+          {values.companyName &&
+          values.corporateBenefitStatus !== CorporateBenefitStatus.REJECTED ? (
+            <DisplayRow
+              label="Company"
+              value={values.companyName || "Not provided"}
+            />
+          ) : null}
+          {values.jobTitle &&
+          values.corporateBenefitStatus !== CorporateBenefitStatus.REJECTED ? (
+            <DisplayRow
+              label="Job Title"
+              value={values.jobTitle || "Not provided"}
+            />
+          ) : null}
+          {values.corporateEmailID &&
+          values.corporateBenefitStatus === CorporateBenefitStatus.APPROVED ? (
+            <DisplayRow
+              label="Corporate Email"
+              value={values.corporateEmailID || "Not provided"}
+            />
+          ) : null}
         </div>
       )}
     </div>

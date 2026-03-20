@@ -9,10 +9,7 @@ import {
   insufficientConnectsIconURL,
   loginAndEarnIconURL,
 } from "@/common/cdnURLs";
-import {
-  BUY_CONNECTS_DIALOG_ID,
-  PRO_SUBSCRIPTION_DIALOG_ID,
-} from "@/common/dataConstants/dialogIDs";
+import { PRO_SUBSCRIPTION_DIALOG_ID } from "@/common/dataConstants/dialogIDs";
 import { AuthStep, PropertyCategory } from "@/common/enums";
 import { getPropertySearchHrefWithLocation } from "@/common/utils";
 import { UserDropdown } from "@/components/UserDropdown";
@@ -215,7 +212,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
                   <InfoTipLogin />
                 ) : (
                   <InfoTipZeroBalance
-                    onBuyConnects={() => openDialog(BUY_CONNECTS_DIALOG_ID)}
+                    onBuyConnects={() => openDialog(PRO_SUBSCRIPTION_DIALOG_ID)}
                   />
                 )
               }

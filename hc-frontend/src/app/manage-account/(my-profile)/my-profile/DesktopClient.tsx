@@ -3,6 +3,7 @@
 import { Form, useFormikContext } from "formik";
 import { CircleAlert, CircleCheck, ShieldCheck } from "lucide-react";
 
+import { CorporateBenefitStatus } from "@/common/enums";
 import { getInitials } from "@/common/utils";
 import { FormPhoneField, FormTextField } from "@/form-components";
 import { MyProfileFormValues } from "@/interfaces/ManageAccount";
@@ -44,7 +45,7 @@ export function DesktopClient({
             <div className="size-32 2xl:size-40 bg-black rounded-full flex items-center justify-center text-5xl 2xl:text-[60px] text-white">
               {getInitials(values.name)}
             </div>
-            {values.corporateEmailVerified && (
+            {values.corporateBenefitStatus === "APPROVED" && (
               <div className="absolute bottom-0 right-0 bg-white rounded-full p-0.5 shadow-md">
                 <ShieldCheck className="text-white fill-red-500 size-8 2xl:size-10" />
               </div>
@@ -74,30 +75,6 @@ export function DesktopClient({
             className="w-2/3 cursor-not-allowed bg-gray-50"
             disabled
           />
-
-          {/* Job Title */}
-          {values.jobTitle ? (
-            <FormTextField
-              name="jobTitle"
-              id="jobTitle"
-              label="Job Title"
-              placeholder="Not provided"
-              className="w-2/3 cursor-not-allowed bg-gray-50"
-              disabled
-            />
-          ) : null}
-
-          {/* Company Name */}
-          {values.companyName ? (
-            <FormTextField
-              name="companyName"
-              id="companyName"
-              label="Company Name"
-              placeholder="Not provided"
-              className="w-2/3 cursor-not-allowed bg-gray-50"
-              disabled
-            />
-          ) : null}
 
           {/* Phone */}
           <div className="mt-1 flex flex-col lg:flex-row items-end lg:items-center justify-between lg:gap-1">
@@ -131,31 +108,7 @@ export function DesktopClient({
             </div>
 
             {/* WhatsApp toggle - commented whats app toggle field */}
-            {/* <label
-              className="flex items-center gap-4 lg:gap-1 xl:gap-4 w-fit"
-              aria-disabled={editMode ? false : true}
-            >
-              <div className="flex gap-1 xl:gap-2 items-center">
-                <SvgIcon iconSize="small" name="whatsapp" size={45} />
-                <span className="text-nowrap">Available on WhatsApp</span>
-              </div>
-              <div
-                className={`relative ${editMode ? "cursor-pointer" : "cursor-not-allowed"}`}
-              >
-                <input
-                  type="checkbox"
-                  name="onWhatsapp"
-                  checked={values.onWhatsapp}
-                  onChange={() =>
-                    setFieldValue("onWhatsapp", !values.onWhatsapp)
-                  }
-                  className="sr-only peer"
-                  disabled={!editMode}
-                />
-                <div className="w-10 h-6 rounded-full bg-gray-300 peer-checked:bg-black transition-colors" />
-                <div className="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow peer-checked:translate-x-4 transition-transform" />
-              </div>
-            </label> */}
+            {/* <label ... /> */}
           </div>
 
           {/* Email */}
@@ -186,6 +139,47 @@ export function DesktopClient({
               </div>
             )}
           </div>
+
+          <hr className="my-6 border-gray-200" />
+
+          {/* Company Name */}
+          {values.companyName &&
+          values.corporateBenefitStatus !== CorporateBenefitStatus.REJECTED ? (
+            <FormTextField
+              name="companyName"
+              id="companyName"
+              label="Company"
+              placeholder="Not provided"
+              className="w-2/3 cursor-not-allowed bg-gray-50"
+              disabled
+            />
+          ) : null}
+
+          {/* Job Title */}
+          {values.jobTitle &&
+          values.corporateBenefitStatus !== CorporateBenefitStatus.REJECTED ? (
+            <FormTextField
+              name="jobTitle"
+              id="jobTitle"
+              label="Job Title"
+              placeholder="Not provided"
+              className="w-2/3 cursor-not-allowed bg-gray-50"
+              disabled
+            />
+          ) : null}
+
+          {/* Corporate Email */}
+          {values.corporateEmailID &&
+          values.corporateBenefitStatus === CorporateBenefitStatus.APPROVED ? (
+            <FormTextField
+              name="corporateEmailID"
+              id="corporateEmailID"
+              label="Corporate Email"
+              placeholder="Not provided"
+              className="w-2/3 cursor-not-allowed bg-gray-50"
+              disabled
+            />
+          ) : null}
         </Form>
       </div>
     </>

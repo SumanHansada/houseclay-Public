@@ -29,11 +29,11 @@ import {
   PhoneCall,
   PlugZap,
   Ruler,
+  ShieldCheck,
   Sofa,
   Stamp,
   Sun,
   SwatchBook,
-  TrendingUp,
   UserSearch,
   Wine,
 } from "lucide-react";
@@ -76,7 +76,12 @@ import {
   WATER_SUPPLY_OPTIONS,
   YES_NO_OPTIONS,
 } from "@/common/dataConstants/formOptions";
-import { LeadCategory, PropertyCategory, PropertyStatus } from "@/common/enums";
+import {
+  CorporateBenefitStatus,
+  LeadCategory,
+  PropertyCategory,
+  PropertyStatus,
+} from "@/common/enums";
 import {
   formatDateToReadable,
   formatINRCurrency,
@@ -384,18 +389,7 @@ export function MyPropertyDetailsClient({
                   </section>
                   {/* Description Section */}
                   <section className="py-6 max-md:py-3">
-                    <div className="flex justify-between text-base xl:text-xl mb-4 md:hidden">
-                      <h1 className="flex items-center gap-1 lg:gap-2 m-1 text-gray-900">
-                        <span className="font-semibold">
-                          {contactedUsers.length ?? 0}
-                        </span>
-                        <span className="text-gray-500 text-nowrap">
-                          People Connected
-                        </span>{" "}
-                        <span>
-                          <TrendingUp size={16} className="text-green-500" />
-                        </span>
-                      </h1>
+                    <div className="flex justify-end text-base xl:text-xl mb-4 md:hidden">
                       <RenderPropertyStatus status={property?.propertyState} />
                     </div>
 
@@ -972,9 +966,19 @@ export function MyPropertyDetailsClient({
                                 <UserSearch size={24} strokeWidth={1.5} />
                               </div>
                               <div className="flex flex-col overflow-hidden">
-                                <span className="font-bold text-lg text-gray-900 font-nunito truncate">
-                                  {user.name}
-                                </span>
+                                <div className="flex items-center gap-2">
+                                  <span className="font-bold text-lg text-gray-900 font-nunito truncate">
+                                    {user.name}
+                                  </span>
+                                  {user.corporateBenefitStatus ===
+                                    CorporateBenefitStatus.APPROVED && (
+                                    <ShieldCheck
+                                      size={18}
+                                      className="text-blue-500"
+                                      strokeWidth={2}
+                                    />
+                                  )}
+                                </div>
                                 {(user.jobTitle || user.companyName) && (
                                   <span className="text-sm text-gray-500 truncate">
                                     {[user.jobTitle, user.companyName]
@@ -1087,19 +1091,7 @@ export function MyPropertyDetailsClient({
         </section>
         <section className="w-1/4 max-md:hidden">
           <section className="max-md:min-h-[fit-content] w-full overflow-hidden max-md:hidden">
-            <div className="flex justify-end text-base xl:text-xl py-12">
-              <h1 className="flex items-center gap-1 lg:gap-2 m-1 text-gray-900">
-                <span className="font-semibold">
-                  {contactedUsers.length ?? 0}
-                </span>
-                <span className="text-gray-500 text-nowrap">
-                  People Connected
-                </span>{" "}
-                <span>
-                  <TrendingUp size={16} className="text-green-500" />
-                </span>
-              </h1>
-            </div>
+            <div className="flex justify-end text-base xl:text-xl py-12"></div>
             {property?.propertyState === PropertyStatus.INACTIVE ? null : (
               <div className="flex justify-end py-0 ml-auto">
                 <button
