@@ -8,10 +8,6 @@ import java.util.List;
 public class PropertyDetailDTO {
     private PropertyDTO property;
     private String secondaryPhoneNumber;
-    List<PropertyUpdateDTO> propertyUpdates;
-    private ContactUserDTO owner;
-    private List<UserDTO> viewUsers;
-    private List<UserDTO> shortlistUsers;
+    private UserDTO owner;
     private List<ContactUserDTO> contactUsers;
-    private List<ReportUserDTO> reportUsers;
 }

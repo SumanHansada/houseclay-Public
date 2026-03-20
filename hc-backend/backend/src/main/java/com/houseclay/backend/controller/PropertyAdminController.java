@@ -78,7 +78,7 @@ public class PropertyAdminController {
     public ResponseEntity<Object> getPropertyById(@PathVariable String id) {
         try {
             Property property = propertyService.getProperty(id);
-            return ResponseEntity.ok(PropertyDetailMapper.toPropertyDetailDTO(property));
+            return ResponseEntity.ok(PropertyDetailMapper.toAdminPropertyDetailDTO(property));
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {
@@ -90,7 +90,7 @@ public class PropertyAdminController {
     public ResponseEntity<?> updatePropertyExclusive(@RequestParam String propertyID, @RequestParam boolean isExclusive, @RequestAttribute("authenticatedAdmin") Admin admin) {
         try {
             Property property = propertyAdminService.updateExclusiveTag(propertyID, isExclusive, admin);
-            return ResponseEntity.ok(PropertyDetailMapper.toPropertyDetailDTO(property));
+            return ResponseEntity.ok(PropertyDetailMapper.toAdminPropertyDetailDTO(property));
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {

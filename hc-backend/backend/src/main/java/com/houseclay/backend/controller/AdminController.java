@@ -127,4 +127,40 @@ public class AdminController {
         }
     }
 
+    @GetMapping("/corporate-domains")
+    public ResponseEntity<?> getCorporateDomains(
+            @RequestParam(defaultValue = "all") String status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestAttribute("authenticatedAdmin") Admin admin) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending());
+        try {
+            return ResponseEntity.ok(adminService.getCorporateDomainsByStatus(status, pageable, admin));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/corporate-domains/{id}/approve")
+    public ResponseEntity<?> approveCorporateDomain(@PathVariable Long id, @RequestAttribute("authenticatedAdmin") Admin admin) {
+        try {
+            return ResponseEntity.ok(adminService.approveCorporateDomain(id, admin));
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/corporate-domains/{id}/deny")
+    public ResponseEntity<?> denyCorporateDomain(@PathVariable Long id, @RequestAttribute("authenticatedAdmin") Admin admin) {
+        try {
+            return ResponseEntity.ok(adminService.denyCorporateDomain(id, admin));
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
 }

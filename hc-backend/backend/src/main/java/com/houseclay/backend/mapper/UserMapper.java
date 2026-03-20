@@ -18,6 +18,7 @@ public class UserMapper {
         userLoginResponseDTO.setPhoneNo(user.getPhoneNo());
         userLoginResponseDTO.setConnectBal(user.getConnectBal());
         userLoginResponseDTO.setCorporateEmailVerified(user.isCorporateEmailVerified());
+        userLoginResponseDTO.setCorporateBenefitStatus(user.getCorporateBenefitStatus());
         return userLoginResponseDTO;
     }
 
@@ -37,6 +38,7 @@ public class UserMapper {
         userDTO.setName(user.getName());
         userDTO.setBlacklisted(user.isBlacklisted());
         userDTO.setCorporateEmailVerified(user.isCorporateEmailVerified());
+        userDTO.setCorporateBenefitStatus(user.getCorporateBenefitStatus());
         userDTO.setCreatedAt(user.getCreatedAt());
         return userDTO;
     }
@@ -56,6 +58,7 @@ public class UserMapper {
         dto.setCorporateEmailVerifiedAt(user.getCorporateEmailVerifiedAt());
         dto.setCompanyName(user.getCompanyName());
         dto.setJobTitle(user.getJobTitle());
+        dto.setCorporateBenefitStatus(user.getCorporateBenefitStatus());
 
         dto.setUserUpdates(user.getUserUpdateLogs().stream()
                 .map(UserMapper::toUserUpdateDTO)
@@ -116,9 +119,10 @@ public class UserMapper {
         dto.setPhoneNo(user.getPhoneNo());
         dto.setConnectBal(user.getConnectBal());
         dto.setEmailVerified(user.isEmailVerified());
-        dto.setCorporateEmailVerified(user.isCorporateEmailVerified());
         dto.setCompanyName(user.getCompanyName());
         dto.setJobTitle(user.getJobTitle());
+        dto.setCorporateEmailID(user.getCorporateEmailID());
+        dto.setCorporateBenefitStatus(user.getCorporateBenefitStatus());
 
         dto.setOwnedProperties(
                 user.getOwnedProperties().stream()
@@ -232,7 +236,11 @@ public class UserMapper {
     public static UserUpdateDTO toUserUpdateDTO(UserUpdateLog userUpdateLog) {
         UserUpdateDTO dto = new UserUpdateDTO();
         dto.setUpdateType(userUpdateLog.getUserUpdateType());
-        dto.setUpdateBy(userUpdateLog.getAdmin().getUsername());
+        if (userUpdateLog.getAdmin() != null) {
+            dto.setUpdateBy(userUpdateLog.getAdmin().getUsername());
+        } else {
+            dto.setUpdateBy("SYSTEM");
+        }
         dto.setUpdateTime(userUpdateLog.getUpdatedAt());
         dto.setComment(userUpdateLog.getComment());
         return dto;
@@ -255,6 +263,7 @@ public class UserMapper {
         dto.setBlacklisted(user.isBlacklisted());
         dto.setCompanyName(user.getCompanyName());
         dto.setJobTitle(user.getJobTitle());
+        dto.setCorporateBenefitStatus(user.getCorporateBenefitStatus());
         return dto;
     }
 }

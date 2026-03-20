@@ -5,6 +5,8 @@ import lombok.Data;
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.houseclay.backend.enums.CorporateBenefitStatus;
+
 @Data
 public class UserDetailDTO {
     private String phoneNo;
@@ -21,6 +23,7 @@ public class UserDetailDTO {
     private Timestamp corporateEmailVerifiedAt;
     private String companyName;
     private String jobTitle;
+    private CorporateBenefitStatus corporateBenefitStatus;
     private List<UserUpdateDTO> userUpdates;
     private List<UserPropertyDTO> ownedProperties;
     private List<UserPropertyDTO> shortlistedProperties;
