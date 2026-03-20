@@ -34,6 +34,7 @@ interface GoogleMapsPropertyMarkersProps {
   defaultZoom?: number;
   className?: string;
   mapId?: string;
+  onMarkerSelect?: (property: PropertySearch | null) => void;
 }
 
 const DEFAULT_CENTER = { lat: 20.5937, lng: 78.9629 };
@@ -54,7 +55,8 @@ function isValidCoord(lat: number, lng: number): boolean {
 
 const MapInner: React.FC<{
   properties: PropertySearch[];
-}> = memo(function MapInner({ properties }) {
+  onMarkerSelect?: (property: PropertySearch | null) => void;
+}> = memo(function MapInner({ properties, onMarkerSelect }) {
   const map = useMap();
   const isMapInitialized = useRef(false);
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
@@ -148,11 +150,12 @@ const MapInner: React.FC<{
 
   useEffect(() => {
     if (!map) return;
-    const listener = map.addListener("click", () =>
-      setSelectedPropertyId(null),
-    );
+    const listener = map.addListener("click", () => {
+      setSelectedPropertyId(null);
+      onMarkerSelect?.(null);
+    });
     return () => google.maps.event.removeListener(listener);
-  }, [map]);
+  }, [map, onMarkerSelect]);
 
   useEffect(() => {
     if (!map || properties.length === 0) return;
@@ -189,14 +192,19 @@ const MapInner: React.FC<{
             key={p.propertyID}
             position={{ lat: p.latitude, lng: p.longitude }}
             zIndex={isSelected ? 1000 : 1}
-            style={isSelected ? { overflow: "visible" } : undefined}
-            onClick={() =>
-              setSelectedPropertyId((prev) =>
-                prev === p.propertyID ? null : p.propertyID,
-              )
+            style={
+              isSelected && !onMarkerSelect
+                ? { overflow: "visible" }
+                : undefined
             }
+            onClick={() => {
+              const nextId =
+                selectedPropertyId === p.propertyID ? null : p.propertyID;
+              setSelectedPropertyId(nextId);
+              onMarkerSelect?.(nextId ? p : null);
+            }}
           >
-            {isSelected ? (
+            {isSelected && !onMarkerSelect ? (
               <div className="relative">
                 <div
                   ref={refs.setReference}
@@ -231,7 +239,9 @@ const MapInner: React.FC<{
                 </FloatingFocusManager>
               </div>
             ) : (
-              <div className="w-8 h-8 rounded-full bg-red-500 text-white border-2 border-white shadow-lg cursor-pointer flex items-center justify-center hover:scale-110 transition-transform">
+              <div
+                className={`w-8 h-8 rounded-full ${isSelected ? "bg-black" : "bg-red-500"} text-white border-2 border-white shadow-lg cursor-pointer flex items-center justify-center hover:scale-110 transition-transform`}
+              >
                 <SvgIcon iconSize="small" name="houseclay-home" size={16} />
               </div>
             )}
@@ -248,12 +258,14 @@ const MapContent: React.FC<{
   defaultZoom: number;
   className: string;
   mapId?: string;
+  onMarkerSelect?: (property: PropertySearch | null) => void;
 }> = memo(function MapContent({
   properties,
   defaultCenter,
   defaultZoom,
   className,
   mapId,
+  onMarkerSelect,
 }) {
   const isApiLoaded = useApiIsLoaded();
   const initialCenter = useMemo(() => {
@@ -283,7 +295,7 @@ const MapContent: React.FC<{
       defaultZoom={defaultZoom}
       className={`${className} overflow-hidden rounded-xl shadow-md border`}
     >
-      <MapInner properties={properties} />
+      <MapInner properties={properties} onMarkerSelect={onMarkerSelect} />
     </Map>
   );
 });
@@ -294,6 +306,7 @@ const GoogleMapsPropertyMarkers: React.FC<GoogleMapsPropertyMarkersProps> = ({
   defaultZoom = DEFAULT_ZOOM,
   className = "h-full w-full min-h-[400px] rounded-xl shadow-md",
   mapId,
+  onMarkerSelect,
 }) => {
   const validProperties = useMemo(
     () => properties.filter((p) => isValidCoord(p.latitude, p.longitude)),
@@ -319,6 +332,7 @@ const GoogleMapsPropertyMarkers: React.FC<GoogleMapsPropertyMarkersProps> = ({
         defaultZoom={defaultZoom}
         className={className}
         mapId={mapId}
+        onMarkerSelect={onMarkerSelect}
       />
     </APIProvider>
   );

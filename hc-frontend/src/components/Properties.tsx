@@ -27,6 +27,7 @@ interface PropertiesProps {
   showCarouselDots?: boolean;
   onClick?: (e: React.MouseEvent) => void;
   onClose?: () => void;
+  className?: string;
 }
 
 // Properties Component
@@ -39,6 +40,7 @@ const Properties: React.FC<PropertiesProps> = ({
   showCarouselDots = true,
   onClick,
   onClose,
+  className,
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { toggleShortlist, isShortlisted } = useShortlist();
@@ -104,7 +106,7 @@ const Properties: React.FC<PropertiesProps> = ({
   return (
     <div
       onClick={onClick}
-      className="flex-col gap-8 bg-white rounded-xl drop-shadow relative cursor-pointer"
+      className={`flex-col gap-8 bg-white rounded-xl drop-shadow relative cursor-pointer ${className}`}
     >
       {/* Image Carousel */}
       <div className="relative h-60 max-md:h-60">

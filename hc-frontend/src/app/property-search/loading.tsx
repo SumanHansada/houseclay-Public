@@ -18,10 +18,14 @@ const PropertyCardSkeleton = () => (
   </div>
 );
 
+const MapSkeleton = () => (
+  <div className="h-full w-full bg-gray-200 animate-pulse rounded-xl" />
+);
+
 export default function Loading() {
   return (
     <>
-      {/* Mobile Header - matches page.tsx mobile header */}
+      {/* Mobile Header */}
       <section className="py-2 px-4 fixed top-0 left-0 right-0 z-50 h-14 border-b border-gray-200 bg-white flex gap-2 justify-center items-center w-full md:hidden">
         <button className="rounded-full md:border-none items-center justify-center">
           <ChevronLeft size={25} />
@@ -31,7 +35,7 @@ export default function Loading() {
         <div className="h-10 w-10 rounded-full bg-gray-200 animate-pulse" />
       </section>
 
-      {/* Desktop Header - matches page.tsx desktop header */}
+      {/* Desktop Header */}
       <section className="fixed z-50 flex w-full xl:gap-16 border-b border-t bg-white border-gray-200 lg:gap-8 md:gap-0 gap-0 xl:px-24 md:px-12 px-12 max-md:pt-4 max-md:pb-8 h-16 max-md:hidden">
         <div className="flex justify-between items-center border-gray-200 w-full gap-4">
           <div className="flex-1">
@@ -48,24 +52,40 @@ export default function Loading() {
         </div>
       </section>
 
-      {/* Main Content Section - matches page.tsx structure */}
-      <section className="w-full md:pt-[64px] bg-gray-50 relative max-md:pb-12">
-        <div className="min-h-screen bg-gray-50 pb-10 xl:px-24 md:px-12 px-6">
-          {/* Header Bar */}
-          <div className="">
+      {/* Main Content */}
+      <section className="w-full md:pt-[64px] md:bg-gray-50 relative">
+        {/* Mobile: Sticky map placeholder behind listings */}
+        <div className="md:hidden sticky top-14 z-0 h-[40vh]">
+          <MapSkeleton />
+        </div>
+
+        <div className="md:flex">
+          {/* Listings */}
+          <div className="min-h-screen md:min-h-[580px] px-6 pb-10 md:bg-gray-50 md:pl-12 md:pr-6 xl:pl-24 xl:pr-8 md:flex-1 md:min-w-0 max-md:relative max-md:z-10 max-md:bg-white max-md:rounded-t-3xl max-md:-mt-5 max-md:shadow-[0_-4px_16px_rgba(0,0,0,0.08)]">
+            {/* Drag handle (mobile only) */}
+            <div className="md:hidden flex justify-center pt-3 pb-1">
+              <div className="w-10 h-1 bg-gray-300 rounded-full" />
+            </div>
+
+            {/* Info Bar skeleton */}
             <div className="flex flex-col gap-4 py-6 max-md:max-h-24 max-h-20">
-              <div>
-                <div className="h-4 w-[200px] bg-gray-200 rounded animate-pulse" />
+              <div className="h-4 w-[200px] bg-gray-200 rounded animate-pulse" />
+            </div>
+
+            {/* Property grid */}
+            <div className="mx-auto">
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <PropertyCardSkeleton key={i} />
+                ))}
               </div>
             </div>
           </div>
 
-          {/* Property List */}
-          <div className="mx-auto">
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-4">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <PropertyCardSkeleton key={i} />
-              ))}
+          {/* Desktop: Sticky map placeholder on right */}
+          <div className="hidden md:block md:w-[50%] lg:w-[50%]">
+            <div className="sticky top-[120px] h-[calc(100vh-120px)] pt-6 pb-6 pr-12 xl:pr-24">
+              <MapSkeleton />
             </div>
           </div>
         </div>

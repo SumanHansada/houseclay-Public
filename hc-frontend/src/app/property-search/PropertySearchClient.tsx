@@ -14,7 +14,7 @@ import {
   useRouter,
   useSearchParams,
 } from "next/navigation";
-import { memo, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -193,6 +193,13 @@ export function PropertySearchClient({
   const dispatch = useDispatch();
   const [page, setPage] = useState(0);
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const [selectedMapProperty, setSelectedMapProperty] =
+    useState<PropertySearch | null>(null);
+
+  const handleMobileMarkerSelect = useCallback(
+    (property: PropertySearch | null) => setSelectedMapProperty(property),
+    [],
+  );
   const { openDialog, closeDialog, isDialogOpen } = useDialog();
 
   const location = searchState.location;
@@ -896,9 +903,52 @@ export function PropertySearchClient({
 
       {/* Main Content */}
       <section className="w-full md:pt-[64px] md:bg-gray-50 relative">
+        {/* Mobile: Sticky map behind listings */}
+        <div
+          className={`md:hidden sticky top-14 z-0 ${selectedMapProperty ? "h-[calc(100vh-3.5rem)]" : "h-[40vh]"} transition-[height] duration-300`}
+        >
+          <GoogleMapsPropertyMarkers
+            properties={properties}
+            mapId="d2efb78aa393f5315b3aed0e"
+            defaultCenter={
+              lat && lon ? { lat: Number(lat), lng: Number(lon) } : undefined
+            }
+            className="h-full w-full"
+            onMarkerSelect={handleMobileMarkerSelect}
+          />
+        </div>
+
+        {/* Mobile: Bottom property card when marker selected */}
+        {selectedMapProperty && (
+          <div
+            key={selectedMapProperty.propertyID}
+            className="md:hidden fixed bottom-0 left-0 right-0 z-50 animate-slide-in-bottom"
+          >
+            <Link
+              href={`/property-details/${selectedMapProperty.propertyID}`}
+              prefetch={false}
+              className="block rounded-t-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+            >
+              <Properties
+                property={selectedMapProperty}
+                showCarouselDots={false}
+                onClose={() => setSelectedMapProperty(null)}
+                className="rounded-t-xl rounded-b-none"
+              />
+            </Link>
+          </div>
+        )}
+
         <div className="md:flex">
-          {/* Left: Property listings */}
-          <div className="min-h-[580px] px-6 pb-10 md:bg-gray-50 md:pl-12 md:pr-6 xl:pl-24 xl:pr-8 md:flex-1 md:min-w-0">
+          {/* Listings */}
+          <div
+            className={`min-h-screen md:min-h-[580px] px-6 pb-10 md:bg-gray-50 md:pl-12 md:pr-6 xl:pl-24 xl:pr-8 md:flex-1 md:min-w-0 max-md:relative max-md:z-10 max-md:bg-white max-md:rounded-t-3xl max-md:-mt-5 max-md:shadow-[0_-4px_16px_rgba(0,0,0,0.08)] ${selectedMapProperty ? "max-md:hidden" : ""}`}
+          >
+            {/* Drag handle (mobile only) */}
+            <div className="md:hidden flex justify-center pt-3 pb-1">
+              <div className="w-10 h-1 bg-gray-300 rounded-full" />
+            </div>
+
             {/* Info Bar */}
             {(() => {
               const totalElements = effectiveData?.totalElements || 0;
@@ -945,7 +995,7 @@ export function PropertySearchClient({
             </div>
           </div>
 
-          {/* Right: Map with property markers (desktop only, sticky) */}
+          {/* Desktop: Sticky map on right */}
           <div className="hidden md:block md:w-[50%] lg:w-[50%]">
             <div className="sticky top-[120px] h-[calc(100vh-120px)] pt-6 pb-6 pr-12 xl:pr-24">
               <GoogleMapsPropertyMarkers
