@@ -95,7 +95,7 @@ import {
 interface SearchFiltersDialogProps {
   id: string;
   onClose: () => void;
-  onReset: () => void;
+  onReset?: () => void;
   onApply: (dialogSelectedCategory?: PropertyCategory) => void;
 }
 
@@ -201,7 +201,7 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
 
   const handleReset = () => {
     dispatch(resetPropertySearchFilters());
-    onReset();
+    onReset?.();
   };
 
   const handleSubmit = () => {

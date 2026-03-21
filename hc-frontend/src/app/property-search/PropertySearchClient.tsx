@@ -102,6 +102,101 @@ interface PropertiesListProps {
   initialData?: PropertySearchClientProps["initialData"];
 }
 
+const TieredCount = memo(function TieredCount({
+  totalElements,
+  propertyCategory,
+}: {
+  totalElements: number;
+  propertyCategory: PropertyCategory;
+}) {
+  if (totalElements < 20) return null;
+
+  let baseLabel: string;
+  switch (propertyCategory) {
+    case PropertyCategory.RESALE:
+      baseLabel = "listings for sale";
+      break;
+    default:
+    case PropertyCategory.RENT:
+    case PropertyCategory.FLATMATE:
+      baseLabel = "listings for rent";
+  }
+  const tier =
+    totalElements >= 200
+      ? "200+"
+      : totalElements >= 100
+        ? "100+"
+        : totalElements >= 50
+          ? "50+"
+          : "20+";
+
+  return (
+    <p className="text-sm text-gray-500 text-left md:text-right flex items-center gap-1">
+      <span>{`${tier} ${baseLabel}`}</span>
+      <ChevronRight className="h-3 w-3 text-gray-400 hidden md:block" />
+    </p>
+  );
+});
+
+const SearchResultsHeader = memo(function SearchResultsHeader({
+  totalElements,
+  propertyCategory,
+  hasConfirmedLocation,
+  confirmedLocationName,
+  variant,
+}: {
+  totalElements: number;
+  propertyCategory: PropertyCategory;
+  hasConfirmedLocation: boolean;
+  confirmedLocationName: string;
+  variant: "mobile" | "desktop";
+}) {
+  const hasCount = totalElements >= 20;
+  const hasContent = hasCount || hasConfirmedLocation;
+
+  if (!hasContent) {
+    return <div className="h-10 invisible" />;
+  }
+
+  const isMobileVariant = variant === "mobile";
+
+  return (
+    <div
+      className={`flex flex-col gap-4 py-6 ${isMobileVariant ? "max-h-24" : "max-h-20"}`}
+    >
+      <div
+        className={
+          isMobileVariant
+            ? "flex flex-col gap-2"
+            : "flex flex-row items-center justify-between gap-4"
+        }
+      >
+        <TieredCount
+          totalElements={totalElements}
+          propertyCategory={propertyCategory}
+        />
+
+        {hasConfirmedLocation ? (
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="text-sm text-gray-700 inline text-nowrap">
+              Showing in:
+            </span>
+            <span
+              className={`px-2 rounded-full bg-gray-200 truncate ${
+                isMobileVariant
+                  ? "py-0.5 text-xs max-w-64"
+                  : "py-1 text-sm max-w-xs"
+              }`}
+            >
+              {confirmedLocationName}
+            </span>
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+});
+
 const PropertiesList = memo(function PropertiesList({
   properties,
   isLoading,
@@ -183,8 +278,10 @@ export function PropertySearchClient({
     const cityCoords =
       EXPLORE_LOCATION ||
       CITY_LAT_LNG_MAPPING[city as keyof typeof CITY_LAT_LNG_MAPPING];
-    lat = cityCoords.lat.toString();
-    lon = cityCoords.lng.toString();
+    if (cityCoords) {
+      lat = cityCoords.lat.toString();
+      lon = cityCoords.lng.toString();
+    }
   }
 
   const searchState = useSelector((state: RootState) => state.propertySearch);
@@ -196,9 +293,11 @@ export function PropertySearchClient({
   const [selectedMapProperty, setSelectedMapProperty] =
     useState<PropertySearch | null>(null);
   const displayedMapProperty = useRef<PropertySearch | null>(null);
-  if (selectedMapProperty) {
-    displayedMapProperty.current = selectedMapProperty;
-  }
+  useEffect(() => {
+    if (selectedMapProperty) {
+      displayedMapProperty.current = selectedMapProperty;
+    }
+  }, [selectedMapProperty]);
 
   const handleMobileMarkerSelect = useCallback(
     (property: PropertySearch | null) => {
@@ -206,6 +305,10 @@ export function PropertySearchClient({
     },
     [],
   );
+
+  const clearSelectedMapProperty = useCallback(() => {
+    setSelectedMapProperty(null);
+  }, []);
 
   const listingsRef = useRef<HTMLDivElement>(null);
   const listingsOffsetY = useRef(0);
@@ -259,8 +362,13 @@ export function PropertySearchClient({
     [getMaxOffset, setListingsTransform],
   );
   const handleDragHandleTouchEnd = useCallback(() => {
+    if (dragStartY.current === null) return;
     dragStartY.current = null;
-  }, []);
+    const maxOffset = getMaxOffset();
+    const snapTarget =
+      listingsOffsetY.current > maxOffset * 0.5 ? maxOffset : 0;
+    setListingsTransform(snapTarget, true);
+  }, [getMaxOffset, setListingsTransform]);
   const { openDialog, closeDialog, isDialogOpen } = useDialog();
 
   const location = searchState.location;
@@ -269,11 +377,11 @@ export function PropertySearchClient({
     !!searchState.confirmedLocationName &&
     searchState.confirmedLocationName !== "";
 
-  const { exclusive, sortFields, sortOrder } = useSelector(
-    (s: RootState) => s.propertySearch,
-  );
-
-  const selectedSortToken = stateToToken({ exclusive, sortFields, sortOrder });
+  const selectedSortToken = stateToToken({
+    exclusive: searchState.exclusive,
+    sortFields: searchState.sortFields,
+    sortOrder: searchState.sortOrder,
+  });
 
   // Reset entire slice on initial mount if URL is clean (from header navigation)
   useEffect(() => {
@@ -520,23 +628,30 @@ export function PropertySearchClient({
     }
   };
 
-  // Only fetch if lat/lon are present and valid
-  const shouldFetch = lat && lon && !isNaN(Number(lat)) && !isNaN(Number(lon));
+  const numLat = lat ? Number(lat) : NaN;
+  const numLon = lon ? Number(lon) : NaN;
+  const shouldFetch = !isNaN(numLat) && !isNaN(numLon);
 
-  // Build query object from all URL params
-  const buildQueryParams = () => {
+  const queryParams = useMemo(() => {
+    if (!shouldFetch) {
+      return {
+        latitude: 0,
+        longitude: 0,
+        propertyCategory: PropertyCategory.RENT,
+      };
+    }
+
     const currentPropertyCategory = getUrlCategory(searchParams);
     const query: Record<
       string,
       string | number | boolean | string[] | PropertyCategory
     > = {
-      latitude: Number(lat),
-      longitude: Number(lon),
+      latitude: numLat,
+      longitude: numLon,
       propertyCategory: currentPropertyCategory,
       page: page,
     };
 
-    // Add optional filters from URL params
     const minPriceStr = searchParams.get("minPrice");
     const maxPriceStr = searchParams.get("maxPrice");
     const propertyType = searchParams.get("propertyType");
@@ -555,15 +670,12 @@ export function PropertySearchClient({
     const sortFields = searchParams.get("sortFields");
     const sortOrder = searchParams.get("sortOrder");
 
-    // Tamper protection: Validate minPrice and maxPrice from URL
     if (minPriceStr !== null && maxPriceStr !== null) {
       const minNum = Number(minPriceStr);
       const maxNum = Number(maxPriceStr);
       if (!isNaN(minNum) && !isNaN(maxNum)) {
-        // Bounds
         const clampedMin = Math.max(0, minNum);
         const clampedMax = Math.min(1000000, maxNum);
-
         if (clampedMin <= clampedMax) {
           query.minPrice = clampedMin;
           query.maxPrice = clampedMax;
@@ -595,169 +707,121 @@ export function PropertySearchClient({
     if (sortOrder) query.sortOrder = sortOrder;
 
     return query;
-  };
+  }, [searchParams, page, numLat, numLon, shouldFetch]);
 
-  // Use RTK Query for subsequent fetches (pagination, filter changes)
-  // But use initialData for first render if available
   const { data, isLoading, isFetching, error } =
-    useGetPropertiesByLocationQuery(
-      shouldFetch
-        ? buildQueryParams()
-        : {
-            latitude: 0,
-            longitude: 0,
-            propertyCategory: PropertyCategory.RENT,
-          },
-      {
-        skip: !shouldFetch,
-      },
-    );
+    useGetPropertiesByLocationQuery(queryParams, {
+      skip: !shouldFetch,
+    });
 
-  // Use initial data if available and we're on page 0, otherwise use RTK Query data
+  // Use initial data if available and we're on page 0, otherwise use RTK Query data.
+  // When page > 0 but RTK Query hasn't finished its background page-0 fetch yet,
+  // fall back to initialData to avoid losing SSR items.
   const effectiveData = useMemo(() => {
     if (page === 0 && initialData) {
       return initialData;
     }
-    return data;
+    return data ?? initialData;
   }, [page, initialData, data]);
 
-  // Helper to load next page
-  const handleLoadMore = () => {
-    if (!effectiveData?.hasNext) return;
+  const handleLoadMore = useCallback(() => {
+    if (!effectiveData?.hasNext || isFetching) return;
     setPage((prev) => prev + 1);
-  };
+  }, [effectiveData?.hasNext, isFetching]);
 
   // Memoize property list
   const properties: PropertySearch[] = useMemo(() => {
-    if (error) {
-      return error as PropertySearch[];
-    }
-    const properties = effectiveData as { items: PropertySearch[] };
-    if (!properties || !Array.isArray(properties.items)) return [];
-    return properties.items.map((property) => ({
+    if (error) return [];
+    const result = effectiveData as { items: PropertySearch[] };
+    if (!result || !Array.isArray(result.items)) return [];
+    return result.items.map((property) => ({
       ...property,
       images: property.images.length ? property.images : [],
     })) as PropertySearch[];
   }, [effectiveData, error]);
 
-  const handleSearch = (dialogSelectedCategory?: PropertyCategory) => {
-    // Build URL params from searchState (only supported filters)
-    const params = new URLSearchParams();
+  const handleSearch = useCallback(
+    (dialogSelectedCategory?: PropertyCategory) => {
+      const params = new URLSearchParams();
 
-    // Required params (lat, lon, propertyCategory)
-    if (lat) params.set("lat", lat);
-    if (lon) params.set("lon", lon);
+      if (lat) params.set("lat", lat);
+      if (lon) params.set("lon", lon);
 
-    const effectiveCategory =
-      dialogSelectedCategory ?? searchState.propertyCategory;
-    if (effectiveCategory) {
-      params.set("propertyCategory", effectiveCategory.toLowerCase());
-    }
-
-    // Optional filters (only add if not empty)
-    let targetMin: number | null = null;
-    let targetMax: number | null = null;
-
-    if (searchState.propertyCategory === PropertyCategory.FLATMATE) {
-      if (searchState.priceRangeForFlatmate) {
-        [targetMin, targetMax] = searchState.priceRangeForFlatmate;
+      const effectiveCategory =
+        dialogSelectedCategory ?? searchState.propertyCategory;
+      if (effectiveCategory) {
+        params.set("propertyCategory", effectiveCategory.toLowerCase());
       }
-    } else {
-      if (searchState.priceRangeForRent) {
-        [targetMin, targetMax] = searchState.priceRangeForRent;
+
+      let targetMin: number | null = null;
+      let targetMax: number | null = null;
+
+      if (searchState.propertyCategory === PropertyCategory.FLATMATE) {
+        if (searchState.priceRangeForFlatmate) {
+          [targetMin, targetMax] = searchState.priceRangeForFlatmate;
+        }
+      } else {
+        if (searchState.priceRangeForRent) {
+          [targetMin, targetMax] = searchState.priceRangeForRent;
+        }
       }
-    }
 
-    // Only append to URL if we found valid numbers
-    if (targetMin !== null && targetMax !== null) {
-      params.set("minPrice", String(targetMin));
-      params.set("maxPrice", String(targetMax));
-    }
-    if (searchState.propertyType && searchState.propertyType !== "") {
-      params.set("propertyType", String(searchState.propertyType));
-    }
-    if (searchState.bhkType && searchState.bhkType !== "") {
-      params.set("bhkType", String(searchState.bhkType));
-    }
-    if (searchState.tenantType && searchState.tenantType !== "") {
-      params.set("tenantType", String(searchState.tenantType));
-    }
-    if (searchState.nonVegAllowed !== null) {
-      params.set("nonVegAllowed", String(searchState.nonVegAllowed));
-    }
-    if (searchState.roomType && searchState.roomType !== "") {
-      params.set("roomType", String(searchState.roomType));
-    }
-    if (searchState.bathroomType && searchState.bathroomType !== "") {
-      params.set("bathroomType", String(searchState.bathroomType));
-    }
-    if (searchState.balconyType && searchState.balconyType !== "") {
-      params.set("balconyType", String(searchState.balconyType));
-    }
-    if (searchState.availability && searchState.availability !== "Any") {
-      params.set("availability", String(searchState.availability));
-    }
-    if (searchState.preferredTenants && searchState.preferredTenants !== "") {
-      params.set("preferredTenants", String(searchState.preferredTenants));
-    }
-    if (searchState.furnishing && searchState.furnishing !== "") {
-      params.set("furnishing", String(searchState.furnishing));
-    }
-    if (searchState.parking && searchState.parking !== "") {
-      params.set("parking", String(searchState.parking));
-    }
-    if (searchState.amenities && searchState.amenities.length > 0) {
-      // Join array with comma for API
-      params.set("amenities", searchState.amenities.join(","));
-    }
-    if (searchState.exclusive) {
-      params.set("exclusive", String(searchState.exclusive));
-    }
-    if (searchState.sortFields && searchState.sortFields !== "") {
-      params.set("sortFields", String(searchState.sortFields));
-    }
-    if (searchState.sortOrder && searchState.sortOrder !== "") {
-      params.set("sortOrder", String(searchState.sortOrder));
-    }
+      if (targetMin !== null && targetMax !== null) {
+        params.set("minPrice", String(targetMin));
+        params.set("maxPrice", String(targetMax));
+      }
+      if (searchState.propertyType && searchState.propertyType !== "") {
+        params.set("propertyType", String(searchState.propertyType));
+      }
+      if (searchState.bhkType && searchState.bhkType !== "") {
+        params.set("bhkType", String(searchState.bhkType));
+      }
+      if (searchState.tenantType && searchState.tenantType !== "") {
+        params.set("tenantType", String(searchState.tenantType));
+      }
+      if (searchState.nonVegAllowed !== null) {
+        params.set("nonVegAllowed", String(searchState.nonVegAllowed));
+      }
+      if (searchState.roomType && searchState.roomType !== "") {
+        params.set("roomType", String(searchState.roomType));
+      }
+      if (searchState.bathroomType && searchState.bathroomType !== "") {
+        params.set("bathroomType", String(searchState.bathroomType));
+      }
+      if (searchState.balconyType && searchState.balconyType !== "") {
+        params.set("balconyType", String(searchState.balconyType));
+      }
+      if (searchState.availability && searchState.availability !== "Any") {
+        params.set("availability", String(searchState.availability));
+      }
+      if (searchState.preferredTenants && searchState.preferredTenants !== "") {
+        params.set("preferredTenants", String(searchState.preferredTenants));
+      }
+      if (searchState.furnishing && searchState.furnishing !== "") {
+        params.set("furnishing", String(searchState.furnishing));
+      }
+      if (searchState.parking && searchState.parking !== "") {
+        params.set("parking", String(searchState.parking));
+      }
+      if (searchState.amenities && searchState.amenities.length > 0) {
+        params.set("amenities", searchState.amenities.join(","));
+      }
+      if (searchState.exclusive) {
+        params.set("exclusive", String(searchState.exclusive));
+      }
+      if (searchState.sortFields && searchState.sortFields !== "") {
+        params.set("sortFields", String(searchState.sortFields));
+      }
+      if (searchState.sortOrder && searchState.sortOrder !== "") {
+        params.set("sortOrder", String(searchState.sortOrder));
+      }
 
-    // Navigate to new URL with all params
-    // Use replace to avoid polluting history when updating filters
-    router.replace(`/property-search?${params.toString()}`);
-  };
+      router.replace(`/property-search?${params.toString()}`);
+    },
+    [lat, lon, searchState, router],
+  );
 
-  const getTieredCountElement = () => {
-    const total = effectiveData?.totalElements || 0;
-    if (total < 20) {
-      return null;
-    }
-
-    let baseLabel: string;
-    switch (searchState.propertyCategory) {
-      case PropertyCategory.RESALE:
-        baseLabel = "listings for sale";
-        break;
-      default:
-      case PropertyCategory.RENT:
-      case PropertyCategory.FLATMATE:
-        baseLabel = "listings for rent";
-    }
-    const tier =
-      total >= 200
-        ? "200+"
-        : total >= 100
-          ? "100+"
-          : total >= 50
-            ? "50+"
-            : "20+";
-    const displayText = `${tier} ${baseLabel}`;
-
-    return (
-      <p className="text-sm text-gray-500 text-left md:text-right flex items-center gap-1">
-        <span>{displayText}</span>
-        <ChevronRight className="h-3 w-3 text-gray-400 hidden md:block" />
-      </p>
-    );
-  };
+  const totalElements = effectiveData?.totalElements || 0;
 
   return (
     <>
@@ -972,7 +1036,7 @@ export function PropertySearchClient({
               properties={properties}
               mapId="d2efb78aa393f5315b3aed0e"
               defaultCenter={
-                lat && lon ? { lat: Number(lat), lng: Number(lon) } : undefined
+                shouldFetch ? { lat: numLat, lng: numLon } : undefined
               }
               className="h-full w-full"
               onMarkerSelect={handleMobileMarkerSelect}
@@ -993,9 +1057,7 @@ export function PropertySearchClient({
                 <Properties
                   property={displayedMapProperty.current}
                   showCarouselDots={false}
-                  onClose={() => {
-                    setSelectedMapProperty(null);
-                  }}
+                  onClose={clearSelectedMapProperty}
                   className="rounded-t-xl rounded-b-none"
                 />
               </Link>
@@ -1016,36 +1078,13 @@ export function PropertySearchClient({
               <div className="w-10 h-1 bg-gray-300 rounded-full" />
             </div>
 
-            {(() => {
-              const totalElements = effectiveData?.totalElements || 0;
-              const hasCount = totalElements >= 20;
-              const hasContent = hasCount || hasConfirmedLocation;
-
-              if (!hasContent) {
-                return <div className="h-10 invisible" />;
-              }
-
-              const countElement = getTieredCountElement();
-
-              return (
-                <div className="flex flex-col gap-4 py-6 max-h-24">
-                  <div className="flex flex-col gap-2">
-                    {countElement}
-
-                    {hasConfirmedLocation ? (
-                      <div className="flex items-center gap-2 min-w-0">
-                        <span className="text-sm text-gray-700 inline text-nowrap">
-                          Showing in:
-                        </span>
-                        <span className="px-2 py-0.5 rounded-full bg-gray-200 text-xs truncate max-w-64">
-                          {searchState.confirmedLocationName}
-                        </span>
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
-              );
-            })()}
+            <SearchResultsHeader
+              totalElements={totalElements}
+              propertyCategory={searchState.propertyCategory}
+              hasConfirmedLocation={hasConfirmedLocation}
+              confirmedLocationName={searchState.confirmedLocationName}
+              variant="mobile"
+            />
 
             <div className="mx-auto">
               <PropertiesList
@@ -1065,36 +1104,13 @@ export function PropertySearchClient({
         <section className="hidden md:flex">
           {/* Desktop: Listings */}
           <div className="min-h-[580px] px-6 pb-10 bg-gray-50 pl-12 pr-6 xl:pl-24 xl:pr-8 flex-1 min-w-0">
-            {(() => {
-              const totalElements = effectiveData?.totalElements || 0;
-              const hasCount = totalElements >= 20;
-              const hasContent = hasCount || hasConfirmedLocation;
-
-              if (!hasContent) {
-                return <div className="h-10 invisible" />;
-              }
-
-              const countElement = getTieredCountElement();
-
-              return (
-                <div className="flex flex-col gap-4 py-6 max-h-20">
-                  <div className="flex flex-row items-center justify-between gap-4">
-                    {countElement}
-
-                    {hasConfirmedLocation ? (
-                      <div className="flex items-center gap-2 min-w-0">
-                        <span className="text-sm text-gray-700 inline text-nowrap">
-                          Showing in:
-                        </span>
-                        <span className="px-2 py-1 rounded-full bg-gray-200 text-sm truncate max-w-xs">
-                          {searchState.confirmedLocationName}
-                        </span>
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
-              );
-            })()}
+            <SearchResultsHeader
+              totalElements={totalElements}
+              propertyCategory={searchState.propertyCategory}
+              hasConfirmedLocation={hasConfirmedLocation}
+              confirmedLocationName={searchState.confirmedLocationName}
+              variant="desktop"
+            />
 
             <div className="mx-auto">
               <PropertiesList
@@ -1116,9 +1132,7 @@ export function PropertySearchClient({
                 properties={properties}
                 mapId="d2efb78aa393f5315b3aed0e"
                 defaultCenter={
-                  lat && lon
-                    ? { lat: Number(lat), lng: Number(lon) }
-                    : undefined
+                  shouldFetch ? { lat: numLat, lng: numLon } : undefined
                 }
                 className="h-full w-full rounded-xl"
               />
@@ -1134,7 +1148,6 @@ export function PropertySearchClient({
           onClose={() => {
             closeDialog(PROPERTY_FILTERS_DIALOG_ID);
           }}
-          onReset={() => {}}
           onApply={(dialogSelectedCategory?: PropertyCategory) => {
             closeDialog(PROPERTY_FILTERS_DIALOG_ID);
             handleSearch(dialogSelectedCategory);
