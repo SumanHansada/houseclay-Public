@@ -299,18 +299,12 @@ export function PropertySearchClient({
     }
   }, [selectedMapProperty]);
 
-  const handleMobileMarkerSelect = useCallback(
-    (property: PropertySearch | null) => {
-      setSelectedMapProperty(property);
-    },
-    [],
-  );
-
   const clearSelectedMapProperty = useCallback(() => {
     setSelectedMapProperty(null);
   }, []);
 
   const listingsRef = useRef<HTMLDivElement>(null);
+  const dragHandleRef = useRef<HTMLDivElement>(null);
   const listingsOffsetY = useRef(0);
   const dragStartY = useRef<number | null>(null);
   const dragStartOffset = useRef(0);
@@ -329,28 +323,39 @@ export function PropertySearchClient({
     listingsOffsetY.current = y;
   }, []);
 
+  const handleMobileMarkerSelect = useCallback(
+    (property: PropertySearch | null) => {
+      if (property) {
+        displayedMapProperty.current = property;
+      }
+      setSelectedMapProperty(property);
+      if (property) {
+        setListingsTransform(getMaxOffset(), true);
+      }
+    },
+    [setListingsTransform, getMaxOffset],
+  );
+
   useEffect(() => {
     if (!listingsRef.current) return;
     const isMobile = window.matchMedia("(max-width: 767px)").matches;
-    if (!isMobile) return;
+    if (!isMobile || hasMountAnimated.current) return;
+    hasMountAnimated.current = true;
+    requestAnimationFrame(() => setListingsTransform(0, true));
+  }, [setListingsTransform]);
 
-    if (!hasMountAnimated.current) {
-      hasMountAnimated.current = true;
-      requestAnimationFrame(() => setListingsTransform(0, true));
-      return;
-    }
+  useEffect(() => {
+    const el = dragHandleRef.current;
+    if (!el) return;
 
-    const targetY = getMaxOffset();
-    setListingsTransform(targetY, true);
-  }, [selectedMapProperty, setListingsTransform, getMaxOffset]);
-
-  const handleDragHandleTouchStart = useCallback((e: React.TouchEvent) => {
-    dragStartY.current = e.touches[0].clientY;
-    dragStartOffset.current = listingsOffsetY.current;
-  }, []);
-  const handleDragHandleTouchMove = useCallback(
-    (e: React.TouchEvent) => {
+    const onTouchStart = (e: TouchEvent) => {
+      e.preventDefault();
+      dragStartY.current = e.touches[0].clientY;
+      dragStartOffset.current = listingsOffsetY.current;
+    };
+    const onTouchMove = (e: TouchEvent) => {
       if (dragStartY.current === null) return;
+      e.preventDefault();
       const diff = e.touches[0].clientY - dragStartY.current;
       const maxOffset = getMaxOffset();
       const newOffset = Math.max(
@@ -358,16 +363,25 @@ export function PropertySearchClient({
         Math.min(maxOffset, dragStartOffset.current + diff),
       );
       setListingsTransform(newOffset, false);
-    },
-    [getMaxOffset, setListingsTransform],
-  );
-  const handleDragHandleTouchEnd = useCallback(() => {
-    if (dragStartY.current === null) return;
-    dragStartY.current = null;
-    const maxOffset = getMaxOffset();
-    const snapTarget =
-      listingsOffsetY.current > maxOffset * 0.5 ? maxOffset : 0;
-    setListingsTransform(snapTarget, true);
+    };
+    const onTouchEnd = () => {
+      if (dragStartY.current === null) return;
+      dragStartY.current = null;
+      const maxOffset = getMaxOffset();
+      const snapTarget =
+        listingsOffsetY.current > maxOffset * 0.5 ? maxOffset : 0;
+      setListingsTransform(snapTarget, true);
+    };
+
+    el.addEventListener("touchstart", onTouchStart, { passive: false });
+    el.addEventListener("touchmove", onTouchMove, { passive: false });
+    el.addEventListener("touchend", onTouchEnd);
+
+    return () => {
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("touchmove", onTouchMove);
+      el.removeEventListener("touchend", onTouchEnd);
+    };
   }, [getMaxOffset, setListingsTransform]);
   const { openDialog, closeDialog, isDialogOpen } = useDialog();
 
@@ -1066,15 +1080,16 @@ export function PropertySearchClient({
 
           {/* Mobile: Listings */}
           <div
-            ref={listingsRef}
-            className="relative z-10 bg-white rounded-t-3xl -mt-[60vh] shadow-[0_-4px_16px_rgba(0,0,0,0.08)] min-h-[60vh] translate-y-[60vh] px-6 pb-10"
+            ref={(el) => {
+              (listingsRef as React.RefObject<HTMLDivElement | null>).current =
+                el;
+              (
+                dragHandleRef as React.RefObject<HTMLDivElement | null>
+              ).current = el;
+            }}
+            className="relative z-10 bg-white rounded-t-3xl -mt-[60vh] shadow-[0_-4px_16px_rgba(0,0,0,0.08)] min-h-[60vh] translate-y-[60vh] px-6 pb-16 touch-none"
           >
-            <div
-              className="flex justify-center pt-3 pb-3 cursor-grab active:cursor-grabbing"
-              onTouchStart={handleDragHandleTouchStart}
-              onTouchMove={handleDragHandleTouchMove}
-              onTouchEnd={handleDragHandleTouchEnd}
-            >
+            <div className="flex justify-center pt-3 pb-3 cursor-grab active:cursor-grabbing">
               <div className="w-10 h-1 bg-gray-300 rounded-full" />
             </div>
 

@@ -26,8 +26,13 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
     ticking.current = true;
     requestAnimationFrame(() => {
       const currentY = window.scrollY;
+      const atBottom =
+        window.innerHeight + currentY >=
+        document.documentElement.scrollHeight - 10;
       const delta = currentY - lastScrollY.current;
-      if (delta > 10) {
+      if (atBottom) {
+        setVisible(true);
+      } else if (delta > 10) {
         setVisible(false);
       } else if (delta < -5) {
         setVisible(true);
