@@ -121,9 +121,6 @@ const MapInner: React.FC<{
           </button>
         </div>,
       );
-      map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(
-        zoomContainer,
-      );
 
       const fullscreenContainer = document.createElement("div");
       fullscreenContainer.style.margin = "12px";
@@ -144,6 +141,8 @@ const MapInner: React.FC<{
           <Fullscreen size={18} />
         </button>,
       );
+
+      map.controls[google.maps.ControlPosition.RIGHT_TOP].push(zoomContainer);
       map.controls[google.maps.ControlPosition.RIGHT_TOP].push(
         fullscreenContainer,
       );

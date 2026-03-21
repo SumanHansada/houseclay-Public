@@ -138,9 +138,6 @@ const GoogleMapsDirectionContent: React.FC<{
           </button>
         </div>,
       );
-      map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(
-        zoomContainer,
-      );
 
       const fullscreenContainer = document.createElement("div");
       fullscreenContainer.style.margin = "12px";
@@ -161,8 +158,12 @@ const GoogleMapsDirectionContent: React.FC<{
           <Fullscreen size={18} />
         </button>,
       );
+
       map.controls[google.maps.ControlPosition.RIGHT_TOP].push(
         fullscreenContainer,
+      );
+      map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(
+        zoomContainer,
       );
 
       setIsMapInitialized(true);

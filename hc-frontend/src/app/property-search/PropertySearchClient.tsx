@@ -195,9 +195,6 @@ export function PropertySearchClient({
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [selectedMapProperty, setSelectedMapProperty] =
     useState<PropertySearch | null>(null);
-  const [mobileMapState, setMobileMapState] = useState<
-    "default" | "expanded" | "collapsed"
-  >("default");
   const displayedMapProperty = useRef<PropertySearch | null>(null);
   if (selectedMapProperty) {
     displayedMapProperty.current = selectedMapProperty;
@@ -206,10 +203,64 @@ export function PropertySearchClient({
   const handleMobileMarkerSelect = useCallback(
     (property: PropertySearch | null) => {
       setSelectedMapProperty(property);
-      setMobileMapState(property ? "expanded" : "collapsed");
     },
     [],
   );
+
+  const listingsRef = useRef<HTMLDivElement>(null);
+  const listingsOffsetY = useRef(0);
+  const dragStartY = useRef<number | null>(null);
+  const dragStartOffset = useRef(0);
+  const hasMountAnimated = useRef(false);
+
+  const getMaxOffset = useCallback(() => {
+    return window.innerHeight * 0.4;
+  }, []);
+
+  const setListingsTransform = useCallback((y: number, animate: boolean) => {
+    if (!listingsRef.current) return;
+    listingsRef.current.style.transition = animate
+      ? "transform 300ms ease-in-out"
+      : "none";
+    listingsRef.current.style.transform = `translateY(${y}px)`;
+    listingsOffsetY.current = y;
+  }, []);
+
+  useEffect(() => {
+    if (!listingsRef.current) return;
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+    if (!isMobile) return;
+
+    if (!hasMountAnimated.current) {
+      hasMountAnimated.current = true;
+      requestAnimationFrame(() => setListingsTransform(0, true));
+      return;
+    }
+
+    const targetY = getMaxOffset();
+    setListingsTransform(targetY, true);
+  }, [selectedMapProperty, setListingsTransform, getMaxOffset]);
+
+  const handleDragHandleTouchStart = useCallback((e: React.TouchEvent) => {
+    dragStartY.current = e.touches[0].clientY;
+    dragStartOffset.current = listingsOffsetY.current;
+  }, []);
+  const handleDragHandleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      if (dragStartY.current === null) return;
+      const diff = e.touches[0].clientY - dragStartY.current;
+      const maxOffset = getMaxOffset();
+      const newOffset = Math.max(
+        0,
+        Math.min(maxOffset, dragStartOffset.current + diff),
+      );
+      setListingsTransform(newOffset, false);
+    },
+    [getMaxOffset, setListingsTransform],
+  );
+  const handleDragHandleTouchEnd = useCallback(() => {
+    dragStartY.current = null;
+  }, []);
   const { openDialog, closeDialog, isDialogOpen } = useDialog();
 
   const location = searchState.location;
@@ -913,56 +964,58 @@ export function PropertySearchClient({
 
       {/* Main Content */}
       <section className="w-full md:pt-[64px] md:bg-gray-50 relative">
-        {/* Mobile: Sticky map behind listings */}
-        <div
-          className={`md:hidden sticky top-14 z-0 ${mobileMapState === "expanded" ? "h-[calc(100vh-3.5rem)]" : mobileMapState === "collapsed" ? "h-[80vh]" : "h-[40vh]"}`}
-        >
-          <GoogleMapsPropertyMarkers
-            properties={properties}
-            mapId="d2efb78aa393f5315b3aed0e"
-            defaultCenter={
-              lat && lon ? { lat: Number(lat), lng: Number(lon) } : undefined
-            }
-            className="h-full w-full"
-            onMarkerSelect={handleMobileMarkerSelect}
-          />
-        </div>
+        {/* Mobile: Map + bottom sheet + marker card */}
+        <section className="md:hidden">
+          {/* Mobile: Map */}
+          <div className="sticky top-14 z-0 h-[calc(100vh-3.5rem)]">
+            <GoogleMapsPropertyMarkers
+              properties={properties}
+              mapId="d2efb78aa393f5315b3aed0e"
+              defaultCenter={
+                lat && lon ? { lat: Number(lat), lng: Number(lon) } : undefined
+              }
+              className="h-full w-full"
+              onMarkerSelect={handleMobileMarkerSelect}
+            />
+          </div>
 
-        {/* Mobile: Bottom property card — always rendered, slides in/out */}
-        <div
-          className={`md:hidden fixed bottom-0 left-0 right-0 z-50 transition-transform duration-300 ease-in-out ${selectedMapProperty ? "translate-y-0" : "translate-y-full"}`}
-        >
-          {displayedMapProperty.current && (
-            <Link
-              key={displayedMapProperty.current.propertyID}
-              href={`/property-details/${displayedMapProperty.current.propertyID}`}
-              prefetch={false}
-              className="block rounded-t-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-            >
-              <Properties
-                property={displayedMapProperty.current}
-                showCarouselDots={false}
-                onClose={() => {
-                  setSelectedMapProperty(null);
-                  setMobileMapState("collapsed");
-                }}
-                className="rounded-t-xl rounded-b-none"
-              />
-            </Link>
-          )}
-        </div>
-
-        <div className="md:flex">
-          {/* Listings */}
+          {/* Mobile: Marker card */}
           <div
-            className={`min-h-screen md:min-h-[580px] px-6 pb-10 md:bg-gray-50 md:pl-12 md:pr-6 xl:pl-24 xl:pr-8 md:flex-1 md:min-w-0 max-md:relative max-md:z-10 max-md:bg-white max-md:rounded-t-3xl max-md:-mt-5 max-md:shadow-[0_-4px_16px_rgba(0,0,0,0.08)] ${mobileMapState === "expanded" ? "max-md:hidden" : ""}`}
+            className={`fixed bottom-0 left-0 right-0 z-50 transition-transform duration-300 ease-in-out ${selectedMapProperty ? "translate-y-0" : "translate-y-full"}`}
           >
-            {/* Drag handle (mobile only) */}
-            <div className="md:hidden flex justify-center pt-3 pb-1">
+            {displayedMapProperty.current && (
+              <Link
+                key={displayedMapProperty.current.propertyID}
+                href={`/property-details/${displayedMapProperty.current.propertyID}`}
+                prefetch={false}
+                className="block rounded-t-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+              >
+                <Properties
+                  property={displayedMapProperty.current}
+                  showCarouselDots={false}
+                  onClose={() => {
+                    setSelectedMapProperty(null);
+                  }}
+                  className="rounded-t-xl rounded-b-none"
+                />
+              </Link>
+            )}
+          </div>
+
+          {/* Mobile: Listings */}
+          <div
+            ref={listingsRef}
+            className="relative z-10 bg-white rounded-t-3xl -mt-[60vh] shadow-[0_-4px_16px_rgba(0,0,0,0.08)] min-h-[60vh] translate-y-[60vh] px-6 pb-10"
+          >
+            <div
+              className="flex justify-center pt-3 pb-3 cursor-grab active:cursor-grabbing"
+              onTouchStart={handleDragHandleTouchStart}
+              onTouchMove={handleDragHandleTouchMove}
+              onTouchEnd={handleDragHandleTouchEnd}
+            >
               <div className="w-10 h-1 bg-gray-300 rounded-full" />
             </div>
 
-            {/* Info Bar */}
             {(() => {
               const totalElements = effectiveData?.totalElements || 0;
               const hasCount = totalElements >= 20;
@@ -975,8 +1028,8 @@ export function PropertySearchClient({
               const countElement = getTieredCountElement();
 
               return (
-                <div className="flex flex-col gap-4 py-6 max-md:max-h-24 max-h-20">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4">
+                <div className="flex flex-col gap-4 py-6 max-h-24">
+                  <div className="flex flex-col gap-2">
                     {countElement}
 
                     {hasConfirmedLocation ? (
@@ -984,7 +1037,7 @@ export function PropertySearchClient({
                         <span className="text-sm text-gray-700 inline text-nowrap">
                           Showing in:
                         </span>
-                        <span className="px-2 py-0.5 md:py-1 rounded-full bg-gray-200 text-xs md:text-sm truncate max-w-64 md:max-w-xs">
+                        <span className="px-2 py-0.5 rounded-full bg-gray-200 text-xs truncate max-w-64">
                           {searchState.confirmedLocationName}
                         </span>
                       </div>
@@ -994,7 +1047,55 @@ export function PropertySearchClient({
               );
             })()}
 
-            {/* Property List */}
+            <div className="mx-auto">
+              <PropertiesList
+                properties={properties}
+                isLoading={isLoading}
+                isFetching={isFetching}
+                effectiveData={effectiveData}
+                onLoadMore={handleLoadMore}
+                page={page}
+                initialData={initialData}
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Desktop: Listings + Map side by side */}
+        <section className="hidden md:flex">
+          {/* Desktop: Listings */}
+          <div className="min-h-[580px] px-6 pb-10 bg-gray-50 pl-12 pr-6 xl:pl-24 xl:pr-8 flex-1 min-w-0">
+            {(() => {
+              const totalElements = effectiveData?.totalElements || 0;
+              const hasCount = totalElements >= 20;
+              const hasContent = hasCount || hasConfirmedLocation;
+
+              if (!hasContent) {
+                return <div className="h-10 invisible" />;
+              }
+
+              const countElement = getTieredCountElement();
+
+              return (
+                <div className="flex flex-col gap-4 py-6 max-h-20">
+                  <div className="flex flex-row items-center justify-between gap-4">
+                    {countElement}
+
+                    {hasConfirmedLocation ? (
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="text-sm text-gray-700 inline text-nowrap">
+                          Showing in:
+                        </span>
+                        <span className="px-2 py-1 rounded-full bg-gray-200 text-sm truncate max-w-xs">
+                          {searchState.confirmedLocationName}
+                        </span>
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+              );
+            })()}
+
             <div className="mx-auto">
               <PropertiesList
                 properties={properties}
@@ -1009,7 +1110,7 @@ export function PropertySearchClient({
           </div>
 
           {/* Desktop: Sticky map on right */}
-          <div className="hidden md:block md:w-[50%] lg:w-[50%]">
+          <div className="w-[50%] lg:w-[50%]">
             <div className="sticky top-[120px] h-[calc(100vh-120px)] pt-6 pb-6 pr-12 xl:pr-24">
               <GoogleMapsPropertyMarkers
                 properties={properties}
@@ -1023,7 +1124,7 @@ export function PropertySearchClient({
               />
             </div>
           </div>
-        </div>
+        </section>
       </section>
       <Footer />
 
