@@ -1088,7 +1088,7 @@ export function PropertySearchClient({
                   property={displayedMapProperty.current}
                   showCarouselDots={false}
                   onClose={clearSelectedMapProperty}
-                  className="rounded-t-xl rounded-b-none"
+                  className="rounded-t-xl rounded-b-none drop-shadow-none"
                 />
               </Link>
             )}

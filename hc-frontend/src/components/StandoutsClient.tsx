@@ -28,7 +28,7 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
 
   return (
     <>
-      <div className="bg-white bg-center bg-cover flex-col items-center md:py-20 xl:px-28 lg:px-14 md:px-14 max-md:pt-4 max-md:pb-0 px-6 pt-4 pb-0">
+      <div className="bg-white pb-safe-bottom bg-center bg-cover flex-col items-center md:py-20 xl:px-28 lg:px-14 md:px-14 max-md:pt-4 max-md:pb-0 px-6 pt-4">
         {/* Header Section */}
         <div className="flex items-center justify-between mb-8 max-md:hidden">
           <h1 className="text-3xl font-bold text-gray-800">
@@ -115,7 +115,7 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
           ))}
         </Carousel2D>
       </div>
-      <div className="md:hidden pb-4">
+      <div className="md:hidden pb-16">
         <Carousel2D
           gap={4}
           showDots={false}
