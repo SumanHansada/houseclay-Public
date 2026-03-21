@@ -1075,7 +1075,7 @@ export function PropertySearchClient({
 
           {/* Mobile: Marker card */}
           <div
-            className={`fixed bottom-0 left-0 right-0 z-50 transition-transform duration-300 ease-in-out ${selectedMapProperty ? "translate-y-0" : "translate-y-full"}`}
+            className={`fixed bottom-0 left-0 right-0 z-50 pb-safe-bottom bg-white transition-transform duration-300 ease-in-out ${selectedMapProperty ? "translate-y-0" : "translate-y-full"}`}
           >
             {displayedMapProperty.current && (
               <Link
