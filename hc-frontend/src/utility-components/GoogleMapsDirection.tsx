@@ -162,9 +162,7 @@ const GoogleMapsDirectionContent: React.FC<{
       map.controls[google.maps.ControlPosition.RIGHT_TOP].push(
         fullscreenContainer,
       );
-      map.controls[google.maps.ControlPosition.RIGHT_CENTER].push(
-        zoomContainer,
-      );
+      map.controls[google.maps.ControlPosition.RIGHT_TOP].push(zoomContainer);
 
       setIsMapInitialized(true);
     }
@@ -247,6 +245,12 @@ const GoogleMapsDirectionContent: React.FC<{
 
   return (
     <div className="relative w-full h-full">
+      <style>{`
+        .gm-svpc {
+          border-radius: 12px !important;
+          overflow: hidden !important;
+        }
+      `}</style>
       <Map
         mapId={mapId}
         defaultCenter={{ lat: centerLatLng.lat(), lng: centerLatLng.lng() }} // Convert LatLng to LatLngLiteral

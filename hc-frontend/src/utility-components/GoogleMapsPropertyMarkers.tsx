@@ -142,10 +142,10 @@ const MapInner: React.FC<{
         </button>,
       );
 
-      map.controls[google.maps.ControlPosition.RIGHT_TOP].push(zoomContainer);
       map.controls[google.maps.ControlPosition.RIGHT_TOP].push(
         fullscreenContainer,
       );
+      map.controls[google.maps.ControlPosition.RIGHT_TOP].push(zoomContainer);
 
       isMapInitialized.current = true;
     }
@@ -183,6 +183,10 @@ const MapInner: React.FC<{
           outline: none !important;
           border-radius: 9999px;
           box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.5);
+        }
+        .gm-svpc {
+          border-radius: 12px !important;
+          overflow: hidden !important;
         }
       `}</style>
 
@@ -241,7 +245,7 @@ const MapInner: React.FC<{
                     <Link
                       href={`/property-details/${p.propertyID}`}
                       prefetch={false}
-                      className="block"
+                      className="block rounded-xl"
                     >
                       <Properties
                         property={p}
