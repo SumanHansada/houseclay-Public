@@ -115,7 +115,7 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
           ))}
         </Carousel2D>
       </div>
-      <div className="md:hidden pb-16">
+      <div className="md:hidden">
         <Carousel2D
           gap={4}
           showDots={false}
