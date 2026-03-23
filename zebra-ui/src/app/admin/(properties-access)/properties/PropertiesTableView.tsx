@@ -5,11 +5,10 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useCallback, useEffect, useTransition } from "react";
 
 import SelectDropdown from "@/base-components/SelectDropdown";
-import { PropertyState, VerifyPropertyStatusEnum } from "@/common/enums";
+import { PropertyState } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
 import { DataTable } from "@/components/DataTable";
 import { Pagination } from "@/components/Pagination";
-import { SearchAndFilterBar } from "@/components/SearchAndFilterBar";
 import { PropertyInfo } from "@/interfaces/PropertyInfo";
 import { useGetPropertiesQuery } from "@/store/apiSlice";
 import { buildPropertyColumns } from "@/utils/tableColumnBuilders";
@@ -102,15 +101,7 @@ export const PropertiesTableView = ({
   };
 
   const handleVerify = (row: SerializedPropertyRow) => {
-    let statusRoute = VerifyPropertyStatusEnum.VERIFY;
-    if (row.propertyState === PropertyState.PENDING_RE_VERIFICATION) {
-      statusRoute = VerifyPropertyStatusEnum.REVERIFY;
-    } else if (row.propertyState === PropertyState.PENDING_ROUTINE_CHECK) {
-      statusRoute = VerifyPropertyStatusEnum.ROUTINE_CHECK;
-    }
-    router.push(
-      `/admin/properties/verification/${statusRoute}/${row.propertyID}`,
-    );
+    router.push(`/admin/properties/${row.propertyID}/verify`);
   };
 
   const columns = buildPropertyColumns([
@@ -158,8 +149,52 @@ export const PropertiesTableView = ({
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* Sticky top filter bar */}
-      <div className="h-16 sticky top-0 z-10 bg-white border border-b-gray-200 shadow-sm px-8 flex items-center">
-        <SearchAndFilterBar />
+      <div className="h-16 sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm flex justify-between items-center px-8 py-4">
+        <h1 className="text-2xl font-medium">Property Management</h1>
+        <div className="flex gap-4 items-center">
+          <SelectDropdown
+            name="property-state-filter"
+            id="property-state-filter"
+            value={stateParam}
+            onChange={(val) => updateURL(1, val as string, sortOrderParam)}
+            options={[
+              { label: "All Properties", value: "ALL" },
+              {
+                label: "Pending Verification",
+                value: PropertyState.PENDING_VERIFICATION,
+              },
+              {
+                label: "Pending Re-Verification",
+                value: PropertyState.PENDING_RE_VERIFICATION,
+              },
+              {
+                label: "Pending Routine Check",
+                value: PropertyState.PENDING_ROUTINE_CHECK,
+              },
+              { label: "Active", value: PropertyState.ACTIVE },
+              { label: "Inactive", value: PropertyState.INACTIVE },
+            ]}
+            variant="outline"
+            containerClassName="w-56"
+            buttonClassName="flex justify-between items-center w-full px-4 py-2 border rounded-xl text-left bg-white text-gray-700"
+            dropdownClassName="absolute right-0 z-50 mt-1 w-full bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-auto"
+          />
+
+          <SelectDropdown
+            name="property-sort-order"
+            id="property-sort-order"
+            value={sortOrderParam}
+            onChange={(val) => updateURL(1, stateParam, val as string)}
+            options={[
+              { label: "Newest First", value: "desc" },
+              { label: "Oldest First", value: "asc" },
+            ]}
+            variant="outline"
+            containerClassName="w-40"
+            buttonClassName="flex justify-between items-center w-full px-4 py-2 border rounded-xl text-left bg-white text-gray-700"
+            dropdownClassName="absolute right-0 z-50 mt-1 w-full bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-auto"
+          />
+        </div>
       </div>
 
       {/* Table area */}
@@ -167,60 +202,12 @@ export const PropertiesTableView = ({
         <div className="flex-1 flex flex-col bg-white shadow-md rounded-xl relative overflow-hidden p-2 gap-2">
           {/* Table Header */}
           <div className="flex justify-between items-center px-1">
-            <div className="flex items-center gap-4">
-              <h1 className="text-xl font-medium">
-                Properties - [{propertiesCount}]
-              </h1>
-              <span className="text-xs font-medium text-gray-400 bg-gray-50 px-2 py-1 rounded-full border">
-                Page {currentPage} of {totalPages || 1}
-              </span>
-            </div>
-
-            {/* Filters */}
-            <div className="flex gap-4 items-center">
-              <SelectDropdown
-                name="property-state-filter"
-                id="property-state-filter"
-                value={stateParam}
-                onChange={(val) => updateURL(1, val as string, sortOrderParam)}
-                options={[
-                  { label: "All Properties", value: "ALL" },
-                  {
-                    label: "Pending Verification",
-                    value: PropertyState.PENDING_VERIFICATION,
-                  },
-                  {
-                    label: "Pending Re-Verification",
-                    value: PropertyState.PENDING_RE_VERIFICATION,
-                  },
-                  {
-                    label: "Pending Routine Check",
-                    value: PropertyState.PENDING_ROUTINE_CHECK,
-                  },
-                  { label: "Active", value: PropertyState.ACTIVE },
-                  { label: "Inactive", value: PropertyState.INACTIVE },
-                ]}
-                variant="outline"
-                containerClassName="w-56"
-                buttonClassName="flex justify-between items-center w-full px-4 py-2 border rounded-xl text-left bg-white text-gray-700"
-                dropdownClassName="absolute right-0 z-50 mt-1 w-full bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-auto"
-              />
-
-              <SelectDropdown
-                name="property-sort-order"
-                id="property-sort-order"
-                value={sortOrderParam}
-                onChange={(val) => updateURL(1, stateParam, val as string)}
-                options={[
-                  { label: "Newest First", value: "desc" },
-                  { label: "Oldest First", value: "asc" },
-                ]}
-                variant="outline"
-                containerClassName="w-40"
-                buttonClassName="flex justify-between items-center w-full px-4 py-2 border rounded-xl text-left bg-white text-gray-700"
-                dropdownClassName="absolute right-0 z-50 mt-1 w-full bg-white border border-gray-300 rounded-xl shadow-lg max-h-60 overflow-auto"
-              />
-            </div>
+            <h1 className="text-xl font-medium">
+              Houseclay Properties - [{propertiesCount}]
+            </h1>
+            <span className="text-xs font-medium text-gray-400 bg-gray-50 px-2 py-1 rounded-full border">
+              Page {currentPage} of {totalPages || 1}
+            </span>
           </div>
 
           {/* Table */}

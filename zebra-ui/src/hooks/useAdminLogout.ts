@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 
 import { logout as logoutAction } from "@/store/adminAuthSlice";
@@ -9,7 +8,6 @@ import { getErrorMessage } from "@/utils/rtkError";
 
 export function useAdminLogout() {
   const dispatch = useDispatch();
-  const router = useRouter();
   const [logoutApi, { isLoading }] = useLogoutMutation();
 
   const logout = async () => {

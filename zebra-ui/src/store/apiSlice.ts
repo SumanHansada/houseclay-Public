@@ -181,7 +181,9 @@ export const apiSlice = createApi({
         params: { phoneNo },
         body: payload,
       }),
-      invalidatesTags: (_r, _e, { phoneNo }) => [{ type: "UserDetail", id: phoneNo }],
+      invalidatesTags: (_r, _e, { phoneNo }) => [
+        { type: "UserDetail", id: phoneNo },
+      ],
     }),
 
     // ──────────────── CORPORATE DOMAINS ────────────────

@@ -4,7 +4,11 @@ import { Form, Formik, FormikProvider } from "formik";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { PropertyCategory } from "@/common/enums";
+import {
+  PropertyCategory,
+  PropertyState,
+  VerifyPropertyStatusEnum,
+} from "@/common/enums";
 import { extractS3KeyFromUrl } from "@/common/utils";
 import AsyncFallback from "@/components/AsyncFallback";
 import {
@@ -54,17 +58,16 @@ import { setPropertyDetailsFromApi } from "@/store/propertyDetailsSlice";
 import { RootState, store } from "@/store/store";
 import { resetUpload } from "@/store/uploadToS3Slice";
 
-import { OwnerDetails } from "../../../components/OwnerDetails";
-import { VerificationPanel } from "../../components/VerificationPanel";
+import { OwnerDetails } from "../components/OwnerDetails";
+import { VerificationPanel } from "../components/VerificationPanel";
 
 type FinalizationStage = "idle" | "deleting" | "uploading" | "updating";
 
 interface Props {
   propertyID: string;
-  status: string;
 }
 
-export const VerificationDetailsView = ({ propertyID, status }: Props) => {
+export const VerificationDetailsView = ({ propertyID }: Props) => {
   const [editMode, setEditMode] = useState(false);
   const dispatch = useDispatch();
   const { openDialog, closeDialog, isDialogOpen } = useDialog();
@@ -76,7 +79,6 @@ export const VerificationDetailsView = ({ propertyID, status }: Props) => {
   const [getDeletePresignedUrls] = useDeletePresignedUrlsMutation();
   const [updateProperty, { isLoading: isUpdatingProperty }] =
     usePropertyUpdateMutation();
-  console.log(status);
 
   // ─── 1. DATA FETCHING (Moved from old layout) ───
   const {
@@ -130,6 +132,20 @@ export const VerificationDetailsView = ({ propertyID, status }: Props) => {
       console.error("Error transforming property data:", error);
     }
   }, [propertyDetailsRaw, isLoadingProperty, propertyID, dispatch]);
+
+  // Derived verify routing status
+  let status = VerifyPropertyStatusEnum.VERIFY as string;
+  if (
+    propertyDetailsRaw?.property?.propertyState ===
+    PropertyState.PENDING_RE_VERIFICATION
+  ) {
+    status = VerifyPropertyStatusEnum.REVERIFY as string;
+  } else if (
+    propertyDetailsRaw?.property?.propertyState ===
+    PropertyState.PENDING_ROUTINE_CHECK
+  ) {
+    status = VerifyPropertyStatusEnum.ROUTINE_CHECK as string;
+  }
 
   // ─── 2. SELECTORS ───
   const uploadState = useSelector((state: RootState) => state.uploadToS3);

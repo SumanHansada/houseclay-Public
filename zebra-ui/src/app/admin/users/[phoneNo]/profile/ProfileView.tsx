@@ -2,7 +2,7 @@
 
 import { CircleSlash, Clock, ExternalLink, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 import { Button } from "@/base-components";
@@ -38,9 +38,6 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
   const [editedJobTitle, setEditedJobTitle] = useState("");
   const [editedEmail, setEditedEmail] = useState("");
 
-  // parent layout already ensures data is present
-  if (!data?.user) return null;
-
   const handleBlacklistConfirm = async (comment: string) => {
     await blacklistUser({ phoneNo: userPhoneNo, comment }).unwrap();
   };
@@ -48,6 +45,18 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
   const handleActivateConfirm = async (comment: string) => {
     await activateUser({ phoneNo: userPhoneNo, comment }).unwrap();
   };
+
+  // Sync state when data changes or when entering edit mode
+  useEffect(() => {
+    if (!isEditing && data?.user) {
+      setEditedCompanyName(data.user.companyName || "");
+      setEditedJobTitle(data.user.jobTitle || "");
+      setEditedEmail(data.user.email || "");
+    }
+  }, [isEditing, data?.user]);
+
+  // parent layout already ensures data is present
+  if (!data?.user) return null;
 
   const {
     name,
@@ -64,15 +73,6 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
     blacklisted,
     blacklistedAt,
   } = data.user;
-
-  // Sync state when data changes or when entering edit mode
-  useEffect(() => {
-    if (!isEditing) {
-      setEditedCompanyName(companyName || "");
-      setEditedJobTitle(jobTitle || "");
-      setEditedEmail(email || "");
-    }
-  }, [isEditing, companyName, jobTitle, email]);
 
   const handleSaveProfile = async () => {
     if (editedEmail) {
@@ -228,7 +228,6 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
           <div className="flex-1 flex flex-col justify-between border rounded-xl shadow-sm overflow-hidden">
             <form className="flex flex-col justify-between gap-4 px-5 py-3 overflow-auto min-h-0 scrollbar-thin">
               {profileFields.map(
-                // @ts-ignore
                 ({
                   label,
                   value,
