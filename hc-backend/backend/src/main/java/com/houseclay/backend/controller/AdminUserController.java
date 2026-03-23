@@ -1,6 +1,7 @@
 package com.houseclay.backend.controller;
 
 import com.houseclay.backend.dto.AdminUserDTO;
+import com.houseclay.backend.dto.AdminUserUpdateDTO;
 import com.houseclay.backend.dto.UserDTO;
 import com.houseclay.backend.entity.Admin;
 import com.houseclay.backend.entity.User;
@@ -143,6 +144,24 @@ public class AdminUserController {
         try {
             User user = adminService.createUser(userDTO);
             return ResponseEntity.ok().body("User created "+user.getName());
+        } catch (APIException e) {
+            return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/update-user-profile")
+    public ResponseEntity<?> updateUserProfile(
+            @RequestParam String phoneNo,
+            @RequestBody AdminUserUpdateDTO dto,
+            @RequestAttribute("authenticatedAdmin") Admin admin) {
+        try {
+            User updatedUser = adminService.updateUserDetails(phoneNo, dto, admin);
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "User profile updated successfully");
+            response.put("userId", updatedUser.getPhoneNo());
+            return ResponseEntity.ok(response);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
         } catch (Exception e) {

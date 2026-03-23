@@ -5,6 +5,7 @@ import com.houseclay.backend.dto.AdminDetailDTO;
 import com.houseclay.backend.dto.AdminSummaryDTO;
 import com.houseclay.backend.dto.AdminRegisterDTO;
 import com.houseclay.backend.dto.AdminUserDTO;
+import com.houseclay.backend.dto.AdminUserUpdateDTO;
 import com.houseclay.backend.dto.UserDTO;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
@@ -163,6 +164,36 @@ public class AdminService {
             throw new APIException("User not found", HttpStatus.NOT_FOUND);
         }
         return userOpt.get();
+    }
+
+    public User updateUserDetails(String phoneNo, AdminUserUpdateDTO dto, Admin admin) throws Exception {
+        Optional<Admin> adminOptional = adminRepository.findByUsername(admin.getUsername());
+        if (adminOptional.isEmpty()) {
+            throw new APIException("Invalid token", HttpStatus.BAD_REQUEST);
+        }
+        admin = adminOptional.get();
+        User user = searchUser(phoneNo);
+        
+        boolean updated = false;
+        if (dto.getCompanyName() != null) {
+            user.setCompanyName(dto.getCompanyName());
+            updated = true;
+        }
+        if (dto.getJobTitle() != null) {
+            user.setJobTitle(dto.getJobTitle());
+            updated = true;
+        }
+        if (dto.getEmailID() != null) {
+            user.setEmailID(dto.getEmailID());
+            updated = true;
+        }
+
+        if (updated) {
+            admin.getUserUpdateLogs().add(new UserUpdateLog(user, admin, new Timestamp(System.currentTimeMillis()), UserUpdateType.PROFILE_UPDATED, "Admin updated user profile"));
+            adminRepository.save(admin);
+            userRepository.save(user);
+        }
+        return user;
     }
 
     public User createUser(UserDTO userDTO) throws Exception {
