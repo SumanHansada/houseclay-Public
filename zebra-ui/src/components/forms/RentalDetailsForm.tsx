@@ -424,6 +424,7 @@ const RentalDetailsForm: React.FC<RentalDetailsFormProps> = ({ disabled }) => {
           withIcons={true}
           alignment="start"
           required
+          disabled={disabled}
         />
       </div>
     </div>

@@ -341,6 +341,7 @@ const ResaleDetailsForm: React.FC<ResaleDetailsFormProps> = ({ disabled }) => {
           withIcons={true}
           alignment="start"
           required
+          disabled={disabled}
         />
       </div>
     </div>

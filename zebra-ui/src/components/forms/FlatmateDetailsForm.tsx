@@ -441,6 +441,7 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
           withIcons={true}
           alignment="start"
           required
+          disabled={disabled}
         />
       </div>
     </div>
