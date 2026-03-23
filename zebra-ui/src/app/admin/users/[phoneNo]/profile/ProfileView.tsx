@@ -2,7 +2,8 @@
 
 import { CircleSlash, Clock, ExternalLink, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 
 import { Button } from "@/base-components";
 import { dialogLabels } from "@/common/constants";
@@ -14,6 +15,7 @@ import {
   useActivateUserMutation,
   useBlacklistUserMutation,
   useGetUserByPhoneNoQuery,
+  useUpdateUserProfileMutation,
 } from "@/store/apiSlice";
 import { userDetailsTestIds } from "@/utils/testIds";
 
@@ -27,6 +29,14 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
   const [blacklistUser] = useBlacklistUserMutation();
   const [activateUser] = useActivateUserMutation();
   const { openDialog, isDialogOpen } = useDialog();
+
+  const [updateUserProfile, { isLoading: isUpdating }] =
+    useUpdateUserProfileMutation();
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedCompanyName, setEditedCompanyName] = useState("");
+  const [editedJobTitle, setEditedJobTitle] = useState("");
+  const [editedEmail, setEditedEmail] = useState("");
 
   // parent layout already ensures data is present
   if (!data?.user) return null;
@@ -54,6 +64,40 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
     blacklisted,
     blacklistedAt,
   } = data.user;
+
+  // Sync state when data changes or when entering edit mode
+  useEffect(() => {
+    if (!isEditing) {
+      setEditedCompanyName(companyName || "");
+      setEditedJobTitle(jobTitle || "");
+      setEditedEmail(email || "");
+    }
+  }, [isEditing, companyName, jobTitle, email]);
+
+  const handleSaveProfile = async () => {
+    if (editedEmail) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(editedEmail)) {
+        toast.error("Please enter a valid email address");
+        return;
+      }
+    }
+
+    try {
+      await updateUserProfile({
+        phoneNo: userPhoneNo,
+        payload: {
+          companyName: editedCompanyName,
+          jobTitle: editedJobTitle,
+          emailID: editedEmail,
+        },
+      }).unwrap();
+      setIsEditing(false);
+    } catch (err) {
+      console.error("Failed to update profile", err);
+      // optionally handle error display here
+    }
+  };
 
   const profileFields = [
     { label: "Phone", value: phoneNo },
@@ -88,7 +132,13 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
     {
       label: "Corporate Benefit Status",
       customRender: (
-        <div className="flex items-center justify-between border border-gray-400 rounded-xl p-2 bg-white">
+        <div
+          className={`flex items-center justify-between border rounded-xl p-2 ${
+            isEditing
+              ? "border-gray-200 text-gray-500 bg-gray-50 cursor-not-allowed"
+              : "border-gray-400 text-gray-700 bg-white"
+          }`}
+        >
           <div className="flex items-center gap-1">
             {corporateBenefitStatus === CorporateBenefitStatus.APPROVED && (
               <ShieldCheck className="text-white fill-red-500" />
@@ -100,7 +150,11 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
             {corporateBenefitStatus === CorporateBenefitStatus.REJECTED && (
               <CircleSlash className="text-red-500" />
             )}
-            <span className="text-gray-700 text-xl font-medium">
+            <span
+              className={`text-xl font-medium ${
+                isEditing ? "text-gray-500" : "text-gray-700"
+              }`}
+            >
               {corporateBenefitStatus || "NONE"}
             </span>
           </div>
@@ -110,6 +164,7 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
               size="custom"
               className="px-3 py-1 rounded-lg"
               rightIcon={<ExternalLink size={16} />}
+              disabled={isEditing}
               onClick={(e) => {
                 e.preventDefault(); // prevent form submit behavior if any
                 router.push(
@@ -132,10 +187,16 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
     {
       label: "Company Name",
       value: companyName ?? "N/A",
+      isEditable: true,
+      editValue: editedCompanyName,
+      setEditValue: setEditedCompanyName,
     },
     {
       label: "Job Title",
       value: jobTitle ?? "N/A",
+      isEditable: true,
+      editValue: editedJobTitle,
+      setEditValue: setEditedJobTitle,
     },
   ];
 
@@ -166,45 +227,111 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
           {/* Right Side */}
           <div className="flex-1 flex flex-col justify-between border rounded-xl shadow-sm overflow-hidden">
             <form className="flex flex-col justify-between gap-4 px-5 py-3 overflow-auto min-h-0 scrollbar-thin">
-              {profileFields.map(({ label, value, customRender }) => (
-                <div key={label} className="flex flex-col gap-1">
-                  <label className="text-gray-600 text-lg font-medium">
-                    {label}
-                  </label>
-                  {customRender ? (
-                    customRender
-                  ) : (
-                    <input
-                      type="text"
-                      value={value}
-                      disabled
-                      className="border border-gray-400 rounded-xl p-2 text-gray-700 text-xl bg-white"
-                    />
-                  )}
-                </div>
-              ))}
+              {profileFields.map(
+                // @ts-ignore
+                ({
+                  label,
+                  value,
+                  customRender,
+                  isEditable,
+                  editValue,
+                  setEditValue,
+                }) => {
+                  const isEmailField = label === "Email";
+                  const canEditField =
+                    isEditable || (isEmailField && !emailVerified);
+
+                  return (
+                    <div key={label} className="flex flex-col gap-1">
+                      <label className="text-gray-600 text-lg font-medium">
+                        {label}
+                      </label>
+                      {customRender ? (
+                        customRender
+                      ) : isEditing && canEditField ? (
+                        <input
+                          type="text"
+                          value={isEmailField ? editedEmail : editValue}
+                          onChange={(e) =>
+                            isEmailField
+                              ? setEditedEmail(e.target.value)
+                              : setEditValue && setEditValue(e.target.value)
+                          }
+                          className="border border-gray-400 rounded-xl p-2 text-gray-900 text-xl bg-white focus:ring-2 focus:ring-red-500 focus:outline-none"
+                        />
+                      ) : (
+                        <input
+                          type="text"
+                          value={value}
+                          disabled
+                          className={`border rounded-xl p-2 text-xl ${
+                            isEditing
+                              ? "border-gray-200 text-gray-500 bg-gray-50 cursor-not-allowed"
+                              : "border-gray-400 text-gray-700 bg-white"
+                          }`}
+                        />
+                      )}
+                    </div>
+                  );
+                },
+              )}
             </form>
 
             {/* Footer */}
-            <div className="sticky bottom-0 flex justify-end border-t border-gray-200 shadow-sm p-2 bg-gray-50">
-              {!blacklisted ? (
-                <Button
-                  aria-label="Blacklist User"
-                  onClick={() => openDialog(BLACKLIST_DIALOG_ID)}
-                  className="rounded-lg"
-                >
-                  Blacklist User
-                </Button>
-              ) : (
-                <button
-                  type="button"
-                  aria-label="Activate User"
-                  onClick={() => openDialog(ACTIVATE_DIALOG_ID)}
-                  className="rounded-lg px-4 py-2 text-base bg-green-600 text-white cursor-pointer hover:bg-green-700"
-                >
-                  Activate User
-                </button>
-              )}
+            <div className="sticky bottom-0 flex justify-between items-center border-t border-gray-200 shadow-sm p-3 bg-gray-50">
+              {/* Left Side */}
+              <div>
+                {!isEditing &&
+                  (!blacklisted ? (
+                    <Button
+                      aria-label="Blacklist User"
+                      onClick={() => openDialog(BLACKLIST_DIALOG_ID)}
+                      className="rounded-lg"
+                    >
+                      Blacklist User
+                    </Button>
+                  ) : (
+                    <button
+                      type="button"
+                      aria-label="Activate User"
+                      onClick={() => openDialog(ACTIVATE_DIALOG_ID)}
+                      className="rounded-lg px-4 py-2 text-base bg-green-600 text-white cursor-pointer hover:bg-green-700"
+                    >
+                      Activate User
+                    </button>
+                  ))}
+              </div>
+
+              {/* Right Side */}
+              <div className="flex gap-2">
+                {isEditing ? (
+                  <>
+                    <Button
+                      variant="outline"
+                      className="rounded-lg"
+                      onClick={() => setIsEditing(false)}
+                      disabled={isUpdating}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      className="rounded-lg"
+                      onClick={handleSaveProfile}
+                      isLoading={isUpdating}
+                    >
+                      Save Changes
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    variant="outline"
+                    className="rounded-lg"
+                    onClick={() => setIsEditing(true)}
+                  >
+                    Edit Profile
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </div>

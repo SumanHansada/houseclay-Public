@@ -168,6 +168,22 @@ export const apiSlice = createApi({
       },
     }),
 
+    updateUserProfile: builder.mutation<
+      { message: string; userId: string },
+      {
+        phoneNo: string;
+        payload: { companyName?: string; jobTitle?: string; emailID?: string };
+      }
+    >({
+      query: ({ phoneNo, payload }) => ({
+        url: `/admin/update-user-profile`,
+        method: "POST",
+        params: { phoneNo },
+        body: payload,
+      }),
+      invalidatesTags: (_r, _e, { phoneNo }) => [{ type: "UserDetail", id: phoneNo }],
+    }),
+
     // ──────────────── CORPORATE DOMAINS ────────────────
     getCorporateDomains: builder.query<
       GetCorporateDomainsResponse,
@@ -530,6 +546,7 @@ export const {
   useBlacklistUserMutation,
   useActivateUserMutation,
   useTagBrokerMutation,
+  useUpdateUserProfileMutation,
   useGetAdminInfoQuery,
   useGetAdminsQuery,
   useGetAdminByUsernameQuery,
