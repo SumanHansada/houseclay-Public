@@ -39,7 +39,7 @@ export default function AuthProvider({
       // Session invalid (Cookie expired or tampered)
       dispatch(authFailure("Session expired"));
       if (!publicPaths.includes(pathname)) {
-        router.push("/login");
+        window.location.href = "/login?clear_session=true";
       }
     }
   }, [data, error, dispatch, router, pathname]);

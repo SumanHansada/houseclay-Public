@@ -22,7 +22,7 @@ export function useAdminLogout() {
     } finally {
       dispatch(logoutAction());
       dispatch(apiSlice.util.resetApiState());
-      router.replace("/login");
+      window.location.href = "/login?clear_session=true";
     }
   };
 
