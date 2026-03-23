@@ -50,8 +50,8 @@ export const InfoTipLogin: React.FC = () => (
 export const InfoTipZeroBalance: React.FC<{ onBuyConnects: () => void }> = ({
   onBuyConnects,
 }) => (
-  <div className="flex w-full px-4 py-2 gap-4 min-w-72">
-    <div className="relative h-14 aspect-[7/9]">
+  <div className="flex w-full px-4 py-2 gap-4 min-w-80">
+    <div className="relative h-14 aspect-[7/9] shrink-0">
       <ImageWithLoader
         src={insufficientConnectsIconURL}
         alt="insufficient connects"
@@ -59,16 +59,19 @@ export const InfoTipZeroBalance: React.FC<{ onBuyConnects: () => void }> = ({
         className="object-center"
       />
     </div>
-    <div className="">
-      <h1 className="text-lg">Insufficient connects!</h1>
-      <p className="text-gray-500 font-light text-nowrap">
-        Purchase more now to continue!
+    <div className="flex flex-col justify-center">
+      <h1 className="text-lg font-medium text-gray-900 leading-tight">
+        Out of Connects?
+      </h1>
+      <p className="text-gray-500 font-light text-sm mt-0.5 text-nowrap">
+        Get Houseclay Pro to unlock more!
       </p>
       <button
         onClick={onBuyConnects}
-        className="text-red-600 cursor-pointer text-left"
+        className="text-red-600 hover:text-red-700 cursor-pointer text-left font-medium text-sm mt-1.5 flex items-center gap-1 transition-colors"
       >
-        Buy Connects
+        Unlock Pro{" "}
+        <ShieldCheckIcon className="size-4 text-white fill-red-500" />
       </button>
     </div>
   </div>

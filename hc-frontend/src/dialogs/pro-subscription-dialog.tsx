@@ -696,218 +696,212 @@ const ProSubscriptionDialog = ({ id }: ProSubscriptionDialogProps) => {
         }
 
         return (
-          <>
-            {/* // <div className="flex flex-col h-full"> */}
+          <div className="px-6 py-6 flex flex-col gap-6">
             {/* HERO SECTION */}
-            <div className="px-6 py-6 flex flex-col gap-6">
-              <div className="text-center space-y-1">
-                <h2 className="flex items-center justify-center gap-2 text-2xl font-bold text-gray-900">
-                  Unlock{" "}
-                  <span className="text-red-600 flex items-center justify-center">
-                    Houseclay Pro{" "}
-                    <ShieldCheckIcon className="size-8 text-white fill-red-500" />
-                  </span>
-                </h2>
-                <p className="text-sm text-gray-500">
-                  Connect directly with owners. Zero Brokerage.
-                </p>
-              </div>
+            <div className="text-center space-y-1">
+              <h2 className="flex items-center justify-center gap-2 text-2xl font-bold text-gray-900">
+                Unlock{" "}
+                <span className="text-red-600 flex items-center justify-center">
+                  Houseclay Pro{" "}
+                  <ShieldCheckIcon className="size-8 text-white fill-red-500" />
+                </span>
+              </h2>
+              <p className="text-sm text-gray-500">
+                Connect directly with owners. Zero Brokerage.
+              </p>
+            </div>
 
-              {/* Benefits */}
-              <div className="flex flex-col gap-4 items-center justify-center w-full">
-                <div className="rounded-xl p-px shadow-sm bg-gradient-to-r from-red-600 via-red-500 via-80% to-amber-300 w-full">
-                  <div className="bg-white rounded-xl p-4">
-                    <ul className="flex flex-col gap-2">
-                      {[
-                        "100% Verified Listings",
-                        "Zero Brokerage - Direct Owner Contact",
-                        "Priority Access to Listings",
-                      ].map((item, i) => (
-                        <li
-                          key={i}
-                          className="flex items-start gap-3 text-sm font-medium text-gray-700"
-                        >
-                          <CheckCircle2
-                            size={18}
-                            className="text-red-500 shrink-0 mt-0.5"
-                          />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                {/* INFO CARDS */}
-                <div className="grid grid-cols-3 gap-3 w-full">
-                  {[
-                    {
-                      icon: HandCoins,
-                      label: "30 Connects",
-                      sub: "For Contacts",
-                    },
-                    { icon: CalendarClock, label: "30 Days", sub: "Validity" },
-                    { icon: UserStar, label: "Verified", sub: "Badge" },
-                  ].map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="flex flex-col items-center justify-center p-3 rounded-xl bg-neutral-100 text-center gap-2 shadow-sm"
-                    >
-                      <div className="p-2 bg-white rounded-full shadow-sm text-red-500">
-                        <item.icon size={20} />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-xs font-bold text-gray-900">
-                          {item.label}
-                        </span>
-                        <span className="text-xxs text-gray-500">
-                          {item.sub}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
+            {/* Benefits */}
+            <div className="flex flex-col gap-4 items-center justify-center w-full">
+              <div className="rounded-xl p-px shadow-sm bg-gradient-to-r from-red-600 via-red-500 via-80% to-amber-300 w-full">
+                <div className="bg-white rounded-xl p-4">
+                  <ul className="flex flex-col gap-2">
+                    {[
+                      "100% Verified Listings",
+                      "Zero Brokerage - Direct Owner Contact",
+                      "Priority Access to Listings",
+                    ].map((item, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-3 text-sm font-medium text-gray-700"
+                      >
+                        <CheckCircle2
+                          size={18}
+                          className="text-red-500 shrink-0 mt-0.5"
+                        />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
 
-              {/* SELECTION SECTION */}
-              <div className="flex flex-col gap-3 pb-6">
-                {isUserAlreadyVerified ? (
-                  <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center space-y-2">
-                    <div className="flex justify-center">
-                      <CheckCircle2 className="text-green-600" size={28} />
+              {/* INFO CARDS */}
+              <div className="grid grid-cols-3 gap-3 w-full">
+                {[
+                  {
+                    icon: HandCoins,
+                    label: "30 Connects",
+                    sub: "For Contacts",
+                  },
+                  { icon: CalendarClock, label: "30 Days", sub: "Validity" },
+                  { icon: UserStar, label: "Verified", sub: "Badge" },
+                ].map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="flex flex-col items-center justify-center p-3 rounded-xl bg-neutral-100 text-center gap-2 shadow-sm"
+                  >
+                    <div className="p-2 bg-white rounded-full shadow-sm text-red-500">
+                      <item.icon size={20} />
                     </div>
-                    <p className="text-sm font-medium text-green-800">
-                      You are already verified and have claimed your benefits.
-                    </p>
-                    <p className="text-xs text-green-700">
-                      You can proceed to buy more if required.
-                    </p>
+                    <div className="flex flex-col">
+                      <span className="text-xs font-bold text-gray-900">
+                        {item.label}
+                      </span>
+                      <span className="text-xxs text-gray-500">{item.sub}</span>
+                    </div>
                   </div>
-                ) : isPendingAdminApproval ? (
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-center space-y-2">
-                    <div className="flex justify-center">
-                      <CheckCircle2 className="text-yellow-600" size={28} />
-                    </div>
-                    <p className="text-sm font-medium text-yellow-800">
-                      Your company domain is pending admin approval.
-                    </p>
-                    <p className="text-xs text-yellow-700">
-                      Your benefits will be granted once approved.
-                    </p>
+                ))}
+              </div>
+            </div>
+
+            {/* SELECTION SECTION */}
+            <div className="flex flex-col gap-3 pb-6">
+              {isUserAlreadyVerified ? (
+                <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center space-y-2">
+                  <div className="flex justify-center">
+                    <CheckCircle2 className="text-green-600" size={28} />
                   </div>
-                ) : isRejected ? null : (
-                  <>
-                    {/* Corporate Option */}
+                  <p className="text-sm font-medium text-green-800">
+                    You are already verified and have claimed your benefits.
+                  </p>
+                  <p className="text-xs text-green-700">
+                    You can proceed to buy more if required.
+                  </p>
+                </div>
+              ) : isPendingAdminApproval ? (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-center space-y-2">
+                  <div className="flex justify-center">
+                    <CheckCircle2 className="text-yellow-600" size={28} />
+                  </div>
+                  <p className="text-sm font-medium text-yellow-800">
+                    Your company domain is pending admin approval.
+                  </p>
+                  <p className="text-xs text-yellow-700">
+                    Your benefits will be granted once approved.
+                  </p>
+                </div>
+              ) : isRejected ? null : (
+                <>
+                  {/* Corporate Option */}
+                  <div
+                    onClick={() => setSelectedOption("corporate")}
+                    className={`relative rounded-xl cursor-pointer transition-all duration-200 ${
+                      selectedOption === "corporate"
+                        ? "p-px bg-gradient-to-r from-red-600 via-red-500 via-80% to-amber-300 shadow-md"
+                        : "border border-neutral-100 hover:border-red-100 hover:bg-gray-50"
+                    }`}
+                  >
                     <div
-                      onClick={() => setSelectedOption("corporate")}
-                      className={`relative rounded-xl cursor-pointer transition-all duration-200 ${
-                        selectedOption === "corporate"
-                          ? "p-px bg-gradient-to-r from-red-600 via-red-500 via-80% to-amber-300 shadow-md"
-                          : "border border-neutral-100 hover:border-red-100 hover:bg-gray-50"
-                      }`}
+                      className={`h-full w-full p-4 ${selectedOption === "corporate" ? "bg-red-50 rounded-xl" : ""}`}
                     >
-                      <div
-                        className={`h-full w-full p-4 ${selectedOption === "corporate" ? "bg-red-50 rounded-xl" : ""}`}
-                      >
-                        <div className="flex justify-between items-start">
-                          <div className="flex items-center gap-3">
-                            <div
-                              className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${
-                                selectedOption === "corporate"
-                                  ? "border-red-600 bg-red-600"
-                                  : "border-gray-300 bg-white"
-                              }`}
-                            >
-                              {selectedOption === "corporate" && (
-                                <div className="w-2 h-2 bg-white rounded-full" />
-                              )}
-                            </div>
-                            <div className="flex flex-col">
-                              <span
-                                className={`text-sm font-semibold ${selectedOption === "corporate" ? "text-red-900" : "text-gray-700"}`}
-                              >
-                                I have a Corporate Email
-                              </span>
-                              <span className="text-xs text-green-600 font-medium">
-                                Get Early Access
-                              </span>
-                            </div>
-                          </div>
-                          {/* Price Tag */}
-                          <div className="flex flex-col items-end">
-                            <span className="text-xs text-gray-400 line-through">
-                              ₹{bundleData?.standardPrice || 1499}
-                            </span>
-                            <span className="text-lg font-bold text-green-600">
-                              ₹0
-                            </span>
-                          </div>
-                        </div>
-
-                        {selectedOption === "corporate" && (
-                          <div className="mt-4 pl-8 animate-fade-in space-y-3">
-                            <p className="text-xs text-gray-600 leading-relaxed">
-                              Verify your work email to unlock{" "}
-                              {bundleData?.connects || 30} connects instantly.
-                            </p>
-
-                            <input
-                              type="email"
-                              placeholder="name@company.com"
-                              value={email}
-                              onChange={(e) => setEmail(e.target.value)}
-                              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-200 bg-white"
-                              onClick={(e) => e.stopPropagation()}
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") handleVerifyEmailClick();
-                              }}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* No Corporate Option */}
-                    <div
-                      onClick={() => setSelectedOption("no-corporate")}
-                      className={`relative rounded-xl cursor-pointer transition-all duration-200 ${
-                        selectedOption === "no-corporate"
-                          ? "p-px bg-gradient-to-r from-red-600 via-red-500 via-80% to-amber-300 shadow-md"
-                          : "border border-gray-200 hover:border-red-100 hover:bg-gray-50"
-                      }`}
-                    >
-                      <div
-                        className={`h-full w-full flex justify-between items-center p-4 ${selectedOption === "no-corporate" ? "bg-red-50 rounded-xl" : ""}`}
-                      >
+                      <div className="flex justify-between items-start">
                         <div className="flex items-center gap-3">
                           <div
                             className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${
-                              selectedOption === "no-corporate"
+                              selectedOption === "corporate"
                                 ? "border-red-600 bg-red-600"
                                 : "border-gray-300 bg-white"
                             }`}
                           >
-                            {selectedOption === "no-corporate" && (
+                            {selectedOption === "corporate" && (
                               <div className="w-2 h-2 bg-white rounded-full" />
                             )}
                           </div>
-                          <span
-                            className={`text-sm font-semibold ${selectedOption === "no-corporate" ? "text-red-900" : "text-gray-700"}`}
-                          >
-                            I don&apos;t have a Corporate Email
+                          <div className="flex flex-col">
+                            <span
+                              className={`text-sm font-semibold ${selectedOption === "corporate" ? "text-red-900" : "text-gray-700"}`}
+                            >
+                              I have a Corporate Email
+                            </span>
+                            <span className="text-xs text-green-600 font-medium">
+                              Get Early Access
+                            </span>
+                          </div>
+                        </div>
+                        {/* Price Tag */}
+                        <div className="flex flex-col items-end">
+                          <span className="text-xs text-gray-400 line-through">
+                            ₹{bundleData?.standardPrice || 1499}
+                          </span>
+                          <span className="text-lg font-bold text-green-600">
+                            ₹0
                           </span>
                         </div>
-                        <span className="text-lg font-bold text-gray-900">
-                          ₹{bundleData?.standardPrice || 1499}
+                      </div>
+
+                      {selectedOption === "corporate" && (
+                        <div className="mt-4 pl-8 animate-fade-in space-y-3">
+                          <p className="text-xs text-gray-600 leading-relaxed">
+                            Verify your work email to unlock{" "}
+                            {bundleData?.connects || 30} connects instantly.
+                          </p>
+
+                          <input
+                            type="email"
+                            placeholder="name@company.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-200 bg-white"
+                            onClick={(e) => e.stopPropagation()}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") handleVerifyEmailClick();
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* No Corporate Option */}
+                  <div
+                    onClick={() => setSelectedOption("no-corporate")}
+                    className={`relative rounded-xl cursor-pointer transition-all duration-200 ${
+                      selectedOption === "no-corporate"
+                        ? "p-px bg-gradient-to-r from-red-600 via-red-500 via-80% to-amber-300 shadow-md"
+                        : "border border-gray-200 hover:border-red-100 hover:bg-gray-50"
+                    }`}
+                  >
+                    <div
+                      className={`h-full w-full flex justify-between items-center p-4 ${selectedOption === "no-corporate" ? "bg-red-50 rounded-xl" : ""}`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${
+                            selectedOption === "no-corporate"
+                              ? "border-red-600 bg-red-600"
+                              : "border-gray-300 bg-white"
+                          }`}
+                        >
+                          {selectedOption === "no-corporate" && (
+                            <div className="w-2 h-2 bg-white rounded-full" />
+                          )}
+                        </div>
+                        <span
+                          className={`text-sm font-semibold ${selectedOption === "no-corporate" ? "text-red-900" : "text-gray-700"}`}
+                        >
+                          I don&apos;t have a Corporate Email
                         </span>
                       </div>
+                      <span className="text-lg font-bold text-gray-900">
+                        ₹{bundleData?.standardPrice || 1499}
+                      </span>
                     </div>
-                  </>
-                )}
-              </div>
+                  </div>
+                </>
+              )}
             </div>
-            {/* // </div> */}
-          </>
+          </div>
         );
       }
     }
