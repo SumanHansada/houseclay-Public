@@ -330,44 +330,56 @@ export const UnlockOwnerDetails = ({
   const renderError = () => {
     if (errorMeta?.code === "INSUFFICIENT_CONNECTS") {
       return (
-        <div className="px-6 space-y-6 flex flex-col justify-center h-full">
-          <div className="flex w-full items-center gap-4 bg-gray-50 border border-gray-100 rounded-xl p-4">
-            <div className="relative h-20 aspect-[7/9] shrink-0">
+        <div className="px-6 space-y-8 flex flex-col justify-center h-full max-md:pt-16 pb-8">
+          <div className="flex flex-col items-center text-center space-y-4 md:pt-12">
+            <div className="relative w-24 md:w-28 aspect-[7/9] shrink-0">
               <ImageWithLoader
                 src={insufficientConnectsIconURL}
                 alt="insufficient connects"
                 fill
-                className="object-center"
+                className="object-contain"
               />
             </div>
-            <div className="flex flex-col justify-center">
-              <h1 className="text-xl font-medium text-gray-900 leading-tight">
-                Out of Connects?
+
+            <div className="space-y-2 mt-4">
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900">
+                Out of Connects
               </h1>
-              <p className="text-gray-500 font-light text-sm mt-0.5">
-                Get Houseclay Pro to unlock more!
+              <p className="text-gray-600 max-w-sm mx-auto">
+                Connects are required to view owner details. Get Houseclay Pro
+                to connect with{" "}
+                <span className="font-semibold text-gray-800">
+                  verified owners
+                </span>{" "}
+                and pay{" "}
+                <span className="font-semibold text-gray-800">
+                  zero brokerage!
+                </span>
               </p>
-              <button
-                onClick={() => {
-                  onClose();
-                  openDialog(PRO_SUBSCRIPTION_DIALOG_ID);
-                }}
-                className="text-red-600 hover:text-red-700 cursor-pointer text-left font-medium text-sm mt-1.5 flex items-center gap-1 transition-colors"
-              >
-                Unlock Pro{" "}
-                <ShieldCheckIcon className="size-4 text-white fill-red-500" />
-              </button>
             </div>
           </div>
-          <button
-            className="w-full py-3 px-4 rounded-lg border hover:bg-gray-50"
-            onClick={() => {
-              reset();
-              onClose();
-            }}
-          >
-            Close
-          </button>
+
+          <div className="space-y-3 w-full max-w-sm mx-auto mt-8">
+            <button
+              onClick={() => {
+                onClose();
+                openDialog(PRO_SUBSCRIPTION_DIALOG_ID);
+              }}
+              className="w-full bg-red-600 hover:bg-red-700 text-white py-3.5 px-4 rounded-xl text-lg flex items-center justify-center gap-2 transition-colors shadow-sm"
+            >
+              Get Houseclay Pro
+              <ShieldCheckIcon className="size-5 text-red-500 fill-white" />
+            </button>
+            <button
+              className="w-full py-3 px-4 rounded-xl text-gray-600 hover:bg-gray-100 font-medium transition-colors"
+              onClick={() => {
+                reset();
+                onClose();
+              }}
+            >
+              Maybe Later
+            </button>
+          </div>
         </div>
       );
     }
