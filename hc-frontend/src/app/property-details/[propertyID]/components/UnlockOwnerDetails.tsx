@@ -1,13 +1,26 @@
 "use client";
 
-import { Lightbulb, Mail, Phone, PhoneCall, UserRound, X } from "lucide-react";
+import {
+  Lightbulb,
+  Mail,
+  Phone,
+  PhoneCall,
+  ShieldCheckIcon,
+  UserRound,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { Button } from "@/base-components";
-import { contactOwnerImageURL } from "@/common/cdnURLs";
+import {
+  contactOwnerImageURL,
+  insufficientConnectsIconURL,
+} from "@/common/cdnURLs";
+import { PRO_SUBSCRIPTION_DIALOG_ID } from "@/common/dataConstants/dialogIDs";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
+import { useDialog } from "@/providers/DialogContextProvider";
 import { useContactOwnerMutation } from "@/store/apiSlice";
 import { setConnectBal } from "@/store/userSlice";
 import { ImageWithLoader, SvgIcon } from "@/utility-components";
@@ -312,22 +325,74 @@ export const UnlockOwnerDetails = ({
     </>
   );
 
-  const renderError = () => (
-    <div className="px-6 space-y-6">
-      <div className="space-y-1 mt-5">
-        <h1 className="text-2xl">{errorMeta?.title ?? "Couldn't unlock"}</h1>
-        <p className="text-gray-700">
-          {errorMeta?.message ?? "Something went wrong!"}
-        </p>
-      </div>
-      <div className="space-y-2">
-        <>
-          <a
-            href="/buy-connects"
-            className="block w-full text-center text-white py-3 px-4 rounded-lg bg-red-500 hover:bg-red-600"
-          >
-            Buy Connects
-          </a>
+  const { openDialog } = useDialog();
+
+  const renderError = () => {
+    if (errorMeta?.code === "INSUFFICIENT_CONNECTS") {
+      return (
+        <div className="px-6 space-y-8 flex flex-col justify-center h-full max-md:pt-16 pb-8">
+          <div className="flex flex-col items-center text-center space-y-4 md:pt-12">
+            <div className="relative w-24 md:w-28 aspect-[7/9] shrink-0">
+              <ImageWithLoader
+                src={insufficientConnectsIconURL}
+                alt="insufficient connects"
+                fill
+                className="object-contain"
+              />
+            </div>
+
+            <div className="space-y-2 mt-4">
+              <h1 className="text-xl md:text-2xl font-bold text-gray-900">
+                Out of Connects
+              </h1>
+              <p className="text-gray-600 max-w-sm mx-auto">
+                Connects are required to view owner details. Get Houseclay Pro
+                to connect with{" "}
+                <span className="font-semibold text-gray-800">
+                  verified owners
+                </span>{" "}
+                and pay{" "}
+                <span className="font-semibold text-gray-800">
+                  zero brokerage!
+                </span>
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-3 w-full max-w-sm mx-auto mt-8">
+            <button
+              onClick={() => {
+                onClose();
+                openDialog(PRO_SUBSCRIPTION_DIALOG_ID);
+              }}
+              className="w-full bg-red-600 hover:bg-red-700 text-white py-3.5 px-4 rounded-xl text-lg flex items-center justify-center gap-2 transition-colors shadow-sm"
+            >
+              Get Houseclay Pro
+              <ShieldCheckIcon className="size-5 text-red-500 fill-white" />
+            </button>
+            <button
+              className="w-full py-3 px-4 rounded-xl text-gray-600 hover:bg-gray-100 font-medium transition-colors"
+              onClick={() => {
+                reset();
+                onClose();
+              }}
+            >
+              Maybe Later
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="px-6 space-y-6 pt-32 md:pt-16">
+        <div className="space-y-1 mt-5">
+          <h1 className="text-2xl">{errorMeta?.title ?? "Couldn't unlock"}</h1>
+          <p className="text-gray-700">
+            {errorMeta?.message ?? "Something went wrong!"}
+          </p>
+        </div>
+        <div className="space-y-2">
           <button
             className="w-full py-3 px-4 rounded-lg border hover:bg-gray-50"
             onClick={() => {
@@ -337,10 +402,10 @@ export const UnlockOwnerDetails = ({
           >
             Close
           </button>
-        </>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <>
