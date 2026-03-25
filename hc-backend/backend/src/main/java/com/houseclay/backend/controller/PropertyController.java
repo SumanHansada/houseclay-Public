@@ -12,6 +12,7 @@ import com.houseclay.backend.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -55,7 +56,7 @@ public class PropertyController {
 
     @GetMapping("/search")
     public ResponseEntity<PaginatedResponse<PropertyCardDTO>> searchProperty(
-            @ModelAttribute PropertySearchRequestDTO propertySearchRequestDTO,
+            @Valid @ModelAttribute PropertySearchRequestDTO propertySearchRequestDTO,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size) {
         if(propertySearchRequestDTO.getDistance() == null || propertySearchRequestDTO.getDistance().isEmpty()) {
