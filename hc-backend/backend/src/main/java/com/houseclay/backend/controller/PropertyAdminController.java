@@ -8,6 +8,7 @@ import com.houseclay.backend.entity.PropertyState;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.mapper.PropertyDetailMapper;
 import com.houseclay.backend.service.PropertyAdminService;
+import com.houseclay.backend.service.PropertyElasticService;
 import com.houseclay.backend.service.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,6 +30,9 @@ public class PropertyAdminController {
 
     @Autowired
     private PropertyService propertyService;
+
+    @Autowired
+    private PropertyElasticService propertyElasticService;
 
     @PostMapping("/add")
     public ResponseEntity<?> addProperty(@RequestBody PropertyDTO propertyDTO, String phoneNo, @RequestAttribute("authenticatedAdmin") Admin admin) {
@@ -129,6 +133,18 @@ public class PropertyAdminController {
             return ResponseEntity.ok(response);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    // One-time backfill endpoint — call this once after deploying new fields (coverImage, propertyState) to ES.
+    // After all properties are re-indexed, this endpoint can be left in place (it's idempotent) or removed.
+    @PostMapping("/reindex")
+    public ResponseEntity<?> reindexAllProperties(@RequestAttribute("authenticatedAdmin") Admin admin) {
+        try {
+            propertyElasticService.reindexAllProperties();
+            return ResponseEntity.ok("Re-index complete");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
