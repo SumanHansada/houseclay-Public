@@ -21,16 +21,13 @@ const ROWS_PER_PAGE = 12;
 
 export const PropertiesTableView = ({
   currentPage,
-  searchTerm,
 }: {
   currentPage: number;
-  searchTerm: string;
 }) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
-  console.log(searchTerm);
 
   const stateParam = searchParams.get("state") || "ALL";
   const sortOrderParam = searchParams.get("sortOrder") || "desc";

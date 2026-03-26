@@ -4,8 +4,7 @@ import {
   TenantTypeValue,
 } from "@/common/enums";
 import { BaseOption, PriceOption } from "@/interfaces/Options";
-
-import { generateNumericOptions } from "./optionUtils";
+import { generateNumericOptions } from "@/utils/formOptionHelpers";
 
 export const PROPERTY_TYPE_OPTIONS: BaseOption[] = [
   { value: PropertyTypeValue.APARTMENT, label: "Apartment" },

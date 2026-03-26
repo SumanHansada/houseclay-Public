@@ -38,7 +38,7 @@ import {
   POWER_BACKUP_OPTIONS,
   WATER_SUPPLY_OPTIONS,
   YES_NO_OPTIONS,
-} from "@/common/constants/options/normalOptions";
+} from "@/common/constants/formOptions";
 import { FormCalendarField } from "@/form-components";
 import {
   FormCheckbox,

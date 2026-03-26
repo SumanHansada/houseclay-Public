@@ -59,28 +59,28 @@ const editPropertyPersistConfig = {
   ],
 };
 
-// Configure persistence for propertySearch slice
 const propertySearchPersistConfig = {
   key: "propertySearch",
   storage,
   whitelist: [
     "location",
+    "confirmedLocationName",
     "propertyType",
+    "bhkType",
     "propertyCategory",
-    "propertyBhk",
+    "nonVegAllowed",
+    "preferredTenants",
     "tenantType",
-    "lookingFor",
-    "propertyTypeFilter",
-    "tenant",
-    "foodPref",
+    "roomType",
+    "balconyType",
     "bathroomType",
     "furnishing",
     "availability",
     "amenities",
     "parking",
     "priceRangeForRent",
+    "priceRangeForFlatmate",
     "priceRangeForBuy",
-    "exclusive",
     "sortFields",
     "sortOrder",
   ], // Persist all fields
