@@ -5,7 +5,7 @@ import { useFormikContext } from "formik";
 import {
   KHATA_CERTIFICATE_OPTIONS,
   YES_NO_OPTIONS,
-} from "@/common/constants/options/normalOptions";
+} from "@/common/constants/formOptions";
 import { FormPhoneField, FormSelectDropdown } from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
 import {

@@ -14,7 +14,7 @@ import {
   PROPERTY_AGE_OPTIONS,
   PROPERTY_TYPE_OPTIONS,
   TOTAL_FLOORS_NUMERIC_OPTIONS,
-} from "@/common/constants/options/normalOptions";
+} from "@/common/constants/formOptions";
 import {
   FormSelectDropdown,
   FormTextArea,

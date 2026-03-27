@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 
-import { WHO_WILL_SHOW_PROPERTY_OPTIONS } from "@/common/constants/options/normalOptions";
+import { WHO_WILL_SHOW_PROPERTY_OPTIONS } from "@/common/constants/formOptions";
 import { FormPhoneField, FormSelectDropdown } from "@/form-components";
 import { FormValues } from "@/interfaces/FormValues";
 import { setAdditionalInfo, setFormValidity } from "@/store/listPropertySlice";
