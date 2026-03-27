@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+
+STAGED=$(git diff --cached --name-only)
+
+if echo "$STAGED" | grep -q "^hc-frontend/"; then
+  echo "▶ hc-frontend: running lint-staged..."
+  (cd hc-frontend && npx lint-staged) || exit 1
+fi
+
+if echo "$STAGED" | grep -q "^zebra-ui/"; then
+  echo "▶ zebra-ui: running lint-staged..."
+  (cd zebra-ui && npx lint-staged) || exit 1
+fi
