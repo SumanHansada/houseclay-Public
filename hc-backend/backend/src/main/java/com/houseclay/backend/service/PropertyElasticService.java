@@ -89,20 +89,18 @@ public class PropertyElasticService {
      * Re-indexes all properties from Postgres into Elasticsearch in batches.
      *
      * When to call this:
-     *   - After adding a new field to PropertyDocument (e.g. coverImage, propertyState)
-     *     so existing ES documents get the field populated from the source-of-truth in Postgres.
-     *   - Trigger via an admin-only endpoint: POST /admin/properties/reindex
+     *   - After adding or changing a field on any PropertyDocument subclass, to backfill
+     *     existing ES documents from the source-of-truth in Postgres.
+     *   - Trigger via the admin-only endpoint: POST /api/property/admin/reindex
      *
      * How it works:
      *   1. Reads every property from the `properties` table in Postgres in pages of 100.
      *   2. For each property, calls indexPropertyInElastic() which overwrites the ES document
      *      (same propertyID = same ES _id, so it's a full replace, not a partial update).
-     *   3. Skips nothing — all states (ACTIVE, INACTIVE, etc.) are re-indexed so the data
-     *      stays consistent. If you only want ACTIVE properties in ES, add a
-     *      propertyRepository.findByPropertyState(PropertyState.ACTIVE, pageable) query here.
+     *   3. All property states are re-indexed for consistency. To restrict to ACTIVE only,
+     *      swap propertyRepository.findAll() for findByPropertyState(ACTIVE, pageable).
      *
-     * NOTE: This is a one-time backfill operation. New properties indexed going forward will
-     *       have all fields populated correctly by indexPropertyInElastic().
+     * NOTE: This operation is idempotent and safe to call multiple times.
      */
     public void reindexAllProperties() {
         int page = 0;

@@ -138,18 +138,6 @@ public class PropertyAdminController {
         }
     }
 
-    // One-time backfill endpoint — call this once after deploying new fields (coverImage, propertyState) to ES.
-    // After all properties are re-indexed, this endpoint can be left in place (it's idempotent) or removed.
-    @PostMapping("/reindex")
-    public ResponseEntity<?> reindexAllProperties(@RequestAttribute("authenticatedAdmin") Admin admin) {
-        try {
-            propertyElasticService.reindexAllProperties();
-            return ResponseEntity.ok("Re-index complete");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
-
     @PostMapping("/re-verify-property")
     public ResponseEntity<?> reVerifyProperty(@RequestParam String propertyId,
                                               @RequestParam String comment,
@@ -163,6 +151,27 @@ public class PropertyAdminController {
             return ResponseEntity.ok(response);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    /**
+     * Triggers a full re-index of all properties from Postgres into Elasticsearch.
+     * Use this whenever a field is added or changed on any PropertyDocument subclass.
+     * See PropertyElasticService#reindexAllProperties() for implementation details.
+     *
+     * Usage:
+     *   POST https://apis.houseclay.com/api/property/admin/reindex
+     *   Authorization: Bearer <admin JWT token>
+     *
+     * Returns "Re-index complete" when done.
+     */
+    @PostMapping("/reindex")
+    public ResponseEntity<?> reindexAllProperties(@RequestAttribute("authenticatedAdmin") Admin admin) {
+        try {
+            propertyElasticService.reindexAllProperties();
+            return ResponseEntity.ok("Re-index complete");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

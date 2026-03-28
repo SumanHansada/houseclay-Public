@@ -34,7 +34,6 @@ public class PropertyCardDTO {
     private String landmark;
     private double latitude;
     private double longitude;
-    // REMOVE: to stop sending image array in search response, remove the field below (and the setImages call in PropertyCardMapper)
     private List<String> images;
     private String coverImage;
     private List<String> badges;

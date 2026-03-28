@@ -27,7 +27,7 @@ public class PropertyDocument {
     private boolean isExclusive;
     private Long createdOn;
     private String coverImage;
-    private String propertyState; // NOTE: existing ES documents won't have this until re-indexed
+    private String propertyState;
 
     @Field(type = FieldType.Keyword)
     private List<String> images;
