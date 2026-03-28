@@ -27,6 +27,7 @@ public class PropertyDocument {
     private boolean isExclusive;
     private Long createdOn;
     private String coverImage;
+    private String propertyState;
 
     @Field(type = FieldType.Keyword)
     private List<String> images;

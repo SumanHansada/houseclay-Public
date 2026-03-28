@@ -37,5 +37,8 @@ public class PropertyCardDTO {
     private List<String> images;
     private String coverImage;
     private List<String> badges;
+    private Long createdOn;
+    private Long availableFrom;
+    private Long updatedOn; // always null — field does not exist in Property entity or PropertyDocument
 }
 

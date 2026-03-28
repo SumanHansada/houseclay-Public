@@ -9,9 +9,12 @@ import com.houseclay.backend.entity.elastic.PropertyDocument;
 import com.houseclay.backend.entity.elastic.RentDocument;
 import com.houseclay.backend.entity.elastic.SaleDocument;
 import com.houseclay.backend.repository.FlatmateDocumentRepository;
+import com.houseclay.backend.repository.PropertyRepository;
 import com.houseclay.backend.repository.RentDocumentRepository;
 import com.houseclay.backend.repository.SaleDocumentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +26,8 @@ public class PropertyElasticService {
     private RentDocumentRepository rentDocumentRepository;
     @Autowired
     private FlatmateDocumentRepository flatmateDocumentRepository;
+    @Autowired
+    private PropertyRepository propertyRepository;
 
     public void indexPropertyInElastic(Property property) {
         if (property instanceof SaleProperty sale) {
@@ -71,10 +76,40 @@ public class PropertyElasticService {
         propertyDocument.setAvailableFrom(property.getAvailableFrom().getTime());
         propertyDocument.setParking(property.getParking());
         propertyDocument.setImages(property.getImages());
+        propertyDocument.setCoverImage(property.getCoverImage());
         propertyDocument.setAmenities(property.getAmenities());
         propertyDocument.setBathrooms(property.getBathrooms());
         propertyDocument.setExclusive(property.isPremium());
         propertyDocument.setCreatedOn(System.currentTimeMillis());
+        propertyDocument.setPropertyState(property.getPropertyState() != null ? property.getPropertyState().name() : null);
         propertyDocument.setLocation(new PropertyDocument.GeoPoint(property.getLatitude(), property.getLongitude()));
+    }
+
+    /**
+     * Re-indexes all properties from Postgres into Elasticsearch in batches.
+     *
+     * When to call this:
+     *   - After adding or changing a field on any PropertyDocument subclass, to backfill
+     *     existing ES documents from the source-of-truth in Postgres.
+     *   - Trigger via the admin-only endpoint: POST /api/property/admin/reindex
+     *
+     * How it works:
+     *   1. Reads every property from the `properties` table in Postgres in pages of 100.
+     *   2. For each property, calls indexPropertyInElastic() which overwrites the ES document
+     *      (same propertyID = same ES _id, so it's a full replace, not a partial update).
+     *   3. All property states are re-indexed for consistency. To restrict to ACTIVE only,
+     *      swap propertyRepository.findAll() for findByPropertyState(ACTIVE, pageable).
+     *
+     * NOTE: This operation is idempotent and safe to call multiple times.
+     */
+    public void reindexAllProperties() {
+        int page = 0;
+        int pageSize = 100;
+        Page<Property> batch;
+        do {
+            batch = propertyRepository.findAll(PageRequest.of(page, pageSize));
+            batch.forEach(this::indexPropertyInElastic);
+            page++;
+        } while (batch.hasNext());
     }
 }

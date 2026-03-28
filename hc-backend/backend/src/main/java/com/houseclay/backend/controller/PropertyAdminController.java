@@ -8,6 +8,7 @@ import com.houseclay.backend.entity.PropertyState;
 import com.houseclay.backend.exception.APIException;
 import com.houseclay.backend.mapper.PropertyDetailMapper;
 import com.houseclay.backend.service.PropertyAdminService;
+import com.houseclay.backend.service.PropertyElasticService;
 import com.houseclay.backend.service.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,6 +30,9 @@ public class PropertyAdminController {
 
     @Autowired
     private PropertyService propertyService;
+
+    @Autowired
+    private PropertyElasticService propertyElasticService;
 
     @PostMapping("/add")
     public ResponseEntity<?> addProperty(@RequestBody PropertyDTO propertyDTO, String phoneNo, @RequestAttribute("authenticatedAdmin") Admin admin) {
@@ -147,6 +151,27 @@ public class PropertyAdminController {
             return ResponseEntity.ok(response);
         } catch (APIException e) {
             return ResponseEntity.status(e.getCode()).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    /**
+     * Triggers a full re-index of all properties from Postgres into Elasticsearch.
+     * Use this whenever a field is added or changed on any PropertyDocument subclass.
+     * See PropertyElasticService#reindexAllProperties() for implementation details.
+     *
+     * Usage:
+     *   POST https://apis.houseclay.com/api/property/admin/reindex
+     *   Authorization: Bearer <admin JWT token>
+     *
+     * Returns "Re-index complete" when done.
+     */
+    @PostMapping("/reindex")
+    public ResponseEntity<?> reindexAllProperties(@RequestAttribute("authenticatedAdmin") Admin admin) {
+        try {
+            propertyElasticService.reindexAllProperties();
+            return ResponseEntity.ok("Re-index complete");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

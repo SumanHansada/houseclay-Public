@@ -8,8 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.houseclay.backend.utils.Constants;
-
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
@@ -38,7 +36,16 @@ public class CorporateDomainService {
     private static final Pattern TITLE_PATTERN = Pattern.compile("<title[^>]*>(.*?)</title>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
     // In-memory set for disposable emails
-    private final Set<String> disposableDomains = new HashSet<>(Constants.DISPOSABLE_DOMAIN_LIST);
+    private volatile Set<String> disposableDomains = new HashSet<>();
+
+    /**
+     * Updates the disposable domain blocklist in memory.
+     */
+    public void updateDisposableDomains(Set<String> newDomains) {
+        if (newDomains != null && !newDomains.isEmpty()) {
+            this.disposableDomains = Set.copyOf(newDomains);
+        }
+    }
 
     // Enable redirect following so domains like "houseclay.com" 
     // successfully redirect to "www.houseclay.com" instead of failing.

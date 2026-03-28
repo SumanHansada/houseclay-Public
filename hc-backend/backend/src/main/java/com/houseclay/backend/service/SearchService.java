@@ -29,9 +29,6 @@ public class SearchService {
     @Autowired
     private ElasticsearchOperations elasticsearchOperations;
 
-    @Autowired
-    private PhotoService photoService;
-
     public PaginatedResponse<PropertyCardDTO> searchNearbyWithFilters(
             PropertySearchRequestDTO request,
             int page,
@@ -211,36 +208,19 @@ public class SearchService {
             case RESALE -> mapPage(
                     elasticsearchOperations.search(searchQuery, SaleDocument.class),
                     pageable,
-                    hit -> {
-                        SaleDocument d = hit.getContent();
-                        String img = safeFirstImageUrl(d.getImages());
-                        return PropertyCardMapper.toPropertyCardDTO(d);
-                    }
+                    hit -> PropertyCardMapper.toPropertyCardDTO(hit.getContent())
             );
             case RENT -> mapPage(
                     elasticsearchOperations.search(searchQuery, RentDocument.class),
                     pageable,
-                    hit -> {
-                        RentDocument d = hit.getContent();
-                        String img = safeFirstImageUrl(d.getImages());
-                        return PropertyCardMapper.toPropertyCardDTO(d);
-                    }
+                    hit -> PropertyCardMapper.toPropertyCardDTO(hit.getContent())
             );
             case FLATMATE -> mapPage(
                     elasticsearchOperations.search(searchQuery, FlatmateDocument.class),
                     pageable,
-                    hit -> {
-                        FlatmateDocument d = hit.getContent();
-                        String img = safeFirstImageUrl(d.getImages());
-                        return PropertyCardMapper.toPropertyCardDTO(d);
-                    }
+                    hit -> PropertyCardMapper.toPropertyCardDTO(hit.getContent())
             );
         };
-    }
-
-    private String safeFirstImageUrl(List<String> images) {
-        if (images == null || images.isEmpty()) return null;
-        return photoService.getObjectPresignedUrl(images.get(0));
     }
 
     private <T> PaginatedResponse<PropertyCardDTO> mapPage(
