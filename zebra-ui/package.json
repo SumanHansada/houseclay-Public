@@ -16,11 +16,11 @@
     "start": "next start",
     "start:prod": "NODE_ENV=production next start",
     "lint": "next lint --fix",
+    "lint:check": "next lint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "format": "prettier src --check --ignore-path .gitignore .",
     "format:fix": "eslint src --ext .js,.jsx,.ts,.tsx --fix && prettier --write --ignore-path .gitignore .",
-    "prepare": "husky",
     "e2e": "playwright test",
     "e2e:headed": "playwright test --headed --debug",
     "e2e:watch": "npm e2e:headed -g \"@auth\""

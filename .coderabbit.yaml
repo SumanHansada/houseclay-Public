@@ -1,0 +1,38 @@
+language: "en-US"
+
+reviews:
+  path_instructions:
+    - path: "hc-backend/**"
+      instructions: "This is a Spring Boot Java backend. Focus on transaction boundaries, JPA pitfalls, and security issues."
+    - path: "hc-frontend/**"
+      instructions: "Next.js 15 + React 19 client-facing site. Focus on performance, accessibility, and SSR correctness."
+    - path: "zebra-ui/**"
+      instructions: "Admin portal. Focus on data validation and admin-only access patterns."
+
+# language: "en-US"
+
+# reviews:
+#   path_instructions:
+#     - path: "hc-backend/**"
+#       instructions: >
+#         Spring Boot 3 / Java 17 backend. Focus on:
+#         JPA/Hibernate pitfalls (N+1, missing @Transactional, lazy-loading across transaction boundaries),
+#         Spring Security correctness (auth bypass, missing @PreAuthorize),
+#         input validation (missing @Valid, direct entity exposure in controllers),
+#         and AWS SDK v2 usage patterns.
+
+#     - path: "hc-frontend/**"
+#       instructions: >
+#         Next.js 15 + React 19 client-facing site. Focus on:
+#         SSR vs client-component boundaries (missing 'use client', server/client data mismatch),
+#         React Query cache invalidation correctness,
+#         accessibility (missing ARIA roles, keyboard navigation),
+#         and sensitive data leaking into NEXT_PUBLIC_ env vars.
+
+#     - path: "zebra-ui/**"
+#       instructions: >
+#         Next.js 15 admin portal. Focus on:
+#         admin-only route protection (missing auth guards),
+#         Redux Toolkit slice correctness,
+#         data validation before API calls,
+#         and SSR/client boundary issues.
