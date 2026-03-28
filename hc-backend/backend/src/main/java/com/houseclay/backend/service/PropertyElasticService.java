@@ -2,6 +2,7 @@ package com.houseclay.backend.service;
 
 import com.houseclay.backend.entity.FlatmateProperty;
 import com.houseclay.backend.entity.Property;
+import com.houseclay.backend.entity.PropertyState;
 import com.houseclay.backend.entity.RentProperty;
 import com.houseclay.backend.entity.SaleProperty;
 import com.houseclay.backend.entity.elastic.FlatmateDocument;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PropertyElasticService {
@@ -86,7 +89,7 @@ public class PropertyElasticService {
     }
 
     /**
-     * Re-indexes all properties from Postgres into Elasticsearch in batches.
+     * Re-indexes eligible properties from Postgres into Elasticsearch in batches.
      *
      * When to call this:
      *   - After adding or changing a field on any PropertyDocument subclass, to backfill
@@ -94,20 +97,26 @@ public class PropertyElasticService {
      *   - Trigger via the admin-only endpoint: POST /api/property/admin/reindex
      *
      * How it works:
-     *   1. Reads every property from the `properties` table in Postgres in pages of 100.
+     *   1. Reads only properties in ACTIVE, PENDING_ROUTINE_CHECK, or PENDING_RE_VERIFICATION
+     *      states from Postgres in pages of 100.
      *   2. For each property, calls indexPropertyInElastic() which overwrites the ES document
      *      (same propertyID = same ES _id, so it's a full replace, not a partial update).
-     *   3. All property states are re-indexed for consistency. To restrict to ACTIVE only,
-     *      swap propertyRepository.findAll() for findByPropertyState(ACTIVE, pageable).
+     *
+     * States excluded from ES (PENDING_VERIFICATION, INACTIVE) are not searchable.
      *
      * NOTE: This operation is idempotent and safe to call multiple times.
      */
     public void reindexAllProperties() {
+        List<PropertyState> indexableStates = List.of(
+                PropertyState.ACTIVE,
+                PropertyState.PENDING_ROUTINE_CHECK,
+                PropertyState.PENDING_RE_VERIFICATION
+        );
         int page = 0;
         int pageSize = 100;
         Page<Property> batch;
         do {
-            batch = propertyRepository.findAll(PageRequest.of(page, pageSize));
+            batch = propertyRepository.findByPropertyStateIn(indexableStates, PageRequest.of(page, pageSize));
             batch.forEach(this::indexPropertyInElastic);
             page++;
         } while (batch.hasNext());

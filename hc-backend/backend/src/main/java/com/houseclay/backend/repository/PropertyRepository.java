@@ -11,11 +11,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.List;
 
 @Repository
 public interface PropertyRepository extends JpaRepository<Property, String> {
     Page<Property> findByPropertyState(PropertyState propertyState, Pageable pageable);
+    Page<Property> findByPropertyStateIn(Collection<PropertyState> states, Pageable pageable);
     List<Property> findTop10ByPropertyStateOrderByScoreDesc(PropertyState propertyState);
 
     // Sorts by the Oldest/Earliest update first (ASC)
