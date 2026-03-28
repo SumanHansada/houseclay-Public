@@ -23,8 +23,10 @@ import {
 } from "@/common/constants/formOptions";
 import { PropertyCategory } from "@/common/enums";
 import { getPropertySearchHrefWithLocation } from "@/common/utils";
-import { DataTable } from "@/components/DataTable";
+import { Column, DataTable } from "@/components/DataTable";
+import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
 import { Pagination } from "@/components/Pagination";
+import { RenderPropertyStatus } from "@/components/status/RenderPropertyStatus";
 import SearchFiltersDialog from "@/dialogs/search-filters-dialog";
 import { PropertySearch } from "@/interfaces/PropertySearch";
 import {
@@ -48,11 +50,9 @@ import {
   setTenantType,
 } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
+import { Popover } from "@/utility-components";
+import { formatDateVerbose } from "@/utils/core";
 import { BENGALURU_BOUNDS, isWithinBounds } from "@/utils/geoBounds";
-import {
-  buildPropertyColumns,
-  SerializedPropertyRow,
-} from "@/utils/tableColumnBuilders";
 
 // Bellandur exact fallback config
 const DEFAULT_LAT = "12.9304";
@@ -76,9 +76,59 @@ export function getUrlCategory(
     : PropertyCategory.RENT;
 }
 
-const ROWS_PER_PAGE = 24;
+const ROWS_PER_PAGE = 12;
 
-export function PropertySearchClient() {
+interface SerializedPropertySearchRow extends PropertySearch {
+  _serial: number;
+}
+
+const propertySearchColumns: Column<SerializedPropertySearchRow>[] = [
+  { key: "_serial", label: "#", accessor: "_serial", className: "w-16" },
+  {
+    key: "locationOrSocietyName",
+    label: "Location",
+    render: (p) => {
+      const location = p.locationOrSocietyName || "—";
+      return (
+        <Popover
+          id={`popover-search-location-${p.propertyID}`}
+          trigger="hover"
+          content={
+            <div className="p-3 max-w-xs md:max-w-sm text-sm text-gray-700 font-medium break-words">
+              {location}
+            </div>
+          }
+        >
+          <div className="max-w-[150px] md:max-w-[200px] xl:max-w-[250px] truncate cursor-help">
+            {location}
+          </div>
+        </Popover>
+      );
+    },
+  },
+  { key: "propertyCategory", label: "Category", accessor: "propertyCategory" },
+  { key: "bhkType", label: "BHK Type", accessor: "bhkType" },
+  {
+    key: "createdOn",
+    label: "Created On",
+    render: (p) => new Date(p.createdOn).toLocaleString("en-IN"),
+  },
+  {
+    key: "availableFrom",
+    label: "Available From",
+    render: (p) =>
+      p.availableFrom != null
+        ? formatDateVerbose(p.availableFrom, "en-IN")
+        : "—",
+  },
+  {
+    key: "status",
+    label: "Status",
+    render: (p) => <RenderPropertyStatus status={p.propertyState} />,
+  },
+];
+
+export function PropertySearchTableView() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dispatch = useDispatch();
@@ -441,19 +491,28 @@ export function PropertySearchClient() {
 
   const propertyList = (propertiesData?.items || []) as PropertySearch[];
 
-  // Table Data mapping
-  const columns = buildPropertyColumns([
+  const columns: Column<SerializedPropertySearchRow>[] = [
+    ...propertySearchColumns,
     {
-      icon: Eye,
-      tooltip: "View Property Details",
-      onClick: (row) => router.push(`/admin/properties/${row.propertyID}`),
+      key: "action",
+      label: "Action",
+      className: "w-16",
+      render: (row) => (
+        <IconButtonWithTooltip
+          icon={Eye}
+          tooltip="View Property Details"
+          onClick={() => router.push(`/admin/properties/${row.propertyID}`)}
+        />
+      ),
     },
-  ]);
+  ];
 
-  const rows = propertyList.map((propertyInfo, index) => ({
-    ...propertyInfo,
-    _serial: page * ROWS_PER_PAGE + index + 1,
-  }));
+  const rows: SerializedPropertySearchRow[] = propertyList.map(
+    (propertyInfo, index) => ({
+      ...propertyInfo,
+      _serial: page * ROWS_PER_PAGE + index + 1,
+    }),
+  );
 
   const onPageChange = (newPage: number) => {
     setPage(newPage - 1); // internal page 0-idx
@@ -592,7 +651,7 @@ export function PropertySearchClient() {
           <div className="flex-1 flex flex-col overflow-hidden">
             <DataTable
               columns={columns}
-              data={rows as unknown as SerializedPropertyRow[]}
+              data={rows}
               getRowId={(prop) => prop.propertyID}
               noDataMessage="No Properties found for these criteria."
               isLoading={isLoading || isFetching}
