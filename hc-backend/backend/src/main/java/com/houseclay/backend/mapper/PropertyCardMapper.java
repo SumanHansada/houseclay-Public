@@ -61,6 +61,9 @@ public class PropertyCardMapper {
         target.setBathrooms(source.getBathrooms());
         target.setImages(source.getImages());
         target.setCoverImage(source.getCoverImage());
+        target.setPropertyState(source.getPropertyState() != null ? PropertyState.valueOf(source.getPropertyState()) : null);
+        target.setCreatedOn(source.getCreatedOn());
+        target.setAvailableFrom(source.getAvailableFrom());
     }
 
     private static void copyBaseFields(Property source, PropertyCardDTO target) {
