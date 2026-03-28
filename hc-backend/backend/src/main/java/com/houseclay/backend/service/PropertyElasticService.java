@@ -107,14 +107,27 @@ public class PropertyElasticService {
      * NOTE: This operation is idempotent and safe to call multiple times.
      */
     public void reindexAllProperties() {
+        // Step 1: Remove any ES documents for states that should not be searchable
+        List<PropertyState> excludedStates = List.of(
+                PropertyState.PENDING_VERIFICATION,
+                PropertyState.INACTIVE
+        );
+        int page = 0;
+        int pageSize = 100;
+        Page<Property> batch;
+        do {
+            batch = propertyRepository.findByPropertyStateIn(excludedStates, PageRequest.of(page, pageSize));
+            batch.forEach(this::deletePropertyInElastic);
+            page++;
+        } while (batch.hasNext());
+
+        // Step 2: Re-index all eligible properties
         List<PropertyState> indexableStates = List.of(
                 PropertyState.ACTIVE,
                 PropertyState.PENDING_ROUTINE_CHECK,
                 PropertyState.PENDING_RE_VERIFICATION
         );
-        int page = 0;
-        int pageSize = 100;
-        Page<Property> batch;
+        page = 0;
         do {
             batch = propertyRepository.findByPropertyStateIn(indexableStates, PageRequest.of(page, pageSize));
             batch.forEach(this::indexPropertyInElastic);
