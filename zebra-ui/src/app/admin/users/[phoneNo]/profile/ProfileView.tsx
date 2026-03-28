@@ -2,13 +2,14 @@
 
 import { CircleSlash, Clock, ExternalLink, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 
 import { Button } from "@/base-components";
 import { dialogLabels } from "@/common/constants";
 import { CorporateBenefitStatus, UserDetailsTabEnum } from "@/common/enums";
 import { InitialsAvatar } from "@/components/InitialsAvatar";
+import Spinner from "@/components/Spinner";
 import { ActionDialog } from "@/dialogs/action-dialog";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -55,6 +56,21 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
     }
   }, [isEditing, data?.user]);
 
+  const isDirty = useMemo(
+    () =>
+      editedEmail !== (data?.user?.email || "") ||
+      editedCompanyName !== (data?.user?.companyName || "") ||
+      editedJobTitle !== (data?.user?.jobTitle || ""),
+    [
+      editedEmail,
+      editedCompanyName,
+      editedJobTitle,
+      data?.user?.email,
+      data?.user?.companyName,
+      data?.user?.jobTitle,
+    ],
+  );
+
   // parent layout already ensures data is present
   if (!data?.user) return null;
 
@@ -75,6 +91,7 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
   } = data.user;
 
   const handleSaveProfile = async () => {
+    if (!isDirty) return;
     if (editedEmail) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(editedEmail)) {
@@ -256,7 +273,8 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
                               ? setEditedEmail(e.target.value)
                               : setEditValue && setEditValue(e.target.value)
                           }
-                          className="border border-gray-400 rounded-xl p-2 text-gray-900 text-xl bg-white focus:ring-2 focus:ring-red-500 focus:outline-none"
+                          disabled={isUpdating}
+                          className="border border-gray-400 rounded-xl p-2 text-gray-900 text-xl bg-white focus:ring-2 focus:ring-red-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                         />
                       ) : (
                         <input
@@ -305,6 +323,7 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
               <div className="flex gap-2">
                 {isEditing ? (
                   <>
+                    {isUpdating && <Spinner size="sm" />}
                     <Button
                       variant="outline"
                       className="rounded-lg"
@@ -314,11 +333,12 @@ export const ProfileView = ({ userPhoneNo }: { userPhoneNo: string }) => {
                       Cancel
                     </Button>
                     <Button
-                      className="rounded-lg"
+                      className="rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                       onClick={handleSaveProfile}
                       isLoading={isUpdating}
+                      disabled={!isDirty}
                     >
-                      Save Changes
+                      {isDirty ? "Save Changes" : "No Changes"}
                     </Button>
                   </>
                 ) : (
