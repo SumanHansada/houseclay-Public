@@ -45,7 +45,7 @@ const StandoutsDialog: React.FC<StandoutsDialogProps> = ({
           </MobileHeader.RightAction>
         </MobileHeader>
       </DialogHeader>
-      <DialogContent>
+      <DialogContent className="flex-grow-0">
         <Standouts properties={properties} />
       </DialogContent>
     </Dialog>

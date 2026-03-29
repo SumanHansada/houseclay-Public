@@ -23,6 +23,7 @@ import Link from "next/link";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 
+import { formatINRCurrency } from "@/common/utils";
 import Properties from "@/components/Properties";
 import { PropertySearch } from "@/interfaces/PropertySearch";
 
@@ -52,6 +53,50 @@ function isValidCoord(lat: number, lng: number): boolean {
     lng <= 180
   );
 }
+
+const PropertyMapMarker = memo(function PropertyMapMarker({
+  property,
+  isSelected,
+  className,
+}: {
+  property: PropertySearch;
+  isSelected: boolean;
+  className?: string;
+}) {
+  const priceLabel = formatINRCurrency(property.price ?? property.rent ?? 0);
+  return (
+    <div className={`flex flex-col items-center ${className ?? ""}`}>
+      <div
+        className="flex flex-col items-center"
+        style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))" }}
+      >
+        <div className="relative">
+          <svg width="36" height="46" viewBox="0 0 36 46" fill="none">
+            <path
+              d="M18 2 C9 2 2 9 2 18 C2 27 9 36 14 41 C15.5 42.5 16.8 43 18 43 C19.2 43 20.5 42.5 22 41 C27 36 34 27 34 18 C34 9 27 2 18 2Z"
+              fill={isSelected ? "red" : "white"}
+            />
+            <circle cx="18" cy="18" r="13" fill="#ef4444" />
+          </svg>
+          <div className="absolute top-1 left-1/2 -translate-x-1/2 w-8 h-6 flex items-center justify-center text-white pointer-events-none">
+            <SvgIcon iconSize="small" name="houseclay-home" size={16} />
+          </div>
+        </div>
+      </div>
+      <div style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))" }}>
+        <div
+          className={`px-3 py-1.5 rounded-full text-[11px] font-semibold shadow-sm border whitespace-nowrap max-w-[140px] truncate ${
+            isSelected
+              ? "bg-red-500 text-white border-red-600"
+              : "bg-white text-gray-900 border-gray-200"
+          }`}
+        >
+          {priceLabel}
+        </div>
+      </div>
+    </div>
+  );
+});
 
 const MapInner: React.FC<{
   properties: PropertySearch[];
@@ -216,20 +261,9 @@ const MapInner: React.FC<{
                 <div
                   ref={refs.setReference}
                   {...getReferenceProps()}
-                  className="flex flex-col items-center cursor-pointer"
-                  style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))" }}
+                  className="cursor-pointer"
                 >
-                  <svg width="36" height="46" viewBox="0 0 36 46" fill="none">
-                    {" "}
-                    <path
-                      d="M18 2 C9 2 2 9 2 18 C2 27 9 36 14 41 C15.5 42.5 16.8 43 18 43 C19.2 43 20.5 42.5 22 41 C27 36 34 27 34 18 C34 9 27 2 18 2Z"
-                      fill="red"
-                    />{" "}
-                    <circle cx="18" cy="18" r="13" fill="#ef4444" />{" "}
-                  </svg>
-                  <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-8 h-6 flex items-center justify-center text-white pointer-events-none">
-                    <SvgIcon iconSize="small" name="houseclay-home" size={16} />
-                  </div>
+                  <PropertyMapMarker property={p} isSelected />
                 </div>
                 <FloatingFocusManager
                   context={context}
@@ -257,23 +291,8 @@ const MapInner: React.FC<{
                 </FloatingFocusManager>
               </div>
             ) : (
-              <div
-                className="flex flex-col items-center cursor-pointer hover:scale-110 transition-transform"
-                style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))" }}
-              >
-                <div className="relative">
-                  <svg width="36" height="46" viewBox="0 0 36 46" fill="none">
-                    {" "}
-                    <path
-                      d="M18 2 C9 2 2 9 2 18 C2 27 9 36 14 41 C15.5 42.5 16.8 43 18 43 C19.2 43 20.5 42.5 22 41 C27 36 34 27 34 18 C34 9 27 2 18 2Z"
-                      fill={isSelected ? "red" : "white"}
-                    />{" "}
-                    <circle cx="18" cy="18" r="13" fill="#ef4444" />{" "}
-                  </svg>
-                  <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-8 h-6 flex items-center justify-center text-white pointer-events-none">
-                    <SvgIcon iconSize="small" name="houseclay-home" size={16} />
-                  </div>
-                </div>
+              <div className="cursor-pointer hover:scale-110 transition-transform">
+                <PropertyMapMarker property={p} isSelected={isSelected} />
               </div>
             )}
           </AdvancedMarker>

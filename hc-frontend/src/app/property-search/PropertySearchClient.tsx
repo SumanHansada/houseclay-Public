@@ -354,24 +354,31 @@ export function PropertySearchClient({
     };
   }, [isMobile, selectedMapProperty]);
 
-  const dragHandleCleanup = useRef<(() => void) | null>(null);
-  const dragHandleRef = useCallback(
+  const listingsPanelTouchCleanup = useRef<(() => void) | null>(null);
+  const setListingsPanelRef = useCallback(
     (el: HTMLDivElement | null) => {
-      dragHandleCleanup.current?.();
-      dragHandleCleanup.current = null;
+      listingsRef.current = el;
+      listingsPanelTouchCleanup.current?.();
+      listingsPanelTouchCleanup.current = null;
 
       if (!el) return;
 
       const onTouchStart = (e: TouchEvent) => {
-        e.preventDefault();
         dragStartY.current = e.touches[0].clientY;
         dragStartOffset.current = listingsOffsetY.current;
       };
       const onTouchMove = (e: TouchEvent) => {
         if (dragStartY.current === null) return;
-        e.preventDefault();
         const diff = e.touches[0].clientY - dragStartY.current;
         const maxOffset = getMaxOffset();
+
+        // At rest: finger moving up = page scroll — do not hijack the gesture
+        if (dragStartOffset.current === 0 && diff < -8) {
+          dragStartY.current = null;
+          return;
+        }
+
+        e.preventDefault();
         const newOffset = Math.max(
           0,
           Math.min(maxOffset, dragStartOffset.current + diff),
@@ -391,7 +398,7 @@ export function PropertySearchClient({
       el.addEventListener("touchmove", onTouchMove, { passive: false });
       el.addEventListener("touchend", onTouchEnd);
 
-      dragHandleCleanup.current = () => {
+      listingsPanelTouchCleanup.current = () => {
         el.removeEventListener("touchstart", onTouchStart);
         el.removeEventListener("touchmove", onTouchMove);
         el.removeEventListener("touchend", onTouchEnd);
@@ -1096,13 +1103,10 @@ export function PropertySearchClient({
 
           {/* Mobile: Listings */}
           <div
-            ref={listingsRef}
-            className={`relative z-10 bg-white rounded-t-3xl -mt-[60vh] shadow-[0_-4px_16px_rgba(0,0,0,0.08)] min-h-[60vh] translate-y-[60vh] px-6 pb-16 ${selectedMapProperty ? "overflow-hidden touch-none" : ""}`}
+            ref={setListingsPanelRef}
+            className={`relative z-10 bg-white rounded-t-3xl -mt-[60vh] shadow-[0_-4px_16px_rgba(0,0,0,0.08)] min-h-[60vh] translate-y-[60vh] px-6 pb-16 cursor-grab active:cursor-grabbing touch-none ${selectedMapProperty ? "overflow-hidden touch-none" : ""}`}
           >
-            <div
-              ref={dragHandleRef}
-              className="flex justify-center pt-3 pb-3 cursor-grab active:cursor-grabbing touch-none"
-            >
+            <div className="flex justify-center pt-3 pb-3">
               <div className="w-10 h-1 bg-gray-300 rounded-full" />
             </div>
 

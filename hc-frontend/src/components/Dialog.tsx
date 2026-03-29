@@ -2,6 +2,7 @@
 
 import { FocusTrap } from "focus-trap-react";
 import React, { useEffect, useState } from "react";
+import { Drawer } from "vaul";
 
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -25,8 +26,10 @@ const getDialogStyles = (type: string, isMobile?: boolean): string => {
         isMobile ? "h-auto" : "rounded-lg max-h-[calc(100svh-4rem)]"
       }`;
     case "bottom-sheet":
-      return `fixed bottom-0 bg-white rounded-t-xl ${
-        isMobile ? "w-full h-auto" : "hidden"
+      return `fixed bottom-0 ${
+        isMobile
+          ? "left-0 right-0 w-full h-auto"
+          : "bg-white rounded-t-xl hidden"
       }`;
     case "card":
       return `fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl ${
@@ -100,6 +103,55 @@ export const Dialog: React.FC<DialogProps> = ({
   };
 
   const dialogStyles = getDialogStyles(type, isMobile);
+  const isBottomSheetMobile = isMobile && type === "bottom-sheet";
+
+  const drawerOpen = isOpen && !isClosing;
+
+  if (isBottomSheetMobile) {
+    return (
+      <Drawer.Root
+        open={drawerOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            closeDialog(id);
+            onClose();
+          }
+        }}
+        dismissible={!disableOverlayClick}
+        shouldScaleBackground={false}
+      >
+        <Drawer.Portal>
+          <Drawer.Overlay className="fixed inset-0 z-50 bg-black/25" />
+          <Drawer.Content
+            className="fixed bottom-0 left-0 right-0 z-50 flex max-h-[96vh] flex-col rounded-t-xl bg-white pb-safe-bottom outline-none"
+            style={height ? { height: `${height}%` } : undefined}
+          >
+            <FocusTrap
+              active={drawerOpen}
+              focusTrapOptions={{
+                allowOutsideClick: true,
+                fallbackFocus: `#${id}`,
+                clickOutsideDeactivates: true,
+                returnFocusOnDeactivate: true,
+                initialFocus: false,
+                setReturnFocus: false,
+              }}
+            >
+              <div
+                id={id}
+                className="flex min-h-0 flex-1 flex-col outline-none"
+                tabIndex={-1}
+              >
+                <Drawer.Title className="sr-only">Dialog</Drawer.Title>
+                <Drawer.Handle className="mx-auto mb-2 mt-2 h-1 w-12 shrink-0 rounded-full bg-gray-300" />
+                {children}
+              </div>
+            </FocusTrap>
+          </Drawer.Content>
+        </Drawer.Portal>
+      </Drawer.Root>
+    );
+  }
 
   return (
     <FocusTrap
@@ -129,14 +181,6 @@ export const Dialog: React.FC<DialogProps> = ({
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          {isMobile && type === "bottom-sheet" && (
-            <div
-              id="dragArea"
-              className="w-full flex justify-center items-center px-4 pt-2"
-            >
-              <div className="w-12 h-1 rounded-full bg-gray-300"></div>
-            </div>
-          )}
           {children}
         </div>
       </div>
@@ -157,10 +201,14 @@ export const DialogHeader: React.FC<{
   );
 };
 
-export const DialogContent: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => (
-  <div className="overflow-y-auto overflow-x-hidden flex-grow max-h-svh scroll-smooth">
+export const DialogContent: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+}> = ({ children, className = "" }) => (
+  <div
+    data-dialog-scrollable
+    className={`overflow-y-auto overflow-x-hidden flex-grow max-h-svh scroll-smooth ${className}`}
+  >
     {children}
   </div>
 );
