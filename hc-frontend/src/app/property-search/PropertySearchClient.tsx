@@ -342,18 +342,6 @@ export function PropertySearchClient({
     requestAnimationFrame(() => setListingsTransform(0, true));
   }, [isMobile, setListingsTransform]);
 
-  useEffect(() => {
-    if (!isMobile) return;
-    if (selectedMapProperty) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isMobile, selectedMapProperty]);
-
   const listingsPanelTouchCleanup = useRef<(() => void) | null>(null);
   const setListingsPanelRef = useCallback(
     (el: HTMLDivElement | null) => {
@@ -363,28 +351,29 @@ export function PropertySearchClient({
 
       if (!el) return;
 
-      const onTouchStart = (e: TouchEvent) => {
-        dragStartY.current = e.touches[0].clientY;
+      const dragRegion = el.querySelector("[data-sheet-drag-region]");
+      if (!dragRegion) return;
+
+      const onTouchStart = (e: Event) => {
+        const te = e as TouchEvent;
+        dragStartY.current = te.touches[0].clientY;
         dragStartOffset.current = listingsOffsetY.current;
       };
-      const onTouchMove = (e: TouchEvent) => {
+
+      const onTouchMove = (e: Event) => {
         if (dragStartY.current === null) return;
-        const diff = e.touches[0].clientY - dragStartY.current;
+        const te = e as TouchEvent;
+        const dy = te.touches[0].clientY - dragStartY.current;
         const maxOffset = getMaxOffset();
 
-        // At rest: finger moving up = page scroll — do not hijack the gesture
-        if (dragStartOffset.current === 0 && diff < -8) {
-          dragStartY.current = null;
-          return;
-        }
-
-        e.preventDefault();
+        te.preventDefault();
         const newOffset = Math.max(
           0,
-          Math.min(maxOffset, dragStartOffset.current + diff),
+          Math.min(maxOffset, dragStartOffset.current + dy),
         );
         setListingsTransform(newOffset, false);
       };
+
       const onTouchEnd = () => {
         if (dragStartY.current === null) return;
         dragStartY.current = null;
@@ -394,14 +383,16 @@ export function PropertySearchClient({
         setListingsTransform(snapTarget, true);
       };
 
-      el.addEventListener("touchstart", onTouchStart, { passive: false });
-      el.addEventListener("touchmove", onTouchMove, { passive: false });
-      el.addEventListener("touchend", onTouchEnd);
+      dragRegion.addEventListener("touchstart", onTouchStart, {
+        passive: true,
+      });
+      dragRegion.addEventListener("touchmove", onTouchMove, { passive: false });
+      dragRegion.addEventListener("touchend", onTouchEnd);
 
       listingsPanelTouchCleanup.current = () => {
-        el.removeEventListener("touchstart", onTouchStart);
-        el.removeEventListener("touchmove", onTouchMove);
-        el.removeEventListener("touchend", onTouchEnd);
+        dragRegion.removeEventListener("touchstart", onTouchStart);
+        dragRegion.removeEventListener("touchmove", onTouchMove);
+        dragRegion.removeEventListener("touchend", onTouchEnd);
       };
     },
     [getMaxOffset, setListingsTransform],
@@ -1101,22 +1092,27 @@ export function PropertySearchClient({
             )}
           </div>
 
-          {/* Mobile: Listings */}
+          {/* Mobile: Listings — page scrolls (no inner overflow); sheet drag only on handle + header */}
           <div
             ref={setListingsPanelRef}
-            className={`relative z-10 bg-white rounded-t-3xl -mt-[60vh] shadow-[0_-4px_16px_rgba(0,0,0,0.08)] min-h-[60vh] translate-y-[60vh] px-6 pb-16 cursor-grab active:cursor-grabbing touch-none ${selectedMapProperty ? "overflow-hidden touch-none" : ""}`}
+            className="relative z-10 -mt-[60vh] min-h-[60vh] translate-y-[60vh] rounded-t-3xl bg-white px-6 pb-16 shadow-[0_-4px_16px_rgba(0,0,0,0.08)]"
           >
-            <div className="flex justify-center pt-3 pb-3">
-              <div className="w-10 h-1 bg-gray-300 rounded-full" />
-            </div>
+            <div
+              data-sheet-drag-region
+              className="cursor-grab active:cursor-grabbing"
+            >
+              <div className="flex justify-center pt-3 pb-3">
+                <div className="h-1 w-10 rounded-full bg-gray-300" />
+              </div>
 
-            <SearchResultsHeader
-              totalElements={totalElements}
-              propertyCategory={searchState.propertyCategory}
-              hasConfirmedLocation={hasConfirmedLocation}
-              confirmedLocationName={searchState.confirmedLocationName}
-              variant="mobile"
-            />
+              <SearchResultsHeader
+                totalElements={totalElements}
+                propertyCategory={searchState.propertyCategory}
+                hasConfirmedLocation={hasConfirmedLocation}
+                confirmedLocationName={searchState.confirmedLocationName}
+                variant="mobile"
+              />
+            </div>
 
             <div className="mx-auto">
               <PropertiesList
