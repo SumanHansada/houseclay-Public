@@ -17,7 +17,7 @@ const ListPropertyPage = () => {
   );
   const router = useRouter();
   const handleBack = () => {
-    router.back();
+    router.push(`/admin/users/${userPhoneNo}/profile`);
   };
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const ListPropertyPage = () => {
     }
     const uuid = generateUUID();
     dispatch(setPropertyID(uuid));
-    const url = `/admin/list-property/${userPhoneNo}/${propertyCategory.toLowerCase()}/property-details`;
+    const url = `/admin/properties/list-property/${userPhoneNo}/${propertyCategory.toLowerCase()}/property-details`;
     console.log("Navigating to URL:", url);
     router.push(url);
   };
@@ -42,6 +42,7 @@ const ListPropertyPage = () => {
         <PropertyTypeOptions
           onNext={handlePostListingClick}
           onBack={handleBack}
+          backLabel="Back to Profile"
         />
       </div>
     </div>

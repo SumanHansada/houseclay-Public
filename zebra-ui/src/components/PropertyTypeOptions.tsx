@@ -12,12 +12,14 @@ import PropertyTypeOption from "./PropertyTypeOption";
 
 interface PropertyTypeOptionsProps {
   onBack?: () => void;
+  backLabel?: string;
   onNext?: () => void;
   handlePrefetch?: () => void;
 }
 
 const PropertyTypeOptions = ({
   onBack,
+  backLabel = "Back",
   onNext,
   handlePrefetch,
 }: PropertyTypeOptionsProps) => {
@@ -80,7 +82,7 @@ const PropertyTypeOptions = ({
             className={`text-center w-1/4 border border-gray-300 text-gray-700 hover:bg-gray-50 px-2 xl:px-6  py-2 xl:py-3 rounded-xl transition duration-200`}
             onClick={onBack}
           >
-            Back
+            {backLabel}
           </button>
         )}
         <button
@@ -102,7 +104,7 @@ const PropertyTypeOptions = ({
               className={`text-center w-full border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 rounded-xl transition duration-200`}
               onClick={onBack}
             >
-              Back
+              {backLabel}
             </button>
           )}
           <button

@@ -1,7 +1,5 @@
 "use client";
 
-import { useParams } from "next/navigation";
-
 import { dialogLabels } from "@/common/constants";
 import { PropertyStatus } from "@/common/enums";
 import { RenderPropertyStatus } from "@/components/status/RenderPropertyStatus";
@@ -16,8 +14,11 @@ import { OwnerDetails } from "../../components/OwnerDetails";
 
 const DEACTIVATE_DIALOG_ID = "report-property-dialog";
 
-export default function PropertyDetailsOverviewPage() {
-  const { propertyID } = useParams() as { propertyID: string };
+interface Props {
+  propertyID: string;
+}
+
+export const OwnerDetailsView = ({ propertyID }: Props) => {
   const { openDialog, isDialogOpen } = useDialog();
   const [deactivateProperty] = useDeactivatePropertyMutation();
 
@@ -29,7 +30,6 @@ export default function PropertyDetailsOverviewPage() {
   const propertyUpdates = currentProperty!.propertyUpdates;
   const latestUpdate = propertyUpdates[propertyUpdates.length - 1] ?? null;
 
-  // Deactivate the property
   const handleDeactivate = async (commentFromDialog: string) => {
     await deactivateProperty({ propertyID, comment: commentFromDialog });
   };
@@ -96,4 +96,4 @@ export default function PropertyDetailsOverviewPage() {
       )}
     </div>
   );
-}
+};

@@ -91,7 +91,7 @@ export default function UserDetailsLayout({
   });
 
   const handleAddProperty = () => {
-    router.push(`/admin/list-property/${userPhoneNo}`);
+    router.push(`/admin/properties/list-property/${userPhoneNo}`);
   };
 
   return (

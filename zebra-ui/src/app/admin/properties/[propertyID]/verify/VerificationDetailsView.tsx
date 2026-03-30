@@ -349,7 +349,6 @@ export const VerificationDetailsView = ({ propertyID }: Props) => {
         }).unwrap();
       }
       setEditMode(false);
-      // router.push(`/admin/properties/verification/${status}`);
     } catch (error) {
       console.error("Error updating property:", error);
     }
