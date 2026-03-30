@@ -112,7 +112,25 @@ export function buildPropertyColumns(
     {
       key: "location",
       label: "Location",
-      accessor: "location",
+      render: (p) => {
+        const location = p.location || "—";
+
+        return (
+          <Popover
+            id={`popover-property-location-${p.propertyID}`}
+            trigger="hover"
+            content={
+              <div className="p-3 max-w-xs md:max-w-sm text-sm text-gray-700 font-medium break-words">
+                {location}
+              </div>
+            }
+          >
+            <div className="max-w-[150px] md:max-w-[200px] xl:max-w-[250px] truncate cursor-help">
+              {location}
+            </div>
+          </Popover>
+        );
+      },
     },
     {
       key: "propertyCategory",

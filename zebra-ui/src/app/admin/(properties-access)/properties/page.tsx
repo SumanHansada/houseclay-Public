@@ -6,7 +6,6 @@ import { PropertiesTableView } from "./PropertiesTableView";
 interface PageProps {
   searchParams: Promise<{
     page?: string;
-    search?: string;
   }>;
 }
 
@@ -19,18 +18,14 @@ export async function generateMetadata({
 }
 
 export default async function PropertiesPage({ searchParams }: PageProps) {
-  const { page, search } = await searchParams;
+  const { page } = await searchParams;
   const parsedPage = Number(page);
 
   if (page !== undefined && (isNaN(parsedPage) || parsedPage < 1)) {
-    const searchParam = search ? `&search=${search}` : "";
-    redirect(`/admin/properties?page=1${searchParam}`);
+    redirect(`/admin/properties?page=1`);
   }
 
   const currentPage = parsedPage || 1;
-  const searchTerm = search || "";
 
-  return (
-    <PropertiesTableView currentPage={currentPage} searchTerm={searchTerm} />
-  );
+  return <PropertiesTableView currentPage={currentPage} />;
 }

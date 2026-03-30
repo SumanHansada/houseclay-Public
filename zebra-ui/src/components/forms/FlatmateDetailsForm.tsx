@@ -43,7 +43,7 @@ import {
   ROOM_TYPE_OPTIONS,
   WATER_SUPPLY_OPTIONS,
   YES_NO_OPTIONS,
-} from "@/common/constants/options/normalOptions";
+} from "@/common/constants/formOptions";
 import { TenantTypeValue } from "@/common/enums";
 import {
   FormCalendarField,
@@ -441,6 +441,7 @@ const FlatmateDetailsForm: React.FC<FlatmateDetailsFormProps> = ({
           withIcons={true}
           alignment="start"
           required
+          disabled={disabled}
         />
       </div>
     </div>

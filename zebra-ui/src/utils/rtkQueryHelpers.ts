@@ -61,7 +61,7 @@ export const baseQueryWithAuth: BaseQueryFn<
         // Hard Redirect to Login
         if (typeof window !== "undefined") {
           // Use window.location to ensure a full state flush
-          window.location.href = `/login?from=${encodeURIComponent(window.location.pathname)}`;
+          window.location.href = `/login?clear_session=true&from=${encodeURIComponent(window.location.pathname)}`;
         }
       } finally {
         release();

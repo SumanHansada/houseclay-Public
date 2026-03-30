@@ -1,5 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 
+import { PropertyCategory } from "@/common/enums";
 import { AdminDetails } from "@/interfaces/Admin";
 import {
   GetAllLeadsResponse,
@@ -13,6 +14,7 @@ import {
 import { GetAllAdminsResponse } from "@/interfaces/api/admins";
 import { LeadQueryParam } from "@/interfaces/Lead";
 import { PropertyForm } from "@/interfaces/PropertyForm";
+import { PropertySearch } from "@/interfaces/PropertySearch";
 import { safeUrlDecode } from "@/utils/core";
 import {
   baseQueryWithAuth,
@@ -166,6 +168,24 @@ export const apiSlice = createApi({
           },
         };
       },
+    }),
+
+    updateUserProfile: builder.mutation<
+      { message: string; userId: string },
+      {
+        phoneNo: string;
+        payload: { companyName?: string; jobTitle?: string; emailID?: string };
+      }
+    >({
+      query: ({ phoneNo, payload }) => ({
+        url: `/admin/update-user-profile`,
+        method: "POST",
+        params: { phoneNo },
+        body: payload,
+      }),
+      invalidatesTags: (_r, _e, { phoneNo }) => [
+        { type: "UserDetail", id: phoneNo },
+      ],
     }),
 
     // ──────────────── CORPORATE DOMAINS ────────────────
@@ -430,6 +450,88 @@ export const apiSlice = createApi({
           : listTag("Properties"),
     }),
 
+    getPropertiesByLocation: builder.query<
+      {
+        items: PropertySearch[];
+        hasNext: boolean;
+        page: number;
+        totalElements: number;
+        totalPages: number;
+      },
+      Record<string, string | number | boolean | string[] | PropertyCategory>
+    >({
+      query: (params) => {
+        const {
+          latitude,
+          longitude,
+          propertyCategory,
+          page = 0,
+          size = 16,
+          ...filters
+        } = params;
+        const searchParams = new URLSearchParams({
+          lat: latitude.toString(),
+          lon: longitude.toString(),
+          propertyCategory: propertyCategory.toString(),
+          page: page.toString(),
+          size: size.toString(),
+        });
+
+        if (filters.minPrice !== undefined && filters.minPrice !== null)
+          searchParams.append("minPrice", filters.minPrice.toString());
+        if (filters.maxPrice)
+          searchParams.append("maxPrice", filters.maxPrice.toString());
+        if (filters.propertyType)
+          searchParams.append("propertyType", filters.propertyType.toString());
+        if (filters.bhkType)
+          searchParams.append("bhkType", filters.bhkType.toString());
+        if (filters.tenantType)
+          searchParams.append("tenantType", filters.tenantType.toString());
+        if (filters.nonVegAllowed !== undefined) {
+          searchParams.append(
+            "nonVegAllowed",
+            filters.nonVegAllowed ? "true" : "false",
+          );
+        }
+        if (filters.roomType)
+          searchParams.append("roomType", filters.roomType.toString());
+        if (filters.bathroomType)
+          searchParams.append("bathroomType", filters.bathroomType.toString());
+        if (filters.balconyType)
+          searchParams.append("balconyType", filters.balconyType.toString());
+        if (filters.preferredTenants)
+          searchParams.append(
+            "preferredTenants",
+            filters.preferredTenants.toString(),
+          );
+        if (filters.furnishing)
+          searchParams.append("furnishing", filters.furnishing.toString());
+        if (filters.parking)
+          searchParams.append("parking", filters.parking.toString());
+        if (
+          filters.amenities &&
+          Array.isArray(filters.amenities) &&
+          filters.amenities.length > 0
+        ) {
+          searchParams.append("amenities", filters.amenities.join(","));
+        }
+        if (filters.availability) {
+          searchParams.append(
+            "propertyAvailability",
+            filters.availability.toString(),
+          );
+        }
+        if (filters.exclusive === true || filters.exclusive === "true")
+          searchParams.append("exclusive", "true");
+        if (filters.sortFields)
+          searchParams.append("sortFields", filters.sortFields.toString());
+        if (filters.sortOrder)
+          searchParams.append("sortOrder", filters.sortOrder.toString());
+
+        return `/property/search?${searchParams.toString()}`;
+      },
+    }),
+
     getPropertyById: builder.query<
       GetPropertyByIdResponse,
       { propertyID: string }
@@ -530,6 +632,7 @@ export const {
   useBlacklistUserMutation,
   useActivateUserMutation,
   useTagBrokerMutation,
+  useUpdateUserProfileMutation,
   useGetAdminInfoQuery,
   useGetAdminsQuery,
   useGetAdminByUsernameQuery,
@@ -547,6 +650,7 @@ export const {
   usePropertyAddMutation,
   usePropertyUpdateMutation,
   useGetPropertiesQuery,
+  useGetPropertiesByLocationQuery,
   useGetPropertyByIdQuery,
   useVerifyPropertyMutation,
   useDeactivatePropertyMutation,

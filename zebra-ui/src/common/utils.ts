@@ -1,5 +1,8 @@
+import { ReadonlyURLSearchParams } from "next/navigation";
+
 import { CDN_BASE_URL } from "./constants";
 import { placeholderImageURL } from "./constants/cdnURLs";
+import { PropertyCategory } from "./enums";
 
 const formatter = new Intl.NumberFormat("en-IN", {
   style: "currency",
@@ -99,3 +102,45 @@ export function processPropertyImages(
   // If all images were invalid, return placeholder
   return processedImages.length > 0 ? processedImages : [placeholderImageURL];
 }
+
+/**
+ * Generates a clean property search URL for the given category in the admin portal.
+ *
+ * Key behaviors:
+ * - Preserves the user's current location context:
+ *   - If `lat` and `lon` are present → keeps them (and optional `city`)
+ *   - Else if `city` is present → keeps it
+ *   - Otherwise → falls back to default city
+ * - Sets the new `propertyCategory` (lowercase)
+ * - Removes ALL other search parameters (price, bhk, filters, etc.)
+ *
+ * Use this when switching categories (header nav, quick filters, dialog)
+ * to maintain location continuity while resetting irrelevant filters.
+ *
+ * @param category - The target PropertyCategory (e.g., RENT, FLATMATE)
+ * @param searchParams - Current search params from useSearchParams()
+ * @returns Full href string starting with "/admin/properties/search?"
+ */
+export const getPropertySearchHrefWithLocation = (
+  category: PropertyCategory,
+  searchParams: URLSearchParams | ReadonlyURLSearchParams,
+) => {
+  const cleanParams = new URLSearchParams();
+
+  const lat = searchParams.get("lat");
+  const lon = searchParams.get("lon");
+  const city = searchParams.get("city");
+
+  const defaultCity = "bengaluru";
+  if (lat && lon) {
+    cleanParams.set("city", city || defaultCity);
+    cleanParams.set("lat", lat);
+    cleanParams.set("lon", lon);
+  } else {
+    cleanParams.set("city", city || defaultCity);
+  }
+
+  cleanParams.set("propertyCategory", category.toLowerCase());
+
+  return `/admin/properties/search?${cleanParams.toString()}`;
+};

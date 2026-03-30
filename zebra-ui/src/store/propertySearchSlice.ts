@@ -5,35 +5,73 @@ import { Location } from "@/interfaces/Location";
 import { PropertySearchFilter } from "@/interfaces/PropertySearchFilter";
 
 const initialState: PropertySearchFilter = {
+  // quick filters
   location: null,
+  confirmedLocationName: "",
   propertyType: "",
   propertyCategory: PropertyCategory.RENT,
-  propertyBhk: "",
+  bhkType: "",
   tenantType: "",
   availability: "Any",
-  // New filter initial states
-  lookingFor: "",
-  propertyTypeFilter: "",
-  tenant: "",
-  foodPref: "",
+
+  // filter dialog
+  nonVegAllowed: null as boolean | null,
+  preferredTenants: "",
+  roomType: "",
   bathroomType: "",
+  balconyType: "",
   furnishing: "",
   amenities: [],
   parking: "",
-  priceRangeForRent: [200000, 700000],
-  priceRangeForBuy: [5000000, 70000000],
-  bhkType: "",
+  priceRangeForRent: null,
+  priceRangeForFlatmate: null,
+  priceRangeForBuy: null,
   exclusive: false,
+
+  // sorting
   sortFields: "",
   sortOrder: "",
+};
+
+// Helper function to reset all filters except location (reusable internally)
+const onlyResetFilters = (state: PropertySearchFilter) => {
+  // state.propertyCategory = PropertyCategory.RENT;
+
+  // Reset quick filters except location
+  state.propertyType = "";
+  state.tenantType = "";
+  state.bhkType = "";
+  state.availability = "Any";
+
+  // Reset filter dialog states to initial values
+  state.nonVegAllowed = null;
+  state.preferredTenants = "";
+  state.roomType = "";
+  state.bathroomType = "";
+  state.balconyType = "";
+  state.furnishing = "";
+  state.amenities = [];
+  state.parking = "";
+  state.priceRangeForRent = null;
+  state.priceRangeForFlatmate = null;
+  state.priceRangeForBuy = null;
+  state.exclusive = false;
+
+  // Reset sorting based filters
+  state.sortFields = "";
+  state.sortOrder = "";
 };
 
 const propertySearchSlice = createSlice({
   name: "propertySearch",
   initialState,
   reducers: {
+    // quick filters
     setLocation: (state, action: PayloadAction<Location | null>) => {
       state.location = action.payload;
+    },
+    setConfirmedLocationName: (state, action: PayloadAction<string>) => {
+      state.confirmedLocationName = action.payload;
     },
     setPropertyCategory: (state, action: PayloadAction<PropertyCategory>) => {
       state.propertyCategory = action.payload;
@@ -44,36 +82,34 @@ const propertySearchSlice = createSlice({
     ) => {
       state.propertyType = String(action.payload || "");
     },
-    setPropertyBhk: (
-      state,
-      action: PayloadAction<string | number | boolean>,
-    ) => {
-      state.propertyBhk = String(action.payload || "");
-    },
     setTenantType: (
       state,
       action: PayloadAction<string | number | boolean>,
     ) => {
       state.tenantType = String(action.payload || "");
     },
+    setBhkType: (state, action: PayloadAction<string>) => {
+      state.bhkType = action.payload;
+    },
     setAvailability: (state, action: PayloadAction<string>) => {
       state.availability = String(action.payload || "Any");
     },
-    // New filter actions
-    setLookingFor: (state, action: PayloadAction<string>) => {
-      state.lookingFor = action.payload;
+
+    // filter dialog
+    setNonVegAllowed: (state, action: PayloadAction<boolean | null>) => {
+      state.nonVegAllowed = action.payload;
     },
-    setPropertyTypeFilter: (state, action: PayloadAction<string>) => {
-      state.propertyTypeFilter = action.payload;
+    setPreferredTenants: (state, action: PayloadAction<string>) => {
+      state.preferredTenants = action.payload;
     },
-    setTenant: (state, action: PayloadAction<string>) => {
-      state.tenant = action.payload;
-    },
-    setFoodPref: (state, action: PayloadAction<string>) => {
-      state.foodPref = action.payload;
+    setRoomType: (state, action: PayloadAction<string>) => {
+      state.roomType = action.payload;
     },
     setBathroomType: (state, action: PayloadAction<string>) => {
       state.bathroomType = action.payload;
+    },
+    setBalconyType: (state, action: PayloadAction<string>) => {
+      state.balconyType = action.payload;
     },
     setFurnishing: (state, action: PayloadAction<string>) => {
       state.furnishing = action.payload;
@@ -84,72 +120,73 @@ const propertySearchSlice = createSlice({
     setParking: (state, action: PayloadAction<string>) => {
       state.parking = action.payload;
     },
-    setPriceRangeForRent: (state, action: PayloadAction<[number, number]>) => {
+    setPriceRangeForRent: (
+      state,
+      action: PayloadAction<[number, number] | null>,
+    ) => {
       state.priceRangeForRent = action.payload;
     },
-    setPriceRangeForBuy: (state, action: PayloadAction<[number, number]>) => {
-      state.priceRangeForBuy = action.payload;
+    setPriceRangeForFlatmate: (
+      state,
+      action: PayloadAction<[number, number] | null>,
+    ) => {
+      state.priceRangeForFlatmate = action.payload;
     },
-    setBhkType: (state, action: PayloadAction<string>) => {
-      state.bhkType = action.payload;
+    setPriceRangeForBuy: (
+      state,
+      action: PayloadAction<[number, number] | null>,
+    ) => {
+      state.priceRangeForBuy = action.payload;
     },
     setExclusiveFilter: (state, action: PayloadAction<boolean>) => {
       state.exclusive = action.payload;
     },
+
+    // sorting
     setSortFields: (state, action: PayloadAction<string>) => {
       state.sortFields = action.payload;
     },
     setSortOrder: (state, action: PayloadAction<string>) => {
       state.sortOrder = action.payload;
     },
-    resetPropertySearch: (state) => {
+
+    // Reset actions
+    resetPropertySearchFilters: (state) => {
+      onlyResetFilters(state);
+    },
+    resetPropertySearchSlice: (state) => {
       state.location = null;
-      state.propertyType = "";
+      state.confirmedLocationName = "";
       state.propertyCategory = PropertyCategory.RENT;
-      state.propertyBhk = "";
-      state.tenantType = "";
-      state.availability = "";
-      // Reset filter states to initial values
-      state.lookingFor = "";
-      state.propertyTypeFilter = "";
-      state.tenant = "";
-      state.foodPref = "";
-      state.bathroomType = "";
-      state.furnishing = "";
-      state.amenities = [];
-      state.parking = "";
-      state.priceRangeForRent = [200000, 700000];
-      state.priceRangeForBuy = [5000000, 70000000];
-      state.bhkType = "";
-      state.exclusive = false;
-      state.sortFields = "";
-      state.sortOrder = "";
+      onlyResetFilters(state);
     },
   },
 });
 
 export const {
   setLocation,
+  setConfirmedLocationName,
   setPropertyType,
   setPropertyCategory,
-  setPropertyBhk,
   setTenantType,
+  setPreferredTenants,
   setAvailability,
-  setLookingFor,
-  setPropertyTypeFilter,
-  setTenant,
-  setFoodPref,
+  setNonVegAllowed,
+  setRoomType,
   setBathroomType,
+  setBalconyType,
   setFurnishing,
   setAmenities,
   setParking,
   setPriceRangeForRent,
+  setPriceRangeForFlatmate,
   setPriceRangeForBuy,
   setBhkType,
   setExclusiveFilter,
   setSortFields,
   setSortOrder,
-  resetPropertySearch,
+  resetPropertySearchSlice,
+  resetPropertySearchFilters,
 } = propertySearchSlice.actions;
 
 export default propertySearchSlice.reducer;

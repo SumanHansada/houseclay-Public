@@ -1,6 +1,10 @@
+import { PropertyCategory, PropertyState } from "@/common/enums";
+
 export interface PropertySearch {
   propertyID: string;
   propertyType: string;
+  propertyState: PropertyState;
+  propertyCategory: PropertyCategory;
   builtUpArea: number;
   bhkType: string;
   bathrooms?: number;
@@ -14,4 +18,7 @@ export interface PropertySearch {
   longitude: number;
   images: string[];
   badges: string | null;
+  createdOn: number;
+  availableFrom: number | null;
+  updatedOn: number | null;
 }

@@ -8,7 +8,15 @@ const authPath = "/login";
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get(COOKIE_NAME)?.value;
-  const { pathname } = request.nextUrl;
+  const { pathname, searchParams } = request.nextUrl;
+
+  if (searchParams.get("clear_session") === "true") {
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.delete("clear_session");
+    const response = NextResponse.redirect(loginUrl);
+    response.cookies.delete(COOKIE_NAME);
+    return response;
+  }
 
   // If trying to access protected routes without token -> Login
   if (!token && protectedPaths.some((path) => pathname.startsWith(path))) {
