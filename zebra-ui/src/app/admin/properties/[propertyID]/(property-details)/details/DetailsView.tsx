@@ -60,6 +60,7 @@ export const DetailsView = ({ propertyID }: Props) => {
     usePropertyUpdateMutation();
   const { openDialog, closeDialog } = useDialog();
 
+  // Selectors
   const uploadState = useSelector((state: RootState) => state.uploadToS3);
   const deleteState = useSelector((state: RootState) => state.deleteFromS3);
   const formState = useSelector((state: RootState) => state.editProperty.form);
@@ -70,13 +71,16 @@ export const DetailsView = ({ propertyID }: Props) => {
     (state: RootState) => state.propertyDetails.propertyDetails.owner?.phoneNo,
   );
 
+  // Combined Schema
   const validationSchema = useMemo(
     () => createValidationSchema(propertyCategory),
     [propertyCategory],
   );
 
+  // Ensure proper form initialization with all required fields
   const initialValues = useMemo((): FormValues => {
     const data = formState?.data || {};
+    // Ensure all required fields are present
     return {
       localityDetails: data.localityDetails,
       images: data.images || [],
@@ -90,8 +94,10 @@ export const DetailsView = ({ propertyID }: Props) => {
     };
   }, [formState?.data]);
 
+  // Ref to store submitted values for chaining
   const submittedValuesRef = useRef<FormValues | null>(null);
 
+  // Finalization refs/logic
   const [finalizationStage, setFinalizationStage] =
     useState<FinalizationStage>("idle");
   const finalizationPlanRef = useRef({
@@ -104,31 +110,42 @@ export const DetailsView = ({ propertyID }: Props) => {
     updateStarted: false,
   });
 
+  // Build queues for uploads and deletes based on current state and S3 URL mappings
   const buildUploadQueue = (
     propertyImagesParam: PropertyImage[],
     propertyImagesS3UrlParam: Record<string, string> | undefined,
   ) => {
     const photos = propertyImagesParam || [];
     return photos
-      .filter((img) => img.url.startsWith("blob:"))
-      .map((img) => {
-        const fileName = img.file.name;
+      .filter((propertyImage: PropertyImage) =>
+        propertyImage.url.startsWith("blob:"),
+      )
+      .map((propertyImage: PropertyImage) => {
+        const fileName = propertyImage.file.name;
         const mappedUrl =
           propertyImagesS3UrlParam?.[fileName] ??
           propertyImagesS3UrlParam?.[encodeURIComponent(fileName)];
-        if (!mappedUrl) return null;
+
+        if (!mappedUrl) {
+          return null;
+        }
+
         return {
           name: fileName,
-          url: img.url,
-          type: img.file.type,
+          url: propertyImage.url,
+          type: propertyImage.file.type,
           S3Url: mappedUrl,
         };
       })
       .filter(
         (
           item,
-        ): item is { name: string; url: string; type: string; S3Url: string } =>
-          Boolean(item),
+        ): item is {
+          name: string;
+          url: string;
+          type: string;
+          S3Url: string;
+        } => Boolean(item),
       );
   };
 
@@ -138,49 +155,113 @@ export const DetailsView = ({ propertyID }: Props) => {
   ) => {
     const deletedPhotos = deletedImagesParam || [];
     return deletedPhotos
-      .map((img) => {
-        const fileName = img.file.name;
+      .map((propertyImage: PropertyImage) => {
+        const fileName = propertyImage.file.name;
         const mappedUrl =
           deletedImagesS3UrlParam?.[fileName] ??
           deletedImagesS3UrlParam?.[encodeURIComponent(fileName)];
-        if (!mappedUrl) return null;
-        return { name: fileName, S3Url: mappedUrl };
+
+        if (!mappedUrl) {
+          return null;
+        }
+
+        return {
+          name: fileName,
+          S3Url: mappedUrl,
+        };
       })
-      .filter((item): item is { name: string; S3Url: string } => Boolean(item));
+      .filter(
+        (
+          item,
+        ): item is {
+          name: string;
+          S3Url: string;
+        } => Boolean(item),
+      );
   };
 
+  // Presigned Helpers
   const getPresignedPhotoUrls = async (imagesParam: PropertyImage[]) => {
-    const newImages = imagesParam.filter((img) => img.url.startsWith("blob:"));
-    if (newImages.length === 0) return;
+    // Only request pre-signed URLs for new images (blob URLs)
+    const newImages = imagesParam.filter((propertyImage: PropertyImage) =>
+      propertyImage.url.startsWith("blob:"),
+    );
+
+    if (newImages.length === 0) {
+      return;
+    }
+
     const fileMap: Record<string, string> = {};
-    newImages.forEach((img) => {
-      fileMap[encodeURIComponent(img.file.name)] = img.file.type;
+    newImages.forEach((propertyImage: PropertyImage) => {
+      fileMap[encodeURIComponent(propertyImage.file.name)] =
+        propertyImage.file.type;
     });
-    const res = await getPresignedUrls({ propertyID, fileMap })
+    const presignedUrlsResponse = await getPresignedUrls({
+      propertyID,
+      fileMap,
+    })
       .unwrap()
-      .catch(console.error);
-    if (!res) return;
+      .catch((error: Error) => {
+        console.error("Error fetching presigned URLs:", error);
+      });
+    if (!presignedUrlsResponse) {
+      console.error("No presigned URLs received");
+      return;
+    }
+
+    // Decode all URLs in the fileURLMap
     const decodedFileURLMap: Record<string, string> = {};
-    Object.entries(res.fileURLMap).forEach(([key, value]) => {
+    Object.entries(presignedUrlsResponse.fileURLMap).forEach(([key, value]) => {
       decodedFileURLMap[key] = decodeURIComponent(value);
     });
-    dispatch(setFileURLMap({ data: decodedFileURLMap }));
+
+    dispatch(
+      setFileURLMap({
+        data: decodedFileURLMap,
+      }),
+    );
   };
 
   const getDeletePresignedPhotoUrls = async (imagesParam: PropertyImage[]) => {
+    // Request delete pre-signed URLs for deleted images
     const deletedPhotos = imagesParam || [];
-    if (deletedPhotos.length === 0) return;
+    if (deletedPhotos.length === 0) {
+      return;
+    }
+
     const fileMap: Record<string, string> = {};
-    deletedPhotos.forEach((img) => {
-      fileMap[encodeURIComponent(img.file.name)] = img.file.type;
+    deletedPhotos.forEach((propertyImage: PropertyImage) => {
+      fileMap[encodeURIComponent(propertyImage.file.name)] =
+        propertyImage.file.type;
     });
-    const res = await getDeletePresignedUrls({ propertyID, fileMap })
+
+    if (Object.keys(fileMap).length === 0) {
+      console.log("No files to delete");
+      return;
+    }
+
+    const presignedUrlsResponse = await getDeletePresignedUrls({
+      propertyID,
+      fileMap,
+    })
       .unwrap()
-      .catch(console.error);
-    if (!res) return;
-    dispatch(setDeleteFileURLMap({ data: res.fileURLMap }));
+      .catch((error: Error) => {
+        console.error("Error fetching delete presigned URLs:", error);
+      });
+
+    if (!presignedUrlsResponse) {
+      console.error("No delete presigned URLs received");
+      return;
+    }
+
+    dispatch(
+      setDeleteFileURLMap({
+        data: presignedUrlsResponse.fileURLMap,
+      }),
+    );
   };
 
+  // Upload/Delete functions
   const uploadFilesToS3 = async () => {
     const latest = store.getState().editProperty;
     const queue = buildUploadQueue(
@@ -205,18 +286,30 @@ export const DetailsView = ({ propertyID }: Props) => {
     closeDialog("delete-photos-dialog");
   };
 
+  // Update Handler
   const handleUpdateProperty = async (formikValues: FormValues) => {
     try {
+      if (!formikValues) {
+        throw new Error("Form data is not available");
+      }
       const propertyForm = transformFormValuesToPropertyForm(
         formikValues,
         propertyID,
         propertyCategory,
       );
+
+      // Use latest from store for images
       const latest = store.getState().editProperty;
 
+      // Extract S3 image keys from propertyForm.images
+      // For new images (blob URLs), they should have been uploaded and the S3 URL should be in propertyImagesS3Url
+      // For existing images (S3 URLs), extract the key directly from the URL
       const imagesS3Keys = propertyForm.images
         .map((url) => {
+          // If it's an existing S3 URL, extract the key
           if (url.startsWith("https://")) return extractS3KeyFromUrl(url) || "";
+
+          // If it's a blob URL, find the S3 URL from propertyImagesS3Url
           const matchingPhoto = latest.propertyImages.find(
             (img) => img.url === url,
           );
@@ -229,9 +322,12 @@ export const DetailsView = ({ propertyID }: Props) => {
           }
           return "";
         })
-        .filter((key) => key !== "");
+        .filter((key) => key !== ""); // Remove empty keys
 
+      // Add cover image information
       const coverImage = latest.propertyImages.filter((image) => image.isCover);
+
+      // Find the cover image S3 key
       let coverImageS3Key = "";
       if (coverImage.length > 0) {
         const coverImageUrl = coverImage[0].url;
@@ -263,6 +359,7 @@ export const DetailsView = ({ propertyID }: Props) => {
     }
   };
 
+  // Finalization effects
   useEffect(() => {
     if (finalizationStage !== "deleting") return;
     if (!finalizationOpsRef.current.deleteStarted) {
@@ -298,8 +395,12 @@ export const DetailsView = ({ propertyID }: Props) => {
 
     const runUpdate = async () => {
       try {
-        if (submittedValuesRef.current)
-          await handleUpdateProperty(submittedValuesRef.current);
+        if (!submittedValuesRef.current) {
+          console.error("No submitted values available");
+          return;
+        }
+
+        await handleUpdateProperty(submittedValuesRef.current);
       } finally {
         setFinalizationStage("idle");
         finalizationPlanRef.current = {
@@ -316,7 +417,9 @@ export const DetailsView = ({ propertyID }: Props) => {
     void runUpdate();
   }, [finalizationStage, handleUpdateProperty]);
 
+  // Centralized submit handler
   const handleSaveChanges = async (formikValues: FormValues) => {
+    // Detect net deleted images by comparing initial vs final
     const initialImages = initialValues.images || [];
     const finalImages = formikValues.images || [];
     const netDeleted = initialImages.filter(
@@ -324,16 +427,22 @@ export const DetailsView = ({ propertyID }: Props) => {
         !finalImages.some((finalImg) => finalImg.id === initialImg.id),
     );
 
+    // Update Redux states
     dispatch(setDeletedImages({ deletedImages: netDeleted }));
     dispatch(setPropertyImages({ propertyImages: finalImages }));
+
+    // 1. Sync Formik -> Redux (one-time)
     dispatch(setFormData({ data: formikValues }));
     submittedValuesRef.current = formikValues;
 
+    // 2. Handle presigned URLs
     const latest = store.getState().editProperty;
     await getPresignedPhotoUrls(latest.propertyImages);
     await getDeletePresignedPhotoUrls(latest.deletedImages);
 
+    // Now get latest S3 URLs after presigned dispatches
     const latestUrls = store.getState().editProperty;
+    // 3. Plan & execute finalization
     const pendingDeletes = buildDeleteQueue(
       latestUrls.deletedImages,
       latestUrls.deletedImagesS3Url,
