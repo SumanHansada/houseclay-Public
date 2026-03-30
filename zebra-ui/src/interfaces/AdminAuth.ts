@@ -5,3 +5,9 @@ export const ADMIN_ROLES = {
 } as const;
 
 export type AdminRole = (typeof ADMIN_ROLES)[keyof typeof ADMIN_ROLES];
+
+export const ADMIN_ROLE_LABELS: Record<AdminRole, string> = {
+  CAPTAIN: "Captain",
+  MANAGER: "Manager",
+  SUPER_ADMIN: "Super Admin",
+};

@@ -74,7 +74,7 @@ const Sidebar = () => {
                 )
               ) : null}
             </div>
-            {item.children.length && openSections[item.label] && (
+            {item.children.length > 0 && openSections[item.label] && (
               <div className="ml-12 flex flex-col gap-1 font-nunito">
                 {item.children.map((child) => (
                   <Link
