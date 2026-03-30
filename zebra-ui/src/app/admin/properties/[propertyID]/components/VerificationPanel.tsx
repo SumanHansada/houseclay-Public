@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import { dialogLabels } from "@/common/constants";
+import { PropertyState, VerifyPropertyStatusEnum } from "@/common/enums";
 import { ActionDialog } from "@/dialogs/action-dialog";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -12,6 +13,12 @@ import {
   useTagBrokerMutation,
   useVerifyPropertyMutation,
 } from "@/store/apiSlice";
+
+const STATUS_TO_PROPERTY_STATE: Record<string, string> = {
+  [VerifyPropertyStatusEnum.VERIFY]: PropertyState.PENDING_VERIFICATION,
+  [VerifyPropertyStatusEnum.REVERIFY]: PropertyState.PENDING_RE_VERIFICATION,
+  [VerifyPropertyStatusEnum.ROUTINE_CHECK]: PropertyState.PENDING_ROUTINE_CHECK,
+};
 
 const VERIFY_DIALOG_ID = "verify-property-dialog";
 const DEACTIVATE_DIALOG_ID = "report-property-dialog";
@@ -143,7 +150,9 @@ export const VerificationPanel: React.FC<VerificationPanelProps> = ({
   const [tagBroker] = useTagBrokerMutation();
 
   const redirectToPropertyList = () => {
-    router.push(`/admin/properties/verification/${status}`);
+    const propertyState = STATUS_TO_PROPERTY_STATE[status];
+    const params = propertyState ? `?state=${propertyState}` : "";
+    router.push(`/admin/properties${params}`);
   };
 
   const handleVerify = async () => {
