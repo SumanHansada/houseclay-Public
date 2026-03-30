@@ -8,8 +8,10 @@ import toast from "react-hot-toast";
 import SelectDropdown from "@/base-components/SelectDropdown";
 import { CorporateDomainStatus } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
-import { DataTable } from "@/components/DataTable";
+import { Column, DataTable } from "@/components/DataTable";
+import IconButtonWithTooltip from "@/components/IconButtonWithTooltip";
 import { Pagination } from "@/components/Pagination";
+import { Pill } from "@/components/Pill";
 import { ActionDialog } from "@/dialogs/action-dialog";
 import { CorporateDomain } from "@/interfaces/api";
 import { useDialog } from "@/providers/DialogContextProvider";
@@ -18,7 +20,7 @@ import {
   useDenyCorporateDomainMutation,
   useGetCorporateDomainsQuery,
 } from "@/store/apiSlice";
-import { buildCorporateDomainColumns } from "@/utils/tableColumnBuilders";
+import { Popover } from "@/utility-components";
 
 interface SerializedDomainRow extends CorporateDomain {
   _serial: number;
@@ -108,25 +110,82 @@ export const CorporateDomainsTableView = ({
     openDialog("denyDomain");
   };
 
-  const columns = buildCorporateDomainColumns([
+  const columns: Column<SerializedDomainRow>[] = [
+    { key: "serial", label: "#", accessor: "_serial", className: "w-16" },
     {
-      icon: ExternalLink,
-      tooltip: "Visit Website",
-      onClick: handleVisit,
+      key: "domainName",
+      label: "Domain Name",
+      accessor: "domainName",
     },
     {
-      icon: CheckCircle,
-      tooltip: "Approve Domain",
-      onClick: handleApprove,
-      show: (row) => row.status === CorporateDomainStatus.PENDING,
+      key: "websiteTitle",
+      label: "Website Title",
+      render: (d) => {
+        const title = d.websiteTitle || "—";
+        return (
+          <Popover
+            id={`popover-domain-title-${d.id}`}
+            trigger="hover"
+            content={
+              <div className="p-3 max-w-xs md:max-w-sm text-sm text-gray-700 font-medium break-words">
+                {title}
+              </div>
+            }
+          >
+            <div className="max-w-[150px] md:max-w-[200px] xl:max-w-[250px] truncate cursor-help">
+              {title}
+            </div>
+          </Popover>
+        );
+      },
     },
     {
-      icon: XCircle,
-      tooltip: "Deny Domain",
-      onClick: handleDeny,
-      show: (row) => row.status === CorporateDomainStatus.PENDING,
+      key: "status",
+      label: "Status",
+      render: (d) => {
+        let color: "green" | "red" | "yellow" = "yellow";
+        if (d.status === CorporateDomainStatus.ALLOWED) color = "green";
+        if (d.status === CorporateDomainStatus.DENIED) color = "red";
+        return <Pill color={color}>{d.status}</Pill>;
+      },
     },
-  ]);
+    {
+      key: "updatedAt",
+      label: "Last Updated",
+      render: (d) => new Date(d.updatedAt).toLocaleString("en-IN"),
+    },
+    {
+      key: "action",
+      label: "Action",
+      className: "w-24",
+      render: (row) => {
+        const isPending = row.status === CorporateDomainStatus.PENDING;
+        return (
+          <div className="flex items-center gap-2">
+            <IconButtonWithTooltip
+              icon={ExternalLink}
+              tooltip="Visit Website"
+              onClick={() => handleVisit(row)}
+            />
+            {isPending && (
+              <>
+                <IconButtonWithTooltip
+                  icon={CheckCircle}
+                  tooltip="Approve Domain"
+                  onClick={() => handleApprove(row)}
+                />
+                <IconButtonWithTooltip
+                  icon={XCircle}
+                  tooltip="Deny Domain"
+                  onClick={() => handleDeny(row)}
+                />
+              </>
+            )}
+          </div>
+        );
+      },
+    },
+  ];
 
   if (isLoading) {
     return (
