@@ -7,7 +7,12 @@ import AsyncFallback from "@/components/AsyncFallback";
 import { Column, DataTable } from "@/components/DataTable";
 import { Pagination } from "@/components/Pagination";
 import { RenderLeadStatus } from "@/components/status/RenderLeadStatus";
-import { Lead, LEAD_TYPE_MAP, LeadType } from "@/interfaces/Lead";
+import {
+  Lead,
+  LEAD_TYPE_LABELS,
+  LEAD_TYPE_MAP,
+  LeadType,
+} from "@/interfaces/Lead";
 import { useGetLeadsQuery } from "@/store/apiSlice";
 import { safeUrlDecode } from "@/utils/core";
 
@@ -27,12 +32,7 @@ export const LeadsTableView = ({
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
-  const statusBarTitle =
-    leadType === "property"
-      ? "Property Listing Leads"
-      : leadType === "support"
-        ? "Search Support Leads"
-        : "Upgrade Property Leads";
+  const statusBarTitle = LEAD_TYPE_LABELS[leadType];
 
   // update URL
   const updateURL = useCallback(

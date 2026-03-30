@@ -8,6 +8,12 @@ export const LEAD_TYPE_MAP = {
 
 export type LeadType = keyof typeof LEAD_TYPE_MAP;
 
+export const LEAD_TYPE_LABELS: Record<LeadType, string> = {
+  property: "Property Listing Leads",
+  support: "Search Support Leads",
+  upgrade: "Upgrade Property Leads",
+};
+
 export type LeadQueryParam = (typeof LEAD_TYPE_MAP)[LeadType];
 
 export interface Lead {

@@ -26,7 +26,7 @@ export const LeadDetailsView = ({ leadType, leadID }: LeadDetailsProps) => {
     isLoading,
     isError,
     error,
-  } = useGetLeadByIdQuery({ id: leadID });
+  } = useGetLeadByIdQuery({ id: leadID }, { refetchOnMountOrArgChange: true });
 
   const [leadStatusUpdate, { isLoading: isUpdatingStatus }] =
     useLeadStatusUpdateMutation();
@@ -201,7 +201,7 @@ export const LeadDetailsView = ({ leadType, leadID }: LeadDetailsProps) => {
         <div className="flex gap-2">
           <button
             className="py-2 px-4 rounded-lg bg-gray-100 hover:bg-gray-300 border border-gray-400"
-            onClick={() => router.back()}
+            onClick={() => router.push(`/admin/leads/${leadType}`)}
           >
             Back
           </button>
