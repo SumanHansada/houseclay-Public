@@ -87,7 +87,7 @@ export const UsersTableView = ({
   };
 
   const handleAddProperty = (phoneNo: string) => {
-    router.push(`/admin/list-property/${phoneNo}`);
+    router.push(`/admin/properties/list-property/${phoneNo}`);
   };
 
   // ─── DATA FETCHING ───

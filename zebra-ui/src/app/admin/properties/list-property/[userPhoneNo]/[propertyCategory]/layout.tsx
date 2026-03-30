@@ -1,7 +1,7 @@
 "use client";
 
 import { Form, Formik, FormikProvider } from "formik";
-import { usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -45,10 +45,13 @@ export default function ListPropertyTypeLayout({
   const { openDialog, isDialogOpen, closeDialog } = useDialog();
   const { isMobile } = useDeviceContext();
 
-  // Extract userPhoneNo and propertyCategory from URL params
-  const pathSegments = pathname.split("/");
-  const userPhoneNo = pathSegments[3];
-  const propertyCategory = pathSegments[4]?.toUpperCase() as PropertyCategory;
+  const { userPhoneNo, propertyCategory: propertyCategoryParam } =
+    useParams() as {
+      userPhoneNo: string;
+      propertyCategory: string;
+    };
+  const propertyCategory =
+    propertyCategoryParam.toUpperCase() as PropertyCategory;
 
   const propertyID = useSelector(
     (state: RootState) => state.listProperty.propertyID,
@@ -59,7 +62,7 @@ export default function ListPropertyTypeLayout({
 
   // Function to derive current step from URL path
   const getCurrentStepFromPath = (): ListPropertyFormStep => {
-    const lastSegment = pathSegments[pathSegments.length - 1];
+    const lastSegment = pathname.split("/").at(-1);
 
     switch (lastSegment) {
       case ListPropertyRouteStep.PROPERTY_DETAILS:
@@ -183,7 +186,7 @@ export default function ListPropertyTypeLayout({
   const initialValues = getInitialValues();
 
   const setRoute = (stepSlug: string) => {
-    const route = `/admin/list-property/${userPhoneNo}/${propertyCategory.toLowerCase()}/${stepSlug}`;
+    const route = `/admin/properties/list-property/${userPhoneNo}/${propertyCategory.toLowerCase()}/${stepSlug}`;
     router.push(route);
   };
 
@@ -231,7 +234,7 @@ export default function ListPropertyTypeLayout({
   // Update the handleBack function to remove the previous step from completedSteps
   const handleBack = () => {
     if (currentStep === ListPropertyFormStep.PROPERTY_DETAILS) {
-      router.push(`/admin/list-property/${userPhoneNo}`);
+      router.push(`/admin/properties/list-property/${userPhoneNo}`);
       return;
     }
 
@@ -491,7 +494,6 @@ export default function ListPropertyTypeLayout({
           <ListPropertySuccessDialog
             id="list-property-success-dialog"
             propertyID={propertyID}
-            propertyCategory={propertyCategory}
           />
         )}
       </div>

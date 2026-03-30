@@ -4,7 +4,6 @@ import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { listPropertySuccessIconURL } from "@/common/constants/cdnURLs";
-import { PropertyCategory } from "@/common/enums";
 import {
   Dialog,
   DialogContent,
@@ -18,12 +17,11 @@ import RemoteSvg from "@/utility-components/RemoteSvg";
 interface ListPropertySuccessDialogProps {
   id: string;
   propertyID: string;
-  propertyCategory: PropertyCategory;
 }
 
 export const ListPropertySuccessDialog: React.FC<
   ListPropertySuccessDialogProps
-> = ({ id, propertyID, propertyCategory }) => {
+> = ({ id, propertyID }) => {
   const { closeDialog } = useDialog();
   const { isMobile } = useDeviceContext();
   const router = useRouter();
@@ -34,16 +32,12 @@ export const ListPropertySuccessDialog: React.FC<
 
   const handlePreviewListing = async () => {
     closeDialog(id);
-    router.push(
-      `/admin/property-details/${propertyCategory.toLowerCase()}/${propertyID}`,
-    );
+    router.push(`/admin/properties/${propertyID}/details`);
   };
 
   const handleVerifyListing = async () => {
     closeDialog(id);
-    router.push(
-      `/admin/property-details/${propertyCategory.toLocaleLowerCase()}/verify/${propertyID}`,
-    );
+    router.push(`/admin/properties/${propertyID}/verify`);
   };
 
   return (
