@@ -163,7 +163,7 @@ public class PropertyAdminController {
      *
      * Usage:
      *   POST https://apis.houseclay.com/api/property/admin/reindex
-     *   Authorization: Bearer <admin JWT token>
+     *   Authorization: Bearer <admin token>
      *
      * Returns "Re-index complete" when done.
      */
