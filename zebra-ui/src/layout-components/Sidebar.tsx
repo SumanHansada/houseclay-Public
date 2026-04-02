@@ -2,19 +2,103 @@
 
 import { ChevronDown, ChevronUp } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useSelector } from "react-redux";
 
 import { sidebarItems } from "@/common/constants";
 import { AdminRole } from "@/interfaces/AdminAuth";
+import { useSidebar } from "@/providers/SidebarContext";
 import { RootState } from "@/store/store";
 import { toSlug } from "@/utils/core";
 
+// ── Collapsed item with portal-based flyout ──
+function CollapsedSidebarItem({
+  item,
+}: {
+  item: {
+    label: string;
+    icon: ReactNode;
+    children: { label: string; href: string }[];
+  };
+}) {
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const open = () => {
+    if (leaveTimer.current) {
+      clearTimeout(leaveTimer.current);
+      leaveTimer.current = null;
+    }
+    setIsOpen(true);
+  };
+
+  const scheduleClose = () => {
+    leaveTimer.current = setTimeout(() => setIsOpen(false), 120);
+  };
+
+  const rect = isOpen ? triggerRef.current?.getBoundingClientRect() : null;
+
+  return (
+    <div
+      ref={triggerRef}
+      onMouseEnter={open}
+      onMouseLeave={scheduleClose}
+      data-testid={`sidebar-section-${toSlug(item.label)}`}
+    >
+      <div className="flex items-center justify-center p-3 rounded-lg hover:bg-gray-200 cursor-pointer transition-colors">
+        <span className="text-gray-950 shrink-0">{item.icon}</span>
+      </div>
+
+      {isOpen &&
+        mounted &&
+        rect &&
+        createPortal(
+          <div
+            className="fixed z-50"
+            style={{ top: rect.top, left: rect.right }}
+            onMouseEnter={open}
+            onMouseLeave={scheduleClose}
+          >
+            {/* pl-2 creates a transparent hover bridge between icon and flyout */}
+            <div className="pl-2">
+              <div className="bg-white rounded-lg shadow-lg border border-gray-200 py-1 min-w-[200px]">
+                <div className="px-3 py-2 text-sm font-semibold text-gray-900 font-nunito border-b border-gray-100">
+                  {item.label}
+                </div>
+                {item.children.map((child) => (
+                  <Link
+                    key={child.label}
+                    href={child.href}
+                    data-testid={`sidebar-link-${toSlug(child.label)}`}
+                    className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 font-nunito transition-colors"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {child.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )}
+    </div>
+  );
+}
+
+// ── Main Sidebar ──
 const Sidebar = () => {
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>(
     {},
   );
   const adminRole = useSelector((state: RootState) => state.adminAuth.role);
+  const { isCollapsed } = useSidebar();
 
   const toggleSection = (label: string) => {
     setOpenSections((prev) => ({ ...prev, [label]: !prev[label] }));
@@ -28,68 +112,68 @@ const Sidebar = () => {
 
   const visibleSidebarItems = sidebarItems
     .map((item) => {
-      // Check Parent Permission
       if (!hasPermission(item.allowedRoles)) return null;
-
-      // Filter Children
       const validChildren = item.children.filter((child) =>
         hasPermission(child.allowedRoles),
       );
-
-      if (item.href === "#" && validChildren.length === 0) {
-        return null;
-      }
-      // Return the valid item with its filtered children
-      return {
-        ...item,
-        children: validChildren,
-      };
+      if (item.href === "#" && validChildren.length === 0) return null;
+      return { ...item, children: validChildren };
     })
     .filter((item) => item !== null);
 
   return (
-    <aside className="bg-gray-300 w-72 lg:w-80 min-h-screen py-20 px-4 flex flex-col gap-2 fixed left-0 top-0 z-40 shadow-lg">
-      <div className="flex flex-col gap-2">
-        {visibleSidebarItems.map((item) => (
-          <div key={item.label}>
-            <div
-              className={`flex items-center justify-between p-3 rounded-lg hover:bg-gray-200 cursor-pointer transition-colors`}
-              onClick={() => item.children.length && toggleSection(item.label)}
-              data-testid={`sidebar-section-${toSlug(item.label)}`} // Zebra-UI: test id
-            >
-              <div className="flex items-center gap-2.5 text-gray-950">
-                {item.icon}
-                <Link
-                  href={item.href}
-                  className="font-medium text-xl font-nunito"
-                >
-                  {item.label}
-                </Link>
-              </div>
-              {item.children.length ? (
-                openSections[item.label] ? (
-                  <ChevronUp size={18} />
-                ) : (
-                  <ChevronDown size={18} />
-                )
-              ) : null}
-            </div>
-            {item.children.length > 0 && openSections[item.label] && (
-              <div className="ml-12 flex flex-col gap-1 font-nunito">
-                {item.children.map((child) => (
+    <aside
+      className={`bg-gray-300 min-h-screen pt-20 pb-4 flex flex-col gap-2 fixed left-0 top-0 z-40 shadow-lg overflow-hidden transition-[width,padding] duration-300 ease-in-out ${
+        isCollapsed ? "w-16 px-2" : "w-72 lg:w-80 px-4"
+      }`}
+    >
+      <div className="flex flex-col gap-1">
+        {visibleSidebarItems.map((item) =>
+          isCollapsed ? (
+            <CollapsedSidebarItem key={item.label} item={item} />
+          ) : (
+            <div key={item.label}>
+              <div
+                className={`flex items-center justify-between p-3 rounded-lg hover:bg-gray-200 cursor-pointer transition-colors`}
+                onClick={() =>
+                  item.children.length && toggleSection(item.label)
+                }
+                data-testid={`sidebar-section-${toSlug(item.label)}`}
+              >
+                <div className="flex items-center gap-2.5 text-gray-950 overflow-hidden">
+                  <span className="shrink-0">{item.icon}</span>
                   <Link
-                    key={child.label}
-                    href={child.href}
-                    data-testid={`sidebar-link-${toSlug(child.label)}`} // Zebra-UI: test id
-                    className="py-1 text-base text-gray-700 hover:text-gray-950 hover:bg-gray-200 cursor-pointer block rounded-lg px-2"
+                    href={item.href}
+                    className="font-medium text-xl font-nunito whitespace-nowrap"
                   >
-                    {child.label}
+                    {item.label}
                   </Link>
-                ))}
+                </div>
+                {item.children.length ? (
+                  openSections[item.label] ? (
+                    <ChevronUp size={18} />
+                  ) : (
+                    <ChevronDown size={18} />
+                  )
+                ) : null}
               </div>
-            )}
-          </div>
-        ))}
+              {item.children.length > 0 && openSections[item.label] && (
+                <div className="ml-12 flex flex-col gap-1 font-nunito">
+                  {item.children.map((child) => (
+                    <Link
+                      key={child.label}
+                      href={child.href}
+                      data-testid={`sidebar-link-${toSlug(child.label)}`}
+                      className="py-1 text-base text-gray-700 hover:text-gray-950 hover:bg-gray-200 cursor-pointer block rounded-lg px-2"
+                    >
+                      {child.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          ),
+        )}
       </div>
     </aside>
   );

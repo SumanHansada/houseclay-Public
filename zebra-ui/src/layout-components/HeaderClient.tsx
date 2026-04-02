@@ -1,11 +1,12 @@
 "use client";
 
-import { ChevronDown, UserRound } from "lucide-react";
+import { ChevronDown, Menu, UserRound } from "lucide-react";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 
 import { houseclayIconURL } from "@/common/constants/cdnURLs";
 import { ADMIN_ROLE_LABELS } from "@/interfaces/AdminAuth";
+import { useSidebar } from "@/providers/SidebarContext";
 import { RootState } from "@/store/store";
 import Popover from "@/utility-components/Popover";
 import RemoteSvg from "@/utility-components/RemoteSvg";
@@ -16,18 +17,30 @@ const Header: React.FC = () => {
   const { isAuthenticated, name, role } = useSelector(
     (state: RootState) => state.adminAuth,
   );
+  const { toggleSidebar } = useSidebar();
 
   return (
     <header className="flex fixed top-0 left-0 right-0 bg-white z-50 justify-between w-full items-center py-2 shadow-sm px-8 h-16">
-      <Link
-        href="/admin/dashboard"
-        className="flex items-center justify-center gap-1 cursor-pointer"
-      >
-        <RemoteSvg src={houseclayIconURL} className="size-6" />
-        <span className="text-red-600 text-lg font-nunito font-bold">
-          ZEBRA | Houseclay
-        </span>
-      </Link>
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={toggleSidebar}
+          className="p-1.5 rounded-lg text-gray-500 hover:text-gray-800 hover:bg-gray-100 transition-colors"
+          aria-label="Toggle sidebar"
+          data-testid="sidebar-toggle"
+        >
+          <Menu size={20} />
+        </button>
+        <Link
+          href="/admin/dashboard"
+          className="flex items-center justify-center gap-1 cursor-pointer"
+        >
+          <RemoteSvg src={houseclayIconURL} className="size-6" />
+          <span className="text-red-600 text-lg font-nunito font-bold">
+            ZEBRA | Houseclay
+          </span>
+        </Link>
+      </div>
 
       {isAuthenticated && (
         <Popover
