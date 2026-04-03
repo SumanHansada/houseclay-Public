@@ -54,7 +54,7 @@ export default function Loading() {
         </h1>
 
         {/* Matches page.tsx inner wrapper: py + responsive horizontal padding */}
-        <div className="py-8 max-md:mb-16 md:py-12 xl:py-20 xl:px-28 lg:px-12 md:px-8">
+        <div className="py-8 max-md:mb-16 md:py-12 xl:py-20 xl:px-24 lg:px-12 md:px-8 px-4">
           {/* HERO — same aspect / min-heights as page */}
           <section
             className="relative w-full aspect-[15/7] min-h-[240px] md:min-h-[360px] xl:max-h-[620px]"

@@ -53,7 +53,7 @@ export default function Loading() {
               <div className="h-full w-full bg-neutral-200" />
             </div>
 
-            <div className="xl:px-28 lg:px-12 md:px-8 px-8 pt-12 md:pt-16 lg:pt-20">
+            <div className="xl:px-24 lg:px-12 md:px-8 px-4 pt-12 md:pt-16 lg:pt-20">
               <div className="w-2/3 space-y-4">
                 <div className="h-9 w-64 rounded bg-neutral-100/70" />
                 <div className="h-7 w-1/2 rounded bg-neutral-100/70" />
@@ -79,11 +79,11 @@ export default function Loading() {
         {/* ── Form Section (overlays on desktop) ── */}
         <section
           className="
-            px-6 sm:px-8 lg:px-0 -mt-10
+            md:px-8 px-4 lg:px-0 -mt-10
             sm:-mt-8 md:-mt-6 lg:mt-0
             lg:absolute lg:z-10
             lg:top-20
-            lg:right-14 xl:right-28
+            lg:right-12 xl:right-24
             lg:w-[45%] xl:w-2/5
           "
           aria-labelledby="form-skel-heading"
@@ -105,8 +105,8 @@ export default function Loading() {
           <h2 id="channels-skel" className="sr-only">
             Contact channels
           </h2>
-          <div className="xl:px-28 lg:px-12 md:px-8 py-8 sm:py-12 lg:py-24 lg:pt-16 lg:pb-36 xl:pb-56">
-            <div className="text-lg lg:w-1/2">
+          <div className="xl:px-24 lg:px-12 md:px-8 px-4 py-8 sm:py-12 lg:py-24 lg:pt-16 lg:pb-36 xl:pb-56">
+            <div className="lg:text-lg text-base lg:w-1/2">
               <div className="w-full lg:w-4/5 xl:w-2/3 mb-8 space-y-2">
                 <div className="h-5 w-3/4 rounded bg-neutral-200" />
                 <div className="h-5 w-2/3 rounded bg-neutral-200" />

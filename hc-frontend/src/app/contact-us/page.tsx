@@ -107,7 +107,7 @@ export default function ContactUsPage() {
                 priority
               />
             </div>
-            <div className="xl:px-28 lg:px-12 md:px-8 pt-12 md:pt-16 lg:pt-20">
+            <div className="xl:px-24 lg:px-12 md:px-8 px-4 pt-12 md:pt-16 lg:pt-20">
               <div className="w-2/3">
                 <h1
                   id="contact-hero-title"
@@ -160,11 +160,11 @@ export default function ContactUsPage() {
         {/* --- Form Section --- */}
         <section
           className="
-            px-6 sm:px-8 lg:px-0 -mt-10
+            md:px-8 px-4 lg:px-0 -mt-10
             sm:-mt-8 md:-mt-6 lg:mt-0
             lg:absolute lg:z-10
             lg:top-20
-            lg:right-14 xl:right-28
+            lg:right-12 xl:right-24
             lg:w-[45%] xl:w-2/5
           "
         >
@@ -258,8 +258,8 @@ export default function ContactUsPage() {
           <h2 id="contact-channels" className="sr-only">
             Contact channels
           </h2>
-          <div className="xl:px-28 lg:px-12 md:px-8 py-8 sm:py-12 lg:py-24 lg:pt-16 lg:pb-36 xl:pb-56">
-            <div className="text-lg lg:w-1/2">
+          <div className="xl:px-24 lg:px-12 md:px-8 px-4 py-8 sm:py-12 lg:py-24 lg:pt-16 lg:pb-36 xl:pb-56">
+            <div className="lg:text-lg text-base lg:w-1/2">
               <p className="w-full lg:w-4/5 xl:w-2/3 mb-8 tracking-wide">
                 In case you have any questions, reach out to us through the
                 following channels:

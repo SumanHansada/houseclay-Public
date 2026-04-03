@@ -44,7 +44,7 @@ export default function PrivacyPolicyPage() {
           </h1>
         </div>
 
-        <div className="flex flex-col gap-8 xl:px-28 lg:px-14 md:px-8 px-6 mb-16 pb-4 mx-auto">
+        <div className="flex flex-col gap-8 xl:px-24 lg:px-12 md:px-8 px-4 mb-16 pb-4 mx-auto">
           <div className="flex flex-col gap-2 md:gap-1 font-semibold">
             <p className="flex max-md:flex-col gap-1">
               <span>Last Updated on </span>

@@ -1,7 +1,7 @@
 export default function PropertyDetailsLoading() {
   return (
     <>
-      <section className="flex w-full gap-16 xl:px-28 lg:px-14 md:px-8 px-8">
+      <section className="flex w-full gap-16 xl:px-24 lg:px-12 md:px-8 px-4">
         <section className="w-3/4 max-md:w-full">
           {/* Header Section */}
           <section className="max-md:min-h-[fit-content] w-full overflow-hidden max-md:hidden">

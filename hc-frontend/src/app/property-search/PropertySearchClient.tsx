@@ -1078,7 +1078,7 @@ export function PropertySearchClient({
               defaultCenter={
                 shouldFetch ? { lat: numLat, lng: numLon } : undefined
               }
-              className="h-full w-full rounded-none xl:rounded-lg"
+              className="h-full w-full max-xl:rounded-none xl:rounded-lg"
               onMarkerSelect={handleMobileMarkerSelect}
             />
           </div>

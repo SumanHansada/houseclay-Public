@@ -27,7 +27,7 @@ export default function AboutUsPage() {
         <MobileHeader.Title>About Us</MobileHeader.Title>
       </MobileHeader>
       <section className="w-full h-full">
-        <div className="py-8 max-md:mb-16 md:py-12 xl:py-20 xl:px-28 lg:px-12 md:px-8">
+        <div className="py-8 max-md:mb-16 md:py-12 xl:py-20 xl:px-24 lg:px-12 md:px-8 px-4">
           {/* HERO */}
           <section
             aria-labelledby="about-hero-title"
