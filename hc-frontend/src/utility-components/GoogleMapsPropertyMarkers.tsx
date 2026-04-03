@@ -343,7 +343,7 @@ const MapContent: React.FC<{
       mapId={mapId}
       defaultCenter={initialCenter}
       defaultZoom={defaultZoom}
-      className={`${className} overflow-hidden rounded-xl shadow-md border`}
+      className={`${className} overflow-hidden rounded-xl xl:border`}
     >
       <MapInner properties={properties} onMarkerSelect={onMarkerSelect} />
     </Map>

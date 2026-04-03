@@ -27,7 +27,7 @@ export default function AboutUsPage() {
         <MobileHeader.Title>About Us</MobileHeader.Title>
       </MobileHeader>
       <section className="w-full h-full">
-        <div className="py-8 max-md:mb-16 md:py-12 xl:py-20 xl:px-28 lg:px-14 md:px-14 px-8">
+        <div className="py-8 max-md:mb-16 md:py-12 xl:py-20 xl:px-28 lg:px-12 md:px-8">
           {/* HERO */}
           <section
             aria-labelledby="about-hero-title"
@@ -112,10 +112,10 @@ export default function AboutUsPage() {
                 <div className="h-full flex flex-col items-center text-center gap-4 sm:px-6 md:px-0 lg:px-6">
                   <SvgIcon iconSize="medium" name="transparency" size={110} />
                   <div className="space-y-2">
-                    <h3 className="text-2xl md:text-3xl font-semibold">
+                    <h3 className="text-2xl lg:text-3xl font-semibold">
                       Transparency
                     </h3>
-                    <p className="text-base md:text-lg">
+                    <p className="text-base lg:text-lg">
                       Clear, upfront, and honest — no hidden fees, no fake
                       listings, no brokerage in disguise.
                     </p>
@@ -129,10 +129,10 @@ export default function AboutUsPage() {
                 <div className="h-full flex flex-col items-center text-center gap-4 sm:px-6 md:px-0 lg:px-6">
                   <SvgIcon iconSize="medium" name="fairness" size={110} />
                   <div className="space-y-2">
-                    <h3 className="text-2xl md:text-3xl font-semibold">
+                    <h3 className="text-2xl lg:text-3xl font-semibold">
                       Fairness
                     </h3>
-                    <p className="text-base md:text-lg">
+                    <p className="text-base lg:text-lg">
                       Tenants pay only for what they use, owners list freely — a
                       balanced, win-win marketplace.
                     </p>
@@ -146,10 +146,10 @@ export default function AboutUsPage() {
                 <div className="h-full flex flex-col items-center text-center gap-4 sm:px-6 md:px-0 lg:px-6">
                   <SvgIcon iconSize="medium" name="simplicity" size={110} />
                   <div className="space-y-2">
-                    <h3 className="text-2xl md:text-3xl font-semibold">
+                    <h3 className="text-2xl lg:text-3xl font-semibold">
                       Simplicity
                     </h3>
-                    <p className="text-base md:text-lg">
+                    <p className="text-base lg:text-lg">
                       Renting should be stress-free. From discovery to move-in,
                       it&apos;s effortless and intuitive.
                     </p>
@@ -173,7 +173,7 @@ export default function AboutUsPage() {
           >
             <h2
               id="cta-heading"
-              className="text-2xl sm:text-3xl lg:text-3xl xl:text-4xl font-bold"
+              className="text-xl sm:text-3xl lg:text-3xl xl:text-4xl font-bold"
             >
               We don&apos;t do subscription traps.
             </h2>

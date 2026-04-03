@@ -33,7 +33,7 @@ const FooterClient: React.FC = () => {
 
   return (
     <>
-      <footer className="bg-gray-100 w-full xl:px-24 lg:px-12 px-12 font-nunito max-md:hidden">
+      <footer className="bg-gray-100 w-full xl:px-24 lg:px-12 px-8 font-nunito max-md:hidden">
         {/* Main footer content */}
         <div className="border-b border-gray-300 pt-24 pb-16">
           <div className="flex justify-between">

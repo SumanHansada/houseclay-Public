@@ -286,7 +286,7 @@ export function PropertySearchClient({
 
   const searchState = useSelector((state: RootState) => state.propertySearch);
   const router = useRouter();
-  const { isMobile } = useDeviceContext();
+  const { isMobile, isTablet } = useDeviceContext();
   const dispatch = useDispatch();
   const [page, setPage] = useState(0);
   const [isInputFocused, setIsInputFocused] = useState(false);
@@ -336,11 +336,23 @@ export function PropertySearchClient({
   );
 
   useEffect(() => {
-    if (!listingsRef.current) return;
-    if (!isMobile || hasMountAnimated.current) return;
-    hasMountAnimated.current = true;
-    requestAnimationFrame(() => setListingsTransform(0, true));
-  }, [isMobile, setListingsTransform]);
+    const shouldAnimateSheet = isMobile || isTablet;
+
+    if (!shouldAnimateSheet) {
+      hasMountAnimated.current = false;
+      return;
+    }
+
+    const trySheetOpenMountAnimation = () => {
+      if (!listingsRef.current) return;
+      if (hasMountAnimated.current) return;
+      hasMountAnimated.current = true;
+      requestAnimationFrame(() => setListingsTransform(0, true));
+    };
+
+    trySheetOpenMountAnimation();
+    requestAnimationFrame(() => trySheetOpenMountAnimation());
+  }, [isMobile, isTablet, setListingsTransform]);
 
   const listingsPanelTouchCleanup = useRef<(() => void) | null>(null);
   const setListingsPanelRef = useCallback(
@@ -913,7 +925,7 @@ export function PropertySearchClient({
       </MobileHeader>
 
       {/* Desktop - Search and Filter Bar (Below Header) */}
-      <section className="fixed top-14 z-50 flex w-full h-16 gap-0 px-12 bg-white border-b border-gray-200 xl:gap-16 lg:gap-8 md:gap-0 xl:px-24 md:px-12 max-md:pt-4 max-md:pb-8 max-md:hidden">
+      <section className="fixed top-14 z-50 flex w-full h-16 gap-0 px-8 bg-white border-b border-gray-200 xl:gap-16 lg:gap-8 md:gap-0 xl:px-24 lg:px-12 max-md:pt-4 max-md:pb-8 max-md:hidden">
         <div className="flex items-center justify-between w-full gap-4 border-gray-200">
           <div className="flex-1 flex items-center min-h-[46px] w-full p-1 border border-gray-300 rounded-xl bg-white">
             <PlacesAutocomplete
@@ -1057,16 +1069,16 @@ export function PropertySearchClient({
       {/* Main Content */}
       <section className="w-full md:pt-[64px] md:bg-gray-50 relative">
         {/* Mobile: Map + bottom sheet + marker card */}
-        <section className="md:hidden">
+        <section className="xl:hidden">
           {/* Mobile: Map */}
-          <div className="sticky top-14 z-0 h-[calc(100vh-3.5rem)]">
+          <div className="sticky top-14 z-0 h-[calc(100vh-3.5rem)] md:top-[120px] md:h-[calc(100vh-120px)]">
             <GoogleMapsPropertyMarkers
               properties={properties}
               mapId="d2efb78aa393f5315b3aed0e"
               defaultCenter={
                 shouldFetch ? { lat: numLat, lng: numLon } : undefined
               }
-              className="h-full w-full"
+              className="h-full w-full rounded-lg md:rounded-none xl:rounded-lg"
               onMarkerSelect={handleMobileMarkerSelect}
             />
           </div>
@@ -1095,7 +1107,7 @@ export function PropertySearchClient({
           {/* Mobile: Listings — page scrolls (no inner overflow); sheet drag only on handle + header */}
           <div
             ref={setListingsPanelRef}
-            className="relative z-10 -mt-[60vh] min-h-[60vh] translate-y-[60vh] rounded-t-3xl bg-white px-6 pb-16 shadow-[0_-4px_16px_rgba(0,0,0,0.08)]"
+            className="relative z-10 -mt-[50vh] min-h-[50vh] translate-y-[50vh] rounded-t-3xl bg-white px-6 pb-16 shadow-[0_-4px_16px_rgba(0,0,0,0.08)]"
           >
             <div
               data-sheet-drag-region
@@ -1129,9 +1141,9 @@ export function PropertySearchClient({
         </section>
 
         {/* Desktop: Listings + Map side by side */}
-        <section className="hidden md:flex">
+        <section className="hidden xl:flex">
           {/* Desktop: Listings */}
-          <div className="min-h-[580px] px-6 pb-10 bg-gray-50 pl-12 pr-6 xl:pl-24 xl:pr-8 flex-1 min-w-0">
+          <div className="min-h-[580px] px-6 pb-10 bg-gray-50 pl-8 lg:pl-12 pr-6 xl:pl-24 xl:pr-8 flex-1 min-w-0">
             <SearchResultsHeader
               totalElements={totalElements}
               propertyCategory={searchState.propertyCategory}
@@ -1155,7 +1167,7 @@ export function PropertySearchClient({
 
           {/* Desktop: Sticky map on right */}
           <div className="w-[50%] lg:w-[50%]">
-            <div className="sticky top-[120px] h-[calc(100vh-120px)] pt-6 pb-6 pr-12 xl:pr-24">
+            <div className="sticky top-[120px] h-[calc(100vh-120px)] pt-6 pb-6 pr-8 lg:pr-12 xl:pr-24">
               <GoogleMapsPropertyMarkers
                 properties={properties}
                 mapId="d2efb78aa393f5315b3aed0e"

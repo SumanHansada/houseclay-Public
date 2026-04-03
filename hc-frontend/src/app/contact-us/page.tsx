@@ -107,7 +107,7 @@ export default function ContactUsPage() {
                 priority
               />
             </div>
-            <div className="xl:px-28 lg:px-14 md:px-14 px-8 pt-12 md:pt-16 lg:pt-20">
+            <div className="xl:px-28 lg:px-12 md:px-8 pt-12 md:pt-16 lg:pt-20">
               <div className="w-2/3">
                 <h1
                   id="contact-hero-title"
@@ -258,7 +258,7 @@ export default function ContactUsPage() {
           <h2 id="contact-channels" className="sr-only">
             Contact channels
           </h2>
-          <div className="xl:px-28 lg:px-14 md:px-14 px-8 py-8 sm:py-12 lg:py-24 lg:pt-16 lg:pb-36 xl:pb-56">
+          <div className="xl:px-28 lg:px-12 md:px-8 py-8 sm:py-12 lg:py-24 lg:pt-16 lg:pb-36 xl:pb-56">
             <div className="text-lg lg:w-1/2">
               <p className="w-full lg:w-4/5 xl:w-2/3 mb-8 tracking-wide">
                 In case you have any questions, reach out to us through the
