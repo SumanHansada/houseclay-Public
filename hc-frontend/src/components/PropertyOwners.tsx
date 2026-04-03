@@ -5,7 +5,7 @@ import { ImageWithLoader } from "@/utility-components";
 
 const PropertyOwners: React.FC = () => {
   return (
-    <div className="mx-auto xl:px-28 lg:px-14 md:px-14 px-6 max-md:py-6 py-12 flex flex-col md:flex-row items-center justify-between bg-white">
+    <div className="mx-auto xl:px-24 lg:px-12 md:px-8 px-4 max-md:py-6 py-12 flex flex-col md:flex-row items-center justify-between bg-white">
       {/* Left Side - Text Content */}
       <div className="flex-col flex-1 text-left items-center">
         <span className="bg-red-50 text-red-700 px-4 py-2 rounded-full text-sm ">
@@ -28,17 +28,19 @@ const PropertyOwners: React.FC = () => {
       </div>
 
       {/* Right Side - Image Content */}
-      <div className="flex h-[509px] w-[492px] flex-1 justify-between items-center">
-        <ImageWithLoader
-          src={ownersImageURL}
-          alt="Property Owners"
-          height={509}
-          width={492}
-          loading="lazy"
-          decoding="async"
-          fetchPriority="low"
-          className="mx-auto h-[509px] w-[492px]"
-        />
+      <div className="flex w-full md:flex-1 md:min-w-0 justify-center items-center shrink-0">
+        <div className="relative mx-auto w-full max-w-[492px] aspect-[492/509]">
+          <ImageWithLoader
+            src={ownersImageURL}
+            alt="Property Owners"
+            fill
+            sizes="(max-width: 768px) 100vw, min(492px, 50vw)"
+            loading="lazy"
+            decoding="async"
+            fetchPriority="low"
+            className="!object-contain"
+          />
+        </div>
       </div>
     </div>
   );

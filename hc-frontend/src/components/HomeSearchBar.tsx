@@ -175,8 +175,8 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
           onChange={handleLocationChange}
           onLocationSelect={handleLocationSelect}
           containerClassName="w-full relative"
-          labelClassName="text-lg font-medium text-gray-900 mb-1"
-          inputClassName="w-full p-1 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 pr-8"
+          labelClassName="lg:text-lg text-base font-medium text-gray-900 mb-1"
+          inputClassName="w-full p-1 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 pr-8 lg:text-lg text-base"
           dropdownClassName="absolute z-10 mt-1 py-1 w-full bg-white shadow-lg max-h-60 overflow-auto rounded-b-xl"
           dropdownItemClassName="py-1 px-3 hover:bg-gray-100 cursor-pointer flex items-center"
           errorClassName="mt-1 text-sm text-red-600"
@@ -207,7 +207,7 @@ const HomeSearchBar: React.FC<HomeSearchBarProps> = ({ id }) => {
       {/* Desktop Search Button */}
       <button
         aria-label="search-properties"
-        className="flex items-center justify-center px-6 py-2 bg-red-500 rounded-xl shadow-xl max-md:hidden hover:bg-red-600 transition-colors"
+        className="flex items-center justify-center px-4 py-2 bg-red-500 rounded-xl shadow-xl max-md:hidden hover:bg-red-600 transition-colors"
         onClick={handleSearch}
         onMouseEnter={handlePrefetch}
         onFocus={handlePrefetch}

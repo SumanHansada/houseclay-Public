@@ -450,7 +450,7 @@ export default function ListPropertyTypeLayout({
           </div>
         </aside>
 
-        <div className="right-0 ml-[33.33%] w-full max-md:ml-auto pt-4 md:pt-12 pb-20 mx-auto xl:px-28 lg:px-14 md:px-8 px-6">
+        <div className="right-0 ml-[33.33%] w-full max-md:ml-auto pt-4 md:pt-12 pb-20 mx-auto xl:px-24 lg:px-12 md:px-8 px-4">
           <div className="flex flex-col">
             <Formik
               initialValues={initialValues}
@@ -468,7 +468,7 @@ export default function ListPropertyTypeLayout({
               )}
             </Formik>
           </div>
-          <div className="fixed bottom-0 left-0 ml-[33.33%] max-md:hidden right-0 flex justify-between py-2 mx-auto xl:px-28 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
+          <div className="fixed bottom-0 left-0 ml-[33.33%] max-md:hidden right-0 flex justify-between py-2 mx-auto xl:px-24 lg:px-14 md:px-8 px-6 border-t border-t-gray-300 bg-white">
             <button
               type="button"
               className="text-center px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 disabled:bg-gray-300 disabled:cursor-not-allowed transition duration-200"

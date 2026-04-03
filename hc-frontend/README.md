@@ -111,7 +111,7 @@ Examples:
 ### Padding, margin, and containers
 
 - Standard horizontal padding for major containers:
-  - `xl:px-28 lg:px-14 md:px-14 px-6`
+  - `xl:px-24 lg:px-12 md:px-8 px-4`
   - Vertical padding (`py-*`) depends on the design; choose per context.
 - On standalone mobile UI, horizontal padding is always `px-6`.
 - For very wide screens or pages that don’t scale nicely, wrap content with Tailwind’s `container` utility to keep a readable max width.
@@ -120,7 +120,7 @@ Examples:
 
 ```html
 <section
-  class="container mx-auto xl:px-28 lg:px-14 md:px-14 px-6 py-8"
+  class="container mx-auto xl:px-24 lg:px-12 md:px-8 px-4 py-8"
 ></section>
 ```
 

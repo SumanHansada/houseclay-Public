@@ -24,7 +24,7 @@ const MastHeadMobile: React.FC = () => {
   const searchParams = useSearchParams();
 
   return (
-    <div className="relative flex flex-col px-6 pt-8 pb-14 gap-6">
+    <div className="relative flex flex-col px-4 pt-8 pb-14 gap-6">
       {/* <div className="absolute inset-0 -z-10">
         <Image
           src={bannerBackgroundMobile}

@@ -173,7 +173,7 @@ const ListPropertyClient = () => {
       </MobileHeader>
       {/* Mobile Content */}
 
-      <section className="w-full my-0 flex-col container pt-4 pb-2 px-6 mx-auto flex justify-between gap-16 md:hidden">
+      <section className="w-full my-0 flex-col container pt-4 pb-2 px-4 mx-auto flex justify-between gap-16 md:hidden">
         {mobileStep === ListPropertyMobileStep.GET_STARTED && <GetStarted />}
         {mobileStep === ListPropertyMobileStep.LISTING_OPTIONS && (
           <ListingOptions onNext={handleListingTypeClick} />
@@ -230,7 +230,7 @@ const ListPropertyClient = () => {
       </MobileFooter>
       {/* Desktop Section */}
       <section className="xl:max-h-[500px] max-h-[450px] max-md:max-h-[fit-content] w-full overflow-hidden max-md:hidden">
-        <div className="container pt-12 mx-auto xl:px-28 lg:px-14 md:px-8 px-8 flex justify-between gap-16">
+        <div className="container pt-12 mx-auto xl:px-24 lg:px-14 md:px-8 px-8 flex justify-between gap-16">
           <div className="flex w-2/5 justify-around items-start">
             <ImageWithLoader
               src={listPropertyImageUrl}

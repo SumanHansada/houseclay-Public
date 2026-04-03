@@ -63,7 +63,7 @@ export default function Loading() {
             <MapSkeleton />
           </div>
 
-          <div className="relative z-10 -mt-[50vh] min-h-[50vh] translate-y-[50vh] rounded-t-3xl bg-white px-6 pb-16 shadow-[0_-4px_16px_rgba(0,0,0,0.08)]">
+          <div className="relative z-10 -mt-[50vh] min-h-[50vh] translate-y-[50vh] rounded-t-3xl bg-white md:px-8 px-4 pb-16 shadow-[0_-4px_16px_rgba(0,0,0,0.08)]">
             <div className="flex justify-center pt-3 pb-3">
               <div className="w-10 h-1 bg-gray-300 rounded-full" />
             </div>

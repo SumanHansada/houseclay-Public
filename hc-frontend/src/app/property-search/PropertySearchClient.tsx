@@ -1078,7 +1078,7 @@ export function PropertySearchClient({
               defaultCenter={
                 shouldFetch ? { lat: numLat, lng: numLon } : undefined
               }
-              className="h-full w-full rounded-lg md:rounded-none xl:rounded-lg"
+              className="h-full w-full rounded-none xl:rounded-lg"
               onMarkerSelect={handleMobileMarkerSelect}
             />
           </div>
@@ -1107,7 +1107,7 @@ export function PropertySearchClient({
           {/* Mobile: Listings — page scrolls (no inner overflow); sheet drag only on handle + header */}
           <div
             ref={setListingsPanelRef}
-            className="relative z-10 -mt-[50vh] min-h-[50vh] translate-y-[50vh] rounded-t-3xl bg-white px-6 pb-16 shadow-[0_-4px_16px_rgba(0,0,0,0.08)]"
+            className="relative z-10 -mt-[50vh] min-h-[50vh] translate-y-[50vh] rounded-t-3xl bg-white px-4 md:px-8 pb-16 shadow-[0_-4px_16px_rgba(0,0,0,0.08)]"
           >
             <div
               data-sheet-drag-region

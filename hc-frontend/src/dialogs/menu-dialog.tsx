@@ -120,7 +120,7 @@ const MenuDialog: React.FC<MenuDialogProps> = ({ id }) => {
         </MobileHeader>
       </DialogHeader>
       <DialogContent>
-        <div className="px-6 py-4 flex flex-col gap-8 pt-14">
+        <div className="px-4 py-4 flex flex-col gap-8 pt-14">
           {/* Profile Section */}
           {isAuthenticated && (
             <Link

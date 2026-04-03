@@ -36,7 +36,7 @@ export default function HomeLoading() {
       </section>
       {/* Masthead Mobile Section Skeleton */}
       <section className="min-h-[500px] w-full overflow-hidden md:hidden">
-        <div className="relative flex flex-col px-6 pt-8 pb-14 gap-6">
+        <div className="relative flex flex-col px-4 pt-8 pb-14 gap-6">
           {/* Tabs and Search */}
           <div className="w-full">
             {/* Tabs Skeleton */}
@@ -108,7 +108,7 @@ export default function HomeLoading() {
       </section>
       {/* Advantages Section Skeleton */}
       <section className="min-h-[500px] w-full overflow-hidden max-md:hidden">
-        <div className="flex flex-col items-center justify-between gap-10 xl:px-28 lg:px-14 md:px-14 px-8 py-12">
+        <div className="flex flex-col items-center justify-between gap-10 xl:px-24 lg:px-12 md:px-8 px-4 py-12">
           {/* Header Skeleton */}
           <div className="flex flex-col items-center justify-center gap-4">
             <div className="h-10 w-48 bg-neutral-300 rounded animate-pulse" />
@@ -146,7 +146,7 @@ export default function HomeLoading() {
       </section>
       {/* Testimonials Section Skeleton */}
       <section className="min-h-[500px] w-full overflow-hidden">
-        <div className="mx-auto xl:px-28 lg:px-14 md:px-14 px-6 max-md:py-6 py-12">
+        <div className="mx-auto xl:px-24 lg:px-14 md:px-14 px-6 max-md:py-6 py-12">
           {/* Top user avatars row Skeleton */}
           <div className="mb-8 flex justify-center">
             <div className="h-16 w-[403px] max-w-full bg-neutral-100 rounded animate-pulse" />
