@@ -175,7 +175,7 @@ export default function PropertyDetailsLayout({
       {/* ─── COMPACT HEADER ─── */}
       <header className="shrink-0 h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 gap-6 shadow-sm z-10">
         {/* Left: Back + Title + Tags */}
-        <div className="flex items-center gap-1 min-w-[280px] max-w-[400px]">
+        <div className="flex items-center gap-1 w-[340px] shrink-0">
           <Link
             href="/admin/properties"
             className="flex items-center justify-center text-gray-400 hover:text-gray-800 hover:bg-gray-100 p-1 rounded-md transition-colors"
