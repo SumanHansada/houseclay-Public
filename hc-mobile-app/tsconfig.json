@@ -1,0 +1,14 @@
+{
+  "extends": "@react-native/typescript-config",
+  "compilerOptions": {
+    "types": ["jest"],
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@hc-sdk/*": ["../hc-sdk/dist/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "index.js", "App.tsx"],
+  "exclude": ["**/node_modules", "**/Pods", "**/__tests__"]
+}
