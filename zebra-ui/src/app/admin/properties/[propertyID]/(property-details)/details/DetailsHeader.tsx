@@ -1,13 +1,12 @@
 "use client";
 
-import { Clock, History } from "lucide-react";
+import { Clock, History, OctagonX } from "lucide-react";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 
 import { dialogLabels } from "@/common/constants";
 import { PropertyStatus } from "@/common/enums";
 import Spinner from "@/components/Spinner";
-import { RenderPropertyStatus } from "@/components/status/RenderPropertyStatus";
 import { ActionDialog } from "@/dialogs/action-dialog";
 import { useDialog } from "@/providers/DialogContextProvider";
 import {
@@ -52,6 +51,7 @@ export const DetailsHeader = ({
   const latestUpdate = sortedUpdates[0] ?? null;
 
   const isInactive = propertyState === PropertyStatus.INACTIVE;
+  const showDeactivate = !editMode && !isInactive;
 
   const handleDeactivate = async (comment: string) => {
     await deactivateProperty({ propertyID, comment });
@@ -60,24 +60,13 @@ export const DetailsHeader = ({
   return (
     <>
       <div className="bg-white sticky top-0 rounded-xl z-10 border-b border-b-gray-400 shadow-sm">
-        {/* Row 1: Mode + State + Actions */}
+        {/* Row 1: Mode + Actions */}
         <div className="flex items-center justify-between py-3 px-6">
           <div className="flex items-center gap-3">
             <h1 className="text-2xl">{editMode ? "Edit Mode" : "View Mode"}</h1>
-            <RenderPropertyStatus status={propertyState} />
           </div>
 
           <div className="flex items-center gap-3">
-            {!editMode && !isInactive && (
-              <button
-                type="button"
-                onClick={() => openDialog(DEACTIVATE_DIALOG_ID)}
-                className="border border-red-500 text-red-500 py-1 px-4 text-lg font-medium rounded-xl hover:bg-red-500 hover:text-white"
-              >
-                Deactivate
-              </button>
-            )}
-
             {editMode ? (
               <>
                 <button
@@ -107,9 +96,9 @@ export const DetailsHeader = ({
           </div>
         </div>
 
-        {/* Row 2: Latest update */}
-        {latestUpdate && (
-          <div className="flex items-center justify-between px-6 py-2 border-t border-gray-200 text-sm text-gray-600">
+        {/* Row 2: Latest update + Deactivate */}
+        <div className="flex items-center justify-between px-6 py-2 border-t border-gray-200 text-sm text-gray-600">
+          {latestUpdate ? (
             <div className="flex items-center gap-2">
               <Clock size={14} className="text-gray-400" />
               <span className="font-medium text-gray-800">
@@ -139,17 +128,30 @@ export const DetailsHeader = ({
                   </span>
                 </>
               )}
+              <span className="text-gray-300 mx-1">|</span>
+              <Link
+                href={`/admin/properties/${propertyID}/owner-details`}
+                className="flex items-center gap-1 text-gray-500 hover:text-gray-800 hover:underline transition-colors"
+              >
+                <History size={14} />
+                View all ({propertyUpdates.length})
+              </Link>
             </div>
+          ) : (
+            <span className="text-gray-400">No updates yet</span>
+          )}
 
-            <Link
-              href={`/admin/properties/${propertyID}/owner-details`}
-              className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 hover:underline transition-colors"
+          {showDeactivate && (
+            <button
+              type="button"
+              onClick={() => openDialog(DEACTIVATE_DIALOG_ID)}
+              className="flex items-center gap-1.5 text-sm text-red-500 hover:text-red-700 hover:bg-red-50 px-3 py-1 rounded-lg border border-red-200 transition-colors"
             >
-              <History size={14} />
-              View all ({propertyUpdates.length})
-            </Link>
-          </div>
-        )}
+              <OctagonX size={14} />
+              Deactivate
+            </button>
+          )}
+        </div>
       </div>
 
       {isDialogOpen(DEACTIVATE_DIALOG_ID) && (

@@ -493,7 +493,7 @@ export const DetailsView = ({ propertyID }: Props) => {
         {(formik) => (
           <Form>
             <FormikProvider value={formik}>
-              <div className="my-8 mx-16 flex flex-col gap-5 flex-1 relative">
+              <div className="m-8 flex flex-col gap-5 flex-1 relative">
                 <DetailsHeader
                   propertyID={propertyID}
                   editMode={editMode}
