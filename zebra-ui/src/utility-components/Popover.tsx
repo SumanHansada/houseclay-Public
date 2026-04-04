@@ -11,6 +11,7 @@ import { createPortal } from "react-dom";
 
 type Trigger = "hover" | "click";
 type Align = "start" | "center" | "end";
+type Placement = "bottom" | "right" | "left" | "top";
 type Content =
   | React.ReactNode
   | ((ctx: { close: () => void }) => React.ReactNode);
@@ -18,7 +19,8 @@ type Content =
 interface PopoverProps {
   id: string;
   trigger: Trigger;
-  align?: Align; // bottom placement only; horizontal align
+  placement?: Placement; // default "bottom"
+  align?: Align; // horizontal align for top/bottom, vertical align for left/right
   enabled?: boolean; // if false, behaves as plain children
   offset?: number; // px gap between trigger and panel
   content: Content | null | false | undefined;
@@ -39,6 +41,7 @@ type NativeMouseEventLike = { stopImmediatePropagation?: () => void };
 export default function Popover({
   id,
   trigger,
+  placement = "bottom",
   align = "start",
   enabled = true,
   offset = 8,
@@ -69,7 +72,7 @@ export default function Popover({
     setEffectiveTrigger(isTouch && trigger === "hover" ? "click" : trigger);
   }, [trigger]);
 
-  // Compute bottom placement + horizontal alignment
+  // Compute placement + alignment
   const computePosition = useCallback(() => {
     if (!triggerRef.current || !panelRef.current) return;
     const tr = triggerRef.current.getBoundingClientRect();
@@ -77,16 +80,35 @@ export default function Popover({
     const vw = window.innerWidth;
     const vh = window.innerHeight;
 
-    const top = Math.min(tr.bottom + offset, vh - pr.height - 8);
-
+    let top: number;
     let left: number;
-    if (align === "start") left = tr.left;
-    else if (align === "center") left = tr.left + tr.width / 2 - pr.width / 2;
-    else left = tr.right - pr.width;
-    left = clamp(left, 8, vw - pr.width - 8);
+
+    if (placement === "right" || placement === "left") {
+      left =
+        placement === "right" ? tr.right + offset : tr.left - pr.width - offset;
+      if (align === "start") top = tr.top;
+      else if (align === "center") top = tr.top + tr.height / 2 - pr.height / 2;
+      else top = tr.bottom - pr.height;
+      top = clamp(top, 8, vh - pr.height - 8);
+      left = clamp(left, 8, vw - pr.width - 8);
+    } else if (placement === "top") {
+      top = tr.top - pr.height - offset;
+      if (align === "start") left = tr.left;
+      else if (align === "center") left = tr.left + tr.width / 2 - pr.width / 2;
+      else left = tr.right - pr.width;
+      top = clamp(top, 8, vh - pr.height - 8);
+      left = clamp(left, 8, vw - pr.width - 8);
+    } else {
+      // "bottom" — default
+      top = Math.min(tr.bottom + offset, vh - pr.height - 8);
+      if (align === "start") left = tr.left;
+      else if (align === "center") left = tr.left + tr.width / 2 - pr.width / 2;
+      else left = tr.right - pr.width;
+      left = clamp(left, 8, vw - pr.width - 8);
+    }
 
     setCoords({ top, left });
-  }, [align, offset]);
+  }, [align, offset, placement]);
 
   const useIsoLayout =
     typeof window !== "undefined" ? useLayoutEffect : useEffect;
@@ -134,25 +156,25 @@ export default function Popover({
     };
   }, [open, isDisabled]);
 
-  // Hover intent
-  const [enterTimer, setEnterTimer] = useState<number | null>(null);
-  const [leaveTimer, setLeaveTimer] = useState<number | null>(null);
+  // Hover intent — refs so timer IDs are available synchronously
+  const enterTimerRef = useRef<number | null>(null);
+  const leaveTimerRef = useRef<number | null>(null);
   const clearTimers = () => {
-    if (enterTimer) window.clearTimeout(enterTimer);
-    if (leaveTimer) window.clearTimeout(leaveTimer);
-    setEnterTimer(null);
-    setLeaveTimer(null);
+    if (enterTimerRef.current) window.clearTimeout(enterTimerRef.current);
+    if (leaveTimerRef.current) window.clearTimeout(leaveTimerRef.current);
+    enterTimerRef.current = null;
+    leaveTimerRef.current = null;
   };
 
   const onTriggerMouseEnter = () => {
     if (isDisabled || effectiveTrigger !== "hover") return;
     clearTimers();
-    setEnterTimer(window.setTimeout(() => setOpen(true), 60));
+    enterTimerRef.current = window.setTimeout(() => setOpen(true), 60);
   };
   const onTriggerMouseLeave = () => {
     if (isDisabled || effectiveTrigger !== "hover") return;
     clearTimers();
-    setLeaveTimer(window.setTimeout(() => setOpen(false), 120));
+    leaveTimerRef.current = window.setTimeout(() => setOpen(false), 120);
   };
   const onPanelMouseEnter = () => {
     if (isDisabled || effectiveTrigger !== "hover") return;
@@ -161,7 +183,7 @@ export default function Popover({
   const onPanelMouseLeave = () => {
     if (isDisabled || effectiveTrigger !== "hover") return;
     clearTimers();
-    setLeaveTimer(window.setTimeout(() => setOpen(false), 120));
+    leaveTimerRef.current = window.setTimeout(() => setOpen(false), 120);
   };
 
   const onTriggerClick = (e: React.MouseEvent) => {
