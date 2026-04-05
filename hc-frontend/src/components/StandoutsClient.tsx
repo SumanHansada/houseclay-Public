@@ -28,7 +28,7 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
 
   return (
     <>
-      <div className="bg-white pb-safe-bottom bg-center bg-cover flex-col items-center md:py-20 xl:px-28 lg:px-14 md:px-14 max-md:pt-4 max-md:pb-0 px-6 pt-4">
+      <div className="bg-white pb-safe-bottom bg-center bg-cover flex-col items-center md:py-20 xl:px-24 lg:px-12 md:px-8 px-4 max-md:pt-4 max-md:pb-0  pt-4">
         {/* Header Section */}
         <div className="flex items-center justify-between mb-8 max-md:hidden">
           <h1 className="text-3xl font-bold text-gray-800">
@@ -121,7 +121,7 @@ const StandoutsClient: React.FC<StandoutsClientProps> = ({ properties }) => {
           showDots={false}
           showArrows
           responsiveSlidesPerView
-          containerClassName="md:hidden px-6"
+          containerClassName="md:hidden px-4"
           className="md:hidden"
         >
           {properties.map((property) => (

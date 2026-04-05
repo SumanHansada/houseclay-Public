@@ -346,8 +346,9 @@ export function PropertySearchClient({
 
   const setListingsTransform = useCallback((y: number, animate: boolean) => {
     if (!listingsRef.current) return;
+    // iOS-like: symmetric ease-in-out (even motion), not ease-out (fast start / slow end)
     listingsRef.current.style.transition = animate
-      ? "transform 300ms ease-in-out"
+      ? "transform 640ms cubic-bezier(0.42, 0, 0.58, 1)"
       : "none";
     listingsRef.current.style.transform = `translateY(${y}px)`;
     listingsOffsetY.current = y;
@@ -1162,7 +1163,7 @@ export function PropertySearchClient({
 
           {/* Mobile: Marker card (Airbnb-style inset); translate-y-full is only 100% of self — use 150vh so it clears safe area / rounding */}
           <div
-            className={`fixed lg:bottom-12 md:bottom-8 bottom-4 left-0 right-0 lg:mx-12 md:mx-8 mx-4 z-50 rounded-xl bg-white pb-safe-bottom shadow-lg transition-[transform,opacity] duration-300 ease-in-out motion-reduce:transition-none ${
+            className={`fixed lg:bottom-12 md:bottom-8 bottom-4 left-0 right-0 lg:mx-12 md:mx-8 mx-4 z-50 rounded-xl bg-white shadow-lg transition-[transform,opacity] duration-[640ms] ease-[cubic-bezier(0.42,0,0.58,1)] motion-reduce:transition-none ${
               selectedMapProperty
                 ? "translate-y-0 opacity-100 pointer-events-auto"
                 : "pointer-events-none translate-y-[150vh] opacity-0"

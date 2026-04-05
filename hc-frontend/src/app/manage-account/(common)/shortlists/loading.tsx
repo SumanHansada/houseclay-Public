@@ -37,7 +37,7 @@ export default function Loading() {
       </section>
 
       {/* Card grid (shared) */}
-      <section className="space-y-4 overflow-y-auto max-md:px-6 pt-4 pb-16">
+      <section className="space-y-4 overflow-y-auto max-md:px-4 pt-4 pb-16">
         <div className="mx-auto w-full">
           <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(330px,1fr))]">
             {Array.from({ length: 9 }).map((_, i) => (

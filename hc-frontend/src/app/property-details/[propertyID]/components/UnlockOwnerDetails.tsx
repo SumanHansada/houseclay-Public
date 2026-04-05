@@ -235,7 +235,7 @@ export const UnlockOwnerDetails = ({
       </section>
 
       {/* Mobile */}
-      <section className="md:hidden px-6 pt-32">
+      <section className="md:hidden px-4 pt-32">
         <div className="space-y-2 mb-4">
           <h1 className="text-2xl">
             <b>Owner Details</b> Unlocked Successfully!

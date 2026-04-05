@@ -113,7 +113,7 @@ export default function ManageAccountLayout({
     <>
       {/* Desktop: Sidebar + Content Area */}
       <div className="w-full h-full max-md:hidden">
-        <div className="flex flex-col px-8 py-12 bg-white xl:px-28 lg:px-14 md:px-14">
+        <div className="flex flex-col py-12 bg-white xl:px-24 lg:px-12 md:px-8 px-4">
           <h1 className="pb-6 text-3xl font-medium">Manage Account</h1>
           <div className="flex md:gap-6 lg:gap-8 xl:gap-24">
             <aside className="md:w-[320px] lg:w-[380px] xl:w-[460px]">

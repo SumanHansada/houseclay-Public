@@ -1,7 +1,7 @@
 "use client";
 
 import { FocusTrap } from "focus-trap-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Drawer } from "vaul";
 
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
@@ -14,8 +14,9 @@ interface DialogProps {
   height?: number;
   width?: number;
   children: React.ReactNode;
-  entryAnimation?: string; // New prop for entry animation
-  exitAnimation?: string; // New prop for exit animation
+  /** Tailwind `animate-*` class for panel (defaults use iOS-like easing from tailwind.config) */
+  entryAnimation?: string;
+  exitAnimation?: string;
   disableOverlayClick?: boolean; // New prop to disable overlay click
 }
 
@@ -42,17 +43,6 @@ const getDialogStyles = (type: string, isMobile?: boolean): string => {
   }
 };
 
-const overlayStyles = (type: string): string => {
-  switch (type) {
-    case "fullscreen":
-      return `fixed inset-0 bg-black bg-opacity-25`;
-    case "bottom-sheet":
-      return `fixed inset-0 bg-black bg-opacity-25`;
-    default:
-      return `fixed inset-0 bg-black bg-opacity-25`;
-  }
-};
-
 export const Dialog: React.FC<DialogProps> = ({
   id,
   type,
@@ -69,7 +59,7 @@ export const Dialog: React.FC<DialogProps> = ({
   const isClosing = isDialogClosing(id);
   const { isMobile } = useDeviceContext();
   const [shouldRender, setShouldRender] = useState(isOpen);
-  const dialogOverlayStyles = overlayStyles(type);
+  const nativeDialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -80,25 +70,49 @@ export const Dialog: React.FC<DialogProps> = ({
     }
   }, [isOpen, isClosing]);
 
-  useEffect(() => {
-    if (isOpen) {
-      document.body.classList.add("dialog-open");
-    } else {
-      document.body.classList.remove("dialog-open");
+  useLayoutEffect(() => {
+    const el = nativeDialogRef.current;
+    if (!el || !shouldRender) return;
+    if (isOpen && !isClosing) {
+      if (!el.open) {
+        el.showModal();
+      }
+    } else if (!isOpen && !isClosing && el.open) {
+      el.close();
     }
+  }, [shouldRender, isOpen, isClosing]);
 
+  useLayoutEffect(() => {
     return () => {
-      document.body.classList.remove("dialog-open");
+      nativeDialogRef.current?.close();
     };
-  }, [isOpen]);
+  }, []);
 
   if (!shouldRender) return null;
 
+  const handleOverlayClose = () => {
+    if (isOpen && !disableOverlayClick) {
+      closeDialog(id);
+      onClose();
+    }
+  };
+
   const handleOverlayClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isOpen && !disableOverlayClick) {
-      closeDialog(id); // Close dialog via context
+    handleOverlayClose();
+  };
+
+  const handleNativeCancel = (e: React.SyntheticEvent<HTMLDialogElement>) => {
+    e.preventDefault();
+    if (!disableOverlayClick) {
+      closeDialog(id);
       onClose();
+    }
+  };
+
+  const handleDialogSurfaceClick = (e: React.MouseEvent<HTMLDialogElement>) => {
+    if (e.target === e.currentTarget) {
+      handleOverlayClick(e);
     }
   };
 
@@ -135,6 +149,7 @@ export const Dialog: React.FC<DialogProps> = ({
                 returnFocusOnDeactivate: true,
                 initialFocus: false,
                 setReturnFocus: false,
+                preventScroll: true,
               }}
             >
               <div
@@ -153,38 +168,30 @@ export const Dialog: React.FC<DialogProps> = ({
     );
   }
 
+  const backdropAnim = isClosing
+    ? "[&::backdrop]:animate-dialog-backdrop-out"
+    : "[&::backdrop]:animate-dialog-backdrop-in";
+  const panelAnim = isClosing ? exitAnimation : entryAnimation;
+
   return (
-    <FocusTrap
-      focusTrapOptions={{
-        allowOutsideClick: true,
-        fallbackFocus: `#${id}`,
-        clickOutsideDeactivates: true,
-        returnFocusOnDeactivate: true,
-        // Make focus trap more lenient for dialogs without tabbable elements
-        initialFocus: false,
-        setReturnFocus: false,
-      }}
+    <dialog
+      ref={nativeDialogRef}
+      id={id}
+      className={`fixed inset-0 z-50 m-0 flex h-full max-h-none w-full max-w-none items-center justify-center border-0 bg-transparent p-0 [backface-visibility:hidden] [&::backdrop]:bg-black/25 ${backdropAnim} motion-reduce:[&::backdrop]:animate-none`}
+      onCancel={handleNativeCancel}
+      onClick={handleDialogSurfaceClick}
     >
       <div
-        id={id}
-        className={`${dialogOverlayStyles} flex justify-center items-center z-50`}
-        onClick={handleOverlayClick}
-        tabIndex={-1} // Make the container focusable as fallback
+        className={`pointer-events-auto z-10 flex flex-col [backface-visibility:hidden] ${dialogStyles} ${panelAnim} motion-reduce:animate-none`}
+        style={{
+          height: height ? `${height}%` : undefined,
+          width: width ? `${width}%` : undefined,
+        }}
+        onClick={(e) => e.stopPropagation()}
       >
-        <div
-          className={`${dialogStyles} flex flex-col transition-transform ${
-            isClosing ? exitAnimation : entryAnimation
-          }`}
-          style={{
-            height: height ? `${height}%` : undefined,
-            width: width ? `${width}%` : undefined,
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {children}
-        </div>
+        {children}
       </div>
-    </FocusTrap>
+    </dialog>
   );
 };
 

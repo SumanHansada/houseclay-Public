@@ -110,7 +110,7 @@ export default function OwnersContactedPage() {
       {/* Mobile */}
       <section className="md:hidden">
         {/* Filter buttons */}
-        <div className="flex justify-between text-lg m-3 border p-1.5 sm:p-2 rounded-xl mx-6">
+        <div className="flex justify-between text-lg m-3 border p-1.5 sm:p-2 rounded-xl mx-4">
           {filterOptions.map((f) => {
             const active = selectedFilterCategory === f.value;
             return (
@@ -130,7 +130,7 @@ export default function OwnersContactedPage() {
       </section>
 
       {/* Cards */}
-      <div className="space-y-4 overflow-y-auto max-md:px-6 pt-4 pb-16">
+      <div className="space-y-4 overflow-y-auto max-md:px-4 pt-4 pb-16">
         {/* Property List */}
         <div className="mx-auto w-full">
           {filteredProperties.length === 0 ? (

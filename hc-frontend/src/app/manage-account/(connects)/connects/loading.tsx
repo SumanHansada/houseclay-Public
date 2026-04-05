@@ -93,7 +93,7 @@ export default function Loading() {
 
       {/* Mobile */}
       <section
-        className="md:hidden px-6 pt-4 pb-16 animate-pulse"
+        className="md:hidden px-4 pt-4 pb-16 animate-pulse"
         role="status"
         aria-live="polite"
         aria-busy="true"

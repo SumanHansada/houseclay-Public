@@ -78,7 +78,7 @@ export default function MyPaymentsPage() {
       {/* Mobile */}
       <section className="md:hidden">
         {/* Filter buttons */}
-        <div className="flex justify-between text-lg m-3 border p-1.5 sm:p-2 rounded-xl mx-6">
+        <div className="flex justify-between text-lg m-3 border p-1.5 sm:p-2 rounded-xl mx-4">
           {filterOptions.map((f) => {
             const active = selectedFilter === f.value;
             return (

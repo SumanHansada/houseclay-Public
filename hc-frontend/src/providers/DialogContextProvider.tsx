@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, ReactNode, useContext, useState } from "react";
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useLayoutEffect,
+  useState,
+} from "react";
 
 // Define the shape of the context
 interface DialogContextType {
@@ -42,14 +48,14 @@ export const DialogContextProvider: React.FC<DialogContextProviderProps> = ({
 
   const closeDialog = (id: string) => {
     setClosingDialogs((prev) => ({ ...prev, [id]: true }));
-    // Delay the actual closing to allow animation
+    // Delay the actual closing to allow exit animation (see tailwind.config fade/slide/dialog-backdrop timings)
     setTimeout(() => {
       setOpenDialogs((prev) => ({ ...prev, [id]: false }));
       setClosingDialogs((prev) => ({ ...prev, [id]: false }));
       if (currentOpenDialogId === id) {
         setCurrentOpenDialogId("");
       }
-    }, 300); // Match animation duration
+    }, 450);
   };
 
   const closeAllDialogs = () => {
@@ -57,6 +63,19 @@ export const DialogContextProvider: React.FC<DialogContextProviderProps> = ({
     setClosingDialogs({});
     setCurrentOpenDialogId("");
   };
+
+  // Match native dialog + showModal(): lock document scroll while any dialog is open
+  useLayoutEffect(() => {
+    const anyOpen = Object.values(openDialogs).some(Boolean);
+    if (anyOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [openDialogs]);
 
   return (
     <DialogContext.Provider
