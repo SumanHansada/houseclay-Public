@@ -51,6 +51,7 @@ import {
 import { Footer, MobileHeader } from "@/layout-components";
 import { useDeviceContext } from "@/providers/DeviceContextProvider";
 import { useDialog } from "@/providers/DialogContextProvider";
+import { useStickyNavbarVisibility } from "@/providers/StickyNavbarVisibilityProvider";
 import { useGetPropertiesByLocationQuery } from "@/store/apiSlice";
 import {
   resetPropertySearchFilters,
@@ -231,7 +232,7 @@ const PropertiesList = memo(function PropertiesList({
 
   return (
     <div className="flex-1">
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6">
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6 lg:gap-8">
         {properties.map((property, idx) => (
           <Link
             key={`${property.propertyID}-${idx}`}
@@ -292,12 +293,42 @@ export function PropertySearchClient({
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [selectedMapProperty, setSelectedMapProperty] =
     useState<PropertySearch | null>(null);
+  const selectedMapPropertyRef = useRef<PropertySearch | null>(null);
   const displayedMapProperty = useRef<PropertySearch | null>(null);
+  selectedMapPropertyRef.current = selectedMapProperty;
   useEffect(() => {
     if (selectedMapProperty) {
       displayedMapProperty.current = selectedMapProperty;
     }
   }, [selectedMapProperty]);
+
+  // Mobile map marker card: lock page scroll without position:fixed (avoids flicker) or scrollTo on close.
+  useEffect(() => {
+    if (!selectedMapProperty || (!isMobile && !isTablet)) return;
+
+    const html = document.documentElement;
+    const body = document.body;
+    const prevHtmlOverflow = html.style.overflow;
+    const prevBodyOverflow = body.style.overflow;
+    const prevHtmlOverscroll = html.style.overscrollBehavior;
+    const prevBodyPaddingRight = body.style.paddingRight;
+
+    const scrollbarWidth = window.innerWidth - html.clientWidth;
+
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    html.style.overscrollBehavior = "none";
+    if (scrollbarWidth > 0) {
+      body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    return () => {
+      html.style.overflow = prevHtmlOverflow;
+      body.style.overflow = prevBodyOverflow;
+      html.style.overscrollBehavior = prevHtmlOverscroll;
+      body.style.paddingRight = prevBodyPaddingRight;
+    };
+  }, [selectedMapProperty, isMobile, isTablet]);
 
   const clearSelectedMapProperty = useCallback(() => {
     setSelectedMapProperty(null);
@@ -328,12 +359,26 @@ export function PropertySearchClient({
         displayedMapProperty.current = property;
       }
       setSelectedMapProperty(property);
-      if (property) {
-        setListingsTransform(getMaxOffset(), true);
-      }
     },
-    [setListingsTransform, getMaxOffset],
+    [],
   );
+
+  // Mobile: when a map pin is selected, push the listings sheet fully below the viewport; restore when closed.
+  useEffect(() => {
+    const run = () => {
+      if (!listingsRef.current) return;
+      if (selectedMapProperty) {
+        const vh = window.innerHeight;
+        setListingsTransform(vh + 80, true);
+      } else {
+        setListingsTransform(0, true);
+      }
+    };
+    const id = requestAnimationFrame(() => {
+      requestAnimationFrame(run);
+    });
+    return () => cancelAnimationFrame(id);
+  }, [selectedMapProperty, setListingsTransform]);
 
   useEffect(() => {
     const shouldAnimateSheet = isMobile || isTablet;
@@ -362,6 +407,14 @@ export function PropertySearchClient({
       listingsPanelTouchCleanup.current = null;
 
       if (!el) return;
+
+      if (selectedMapPropertyRef.current) {
+        requestAnimationFrame(() => {
+          if (!listingsRef.current) return;
+          const vh = window.innerHeight;
+          setListingsTransform(vh + 80, true);
+        });
+      }
 
       const dragRegion = el.querySelector("[data-sheet-drag-region]");
       if (!dragRegion) return;
@@ -410,6 +463,22 @@ export function PropertySearchClient({
     [getMaxOffset, setListingsTransform],
   );
   const { openDialog, closeDialog, isDialogOpen } = useDialog();
+  const { setSuppressed: setStickyNavbarSuppressed } =
+    useStickyNavbarVisibility();
+
+  useEffect(() => {
+    const mapCardOpen = Boolean(selectedMapProperty && (isMobile || isTablet));
+    setStickyNavbarSuppressed(mapCardOpen);
+    if (mapCardOpen) {
+      document.body.classList.add("property-search-map-card-open");
+    } else {
+      document.body.classList.remove("property-search-map-card-open");
+    }
+    return () => {
+      setStickyNavbarSuppressed(false);
+      document.body.classList.remove("property-search-map-card-open");
+    };
+  }, [selectedMapProperty, isMobile, isTablet, setStickyNavbarSuppressed]);
 
   const location = searchState.location;
   const locationSearch = location?.name || "";
@@ -863,6 +932,8 @@ export function PropertySearchClient({
 
   const totalElements = effectiveData?.totalElements || 0;
 
+  const mapPinCardOpen = Boolean(selectedMapProperty && (isMobile || isTablet));
+
   return (
     <>
       {/* Mobile - Search and Filter Bar (Overlaps Header)*/}
@@ -1070,8 +1141,14 @@ export function PropertySearchClient({
       <section className="w-full md:pt-[64px] md:bg-gray-50 relative">
         {/* Mobile: Map + bottom sheet + marker card */}
         <section className="xl:hidden">
-          {/* Mobile: Map */}
-          <div className="sticky top-14 z-0 h-[calc(100vh-3.5rem)] md:top-[120px] md:h-[calc(100vh-120px)]">
+          {/* Mobile: Map — dvh + no main pb when pin card open avoids gray gap (was space for sticky nav) */}
+          <div
+            className={
+              mapPinCardOpen
+                ? "sticky top-14 z-0 h-[calc(100dvh-3.5rem)] md:top-[120px] md:h-[calc(100dvh-120px)]"
+                : "sticky top-14 z-0 h-[calc(100vh-3.5rem)] md:top-[120px] md:h-[calc(100vh-120px)]"
+            }
+          >
             <GoogleMapsPropertyMarkers
               properties={properties}
               mapId="d2efb78aa393f5315b3aed0e"
@@ -1083,22 +1160,27 @@ export function PropertySearchClient({
             />
           </div>
 
-          {/* Mobile: Marker card */}
+          {/* Mobile: Marker card (Airbnb-style inset); translate-y-full is only 100% of self — use 150vh so it clears safe area / rounding */}
           <div
-            className={`fixed bottom-0 left-0 right-0 z-50 pb-safe-bottom bg-white transition-transform duration-300 ease-in-out ${selectedMapProperty ? "translate-y-0" : "translate-y-full"}`}
+            className={`fixed lg:bottom-12 md:bottom-8 bottom-4 left-0 right-0 lg:mx-12 md:mx-8 mx-4 z-50 rounded-xl bg-white pb-safe-bottom shadow-lg transition-[transform,opacity] duration-300 ease-in-out motion-reduce:transition-none ${
+              selectedMapProperty
+                ? "translate-y-0 opacity-100 pointer-events-auto"
+                : "pointer-events-none translate-y-[150vh] opacity-0"
+            }`}
+            aria-hidden={!selectedMapProperty}
           >
             {displayedMapProperty.current && (
               <Link
                 key={displayedMapProperty.current.propertyID}
                 href={`/property-details/${displayedMapProperty.current.propertyID}`}
                 prefetch={false}
-                className="block rounded-t-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                className="block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
               >
                 <Properties
                   property={displayedMapProperty.current}
                   showCarouselDots={false}
                   onClose={clearSelectedMapProperty}
-                  className="rounded-t-xl rounded-b-none drop-shadow-none"
+                  className="rounded-xl drop-shadow-none"
                 />
               </Link>
             )}
@@ -1107,7 +1189,7 @@ export function PropertySearchClient({
           {/* Mobile: Listings — page scrolls (no inner overflow); sheet drag only on handle + header */}
           <div
             ref={setListingsPanelRef}
-            className="relative z-10 -mt-[50vh] min-h-[50vh] translate-y-[50vh] rounded-t-3xl bg-white px-4 md:px-8 pb-16 shadow-[0_-4px_16px_rgba(0,0,0,0.08)]"
+            className="relative z-10 -mt-[50vh] min-h-[50vh] translate-y-[50vh] rounded-t-3xl bg-white px-4 lg:px-12 md:px-8 pb-16 shadow-[0_-4px_16px_rgba(0,0,0,0.08)]"
           >
             <div
               data-sheet-drag-region

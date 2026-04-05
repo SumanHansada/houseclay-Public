@@ -73,7 +73,7 @@ export default function Loading() {
             </div>
 
             <div className="mx-auto">
-              <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6">
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6 lg:gap-8">
                 {Array.from({ length: 8 }).map((_, i) => (
                   <PropertyCardSkeleton key={i} />
                 ))}
@@ -90,7 +90,7 @@ export default function Loading() {
             </div>
 
             <div className="mx-auto">
-              <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6">
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6 lg:gap-8">
                 {Array.from({ length: 8 }).map((_, i) => (
                   <PropertyCardSkeleton key={i} />
                 ))}

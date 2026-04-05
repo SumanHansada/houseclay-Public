@@ -29,6 +29,11 @@ body.dialog-open {
   overflow: hidden;
 }
 
+/* Property search: map pin card open — bottom nav hidden, remove main pb so map can reach screen bottom */
+body.property-search-map-card-open main {
+  padding-bottom: 0 !important;
+}
+
 .no-scroll {
   overflow: hidden;
 }

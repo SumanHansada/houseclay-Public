@@ -10,6 +10,7 @@ import { DialogContextProvider } from "./DialogContextProvider";
 import QueryProvider from "./QueryProvider";
 import ReduxProvider from "./ReduxProvider";
 import { SkeletonProvider } from "./SkeletonProvider";
+import { StickyNavbarVisibilityProvider } from "./StickyNavbarVisibilityProvider";
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -40,14 +41,16 @@ const Providers: React.FC<ProvidersProps> = ({ children }) => {
       <QueryProvider>
         <DeviceContextProvider>
           <DialogContextProvider>
-            <SkeletonProvider>
-              <PWAInstallHandler />
-              {children}
-              <Toaster
-                position={toasterPosition}
-                containerClassName="toaster-container"
-              />
-            </SkeletonProvider>
+            <StickyNavbarVisibilityProvider>
+              <SkeletonProvider>
+                <PWAInstallHandler />
+                {children}
+                <Toaster
+                  position={toasterPosition}
+                  containerClassName="toaster-container"
+                />
+              </SkeletonProvider>
+            </StickyNavbarVisibilityProvider>
           </DialogContextProvider>
         </DeviceContextProvider>
       </QueryProvider>

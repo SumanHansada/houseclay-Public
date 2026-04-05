@@ -7,6 +7,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { StickyNavItem } from "@/common/dataConstants/navbarList";
 import { STICKY_NAV_ITEMS } from "@/common/dataConstants/navbarList";
 import { useDialog } from "@/providers/DialogContextProvider";
+import { useStickyNavbarSuppressed } from "@/providers/StickyNavbarVisibilityProvider";
 interface StickyNavbarProps {
   defaultActive?: string;
 }
@@ -17,6 +18,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
   const pathname = usePathname();
   const [activeTab, setActiveTab] = useState<string>(defaultActive);
   const { openDialog } = useDialog();
+  const suppressed = useStickyNavbarSuppressed();
   const [visible, setVisible] = useState(true);
   const lastScrollY = useRef(0);
   const ticking = useRef(false);
@@ -65,9 +67,12 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
     return isTabActive(item);
   });
 
+  const showNav = !suppressed && visible;
+
   return (
     <nav
-      className={`fixed bottom-0 left-0 right-0 pb-safe-bottom bg-white border-t border-gray-200 shadow-md z-40 w-full md:hidden transition-transform duration-300 ease-in-out ${visible ? "translate-y-0" : "translate-y-full"}`}
+      aria-hidden={suppressed}
+      className={`fixed bottom-0 left-0 right-0 pb-safe-bottom bg-white border-t border-gray-200 shadow-md z-40 w-full md:hidden transition-transform duration-300 ease-in-out ${showNav ? "translate-y-0" : "translate-y-full"} ${suppressed ? "pointer-events-none" : ""}`}
     >
       <div className="relative grid grid-cols-5 place-items-center py-2">
         <ul className="contents">
