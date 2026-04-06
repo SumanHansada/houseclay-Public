@@ -20,7 +20,6 @@ import {
   RentalDetailsForm,
   ResaleDetailsForm,
 } from "@/components/forms";
-import Spinner from "@/components/Spinner";
 import { useS3Deleter } from "@/hooks/useS3Deleter";
 import { useS3Uploader } from "@/hooks/useS3Uploader";
 import { transformFormValuesToPropertyForm } from "@/interfaces/FormTransformers";
@@ -42,6 +41,8 @@ import {
 } from "@/store/editPropertySlice";
 import { RootState, store } from "@/store/store";
 import { resetUpload } from "@/store/uploadToS3Slice";
+
+import { DetailsHeader } from "./DetailsHeader";
 
 type FinalizationStage = "idle" | "deleting" | "uploading" | "updating";
 
@@ -492,41 +493,19 @@ export const DetailsView = ({ propertyID }: Props) => {
         {(formik) => (
           <Form>
             <FormikProvider value={formik}>
-              <div className="my-8 mx-16 flex flex-col gap-5 flex-1 relative">
-                <div className="flex justify-between bg-white py-3 px-6 sticky top-0 rounded-xl z-10 border-b border-b-gray-400 shadow-sm items-center">
-                  <h1 className="text-2xl">
-                    {editMode ? "Edit Mode" : "View Mode"}
-                  </h1>
-                  {editMode ? (
-                    <div className="flex gap-3">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          formik.resetForm();
-                          setEditMode(false);
-                        }}
-                        className="border border-red-500 text-red-500 py-1 px-4 text-lg font-medium rounded-xl hover:bg-red-500 hover:text-white"
-                      >
-                        Discard
-                      </button>
-                      <button
-                        type="submit"
-                        className="border border-red-500 text-red-500 py-1 px-4 text-lg font-medium rounded-xl hover:bg-red-500 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                        disabled={!formik.isValid || isWorking || !formik.dirty}
-                      >
-                        {isWorking && <Spinner size="sm" />} Save Changes
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => setEditMode(true)}
-                      className="border border-red-500 text-red-500 py-1 px-4 text-lg font-medium rounded-xl hover:bg-red-500 hover:text-white"
-                    >
-                      Edit
-                    </button>
-                  )}
-                </div>
+              <div className="m-8 flex flex-col gap-5 flex-1 relative">
+                <DetailsHeader
+                  propertyID={propertyID}
+                  editMode={editMode}
+                  setEditMode={setEditMode}
+                  isWorking={isWorking}
+                  onDiscard={() => {
+                    formik.resetForm();
+                    setEditMode(false);
+                  }}
+                  formIsValid={formik.isValid}
+                  formIsDirty={formik.dirty}
+                />
 
                 <div className="flex flex-col gap-8">
                   <div className="bg-white rounded-xl p-6 shadow-sm">

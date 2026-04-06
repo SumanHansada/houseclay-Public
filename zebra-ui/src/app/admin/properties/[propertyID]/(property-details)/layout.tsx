@@ -1,15 +1,14 @@
 "use client";
 
-import {
-  useParams,
-  useRouter,
-  useSelectedLayoutSegment,
-} from "next/navigation";
-import { useEffect } from "react";
+import { ChevronLeft, ExternalLink, UserRound } from "lucide-react";
+import Link from "next/link";
+import { useParams, useSelectedLayoutSegment } from "next/navigation";
+import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 
-import { PropertyDetailsTabEnum } from "@/common/enums";
+import { PropertyCategory, PropertyDetailsTabEnum } from "@/common/enums";
 import AsyncFallback from "@/components/AsyncFallback";
+import { RenderPropertyStatus } from "@/components/status/RenderPropertyStatus";
 import { default as DeletePhotosDialog } from "@/dialogs/delete-photos-dialog";
 import { default as UploadPhotosDialog } from "@/dialogs/upload-photos-dialog";
 import { transformPropertyFormToFormValues } from "@/interfaces/FormTransformers";
@@ -23,7 +22,6 @@ import {
   setPropertyImages,
 } from "@/store/editPropertySlice";
 import { setPropertyDetailsFromApi } from "@/store/propertyDetailsSlice";
-import { Tab, TabHeader, Tabs } from "@/utility-components";
 import { ensureEnumValue } from "@/utils/core";
 
 const tabs: { label: string; value: PropertyDetailsTabEnum }[] = [
@@ -35,6 +33,12 @@ const tabs: { label: string; value: PropertyDetailsTabEnum }[] = [
   { label: "Report Users", value: PropertyDetailsTabEnum.REPORT },
 ];
 
+const categoryColors: Record<string, string> = {
+  [PropertyCategory.RENT]: "bg-blue-100 text-blue-800 border-blue-200",
+  [PropertyCategory.RESALE]: "bg-purple-100 text-purple-800 border-purple-200",
+  [PropertyCategory.FLATMATE]: "bg-teal-100 text-teal-800 border-teal-200",
+};
+
 export default function PropertyDetailsLayout({
   children,
 }: {
@@ -43,15 +47,13 @@ export default function PropertyDetailsLayout({
   const { propertyID: propertyIDParam } = useParams() as {
     propertyID: string;
   };
-  const router = useRouter();
   const currentTabFromUrl = useSelectedLayoutSegment();
   const dispatch = useDispatch();
   const { isDialogOpen } = useDialog();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     dispatch(clearFormData());
-
-    // Cleanup on unmount
     return () => {
       dispatch(clearFormData());
     };
@@ -65,18 +67,36 @@ export default function PropertyDetailsLayout({
   } = useGetPropertyByIdQuery(
     { propertyID: propertyIDParam },
     {
-      // skip: !propertyIDParam,
       refetchOnMountOrArgChange: true,
       refetchOnReconnect: true,
       refetchOnFocus: true,
     },
   );
 
+  // Horizontal scroll on wheel
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleWheel = (evt: WheelEvent) => {
+      if (container.scrollWidth > container.clientWidth) {
+        if (Math.abs(evt.deltaY) > 0) {
+          evt.preventDefault();
+          container.scrollLeft += evt.deltaY;
+        }
+      }
+    };
+
+    container.addEventListener("wheel", handleWheel, { passive: false });
+    return () => {
+      container.removeEventListener("wheel", handleWheel);
+    };
+  }, [isLoadingProperty]);
+
   // Populate form data when existing property data is loaded
   useEffect(() => {
     if (!propertyDetailsRaw || isLoadingProperty) return;
 
-    // --- Update propertyDetails slice ---
     dispatch(setPropertyDetailsFromApi(propertyDetailsRaw));
     try {
       console.log("Property Details - raw data: ", propertyDetailsRaw);
@@ -94,19 +114,12 @@ export default function PropertyDetailsLayout({
       }
 
       if (apiPropertyData) {
-        // Transform API response to FormValues
         const formValues = transformPropertyFormToFormValues(apiPropertyData);
 
-        // Set property category
         dispatch(setPropertyCategory(apiPropertyData.propertyCategory));
-
-        // Set propertyID
         dispatch(setPropertyID(propertyIDParam));
-
-        // Set form data
         dispatch(setFormData({ data: formValues }));
 
-        // Set property images
         if (formValues.images && formValues.images.length > 0) {
           const decodedImages = formValues.images.map((image) => {
             return {
@@ -122,7 +135,7 @@ export default function PropertyDetailsLayout({
     }
   }, [propertyDetailsRaw, isLoadingProperty, propertyIDParam, dispatch]);
 
-  // Initial Hard Loading State
+  // Loading State
   if (isLoadingProperty) {
     return (
       <AsyncFallback
@@ -151,30 +164,98 @@ export default function PropertyDetailsLayout({
     fallback: PropertyDetailsTabEnum.DETAILS,
   });
 
-  const handleTabChange = (tab: string) => {
-    router.push(`/admin/properties/${propertyIDParam}/${tab}`);
-  };
+  const { property, owner } = propertyDetailsRaw;
+  const propertyTitle = `${property.bhkType} in ${property.locationOrSocietyName}`;
+  const categoryColor =
+    categoryColors[property.propertyCategory] ??
+    "bg-gray-100 text-gray-800 border-gray-200";
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      {/* ─── HEADER ─── */}
-      <Tabs onTabChange={handleTabChange} defaultActive={activeTab}>
-        <TabHeader
-          containerClassName="border-b border-gray-200"
-          tabsClassName="flex w-full"
-        >
-          {tabs.map((tab) => (
-            <Tab
-              key={tab.value}
-              label={tab.label}
-              value={tab.value}
-              containerClassName="w-full py-3 font-medium"
-              activeClassName="text-red-500 border-b-2 border-red-500"
-              inactiveClassName="text-gray-500 hover:text-gray-700"
-            />
-          ))}
-        </TabHeader>
-      </Tabs>
+      {/* ─── COMPACT HEADER ─── */}
+      <header className="shrink-0 h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 gap-6 shadow-sm z-10">
+        {/* Left: Back + Title + Tags */}
+        <div className="flex items-center gap-1 w-[480px] shrink-0">
+          <Link
+            href="/admin/properties"
+            className="flex items-center justify-center text-gray-400 hover:text-gray-800 hover:bg-gray-100 p-1 rounded-md transition-colors"
+            title="Back to Properties"
+          >
+            <ChevronLeft size={20} />
+          </Link>
+
+          <div className="flex items-center gap-2 overflow-hidden">
+            <h1
+              className="text-lg font-semibold text-gray-900 truncate"
+              title={propertyTitle}
+            >
+              {propertyTitle}
+            </h1>
+
+            {/* Category Tag */}
+            {property.propertyCategory && (
+              <span
+                className={`shrink-0 text-sm font-medium px-1.5 py-0.5 rounded border uppercase tracking-wider ${categoryColor}`}
+              >
+                {property.propertyCategory}
+              </span>
+            )}
+
+            {/* State Tag */}
+            <span className="shrink-0">
+              <RenderPropertyStatus status={property.propertyState} />
+            </span>
+          </div>
+        </div>
+
+        {/* Center: Navigation Tabs */}
+        <nav className="flex-1 flex justify-center overflow-hidden min-w-0 px-4">
+          <div
+            ref={scrollContainerRef}
+            className="flex items-center gap-1 p-1 bg-gray-100 rounded-lg border border-gray-200 overflow-x-auto scrollbar-hide max-w-full whitespace-nowrap"
+          >
+            {tabs.map((tab) => {
+              const isActive = activeTab === tab.value;
+              return (
+                <Link
+                  key={tab.value}
+                  href={`/admin/properties/${propertyIDParam}/${tab.value}`}
+                  className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all duration-200
+                    ${
+                      isActive
+                        ? "bg-white text-gray-900 shadow-sm ring-1 ring-black/5"
+                        : "text-gray-500 hover:text-gray-700 hover:bg-gray-200/50"
+                    }
+                  `}
+                >
+                  {tab.label}
+                </Link>
+              );
+            })}
+          </div>
+        </nav>
+
+        {/* Right: Owner Link */}
+        {owner && (
+          <div className="flex items-center justify-end min-w-fit">
+            <Link
+              href={`/admin/users/${encodeURIComponent(owner.phoneNo)}/profile`}
+              className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 hover:underline px-2.5 py-1.5 rounded-lg transition-colors max-w-[200px] group"
+              title={`View owner: ${owner.name || owner.phoneNo}`}
+            >
+              <UserRound
+                size={16}
+                className="shrink-0 text-gray-400 group-hover:text-gray-600"
+              />
+              <span className="truncate">{owner.name || owner.phoneNo}</span>
+              <ExternalLink
+                size={14}
+                className="shrink-0 text-gray-300 group-hover:text-gray-500"
+              />
+            </Link>
+          </div>
+        )}
+      </header>
 
       {/* ─── MAIN CONTENT ─── */}
       <div className="flex-1 overflow-hidden relative flex flex-col">
