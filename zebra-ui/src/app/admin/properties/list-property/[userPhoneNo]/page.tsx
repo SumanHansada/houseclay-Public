@@ -38,7 +38,7 @@ const ListPropertyPage = () => {
 
   return (
     <div className="flex-1 flex flex-col overflow-y-auto items-center justify-center">
-      <div className="border border-red-500 rounded-xl p-6 text-lg w-1/2">
+      <div className="border border-red-500 rounded-xl p-6 text-lg w-4/5 lg:w-2/3 xl:w-1/2">
         <PropertyTypeOptions
           onNext={handlePostListingClick}
           onBack={handleBack}

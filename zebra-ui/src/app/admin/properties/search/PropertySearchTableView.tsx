@@ -528,7 +528,7 @@ export function PropertySearchTableView() {
       <div className="h-16 w-full shrink-0 border-b relative z-10 bg-white shadow-sm flex items-center px-8 py-0 gap-6">
         {/* Global Property Search + Filter ConfigBar */}
         <div className="flex-1 flex flex-row items-center gap-2 lg:gap-4">
-          <div className="flex-1 flex items-center h-[46px] p-1 px-3 border border-gray-300 rounded-xl bg-gray-50 max-w-lg">
+          <div className="flex-1 min-w-0 flex items-center h-[46px] p-1 px-3 border border-gray-300 rounded-xl bg-gray-50">
             <PlacesAutocomplete
               id="location-search"
               name="location"

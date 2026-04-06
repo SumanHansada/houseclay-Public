@@ -79,7 +79,7 @@ const PropertyTypeOptions = ({
         {onBack && (
           <button
             type="button"
-            className={`text-center w-1/4 border border-gray-300 text-gray-700 hover:bg-gray-50 px-2 xl:px-6  py-2 xl:py-3 rounded-xl transition duration-200`}
+            className={`text-center w-1/3 border border-gray-300 text-gray-700 hover:bg-gray-50 px-2 xl:px-6  py-2 xl:py-3 rounded-xl transition duration-200`}
             onClick={onBack}
           >
             {backLabel}
