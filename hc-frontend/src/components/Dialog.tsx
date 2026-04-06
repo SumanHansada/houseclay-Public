@@ -182,7 +182,7 @@ export const Dialog: React.FC<DialogProps> = ({
       onClick={handleDialogSurfaceClick}
     >
       <div
-        className={`pointer-events-auto z-10 flex flex-col [backface-visibility:hidden] ${dialogStyles} ${panelAnim} motion-reduce:animate-none`}
+        className={`pointer-events-auto z-10 flex min-h-0 flex-col pb-safe-bottom [backface-visibility:hidden] ${dialogStyles} ${panelAnim} motion-reduce:animate-none`}
         style={{
           height: height ? `${height}%` : undefined,
           width: width ? `${width}%` : undefined,
@@ -225,7 +225,7 @@ export const DialogFooter: React.FC<{
   className?: string;
 }> = ({ children, className = "" }) => (
   <div
-    className={`${children ? "flex pb-safe-bottom-2 pt-2 md:px-6 px-4 justify-center" : ""} ${className}`}
+    className={`${children ? "flex py-2 md:px-6 px-4 justify-center" : ""} ${className}`}
   >
     {children}
   </div>

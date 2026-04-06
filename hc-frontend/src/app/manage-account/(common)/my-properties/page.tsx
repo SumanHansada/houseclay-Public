@@ -1,8 +1,9 @@
 "use client";
 
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { MARK_RENTED_ACTION_DIALOG_ID } from "@/common/dataConstants/dialogIDs";
@@ -26,8 +27,20 @@ const filterOptions = [
 
 const PROPERTY_ACTIONS_DIALOG_ID = "property-actions-dialog";
 
+const tabTween = {
+  type: "tween" as const,
+  duration: 0.28,
+  ease: [0.4, 0, 0.2, 1] as const,
+};
+
+const listCrossfade = {
+  duration: 0.18,
+  ease: [0.4, 0, 0.2, 1] as const,
+};
+
 export default function MyPropertiesPage() {
   const router = useRouter();
+  const reduceMotion = useReducedMotion();
   const [selectedFilterCategory, setSelectedFilterCategory] =
     useState<PropertyCategory>(PropertyCategory.NONE);
   const [onlyActive, setOnlyActive] = useState(false);
@@ -44,16 +57,25 @@ export default function MyPropertiesPage() {
 
   const ownedProperties = userDetail.ownedProperties;
 
-  const filteredProperties = ownedProperties.filter((prop) => {
-    if (
-      selectedFilterCategory !== PropertyCategory.NONE &&
-      prop.propertyCategory !== selectedFilterCategory
-    )
-      return false;
-    if (onlyActive && prop.propertyState !== PropertyStatus.VERIFIED)
-      return false;
-    return true;
-  });
+  const filteredProperties = useMemo(() => {
+    return ownedProperties.filter((prop) => {
+      if (
+        selectedFilterCategory !== PropertyCategory.NONE &&
+        prop.propertyCategory !== selectedFilterCategory
+      )
+        return false;
+      if (onlyActive && prop.propertyState !== PropertyStatus.VERIFIED)
+        return false;
+      return true;
+    });
+  }, [ownedProperties, selectedFilterCategory, onlyActive]);
+
+  const activeFilterIndex = Math.max(
+    0,
+    filterOptions.findIndex((f) => f.value === selectedFilterCategory),
+  );
+
+  const listPresenceKey = `${selectedFilterCategory}-${onlyActive}`;
 
   const onDashboard = (category: string, id: string) => {
     router.push(`/my-property-details/${category?.toLowerCase()}/${id}`);
@@ -147,43 +169,85 @@ export default function MyPropertiesPage() {
       </section>
 
       <section className="md:hidden">
-        {/* Filter buttons */}
-        <div className="flex justify-between text-lg m-3 border p-1.5 sm:p-2 rounded-xl mx-4">
-          {filterOptions.map((f) => {
-            const active = selectedFilterCategory === f.value;
-            return (
-              <button
-                key={f.value}
-                onClick={() => setSelectedFilterCategory(f.value)}
-                aria-pressed={active}
-                className={`px-2 py-1 sm:px-4 sm:py-2 flex-1 whitespace-nowrap ${
-                  active ? "border border-red-500 text-red-500 rounded-lg" : ""
-                }`}
-              >
-                {f.label}
-              </button>
-            );
-          })}
+        <div className="m-3 mx-4 rounded-xl border border-gray-200 bg-gray-50/80 p-1.5 text-lg sm:p-2">
+          <div className="relative flex min-h-10 sm:min-h-11">
+            <motion.div
+              className="pointer-events-none absolute inset-y-0 left-0 z-0 rounded-lg border border-red-500 bg-white shadow-sm"
+              initial={false}
+              style={{
+                width: `${100 / filterOptions.length}%`,
+              }}
+              animate={{
+                left: `${(activeFilterIndex / filterOptions.length) * 100}%`,
+              }}
+              transition={
+                reduceMotion ? { duration: 0, ease: "linear" } : tabTween
+              }
+              aria-hidden
+            />
+            {filterOptions.map((f) => {
+              const active = selectedFilterCategory === f.value;
+              return (
+                <button
+                  key={f.value}
+                  type="button"
+                  onClick={() => setSelectedFilterCategory(f.value)}
+                  aria-pressed={active}
+                  className="relative z-10 flex flex-1 items-center justify-center whitespace-nowrap rounded-lg px-2 py-1 sm:px-4 sm:py-2"
+                >
+                  <span
+                    className={`text-sm font-medium sm:text-base ${
+                      active ? "text-red-500" : "text-gray-800"
+                    }`}
+                  >
+                    {f.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </section>
 
       {/* Table for ≥ 2xl */}
-      <div className="max-2xl:hidden">
-        <PropertyTable
-          properties={filteredProperties}
-          onDashboard={onDashboard}
-          onMarkAsRented={handleMarkAsRented}
-        />
+      <div className="mx-auto max-2xl:hidden grid w-full [grid-template-areas:'stack']">
+        <AnimatePresence mode="sync" initial={false}>
+          <motion.div
+            key={listPresenceKey}
+            className="[grid-area:stack] w-full min-w-0"
+            initial={{ opacity: reduceMotion ? 1 : 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: reduceMotion ? 1 : 0 }}
+            transition={reduceMotion ? { duration: 0 } : listCrossfade}
+          >
+            <PropertyTable
+              properties={filteredProperties}
+              onDashboard={onDashboard}
+              onMarkAsRented={handleMarkAsRented}
+            />
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* Cards for < 2xl */}
-      <div className="pt-4 pb-16 2xl:hidden max-md:px-6">
-        <PropertyCardList
-          items={filteredProperties}
-          onDashboard={onDashboard}
-          onOpenDialog={onOpenDialog}
-          onMarkAsRented={handleMarkAsRented}
-        />
+      <div className="mx-auto grid w-full [grid-template-areas:'stack'] pt-4 pb-16 2xl:hidden max-md:px-6">
+        <AnimatePresence mode="sync" initial={false}>
+          <motion.div
+            key={listPresenceKey}
+            className="[grid-area:stack] w-full min-w-0"
+            initial={{ opacity: reduceMotion ? 1 : 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: reduceMotion ? 1 : 0 }}
+            transition={reduceMotion ? { duration: 0 } : listCrossfade}
+          >
+            <PropertyCardList
+              items={filteredProperties}
+              onDashboard={onDashboard}
+              onOpenDialog={onOpenDialog}
+              onMarkAsRented={handleMarkAsRented}
+            />
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {isDialogOpen(PROPERTY_ACTIONS_DIALOG_ID) && (

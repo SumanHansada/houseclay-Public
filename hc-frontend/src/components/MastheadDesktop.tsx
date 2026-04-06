@@ -1,7 +1,8 @@
 "use client";
 
+import { motion, useReducedMotion } from "framer-motion";
 import { BedDouble } from "lucide-react";
-import React from "react";
+import React, { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { PropertyCategory } from "@/common/enums";
@@ -10,11 +11,65 @@ import { setPropertyCategory } from "@/store/propertySearchSlice";
 import { RootState } from "@/store/store";
 import { InfiniteScroller, SvgIcon } from "@/utility-components";
 
+const tabTween = {
+  type: "tween" as const,
+  duration: 0.28,
+  ease: [0.4, 0, 0.2, 1] as const,
+};
+
+const mastheadTabs = [
+  {
+    category: PropertyCategory.RENT,
+    label: "Flats for rent",
+    kind: "rent" as const,
+  },
+  {
+    category: PropertyCategory.FLATMATE,
+    label: "Find rooms",
+    kind: "flatmate" as const,
+  },
+];
+
 const MastHeadDesktop = () => {
+  const reduceMotion = useReducedMotion();
   const propertyCategory = useSelector(
     (state: RootState) => state.propertySearch.propertyCategory,
   );
   const dispatch = useDispatch();
+
+  const activeTabIndex = Math.max(
+    0,
+    mastheadTabs.findIndex((t) => t.category === propertyCategory),
+  );
+
+  const tabsRowRef = useRef<HTMLDivElement>(null);
+  const tabButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [underline, setUnderline] = useState({ left: 0, width: 0 });
+
+  const updateUnderline = useCallback(() => {
+    const row = tabsRowRef.current;
+    const btn = tabButtonRefs.current[activeTabIndex];
+    if (!row || !btn) return;
+    const rowRect = row.getBoundingClientRect();
+    const btnRect = btn.getBoundingClientRect();
+    setUnderline({
+      left: btnRect.left - rowRect.left,
+      width: btnRect.width,
+    });
+  }, [activeTabIndex]);
+
+  useLayoutEffect(() => {
+    updateUnderline();
+  }, [updateUnderline, propertyCategory]);
+
+  useLayoutEffect(() => {
+    const ro = new ResizeObserver(() => updateUnderline());
+    if (tabsRowRef.current) ro.observe(tabsRowRef.current);
+    tabButtonRefs.current.forEach((el) => {
+      if (el) ro.observe(el);
+    });
+    return () => ro.disconnect();
+  }, [updateUnderline]);
 
   return (
     <>
@@ -54,35 +109,51 @@ const MastHeadDesktop = () => {
           itemClassName="font-light lg:text-lg text-base justify-start"
         />
 
-        {/* Tabs */}
-        <div className="max-w-5xl flex justify-start mb-4 px-2">
-          <button
-            className={`flex items-center gap-2 px-2 py-2 lg:text-lg text-base border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.RENT ? "text-red-600 border-b-2 border-red-600" : "text-gray-700"}`}
-            onClick={() => dispatch(setPropertyCategory(PropertyCategory.RENT))}
-          >
-            <SvgIcon
-              iconSize="small"
-              name="instant-access"
-              size={24}
-              className={
-                propertyCategory === PropertyCategory.RENT
-                  ? "text-red-600"
-                  : "text-gray-700"
-              }
-            />
-            <span className="">Flats for rent</span>
-          </button>
-          <button
-            className={`flex items-center gap-2 px-2 py-2 lg:text-lg text-base border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.FLATMATE ? "text-red-600 border-b-2 border-red-600" : "text-gray-700"}`}
-            onClick={() =>
-              dispatch(setPropertyCategory(PropertyCategory.FLATMATE))
+        {/* Tabs — original underline look; red accent is one sliding bar (measured) */}
+        <div
+          ref={tabsRowRef}
+          className="relative mb-4 flex max-w-5xl justify-start px-2"
+        >
+          <motion.div
+            className="pointer-events-none absolute bottom-0 z-10 h-0.5 bg-red-600"
+            initial={false}
+            animate={{ left: underline.left, width: underline.width }}
+            transition={
+              reduceMotion ? { duration: 0, ease: "linear" } : tabTween
             }
-          >
-            <BedDouble
-              className={`size-5 ${propertyCategory === PropertyCategory.FLATMATE ? "text-red-600" : "text-gray-700"}`}
-            />
-            <span className="">Find rooms</span>
-          </button>
+            aria-hidden
+          />
+          {mastheadTabs.map((tab, index) => {
+            const active = propertyCategory === tab.category;
+            return (
+              <button
+                key={tab.category}
+                ref={(el) => {
+                  tabButtonRefs.current[index] = el;
+                }}
+                type="button"
+                onClick={() => dispatch(setPropertyCategory(tab.category))}
+                aria-pressed={active}
+                className={`flex items-center gap-2 px-2 py-2 text-base lg:text-lg border-b-2 border-gray-300 ${
+                  active ? "text-red-600" : "text-gray-700"
+                }`}
+              >
+                {tab.kind === "rent" ? (
+                  <SvgIcon
+                    iconSize="small"
+                    name="instant-access"
+                    size={24}
+                    className={active ? "text-red-600" : "text-gray-700"}
+                  />
+                ) : (
+                  <BedDouble
+                    className={`size-5 ${active ? "text-red-600" : "text-gray-700"}`}
+                  />
+                )}
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
           {/* <button
             className={`px-6 py-2 text-lg border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.RESALE ? "text-red-500 border-b-2 border-red-500" : "text-gray-700"}`}
             onClick={() =>

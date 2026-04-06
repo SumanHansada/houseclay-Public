@@ -29,9 +29,9 @@ export default function Loading() {
       {/* Mobile */}
       <section className="md:hidden">
         {/* Filters */}
-        <div className="mx-6 mt-3 mb-4 flex rounded-xl border p-1.5 sm:p-2">
+        <div className="mx-4 mt-3 mb-4 flex rounded-xl border p-1.5 sm:p-2">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="mx-1 h-8 flex-1 rounded-lg bg-gray-200" />
+            <div key={i} className="mx-1 h-10 flex-1 rounded-lg bg-gray-200" />
           ))}
         </div>
       </section>
@@ -53,7 +53,7 @@ export default function Loading() {
 
 function CardSkeleton() {
   return (
-    <div className="flex-col gap-8 bg-white border border-gray-100 rounded-lg drop-shadow relative p-3 animate-pulse">
+    <div className="flex-col gap-8 bg-white border border-gray-100 rounded-lg drop-shadow relative animate-pulse">
       <div className="relative h-72 max-md:h-60 mb-4">
         <div className="h-full w-full rounded-xl bg-gray-200" />
       </div>

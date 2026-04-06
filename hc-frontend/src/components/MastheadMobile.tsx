@@ -1,6 +1,10 @@
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
 import { BedDouble } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { EXPLORE_LOCATION } from "@/common/constants";
@@ -13,7 +17,19 @@ import { InfiniteScroller, SvgIcon } from "@/utility-components";
 
 import HomeSearchBar from "./HomeSearchBar";
 
+const tabTween = {
+  type: "tween" as const,
+  duration: 0.28,
+  ease: [0.4, 0, 0.2, 1] as const,
+};
+
+const mobileTabCategories = [
+  PropertyCategory.RENT,
+  PropertyCategory.FLATMATE,
+] as const;
+
 const MastHeadMobile: React.FC = () => {
+  const reduceMotion = useReducedMotion();
   const dispatch = useDispatch();
   const { openDialog } = useDialog();
   const propertyCategory = useSelector(
@@ -22,6 +38,40 @@ const MastHeadMobile: React.FC = () => {
   const router = useRouter();
 
   const searchParams = useSearchParams();
+
+  const activeTabIndex = Math.max(
+    0,
+    mobileTabCategories.findIndex((c) => c === propertyCategory),
+  );
+
+  const tabsRowRef = useRef<HTMLDivElement>(null);
+  const tabButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [underline, setUnderline] = useState({ left: 0, width: 0 });
+
+  const updateUnderline = useCallback(() => {
+    const row = tabsRowRef.current;
+    const btn = tabButtonRefs.current[activeTabIndex];
+    if (!row || !btn) return;
+    const rowRect = row.getBoundingClientRect();
+    const btnRect = btn.getBoundingClientRect();
+    setUnderline({
+      left: btnRect.left - rowRect.left,
+      width: btnRect.width,
+    });
+  }, [activeTabIndex]);
+
+  useLayoutEffect(() => {
+    updateUnderline();
+  }, [updateUnderline, propertyCategory]);
+
+  useLayoutEffect(() => {
+    const ro = new ResizeObserver(() => updateUnderline());
+    if (tabsRowRef.current) ro.observe(tabsRowRef.current);
+    tabButtonRefs.current.forEach((el) => {
+      if (el) ro.observe(el);
+    });
+    return () => ro.disconnect();
+  }, [updateUnderline]);
 
   return (
     <div className="relative flex flex-col px-4 pt-8 pb-14 gap-6">
@@ -38,13 +88,34 @@ const MastHeadMobile: React.FC = () => {
 
       {/* Tabs and Search */}
       <div className="w-full">
-        {/* Tabs */}
-        <div className="flex justify-center w-[85%] mx-auto">
+        {/* Tabs — sliding underline (same behavior as MastheadDesktop) */}
+        <div
+          ref={tabsRowRef}
+          className="relative mx-auto flex w-[85%] justify-center"
+        >
+          <motion.div
+            className="pointer-events-none absolute bottom-0 z-10 h-0.5 bg-red-600"
+            initial={false}
+            animate={{ left: underline.left, width: underline.width }}
+            transition={
+              reduceMotion ? { duration: 0, ease: "linear" } : tabTween
+            }
+            aria-hidden
+          />
           <button
+            ref={(el) => {
+              tabButtonRefs.current[0] = el;
+            }}
+            type="button"
             onClick={() =>
               dispatch(setSearchPropertyCategory(PropertyCategory.RENT))
             }
-            className={`w-1/2 flex items-center gap-1 justify-center py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.RENT ? "text-red-600 border-red-600" : "text-gray-700 "}`}
+            aria-pressed={propertyCategory === PropertyCategory.RENT}
+            className={`flex w-1/2 items-center justify-center gap-1 border-b-2 border-gray-300 py-2 ${
+              propertyCategory === PropertyCategory.RENT
+                ? "text-red-600"
+                : "text-gray-700 "
+            }`}
           >
             <SvgIcon
               iconSize="small"
@@ -59,10 +130,19 @@ const MastHeadMobile: React.FC = () => {
             Flats for rent
           </button>
           <button
+            ref={(el) => {
+              tabButtonRefs.current[1] = el;
+            }}
+            type="button"
             onClick={() =>
               dispatch(setSearchPropertyCategory(PropertyCategory.FLATMATE))
             }
-            className={`w-1/2 flex items-center gap-1 justify-center py-2 border-b-2 border-gray-300 ${propertyCategory === PropertyCategory.FLATMATE ? "text-red-600 border-red-600" : "text-gray-700 "}`}
+            aria-pressed={propertyCategory === PropertyCategory.FLATMATE}
+            className={`flex w-1/2 items-center justify-center gap-1 border-b-2 border-gray-300 py-2 ${
+              propertyCategory === PropertyCategory.FLATMATE
+                ? "text-red-600"
+                : "text-gray-700 "
+            }`}
           >
             <BedDouble
               className={`size-5 ${propertyCategory === PropertyCategory.FLATMATE ? "text-red-600" : "text-gray-700"}`}
