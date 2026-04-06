@@ -38,7 +38,7 @@ public class PropertyAdminService {
             property.setPropertyState(PropertyState.PENDING_VERIFICATION);
             property.setOwner(user);
             property.setTitle(PropertyUtils.getTitle(property));
-            property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, admin, "added by admin", PropertyUpdateType.CREATE));
+            property.getPropertyUpdateLogs().add(PropertyUpdateLog.forAdmin(property, admin, "added by admin", PropertyUpdateType.CREATE));
             user.getOwnedProperties().add(property);
             userRepository.save(user);
             return property;
@@ -57,7 +57,7 @@ public class PropertyAdminService {
         Property property = propertyOpt.get();
         PropertyMapper.toBasicEntity(propertyDTO, property);
         property.setPropertyState(PropertyState.PENDING_VERIFICATION);
-        property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, admin, "updated by admin", PropertyUpdateType.UPDATE));
+        property.getPropertyUpdateLogs().add(PropertyUpdateLog.forAdmin(property, admin, "updated by admin", PropertyUpdateType.UPDATE));
         propertyElasticService.deletePropertyInElastic(property);
         return propertyRepository.save(property);
     }
@@ -70,7 +70,7 @@ public class PropertyAdminService {
 
         Property property = propertyOpt.get();
         property.setPropertyState(PropertyState.INACTIVE);
-        property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, admin, comment, PropertyUpdateType.DEACTIVATE));
+        property.getPropertyUpdateLogs().add(PropertyUpdateLog.forAdmin(property, admin, comment, PropertyUpdateType.DEACTIVATE));
         propertyRepository.save(property);
         propertyElasticService.deletePropertyInElastic(property);
     }
@@ -106,7 +106,7 @@ public class PropertyAdminService {
 
         Property property = propertyOpt.get();
         property.setScore(score);
-        property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, admin, comment, PropertyUpdateType.VERIFIED));
+        property.getPropertyUpdateLogs().add(PropertyUpdateLog.forAdmin(property, admin, comment, PropertyUpdateType.VERIFIED));
         property.setPropertyState(PropertyState.ACTIVE);
         property = propertyRepository.save(property);
         propertyElasticService.indexPropertyInElastic(property);
@@ -121,7 +121,7 @@ public class PropertyAdminService {
         }
 
         Property property = propertyOpt.get();
-        property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, admin, comment, PropertyUpdateType.RE_VERIFIED));
+        property.getPropertyUpdateLogs().add(PropertyUpdateLog.forAdmin(property, admin, comment, PropertyUpdateType.RE_VERIFIED));
         property.setPropertyState(PropertyState.ACTIVE);
         property = propertyRepository.save(property);
         propertyElasticService.indexPropertyInElastic(property);
@@ -136,7 +136,7 @@ public class PropertyAdminService {
 
         Property property = propertyOpt.get();
         property.setPremium(tag);
-        property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, admin, "exclusive tag updated", PropertyUpdateType.UPDATE));
+        property.getPropertyUpdateLogs().add(PropertyUpdateLog.forAdmin(property, admin, "exclusive tag updated", PropertyUpdateType.UPDATE));
         return propertyRepository.save(property);
     }
 }

@@ -46,7 +46,7 @@ public class PropertyUserService {
             property.setOwner(user);
             property.setTitle(PropertyUtils.getTitle(property));
             property.setPropertyState(PropertyState.PENDING_VERIFICATION);
-            property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, user, "added by user", PropertyUpdateType.CREATE));
+            property.getPropertyUpdateLogs().add(PropertyUpdateLog.forUser(property, user, "added by user", PropertyUpdateType.CREATE));
             user.getOwnedProperties().add(property);
             userRepository.save(user);
             return property;
@@ -65,7 +65,7 @@ public class PropertyUserService {
         Property property = propertyOpt.get();
         PropertyMapper.toBasicEntity(propertyDTO, property);
         property.setPropertyState(PropertyState.PENDING_VERIFICATION);
-        property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, user,"updated by user", PropertyUpdateType.UPDATE));
+        property.getPropertyUpdateLogs().add(PropertyUpdateLog.forUser(property, user, "updated by user", PropertyUpdateType.UPDATE));
         property = propertyRepository.save(property);
         propertyElasticService.deletePropertyInElastic(property);
         return property;
@@ -81,7 +81,7 @@ public class PropertyUserService {
         }
         Property property = propertyOpt.get();
         property.setPropertyState(PropertyState.INACTIVE);
-        property.getPropertyUpdateLogs().add(new PropertyUpdateLog(property, user, "deactivated by user", PropertyUpdateType.DEACTIVATE));
+        property.getPropertyUpdateLogs().add(PropertyUpdateLog.forUser(property, user, "deactivated by user", PropertyUpdateType.DEACTIVATE));
         propertyRepository.save(property);
         propertyElasticService.deletePropertyInElastic(property);
     }

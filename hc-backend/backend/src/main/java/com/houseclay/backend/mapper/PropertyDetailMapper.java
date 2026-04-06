@@ -71,12 +71,16 @@ public class PropertyDetailMapper {
         dto.setUpdateTime(propertyUpdateLog.getUpdatedAt());
         dto.setComment(propertyUpdateLog.getComment());
 
-        if (propertyUpdateLog.getUpdatedByAdmin() != null) {
+        ActorType actorType = propertyUpdateLog.getActorType();
+        if (actorType == ActorType.ADMIN && propertyUpdateLog.getUpdatedByAdmin() != null) {
             dto.setUpdateBy(propertyUpdateLog.getUpdatedByAdmin().getUsername());
             dto.setUserType("ADMIN");
-        } else if (propertyUpdateLog.getUpdatedByUser() != null) {
+        } else if (actorType == ActorType.USER && propertyUpdateLog.getUpdatedByUser() != null) {
             dto.setUpdateBy(propertyUpdateLog.getUpdatedByUser().getPhoneNo());
             dto.setUserType("USER");
+        } else if (actorType == ActorType.SYSTEM) {
+            dto.setUpdateBy("SYSTEM");
+            dto.setUserType("SYSTEM");
         } else {
             dto.setUpdateBy("UNKNOWN");
             dto.setUserType("UNKNOWN");
