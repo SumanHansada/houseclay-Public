@@ -11,7 +11,6 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["lucide-react", "react-loading-skeleton"],
     viewTransition: true,
-    ppr: true,
   },
   async rewrites() {
     return [
