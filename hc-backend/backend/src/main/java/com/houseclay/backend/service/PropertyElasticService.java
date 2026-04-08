@@ -9,6 +9,7 @@ import com.houseclay.backend.entity.elastic.FlatmateDocument;
 import com.houseclay.backend.entity.elastic.PropertyDocument;
 import com.houseclay.backend.entity.elastic.RentDocument;
 import com.houseclay.backend.entity.elastic.SaleDocument;
+import com.houseclay.backend.mapper.UserMapper;
 import com.houseclay.backend.repository.FlatmateDocumentRepository;
 import com.houseclay.backend.repository.PropertyRepository;
 import com.houseclay.backend.repository.RentDocumentRepository;
@@ -83,7 +84,8 @@ public class PropertyElasticService {
         propertyDocument.setAmenities(property.getAmenities());
         propertyDocument.setBathrooms(property.getBathrooms());
         propertyDocument.setExclusive(property.isPremium());
-        propertyDocument.setCreatedOn(System.currentTimeMillis());
+        java.sql.Timestamp createdOn = UserMapper.getCreateTimestamp(property);
+        propertyDocument.setCreatedOn(createdOn != null ? createdOn.getTime() : null);
         propertyDocument.setPropertyState(property.getPropertyState() != null ? property.getPropertyState().name() : null);
         propertyDocument.setLocation(new PropertyDocument.GeoPoint(property.getLatitude(), property.getLongitude()));
     }
