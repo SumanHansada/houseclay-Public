@@ -19,6 +19,8 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+
+
 @Component
 @EnableScheduling
 public class PropertyRoutineCheckScheduler {
@@ -50,14 +52,11 @@ public class PropertyRoutineCheckScheduler {
 
         for (Property property : propertiesToCheck) {
             property.setPropertyState(PropertyState.PENDING_ROUTINE_CHECK);
-            
-            PropertyUpdateLog updateLog = new PropertyUpdateLog();
-            updateLog.setProperty(property);
-            updateLog.setUpdateType(PropertyUpdateType.ROUTINE_CHECK);
-            updateLog.setComment("Automated state change to PENDING_ROUTINE_CHECK by scheduler due to expiration");
-            updateLog.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-            
-            property.getPropertyUpdateLogs().add(updateLog);
+            property.getPropertyUpdateLogs().add(PropertyUpdateLog.forSystem(
+                    property,
+                    "Automated state change to PENDING_ROUTINE_CHECK by scheduler due to expiration",
+                    PropertyUpdateType.ROUTINE_CHECK
+            ));
         }
 
         propertyRepository.saveAll(propertiesToCheck);

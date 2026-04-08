@@ -19,6 +19,10 @@ public class PropertyUpdateLog {
 
     private String comment;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ActorType actorType;
+
     @ManyToOne
     private Property property;
 
@@ -28,19 +32,35 @@ public class PropertyUpdateLog {
     @ManyToOne
     private User updatedByUser;
 
-    public PropertyUpdateLog(Property property, Object updatedBy, String comment, PropertyUpdateType updateType) {
-        this.property = property;
-        this.updateType = updateType;
-        this.updatedAt = new Timestamp(System.currentTimeMillis());
-        this.comment = comment;
-        if (updatedBy instanceof Admin admin) {
-            this.setUpdatedByAdmin(admin);
-        } else if (updatedBy instanceof User user) {
-            this.setUpdatedByUser(user);
-        }
+    public PropertyUpdateLog() {
     }
 
-    public PropertyUpdateLog() {
-        
+    public static PropertyUpdateLog forAdmin(Property property, Admin admin, String comment, PropertyUpdateType updateType) {
+        PropertyUpdateLog log = base(property, comment, updateType);
+        log.actorType = ActorType.ADMIN;
+        log.updatedByAdmin = admin;
+        return log;
+    }
+
+    public static PropertyUpdateLog forUser(Property property, User user, String comment, PropertyUpdateType updateType) {
+        PropertyUpdateLog log = base(property, comment, updateType);
+        log.actorType = ActorType.USER;
+        log.updatedByUser = user;
+        return log;
+    }
+
+    public static PropertyUpdateLog forSystem(Property property, String comment, PropertyUpdateType updateType) {
+        PropertyUpdateLog log = base(property, comment, updateType);
+        log.actorType = ActorType.SYSTEM;
+        return log;
+    }
+
+    private static PropertyUpdateLog base(Property property, String comment, PropertyUpdateType updateType) {
+        PropertyUpdateLog log = new PropertyUpdateLog();
+        log.property = property;
+        log.comment = comment;
+        log.updateType = updateType;
+        log.updatedAt = new Timestamp(System.currentTimeMillis());
+        return log;
     }
 }
