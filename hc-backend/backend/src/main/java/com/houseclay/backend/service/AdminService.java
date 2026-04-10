@@ -1,6 +1,7 @@
 package com.houseclay.backend.service;
 
 import com.houseclay.backend.config.CookieConfig;
+import com.houseclay.backend.config.SessionConfig;
 import com.houseclay.backend.dto.AdminDetailDTO;
 import com.houseclay.backend.dto.AdminSummaryDTO;
 import com.houseclay.backend.dto.AdminRegisterDTO;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -54,6 +56,9 @@ public class AdminService {
 
     @Autowired
     private CookieConfig cookieConfig;
+
+    @Autowired
+    private SessionConfig sessionConfig;
 
     @Autowired
     private CorporateDomainRepository corporateDomainRepository;
@@ -101,8 +106,21 @@ public class AdminService {
         // Generate auth token
         String authToken = UUID.randomUUID().toString();
 
-        AdminLogin adminLogin = new AdminLogin(admin, authToken);
+        AdminLogin adminLogin = new AdminLogin(admin, authToken, sessionConfig.getDurationMs());
         List<AdminLogin> adminLogins = admin.getAdminLogins();
+
+        // Remove expired sessions (orphanRemoval handles DB deletion)
+        adminLogins.removeIf(AdminLogin::isExpired);
+
+        // Evict oldest if at capacity
+        if (adminLogins.size() >= sessionConfig.getMaxActive()) {
+            adminLogins.sort(Comparator.comparing(AdminLogin::getCreatedAt, Comparator.nullsFirst(Comparator.naturalOrder())));
+            int toRemove = adminLogins.size() - sessionConfig.getMaxActive() + 1;
+            for (int i = 0; i < toRemove; i++) {
+                adminLogins.remove(0);
+            }
+        }
+
         adminLogins.add(adminLogin);
         admin.setAdminLogins(adminLogins);
 
