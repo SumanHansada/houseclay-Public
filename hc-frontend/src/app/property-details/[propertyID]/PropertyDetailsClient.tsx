@@ -285,7 +285,7 @@ export function PropertyDetailsClient({
   return (
     <>
       <section
-        className={`py-2 px-4 fixed top-0 left-0 right-0 z-50 h-[55px] border-b border-gray-200 bg-white flex gap-2 justify-between items-center w-full md:hidden`}
+        className={`py-2 px-4 fixed top-0 left-0 right-0 z-50 h-14 border-b border-gray-200 shadow-sm bg-white flex gap-2 justify-between items-center w-full md:hidden`}
       >
         <Button
           variant="secondary"

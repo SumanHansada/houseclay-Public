@@ -113,13 +113,13 @@ export default function Loading() {
         aria-label="Loading support page (mobile)"
       >
         {/* Mobile header placeholder (matches MobileHeader) */}
-        <div className="fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white">
+        <div className="fixed top-0 inset-x-0 z-50 h-14 border-b border-gray-200 shadow-sm bg-white">
           <div className="h-full flex items-center px-6">
             <div className="h-5 w-28 rounded bg-gray-200" />
           </div>
         </div>
         {/* Spacer for fixed header */}
-        <div className="h-[55px]" />
+        <div className="h-14 border-b border-gray-200 shadow-sm" />
 
         <div className="px-8 space-y-6">
           {/* Support */}

@@ -29,7 +29,7 @@ export default function Loading() {
       {/* Mobile */}
       <section className="md:hidden">
         {/* Mobile header placeholder (matches MobileHeader height) */}
-        <div className="fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white">
+        <div className="fixed top-0 inset-x-0 z-50 h-14 border-b border-gray-200 shadow-sm bg-white">
           <div className="h-full flex items-center px-6">
             <div className="h-5 w-56 rounded-md bg-gray-200" />
           </div>

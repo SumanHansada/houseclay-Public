@@ -11,7 +11,7 @@ export default function Loading() {
   return (
     <>
       {/* Mobile header skeleton (matches MobileHeader height) */}
-      <header className="fixed top-0 inset-x-0 z-50 h-[55px] border-b border-gray-200 bg-white md:hidden">
+      <header className="fixed top-0 inset-x-0 z-50 h-14 border-b border-gray-200 shadow-sm bg-white md:hidden">
         <div className="animate-pulse flex items-center h-full px-6 gap-2">
           <div className="shrink-0 w-10 h-10 grid place-items-center">
             <div className="h-9 w-9 rounded-full bg-neutral-200" />

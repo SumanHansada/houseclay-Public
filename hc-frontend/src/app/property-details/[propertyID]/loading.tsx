@@ -137,7 +137,7 @@ export default function Loading() {
   return (
     <>
       {/* Mobile Header - matches PropertyDetailsClient mobile header */}
-      <section className="py-2 px-4 fixed top-0 left-0 right-0 z-50 h-[55px] border-b border-gray-200 bg-white flex gap-2 justify-between items-center w-full md:hidden">
+      <section className="py-2 px-4 fixed top-0 left-0 right-0 z-50 h-14 border-b border-gray-200 shadow-sm bg-white flex gap-2 justify-between items-center w-full md:hidden">
         <button className="rounded-full md:border-none items-center justify-center">
           <ChevronLeft size={25} />
         </button>

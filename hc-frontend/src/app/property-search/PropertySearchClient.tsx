@@ -1122,7 +1122,7 @@ export function PropertySearchClient({
               onChange={onSortChange}
               size="sm"
               dropdownWidth="full"
-              containerClassName="relative w-48"
+              containerClassName="relative w-52"
             />
             <Button
               leftIcon={<SlidersHorizontal size={16} />}
@@ -1139,7 +1139,7 @@ export function PropertySearchClient({
       </section>
 
       {/* Main Content */}
-      <section className="w-full md:pt-[64px] md:bg-gray-50 relative">
+      <section className="w-full md:pt-[64px] md:bg-gray-50 relative w-">
         {/* Mobile: Map + bottom sheet + marker card */}
         <section className="xl:hidden">
           {/* Mobile: Map — dvh + no main pb when pin card open avoids gray gap (was space for sticky nav) */}

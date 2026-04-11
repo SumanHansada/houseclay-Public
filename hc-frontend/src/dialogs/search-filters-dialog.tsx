@@ -268,20 +268,25 @@ const SearchFiltersDialog: React.FC<SearchFiltersDialogProps> = ({
                 defaultActive={currentPropertyCategory}
                 onTabChange={handleTabChange}
               >
-                <TabHeader tabsClassName="justify-between border rounded-xl p-2 w-full flex gap-2">
+                <TabHeader
+                  segmented
+                  tabsClassName="w-full rounded-xl border border-gray-200 bg-gray-50/80 p-1.5"
+                >
                   <Tab
-                    label="Full house"
+                    key="fullHouse"
+                    label="Full House"
                     value={PropertyCategory.RENT}
-                    containerClassName="w-1/2 p-2 md:p-3 text-base font-medium max-md:font-normal rounded-xl border transition-colors duration-300"
-                    activeClassName="text-red-600 border-red-500"
-                    inactiveClassName="text-gray-700 border-transparent"
+                    containerClassName="p-2 md:p-3 text-sm font-medium sm:text-base max-md:font-normal transition-colors duration-300"
+                    activeClassName="text-red-500"
+                    inactiveClassName="text-gray-800"
                   />
                   <Tab
+                    key="rooms"
                     label="Rooms"
                     value={PropertyCategory.FLATMATE}
-                    containerClassName="w-1/2 p-2 md:p-3 text-base font-medium max-md:font-normal rounded-xl border transition-colors duration-300"
-                    activeClassName="text-red-600 border-red-500"
-                    inactiveClassName="text-gray-700 border-transparent"
+                    containerClassName="p-2 md:p-3 text-sm font-medium sm:text-base max-md:font-normal transition-colors duration-300"
+                    activeClassName="text-red-500"
+                    inactiveClassName="text-gray-800"
                   />
                 </TabHeader>
                 <TabContent value={PropertyCategory.RENT} className="gap-4">

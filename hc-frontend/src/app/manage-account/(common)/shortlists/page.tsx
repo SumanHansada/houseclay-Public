@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { BadgeType, PropertyCategory, PropertyStatus } from "@/common/enums";
 import Properties from "@/components/Properties";
 import { RootState } from "@/store/store";
+import { Tab, TabHeader, Tabs } from "@/utility-components/Tabs";
 
 import Loading from "./loading";
 
@@ -18,12 +19,6 @@ const filterOptions = [
   { label: "Rent", value: PropertyCategory.RENT },
   { label: "Flatmate", value: PropertyCategory.FLATMATE },
 ];
-
-const tabTween = {
-  type: "tween" as const,
-  duration: 0.28,
-  ease: [0.4, 0, 0.2, 1] as const,
-};
 
 const listCrossfade = {
   duration: 0.18,
@@ -57,11 +52,6 @@ export default function ShortlistsPage() {
       return true;
     });
   }, [shortlistedProperties, selectedFilterCategory, onlyAvailable]);
-
-  const activeFilterIndex = Math.max(
-    0,
-    filterOptions.findIndex((f) => f.value === selectedFilterCategory),
-  );
 
   /** Drives list crossfade when filter / availability changes (not on unrelated shortlist updates). */
   const listPresenceKey = `${selectedFilterCategory}-${onlyAvailable}`;
@@ -124,44 +114,29 @@ export default function ShortlistsPage() {
 
       {/* Mobile */}
       <section className="md:hidden">
-        {/* Filter tabs — single sliding pill (tween on `left`; avoids layoutId remount flicker) */}
-        <div className="m-3 mx-4 rounded-xl border border-gray-200 bg-gray-50/80 p-1.5 text-lg sm:p-2">
-          <div className="relative flex min-h-10 sm:min-h-11">
-            <motion.div
-              className="pointer-events-none absolute inset-y-0 left-0 z-0 rounded-lg border border-red-500 bg-white shadow-sm"
-              initial={false}
-              style={{
-                width: `${100 / filterOptions.length}%`,
-              }}
-              animate={{
-                left: `${(activeFilterIndex / filterOptions.length) * 100}%`,
-              }}
-              transition={
-                reduceMotion ? { duration: 0, ease: "linear" } : tabTween
-              }
-              aria-hidden
-            />
-            {filterOptions.map((f) => {
-              const active = selectedFilterCategory === f.value;
-              return (
-                <button
+        <div className="m-3 mx-4">
+          <Tabs
+            active={selectedFilterCategory}
+            onTabChange={(value) =>
+              setSelectedFilterCategory(value as PropertyCategory)
+            }
+          >
+            <TabHeader
+              segmented
+              tabsClassName="w-full rounded-xl border border-gray-200 bg-gray-50/80 p-1.5 text-lg sm:p-2"
+            >
+              {filterOptions.map((f) => (
+                <Tab
                   key={f.value}
-                  type="button"
-                  onClick={() => setSelectedFilterCategory(f.value)}
-                  aria-pressed={active}
-                  className="relative z-10 flex flex-1 items-center justify-center whitespace-nowrap rounded-lg px-2 py-1 sm:px-4 sm:py-2"
-                >
-                  <span
-                    className={`text-sm font-medium sm:text-base ${
-                      active ? "text-red-500" : "text-gray-800"
-                    }`}
-                  >
-                    {f.label}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+                  label={f.label}
+                  value={f.value}
+                  containerClassName="px-2 py-1 sm:px-4 sm:py-2 text-sm font-medium sm:text-base max-md:font-normal"
+                  activeClassName="text-red-500"
+                  inactiveClassName="text-gray-800"
+                />
+              ))}
+            </TabHeader>
+          </Tabs>
         </div>
       </section>
 

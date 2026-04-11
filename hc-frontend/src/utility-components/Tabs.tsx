@@ -1,12 +1,20 @@
 "use client";
+import { motion, useReducedMotion } from "framer-motion";
 import React, {
   Children,
+  cloneElement,
   createContext,
   ReactElement,
   ReactNode,
   useContext,
   useState,
 } from "react";
+
+const tabTween = {
+  type: "tween" as const,
+  duration: 0.28,
+  ease: [0.4, 0, 0.2, 1] as const,
+};
 
 interface TabContextType {
   active: string;
@@ -31,6 +39,8 @@ interface TabContentProps {
 
 interface TabsProps {
   children: ReactNode;
+  /** When set, the active tab is controlled by the parent (e.g. shared with other UI). */
+  active?: string;
   defaultActive?: string;
   onTabChange?: (value: string) => void;
   className?: string;
@@ -40,6 +50,8 @@ interface TabHeaderProps {
   children: ReactNode;
   containerClassName?: string;
   tabsClassName?: string;
+  /** Sliding pill indicator (equal-width segments), similar to segmented controls on mobile filters. */
+  segmented?: boolean;
 }
 
 interface NonTabProps {
@@ -65,6 +77,7 @@ const Tab: React.FC<TabProps> = ({
       `}
       onClick={() => context.onTabClick(value)}
       type="button"
+      aria-pressed={isActive}
     >
       {label}
     </button>
@@ -80,7 +93,11 @@ const TabHeader: React.FC<TabHeaderProps> = ({
   children,
   containerClassName = "",
   tabsClassName = "",
+  segmented = false,
 }) => {
+  const context = useContext(TabContext);
+  const reduceMotion = useReducedMotion();
+
   // Separate Tab and NonTab children
   const tabChildren: ReactElement[] = [];
   const nonTabChildren: ReactElement[] = [];
@@ -93,11 +110,61 @@ const TabHeader: React.FC<TabHeaderProps> = ({
     }
   });
 
+  const tabCount = tabChildren.length;
+  const activeTabIndex =
+    segmented && context
+      ? Math.max(
+          0,
+          tabChildren.findIndex(
+            (t) =>
+              React.isValidElement<TabProps>(t) &&
+              t.props.value === context.active,
+          ),
+        )
+      : 0;
+
+  const tabRow = segmented
+    ? tabChildren.map((tab) => {
+        if (!React.isValidElement<TabProps>(tab)) return tab;
+        return cloneElement(tab, {
+          containerClassName: `relative z-10 flex flex-1 items-center justify-center whitespace-nowrap rounded-lg ${tab.props.containerClassName ?? ""}`,
+        });
+      })
+    : tabChildren;
+
+  const segmentedInner = (
+    <>
+      {segmented && tabCount > 0 && context ? (
+        <motion.div
+          className="pointer-events-none absolute inset-y-0 left-0 z-0 rounded-lg border border-red-500 bg-white shadow-sm"
+          initial={false}
+          style={{
+            width: `${100 / tabCount}%`,
+          }}
+          animate={{
+            left: `${(activeTabIndex / tabCount) * 100}%`,
+          }}
+          transition={reduceMotion ? { duration: 0, ease: "linear" } : tabTween}
+          aria-hidden
+        />
+      ) : null}
+      {tabRow}
+    </>
+  );
+
   return (
     <div
       className={`flex w-full items-center justify-between ${containerClassName}`}
     >
-      <div className={`${tabsClassName}`}>{tabChildren}</div>
+      {segmented ? (
+        <div className={tabsClassName}>
+          <div className="relative flex min-h-10 sm:min-h-11">
+            {segmentedInner}
+          </div>
+        </div>
+      ) : (
+        <div className={tabsClassName}>{tabRow}</div>
+      )}
       <div className="flex gap-2 ml-auto">{nonTabChildren}</div>
     </div>
   );
@@ -116,6 +183,7 @@ const TabContent: React.FC<TabContentProps> = ({
 
 const Tabs: React.FC<TabsProps> = ({
   children,
+  active: controlledActive,
   defaultActive,
   onTabChange,
   className = "",
@@ -145,13 +213,15 @@ const Tabs: React.FC<TabsProps> = ({
     }
   });
 
-  const [active, setActive] = useState<string>(
-    defaultActive || firstTabValue || "",
+  const [uncontrolledActive, setUncontrolledActive] = useState<string>(
+    defaultActive ?? firstTabValue ?? "",
   );
+  const isControlled = controlledActive !== undefined;
+  const active = isControlled ? controlledActive : uncontrolledActive;
 
   const handleTabClick = (value: string) => {
-    setActive(value);
-    if (onTabChange) onTabChange(value);
+    if (!isControlled) setUncontrolledActive(value);
+    onTabChange?.(value);
   };
 
   return (

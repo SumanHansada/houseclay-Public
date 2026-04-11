@@ -96,7 +96,7 @@ const DesktopStepper: React.FC<DesktopStepperProps> = ({
 
     return (
       <>
-        <section className="py-2 px-4 fixed top-0 left-0 right-0 z-50 h-[55px] border-gray-200 bg-white flex flex-col justify-center items-center w-full md:hidden">
+        <section className="py-2 px-4 fixed top-0 left-0 right-0 z-50 h-14 border-b border-gray-200 shadow-sm bg-white flex flex-col justify-center items-center w-full md:hidden">
           <div className="flex justify-center items-center align-middle w-full md:hidden">
             <h1 className="text-lg my-auto text-black ml-auto">
               {displayStep}
