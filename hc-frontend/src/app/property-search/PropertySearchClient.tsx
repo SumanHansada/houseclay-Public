@@ -999,7 +999,7 @@ export function PropertySearchClient({
       {/* Desktop - Search and Filter Bar (Below Header) */}
       <section className="fixed top-14 z-50 flex w-full h-16 gap-0 px-8 bg-white border-b border-gray-200 xl:gap-16 lg:gap-8 md:gap-0 xl:px-24 lg:px-12 max-md:pt-4 max-md:pb-8 max-md:hidden">
         <div className="flex items-center justify-between w-full gap-4 border-gray-200">
-          <div className="flex-1 flex items-center min-h-[46px] w-full p-1 border border-gray-300 rounded-xl bg-white">
+          <div className="flex-1 flex items-center min-h-[46px] w-full p-1 border border-gray-300 rounded-xl bg-white gap-2">
             <PlacesAutocomplete
               id="location-search-desktop"
               name="location"

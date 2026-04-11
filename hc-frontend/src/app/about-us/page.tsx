@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronLeft } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/base-components";
@@ -72,7 +73,7 @@ export default function AboutUsPage() {
             aria-labelledby="mission-heading"
             className="space-y-3 mt-4 md:mt-6 lg:mt-10 xl:mt-16"
           >
-            <p className="bg-red-500 px-5 py-2 md:px-7 md:py-3 text-white rounded-lg w-fit mx-auto sm:text-lg md:text-xl">
+            <p className="bg-red-600 px-4 py-2 md:px-6 md:py-3 text-white rounded-xl w-fit mx-auto sm:text-lg md:text-xl">
               OUR MISSION
             </p>
             <h2
@@ -101,7 +102,7 @@ export default function AboutUsPage() {
               className="absolute -top-3 md:-top-4 left-1/2 -translate-x-1/2"
               aria-hidden="true"
             >
-              <span className="bg-red-500 px-4 md:px-6 py-1 text-white rounded-lg w-fit text-sm md:text-lg">
+              <span className="bg-red-600 px-4 py-1.5 md:px-6 md:py-2 text-white rounded-xl w-fit text-sm md:text-lg">
                 OUR VALUES
               </span>
             </div>
@@ -182,13 +183,12 @@ export default function AboutUsPage() {
               property, or just browsing options — HouseClay is where trust
               meets tech.
             </p>
-            <button
-              type="button"
-              onClick={() => router.push("/list-property")}
-              className="bg-red-600 text-white px-7 py-2 rounded-lg hover:cursor-pointer hover:bg-red-600 text-lg"
+            <Link
+              href="/list-property"
+              className="inline-block border border-red-500 bg-red-600 text-white px-6 py-2 rounded-xl text-lg hover:bg-red-600 hover:text-white focus:text-white  transition-colors nav-link"
             >
-              List your property
-            </button>
+              List Your Property
+            </Link>
           </section>
         </div>
 

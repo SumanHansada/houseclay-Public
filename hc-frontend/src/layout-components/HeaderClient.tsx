@@ -1,8 +1,10 @@
 "use client";
 
-import { Menu, ShieldCheckIcon, User } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Menu, ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -77,6 +79,8 @@ export const InfoTipZeroBalance: React.FC<{ onBuyConnects: () => void }> = ({
   </div>
 );
 
+type HeaderNavActiveKey = "rent" | "rooms" | "about" | null;
+
 const HeaderClient: React.FC<HeaderClientProps> = () => {
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated,
@@ -94,6 +98,18 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
   const { openDialog, closeAllDialogs } = useDialog();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const reduceMotion = useReducedMotion();
+
+  const navRef = useRef<HTMLElement>(null);
+  const rentLinkRef = useRef<HTMLAnchorElement>(null);
+  const roomsLinkRef = useRef<HTMLAnchorElement>(null);
+  const aboutLinkRef = useRef<HTMLAnchorElement>(null);
+
+  const [underline, setUnderline] = useState<{
+    left: number;
+    width: number;
+    visible: boolean;
+  }>({ left: 0, width: 0, visible: false });
 
   const rentHref = getPropertySearchHrefWithLocation(
     PropertyCategory.RENT,
@@ -103,6 +119,74 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
     PropertyCategory.FLATMATE,
     searchParams,
   );
+
+  const rentActive =
+    searchParams.get("propertyCategory") === "rent" ||
+    (pathname === "/property-search" && !searchParams.get("propertyCategory"));
+  const roomsActive = searchParams.get("propertyCategory") === "flatmate";
+  const aboutActive = pathname === "/about-us";
+
+  const headerNavActiveKey: HeaderNavActiveKey = useMemo(() => {
+    if (rentActive) return "rent";
+    if (roomsActive) return "rooms";
+    if (aboutActive) return "about";
+    return null;
+  }, [rentActive, roomsActive, aboutActive]);
+
+  const measureHeaderNavUnderline = useCallback(() => {
+    const nav = navRef.current;
+    if (!nav || !headerNavActiveKey) {
+      setUnderline((u) => ({ ...u, visible: false }));
+      return;
+    }
+    const el =
+      headerNavActiveKey === "rent"
+        ? rentLinkRef.current
+        : headerNavActiveKey === "rooms"
+          ? roomsLinkRef.current
+          : aboutLinkRef.current;
+    if (!el) {
+      setUnderline((u) => ({ ...u, visible: false }));
+      return;
+    }
+    const cs = window.getComputedStyle(el);
+    if (cs.display === "none" || cs.visibility === "hidden") {
+      setUnderline((u) => ({ ...u, visible: false }));
+      return;
+    }
+    const nr = nav.getBoundingClientRect();
+    const er = el.getBoundingClientRect();
+    if (er.width < 2) {
+      setUnderline((u) => ({ ...u, visible: false }));
+      return;
+    }
+    setUnderline({
+      left: er.left - nr.left + nav.scrollLeft,
+      width: er.width,
+      visible: true,
+    });
+  }, [headerNavActiveKey]);
+
+  useLayoutEffect(() => {
+    measureHeaderNavUnderline();
+    const nav = navRef.current;
+    if (!nav) return;
+    const ro = new ResizeObserver(() => measureHeaderNavUnderline());
+    ro.observe(nav);
+    window.addEventListener("resize", measureHeaderNavUnderline);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measureHeaderNavUnderline);
+    };
+  }, [measureHeaderNavUnderline, rentHref, flatmateHref]);
+
+  const headerNavUnderlineTransition = reduceMotion
+    ? { type: "tween" as const, duration: 0, ease: "linear" as const }
+    : {
+        type: "tween" as const,
+        duration: 0.28,
+        ease: [0.4, 0, 0.2, 1] as const,
+      };
 
   const onLogin = () => {
     closeAllDialogs();
@@ -120,7 +204,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
       <header className="fixed top-0 inset-x-0 z-50 h-14 border-b border-gray-200 bg-white flex justify-between items-center w-full py-2 shadow-sm xl:gap-32 lg:gap-16 md:gap-5 gap-8 xl:px-24 lg:px-12 md:px-8 px-12 max-md:hidden mx-auto ">
         {/* Left Section - Logo */}
         <div className="flex items-center">
-          <Link href="/" className="flex items-center gap-1 py-1">
+          <Link href="/" className="flex items-center gap-1 py-1 nav-link">
             <SvgIcon
               iconSize="small"
               name="houseclay"
@@ -135,30 +219,36 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
 
         {/* Center - Navigation */}
         <div className="flex justify-between items-center w-full text-sm">
-          <nav className="hidden md:flex xl:gap-8 lg:gap-6 md:gap-5 gap-3 text-gray-800 text-base">
+          <nav
+            ref={navRef}
+            className="header-primary-nav relative hidden md:flex xl:gap-8 lg:gap-6 md:gap-5 gap-3 text-gray-800 text-base"
+          >
+            <motion.div
+              className="pointer-events-none absolute bottom-0 z-0 h-0.5 rounded-full bg-red-500"
+              initial={false}
+              animate={{
+                left: underline.left,
+                width: underline.width,
+                opacity: underline.visible ? 1 : 0,
+              }}
+              transition={headerNavUnderlineTransition}
+              aria-hidden
+            />
             <Link
+              ref={rentLinkRef}
               href={rentHref}
               data-category="rent"
-              data-active={
-                searchParams.get("propertyCategory") === "rent" ||
-                (pathname === "/property-search" &&
-                  !searchParams.get("propertyCategory"))
-                  ? "true"
-                  : "false"
-              }
-              className="relative hover:text-red-600 py-2 nav-link"
+              data-active={rentActive ? "true" : "false"}
+              className="relative z-10 hover:text-red-600 py-2 nav-link"
             >
               Rent
             </Link>
             <Link
+              ref={roomsLinkRef}
               href={flatmateHref}
               data-category="flatmate"
-              data-active={
-                searchParams.get("propertyCategory") === "flatmate"
-                  ? "true"
-                  : "false"
-              }
-              className="relative hover:text-red-600 py-2 nav-link"
+              data-active={roomsActive ? "true" : "false"}
+              className="relative z-10 hover:text-red-600 py-2 nav-link"
             >
               Rooms
             </Link>
@@ -175,16 +265,18 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
               Buy
             </Link> */}
             <button
+              type="button"
               onClick={() => openDialog(PRO_SUBSCRIPTION_DIALOG_ID)}
-              className="relative text-red-600 py-2 nav-link flex items-center hover:bg-red-50 rounded-xl px-2"
+              className="relative z-10 text-red-600 py-2 nav-link flex items-center hover:bg-red-50 px-0"
             >
               Get Pro{" "}
               <ShieldCheckIcon className="size-6 text-white fill-red-500" />
             </button>
             <Link
+              ref={aboutLinkRef}
               href="/about-us"
-              data-active={pathname === "/about-us" ? "true" : "false"}
-              className="relative hover:text-red-600 py-2 nav-link hidden lg:block"
+              data-active={aboutActive ? "true" : "false"}
+              className="relative z-10 hover:text-red-600 py-2 nav-link hidden lg:block"
             >
               About Us
             </Link>
@@ -195,7 +287,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
             {/* List Property Button */}
             <Link
               href="/list-property"
-              className="relative border border-red-600 text-red-600 xl:px-6 lg:px-5 md:px-3 px-3 py-2 rounded-xl hover:bg-red-50"
+              className="relative border border-red-600 text-red-600 xl:px-6 lg:px-5 md:px-3 px-3 py-2 rounded-xl hover:bg-red-50 nav-link"
             >
               List Your Property
               <span className="absolute bottom-0 right-0 -mb-2 -mr-2 bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-md">
@@ -244,6 +336,7 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
               />
             ) : pathname !== "/login" ? (
               <button
+                type="button"
                 className="xl:px-8 lg:px-6 md:px-4 px-4  py-2 border rounded-xl border-gray-300 text-gray-800 hover:bg-gray-100 text-center"
                 onClick={onLogin}
               >
@@ -258,8 +351,15 @@ const HeaderClient: React.FC<HeaderClientProps> = () => {
       <header className="fixed top-0 left-0 right-0 h-14 bg-white z-40 border-b border-gray-200 flex justify-between w-full px-4 py-2 shadow-sm md:hidden">
         {/* Left Section - Logo */}
         <div className="flex items-center gap-2">
-          <Menu role="button" onClick={onMenuClick} />
-          <Link href="/" className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={onMenuClick}
+            className="p-1 text-gray-800 hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
+            aria-label="Open menu"
+          >
+            <Menu className="size-6" aria-hidden />
+          </button>
+          <Link href="/" className="flex items-center gap-1 nav-link">
             <SvgIcon iconSize="small" name="houseclay" size={22} />
             <span className="text-red-600 text-2xl font-inter font-bold">
               houseclay

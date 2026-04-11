@@ -103,6 +103,11 @@ body.property-search-map-card-open main {
   background-color: #ef4444; /* red-500 */
 }
 
+/* Header primary nav uses a motion underline instead */
+nav.header-primary-nav .nav-link[data-active="true"]::after {
+  content: none;
+}
+
 /* Alternative: Using focus states for keyboard navigation */
 .nav-link:focus-visible {
   color: #ef4444; /* red-500 */

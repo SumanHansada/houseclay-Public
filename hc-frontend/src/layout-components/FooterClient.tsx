@@ -41,14 +41,14 @@ const FooterClient: React.FC = () => {
             <div className="space-y-3 w-1/2 lg:w-2/5 2xl:w-1/3">
               <div className="pb-4 space-y-4">
                 <div className="flex items-center">
-                  <Link href="/" className="flex items-center gap-1">
+                  <Link href="/" className="flex items-center gap-1 nav-link">
                     <SvgIcon
                       iconSize="small"
                       name="houseclay"
                       size={28}
                       className="scale-90 lg:scale-100"
                     />
-                    <span className="text-red-500 text-2xl lg:text-[28px] font-inter font-bold">
+                    <span className="text-red-500 text-2xl font-inter font-bold">
                       houseclay
                     </span>
                   </Link>
@@ -95,7 +95,7 @@ const FooterClient: React.FC = () => {
                   </ul>
                   <Link
                     href="/list-property"
-                    className="inline-block border border-red-500 text-black px-6 py-2 rounded-xl hover:bg-red-500 hover:text-white transition-colors"
+                    className="inline-block border border-red-600 text-black px-6 py-2 rounded-xl hover:bg-red-600 hover:text-white transition-colors nav-link"
                   >
                     List Your Property
                   </Link>

@@ -40,7 +40,7 @@ export default function Loading() {
       {/* Desktop filter bar — matches PropertySearchClient */}
       <section className="fixed top-14 z-50 flex w-full h-16 gap-0 px-8 bg-white border-b border-gray-200 xl:gap-16 lg:gap-8 md:gap-0 xl:px-24 lg:px-12 max-md:pt-4 max-md:pb-8 max-md:hidden">
         <div className="flex justify-between items-center border-gray-200 w-full gap-4">
-          <div className="flex-1 flex items-center min-h-[46px] w-full p-1 border border-gray-300 rounded-xl bg-white">
+          <div className="flex-1 flex items-center min-h-10 w-full p-1 border border-gray-300 rounded-xl bg-white gap-2">
             <div className="h-[38px] flex-1 rounded-lg bg-gray-200 animate-pulse mx-1" />
             <div className="h-9 w-9 rounded-full bg-gray-200 animate-pulse m-1 shrink-0" />
           </div>
