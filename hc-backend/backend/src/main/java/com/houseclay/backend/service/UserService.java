@@ -1,6 +1,7 @@
 package com.houseclay.backend.service;
 
 import com.houseclay.backend.config.CookieConfig;
+import com.houseclay.backend.config.SessionConfig;
 import com.houseclay.backend.dto.UserEditDTO;
 import com.houseclay.backend.entity.*;
 import com.houseclay.backend.exception.APIException;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -51,13 +53,16 @@ public class UserService {
     @Autowired
     private CookieConfig cookieConfig;
 
+    @Autowired
+    private SessionConfig sessionConfig;
+
     public ResponseEntity<?> createUser(UserPayload userPayload) throws Exception {
         if(!otpService.validateOTP(userPayload.getPhoneNo(), userPayload.getOtpCode())) {
             throw new APIException("Invalid OTP Code", HttpStatus.UNAUTHORIZED);
         }
         User user = new User(userPayload.getPhoneNo(), userPayload.getName(), userPayload.getEmailID());
         String token = UUID.randomUUID().toString();
-        UserLogin userLogin = new UserLogin(token, user);
+        UserLogin userLogin = new UserLogin(token, user, sessionConfig.getDurationMs());
         List<UserLogin> userLogins = user.getUserLogins();
         userLogins.add(userLogin);
         user.setUserLogins(userLogins);
@@ -79,8 +84,22 @@ public class UserService {
         }
         String token = UUID.randomUUID().toString();
         User user = optionalUser.get();
-        UserLogin userLogin = new UserLogin(token, user);
+        UserLogin userLogin = new UserLogin(token, user, sessionConfig.getDurationMs());
+
         List<UserLogin> userLogins = user.getUserLogins();
+
+        // Remove expired sessions (orphanRemoval handles DB deletion)
+        userLogins.removeIf(UserLogin::isExpired);
+
+        // Evict oldest if at capacity
+        if (userLogins.size() >= sessionConfig.getMaxActive()) {
+            userLogins.sort(Comparator.comparing(UserLogin::getCreatedAt, Comparator.nullsFirst(Comparator.naturalOrder())));
+            int toRemove = userLogins.size() - sessionConfig.getMaxActive() + 1;
+            for (int i = 0; i < toRemove; i++) {
+                userLogins.remove(0);
+            }
+        }
+
         userLogins.add(userLogin);
         user.setUserLogins(userLogins);
         userRepository.save(user);

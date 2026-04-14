@@ -84,7 +84,14 @@ public class UserTokenAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        User user = userLoginOpt.get(0).getUser();
+        UserLogin userLogin = userLoginOpt.get(0);
+        if (userLogin.isExpired()) {
+            userLoginRepository.delete(userLogin);
+            CookieUtils.unauthorized(response, "Token has expired");
+            return;
+        }
+
+        User user = userLogin.getUser();
         if (user.isBlacklisted()) {
             forbidden(response, "User is blacklisted");
             return;

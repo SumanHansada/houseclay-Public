@@ -72,8 +72,15 @@ public class AdminTokenAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+        AdminLogin adminLogin = adminLoginOpt.get();
+        if (adminLogin.isExpired()) {
+            adminLoginRepository.delete(adminLogin);
+            CookieUtils.unauthorized(response, "Token has expired");
+            return;
+        }
+
         // Store the admin in request attribute to access in controllers
-        Admin admin = adminLoginOpt.get().getAdmin();
+        Admin admin = adminLogin.getAdmin();
         request.setAttribute("authenticatedAdmin", admin);
         request.setAttribute("token", token);
 
