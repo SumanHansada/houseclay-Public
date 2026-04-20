@@ -30,7 +30,6 @@ public class AdminTokenAuthenticationFilter extends OncePerRequestFilter {
     private static final String AUTH_HEADER = "Authorization";
 
     private static final List<String> PUBLIC_URLS = List.of(
-            "/api/admin/register",
             "/api/admin/login"
     );
 
