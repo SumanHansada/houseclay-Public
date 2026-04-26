@@ -169,7 +169,7 @@ const SearchResultsHeader = memo(function SearchResultsHeader({
 
   return (
     <div
-      className={`flex flex-col gap-4 py-6 ${isMobileVariant ? "max-h-24" : "max-h-20"}`}
+      className={`flex flex-col gap-4 ${isMobileVariant ? "max-h-24 py-3" : "max-h-20 py-4"}`}
     >
       <div
         className={
@@ -365,14 +365,6 @@ export function PropertySearchClient({
     };
   }, [isMobile, isTablet]);
 
-  const handleListMapToggle = useCallback(() => {
-    if (isOnListings) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-    listingsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [isOnListings]);
-
   const getMaxOffset = useCallback(() => {
     return window.innerHeight * 0.4;
   }, []);
@@ -386,6 +378,16 @@ export function PropertySearchClient({
     listingsRef.current.style.transform = `translateY(${y}px)`;
     listingsOffsetY.current = y;
   }, []);
+
+  const handleListMapToggle = useCallback(() => {
+    if (isOnListings) {
+      setListingsTransform(getMaxOffset(), true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    setListingsTransform(0, true);
+    listingsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [getMaxOffset, isOnListings, setListingsTransform]);
 
   const handleMobileMarkerSelect = useCallback(
     (property: PropertySearch | null) => {
@@ -463,8 +465,13 @@ export function PropertySearchClient({
         if (dragStartY.current === null) return;
         const te = e as TouchEvent;
         const dy = te.touches[0].clientY - dragStartY.current;
-        const maxOffset = getMaxOffset();
 
+        // Allow natural upward scrolling through the drag region.
+        if (dy <= 0) {
+          return;
+        }
+
+        const maxOffset = getMaxOffset();
         te.preventDefault();
         const newOffset = Math.max(
           0,
@@ -1234,7 +1241,7 @@ export function PropertySearchClient({
               data-sheet-drag-region
               className="cursor-grab active:cursor-grabbing"
             >
-              <div className="flex justify-center pt-3 pb-3">
+              <div className="flex justify-center py-2">
                 <div className="h-1 w-10 rounded-full bg-gray-300" />
               </div>
 
@@ -1274,7 +1281,7 @@ export function PropertySearchClient({
                 <List className="h-4 w-4" />
               )
             }
-            className="fixed left-1/2 z-40 -translate-x-1/2 rounded-full bg-red-500/90 px-5 py-3 text-sm font-medium text-white shadow-lg transition-[bottom,transform] duration-300 ease-in-out hover:bg-red-600/90 active:scale-95"
+            className="fixed left-1/2 z-40 -translate-x-1/2 rounded-full bg-red-500/90 px-5 py-3 text-sm font-medium text-white shadow-lg transition-[bottom,transform] duration-300 ease-in-out hover:bg-red-600/90"
             style={{
               bottom:
                 isMobile && isStickyNavbarVisible
