@@ -36,6 +36,7 @@ interface GoogleMapsPropertyMarkersProps {
   className?: string;
   mapId?: string;
   onMarkerSelect?: (property: PropertySearch | null) => void;
+  onSelectionChange?: (property: PropertySearch | null) => void;
 }
 
 const DEFAULT_CENTER = { lat: 20.5937, lng: 78.9629 };
@@ -101,7 +102,8 @@ const PropertyMapMarker = memo(function PropertyMapMarker({
 const MapInner: React.FC<{
   properties: PropertySearch[];
   onMarkerSelect?: (property: PropertySearch | null) => void;
-}> = memo(function MapInner({ properties, onMarkerSelect }) {
+  onSelectionChange?: (property: PropertySearch | null) => void;
+}> = memo(function MapInner({ properties, onMarkerSelect, onSelectionChange }) {
   const map = useMap();
   const isMapInitialized = useRef(false);
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
@@ -109,6 +111,23 @@ const MapInner: React.FC<{
   );
 
   const isOpen = selectedPropertyId !== null;
+
+  const onSelectionChangeRef = useRef(onSelectionChange);
+  onSelectionChangeRef.current = onSelectionChange;
+  const propertiesRef = useRef(properties);
+  propertiesRef.current = properties;
+  useEffect(() => {
+    const cb = onSelectionChangeRef.current;
+    if (!cb) return;
+    if (selectedPropertyId === null) {
+      cb(null);
+      return;
+    }
+    const found =
+      propertiesRef.current.find((p) => p.propertyID === selectedPropertyId) ??
+      null;
+    cb(found);
+  }, [selectedPropertyId]);
 
   const { refs, floatingStyles, context } = useFloating({
     open: isOpen,
@@ -272,8 +291,13 @@ const MapInner: React.FC<{
                 >
                   <div
                     ref={refs.setFloating}
-                    style={floatingStyles}
-                    {...getFloatingProps()}
+                    style={{ ...floatingStyles, willChange: "transform" }}
+                    {...getFloatingProps({
+                      onClick: (e) => e.stopPropagation(),
+                      onPointerDown: (e) => e.stopPropagation(),
+                      onMouseDown: (e) => e.stopPropagation(),
+                      onTouchStart: (e) => e.stopPropagation(),
+                    })}
                     className="w-96 z-50 font-inter text-base leading-normal font-normal"
                   >
                     <Link
@@ -283,7 +307,7 @@ const MapInner: React.FC<{
                     >
                       <Properties
                         property={p}
-                        showCarouselDots={false}
+                        showCarouselDots={true}
                         onClose={() => setSelectedPropertyId(null)}
                       />
                     </Link>
@@ -309,6 +333,7 @@ const MapContent: React.FC<{
   className: string;
   mapId?: string;
   onMarkerSelect?: (property: PropertySearch | null) => void;
+  onSelectionChange?: (property: PropertySearch | null) => void;
 }> = memo(function MapContent({
   properties,
   defaultCenter,
@@ -316,6 +341,7 @@ const MapContent: React.FC<{
   className,
   mapId,
   onMarkerSelect,
+  onSelectionChange,
 }) {
   const isApiLoaded = useApiIsLoaded();
   const initialCenter = useMemo(() => {
@@ -345,7 +371,11 @@ const MapContent: React.FC<{
       defaultZoom={defaultZoom}
       className={`${className} overflow-hidden rounded-xl xl:border`}
     >
-      <MapInner properties={properties} onMarkerSelect={onMarkerSelect} />
+      <MapInner
+        properties={properties}
+        onMarkerSelect={onMarkerSelect}
+        onSelectionChange={onSelectionChange}
+      />
     </Map>
   );
 });
@@ -357,6 +387,7 @@ const GoogleMapsPropertyMarkers: React.FC<GoogleMapsPropertyMarkersProps> = ({
   className = "h-full w-full min-h-[400px] rounded-xl shadow-md",
   mapId,
   onMarkerSelect,
+  onSelectionChange,
 }) => {
   const validProperties = useMemo(
     () => properties.filter((p) => isValidCoord(p.latitude, p.longitude)),
@@ -383,6 +414,7 @@ const GoogleMapsPropertyMarkers: React.FC<GoogleMapsPropertyMarkersProps> = ({
         className={className}
         mapId={mapId}
         onMarkerSelect={onMarkerSelect}
+        onSelectionChange={onSelectionChange}
       />
     </APIProvider>
   );
