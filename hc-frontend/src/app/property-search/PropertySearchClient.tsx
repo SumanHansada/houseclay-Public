@@ -366,7 +366,7 @@ export function PropertySearchClient({
   }, [isMobile, isTablet]);
 
   const getMaxOffset = useCallback(() => {
-    return window.innerHeight * 0.4;
+    return window.innerHeight * 0.3;
   }, []);
 
   const setListingsTransform = useCallback((y: number, animate: boolean) => {
