@@ -1163,7 +1163,7 @@ export function PropertySearchClient({
 
           {/* Mobile: Marker card (Airbnb-style inset); translate-y-full is only 100% of self — use 150vh so it clears safe area / rounding */}
           <div
-            className={`fixed lg:bottom-12 md:bottom-8 bottom-4 left-1/2 -translate-x-1/2 max-w-96 lg:mx-12 md:mx-8 z-50 rounded-xl bg-white shadow-lg transition-[transform,opacity] duration-[640ms] ease-[cubic-bezier(0.42,0,0.58,1)] motion-reduce:transition-none ${
+            className={`fixed lg:bottom-12 md:bottom-8 bottom-4 left-0 right-0 lg:mx-12 md:mx-8 mx-4 z-50 rounded-xl bg-white shadow-lg transition-[transform,opacity] duration-[640ms] ease-[cubic-bezier(0.42,0,0.58,1)] motion-reduce:transition-none ${
               selectedMapProperty
                 ? "translate-y-0 opacity-100 pointer-events-auto"
                 : "pointer-events-none translate-y-[150vh] opacity-0"
