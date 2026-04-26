@@ -47,6 +47,7 @@ export const CITY_LAT_LNG_MAPPING: Record<
 
 export const WEBSITE_BASE_URL = "https://houseclay.com";
 export const CDN_BASE_URL = "https://cdn.houseclay.com";
+export const MOBILE_STICKY_HEADER_OFFSET_PX = 56;
 
 // Popular Neighbourhoods
 export const NEIGHBOURHOODS = [

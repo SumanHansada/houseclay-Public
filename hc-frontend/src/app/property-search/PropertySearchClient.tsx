@@ -4,6 +4,8 @@ import {
   ArrowDownWideNarrow,
   ChevronLeft,
   ChevronRight,
+  List,
+  Map as MapIcon,
   SearchIcon,
   SlidersHorizontal,
   X,
@@ -25,7 +27,11 @@ import {
   SelectDropdown,
 } from "@/base-components";
 import { noResultsFoundIconURL } from "@/common/cdnURLs";
-import { CITY_LAT_LNG_MAPPING, EXPLORE_LOCATION } from "@/common/constants";
+import {
+  CITY_LAT_LNG_MAPPING,
+  EXPLORE_LOCATION,
+  MOBILE_STICKY_HEADER_OFFSET_PX,
+} from "@/common/constants";
 import {
   PROPERTY_FILTERS_DIALOG_ID,
   SORT_FILTERS_DIALOG_ID,
@@ -340,6 +346,33 @@ export function PropertySearchClient({
   const dragStartOffset = useRef(0);
   const hasMountAnimated = useRef(false);
 
+  const [isOnListings, setIsOnListings] = useState(false);
+  useEffect(() => {
+    if (!isMobile && !isTablet) return;
+    const update = () => {
+      const el = listingsRef.current;
+      if (!el) return;
+      setIsOnListings(
+        el.getBoundingClientRect().top <= MOBILE_STICKY_HEADER_OFFSET_PX,
+      );
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [isMobile, isTablet]);
+
+  const handleListMapToggle = useCallback(() => {
+    if (isOnListings) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    listingsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [isOnListings]);
+
   const getMaxOffset = useCallback(() => {
     return window.innerHeight * 0.4;
   }, []);
@@ -464,8 +497,10 @@ export function PropertySearchClient({
     [getMaxOffset, setListingsTransform],
   );
   const { openDialog, closeDialog, isDialogOpen } = useDialog();
-  const { setSuppressed: setStickyNavbarSuppressed } =
-    useStickyNavbarVisibility();
+  const {
+    setSuppressed: setStickyNavbarSuppressed,
+    isVisible: isStickyNavbarVisible,
+  } = useStickyNavbarVisibility();
 
   useEffect(() => {
     const mapCardOpen = Boolean(selectedMapProperty && (isMobile || isTablet));
@@ -1164,7 +1199,7 @@ export function PropertySearchClient({
             />
           </div>
 
-          {/* Mobile only (<md): Marker card (Airbnb-style inset); tablet uses the in-map floating popover instead. translate-y-full is only 100% of self — use 150vh so it clears safe area / rounding */}
+          {/* Mobile only: Marker card (Airbnb-style inset); tablet uses the in-map floating popover instead. translate-y-full is only 100% of self — use 150vh so it clears safe area / rounding */}
           <div
             className={`fixed md:hidden bottom-4 left-0 right-0 mx-4 z-50 rounded-xl bg-white shadow-lg transition-[transform,opacity] duration-[640ms] ease-[cubic-bezier(0.42,0,0.58,1)] motion-reduce:transition-none ${
               selectedMapProperty
@@ -1224,6 +1259,31 @@ export function PropertySearchClient({
               />
             </div>
           </div>
+
+          {/* Mobile + tablet: floating Show map / Show list toggle */}
+          <Button
+            type="button"
+            size="custom"
+            variant="primary"
+            onClick={handleListMapToggle}
+            aria-label={isOnListings ? "Show Map" : "Show List"}
+            leftIcon={
+              isOnListings ? (
+                <MapIcon className="h-4 w-4" />
+              ) : (
+                <List className="h-4 w-4" />
+              )
+            }
+            className="fixed left-1/2 z-40 -translate-x-1/2 rounded-full bg-red-500/90 px-5 py-3 text-sm font-medium text-white shadow-lg transition-[bottom,transform] duration-300 ease-in-out hover:bg-red-600/90 active:scale-95"
+            style={{
+              bottom:
+                isMobile && isStickyNavbarVisible
+                  ? "calc(env(safe-area-inset-bottom, 0px) + 5.5rem)"
+                  : "1.5rem",
+            }}
+          >
+            {isOnListings ? "Show Map" : "Show List"}
+          </Button>
         </section>
 
         {/* Desktop: Listings + Map side by side */}

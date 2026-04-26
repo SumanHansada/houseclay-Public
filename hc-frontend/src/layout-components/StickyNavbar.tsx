@@ -8,7 +8,10 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { StickyNavItem } from "@/common/dataConstants/navbarList";
 import { STICKY_NAV_ITEMS } from "@/common/dataConstants/navbarList";
 import { useDialog } from "@/providers/DialogContextProvider";
-import { useStickyNavbarSuppressed } from "@/providers/StickyNavbarVisibilityProvider";
+import {
+  useStickyNavbarSuppressed,
+  useStickyNavbarVisibilityOptional,
+} from "@/providers/StickyNavbarVisibilityProvider";
 
 interface StickyNavbarProps {
   defaultActive?: string;
@@ -23,6 +26,7 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
   const [pendingTabId, setPendingTabId] = useState<string | null>(null);
   const { openDialog } = useDialog();
   const suppressed = useStickyNavbarSuppressed();
+  const stickyNavbarVisibility = useStickyNavbarVisibilityOptional();
   const reduceMotion = useReducedMotion();
   const [visible, setVisible] = useState(true);
   const lastScrollY = useRef(0);
@@ -78,6 +82,10 @@ const StickyNavbar: React.FC<StickyNavbarProps> = ({
   const activeIndex = STICKY_NAV_ITEMS.findIndex((item) => isTabActive(item));
 
   const showNav = !suppressed && visible;
+
+  useEffect(() => {
+    stickyNavbarVisibility?.setIsVisible(showNav);
+  }, [showNav, stickyNavbarVisibility]);
 
   // Tween on `left` avoids spring overshoot flicker; no layoutId/transform clash
   const indicatorTransition = reduceMotion

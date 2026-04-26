@@ -13,6 +13,9 @@ type StickyNavbarVisibilityContextValue = {
   /** When true, bottom StickyNavbar stays off-screen (e.g. property map pin card open). */
   suppressed: boolean;
   setSuppressed: (value: boolean) => void;
+  /** Whether StickyNavbar is currently on-screen. */
+  isVisible: boolean;
+  setIsVisible: (value: boolean) => void;
 };
 
 const StickyNavbarVisibilityContext =
@@ -24,13 +27,17 @@ export function StickyNavbarVisibilityProvider({
   children: ReactNode;
 }) {
   const [suppressed, setSuppressedState] = useState(false);
+  const [isVisible, setIsVisibleState] = useState(true);
   const setSuppressed = useCallback((value: boolean) => {
     setSuppressedState(value);
   }, []);
+  const setIsVisible = useCallback((value: boolean) => {
+    setIsVisibleState(value);
+  }, []);
 
   const value = useMemo(
-    () => ({ suppressed, setSuppressed }),
-    [suppressed, setSuppressed],
+    () => ({ suppressed, setSuppressed, isVisible, setIsVisible }),
+    [suppressed, setSuppressed, isVisible, setIsVisible],
   );
 
   return (
@@ -54,4 +61,9 @@ export function useStickyNavbarVisibility(): StickyNavbarVisibilityContextValue 
 export function useStickyNavbarSuppressed(): boolean {
   const ctx = useContext(StickyNavbarVisibilityContext);
   return ctx?.suppressed ?? false;
+}
+
+/** Safe optional access for components that may render outside provider. */
+export function useStickyNavbarVisibilityOptional(): StickyNavbarVisibilityContextValue | null {
+  return useContext(StickyNavbarVisibilityContext);
 }
