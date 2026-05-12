@@ -1,12 +1,23 @@
+# ============================================================
+# FROZEN — Houseclay AWS freeze, May 2026.
+# This workflow targets EC2 hosts that no longer exist.
+# Do not run until infra revived. See docs/freeze-2026-05/.
+# ============================================================
 name: Deploy zebra-ui
 
+# FROZEN 2026-05-11 — Houseclay ops paused. See docs/freeze-2026-05/FREEZE-RUNBOOK.md
+# Revival: restore the push trigger block below after EC2 is back per REVIVAL-RUNBOOK.md
+#
+# Original trigger (restore on revival):
+# on:
+#   push:
+#     branches:
+#       - main
+#     paths:
+#       - "zebra-ui/**"
+#       - ".github/workflows/deploy-zebra-ui.yml"
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "zebra-ui/**"
-      - ".github/workflows/deploy-zebra-ui.yml"
+  workflow_dispatch:
 
 jobs:
   deploy-zebra-ui:
