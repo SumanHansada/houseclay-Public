@@ -1,5 +1,7 @@
 # 🏗️ Houseclay Developer Setup Guide
 
+> **⚠️ Production is frozen as of 2026-05-11.** All AWS infrastructure (EC2, RDS, CloudFront) is shut down to minimize cost; only Route 53 (mail) remains live. Local dev still works exactly as documented below — production endpoints (`houseclay.com`, `api.houseclay.com`, `zebra.houseclay.com`, `cdn.houseclay.com`) will not respond. CI/CD deploy workflows are also frozen (`workflow_dispatch` only). Full freeze + revival runbook: [`docs/freeze-2026-05/`](./docs/freeze-2026-05/README.md).
+
 This guide covers the complete setup for the **Houseclay Monorepo**. We support two workflows:
 
 - **Method A (Docker-First):** Run everything (Frontend + Backend) inside Docker. Zero local setup required.
