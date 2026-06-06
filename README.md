@@ -158,7 +158,16 @@ cd zebra-ui && npm install && npm run dev:local
 
 ## Screenshots
 
-<!-- TODO: Add screenshots -->
+### Desktop Screens
+
+#### Home
+<img width="3304" height="2018" alt="Macbook-PRO-16-2021-localhost-home" src="https://github.com/user-attachments/assets/97e08838-876d-44c3-ab3d-98ba9aeb002f" />
+
+#### Login
+<img width="3304" height="2018" alt="Macbook-PRO-16-2021-localhost-login" src="https://github.com/user-attachments/assets/27588271-1115-4dcf-ade4-1c4e5ed1b707" />
+
+
+### Tablet and Mobile Screens
 
 ---
 
